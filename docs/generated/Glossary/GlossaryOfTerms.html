@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="cluster execution mode Pipeline execution mode that allows you to process large volumes of data from Kafka or HDFS. cluster pipeline, cluster mode pipeline A pipeline configured to run in cluster ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Glossary of Terms"></meta><meta name="DC.Relation" scheme="URI" content="../Glossary/Glossary_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_h2c_pfh_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Glossary of Terms</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="batch A set of records that passes through a pipeline. Data Collector processes data in batches. cluster execution mode Pipeline execution mode that allows you to process large volumes of data from ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Glossary of Terms"></meta><meta name="DC.Relation" scheme="URI" content="../Glossary/Glossary_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_h2c_pfh_tq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Glossary of Terms</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -37,10 +37,19 @@
  <div class="body conbody">
   <dl class="dl">
       
+        <dt class="dt dlterm">batch</dt>
+
+        <dd class="dd">A set of
+          records that passes through a pipeline. <span class="ph">Data
+                  Collector</span>
+          processes data in batches.</dd>
+
+      
+      
         <dt class="dt dlterm">cluster execution mode</dt>
 
-        <dd class="dd">Pipeline
-          execution mode that allows you to process large volumes of data from Kafka or HDFS.</dd>
+        <dd class="dd">Pipeline execution mode that allows you to process large volumes of data from Kafka or
+          HDFS.</dd>
 
       
       
@@ -61,6 +70,18 @@
 
         <dd class="dd">Alerts based on rules that gather information about the data that passes between two
           stages.</dd>
+
+      
+      
+        <dt class="dt dlterm"><span class="ph">Data
+                  Collector</span>
+          configuration file</dt>
+
+        <dd class="dd">Cofiguration file with most <span class="ph">Data
+                  Collector</span>
+          properties. Found in the following location:
+          <pre class="pre codeblock">$SDC_CONF/sdc.properties</pre>
+</dd>
 
       
       
@@ -92,6 +113,13 @@
      processed data.</dd>
 
    
+      
+        <dt class="dt dlterm">development stages, dev stages</dt>
+
+        <dd class="dd">Stages such as the Dev Data Generator origin and the Dev Random Error processor that
+          enable pipeline development and testing. Not meant for use in production pipelines.</dd>
+
+      
       
         <dt class="dt dlterm">explicit validation</dt>
 
@@ -159,6 +187,13 @@
 
       
       
+        <dt class="dt dlterm">RPC ID</dt>
+
+        <dd class="dd">A user-defined identifier configured in the SDC RPC origin and destination to allow the
+          destination to write to the origin.</dd>
+
+      
+      
         <dt class="dt dlterm">runtime properties</dt>
 
         <dd class="dd">Properties that you define in a file local to the <span class="ph">Data
@@ -210,6 +245,6 @@
 
 <div class="related-links"></div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Glossary/Glossary_title.html" title="Glossary"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Glossary</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Glossary/Glossary_title.html" title="Glossary"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Glossary</span></a></span>  </div>
 </body>
 </html>

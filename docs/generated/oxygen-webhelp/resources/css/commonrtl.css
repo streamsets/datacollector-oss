@@ -8,6 +8,14 @@
  | (c) Copyright IBM Corp. 2004, 2005 All Rights Reserved.
  */
  
+ 
+/* 
+ * The Oxygen Webhelp plugin redistributes this file under the terms of the 
+ * Apache Software Foundation License v2.0:
+ * 
+ * http://opensource.org/licenses/apache2.0.php
+ */
+
 .unresolved { background-color: skyblue; }
 .noTemplate { background-color: yellow; }
 

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language. Use the expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Language"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_p54_4kl_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Language</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The StreamSets expression language enables you to create expressions that evaluate or modify data. The StreamSets expression language is based on the JSP 2.0 expression language. Use the expression ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Language"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_p54_4kl_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Language</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -48,7 +48,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion to determine where you can use an expression and the
                   expression elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d3770e794">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d5068e819">
                         <li class="li">Constants</li>
 
                         <li class="li">Field names</li>
@@ -68,7 +68,7 @@
 
  </div>
 
-  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq" title="Precede all expressions with a dollar sign and enclose them with curly brackets, as follows: ${&lt;expression&gt;}.You can use quotation marks and the backslash character to handle special characters in field names. When a pipeline is valid for preview, you can generally select fields from a list. When a list is not available or when you are defining a new field name, you need to use the appropriate format for the field name. In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays. Use the following information and tips when you invoke expression completion:When an expression requires, the expression language attempts implicit data type conversion - a.k.a. data type coercion. When coercion is not possible, Data Collector passes the error records to the stage for error handling.">Expression Configuration</a></div>
 </div>
 </div>
@@ -87,9 +87,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="55.55555555555556%" id="d34219e112">Sample Conditions</th>
+                        <th class="entry" valign="top" width="55.55555555555556%" id="d53256e112">Sample Conditions</th>
 
-                        <th class="entry" valign="top" width="44.44444444444444%" id="d34219e115">Description</th>
+                        <th class="entry" valign="top" width="44.44444444444444%" id="d53256e115">Description</th>
 
                     </tr>
 
@@ -97,41 +97,41 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e112 ">${record:value('/payment_type') == 'CRD'}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e112 ">${record:value('/payment_type') == 'CRD'}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e115 ">In a Stream Selector, this condition routes records where the payment
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e115 ">In a Stream Selector, this condition routes records where the payment
                             type is credit card to the stream.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e112 ">${record:value('[3]/State') == "MD"}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e112 ">${record:value('[3]/State') == "MD"}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e115 ">The same as above, but for a record in list format.</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e115 ">The same as above, but for a record in list format.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e112 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e112 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e115 ">Used in a Stream Selector in an error pipeline, this condition routes
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e115 ">Used in a Stream Selector in an error pipeline, this condition routes
                             records with the FIELD_MERGER_02 error to a stream that corrects the
                             error.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e112 ">${record:value("[20]/value") == ""}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e112 ">${record:value("[20]/value") == ""}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e115 ">When used in an alert, triggers an alert when the specified field
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e115 ">When used in an alert, triggers an alert when the specified field
                             contains no data.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e112 ">${record:type('/ID')=STRING}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e112 ">${record:type('/ID')=STRING}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e115 ">In the Stream Selector, routes records where the ID is a String to a
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e115 ">In the Stream Selector, routes records where the ID is a String to a
                             branch that includes a Field Converter to convert the field to a numeric
                             data type.</td>
 
@@ -148,9 +148,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d34219e184">Sample String Manipulation</th>
+                            <th class="entry" valign="top" width="55.55555555555556%" id="d53256e184">Sample String Manipulation</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d34219e187">Description</th>
+                            <th class="entry" valign="top" width="44.44444444444444%" id="d53256e187">Description</th>
 
                         </tr>
 
@@ -158,17 +158,17 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e184 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e184 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e187 ">Replaces missing values in the Payment field with
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e187 ">Replaces missing values in the Payment field with
                                 "unknown".</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e184 ">${str:toUpper(record:value('/STATE')}</td>
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e184 ">${str:toUpper(record:value('/STATE')}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e187 ">Capitalizes all strings in the STATE field.</td>
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e187 ">Capitalizes all strings in the STATE field.</td>
 
                         </tr>
 
@@ -184,9 +184,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d34219e229">Sample Numeric Operations</th>
+                            <th class="entry" valign="top" width="55.55555555555556%" id="d53256e229">Sample Numeric Operations</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d34219e232"> </th>
+                            <th class="entry" valign="top" width="44.44444444444444%" id="d53256e232"> </th>
 
                         </tr>
 
@@ -194,10 +194,10 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d34219e229 ">${record:value('/total_amount') - (record:value('/tip_amount') +
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d53256e229 ">${record:value('/total_amount') - (record:value('/tip_amount') +
                                 record:value('/tolls') + record:value('/mta_tax'))}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d34219e232 ">An expression that calculates trip revenue by subtracting the
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d53256e232 ">An expression that calculates trip revenue by subtracting the
                                 tip, taxes, and tolls from the total fare amount</td>
 
                         </tr>
@@ -213,6 +213,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div>
 </body>
 </html>

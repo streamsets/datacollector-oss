@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing. The JavaScript Evaluator can process data one record ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JavaScript Evaluator"></meta><meta name="abstract" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="description" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n2p_jgf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JavaScript Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing. The JavaScript Evaluator can process data one record ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JavaScript Evaluator"></meta><meta name="abstract" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="description" content="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_n2p_jgf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JavaScript Evaluator</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -73,6 +73,7 @@
   <p class="p">The JavaScript Evaluator provides the following processing
    modes: </p>
 
+  
   <div class="p">
    <dl class="dl">
     
@@ -116,57 +117,63 @@
   <div class="p">You can use the following scripting objects in the
       JavaScript Evaluator:<dl class="dl">
         
-          <dt class="dt dlterm">records array</dt>
+          <dt class="dt dlterm">records</dt>
 
-          <dd class="dd">An array of records to process. The records object includes different elements based
-            on the processing mode that you use:<ul class="ul" id="concept_mqn_5vk_sr__ul_fdm_5yk_sr">
-              <li class="li">Record by Record - The records array includes one record element.</li>
+          <dd class="dd">A collection of records to process. The
+            records object includes different elements based on the
+            processing mode that you use:<ul class="ul" id="concept_mqn_5vk_sr__ul_fdm_5yk_sr">
+              <li class="li">Record by Record - The records array includes one
+                record element. A record includes a single
+                <samp class="ph codeph">value</samp> element. The
+                <samp class="ph codeph">value</samp> element contains the data
+                for the record.</li>
 
-              <li class="li">Batch by Batch - The records array includes all records in the batch.</li>
+              <li class="li">Batch by Batch - The records array includes all
+                records in the batch.</li>
 
             </ul>
 </dd>
 
-        
-        
-          <dt class="dt dlterm">record</dt>
-
-          <dd class="dd">An object that represents a single record. Includes a single <samp class="ph codeph">value</samp>
-            element. The <samp class="ph codeph">value</samp> element contains the data for the record. </dd>
-
-          <dd class="dd">Map and list record fields are mapped to JavaScript maps and arrays,
-            respectively.</dd>
+          <dd class="dd">Map and list record fields are mapped to JavaScript maps and arrays, respectively.</dd>
 
         
-        
-          <dt class="dt dlterm">log</dt>
+          
+            <dt class="dt dlterm">state</dt>
 
-          <dd class="dd">An object to write messages to the log. Includes four methods:
-            <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>, <samp class="ph codeph">debug()</samp>, and
+            <dd class="dd">An object to store information between invocations of this script. A state is a map
+              object that includes a collection of key/value pairs. You can use the state object to
+              cache data such as a counter.</dd>
+
+          
+          
+            <dt class="dt dlterm">log</dt>
+
+            <dd class="dd">An object to write messages to the log. Includes four methods:
+              <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>, <samp class="ph codeph">debug()</samp>, and
               <samp class="ph codeph">trace()</samp>. </dd>
 
-          <dd class="dd">The signature of the 4 methods is as follows:
-            <pre class="pre codeblock">(message-template, arguments…) </pre>
+            <dd class="dd">The signature of the four methods is as follows:
+              <pre class="pre codeblock">(message-template, arguments…) </pre>
 The message template can have
-            positional variables denoted by curly brackets: { }. The arguments are replaced in the
-            message template curly brackets in positional manner, i.e., this is the first argument
-            in the first { } occurrence, and so on.</dd>
+              positional variables denoted by curly brackets: { }. The arguments are replaced in the
+              message template curly brackets in positional manner, i.e., this is the first argument in
+              the first { } occurrence, and so on.</dd>
 
-        
-        
-          <dt class="dt dlterm">out</dt>
+          
+          
+            <dt class="dt dlterm">output</dt>
 
-          <dd class="dd">An object that writes the record to the output batch. Includes a
+            <dd class="dd">An object that writes the record to the output batch. Includes a
               <samp class="ph codeph">write(Record)</samp> method.</dd>
 
-        
-        
-          <dt class="dt dlterm">err</dt>
+          
+          
+            <dt class="dt dlterm">error</dt>
 
-          <dd class="dd">An object that passes error records to the processor for error handling. Includes a
+            <dd class="dd">An object that passes error records to the processor for error handling. Includes a
               <samp class="ph codeph">write(Record, message)</samp> method.</dd>
 
-        
+          
       </dl>
 </div>
 
@@ -259,14 +266,14 @@ The message template can have
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d9675e2214" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d12879e2224" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d85145e376">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d119679e379">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d85145e379">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d119679e382">Description</th>
 
                                 </tr>
 
@@ -274,24 +281,24 @@ The message template can have
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d85145e376 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d119679e379 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85145e379 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d85145e376 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d85145e379 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d119679e382 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d85145e376 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d9675e2260" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d119679e379 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85145e379 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d119679e382 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d119679e379 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d12879e2270" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d119679e382 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -299,10 +306,10 @@ The message template can have
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d85145e376 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d9675e2274" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d119679e379 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d12879e2284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85145e379 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d119679e382 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -310,9 +317,9 @@ The message template can have
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d85145e376 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d119679e379 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d85145e379 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d9675e2290">
+                                    <td class="entry" valign="top" width="70%" headers="d119679e382 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d12879e2300">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -343,9 +350,9 @@ The message template can have
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d85145e488">JavaScript Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d119679e491">JavaScript Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d85145e491">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d119679e494">Description</th>
 
                                 </tr>
 
@@ -353,9 +360,9 @@ The message template can have
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d85145e488 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d119679e491 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d85145e491 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d119679e494 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -370,9 +377,9 @@ The message template can have
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d85145e488 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d119679e491 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d85145e491 ">JavaScript code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d119679e494 ">JavaScript code to use in the processor.</td>
 
                                 </tr>
 
@@ -390,6 +397,6 @@ The message template can have
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
 </body>
 </html>

@@ -1,18 +1,14 @@
-/*
-
-Under the same licenses as the jQuery library itself: http://docs.jquery.com/License
-
-jQuery quicksearch is made by Rik Lomas at Lomalogue
-
-Copyright (c) 2011 Rik Lomas, http://www.riklomas.co.uk/
-
-*/
-   
-/* 
- * The Oxygen Webhelp plugin redistributes this file under the terms of the MIT license. 
- * The full license terms of this license are available in the file MIT-License.txt 
- * located in the same directory as the present file you are reading. 
+/** 
+ * jQuery-QuickSearch - v2.0.0 - 2013-10-31
+ * Copyright (c) 2013 Deux Huit Huit (http://deuxhuithuit.com/);
+ * Licensed MIT http://deuxhuithuit.mit-license.org 
  */
+
+/**
+ * Copyrights: Deux Huit Huit, Rik Lomas.
+ * Licensed MIT: http://deuxhuithuit.mit-license.org
+ */
+
 
 (function($, window, document, undefined) {
 	$.fn.quicksearch = function (target, opt) {

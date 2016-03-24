@@ -1,19 +1,18 @@
-/*
-* jQuery.splitter.js - animated splitter plugin
-*
-* version 1.0 (2010/01/02) 
-* 
-* Dual licensed under the MIT and GPL licenses: 
-*   http://www.opensource.org/licenses/mit-license.php 
-*   http://www.gnu.org/licenses/gpl.html 
-*/
-   
-/* 
+/**
+ * jQuery.splitter.js - animated splitter plugin
+ *
+ * version 1.0 (2010/01/02) 
+ * 
+ */
+
+
+/**
  * The Oxygen Webhelp plugin redistributes this file under the terms of the MIT license. 
  * The full license terms of this license are available in the file MIT-License.txt 
  * located in the same directory as the present file you are reading. 
  */
 
+ 
 /**
 * jQuery.splitter() plugin implements a two-pane resizable animated window, using existing DIV elements for layout.
 * For more details and demo visit: http://krikus.com/js/splitter
@@ -39,6 +38,7 @@
  * 1. Added attribute class="splitterMask" to right side iframe
  * 2. Applied a correction to the computed size (width) of the right side iframe.
  * 3. Modified values of overflow and overflow-y CSS properties of left side iframe.
+ * 4. Add URL parameter for initial state of TOC - toc.visible: true - will be visible (default) / false - TOC will not be visible.
  * 
  */
 
@@ -125,7 +125,19 @@
             }		
             //reset size to default.			
             var perc=(((C.position()[opts.moving]-splitter.offset()[opts.moving])/splitter[opts.sizing]())*100).toFixed(1);
-            splitTo(perc,false,true); 
+
+            // oXygen patch start
+            visibleTOC = location.search.indexOf('toc.visible=false') != -1 ? false : true;
+            splitPos = visibleTOC ? perc : opts.minAsize;
+            _splitPos = visibleTOC ? opts.minAsize : perc;
+            var initialSplitTo = visibleTOC ? perc : opts.minAsize;
+            splitTo(initialSplitTo,false,true);
+
+            if( initialSplitTo == opts.minAsize ) {
+                Bt.toggleClass(opts.invertClass);
+            }
+            // oXygen patch end
+            
             // resize  event handlers;
             splitter.bind("resize",function(e, size){
                 if(e.target!=this)return;
@@ -141,7 +153,7 @@
                 _ghost = _ghost || C.clone(false).insertAfter(A);
                 splitter._initPos=C.position();
                 splitter._initPos[opts.moving]-=C[opts.sizing]();
-                _ghost.addClass(opts.ghostClass).css('position','absolute').css('z-index','250').css("-webkit-user-select", "none").width(C.width()).height(C.height()).css(opts.moving,splitter._initPos[opts.moving]);
+                _ghost.addClass(opts.ghostClass).css('position','absolute').css('top', C.offset().top+"px").css('z-index','250').css("-webkit-user-select", "none").width(C.width()).height(C.height()).css(opts.moving,splitter._initPos[opts.moving]);
                 mychilds.css("-webkit-user-select", "none");	// Safari selects A/B text on a move
                 // oXygen patch start
                 // in order to work with right iframe

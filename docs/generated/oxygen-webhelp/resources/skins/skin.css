@@ -106,7 +106,7 @@
   color: rgb(74, 74, 74);
 }
 .title.topictitle1, .title.sectiontitle, .title.topictitle2, #header #productTitle H1, #header .tab.selectedTab, #header .tab:not(.selectedTab), #header .navheader_parent_path, #header .link {
-  font-family: arial,helvetica,sans-serif;
+  font-family: arial, helvetica, "Lucida Grande", Verdana, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
   font-style: normal;
 }
 #header .tab.selectedTab, #header .tab:not(.selectedTab), #header .navheader_parent_path, #header .link {

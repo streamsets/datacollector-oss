@@ -1,12 +1,22 @@
 /*
 
 Oxygen Webhelp plugin
-Copyright (c) 1998-2014 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
 Licensed under the terms stated in the license file EULA_Webhelp.txt 
 available in the base directory of this Oxygen Webhelp plugin.
 
 */
 
+/*Start RTL*/
+html[dir="rtl"] #adminMenu,html[dir="rtl"] #adminMenu .span_bt{
+    float: left;
+}
+
+html[dir="rtl"] #adminMenu .span_bt{
+    margin-left: 20px;
+    margin-right: 0;
+}
+/*End RTL*/
 #comments {
 	font-size: 12px;
 	border-width: 1px;
@@ -293,7 +303,7 @@ available in the base directory of this Oxygen Webhelp plugin.
 
 body {
     min-width: 720px;
-	font-family: arial, helvetica, verdana,serif;
+    font-family:arial, helvetica, verdana, "Lucida Grande", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
 	font-size: 0.9em;
 }
 

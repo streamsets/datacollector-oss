@@ -1,12 +1,16 @@
 /*
 
 Oxygen Webhelp plugin
-Copyright (c) 1998-2014 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
 Licensed under the terms stated in the license file EULA_Webhelp.txt
 available in the base directory of this Oxygen Webhelp plugin.
 
  */
  
+$(document).ready(function(){
+    $("#searchForm").css("background-color", $("#leftPane").css("background-color"));
+});
+
 /**
  * {Refactored}
  * @description Marks the current page in TOC
@@ -37,7 +41,8 @@ function markSelectItem(url) {
         $(newloc).each(function () {
             if (Math.abs($(this).parents('li').index('li') - currentTOCSelection) < diff) {
                 diff = Math.abs($(this).parents('li').index('li') - currentTOCSelection);
-                closest = $(this).parents('li').index('li');
+                var findIndexFor = $(this).closest('li');
+                closest = $('#contentBlock li').index(findIndexFor);
             }
         });
         var loc = '#contentBlock li:eq(' + currentTOCSelection + ') a[href="' + toFind + '"]';
@@ -64,11 +69,5 @@ function markSelectItem(url) {
     item.parent('li span').addClass('menuItemSelected');
 
     // Scroll TOC to make selectedItem visible
-    if($(".menuItemSelected").length>0) {
-        if(parseInt($(".menuItemSelected").offset().top)<$(window).scrollTop()) {
-            $(window).scrollTop(parseInt($(".menuItemSelected").offset().top));
-        } else if (eval($(".menuItemSelected").offset().top+$(".menuItemSelected").height())>eval($(window).scrollTop()+$(window).height())) {
-            $(window).scrollTop(eval($(".menuItemSelected").offset().top - $(window).height() + 2*$(".menuItemSelected").height()));
-        }
-    }
+    scrollToVisibleItem();
 }

@@ -1,13 +1,43 @@
 /*
 
 Oxygen Webhelp plugin
-Copyright (c) 1998-2014 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
 Licensed under the terms stated in the license file EULA_Webhelp.txt 
 available in the base directory of this Oxygen Webhelp plugin.
 
 */
 
 @import "../../css/print.css";
+
+/* Start RTL */
+html[dir="rtl"] #productTitle, html[dir="rtl"] #productToolbar #breadcrumbLinks, html[dir="rtl"] #productTitle h1{
+    float: right;
+}
+
+html[dir="rtl"] .framesLink, html[dir="rtl"] #productToolbar #navigationLinks {
+    float: left;
+}
+
+html[dir="rtl"] #rightPane{
+    float: left;
+}
+
+html[dir="rtl"] #leftPane{
+    float: right;
+}
+
+html[dir="rtl"] .splitbarV{
+    float: right;
+    border-right: solid 1px #eee;
+    border-left: solid 1px #ccc;
+}
+html[dir="rtl"] .splitbuttonV {
+    background: transparent url(../../img/splitter.png) 0 50%;
+}
+html[dir="rtl"] .splitbuttonV.invert {
+    background: transparent url(../../img/splitter.png) 8px 50%;
+}
+/* End RTL */
 
 html, body {
     overflow: hidden;
@@ -49,7 +79,7 @@ html, body {
   display: block;
   float: right;
   margin: 0.5em 1em 0 0.3em;
-  padding: 5px;
+  padding: 7px;
   min-width: 90px;
 }
 .framesLink img{

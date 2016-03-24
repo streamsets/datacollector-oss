@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector . As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MapR Prerequisites"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jgs_qpg_2v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR Prerequisites</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector . As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MapR Prerequisites"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jgs_qpg_2v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR Prerequisites</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -48,18 +48,18 @@
 
         <div class="p">To run the Data Collector on a client machine - outside the cluster or on your local
             machine - the MapR client package must be installed and configured on the machine. To
-            install the client package, you need to download the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
+            install the MapR client package, you need to download the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
                 <li class="li">MapR client library - Typically named
                         <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can download the
                         files for your operating system
-                        here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/v5.1.0/" target="_blank">http://package.mapr.com/releases/v5.1.0/</a></pre>
+                        here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
 </div>
 </li>
 
                 <li class="li">Kafka client library - Typically named
                         <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">You can download the
                         files for your operating system here:
-                        <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/ecosystem-5.x/" target="_blank">http://package.mapr.com/releases/ecosystem-5.x/</a></pre>
+                        <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
 </div>
 </li>
 
@@ -74,20 +74,36 @@
             <li class="li">In the <span class="ph">Data
                   Collector</span> configuration file, $SDC_CONF/sdc.properties, remove the MapR stage library that
                 you want to use from the <span class="ph uicontrol">system.stagelibs.blacklist</span>
-                    property.<div class="note note"><span class="notetitle">Note:</span> You can use only one version of the MapR library at a time.
-                </div>
+                    property.<div class="note warning"><span class="warningtitle">Warning:</span> You can use only one version of the MapR library
+                    at a time. </div>
 </li>
 
             <li class="li">Create the following symlinks:<ul class="ul" id="concept_jgs_qpg_2v__ul_yhl_bsg_2v">
                     <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/*</span> to
-                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR library&gt;/lib/</span>.
-                            <p class="p">$MAPR_HOME is usually /opt/mapr. </p>
-<p class="p">&lt;MapR library&gt; is the name
-                            of the MapR library to use. </p>
+                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR library
+                            version&gt;/lib/</span>. <p class="p">$MAPR_HOME is usually /opt/mapr.
+                            </p>
+<p class="p">&lt;MapR library version&gt; is the version of the StreamSets MapR
+                            library to use. </p>
+<p class="p">For example, for the
+                            streamsets-datacollector-mapr_5_1-lib library, the MapR library version
+                            is mapr_5_1-lib. </p>
+<div class="p">So to use MapR version 5.1.0 with <span class="ph">Data
+                  Collector</span>, you would create a symlink from $MAPR_HOME/lib/* to
+                            $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/ as
+                            follows:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/</pre>
+</div>
 </li>
 
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/maprfs-5.1.0-mapr-SNAPSHOT.jar</span> to
-                            <span class="ph uicontrol">$SDC_DIST/root-lib/</span></li>
+                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/maprfs-&lt;version&gt;-mapr.jar</span> to
+                            <span class="ph uicontrol">$SDC_DIST/root-lib/</span><p class="p">&lt;version&gt; is the MapR
+                            version. </p>
+<div class="p">For example, when using MapR version 5.1.0, you would
+                            create a symlink from $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar to
+                            $SDC_DIST/root-lib/ as
+                            follows:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</pre>
+</div>
+</li>
 
                 </ul>
 </li>
@@ -107,6 +123,6 @@
 
 <div class="related-links"></div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div>
 </body>
 </html>

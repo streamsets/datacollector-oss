@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Remover removes fields from records. Use the Field Remover to discard field data that you do not need in the pipeline. Configure a Field Remover to remove unwanted fields from the pipeline. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Remover"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jdd_blr_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Remover</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Remover removes fields from records. Use the Field Remover to discard field data that you do not need in the pipeline. You configure the Field Remover to complete one of the following ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Remover"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jdd_blr_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Remover</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -38,32 +38,42 @@
   <p class="p">The Field Remover removes fields from records. Use the
       Field Remover to discard field data that you do not need in the pipeline. </p>
 
+        <div class="p">You configure the Field Remover to complete one of the following actions:<ul class="ul" id="concept_jdd_blr_wq__ul_ak2_qdx_hv">
+                <li class="li">Keep listed fields - You list the fields that you want to keep, and the Field
+                    Remover removes the remaining fields.</li>
+
+                <li class="li">Remove listed fields - You list the fields that you want to remove, and the
+                    Field Remover removes all of the listed fields.</li>
+
+                <li class="li">Remove listed fields if their values are null - You list the fields that you
+                    want to remove, and the Field Remover removes the listed fields when they
+                    contain null values.</li>
+
+            </ul>
+</div>
+
  </div>
 
 <div class="related-links"></div>
 <div class="topic task nested1" id="task_c1j_btr_wq">
     <h2 class="title topictitle2">Configuring a Field Remover</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Configure a Field Remover to remove unwanted fields from the pipeline. </p>
-
-        <div class="section context">When you configure the Field
-            Remover, you can list the fields that you want to keep so the Field Remover removes the
-            remaining fields. Or, you can list the fields that you want to remove. </div>
+    <div class="body taskbody">
+        <div class="section context">Configure a Field Remover to remove unwanted fields from the pipeline. </div>
 
         <ol class="ol steps" id="task_c1j_btr_wq__steps_fdt_ttq_wq"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d9675e2327" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d12879e2337" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d82994e79">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d115988e90">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d82994e82">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d115988e93">Description</th>
 
                                 </tr>
 
@@ -71,24 +81,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d82994e79 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115988e90 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d82994e82 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d82994e79 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d82994e82 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d115988e93 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d82994e79 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_c1j_btr_wq__d9675e2373" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d115988e90 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d82994e82 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d115988e93 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115988e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_c1j_btr_wq__d12879e2383" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115988e93 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -96,10 +106,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d82994e79 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_c1j_btr_wq__d9675e2387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d115988e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_c1j_btr_wq__d12879e2397" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d82994e82 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d115988e93 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -123,9 +133,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d82994e171">Field Remover Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d115988e182">Field Remover Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d82994e174">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d115988e185">Description</th>
 
                                 </tr>
 
@@ -133,17 +143,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d82994e171 ">Action</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d115988e182 ">Action</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d82994e174 ">Indicates whether to keep or drop the listed fields.
-                                    </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d115988e185 ">Action to complete:<ul class="ul" id="task_c1j_btr_wq__ul_clq_bbx_hv">
+                                            <li class="li">Keep listed fields</li>
+
+                                            <li class="li">Remove listed fields</li>
+
+                                            <li class="li">Remove listed fields if their values are null</li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d82994e171 ">Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d115988e182 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d82994e174 ">List of fields to keep or remove.<p class="p">You can use the asterisk wildcard to represent array indices and map
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d115988e185 ">List of fields to keep or remove.<p class="p">You can use the asterisk wildcard to represent array indices and map
                   elements. <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                   </a>
             </p>
@@ -165,6 +182,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
 </body>
 </html>

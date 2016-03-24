@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Runtime Properties"></meta><meta name="abstract" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fjx_g31_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Properties</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Runtime Properties"></meta><meta name="abstract" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fjx_g31_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Properties</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -70,8 +70,8 @@
     <p class="p">You can define
       runtime properties in the <span class="ph">Data
                   Collector</span>
-      configuration file or in a separate runtime properties file local to the <span class="ph">Data
-                  Collector</span>.</p>
+      configuration file, <samp class="ph codeph">sdc.properties</samp>, or in a separate runtime properties
+      file.</p>
 
   <div class="p">
    <dl class="dl">
@@ -82,21 +82,25 @@
 
      <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data
                   Collector</span>
-      configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
-       <li class="li">In the <span class="ph">Data
-                  Collector</span>
-        configuration file, configure the <samp class="ph codeph">runtime.conf.location</samp> property as
-        follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
+            configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
+              <li class="li">In the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp> file, configure the
+                  <strong class="ph b">runtime.conf.location</strong> property as
+                follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
 </li>
 
-       <li class="li">Use the following format to define runtime properties:
+              <li class="li">Define the runtime properties in the <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>
+                file using the following format:
                 <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
 For example, the
                 following runtime property defines a Hadoop FS directory template location:
                 <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
 </li>
 
-      </ol>
+              <li class="li">Restart <span class="ph">Data
+                  Collector</span>
+                to enable the changes.</li>
+
+            </ol>
 </dd>
 
     
@@ -105,21 +109,31 @@ For example, the
 
      <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
               file:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
-              <li class="li">Create a text file and save it in a directory local to the <span class="ph">Data
-                  Collector</span>.</li>
+                <li class="li">Create a text file and save it in a directory relative to the
+                  <samp class="ph codeph">$SDC_CONF</samp> directory.</li>
 
-              <li class="li">In the <span class="ph">Data
-                  Collector</span>
-                configuration file, configure the <samp class="ph codeph">runtime.conf.location</samp> property to
-                point to the file. </li>
-
-              <li class="li">In the text file, list the runtime properties that you want to define using the
-                following format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
-For example,
-                the following runtime property defines the same Hadoop FS directory template in a
+              <li class="li">Define the runtime properties in the text file using the following
+                format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+For example, the
+                following runtime property defines the same Hadoop FS directory template in a
                 separate runtime properties
                 file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
 </li>
+
+              <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, configure the
+                  <strong class="ph b">runtime.conf.location</strong> property to point to the relative location
+                of the separate runtime properties file. <p class="p">For example, the following separate
+                  runtime properties file is located in a <samp class="ph codeph">runtime</samp> directory that is
+                  relative to the <samp class="ph codeph">$SDC_CONF</samp>
+                directory:</p>
+<pre class="pre codeblock">runtime.conf.location=runtime/test-runtime.properties</pre>
+</li>
+
+              <li class="li">Restart <span class="ph">Data
+                  Collector</span>
+                to enable the changes.</li>
 
             </ol>
 </dd>
@@ -131,6 +145,10 @@ For example,
 
  </div>
 
+  <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector can provide JMX metrics to external tools. Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Variables</a></div>
+</div>
+</div>
 </div>
 <div class="topic concept nested1" id="concept_pdh_glg_1s">
  <h2 class="title topictitle2">Calling a Runtime Property</h2>
@@ -145,9 +163,13 @@ For example,
             <pre class="pre codeblock">runtime:conf('&lt;property name&gt;')</pre>
 </div>
 
-  <div class="p">For example, to use a LogDir runtime property that represents the source file directory for the
-            Directory stage, enter the following syntax for the Files Directory
-            property:<pre class="pre codeblock">${runtime:conf('LogDir')}</pre>
+    <div class="note note"><span class="notetitle">Note:</span> If you defined the runtime properties in the <span class="ph">Data
+                  Collector</span>
+      configuration file, enter just <samp class="ph codeph">&lt;property name&gt;</samp> and not <samp class="ph codeph">runtime.conf_&lt;property name&gt;</samp>.</div>
+
+  <div class="p">For example, to use the HDFSDirTemplate runtime property for the Hadoop FS destination, enter
+      the following syntax for the Directory Template
+      property:<pre class="pre codeblock">${runtime:conf('HDFSDirTemplate')}</pre>
 </div>
 
   <div class="p">You can use a runtime property to represent a part of a property. For example, you could use a
@@ -160,6 +182,6 @@ For example,
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Advanced Configuration</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Advanced Configuration</span></a></span>  </div>
 </body>
 </html>

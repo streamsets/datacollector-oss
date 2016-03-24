@@ -1,18 +1,51 @@
 /*
 
 Oxygen Webhelp plugin
-Copyright (c) 1998-2014 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
 Licensed under the terms stated in the license file EULA_Webhelp.txt
 available in the base directory of this Oxygen Webhelp plugin.
 
 */
+
+/* Start RTL */
+html[dir="rtl"] .topic, html[dir="rtl"] .hasSubMenuOpened, html[dir="rtl"] .hasSubMenuClosed{
+    background-position: right;
+}
+html[dir="rtl"] .textToSearch{
+    margin-right: 0;
+    margin-left: 4px;
+}
+html[dir="rtl"] #searchForm{
+    float:left;
+    padding: 2px 0 5px 0;
+    margin: 0;
+}
+html[dir="rtl"] #customLogo {
+    float: right;
+}
+html[dir="rtl"] #contentBlock, html[dir="rtl"] #contentBlock ul{
+    padding-right: 10px;
+    padding-left: 0px;
+}
+html[dir="rtl"] #expnd {
+    float: left;
+}
+html[dir="rtl"] #contentBlock li span {
+    padding: 2px 21px 2px 5px;
+}
+
+html[dir="rtl"] #header #tocMenu{
+    padding-left: 0;
+    padding-right: 13px;
+}
+/* End RTL */
 
 html,body {
     width: 100%;
     margin: 0;
     padding: 0;
     background-color: #fff;
-    font-family: arial, helvetica, sans-serif;
+    font-family: arial, helvetica, "Lucida Grande", Verdana, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
     font-size: 10pt;
 }
 
@@ -118,8 +151,8 @@ html,body {
 #contentBlock ul{
     margin: 0;
 }
-#contentBlock li span{
-    display: block;
+#contentBlock li>span{
+    display: inline-block;
     padding: 2px 5px 2px 21px;
 }
 #contentBlock,#contentBlock ul{
@@ -129,7 +162,7 @@ html,body {
     text-decoration: none;
     font-size: 10pt;
     color: navy;
-    font-family: arial, helvetica, tahoma, sans-serif;
+    font-family: arial, helvetica, tahoma, "Lucida Grande", Verdana, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
     white-space: nowrap;
 }
 #contentBlock a, #contentBlock a:hover, #contentBlock a:after, #contentBlock a:active, a.link, a.navheader_parent_path{
@@ -179,7 +212,7 @@ li{
     list-style: none;
 }
 
-#searchBlock #searchForm, #indexBlock #indexForm {
+#searchBlock #searchForm.frameset, #indexBlock #indexForm {
     position: relative;
     margin: 0;
     padding-top: 10px;
@@ -189,32 +222,55 @@ li{
     background-color: #0000FF;
     box-shadow: #bbbbbb 0 0 10px;
 }
+#searchForm{
+    float:right;
+    padding: 2px 0 5px 0;
+    margin: 0.2em 0 0 0;
+}
 
-#searchForm, #indexForm{
+#searchForm.frameset,#indexForm{
     margin:15px 10px;
     padding:0 10px 15px 10px;
     border:0;
 }
-
-.textToSearch{
+#id_search, .textToSearch.frameset{
+    border: 1px #999 solid;
+    line-height: 1.4em;
+    padding: 0 3px;
+    margin: 0;
+}
+.textToSearch.frameset{
+    margin:15px 0 0 20px;
+    width: 170px;
+    border-radius: 0;
+}
+.textToSearch.frameset:focus{
+    border: 1px #999 solid;
+    line-height: 1.4em;
+    padding: 0 3px;
+    margin: 15px 0 0 20px;
+    width: 170px;
+    border-radius: 0;
+    box-shadow: none;
+}
+.textToSearch, .textToSearch:focus{
     width: 150px;
     border: 1px #999 solid;
-    padding: 0 3px;
-    margin-right: 4px;
-    line-height: 1.5em;
+    padding: 2px 8px;
+    margin: 5px 4px 0 0;
+    line-height: 16px;
+    border-radius: 5px;
+}
+.textToSearch:focus{
+    outline: none;
+    box-shadow: 0 0 7px #999999;
+    border: 1px #bbb solid;
 }
 
 .topic{
     background-image: url('../img/topic16.png');
     background-repeat:  no-repeat;
     padding-left: 16px;
-}
-
-#id_search{
-    border: 1px #999 solid;
-    line-height: 1.4em;
-    padding: 0 3px;
-    margin: 0;
 }
 
 #rightDiv{
@@ -270,7 +326,7 @@ a.foundResult:hover{
     position: relative;
     float: right;
     font-size: 13px;
-    font-family: Arial,sans-serif;
+    font-family: Arial, "Lucida Grande", Verdana, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
     color: #888;
 }
 

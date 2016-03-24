@@ -1,0 +1,331 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy version 2.4. The ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Groovy Evaluator"></meta><meta name="abstract" content="The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy version 2.4."></meta><meta name="description" content="The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy version 2.4."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ldh_sct_gv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Groovy Evaluator</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ldh_sct_gv">
+ <h1 class="title topictitle1">Groovy Evaluator</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator
+    processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy
+    version 2.4.</p>
+  <p class="p">The Groovy Evaluator can process data one record at a time or
+   one batch at a time. </p>
+
+  <p class="p">When you use a Groovy Evaluator in a pipeline, the <span class="ph">Data
+                  Collector</span> passes a batch
+   of data to the processor and converts the data to a scripting-friendly data structure for
+   processing.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ljq_z2t_gv">
+ <h2 class="title topictitle2">Processing Mode</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can choose the processing mode to use with the Groovy Evaluator. You can use the
+  same script in each processing mode. However, you should include error handling in the script
+  before you run in batch mode.</p>
+
+  
+  <p class="p">The Groovy Evaluator provides the following processing modes: </p>
+
+  <dl class="dl">
+   
+    <dt class="dt dlterm">Record by Record</dt>
+
+    <dd class="dd">The processor calls the script for each record. The processor passes the record to the
+     script as a map and processes each record individually. </dd>
+
+    <dd class="dd">The script does not require error handling logic. Error records are passed to the processor
+     for error handling. The processor handles error records based on the On Record Error
+     property.</dd>
+
+    <dd class="dd">Use this mode to avoid including error handling logic in the code. Since this mode calls
+     the script for each record, pipeline performance will be negatively affected. </dd>
+
+   
+   
+    <dt class="dt dlterm">Batch by Batch</dt>
+
+    <dd class="dd">The processor calls the script for each batch. The processor passes the batch to the script
+     as a list and processes the batch at one time. </dd>
+
+    <dd class="dd">Include error handling logic in the script. Without custom error handling logic, a single
+     error record sends the entire batch to the processor for error handling. The processor handles
+     error records based on the On Record Error property.</dd>
+
+    <dd class="dd">Use this mode to improve performance by processing a batch of data at a time.</dd>
+
+   
+  </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_hzt_zjt_gv">
+ <h2 class="title topictitle2">Groovy Scripting Objects</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use the following scripting objects in the Groovy
+        Evaluator:</p>
+
+  <dl class="dl">
+   
+     <dt class="dt dlterm">records</dt>
+
+     <dd class="dd">A collection of records to process. The
+       records object includes different elements based on the
+       processing mode that you use:<ul class="ul" id="concept_hzt_zjt_gv__ul_fdm_5yk_sr">
+         <li class="li">Record by Record - The records array includes one
+           record element. A record includes a single
+           <samp class="ph codeph">value</samp> element. The
+           <samp class="ph codeph">value</samp> element contains the data
+           for the record.</li>
+
+         <li class="li">Batch by Batch - The records array includes all
+           records in the batch.</li>
+
+       </ul>
+</dd>
+
+    <dd class="dd">Map and list record fields are mapped to Groovy maps and lists, respectively.</dd>
+
+   
+    
+      <dt class="dt dlterm">state</dt>
+
+      <dd class="dd">An object to store information between invocations of this script. A state is a map
+        object that includes a collection of key/value pairs. You can use the state object to
+        cache data such as a counter.</dd>
+
+    
+    
+      <dt class="dt dlterm">log</dt>
+
+      <dd class="dd">An object to write messages to the log. Includes four methods:
+        <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>, <samp class="ph codeph">debug()</samp>, and
+        <samp class="ph codeph">trace()</samp>. </dd>
+
+      <dd class="dd">The signature of the four methods is as follows:
+        <pre class="pre codeblock">(message-template, arguments…) </pre>
+The message template can have
+        positional variables denoted by curly brackets: { }. The arguments are replaced in the
+        message template curly brackets in positional manner, i.e., this is the first argument in
+        the first { } occurrence, and so on.</dd>
+
+    
+    
+      <dt class="dt dlterm">output</dt>
+
+      <dd class="dd">An object that writes the record to the output batch. Includes a
+        <samp class="ph codeph">write(Record)</samp> method.</dd>
+
+    
+    
+      <dt class="dt dlterm">error</dt>
+
+      <dd class="dd">An object that passes error records to the processor for error handling. Includes a
+        <samp class="ph codeph">write(Record, message)</samp> method.</dd>
+
+    
+  </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rmp_xlt_gv">
+ <h2 class="title topictitle2">Processing List-Map Data</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">In scripts that process list-map data, treat the data as maps. </p>
+
+  <p class="p">List-Map is a <span class="ph">Data
+                  Collector</span> data type that
+    allows you to use standard record functions to work with delimited data. When an origin reads
+    delimited data, it generates List-Map fields by default. </p>
+
+  <p class="p">The Groovy Evaluator reads and passes list-map data. But to process data in a List-Map field,
+   treat the field as a Map in the script.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_asl_bpt_gv">
+    <h2 class="title topictitle2">Configuring a Groovy Evaluator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Groovy Evaluator
+                to use custom Groovy code in a pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__d12879e2224" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d118405e291">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d118405e294">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d118405e291 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d118405e294 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d118405e291 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d118405e294 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d118405e291 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d12879e2270" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d118405e294 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d118405e291 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d12879e2284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d118405e294 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d118405e291 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d118405e294 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d12879e2300">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Groovy</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__table_kqw_xpt_gv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d118405e403">Groovy Evaluator Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d118405e406">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d118405e403 ">Record Processing Mode</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d118405e406 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
+                                            <li class="li">Record by Record - Processes records individually.
+                                                Performs error handling.</li>
+
+                                            <li class="li">Batch by Batch - Processes records in batches.
+                                                Requires error handling code in the script.</li>
+
+                                        </ul>
+<p class="p">Default is Batch by Batch.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d118405e403 ">Script</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d118405e406 ">Groovy code to use in the processor.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
+</body>
+</html>
