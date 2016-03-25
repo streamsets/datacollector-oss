@@ -54,14 +54,18 @@ public class AsynchronousFileFinder extends FileFinder {
   private boolean firstFind;
 
   public AsynchronousFileFinder(final Path globPath, int scanIntervalSec) {
-    this(globPath, scanIntervalSec, null);
+    this(globPath, scanIntervalSec, null, FileFilterOption.FILTER_REGULAR_FILES_ONLY);
   }
 
   // if a null executor is given the finder will create its own instance and destroy it on close()
-  public AsynchronousFileFinder(final Path globPath, int scanIntervalSec, ScheduledExecutorService executor) {
+  public AsynchronousFileFinder(
+      final Path globPath,
+      int scanIntervalSec,
+      ScheduledExecutorService executor,
+      FileFilterOption filterOption) {
     Utils.checkArgument(scanIntervalSec > 0, Utils.formatL("scanInterval must be greater than zero", scanIntervalSec));
     this.globPath = globPath;
-    fileFinder = new SynchronousFileFinder(globPath);
+    fileFinder = new SynchronousFileFinder(globPath, filterOption);
     found = new LinkedBlockingDeque<>();
     this.executor = (executor != null) ? executor : new SafeScheduledExecutorService(1, "FileFinder");
     ownExecutor = (executor == null);

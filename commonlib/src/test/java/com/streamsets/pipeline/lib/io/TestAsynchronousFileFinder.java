@@ -54,7 +54,13 @@ public class TestAsynchronousFileFinder {
 
     Set<Path> expected = ImmutableSet.of(file1.toPath(), file2.toPath(), file3.toPath());
 
-    AsynchronousFileFinder ff = new AsynchronousFileFinder(Paths.get(baseDir.getAbsolutePath(), "*/*.txt"), 1, executor);
+    AsynchronousFileFinder ff = new AsynchronousFileFinder(
+        Paths.get(baseDir.getAbsolutePath(), "*/*.txt"),
+        1,
+        executor,
+        FileFilterOption.FILTER_REGULAR_FILES_ONLY
+    );
+
     try {
       Thread.sleep(2000);
       Assert.assertEquals(expected, ff.find());

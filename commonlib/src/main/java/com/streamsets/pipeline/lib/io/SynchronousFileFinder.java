@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,37 +42,27 @@ import java.util.regex.Pattern;
 public class SynchronousFileFinder extends FileFinder {
   private final static Logger LOG = LoggerFactory.getLogger(SynchronousFileFinder.class);
 
-  private final static Pattern DOUBLE_WILDCARD = Pattern.compile(".*[^\\\\]\\*\\*.*");
   private final Path globPath;
   private final Path pivotPath;
   private final Path wildcardPath;
   private final Set<Path> foundPaths;
   private final DirectoryStream.Filter<Path> filter;
 
-  public SynchronousFileFinder(Path globPath) {
+  public SynchronousFileFinder(Path globPath, FileFilterOption filterOption) {
     Utils.checkNotNull(globPath, "path");
     Utils.checkArgument(globPath.isAbsolute(), Utils.formatL("Path '{}' must be absolute", globPath));
+    Utils.checkArgument(
+        !globPath.toString().contains("**"),
+        Utils.formatL("Path '{}' canot have double '*' wildcard", globPath)
+    );
     this.globPath = globPath;
     pivotPath = GlobFilePathUtil.getPivotPath(globPath);
     wildcardPath = GlobFilePathUtil.getWildcardPath(globPath);
-    Utils.checkArgument(!DOUBLE_WILDCARD.matcher(globPath.toString()).matches(),
-                        Utils.formatL("Path '{}' canot have double '*' wildcard", globPath));
     foundPaths = Collections.synchronizedSet(new HashSet<Path>());
-
     if (wildcardPath == null) {
-      filter = new DirectoryStream.Filter<Path>() {
-        @Override
-        public boolean accept(Path entry) throws IOException {
-          return !foundPaths.contains(entry);
-        }
-      };
+      filter = FileFilterOption.getFilter(this.foundPaths, FileFilterOption.NO_FILTER_OPTION);
     } else {
-      filter = new DirectoryStream.Filter<Path>() {
-        @Override
-        public boolean accept(Path entry) throws IOException {
-          return !foundPaths.contains(entry) && Files.isRegularFile(entry);
-        }
-      };
+      filter = FileFilterOption.getFilter(this.foundPaths, filterOption);
     }
     LOG.trace("<init>(globPath={})", globPath);
   }

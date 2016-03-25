@@ -115,7 +115,7 @@ public class DirectoryPathCreationWatcher implements Runnable{
               Path child = currentPath.resolve(name);
               Path wholePath = existingPathToWholePath.get(currentPath);
               if (wholePath.equals(child) || wholePath.startsWith(child)) {
-                DIR_PATH_CREATION_LOGGER.info(Utils.format("Watched Path Detected: {}", currentPath.toAbsolutePath()));
+                DIR_PATH_CREATION_LOGGER.info(Utils.format("Watched Path Detected: {}", child.toAbsolutePath()));
                 updateState(wholePath);
                 key.cancel();
               }

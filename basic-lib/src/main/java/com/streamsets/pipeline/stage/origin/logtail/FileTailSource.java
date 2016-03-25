@@ -140,8 +140,6 @@ public class FileTailSource extends BaseSource {
       } else {
         // valid patternForTokens must be parseable regexes
         ok &= validatePatternIsValidRegex(fileInfo, issues);
-        // and no glob wildcards
-        ok &= validatePatternNoWildcards(fileInfo, issues);
       }
 
       // if firstFile is provided, make sure it's possible to use it
@@ -161,38 +159,6 @@ public class FileTailSource extends BaseSource {
       }
     }
     return ok;
-  }
-
-  private boolean validatePatternNoWildcards(FileInfo fileInfo, List<ConfigIssue> issues) {
-    ELVars elVars = getContext().createELVars();
-    elVars.addVariable("PATTERN", "");
-    ELEval elEval = getContext().createELEval("fileFullPath");
-    try {
-      String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
-      if (GlobFilePathUtil.hasGlobWildcard(pathWithoutPattern)) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.FILES.name(),
-                FILE_TAIL_CONF_PREFIX + "fileInfos",
-                Errors.TAIL_17,
-                fileInfo.fileFullPath
-            )
-        );
-        return false;
-      }
-    } catch (ELEvalException ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.FILES.name(),
-              FILE_TAIL_CONF_PREFIX + "fileInfos",
-              Errors.TAIL_18,
-              fileInfo.fileFullPath,
-              ex.toString()
-          )
-      );
-      return false;
-    }
-    return true;
   }
 
   private boolean validatePatternIsValidRegex(FileInfo fileInfo, List<ConfigIssue> issues) {

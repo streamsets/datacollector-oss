@@ -79,9 +79,10 @@ public class BaseFileContextProvider implements FileContextProvider{
     Map<String, Long> offsetLagMap = new HashMap<String, Long>();
     for (FileContext fileContext : fileContexts) {
       String fileKey = fileContext.getMultiFileInfo().getFileKey();
-      if (offsetMap.containsKey(fileKey)) {
-        long offsetLag = FileContextProviderUtil.getOffsetLagForFile(offsetMap.get(fileKey));
-        offsetLagMap.put(fileKey, offsetLag);
+      //Whatever does not have offsets (i.e empty offsets) mean their live (current) file is null
+      //they will appear in pending files.
+      if (offsetMap.containsKey(fileKey) && !offsetMap.get(fileKey).isEmpty()) {
+        offsetLagMap.put(fileKey, FileContextProviderUtil.getOffsetLagForFile(offsetMap.get(fileKey)));
       }
     }
     return offsetLagMap;

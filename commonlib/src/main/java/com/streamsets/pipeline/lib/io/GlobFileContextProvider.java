@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -54,13 +55,35 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
     public GlobFileInfo(MultiFileInfo globFileInfo, ScheduledExecutorService executor, int scanIntervalSecs) {
       this.globFileInfo = globFileInfo;
-      finderPath = Paths.get(globFileInfo.getFileFullPath());
-      this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(finderPath)
-          : new AsynchronousFileFinder(finderPath, scanIntervalSecs, executor);
+      //For Periodic Pattern Roll mode, we will just use the parent path of
+      //the file for globbing and we will filter just the directories.
+      this.finderPath =  (globFileInfo.getFileRollMode() == FileRollMode.PATTERN)?
+          Paths.get(globFileInfo.getFileFullPath()).getParent()
+          : Paths.get(globFileInfo.getFileFullPath());
+
+      FileFilterOption filterOption = (globFileInfo.getFileRollMode() == FileRollMode.PATTERN) ?
+          FileFilterOption.FILTER_DIRECTORIES_ONLY
+          : FileFilterOption.FILTER_REGULAR_FILES_ONLY;
+
+      this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(finderPath, filterOption)
+          : new AsynchronousFileFinder(finderPath, scanIntervalSecs, executor, filterOption);
     }
 
     public MultiFileInfo getFileInfo(Path path) {
-      return new MultiFileInfo(globFileInfo, path.toString());
+      //For Periodic Pattern Roll Mode we will only watch for path of the parent
+      //Once we resolve the filepath for parent
+      //we will attach the final file name to the path to do the periodic pattern match.
+      if (globFileInfo.getFileRollMode() == FileRollMode.PATTERN)  {
+        return new MultiFileInfo(
+            globFileInfo,
+            path.toString() + File.separatorChar + Paths.get(globFileInfo.getFileFullPath()).getFileName()
+        );
+      } else {
+        return new MultiFileInfo(
+            globFileInfo,
+            path.toString()
+        );
+      }
     }
 
     public Set<Path> find() throws IOException {
@@ -68,7 +91,9 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     }
 
     public boolean forget(MultiFileInfo multiFileInfo) {
-      return fileFinder.forget(Paths.get(multiFileInfo.getFileFullPath()));
+      return (multiFileInfo.getFileRollMode() == FileRollMode.PATTERN) ?
+          fileFinder.forget(Paths.get(multiFileInfo.getFileFullPath()).getParent()) :
+          fileFinder.forget(Paths.get(multiFileInfo.getFileFullPath()));
     }
 
     @Override
@@ -94,8 +119,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
   private boolean allowForLateDirectoryCreation;
   private Map<Path, MultiFileInfo> nonExistingPaths = new HashMap<Path, MultiFileInfo>();
   private ScheduledExecutorService executor;
-
-  DirectoryPathCreationWatcher directoryWatcher;
+  private DirectoryPathCreationWatcher directoryWatcher;
 
   public GlobFileContextProvider(
       boolean allowForLateDirectoryCreation,
@@ -116,12 +140,14 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
 
     for (MultiFileInfo fileInfo : fileInfos) {
       if (!checkForNonExistingPath(fileInfo)) {
-        if (fileInfo.getFileRollMode() == FileRollMode.PATTERN) {
-          // for periodic pattern roll mode we don't support wildcards
-          fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
-        } else {
-          globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
-        }
+        addToContextOrGlobFileInfo(
+            scanIntervalSecs,
+            charset,
+            maxLineLength,
+            postProcessing,
+            archiveDir,
+            eventPublisher, fileInfo
+        );
       }
     }
 
@@ -142,14 +168,42 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     LOG.debug("Created");
   }
 
-  private boolean checkForNonExistingPath(MultiFileInfo multiFileInfo) {
-    if (allowForLateDirectoryCreation) {
-      Path parentPath = Paths.get(multiFileInfo.getFileFullPath()).getParent();
-      Path pathToSearchFor = parentPath;
-      if (multiFileInfo.getFileRollMode() != FileRollMode.PATTERN) {
-        pathToSearchFor = GlobFilePathUtil.getPivotPath(parentPath);
-      }
-      if (!Files.exists(pathToSearchFor)) {
+  private void addToContextOrGlobFileInfo(
+      int scanIntervalSecs,
+      Charset charset,
+      int maxLineLength,
+      PostProcessingOptions postProcessing,
+      String archiveDir,
+      FileEventPublisher eventPublisher,
+      MultiFileInfo fileInfo
+  ) throws IOException {
+    //Make sure if it is a periodic pattern roll mode and there is no globbing in the parent path
+    //if so add it to globFileInfo
+    if (fileInfo.getFileRollMode() == FileRollMode.PATTERN
+        && !GlobFilePathUtil.hasGlobWildcard(fileInfo.getFileFullPath().replaceAll("\\$\\{"+"PATTERN"+"\\}", "")))
+    {
+      fileContexts.add(
+          new FileContext(
+              fileInfo,
+              charset,
+              maxLineLength,
+              postProcessing,
+              archiveDir,
+              eventPublisher
+          )
+      );
+    } else {
+      globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+    }
+  }
+
+  private boolean checkForNonExistingPath(MultiFileInfo multiFileInfo) throws IOException {
+    Path pathToSearchFor = GlobFilePathUtil.getPivotPath(Paths.get(multiFileInfo.getFileFullPath()).getParent());
+    boolean exists = Files.exists(pathToSearchFor);
+    if (!exists) {
+      if (!allowForLateDirectoryCreation) {
+        throw new IOException(Utils.format("Path does not exist:{}", pathToSearchFor));
+      } else {
         nonExistingPaths.put(pathToSearchFor, multiFileInfo);
         return true;
       }
@@ -162,16 +216,17 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
       Path processingPath;
       while ((processingPath = directoryWatcher.getCompletedPaths().poll()) != null) {
         MultiFileInfo fileInfo = nonExistingPaths.get(processingPath);
-        if (fileInfo.getFileRollMode() != FileRollMode.PATTERN) {
-          Path fileParentPath = Paths.get(fileInfo.getFileFullPath()).getParent();
-          Path pathToSearchFor = GlobFilePathUtil.getPivotPath(fileParentPath);
-          if (processingPath.equals(pathToSearchFor)) {
-            globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
-          }
-        } else {
-          fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
-        }
+        addToContextOrGlobFileInfo(
+            scanIntervalSecs,
+            charset,
+            maxLineLength,
+            postProcessing,
+            archiveDir,
+            eventPublisher,
+            fileInfo
+        );
         nonExistingPaths.remove(processingPath);
+        LOG.debug("Found Path '{}'", processingPath);
       }
     }
   }
@@ -185,8 +240,13 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
       GlobFileInfo globfileInfo = iterator.next();
       Set<Path> found = globfileInfo.find();
       for (Path path : found) {
-        FileContext fileContext = new FileContext(globfileInfo.getFileInfo(path), charset, maxLineLength,
-            postProcessing, archiveDir, eventPublisher);
+        FileContext fileContext = new FileContext(
+            globfileInfo.getFileInfo(path),
+            charset, maxLineLength,
+            postProcessing,
+            archiveDir,
+            eventPublisher
+        );
         fileContexts.add(fileContext);
         fileToGlobFile.put(fileContext, globfileInfo);
         LOG.debug("Found '{}'", fileContext);
@@ -245,7 +305,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
 
     startNewLoop();
   }
-  
+
   @Override
   public void close() {
     LOG.debug("Closed");

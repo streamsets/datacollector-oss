@@ -31,10 +31,10 @@ public final class FileContextProviderUtil {
 
   public static long getLongOffsetFromFileOffset(String fileOffset) {
     String offsetString = fileOffset.split("::")[0];
-    return Long.parseLong(offsetString);
+    return (offsetString.isEmpty())? 0L : Long.parseLong(offsetString);
   }
 
-  public static LiveFile getLiveFileFromFileOffset(String fileOffset) throws IOException {
+  private static LiveFile getLiveFileFromFileOffset(String fileOffset) throws IOException {
     String liveFileSerializedString = fileOffset.split("::")[1];
     return LiveFile.deserialize(liveFileSerializedString).refresh();
   }
@@ -43,6 +43,12 @@ public final class FileContextProviderUtil {
     return getLiveFileFromFileOffset(fileOffset).refresh();
   }
 
+  /**
+   * If passed a valid fileOffsetString, it will return what is the offset lag in the file.
+   * @param fileOffsetString
+   * @return offset lag for the live file.
+   * @throws IOException
+   */
   public static long getOffsetLagForFile(String fileOffsetString) throws IOException {
     long offset = FileContextProviderUtil.getLongOffsetFromFileOffset(fileOffsetString);
     //We are refreshing the live file here because we are going to get the size by using path.

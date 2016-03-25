@@ -22,12 +22,13 @@ package com.streamsets.pipeline.stage.origin.logtail;
 import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.io.MultiFileReader;
+import com.streamsets.pipeline.lib.io.GlobFileContextProvider;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -40,6 +41,8 @@ import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,6 +56,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Date;
@@ -61,11 +65,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileTailSource.class)
+@PrepareForTest({FileTailSource.class, GlobFileContextProvider.class})
 public class TestFileTailSource {
   private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery
+  private final Logger LOGGER = LoggerFactory.getLogger(TestFileTailSource.class);
 
-  @Test
+  @Test(expected = StageException.class)
+  //Non existing directory with conf.validatePath=true (default) will throw exception.
   public void testInitDirDoesNotExist() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
 
@@ -1072,5 +1078,230 @@ public class TestFileTailSource {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testGlobbingForPeriodicRollPattern() throws Exception {
+    final File testDataDir = new File("target", UUID.randomUUID().toString());
+
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    final List<Path> dirPaths = Arrays.asList(
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a1" + File.separatorChar + "b1"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a2" + File.separatorChar + "b2"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a3" + File.separatorChar + "b3"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a4" + File.separatorChar + "b4"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a5" + File.separatorChar + "b5"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a6" + File.separatorChar + "b6")
+    );
+
+    for (int i = 0; i< dirPaths.size(); i++) {
+      Path dirPath = dirPaths.get(i);
+      Files.createDirectories(dirPath);
+      Path filePath1 = Paths.get(dirPath.toString() + File.separatorChar + "file-"+ String.valueOf(i) +".txt");
+      Files.write(
+          filePath1,
+          Arrays.asList("A", "B", "C"),
+          StandardCharsets.UTF_8,
+          StandardOpenOption.CREATE_NEW
+      );
+    }
+
+    FileInfo fileInfo = new FileInfo();
+    //We are looking for testdataDir/*/*/file-[0-9]+.txt
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + File.separatorChar + "*" +
+        File.separatorChar + "*" + File.separatorChar + "file-${PATTERN}.txt";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]+";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
+
+    SourceRunner runner = createRunner(source);
+    try {
+      // run till current end and stop pipeline
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 30);
+      // (6 folders * 1 file * 3 records) = 18 records
+      Assert.assertEquals(18L, output.getRecords().get("lane").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMetricsWithGlobbingAndLateDirectory() throws Exception{
+    final File testDataDir = new File("target", UUID.randomUUID().toString());
+
+    final List<Path> dirPaths = Arrays.asList(
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a1" +
+            File.separatorChar + "const" + File.separatorChar + "b1"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a2" +
+            File.separatorChar + "const" + File.separatorChar + "b2"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a3" +
+            File.separatorChar + "const" + File.separatorChar + "b3"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a4" +
+            File.separatorChar + "const" + File.separatorChar + "b4"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a5" +
+            File.separatorChar + "const" + File.separatorChar + "b5"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a6" +
+            File.separatorChar + "const" + File.separatorChar + "b6"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a7" +
+            File.separatorChar + "const" + File.separatorChar + "b7"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a8" +
+            File.separatorChar + "const" + File.separatorChar + "b8"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a9" +
+            File.separatorChar + "const" + File.separatorChar + "b9"),
+        Paths.get(testDataDir.getAbsolutePath() + File.separatorChar + "a10" +
+            File.separatorChar + "const" + File.separatorChar + "b10")
+    );
+
+    FileInfo fileInfo = new FileInfo();
+    //We are looking for testdataDir/*/const/*/file-[0-9]+.txt
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + File.separatorChar + "*" +
+        File.separatorChar + "const" + File.separatorChar + "*" + File.separatorChar +
+        "file-${PATTERN}.txt";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]+";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 40;
+    conf.maxWaitTimeSecs = 40;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.validatePath=false;
+
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = PowerMockito.spy(new FileTailSource(conf, SCAN_INTERVAL));
+
+    SourceRunner runner = createRunner(source);
+
+    // run till current end and stop pipeline
+    runner.runInit();
+
+    //Late directory(testDataDir) creation
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    for (int i=0; i<dirPaths.size(); i++) {
+      Path dirPath = dirPaths.get(i);
+      Files.createDirectories(dirPath);
+      Path filePath = Paths.get(dirPath.toString() + File.separatorChar + "file-"+ String.valueOf(i) +".txt");
+      Files.write(
+          filePath,
+          Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"), //10 records * 2 bytes = 20 bytes.
+          StandardCharsets.UTF_8,
+          StandardOpenOption.CREATE_NEW
+      );
+    }
+
+    setSleepTimeForFindingPaths(10000L , 2000L);
+
+    try {
+      //We have totally 10(folders) * 1(file) * 10 (records) = 100 records
+      //Also means totally 100 records * 2 bytes = 200 bytes.
+      //We will read only 20 records.
+      //This means the total is (remaining 80 records * 2 bytes) = 160 bytes yet to be read.
+      //including pending files and offsetLag.
+      StageRunner.Output output = runner.runProduce(null, 20);
+      Assert.assertEquals(20L, output.getRecords().get("lane").size());
+      checkPendingAndOffsetLag(source, 160L);
+
+      //All files would have been found, don't need to wait for finding them.
+      setSleepTimeForFindingPaths(0L, 0L);
+
+      //We are gonna read another 40 records and check
+      //If we read 40 more records this means, we will end up reading another 40*2 = 80 bytes
+      //Total remaining bytes to read is 160 - 80 = 80 bytes
+      output = runner.runProduce(output.getNewOffset(), 40);
+      Assert.assertEquals(40L, output.getRecords().get("lane").size());
+      checkPendingAndOffsetLag(source, 80L);
+
+      //We are gonna read 40 records and check
+      //If we read 40 more records this means, we will end up reading another 40*2 = 80 bytes
+      //Total remaining bytes to read is 80 - 80 = 0 bytes.
+      output = runner.runProduce(output.getNewOffset(), 40);
+      Assert.assertEquals(40L, output.getRecords().get("lane").size());
+      checkPendingAndOffsetLag(source, 0L);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private void setSleepTimeForFindingPaths(final long dirFindTime, final long fileFindTime) {
+    PowerMockito.replace(
+        MemberMatcher.method(
+            GlobFileContextProvider.class,
+            "findCreatedDirectories"
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            //Give some time for it to find new directories.
+            Thread.sleep(dirFindTime);
+            //call the real getOffsetsLag private method
+            return method.invoke(proxy, args);
+          }
+        }
+    );
+    PowerMockito.replace(
+        MemberMatcher.method(
+            GlobFileContextProvider.class,
+            "findNewFileContexts"
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            //Give some time for it to find new files.
+            Thread.sleep(fileFindTime);
+            //call the real getOffsetsLag private method
+            return method.invoke(proxy, args);
+          }
+        }
+    );
+  }
+
+  @SuppressWarnings("unchecked")
+  private void checkPendingAndOffsetLag(FileTailSource source, long expectedRemainingBytesToRead) {
+    long totalOffsetLag = 0, totalBytesForPendingFiles = 0;
+    Map<String, Counter> offsetLagMetric = Whitebox.getInternalState(source, "offsetLagMetric");
+    Map<String, Counter> pendingFilesMetric = Whitebox.getInternalState(source, "pendingFilesMetric");
+
+    for (Map.Entry<String, Counter> offsetLagMetricEntry : offsetLagMetric.entrySet()) {
+      LOGGER.info("File Configuration :" + offsetLagMetricEntry.getKey()
+          + " lags by " + offsetLagMetricEntry.getValue().getCount());
+      totalOffsetLag += offsetLagMetricEntry.getValue().getCount();
+    }
+
+    LOGGER.info("Total Lag :" + totalOffsetLag);
+
+    for (Map.Entry<String, Counter> pendingFilesMetricEntry : pendingFilesMetric.entrySet()) {
+      LOGGER.info(
+          "File Configuration :" + pendingFilesMetricEntry.getKey()
+              + " has Pending Files: " + pendingFilesMetricEntry.getValue().getCount()
+      );
+      //Each pending file contributes - 10 records * 2 bytes = 20 bytes each.
+      totalBytesForPendingFiles += (pendingFilesMetricEntry.getValue().getCount() * 10 * 2);
+    }
+
+    LOGGER.info("Total Pending Files Lag :" + totalBytesForPendingFiles);
+
+    Assert.assertEquals(expectedRemainingBytesToRead, totalOffsetLag + totalBytesForPendingFiles);
   }
 }
