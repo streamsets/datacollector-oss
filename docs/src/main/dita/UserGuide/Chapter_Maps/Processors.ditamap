@@ -19,6 +19,14 @@
   <topicref href="../Processors/Processors_overview.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
   </topicref>
+  <topicref href="../Processors/Base64Decoder.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Base64Decoder-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/Base64Encoder.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Base64Encoder-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Expression-OutputField.dita"/>

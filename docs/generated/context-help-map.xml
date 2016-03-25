@@ -71,7 +71,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_1549637728"/>
+               path="Install_Config/CMInstall-Overview.html#unique_1842651206"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -315,6 +315,14 @@
    <appContext helpID="concept_yjl_nc5_jq" path="Processors/Processors_title.html"/>
    <appContext helpID="concept_hpr_twm_jq"
                path="Processors/Processors_overview.html#concept_hpr_twm_jq"/>
+   <appContext helpID="concept_ujj_spy_kv"
+               path="Processors/Base64Decoder.html#concept_ujj_spy_kv"/>
+   <appContext helpID="task_pnn_5py_kv"
+               path="Processors/Base64Decoder.html#task_pnn_5py_kv"/>
+   <appContext helpID="concept_wtr_mpy_kv"
+               path="Processors/Base64Encoder.html#concept_wtr_mpy_kv"/>
+   <appContext helpID="task_ekg_ppy_kv"
+               path="Processors/Base64Encoder.html#task_ekg_ppy_kv"/>
    <appContext helpID="concept_zm2_pp3_wq"
                path="Processors/Expression.html#concept_zm2_pp3_wq"/>
    <appContext helpID="concept_pzk_fz4_yq"
@@ -796,7 +804,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_1460019977"/>
+               path="Troubleshooting/Destinations.html#unique_855786311"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
