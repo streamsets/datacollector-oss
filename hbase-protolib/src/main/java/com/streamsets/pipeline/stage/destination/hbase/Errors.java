@@ -33,15 +33,15 @@ public enum Errors implements ErrorCode {
   HBASE_07("Table name doesn't exist: {}"),
   HBASE_08("Table is not enabled: {}"),
   HBASE_09("Zookeeper root znode cannot be empty "),
-  HBASE_10("Failed writing record '{}': {}"),
+  HBASE_10("Failed writing record: {}"),
   HBASE_11("Cannot parse family and qualifier for record: {} and rowkey: {}"),
-  HBASE_12("Cannot convert type: {} to {} for record: {} "),
+  HBASE_12("Cannot convert type: {} to {}"),
   HBASE_13("Zookeeper client port is invalid: {}"),
   HBASE_14("Invalid row key storage type: {}"),
   HBASE_15("Invalid column storage type: {}"),
   HBASE_16("Hadoop UserGroupInformation should return kerberos authentication, it is set to: {}"),
   HBASE_17("Failed to configure or connect to the HBase cluster: {}"),
-  HBASE_18("HBase column mapping is undefined. There should be atleast one column"),
+  HBASE_18("HBase column mapping should be defined or implicit field mapping should be enabled"),
   HBASE_19("HBase configuration directory '{}' under SDC resources does not exist"),
   HBASE_20("HBase configuration directory '{}' path under  SDC resources is not a directory"),
   HBASE_21("HBase configuration file '{}/{}' under SDC resources is not a file"),
@@ -52,7 +52,12 @@ public enum Errors implements ErrorCode {
   HBASE_24("HBase Configuration Directory '{}' must be relative to SDC resources directory in cluster mode"),
   HBASE_25("Missing column field '{}' in record"),
   HBASE_26("Errors while writing to HBase: '{}'"),
-  HBASE_27("Missing row key field '{}' in record")
+  HBASE_27("Missing row key field '{}' in record"),
+  HBASE_28("Cannot construct HBase column from '{}' as it is not separated by '{}'"),
+  HBASE_29("Record root type: '{}' is not eligible to be inserted in HBase; Root type must be a MAP or LIST_MAP "),
+  HBASE_30("All fields encountered error: '{}'"),
+  HBASE_31("Error converting '{}' to '{}'"),
+  HBASE_32("Column family '{}' doesn't exist for table '{}'")
   ;
   private final String msg;
 

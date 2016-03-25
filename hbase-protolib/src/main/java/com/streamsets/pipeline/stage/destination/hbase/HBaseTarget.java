@@ -31,17 +31,23 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HConstants;
+import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.RetriesExhaustedWithDetailsException;
+import org.apache.hadoop.hbase.client.Row;
+import org.apache.hadoop.hbase.regionserver.NoSuchColumnFamilyException;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -53,16 +59,18 @@ import javax.security.auth.Subject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Set;
 
 public class HBaseTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseTarget.class);
@@ -78,14 +86,17 @@ public class HBaseTarget extends BaseTarget {
   private final String hbaseRowKey;
   private final List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
   private final boolean kerberosAuth;
-  private final SortedMap<String, ColumnInfo> columnMappings = new TreeMap<>();
+  private final Map<String, ColumnInfo> columnMappings = new HashMap<>();
   private final Map<String, String> hbaseConfigs;
   private final StorageType rowKeyStorageType;
   private final String hbaseConfDir;
   private final String hbaseUser;
-
+  private final boolean implicitFieldMapping;
+  private final boolean ignoreMissingFieldPath;
+  private final boolean ignoreInvalidColumn;
   private Configuration hbaseConf;
   private UserGroupInformation loginUgi;
+  private ErrorRecordHandler errorRecordHandler;
 
   public HBaseTarget(
       String zookeeperQuorum,
@@ -98,8 +109,11 @@ public class HBaseTarget extends BaseTarget {
       boolean kerberosAuth,
       String hbaseConfDir,
       Map<String, String> hbaseConfigs,
-      String hbaseUser
-  ) {
+      String hbaseUser,
+      boolean implicitFieldMapping,
+      boolean ignoreMissingFieldPath,
+      boolean ignoreInvalidColumn
+   ) {
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -111,6 +125,9 @@ public class HBaseTarget extends BaseTarget {
     this.rowKeyStorageType = rowKeyStorageType;
     this.hbaseConfDir = hbaseConfDir;
     this.hbaseUser = hbaseUser;
+    this.implicitFieldMapping = implicitFieldMapping;
+    this.ignoreMissingFieldPath = ignoreMissingFieldPath;
+    this.ignoreInvalidColumn = ignoreInvalidColumn;
   }
 
   @Override
@@ -125,18 +142,30 @@ public class HBaseTarget extends BaseTarget {
     }
     validateQuorumConfigs(issues);
     validateSecurityConfigs(issues);
+    HTableDescriptor hTableDescriptor = null;
     if (issues.isEmpty()) {
       hbaseConf.set(HConstants.ZOOKEEPER_QUORUM, this.zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, this.clientPort);
       hbaseConf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, this.zookeeperParentZnode);
-      checkConnectionAndTableExistence(issues, this.tableName);
+      hTableDescriptor = checkConnectionAndTableExistence(issues, this.tableName);
     }
     validateStorageTypes(issues);
     if (issues.isEmpty()) {
+      Collection<byte[]> families = hTableDescriptor.getFamiliesKeys();
       for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
-        columnMappings.put(column.columnName, new ColumnInfo(column.columnValue, column.columnStorageType));
+        HBaseColumn hbaseColumn = getColumn(column.columnName);
+        if (hbaseColumn == null) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_28,
+            column.columnName, KeyValue.COLUMN_FAMILY_DELIMITER));
+        } else if (!families.contains(hbaseColumn.cf)) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_32,
+            column.columnName, this.tableName));
+        } else {
+          columnMappings.put(column.columnValue, new ColumnInfo(hbaseColumn, column.columnStorageType));
+        }
       }
     }
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return issues;
   }
 
@@ -265,21 +294,24 @@ public class HBaseTarget extends BaseTarget {
   }
 
 
-  private void checkConnectionAndTableExistence(final List<ConfigIssue> issues,
+  private HTableDescriptor checkConnectionAndTableExistence(final List<ConfigIssue> issues,
       final String tableName) {
     try {
-      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+      return getUGI().doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
         @Override
-        public Void run() throws Exception {
+        public HTableDescriptor run() throws Exception {
           LOG.debug("Validating connection to hbase cluster and whether table " + tableName + " exists and is enabled");
           HBaseAdmin hbaseAdmin = null;
+          HTableDescriptor hTableDescriptor = null;
           try {
             HBaseAdmin.checkHBaseAvailable(hbaseConf);
             hbaseAdmin = new HBaseAdmin(hbaseConf);
             if (!hbaseAdmin.tableExists(tableName)) {
-              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_07, tableName));
+              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_07, tableName));
             } else if (!hbaseAdmin.isTableEnabled(tableName)) {
-              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_08, tableName));
+              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_08, tableName));
+            } else {
+              hTableDescriptor = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName));
             }
           } catch (Exception ex) {
             LOG.warn("Received exception while connecting to cluster: ", ex);
@@ -289,7 +321,7 @@ public class HBaseTarget extends BaseTarget {
               hbaseAdmin.close();
             }
           }
-          return null;
+          return hTableDescriptor;
         }
       });
     } catch (Exception e) {
@@ -308,52 +340,140 @@ public class HBaseTarget extends BaseTarget {
         Errors.HBASE_14, rowKeyStorageType));
     }
 
-    if (hbaseFieldColumnMapping == null || hbaseFieldColumnMapping.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping",
-        Errors.HBASE_18));
-    } else {
+    if (!hbaseFieldColumnMapping.isEmpty()) {
       for (HBaseFieldMappingConfig hbaseFieldMappingConfig : hbaseFieldColumnMapping) {
         switch (hbaseFieldMappingConfig.columnStorageType) {
-        case BINARY:
-        case JSON_STRING:
-        case TEXT:
-          break;
-        default:
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "columnStorageType",
-            Errors.HBASE_15, hbaseFieldMappingConfig.columnStorageType));
+          case BINARY:
+          case JSON_STRING:
+          case TEXT:
+            break;
+          default:
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "columnStorageType", Errors.HBASE_15,
+              hbaseFieldMappingConfig.columnStorageType));
+        }
+      }
+    } else if (!implicitFieldMapping) {
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_18));
+    }
+  }
+
+  private HBaseColumn getColumn(String column) {
+    byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
+    byte[] cf = null;
+    byte[] qualifier = null;
+    if (parts.length == 2) {
+      cf = parts[0];
+      qualifier = parts[1];
+      return new HBaseColumn(cf, qualifier);
+    } else {
+      return null;
+    }
+  }
+
+  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException {
+    Put p = new Put(rowKeyBytes);
+    StringBuilder errorMsgBuilder = new StringBuilder();
+    doExplicitFieldMapping(p, record, errorMsgBuilder);
+    if (implicitFieldMapping) {
+      doImplicitFieldMapping(p, record, errorMsgBuilder, columnMappings.keySet());
+    }
+    if (p.isEmpty()) { // no columns in the Put; throw exception will all messages
+      throw new OnRecordErrorException(record, Errors.HBASE_30,  errorMsgBuilder.toString());
+    }
+    return p;
+  }
+
+  private void doExplicitFieldMapping(Put p, Record record, StringBuilder errorBuilder) throws OnRecordErrorException {
+    for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
+      HBaseColumn hbaseColumn = mapEntry.getValue().hbaseColumn;
+      byte[] value = getBytesForValue(record, mapEntry.getKey(), mapEntry.getValue().storageType, errorBuilder);
+      if (value != null) {
+        p.add(hbaseColumn.cf, hbaseColumn.qualifier, value);
+      }
+    }
+  }
+
+  private void validateRootLevelType(Record record) throws OnRecordErrorException {
+    for (String fieldPath : record.getEscapedFieldPaths()) {
+      if (fieldPath.isEmpty()) {
+        Type type = record.get(fieldPath).getType();
+        if (type != Type.MAP && type != Type.LIST_MAP) {
+          throw new OnRecordErrorException(record, Errors.HBASE_29, type);
+        }
+        break;
+      }
+    }
+  }
+
+  private void doImplicitFieldMapping(Put p, Record record, StringBuilder errorMsgBuilder, Set<String> explicitFields)
+    throws OnRecordErrorException {
+    validateRootLevelType(record);
+    for (String fieldPath : record.getEscapedFieldPaths()) {
+      if (fieldPath.isEmpty() || fieldPath.equals(this.hbaseRowKey) || explicitFields.contains(fieldPath)) {
+        // ignore
+      } else {
+        String fieldPathColumn = fieldPath;
+        if (fieldPath.charAt(0) == '/') {
+          fieldPathColumn = fieldPath.substring(1);
+        }
+        HBaseColumn hbaseColumn = getColumn(fieldPathColumn.replace("'", ""));
+        if (hbaseColumn != null) {
+          byte[] value = getValueImplicitTypeMapping(record, fieldPath);
+          p.add(hbaseColumn.cf, hbaseColumn.qualifier, value);
+        } else {
+          if (ignoreInvalidColumn) {
+            String errorMessage = Utils.format(Errors.HBASE_28.getMessage(), fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
+            LOG.warn(errorMessage);
+            errorMsgBuilder.append(errorMessage);
+          } else {
+            throw new OnRecordErrorException(record, Errors.HBASE_28, fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
+          }
         }
       }
     }
   }
 
-  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException, StageException {
-    Put p = new Put(rowKeyBytes);
-    for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
-      // Parse the column in column family and qualifier
-      byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(mapEntry.getKey()));
-      byte[] cf;
-      byte[] qualifier;
-      if (parts.length == 1) {
-        cf = parts[0];
-        // empty qualifier is ok
-        qualifier = Bytes.toBytes(StringUtils.EMPTY);
-      } else if (parts.length == 2) {
-        cf = parts[0];
-        qualifier = parts[1];
-      } else {
-        throw new OnRecordErrorException(Errors.HBASE_11, record, mapEntry.getKey());
-      }
-      byte[] value = getBytesForValue(record, mapEntry.getValue());
-      p.add(cf, qualifier, value);
+  private byte[] getValueImplicitTypeMapping(Record record, String fieldPath) throws OnRecordErrorException {
+    Field field = record.get(fieldPath);
+    byte[] value;
+    switch (field.getType()) {
+      case BYTE_ARRAY:
+        value = field.getValueAsByteArray();
+        break;
+      case BOOLEAN:
+      case BYTE:
+      case CHAR:
+      case DATE:
+      case DATETIME:
+      case DECIMAL:
+      case DOUBLE:
+      case FLOAT:
+      case INTEGER:
+      case LONG:
+      case SHORT:
+      case STRING:
+        value = Bytes.toBytes(field.getValueAsString());
+        break;
+      case LIST:
+      case LIST_MAP:
+      case MAP:
+        try {
+          value = JsonUtil.jsonRecordToBytes(record, field);
+        } catch (StageException se) {
+          throw new OnRecordErrorException(record, Errors.HBASE_31, field.getType(), StorageType.JSON_STRING.getLabel(), se);
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("This shouldn't happen: " + "Conversion not defined for " + field.getType());
     }
-    return p;
+    return value;
   }
 
   private byte[] getBytesForRowKey(Record record) throws OnRecordErrorException {
     byte[] value;
     Field field = record.get(this.hbaseRowKey);
     if (field == null) {
-      throw new OnRecordErrorException(Errors.HBASE_27, this.hbaseRowKey);
+      throw new OnRecordErrorException(record, Errors.HBASE_27, this.hbaseRowKey);
     }
     if (rowKeyStorageType == StorageType.TEXT) {
       value = Bytes.toBytes(field.getValueAsString());
@@ -402,38 +522,32 @@ public class HBaseTarget extends BaseTarget {
         try {
           byte[] rowKeyBytes = getBytesForRowKey(record);
           // Map hbase rows to sdc records.
-          rowKeyToRecord.put(Bytes.toString(rowKeyBytes), record);
           Put p = getHBasePut(record, rowKeyBytes);
+          rowKeyToRecord.put(Bytes.toString(rowKeyBytes), record);
           try {
             // HTable internally keeps a buffer, a put() will keep on buffering till the buffer
             // limit is reached
             // Once it hits the buffer limit or autoflush is set to true, commit will happen
             hTable.put(p);
-          } catch (Exception ex) {
-            throw new StageException(Errors.HBASE_02, ex);
+          } catch (RetriesExhaustedWithDetailsException rex) {
+            // There may be more than one row which failed to persist
+            handleNoColumnFamilyException(rex, record, null);
           }
         } catch (OnRecordErrorException ex) {
           LOG.debug("Got exception while writing to HBase", ex);
-          switch (getContext().getOnErrorRecord()) {
-            case DISCARD:
-              break;
-            case TO_ERROR:
-              getContext().toError(record, ex);
-              break;
-            case STOP_PIPELINE:
-              throw ex;
-            default:
-              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext()
-                .getOnErrorRecord(), ex));
-          }
+          errorRecordHandler.onError(ex);
         }
       }
       // This will flush the internal buffer
       hTable.flushCommits();
-    } catch (Exception ex) {
+    } catch (RetriesExhaustedWithDetailsException rex) {
+      LOG.debug("Got exception while flushing commits to HBase", rex);
+      handleNoColumnFamilyException(rex, null, rowKeyToRecord);
+    } catch (IOException ex) {
       LOG.debug("Got exception while flushing commits to HBase", ex);
       throw new StageException(Errors.HBASE_02, ex);
-    } finally {
+    }
+    finally {
       try {
         if (hTable != null) {
           hTable.close();
@@ -444,24 +558,61 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private byte[] getBytesForValue(Record record, ColumnInfo columnInfo) throws OnRecordErrorException, StageException {
+  private void handleNoColumnFamilyException(
+    RetriesExhaustedWithDetailsException rex,
+    Record record,
+    Map<String, Record> rowKeyToRecord) throws StageException {
+    for (int i = 0; i < rex.getNumExceptions(); i++) {
+      if (rex.getCause(i) instanceof NoSuchColumnFamilyException) {
+        Row r = rex.getRow(i);
+        Record errorRecord = record != null ? record : rowKeyToRecord.get(Bytes.toString(r.getRow()));
+        OnRecordErrorException exception =
+          new OnRecordErrorException(errorRecord, Errors.HBASE_10,
+            getErrorDescription(rex.getCause(i), r, rex.getHostnamePort(i)));
+        errorRecordHandler.onError(exception);
+      } else {
+        // If at least 1 non NoSuchColumnFamilyException exception,
+        // consider as stage exception
+        throw new StageException(Errors.HBASE_02, rex);
+      }
+    }
+  }
+
+  private byte[] getBytesForValue(Record record, String fieldPath, StorageType columnStorageType, StringBuilder errorMsgBuilder) throws OnRecordErrorException {
     byte[] value;
-    String index = columnInfo.columnValue;
-    StorageType columnStorageType = columnInfo.storageType;
-    Field field = record.get(index);
+    Field field = record.get(fieldPath);
     if (field == null) {
-      throw new OnRecordErrorException(Errors.HBASE_25, index);
+      if (!ignoreMissingFieldPath) {
+        throw new OnRecordErrorException(record, Errors.HBASE_25, fieldPath);
+      } else {
+        String errorMessage = Utils.format(Errors.HBASE_25.getMessage(), fieldPath);
+        LOG.warn(errorMessage);
+        errorMsgBuilder.append(errorMessage);
+        return null;
+      }
     }
     // Figure the storage type and convert appropriately
     if (columnStorageType == (StorageType.TEXT)) {
-      value = Bytes.toBytes(field.getValueAsString());
+      if (field.getType() == Type.BYTE_ARRAY
+        || field.getType() == Type.MAP
+        || field.getType() == Type.LIST_MAP
+        || field.getType() == Type.LIST) {
+        throw new OnRecordErrorException(record, Errors.HBASE_12, field.getType(),
+          StorageType.TEXT.name());
+      } else {
+        value = Bytes.toBytes(field.getValueAsString());
+      }
     } else if (columnStorageType == StorageType.JSON_STRING) {
       // only map and list can be converted to json string
       if (field.getType() == Type.MAP || field.getType() == Type.LIST || field.getType() == Type.LIST_MAP) {
-        value = JsonUtil.jsonRecordToBytes(record, field);
+        try {
+          value = JsonUtil.jsonRecordToBytes(record, field);
+        } catch (StageException se) {
+          throw new OnRecordErrorException(record, Errors.HBASE_31, field.getType(), StorageType.JSON_STRING.getLabel(), se);
+        }
       } else {
-        throw new OnRecordErrorException(Errors.HBASE_12, field.getType(),
-            StorageType.JSON_STRING.name(), record);
+        throw new OnRecordErrorException(record, Errors.HBASE_12, field.getType(),
+            StorageType.JSON_STRING.name());
       }
     } else {
       value = convertToBinary(field, record);
@@ -485,11 +636,11 @@ public class HBaseTarget extends BaseTarget {
       value = Bytes.toBytes(field.getValueAsChar());
       break;
     case DATE:
-      throw new OnRecordErrorException(Errors.HBASE_12, Type.DATE.name(),
-          StorageType.BINARY.name(), record);
+      throw new OnRecordErrorException(record, Errors.HBASE_12, Type.DATE.name(),
+          StorageType.BINARY.name());
     case DATETIME:
-      throw new OnRecordErrorException(Errors.HBASE_12, Type.DATETIME.name(),
-          StorageType.BINARY.name(), record);
+      throw new OnRecordErrorException(record, Errors.HBASE_12, Type.DATETIME.name(),
+          StorageType.BINARY.name());
     case DECIMAL:
       value = Bytes.toBytes(field.getValueAsDecimal());
       break;
@@ -503,11 +654,11 @@ public class HBaseTarget extends BaseTarget {
       value = Bytes.toBytes(field.getValueAsInteger());
       break;
     case LIST:
-      throw new OnRecordErrorException(Errors.HBASE_12, Type.LIST.name(),
-          StorageType.BINARY.name(), record);
+      throw new OnRecordErrorException(record, Errors.HBASE_12, Type.LIST.name(),
+          StorageType.BINARY.name());
     case LIST_MAP:
-      throw new OnRecordErrorException(Errors.HBASE_12, Type.LIST_MAP.name(),
-          StorageType.BINARY.name(), record);
+      throw new OnRecordErrorException(record, Errors.HBASE_12, Type.LIST_MAP.name(),
+          StorageType.BINARY.name());
     case LONG:
       value = Bytes.toBytes(field.getValueAsLong());
       break;
@@ -518,8 +669,8 @@ public class HBaseTarget extends BaseTarget {
       value = Bytes.toBytes(field.getValueAsShort());
       break;
     case STRING:
-      throw new OnRecordErrorException(Errors.HBASE_12, Type.STRING.name(),
-          StorageType.BINARY.name(), record);
+      throw new OnRecordErrorException(record, Errors.HBASE_12, Type.STRING.name(),
+          StorageType.BINARY.name());
     default:
       throw new RuntimeException("This shouldn't happen: " + "Conversion not defined for "
           + field.toString());
@@ -532,14 +683,35 @@ public class HBaseTarget extends BaseTarget {
     return hbaseConf;
   }
 
-  private static class ColumnInfo {
-    private ColumnInfo(String columnValue, StorageType hbaseStorageType) {
-      this.columnValue = columnValue;
-      this.storageType = hbaseStorageType;
-    }
+ private static String getErrorDescription(Throwable t, Row row, String server) {
+   StringWriter errorWriter = new StringWriter();
+   PrintWriter pw = new PrintWriter(errorWriter);
+   pw.append("Exception from " + server + " for " + Bytes.toStringBinary(row.getRow()));
+   if (t != null) {
+     pw.println();
+     t.printStackTrace(pw);
+   }
+   pw.flush();
+   return errorWriter.toString();
+ }
 
-    private final String columnValue;
-    private final StorageType storageType;
+ private static class HBaseColumn {
+    private byte[] cf;
+    private byte[] qualifier;
+
+    public HBaseColumn(byte[] cf, byte[] qualifier) {
+      this.cf = cf;
+      this.qualifier = qualifier;
+    }
   }
 
+  private static class ColumnInfo {
+    private final HBaseColumn hbaseColumn;
+    private final StorageType storageType;
+
+    private ColumnInfo(HBaseColumn hbaseColumn, StorageType hbaseStorageType) {
+      this.hbaseColumn = hbaseColumn;
+      this.storageType = hbaseStorageType;
+    }
+  }
 }

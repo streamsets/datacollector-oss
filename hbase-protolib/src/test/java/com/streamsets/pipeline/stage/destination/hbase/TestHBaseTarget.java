@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,6 +64,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Field.Type;
@@ -128,6 +130,9 @@ public class TestHBaseTarget {
             .addConfiguration("hbaseUser", "")
             .addConfiguration("hbaseConfDir", "")
             .addConfiguration("rowKeyStorageType", StorageType.BINARY)
+            .addConfiguration("implicitFieldMapping", false)
+            .addConfiguration("ignoreMissingFieldPath", false)
+            .addConfiguration("ignoreInvalidColumn", false)
             .setOnRecordError(OnRecordError.DISCARD).build();
     assertTrue(targetRunner.runValidateConfigs().isEmpty());
   }
@@ -205,7 +210,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
-    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "");
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -233,6 +238,205 @@ public class TestHBaseTarget {
 
   }
 
+  @Test(timeout = 600000)
+  public void testOnlyImplicitFieldMapping() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testOnlyImplicitFieldMapping";
+    TargetRunner targetRunner =
+      buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, false);
+    Record record = RecordCreator.create();
+    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
+    map.put("cf:a", Field.create("value_a"));
+    map.put("cf:b", Field.create("value_b"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    Field mapField = Field.createListMap(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertEquals("value_a", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+  }
+
+  @Test(timeout = 60000)
+  public void testFieldMappings() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testFieldMappings";
+    List<HBaseFieldMappingConfig> fieldMappings =
+      ImmutableList.of(new HBaseFieldMappingConfig("cf:explicit", "/explicit", StorageType.TEXT));
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, false);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("cf:a", Field.create("value_a"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    map.put("cf:b", Field.create("value_b"));
+    map.put("explicit", Field.create("explicitValue"));
+    Field mapField = Field.create(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+
+    HTable htable = new HTable(conf, tableName);
+
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertEquals("value_a", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+    assertEquals("explicitValue", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("explicit"))));
+  }
+
+  @Test(timeout = 60000)
+  public void testFieldMappingIgnoreInvalidColumn() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testFieldMappingIgnoreOnError";
+    List<HBaseFieldMappingConfig> fieldMappings =
+      ImmutableList.of(new HBaseFieldMappingConfig("cf:explicit", "/explicit", StorageType.TEXT));
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, true);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    Map<String, Field> dummyInnerMap = new HashMap<>();
+    dummyInnerMap.put("f1", Field.create("abc"));
+    // some invalid fieldpath as it cannot be mapped to column
+    map.put("mymap", Field.create(dummyInnerMap));
+    map.put("cf:a", Field.create("value_a"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    map.put("cf:b", Field.create("value_b"));
+    // some invalid fieldpath as it cannot be mapped to column
+    map.put("dummy", Field.create("value_b"));
+    map.put("explicit", Field.create("explicitValue"));
+    Field mapField = Field.create(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+
+    HTable htable = new HTable(conf, tableName);
+
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertEquals("value_a", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+    assertEquals("explicitValue", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("explicit"))));
+  }
+
+  @Test(timeout = 60000)
+  public void testFieldMappingNotIgnoreInvalidColumn() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testAllFieldMappingError";
+    List<HBaseFieldMappingConfig> fieldMappings =
+      ImmutableList.of(new HBaseFieldMappingConfig("cf:explicit", "/explicit", StorageType.TEXT));
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    Map<String, Field> dummyInnerMap = new HashMap<>();
+    dummyInnerMap.put("f1", Field.create("abc"));
+    map.put("mymap", Field.create(dummyInnerMap));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    map.put("dummy", Field.create("value_b"));
+    Field mapField = Field.create(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    assertEquals(1, targetRunner.getErrorRecords().size());
+    assertEquals(record.getHeader().getSourceId(), targetRunner.getErrorRecords().get(0).getHeader().getSourceId());
+    assertTrue(targetRunner.getErrors().isEmpty());
+    targetRunner.runDestroy();
+
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertTrue(r.isEmpty());
+
+  }
+
+  @Test
+  public void testWriteWrongColumn() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testWriteWrongColumn";
+    TargetRunner targetRunner = buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("invalidcf:a", Field.create("value_a"));
+    map.put("cf:b", Field.create("value_b"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    record.set(Field.create(map));
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    assertEquals(1, targetRunner.getErrorRecords().size());
+    assertEquals(record.getHeader().getSourceId(), targetRunner.getErrorRecords().get(0).getHeader().getSourceId());
+    assertTrue(targetRunner.getErrors().isEmpty());
+    targetRunner.runDestroy();
+
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertTrue(r.isEmpty());
+
+  }
+
+  @Test(timeout = 60000)
+  public void testNotFlatMap() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testNotFlatMapError";
+    TargetRunner targetRunner =
+      buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, false);
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("cf:a", Field.create("value_a"));
+    map.put("cf:b", Field.create("value_b"));
+    map.put("cf:c", Field.create(ImmutableMap.of("key_1", Field.create(60), "key_2", Field.create(70))));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    Field mapField = Field.create(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertTrue(!r.isEmpty());
+    assertEquals("value_a", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+    Field field = JsonUtil.bytesToField(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c")));
+    assertTrue(field.getType() == Type.MAP);
+    map = field.getValueAsMap();
+    assertEquals(60, map.get("key_1").getValueAsInteger());
+    assertEquals(70, map.get("key_2").getValueAsInteger());
+  }
+
+  @Test(timeout = 60000)
+  public void testNotMapError() throws Exception {
+    String rowKey = "testNotMapError";
+    TargetRunner targetRunner =
+      buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT, OnRecordError.TO_ERROR, "", true, "[0]", false, true);
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<Field>();
+    fields.add(Field.create(rowKey));
+    fields.add(Field.create("20"));
+    record.set(Field.create(fields));
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    assertEquals(1, targetRunner.getErrorRecords().size());
+    assertEquals(record.getHeader().getSourceId(), targetRunner.getErrorRecords().get(0).getHeader().getSourceId());
+    assertTrue(targetRunner.getErrors().isEmpty());
+    targetRunner.runDestroy();
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    assertTrue(r.isEmpty());
+  }
+
   @Test(timeout=60000)
   public void testSingleRecordBinaryStorage() throws InterruptedException, StageException,
       IOException {
@@ -243,7 +447,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -285,7 +489,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "", false, "[0]", false, false);
 
     // Add two records
     Record record = RecordCreator.create();
@@ -345,7 +549,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.JSON_STRING));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -396,7 +600,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.DISCARD, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -435,7 +639,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -474,7 +678,7 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.STOP_PIPELINE, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.STOP_PIPELINE, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -505,10 +709,11 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "");
+        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
+
     int rowKey = 3333;
     // / Invalid record
     fields.add(Field.create(rowKey));
@@ -553,45 +758,24 @@ public class TestHBaseTarget {
     assertEquals("90", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
   }
 
-  @Test(timeout=60000)
-  public void testWriteRecordsWrongColumn() throws InterruptedException, StageException,
-      IOException {
+  @Test(timeout = 60000)
+  public void testInvalidColumnFamily() throws Exception {
     List<HBaseFieldMappingConfig> fieldMappings =
-        ImmutableList.of(new HBaseFieldMappingConfig("invalid_cf:a", "[1]", StorageType.BINARY),
-          new HBaseFieldMappingConfig("cf:b", "[2]", StorageType.BINARY),
-          new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
-          new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
-
+      ImmutableList.of(new HBaseFieldMappingConfig("invalid_cf:a", "[1]", StorageType.BINARY), new HBaseFieldMappingConfig(
+        "cf:b", "[2]", StorageType.BINARY));
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "");
-
-    Record record = RecordCreator.create();
-    List<Field> fields = new ArrayList<>();
-    int rowKey = 123;
-    fields.add(Field.create(rowKey));
-    fields.add(Field.create(20));
-    fields.add(Field.create(30));
-    fields.add(Field.create(40));
-    fields.add(Field.create(50));
-    record.set(Field.create(fields));
-
-    List<Record> singleRecord = ImmutableList.of(record);
-    targetRunner.runInit();
-    try {
-      targetRunner.runWrite(singleRecord);
-      fail("Expected StageException but didn't get any");
-    } catch (StageException e) {
-      assertEquals(Errors.HBASE_26, e.getErrorCode());
-    } catch (Exception e) {
-
-    }
+      buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", false, "[0]", false, false);
+    List<ConfigIssue> configIssues = targetRunner.runValidateConfigs();
+    assertEquals(1, configIssues.size());
+    assertTrue(configIssues.get(0).toString().contains(Errors.HBASE_32.getCode()));
   }
 
   static class ForTestHBaseTarget extends HBaseDTarget {
     @Override
     protected Target createTarget() {
       return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser) {
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
+        ignoreMissingFieldPath, ignoreInvalidColumn) {
         @Override
         public void write(Batch batch) throws StageException {
         }
@@ -654,19 +838,23 @@ public class TestHBaseTarget {
   }
 
   private TargetRunner buildRunner(List<HBaseFieldMappingConfig> fieldMappings,
-      StorageType storageType, OnRecordError onRecordError, String hbaseUser) {
+      StorageType storageType, OnRecordError onRecordError, String hbaseUser, boolean implicitFieldMapping, String hbaseRowKey, boolean ignoreMissingFieldPath, boolean ignoreInvalidColumn) {
     TargetRunner targetRunner =
         new TargetRunner.Builder(HBaseDTarget.class)
             .addConfiguration("zookeeperQuorum", "127.0.0.1")
             .addConfiguration("clientPort", miniZK.getClientPort())
             .addConfiguration("zookeeperParentZnode", "/hbase")
-            .addConfiguration("tableName", tableName).addConfiguration("hbaseRowKey", "[0]")
+            .addConfiguration("tableName", tableName)
+            .addConfiguration("hbaseRowKey", hbaseRowKey)
             .addConfiguration("hbaseFieldColumnMapping", fieldMappings)
             .addConfiguration("kerberosAuth", false)
             .addConfiguration("hbaseConfDir", "")
             .addConfiguration("hbaseConfigs", new HashMap<String, String>())
+            .addConfiguration("implicitFieldMapping", implicitFieldMapping)
             .addConfiguration("rowKeyStorageType", storageType).setOnRecordError(onRecordError)
             .addConfiguration("hbaseUser", hbaseUser)
+            .addConfiguration("ignoreMissingFieldPath", ignoreMissingFieldPath)
+            .addConfiguration("ignoreInvalidColumn", ignoreInvalidColumn)
             .build();
     return targetRunner;
   }
@@ -678,12 +866,12 @@ public class TestHBaseTarget {
         new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
         new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
-    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, user);
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, user, false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
-    String rowKey = "row_key";
-    fields.add(Field.create(rowKey));
+    String rowkey = "row_key";
+    fields.add(Field.create(rowkey));
     fields.add(Field.create(20));
     fields.add(Field.create(30));
     fields.add(Field.create(40));
@@ -695,7 +883,7 @@ public class TestHBaseTarget {
     targetRunner.runWrite(singleRecord);
     targetRunner.runDestroy();
     HTable htable = new HTable(conf, tableName);
-    Get g = new Get(Bytes.toBytes(rowKey));
+    Get g = new Get(Bytes.toBytes(rowkey));
     Result r = htable.get(g);
     assertEquals("20", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
     assertEquals("30", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
@@ -733,6 +921,9 @@ public class TestHBaseTarget {
         .addConfiguration("hbaseUser", "")
         .addConfiguration("hbaseConfDir", dir.getAbsolutePath())
         .addConfiguration("rowKeyStorageType", StorageType.BINARY)
+        .addConfiguration("implicitFieldMapping", false)
+        .addConfiguration("ignoreMissingFieldPath", false)
+        .addConfiguration("ignoreInvalidColumn", false)
       .setOnRecordError(OnRecordError.DISCARD)
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH).build();
 

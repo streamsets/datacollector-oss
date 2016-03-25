@@ -107,7 +107,7 @@ public class HBaseDTarget extends DTarget {
   @ValueChooserModel(RowKeyStorageTypeChooserValues.class)
   public StorageType rowKeyStorageType;
 
-  @ConfigDef(required = true,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Fields",
@@ -117,11 +117,43 @@ public class HBaseDTarget extends DTarget {
   @ListBeanModel
   public List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
 
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Ignore Missing Field Path",
+    description = "If set, when a mapped field path is not present in the record then it will not be "
+      + "treated as error record",
+    displayPosition = 80,
+    group = "HBASE")
+  public boolean ignoreMissingFieldPath;
+
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Implicit field mapping",
+    description = "If set, field paths will be implicitly mapped to HBase columns; " + "E.g record field cf:a will be inserted"
+      + " in the given HBase table with column family 'cf' and qualifier 'a'",
+    displayPosition = 90,
+    group = "HBASE")
+  public boolean implicitFieldMapping;
+
+  @ConfigDef(required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Ignore Invalid Column",
+    description = "If enabled, field paths that cannot be mapped to column (column family ':' qualifier) will"
+      + " be ignored ",
+    dependsOn = "implicitFieldMapping",
+    triggeredByValue = "true",
+    displayPosition = 100,
+    group = "HBASE")
+  public boolean ignoreInvalidColumn;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Kerberos Authentication",
-      displayPosition = 80,
+      displayPosition = 110,
       group = "HBASE")
   public boolean kerberosAuth;
 
@@ -131,7 +163,7 @@ public class HBaseDTarget extends DTarget {
     label = "HBase User",
     description = "If set, the data collector will write to HBase as this user. " +
                   "The data collector user must be configured as a proxy user in HDFS.",
-    displayPosition = 90,
+    displayPosition = 120,
     group = "HBASE"
   )
   public String hbaseUser;
@@ -142,7 +174,7 @@ public class HBaseDTarget extends DTarget {
     defaultValue = "",
     label = "HBase Configuration Directory",
     description = "An absolute path or a directory under SDC resources directory to load hbase-site.xml configuration file",
-    displayPosition = 100,
+    displayPosition = 130,
     group = "HBASE")
   public String hbaseConfDir;
 
@@ -150,14 +182,15 @@ public class HBaseDTarget extends DTarget {
       type = ConfigDef.Type.MAP,
       label = "HBase Configuration",
       description = "Additional HBase client properties",
-      displayPosition = 110,
+      displayPosition = 140,
       group = "HBASE")
   public Map<String, String> hbaseConfigs;
 
   @Override
   protected Target createTarget() {
     return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser);
+        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
+        ignoreMissingFieldPath, ignoreInvalidColumn);
 
   }
 
