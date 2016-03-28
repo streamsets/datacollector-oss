@@ -23,26 +23,19 @@
     mode</indexterm></indexterm><indexterm>processing modes<indexterm>JavaScript
      Evaluator</indexterm></indexterm>The JavaScript Evaluator provides the following processing
    modes: </p>
-  <draft-comment author="alisontaylor">port changes over to Jython Processing Mode and Groovy Processing Mode</draft-comment>
   <p>
    <dl>
-    <dlentry>
-     <dt>Record by Record</dt>
-     <dd>The processor calls the script for each record. The processor passes the record to the
-      script as a map and processes each record individually. </dd>
-     <dd>The script does not require error handling logic. Error records are passed to the processor
-      for error handling. The processor handles error records based on the On Record Error
-      property.</dd>
-     <dd>Use this mode to avoid including error handling logic in the code. Since this mode calls
-      the script for each record, pipeline performance will be negatively affected. </dd>
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ProcessMode-RbyR">
+     <dt/>
+     <dd/>
     </dlentry>
     <dlentry>
      <dt>Batch by Batch</dt>
      <dd>The processor calls the script for each batch. The processor passes the batch to the script
       as an array and processes the batch at one time. </dd>
-     <dd>Include error handling logic in the script. Without custom error handling logic, a single
-      error record sends the entire batch to the processor for error handling. The processor handles
-      error records based on the On Record Error property.</dd>
+     <dd>Include error handling logic in the script. Without error handling logic, a single error
+      record sends the entire batch to the processor for error handling. The processor handles error
+      records based on the On Record Error property.</dd>
      <dd>Use this mode to improve performance by processing a batch of data at a time.</dd>
     </dlentry>
    </dl>

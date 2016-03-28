@@ -398,6 +398,98 @@
                   </dl>
             </p>
             <p>
+                  <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
+                  <draft-comment author="Loretta">Scripting processors - <uicontrol>P-DL-ProcessMode
+                        </uicontrol> - Groovy and Jython use the whole DL. JavaScript uses Record by
+                        Record only (<uicontrol>P-ProcessMode-RbyR</uicontrol>).</draft-comment>
+            </p>
+            <p>
+                  <dl id="P-DL-ProcessMode">
+                        <dlentry id="P-ProcessMode-RbyR">
+                              <dt>Record by Record</dt>
+                              <dd>The processor calls the script for each record. The processor
+                                    passes the record to the script as a map and processes each
+                                    record individually. </dd>
+                              <dd>The script does not require error handling logic. Error records
+                                    are passed to the processor for error handling. The processor
+                                    handles error records based on the On Record Error
+                                    property.</dd>
+                              <dd>Use this mode to avoid including error handling logic in the code.
+                                    Since this mode calls the script for each record, pipeline
+                                    performance will be negatively affected. </dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Batch by Batch</dt>
+                              <dd>The processor calls the script for each batch. The processor
+                                    passes the batch to the script as a list and processes the batch
+                                    at one time. </dd>
+                              <dd>Include error handling logic in the script. Without error handling
+                                    logic, a single error record sends the entire batch to the
+                                    processor for error handling. The processor handles error
+                                    records based on the On Record Error property.</dd>
+                              <dd>Use this mode to improve performance by processing a batch of data
+                                    at a time.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>P-DL-ScriptObjects</uicontrol> -
+                        Groovy, JavaScript, Jython Processor scripting objects. All three use these,
+                        and they each have their own Record object versions:</draft-comment>
+            </p>
+            <p>
+                  <dl id="P-DL-ScriptObjects">
+                        <dlentry>
+                              <dt>state</dt>
+                              <dd>An object to store information between invocations of this script.
+                                    A state is a map object that includes a collection of key/value
+                                    pairs. You can use the state object to cache data such as
+                                    lookups or counters.</dd>
+                              <dd>The state object functions much like an instance variable: <ul
+                                          id="ul_bh4_1yr_kv">
+                                          <li>You need to populate the object - it has no default
+                                                value.</li>
+                                          <li>The information is transient and is lost when the
+                                                pipeline stops or restarts.</li>
+                                          <li>The state object is available only for the instance of
+                                                the processor stage it is defined in. If the
+                                                pipeline executes in cluster mode, the state object
+                                                is not shared across nodes.</li>
+                                    </ul></dd>
+                              <dd>
+                                    <note type="warning">The state object is best used for a fixed
+                                          or static set of data. Adding to the cache on every record
+                                          or batch can quickly consume the memory allocated to <ph
+                                                conref="#concept_vhs_5tz_xp/pName-long"/> and cause
+                                          out of memory exceptions. </note>
+                              </dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>log</dt>
+                              <dd>An object to write messages to the log. Includes four methods:
+                                          <codeph>info()</codeph>, <codeph>warn()</codeph>,
+                                          <codeph>debug()</codeph>, and <codeph>trace()</codeph>. </dd>
+                              <dd>The signature of the four methods is as follows:
+                                    <codeblock>(message-template, arguments…) </codeblock>The
+                                    message template can have positional variables denoted by curly
+                                    brackets: { }. The arguments are replaced in the message
+                                    template curly brackets in positional manner, i.e., this is the
+                                    first argument in the first { } occurrence, and so on.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>output</dt>
+                              <dd>An object that writes the record to the output batch. Includes a
+                                          <codeph>write(Record)</codeph> method.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>error</dt>
+                              <dd>An object that passes error records to the processor for error
+                                    handling. Includes a <codeph>write(Record, message)</codeph>
+                                    method.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
                         They also have additional data formats specific to each destination. Hadoop
                         FS and Local FS conref individual data formats</draft-comment>

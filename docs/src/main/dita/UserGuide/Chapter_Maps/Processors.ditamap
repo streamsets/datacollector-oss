@@ -79,7 +79,6 @@
    </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/JavaScript_ProcessingMode.dita"/>
    <topicref href="../Processors/JavaScript-ScriptingObjects.dita"/>
    <topicref href="../Processors/JavaScript-DelimData.dita"/>
    <topicref href="../Processors/JavaScript-TypeHandling.dita"/>
