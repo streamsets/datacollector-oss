@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_pnf_344_1r">
+    <title>Installing from the Tarball</title>
+    <shortdesc>This procedure walks through setting the default directories and the default system
+        user and group used to start <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
+        service.</shortdesc>
+    <taskbody>
+        <context>Before you install, you can alternatively use the <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath>
+            file to modify the environment variables that define directories and the system user and
+            group.</context>
+        <steps id="steps_wnx_444_1r">
+            <step>
+                <cmd>Use the following URL to download the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> tarball from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step>
+                <cmd>Extract the tarball to the desired location, typically<codeph>
+                        /opt/local/</codeph>.</cmd>
+            </step>
+            <step>
+                <cmd>Copy <filepath>initd/_sdcinitd_prototype</filepath> to the
+                        <filepath>/etc/init.d/</filepath> directory as sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Edit the sdc file and set the SDC_DIST and SDC_HOME environment variables to
+                    the location where you extracted the tarball.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to make the sdc file executable:</cmd>
+                <info>
+                    <codeblock>sudo chmod 755 /etc/init.d/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Create a system user and group named sdc.</cmd>
+                <info>The sdc user and group are used to start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service. </info>
+            </step>
+            <step>
+                <cmd>Create the <codeph>/etc/sdc</codeph> directory and copy all files from etc into this
+                    directory.</cmd>
+            </step>
+            <step>
+                <cmd>Create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> log directory at <codeph>/var/log/sdc</codeph> and change the owner to
+                    sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> data directory at <codeph>/var/lib/sdc</codeph> and change the owner to
+                    sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> resources directory at <codeph>/var/lib/sdc-resources</codeph> and change the
+                    owner to sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>To start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service, use the following command: </cmd>
+                <info>
+                    <codeblock>service sdc start  </codeblock>
+                    <p>For CentOS, use the following
+                        command:<codeblock>chkconfig --add sdc</codeblock></p>
+                    <p>For Ubuntu, use the following
+                        command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
+                    following URL in the address bar of your browser: </cmd>
+                <info>
+                    <codeblock>http://&lt;system-ip>:18630/</codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="DCDirectories.dita#concept_mnx_j3r_3v" type="topic"/>
+        <link href="DCUserGroupServiceStart.dita#concept_htz_t1s_3v" type="topic"/>
+    </related-links>
+</task>

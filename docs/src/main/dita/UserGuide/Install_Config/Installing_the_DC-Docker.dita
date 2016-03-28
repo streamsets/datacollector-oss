@@ -13,18 +13,21 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_vq4_5tr_kv">
- <title>Full Installation and Launch (Service Start)</title>
+<concept id="concept_jxh_qxr_kv">
+ <title>Run Data Collector from Docker</title>
+    <shortdesc>You can run the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> image
+        from Docker Hub.</shortdesc>
  <conbody>
-     <p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch
-                Data Collector<indexterm>service start</indexterm></indexterm>To install the full
-                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> as a service, you can download the <ph
+     <p><indexterm>Data
+                    Collector<indexterm>Docker</indexterm></indexterm><indexterm>Docker<indexterm>Data
+                    Collector</indexterm></indexterm>To run the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            RPM package or the <ph
+            image from Docker Hub, use the following command in the Docker Quickstart
+            Terminal:<codeblock>docker run -d -P --name streamsets-dc streamsets/datacollector</codeblock></p>
+        <p>For more information about running <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            tarball. Installing the full <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as
-            a service requires sudo privileges on the root directory.</p>
+            from Docker, see <xref href="https://hub.docker.com/r/streamsets/datacollector/"
+                format="html" scope="external"/>.</p>
  </conbody>
 </concept>

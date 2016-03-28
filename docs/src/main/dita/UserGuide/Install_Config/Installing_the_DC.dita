@@ -15,6 +15,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bt1_zcp_kq">
     <title>Full Installation and Launch (Manual Start)</title>
+    <shortdesc>To install the full <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+        start it manually, download the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        tarball. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_g53_l3p_kq">
@@ -24,7 +29,7 @@
                         Collector<indexterm>manual start</indexterm></indexterm>Use the following URL to download the full StreamSets <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> tarball  from the StreamSets website: <xref
-                    href="http://www.streamsets.com/opensource" format="html" scope="external"
+                    href="https://streamsets.com/opensource" format="html" scope="external"
                     />.</cmd>
             </step>
             <step>
@@ -66,6 +71,13 @@
                 <info>Or, use the following command to launch <ph>Data Collector</ph> and run it in
                     the
                     background:<codeblock>nohup $SDC_DIST/bin/streamsets dc &amp;</codeblock></info>
+            </step>
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
+                    following URL in the address bar of your browser: </cmd>
+                <info>
+                    <codeblock>http://&lt;system-ip>:18630/</codeblock>
+                </info>
             </step>
         </steps>
     </taskbody>
