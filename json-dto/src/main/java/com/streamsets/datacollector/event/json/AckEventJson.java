@@ -19,7 +19,7 @@
  */
 package com.streamsets.datacollector.event.json;
 
-public final class AckEventJson extends UUIDEventJson {
+public final class AckEventJson implements EventJson {
 
   private AckEventStatusJson ackEventStatus;
   private String message;
@@ -39,5 +39,4 @@ public final class AckEventJson extends UUIDEventJson {
   public void setMessage(String message) {
     this.message = message;
   }
-
 }

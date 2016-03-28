@@ -28,8 +28,8 @@ public class PipelineSaveRulesEvent extends PipelineBaseEvent {
   public PipelineSaveRulesEvent() {
   }
 
-  public PipelineSaveRulesEvent(UUID uuid, String name, String rev, String user, String ruleDefinitions) {
-    super(uuid, name, rev, user);
+  public PipelineSaveRulesEvent(String name, String rev, String user, String ruleDefinitions) {
+    super(name, rev, user);
     this.ruleDefinitions = ruleDefinitions;
   }
 

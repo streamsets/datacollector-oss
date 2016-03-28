@@ -22,7 +22,7 @@ package com.streamsets.datacollector.event.dto;
 import java.util.UUID;
 
 // Events for all commands requiring Pipeline name, rev and user
-public class PipelineBaseEvent extends UUIDEvent {
+public class PipelineBaseEvent implements Event {
 
   private String name;
   private String rev;
@@ -31,8 +31,7 @@ public class PipelineBaseEvent extends UUIDEvent {
   public PipelineBaseEvent() {
   }
 
-  public PipelineBaseEvent(UUID uuid, String name, String rev, String user) {
-    super(uuid);
+  public PipelineBaseEvent(String name, String rev, String user) {
     this.name = name;
     this.rev = rev;
     this.user = user;

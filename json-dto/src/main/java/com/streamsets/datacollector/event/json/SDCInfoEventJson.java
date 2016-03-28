@@ -28,6 +28,7 @@ public class SDCInfoEventJson implements EventJson {
   private String javaVersion;
   private List<StageInfoJson> stageInfoList;
   private SDCBuildInfoJson sdcBuildInfo;
+  private List<String> labels;
 
   public String getSdcId() {
     return sdcId;
@@ -67,6 +68,22 @@ public class SDCInfoEventJson implements EventJson {
 
   public void setSdcBuildInfo(SDCBuildInfoJson sdcBuildInfo) {
     this.sdcBuildInfo = sdcBuildInfo;
+  }
+
+  public List<StageInfoJson> getStageInfoList() {
+    return stageInfoList;
+  }
+
+  public void setStageInfoList(List<StageInfoJson> stageInfoList) {
+    this.stageInfoList = stageInfoList;
+  }
+
+  public List<String> getLabels() {
+    return labels;
+  }
+
+  public void setLabels(List<String> labels) {
+    this.labels = labels;
   }
 
 }

@@ -28,6 +28,7 @@ public class SDCInfoEvent implements Event {
   private String javaVersion;
   private List<StageInfo> stageInfoList;
   private SDCBuildInfo sdcBuildInfo;
+  private List<String> labels;
 
   public SDCInfoEvent() {
   }
@@ -36,12 +37,14 @@ public class SDCInfoEvent implements Event {
     String httpUrl,
     String javaVersion,
     List<StageInfo> stageInfoList,
-    SDCBuildInfo sdcBuildInfo) {
+    SDCBuildInfo sdcBuildInfo,
+    List<String> labels) {
     this.sdcId = id;
     this.httpUrl = httpUrl;
     this.javaVersion = javaVersion;
     this.stageInfoList = stageInfoList;
     this.sdcBuildInfo = sdcBuildInfo;
+    this.labels = labels;
   }
 
   public String getSdcId() {
@@ -82,5 +85,21 @@ public class SDCInfoEvent implements Event {
 
   public void setSdcBuildInfo(SDCBuildInfo sdcBuildInfo) {
     this.sdcBuildInfo = sdcBuildInfo;
+  }
+
+  public List<StageInfo> getStageInfoList() {
+    return stageInfoList;
+  }
+
+  public void setStageInfoList(List<StageInfo> stageInfoList) {
+    this.stageInfoList = stageInfoList;
+  }
+
+  public List<String> getLabels() {
+    return labels;
+  }
+
+  public void setLabels(List<String> labels) {
+    this.labels = labels;
   }
 }

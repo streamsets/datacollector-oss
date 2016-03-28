@@ -22,11 +22,16 @@ package com.streamsets.datacollector.event;
 import java.util.List;
 import java.util.Map;
 
-import com.streamsets.datacollector.event.json.EventJson;
-import com.streamsets.datacollector.event.json.EventTypeJson;
+import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
 
 public interface EventClient {
 
-  Map<EventTypeJson, List<? extends EventJson>> submit(Map<EventTypeJson, List<? extends EventJson>> senderMap) throws EventException;
+  List<ServerEventJson> submit(
+    String path,
+    Map<String, String> queryParams,
+    Map<String, String> headerParams,
+    boolean compression,
+    List<ClientEventJson> clientEventJson) throws EventException;
 
 }

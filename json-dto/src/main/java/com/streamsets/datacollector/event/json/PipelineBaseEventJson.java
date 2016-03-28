@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.event.json;
 
 
-public class PipelineBaseEventJson extends UUIDEventJson {
+public class PipelineBaseEventJson implements EventJson {
 
   private String name;
   private String rev;

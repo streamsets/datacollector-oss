@@ -31,9 +31,9 @@ public class PipelineSaveEvent extends PipelineBaseEvent {
   public PipelineSaveEvent() {
   }
 
-  public PipelineSaveEvent(UUID uuid, String name, String rev, String user, String pipelineDescription,
+  public PipelineSaveEvent(String name, String rev, String user, String pipelineDescription,
     PipelineConfigAndRules pipelineConfigurationAndRules) {
-    super(uuid, name, rev, user);
+    super(name, rev, user);
     this.description = pipelineDescription;
     this.pipelineConfigurationAndRules = pipelineConfigurationAndRules;
   }

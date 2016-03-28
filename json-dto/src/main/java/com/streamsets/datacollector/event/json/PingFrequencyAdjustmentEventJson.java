@@ -19,7 +19,7 @@
  */
 package com.streamsets.datacollector.event.json;
 
-public class PingFrequencyAdjustmentEventJson extends UUIDEventJson {
+public class PingFrequencyAdjustmentEventJson implements EventJson {
 
   private long pingFrequency;
 

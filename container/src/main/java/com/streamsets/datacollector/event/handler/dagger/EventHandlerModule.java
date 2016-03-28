@@ -59,7 +59,7 @@ public class EventHandlerModule {
     if (targetURL != null) {
       eventHandlerTask =
         new RemoteEventHandlerTask(remoteDataCollector, new EventClientImpl(targetURL), eventHandlerExecutor,
-          stageLibraryTask, runtimeInfo);
+          stageLibraryTask, runtimeInfo, conf);
     } else {
       eventHandlerTask = new NoOpEventHandlerTask();
     }

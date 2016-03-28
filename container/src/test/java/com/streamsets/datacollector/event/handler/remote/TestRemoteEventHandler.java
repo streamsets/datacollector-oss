@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -43,7 +46,11 @@ import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
 import com.streamsets.datacollector.config.json.PipelineStatusJson;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.event.EventClient;
+import com.streamsets.datacollector.event.EventException;
 import com.streamsets.datacollector.event.binding.JsonToFromDto;
+import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.AckEventStatus;
+import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
@@ -51,9 +58,7 @@ import com.streamsets.datacollector.event.dto.StageInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.EventHandlerCallable;
-import com.streamsets.datacollector.event.json.AckEventJson;
-import com.streamsets.datacollector.event.json.AckEventStatusJson;
-import com.streamsets.datacollector.event.json.EventJson;
+import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.EventTypeJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
@@ -61,6 +66,7 @@ import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
@@ -80,70 +86,102 @@ public class TestRemoteEventHandler {
 
   private static final UUID id1 = UUID.randomUUID();
   private static final UUID id2 = UUID.randomUUID();
+  private static final UUID id3 = UUID.randomUUID();
+  private static final UUID id4 = UUID.randomUUID();
+  private static final UUID id5 = UUID.randomUUID();
+  private static final UUID id6 = UUID.randomUUID();
+
   private static final long PING_FREQUENCY = 10;
+  private static final JsonToFromDto jsonDto = JsonToFromDto.getInstance();
 
   private static class MockBaseEventSenderReceiver implements EventClient {
-    public Map<EventTypeJson, List<? extends EventJson>> senderMap;
+    public List<ClientEventJson> clientJson;
 
     @Override
-    public Map<EventTypeJson, List<? extends EventJson>> submit(Map<EventTypeJson, List<? extends EventJson>> senderMap) {
-      this.senderMap = senderMap;
-      List<PipelineBaseEventJson> list = new ArrayList<PipelineBaseEventJson>();
-      List<PipelineBaseEventJson> list2 = new ArrayList<PipelineBaseEventJson>();
+    public List<ServerEventJson> submit(
+      String path,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      boolean compression,
+      List<ClientEventJson> clientEventJson) throws EventException {
+      this.clientJson = clientEventJson;
       PipelineBaseEventJson pipelineBaseEventJson = new PipelineBaseEventJson();
       pipelineBaseEventJson.setName("name");
       pipelineBaseEventJson.setRev("rev");
       pipelineBaseEventJson.setUser("user");
-      pipelineBaseEventJson.setUuid(id1);
-      list.add(pipelineBaseEventJson);
-      PipelineBaseEventJson pipelineBaseEventJson2 = new PipelineBaseEventJson();
-      pipelineBaseEventJson2.setName("name1");
-      pipelineBaseEventJson2.setRev("rev1");
-      pipelineBaseEventJson2.setUser("user1");
-      pipelineBaseEventJson2.setUuid(id2);
-      list2.add(pipelineBaseEventJson);
-      list2.add(pipelineBaseEventJson2);
-      Map<EventTypeJson, List<? extends EventJson>> map = new HashMap<EventTypeJson, List<? extends EventJson>>();
-      // add two events for start event
-      map.put(EventTypeJson.START_PIPELINE, list2);
-      map.put(EventTypeJson.STOP_PIPELINE, list);
-      map.put(EventTypeJson.DELETE_PIPELINE, list);
-      map.put(EventTypeJson.DELETE_HISTORY_PIPELINE, list);
-      map.put(EventTypeJson.VALIDATE_PIPELINE, list);
-      map.put(EventTypeJson.RESET_OFFSET_PIPELINE, list);
-      return map;
+      List<ServerEventJson> serverEventJsonList = new ArrayList<ServerEventJson>();
+      try {
+        ServerEventJson serverEventJson1 = new ServerEventJson();
+        ServerEventJson serverEventJson2 = new ServerEventJson();
+        ServerEventJson serverEventJson3 = new ServerEventJson();
+        ServerEventJson serverEventJson4 = new ServerEventJson();
+        ServerEventJson serverEventJson5 = new ServerEventJson();
+        ServerEventJson serverEventJson6 = new ServerEventJson();
+        setServerEvent(serverEventJson1, id1.toString(), EventTypeJson.START_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson2, id2.toString(), EventTypeJson.STOP_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson3, id3.toString(), EventTypeJson.DELETE_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson4, id4.toString(), EventTypeJson.DELETE_HISTORY_PIPELINE, false, true,
+          jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson5, id5.toString(), EventTypeJson.VALIDATE_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson6, id6.toString(), EventTypeJson.RESET_OFFSET_PIPELINE, false, true,
+          jsonDto.serialize(pipelineBaseEventJson));
+        serverEventJsonList.addAll(Arrays.asList(serverEventJson1, serverEventJson2, serverEventJson3, serverEventJson4, serverEventJson5,
+          serverEventJson6));
+
+      } catch (JsonProcessingException e) {
+        throw new EventException("Cannot create event for test case" + e.getMessage());
+      }
+      return serverEventJsonList;
     }
 
   }
 
+  private static void setServerEvent(ServerEventJson serverEventJson, String eventId, EventTypeJson eventType, boolean isAckEvent, boolean requiresAck,
+    String payload) {
+    serverEventJson.setAckEvent(isAckEvent);
+    serverEventJson.setEventId(eventId);
+    serverEventJson.setEventType(eventType);
+    serverEventJson.setFrom("JOB_RUNNER");
+    serverEventJson.setRequiresAck(requiresAck);
+    serverEventJson.setPayload(payload);
+  }
+
   private static class MockPingFrequencyAdjustmentSenderReceiver implements EventClient {
     @Override
-    public Map<EventTypeJson, List<? extends EventJson>> submit(Map<EventTypeJson, List<? extends EventJson>> senderMap) {
-      List<PingFrequencyAdjustmentEventJson> list = new ArrayList<PingFrequencyAdjustmentEventJson>();
+    public List<ServerEventJson> submit(
+      String path,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      boolean compression,
+      List<ClientEventJson> clientEventJson) throws EventException {
       PingFrequencyAdjustmentEventJson pingFrequencyJson = new PingFrequencyAdjustmentEventJson();
       pingFrequencyJson.setPingFrequency(PING_FREQUENCY);
-      pingFrequencyJson.setUuid(id1);
-      list.add(pingFrequencyJson);
-      Map<EventTypeJson, List<? extends EventJson>> map = new HashMap<EventTypeJson, List<? extends EventJson>>();
-      map.put(EventTypeJson.PING_FREQUENCY_ADJUSTMENT, list);
-      return map;
+      ServerEventJson serverEventJson1 = new ServerEventJson();
+      try {
+        setServerEvent(serverEventJson1, id1.toString(), EventTypeJson.PING_FREQUENCY_ADJUSTMENT, false, true, jsonDto.serialize(pingFrequencyJson));
+      } catch (Exception e) {
+        throw new EventException(e.getMessage());
+      }
+      return Arrays.asList(serverEventJson1);
     }
 
   }
 
   private static class MockSaveEventSenderReceiver implements EventClient {
     @Override
-    public Map<EventTypeJson, List<? extends EventJson>> submit(Map<EventTypeJson, List<? extends EventJson>> senderMap) {
+    public List<ServerEventJson> submit(
+      String path,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      boolean compression,
+      List<ClientEventJson> clientEventJson) throws EventException {
       try {
-        Map<EventTypeJson, List<? extends EventJson>> map = new HashMap<EventTypeJson, List<? extends EventJson>>();
-        List<PipelineSaveEventJson> list1 = new ArrayList<PipelineSaveEventJson>();
-        List<PipelineSaveRulesEventJson> list2 = new ArrayList<PipelineSaveRulesEventJson>();
+        List<ServerEventJson> serverEventJsonList = new ArrayList<ServerEventJson>();
         PipelineSaveEventJson pipelineSaveEventJson = new PipelineSaveEventJson();
         pipelineSaveEventJson.setName("name");
         pipelineSaveEventJson.setRev("rev");
         pipelineSaveEventJson.setUser("user");
         pipelineSaveEventJson.setDescription("description");
-        pipelineSaveEventJson.setUuid(id1);
         List<Config> list = new ArrayList<Config>();
         list.add(new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()));
         Map<String, Object> uiInfo = new HashMap<String, Object>();
@@ -168,16 +206,17 @@ public class TestRemoteEventHandler {
         pipelineSaveRulesEventJson.setName("name");
         pipelineSaveRulesEventJson.setRev("rev");
         pipelineSaveRulesEventJson.setUser("user");
-        pipelineSaveRulesEventJson.setUuid(id1);
         pipelineSaveRulesEventJson.setRuleDefinitions(JsonToFromDto.getInstance().serialize(
           BeanHelper.wrapRuleDefinitions(ruleDefinitions)));
-        list1.add(pipelineSaveEventJson);
-        list2.add(pipelineSaveRulesEventJson);
-        map.put(EventTypeJson.SAVE_PIPELINE, list1);
-        map.put(EventTypeJson.SAVE_RULES_PIPELINE, list2);
-        return map;
+        ServerEventJson serverEventJson1 = new ServerEventJson();
+        ServerEventJson serverEventJson2 = new ServerEventJson();
+        setServerEvent(serverEventJson1, id1.toString(), EventTypeJson.SAVE_PIPELINE, false, true, jsonDto.serialize(pipelineSaveEventJson));
+        setServerEvent(serverEventJson2, id2.toString(), EventTypeJson.SAVE_RULES_PIPELINE, false, true, jsonDto.serialize(pipelineSaveRulesEventJson));
+        serverEventJsonList.addAll(Arrays.asList(serverEventJson1, serverEventJson2));
+        return serverEventJsonList;
+
       } catch (Exception e) {
-        throw new IllegalStateException("Cannot create event for test case");
+        throw new EventException("Cannot create event for test case " + e.getMessage());
       }
     }
 
@@ -262,28 +301,46 @@ public class TestRemoteEventHandler {
   @Test
   public void testPipelineBaseEventTriggered() {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, new MockBaseEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
-        null, -1);
+        null, -1, "JOB_RUNNER", new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
-    List<AckEventJson> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(7, ackEventList.size());
-    int uuid1 = 0;
-    int uuid2 = 0;
-    for (AckEventJson ackEventJson : ackEventList) {
-      if (id1 == ackEventJson.getUuid()) {
-        uuid1++;
-      } else if (id2 == ackEventJson.getUuid()) {
-        uuid2++;
-      }
-      assertEquals(AckEventStatusJson.SUCCESS, ackEventJson.getAckEventStatus());
-    }
-    assertEquals(6, uuid1);
-    assertEquals(1, uuid2);
-    assertEquals(2, mockRemoteDataCollector.startCalled);
+    List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
+    assertEquals(6, ackEventList.size());
+    assertEquals(id1.toString(), ackEventList.get(0).getEventId());
+    assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
+    AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(id2.toString(), ackEventList.get(1).getEventId());
+    assertTrue(ackEventList.get(1).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(1).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(id3.toString(), ackEventList.get(2).getEventId());
+    assertTrue(ackEventList.get(2).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(2).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(id4.toString(), ackEventList.get(3).getEventId());
+    assertTrue(ackEventList.get(3).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(3).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(id5.toString(), ackEventList.get(4).getEventId());
+    assertTrue(ackEventList.get(4).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(4).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(id6.toString(), ackEventList.get(5).getEventId());
+    assertTrue(ackEventList.get(5).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(5).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
+    assertEquals(1, mockRemoteDataCollector.startCalled);
     assertTrue(mockRemoteDataCollector.stopCalled);
     assertTrue(mockRemoteDataCollector.resetOffsetCalled);
     assertTrue(mockRemoteDataCollector.validateConfigsCalled);
@@ -297,107 +354,113 @@ public class TestRemoteEventHandler {
   @Test
   public void testPipelineSaveEventTriggered() {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, new MockSaveEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
-        null, -1);
+        null, -1, "JOB_RUNNER", new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
-    List<AckEventJson> ackEventList = remoteEventHandler.getAckEventList();
+    List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
     assertEquals(2, ackEventList.size());
-    assertEquals(id1, ackEventList.get(0).getUuid());
-    assertEquals(id1, ackEventList.get(1).getUuid());
+    assertEquals(id1.toString(), ackEventList.get(0).getEventId());
+    AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
     assertTrue(mockRemoteDataCollector.savePipelineCalled);
     assertTrue(mockRemoteDataCollector.savePipelineRulesCalled);
-    assertEquals(AckEventStatusJson.SUCCESS, ackEventList.get(0).getAckEventStatus());
-    assertEquals(AckEventStatusJson.SUCCESS, ackEventList.get(1).getAckEventStatus());
   }
 
   @Test
   public void testPipelineAckEventError() {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
-      new EventHandlerCallable(mockRemoteDataCollector, new MockBaseEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null, null, -1);
+      new EventHandlerCallable(mockRemoteDataCollector, new MockBaseEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
+        null, -1, "JOB_RUNNER", new HashMap<String, String>());
     // start event in error
     mockRemoteDataCollector.errorInjection = true;
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
-    List<AckEventJson> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(7, ackEventList.size());
-    int error = 0;
-    for (AckEventJson ackEventJson : ackEventList) {
-      if (ackEventJson.getAckEventStatus() == AckEventStatusJson.ERROR) {
-        error++;
-      }
-    }
-    // 1 event in error
-    assertEquals(2, error);
+    List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
+    assertEquals(6, ackEventList.size());
+    assertEquals(id1.toString(), ackEventList.get(0).getEventId());
+    assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
+    AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();
+    assertEquals(AckEventStatus.ERROR, ackEvent.getAckEventStatus());
   }
 
   @Test
   public void testPingFrequencyEvent() {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(new MockRemoteDataCollector(), new MockPingFrequencyAdjustmentSenderReceiver(), jsonToFromDto,
-        ackEventJsonList, null, null, -1);
+        ackEventJsonList, null, null, -1, "JOB_RUNNER", new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
     assertEquals(PING_FREQUENCY, remoteEventHandler.getDelay());
-    List<AckEventJson> ackEventList = remoteEventHandler.getAckEventList();
+    List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
     assertEquals(1, ackEventList.size());
-    assertEquals(id1, ackEventList.get(0).getUuid());
-    assertEquals(AckEventStatusJson.SUCCESS, ackEventList.get(0).getAckEventStatus());
+    assertEquals(id1.toString(), ackEventList.get(0).getEventId());
+    assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
+    AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
   }
 
+
   @Test
-  public void testSendingEventClientToServer() {
+  public void testSendingEventClientToServer() throws Exception {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     mockRemoteDataCollector.putDummyPipelineStatus = true;
     MockBaseEventSenderReceiver mockBaseEventSenderReceiver = new MockBaseEventSenderReceiver();
     EventHandlerCallable remoteEventHandler =
-      new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, null, null, -1);
+      new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, null, null, -1,
+        "JOB_RUNNER", new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
-    assertEquals(1, mockBaseEventSenderReceiver.senderMap.size());
-    assertTrue(mockBaseEventSenderReceiver.senderMap.containsKey(EventTypeJson.STATUS_PIPELINE));
-    List<? extends EventJson> pipelineStatusEventJsonList = mockBaseEventSenderReceiver.senderMap.get(EventTypeJson.STATUS_PIPELINE);
-    assertEquals(2, pipelineStatusEventJsonList.size());
-    PipelineStatusEventJson pipelineStatusEventJson = (PipelineStatusEventJson)pipelineStatusEventJsonList.get(0);
+    assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
+    ClientEventJson clientEventJson = mockBaseEventSenderReceiver.clientJson.get(0);
+    PipelineStatusEventJson pipelineStatusEventJson =
+      jsonToFromDto.deserialize(clientEventJson.getPayload(), new TypeReference<PipelineStatusEventJson>() {
+      });
     assertEquals("name1", pipelineStatusEventJson.getName());
     assertEquals("rev1", pipelineStatusEventJson.getRev());
     assertEquals(PipelineStatusJson.RUNNING, pipelineStatusEventJson.getPipelineStatus());
-    PipelineStatusEventJson pipelineStatusEventJson1 = (PipelineStatusEventJson)pipelineStatusEventJsonList.get(1);
+
+    PipelineStatusEventJson pipelineStatusEventJson1 =
+      jsonToFromDto.deserialize(mockBaseEventSenderReceiver.clientJson.get(1).getPayload(), new TypeReference<PipelineStatusEventJson>() {
+      });
     assertEquals("name2", pipelineStatusEventJson1.getName());
     assertEquals("rev2", pipelineStatusEventJson1.getRev());
     assertEquals(PipelineStatusJson.CONNECTING, pipelineStatusEventJson1.getPipelineStatus());
   }
 
   @Test
-  public void testSendSDCInfoEvent() {
+  public void testSendSDCInfoEvent() throws Exception {
     JsonToFromDto jsonToFromDto = JsonToFromDto.getInstance();
-    List<AckEventJson> ackEventJsonList = new ArrayList<AckEventJson>();
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     MockBaseEventSenderReceiver mockBaseEventSenderReceiver = new MockBaseEventSenderReceiver();
     StageInfo stageInfo = new StageInfo("stage1", 1, "stageLib");
     List<StageInfo> stageInfoList = new ArrayList<StageInfo>();
     stageInfoList.add(stageInfo);
     SDCBuildInfo sdcBuildInfo = new SDCBuildInfo("1.0", "date1", "foo", "sha1", "checksum1");
-    SDCInfoEvent sdcInfoEvent = new SDCInfoEvent("1", "localhost:9090", "1.7", stageInfoList, sdcBuildInfo);
-    SDCInfoEventJson sdcInfoEventJson = (SDCInfoEventJson) jsonToFromDto.toJson(EventType.SDC_INFO_EVENT, sdcInfoEvent);
+    SDCInfoEvent sdcInfoEvent =
+      new SDCInfoEvent("1", "localhost:9090", "1.7", stageInfoList, sdcBuildInfo, Arrays.asList("label_1", "label_2"));
+    ClientEvent clientEvent =
+      new ClientEvent(id1.toString(), Arrays.asList("JOB_RUNNER"), false, false, EventType.SDC_INFO_EVENT, sdcInfoEvent);
     EventHandlerCallable remoteEventHandler =
-      new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList,
-        sdcInfoEventJson, null, -1);
+      new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, clientEvent, null,
+        -1, "JOB_RUNNER", new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
-    assertEquals(1, mockBaseEventSenderReceiver.senderMap.size());
-    assertTrue(mockBaseEventSenderReceiver.senderMap.containsKey(EventTypeJson.SDC_INFO_EVENT));
-    List<? extends EventJson> pipelineSDCInfoEventJsonList =
-      mockBaseEventSenderReceiver.senderMap.get(EventTypeJson.SDC_INFO_EVENT);
-    assertEquals(1, pipelineSDCInfoEventJsonList.size());
-    SDCInfoEventJson sdcInfoJson = (SDCInfoEventJson) pipelineSDCInfoEventJsonList.get(0);
+    assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
+    assertEquals(EventTypeJson.SDC_INFO_EVENT, mockBaseEventSenderReceiver.clientJson.get(0).getEventType());
+    assertEquals(Arrays.asList("JOB_RUNNER"), mockBaseEventSenderReceiver.clientJson.get(0).getDestinations());
+    assertEquals(id1.toString(), mockBaseEventSenderReceiver.clientJson.get(0).getEventId());
+    String payload = mockBaseEventSenderReceiver.clientJson.get(0).getPayload();
+    SDCInfoEventJson sdcInfoJson = jsonToFromDto.deserialize(payload, new TypeReference<SDCInfoEventJson>() {
+    });
     assertEquals("1", sdcInfoJson.getSdcId());
     assertEquals("localhost:9090", sdcInfoJson.getHttpUrl());
     assertEquals("1.7", sdcInfoJson.getJavaVersion());
@@ -406,5 +469,6 @@ public class TestRemoteEventHandler {
     assertEquals("stage1", stageInfoListJson.get(0).getStageName());
     assertEquals(1, stageInfoListJson.get(0).getStageVersion());
     assertEquals("stageLib", stageInfoListJson.get(0).getLibraryName());
+    assertEquals(Arrays.asList("label_1", "label_2"), sdcInfoJson.getLabels());
   }
 }

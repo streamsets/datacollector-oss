@@ -19,9 +19,7 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import java.util.UUID;
-
-public class AckEvent extends UUIDEvent {
+public class AckEvent implements Event {
 
   private AckEventStatus ackEventStatus;
   private String message;
@@ -29,8 +27,7 @@ public class AckEvent extends UUIDEvent {
   public AckEvent() {
   }
 
-  public AckEvent(UUID uuid, AckEventStatus ackEventStatus, String message) {
-    super (uuid);
+  public AckEvent(AckEventStatus ackEventStatus, String message) {
     this.ackEventStatus = ackEventStatus;
     this.message = message;
   }

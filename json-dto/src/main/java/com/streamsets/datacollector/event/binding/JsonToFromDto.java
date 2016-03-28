@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.event.binding;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,23 +31,25 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.datacollector.event.dto.AckEvent;
+import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.Event;
-import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
+import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
+import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
-import com.streamsets.datacollector.event.json.EventTypeJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
 
 public class JsonToFromDto {
 
@@ -75,17 +79,82 @@ public class JsonToFromDto {
     return mapper.writeValueAsString(object);
   }
 
-  public EventTypeJson toJson(EventType eventType) {
-    return DtoJsonMapper.INSTANCE.toEventTypeJson(eventType);
+  public List<ClientEventJson> toJson(List<ClientEvent> clientEventList) throws JsonProcessingException {
+    List<ClientEventJson> clientEventJsonList = new ArrayList<>();
+    for (ClientEvent clientEvent: clientEventList) {
+      clientEventJsonList.add(toJson(clientEvent));
+    }
+    return clientEventJsonList;
   }
 
-  public EventType asDto(EventTypeJson eventTypeJson) {
-    return DtoJsonMapper.INSTANCE.asEventTypeDto(eventTypeJson);
+  public ServerEvent asDto(ServerEventJson serverEventJson) throws JsonParseException, JsonMappingException, IOException {
+    ServerEvent serverEvent = DtoJsonMapper.INSTANCE.asServerEventDto(serverEventJson);
+    switch (serverEvent.getEventType()) {
+      case ACK_EVENT: {
+        TypeReference<AckEventJson> typeRef = new TypeReference<AckEventJson>() {
+        };
+        AckEventJson ackEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asAckEventDto(ackEventJson));
+        break;
+      }
+      case PING_FREQUENCY_ADJUSTMENT: {
+        TypeReference<PingFrequencyAdjustmentEventJson> typeRef = new TypeReference<PingFrequencyAdjustmentEventJson>() {
+        };
+        PingFrequencyAdjustmentEventJson pingFrequencyAdjustmentEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPingFrequencyAdjustmentEventDto(pingFrequencyAdjustmentEventJson));
+        break;
+      }
+      case SAVE_PIPELINE: {
+        TypeReference<PipelineSaveEventJson> typeRef = new TypeReference<PipelineSaveEventJson>() {
+        };
+        PipelineSaveEventJson pipelineSaveEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineSaveEventDto(pipelineSaveEventJson));
+        break;
+      }
+      case SAVE_RULES_PIPELINE: {
+        TypeReference<PipelineSaveRulesEventJson> typeRef = new TypeReference<PipelineSaveRulesEventJson>() {
+        };
+        PipelineSaveRulesEventJson pipelineSaveRulesEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineSaveRulesEventDto(pipelineSaveRulesEventJson));
+        break;
+      }
+      case SDC_INFO_EVENT: {
+        TypeReference<SDCInfoEventJson> typeRef = new TypeReference<SDCInfoEventJson>() {
+        };
+        SDCInfoEventJson sdcInfoEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asSDCInfoEventDto(sdcInfoEventJson));
+        break;
+      }
+      case STATUS_PIPELINE: {
+        TypeReference<PipelineStatusEventJson> typeRef = new TypeReference<PipelineStatusEventJson>() {
+        };
+        PipelineStatusEventJson pipelineStatusEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pipelineStatusEventJson));
+        break;
+      }
+      case DELETE_HISTORY_PIPELINE:
+      case DELETE_PIPELINE:
+      case START_PIPELINE:
+      case STOP_PIPELINE:
+      case VALIDATE_PIPELINE:
+      case RESET_OFFSET_PIPELINE: {
+        TypeReference<PipelineBaseEventJson> typeRef = new TypeReference<PipelineBaseEventJson>() {
+        };
+        PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
+        break;
+      }
+      default:
+        break;
+    }
+    return serverEvent;
   }
 
-  public EventJson toJson(EventType eventType, Event event) {
-    EventJson eventJson = null;
-    switch (eventType) {
+  private ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
+    ClientEventJson clientEventJson = DtoJsonMapper.INSTANCE.toClientEventJson(clientEvent);
+    EventJson eventJson;
+    Event event = clientEvent.getEvent();
+    switch (clientEvent.getEventType()) {
       case PING_FREQUENCY_ADJUSTMENT:
         eventJson = DtoJsonMapper.INSTANCE.toPingFrequencyAdjustmentEventJson((PingFrequencyAdjustmentEvent) event);
         break;
@@ -113,45 +182,11 @@ public class JsonToFromDto {
         eventJson = DtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
         break;
       default:
-        throw new IllegalStateException("Unrecognized event type: " + eventType);
+        throw new IllegalStateException("Unrecognized event type: " + clientEvent.getEventType());
     }
-    return eventJson;
+    // Map payload
+    clientEventJson.setPayload(serialize(eventJson));
+    return clientEventJson;
   }
-
-  public Event asDto(EventType eventType, EventJson eventJson) {
-    Event event = null;
-    switch (eventType) {
-      case PING_FREQUENCY_ADJUSTMENT:
-        event = DtoJsonMapper.INSTANCE.asPingFrequencyAdjustmentEventDto((PingFrequencyAdjustmentEventJson) eventJson);
-        break;
-      case SAVE_PIPELINE:
-        event = DtoJsonMapper.INSTANCE.asPipelineSaveEventDto((PipelineSaveEventJson) eventJson);
-        break;
-      case SAVE_RULES_PIPELINE:
-        event = DtoJsonMapper.INSTANCE.asPipelineSaveRulesEventDto((PipelineSaveRulesEventJson) eventJson);
-        break;
-      case STATUS_PIPELINE:
-        event = DtoJsonMapper.INSTANCE.asPipelineStatusEventDto((PipelineStatusEventJson) eventJson);
-        break;
-      case ACK_EVENT:
-        event = DtoJsonMapper.INSTANCE.asAckEventDto((AckEventJson) eventJson);
-        break;
-      case SDC_INFO_EVENT:
-        event = DtoJsonMapper.INSTANCE.asSDCInfoEventDto((SDCInfoEventJson) eventJson);
-        break;
-      case START_PIPELINE:
-      case STOP_PIPELINE:
-      case VALIDATE_PIPELINE:
-      case RESET_OFFSET_PIPELINE:
-      case DELETE_HISTORY_PIPELINE:
-      case DELETE_PIPELINE:
-        event = DtoJsonMapper.INSTANCE.asPipelineBaseEventDto((PipelineBaseEventJson) eventJson);
-        break;
-      default:
-        throw new IllegalStateException("Unrecognized event type: " + eventType);
-    }
-    return event;
-  }
-
 
 }

@@ -21,7 +21,7 @@ package com.streamsets.datacollector.event.dto;
 
 import java.util.UUID;
 
-public class PingFrequencyAdjustmentEvent extends UUIDEvent {
+public class PingFrequencyAdjustmentEvent implements Event {
 
   private long pingFrequency;
 
@@ -29,7 +29,6 @@ public class PingFrequencyAdjustmentEvent extends UUIDEvent {
   }
 
   public PingFrequencyAdjustmentEvent(UUID uuid, long pingFrequency) {
-    super(uuid);
     this.pingFrequency = pingFrequency;
   }
 

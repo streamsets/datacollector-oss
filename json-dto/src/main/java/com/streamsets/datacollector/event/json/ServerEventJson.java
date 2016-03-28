@@ -26,7 +26,7 @@ public class ServerEventJson {
   private String from;
   private boolean requiresAck;
   private boolean isAckEvent;
-  private EventType eventType;
+  private EventTypeJson eventType;
   private String payload;
   private long receivedTime;
 
@@ -65,11 +65,11 @@ public class ServerEventJson {
     this.isAckEvent = isAckEvent;
   }
 
-  public EventType getEventType() {
+  public EventTypeJson getEventType() {
     return eventType;
   }
 
-  public void setEventType(EventType eventType) {
+  public void setEventType(EventTypeJson eventType) {
     this.eventType = eventType;
   }
 

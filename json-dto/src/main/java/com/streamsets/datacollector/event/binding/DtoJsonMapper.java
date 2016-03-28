@@ -20,60 +20,65 @@
 package com.streamsets.datacollector.event.binding;
 
 import com.streamsets.datacollector.event.dto.AckEvent;
-import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
+import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
-import com.streamsets.datacollector.event.json.EventTypeJson;
+import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
 
 import fr.xebia.extras.selma.Mapper;
+import fr.xebia.extras.selma.Maps;
 import fr.xebia.extras.selma.Selma;
 
 @Mapper
 public abstract class DtoJsonMapper {
-  static final DtoJsonMapper INSTANCE = Selma.builder(DtoJsonMapper.class).build();
+  public static final DtoJsonMapper INSTANCE = Selma.builder(DtoJsonMapper.class).build();
 
-  abstract EventTypeJson toEventTypeJson(EventType eventType);
+  public abstract PipelineSaveEventJson toPipelineSaveEventJson(PipelineSaveEvent pipelineSaveEvent);
 
-  abstract EventType asEventTypeDto(EventTypeJson eventTypeJson);
+  public abstract PipelineSaveEvent asPipelineSaveEventDto(PipelineSaveEventJson pipelineSaveEventJson);
 
-  abstract PipelineSaveEventJson toPipelineSaveEventJson(PipelineSaveEvent pipelineSaveEvent);
+  public abstract PipelineSaveRulesEventJson toPipelineSaveRulesEventJson(PipelineSaveRulesEvent pipelineSaveRulesEvent);
 
-  abstract PipelineSaveEvent asPipelineSaveEventDto(PipelineSaveEventJson pipelineSaveEventJson);
+  public abstract PipelineSaveRulesEvent asPipelineSaveRulesEventDto(PipelineSaveRulesEventJson pipelineSaveRulesEventJson);
 
-  abstract PipelineSaveRulesEventJson toPipelineSaveRulesEventJson(PipelineSaveRulesEvent pipelineSaveRulesEvent);
+  public abstract PipelineBaseEventJson toPipelineBaseEventJson(PipelineBaseEvent event);
 
-  abstract PipelineSaveRulesEvent asPipelineSaveRulesEventDto(PipelineSaveRulesEventJson pipelineSaveRulesEventJson);
+  public abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
 
-  abstract PipelineBaseEventJson toPipelineBaseEventJson(PipelineBaseEvent event);
+  public abstract PingFrequencyAdjustmentEventJson toPingFrequencyAdjustmentEventJson(PingFrequencyAdjustmentEvent pingFrequencyEvent);
 
-  abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
+  public abstract PingFrequencyAdjustmentEvent asPingFrequencyAdjustmentEventDto(PingFrequencyAdjustmentEventJson pingFrequencyEventJson);
 
-  abstract PingFrequencyAdjustmentEventJson toPingFrequencyAdjustmentEventJson(PingFrequencyAdjustmentEvent pingFrequencyEvent);
+  public abstract PipelineStatusEventJson toPipelineStatusEventJson(PipelineStatusEvent pipelineStatusEvent);
 
-  abstract PingFrequencyAdjustmentEvent asPingFrequencyAdjustmentEventDto(PingFrequencyAdjustmentEventJson pingFrequencyEventJson);
+  public abstract AckEventJson toAckEventJson(AckEvent ackEvent);
 
-  abstract PipelineStatusEventJson toPipelineStatusEventJson(PipelineStatusEvent pipelineStatusEvent);
+  public abstract AckEvent asAckEventDto(AckEventJson ackEvent);
 
-  abstract AckEventJson toAckEventJson(AckEvent ackEvent);
+  public abstract PipelineStatusEvent asPipelineStatusEventDto(PipelineStatusEventJson pipelineStatusEvent);
 
-  abstract AckEvent asAckEventDto(AckEventJson ackEvent);
+  public abstract SDCInfoEvent asSDCInfoEventDto(SDCInfoEventJson sdcInfoEventJson);
 
-  abstract PipelineStatusEvent asPipelineStatusEventDto(PipelineStatusEventJson pipelineStatusEvent);
+  public abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
 
-  abstract SDCInfoEvent asSDCInfoEventDto(SDCInfoEventJson sdcInfoEventJson);
+  @Maps(withIgnoreFields = {"payload", "event"})
+  abstract ServerEvent asServerEventDto(ServerEventJson serverEventJson);
 
-  abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
+  @Maps(withIgnoreFields = {"payload", "event"})
+  abstract ClientEventJson toClientEventJson(ClientEvent clientEvent);
 }
 
 

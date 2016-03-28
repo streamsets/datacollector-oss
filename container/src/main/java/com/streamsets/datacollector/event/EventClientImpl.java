@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.event;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -26,44 +28,65 @@ import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
+import org.glassfish.jersey.client.filter.EncodingFilter;
+import org.glassfish.jersey.message.GZipEncoder;
 
-import com.streamsets.datacollector.event.json.EventJson;
-import com.streamsets.datacollector.event.json.EventTypeJson;
+import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
 
 public class EventClientImpl implements EventClient {
 
   private final String targetURL;
+  private Client client;
 
   @Inject
   public EventClientImpl(String targetURL) {
     this.targetURL = targetURL;
-  }
-
-  public Client getClient() {
-    // TODO - add application token for auth purposes
-    return ClientBuilder.newClient();
+    this.client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
   }
 
   @Override
-  public Map<EventTypeJson, List<? extends EventJson>> submit(Map<EventTypeJson, List<? extends EventJson>> senderMap)
-    throws EventException {
-    Response response =
-      getClient().register(new CsrfProtectionFilter("CSRF")).target(targetURL).request()
-        .post(Entity.json(senderMap));
+  public List<ServerEventJson> submit(
+    String path,
+    Map<String, String> queryParams,
+    Map<String, String> headerParams,
+    boolean compression,
+    List<ClientEventJson> clientEventJson) throws EventException {
+
+    if (compression) {
+      client.register(GZipEncoder.class);
+      client.register(EncodingFilter.class);
+    }
+
+    WebTarget target = client.target(targetURL + path);
+
+    for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+      target.queryParam(entry.getKey(), entry.getValue());
+    }
+
+    Invocation.Builder builder = target.request();
+
+    for (Map.Entry<String, String> entry : headerParams.entrySet()) {
+      builder = builder.header(entry.getKey(), entry.getValue());
+    }
+
+    Response response = builder.post(Entity.json(clientEventJson));
     if (response.getStatus() != 200) {
       throw new EventException("Failed : HTTP error code : " + response.getStatus());
     }
     try {
-      return response.readEntity(new GenericType<Map<EventTypeJson, List<? extends EventJson>>>() {
+      return response.readEntity(new GenericType<List<ServerEventJson>>() {
       });
     } catch (Exception ex) {
       throw new EventException("Failed to read response : " + ex);
     }
-
   }
 }
 
