@@ -128,18 +128,30 @@ public class S3ConfigBean {
     );
 
     //error handling config options
-    errorConfig.errorBucket = validatePostProcessing(
-        context,
-        errorConfig.errorHandlingOption,
-        errorConfig.archivingOption,
-        errorConfig.errorBucket,
-        errorConfig.errorFolder,
-        Groups.ERROR_HANDLING.name(),
-        ERROR_CONFIG_PREFIX + "errorBucket",
-        ERROR_CONFIG_PREFIX + "errorFolder",
-        issues
-    );
-
+    if (errorConfig.errorHandlingOption == PostProcessingOptions.NONE) {
+      // If error handling is "None" and Post Processing is "Archive", SDC will archive files that caused error
+      // even though SDC did not process the file due to error. So this validation detects and raises issue if
+      // error handling is None and Post Processing is not None.
+      if (postProcessingConfig.postProcessing != PostProcessingOptions.NONE){
+        issues.add(context.createConfigIssue(Groups.ERROR_HANDLING.name(),
+            ERROR_CONFIG_PREFIX + "errorHandlingOption",
+            Errors.S3_SPOOLDIR_07,
+            errorConfig.errorHandlingOption,
+            postProcessingConfig.postProcessing));
+      }
+    } else {
+      errorConfig.errorBucket = validatePostProcessing(
+          context,
+          errorConfig.errorHandlingOption,
+          errorConfig.archivingOption,
+          errorConfig.errorBucket,
+          errorConfig.errorFolder,
+          Groups.ERROR_HANDLING.name(),
+          ERROR_CONFIG_PREFIX + "errorBucket",
+          ERROR_CONFIG_PREFIX + "errorFolder",
+          issues
+      );
+    }
   }
 
   private String validatePostProcessing(Stage.Context context, PostProcessingOptions postProcessingOptions,

@@ -41,6 +41,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.AfterClass;
@@ -342,7 +343,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -379,7 +380,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -412,7 +413,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -447,7 +448,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -482,7 +483,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -516,7 +517,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 

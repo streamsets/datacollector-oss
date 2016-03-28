@@ -31,6 +31,7 @@ public enum Errors implements ErrorCode {
   S3_SPOOLDIR_04("Buffer Limit must be equal or greater than 64KB and equal or less than 1024MB"),
   S3_SPOOLDIR_05("Max files in directory cannot be less than 1"),
   S3_SPOOLDIR_06("File Pattern configuration is required"),
+  S3_SPOOLDIR_07("Error Handling cannot be {} when Post Processing is {}"),
 
   S3_SPOOLDIR_11("Bucket name cannot be empty"),
   S3_SPOOLDIR_12("Bucket '{}' does not exist"),

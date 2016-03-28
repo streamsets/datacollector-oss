@@ -37,6 +37,8 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.AfterClass;
@@ -352,6 +354,14 @@ public class TestAmazonS3Source {
   }
 
   @Test
+  public void testInvalidErrorHandlingConfig() throws StageException {
+    AmazonS3Source source = createSourceWithWrongErrorHandlingPostProcessing();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+  }
+
+  @Test
   public void testValidConfig1() throws StageException {
     AmazonS3Source source = createSourceWithSameBucketDiffFolder();
     SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
@@ -397,11 +407,12 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -418,7 +429,8 @@ public class TestAmazonS3Source {
     s3ConfigBean.dataFormatConfig.textMaxLineLen = 1024;
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
-    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.ARCHIVE;
+    s3ConfigBean.errorConfig.archivingOption = S3ArchivingOption.MOVE_TO_BUCKET;
     s3ConfigBean.errorConfig.errorFolder = ERROR_FOLDER;
     s3ConfigBean.errorConfig.errorBucket = ERROR_BUCKET;
 
@@ -435,11 +447,12 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -456,9 +469,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.dataFormatConfig.textMaxLineLen = 1024;
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
-    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.ARCHIVE;
+    s3ConfigBean.errorConfig.archivingOption =  S3ArchivingOption.MOVE_TO_DIRECTORY;
     s3ConfigBean.errorConfig.errorFolder = ERROR_FOLDER;
-    s3ConfigBean.errorConfig.errorBucket = ERROR_BUCKET;
 
     s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
     s3ConfigBean.postProcessingConfig.archivingOption = S3ArchivingOption.MOVE_TO_BUCKET;
@@ -473,11 +486,12 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "NorthAmerica/USA/";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -513,11 +527,12 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "AKIAJ6S5Q43F4BT6ZJLQ";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "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";
     s3ConfigBean.s3Config.folder = FOLDER_NAME;
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -553,11 +568,12 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "AKIAJ6S5Q43F4BT6ZJLQ";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "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";
     s3ConfigBean.s3Config.folder = "test-error-folder3/";
     s3ConfigBean.s3Config.delimiter = "/";
-
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -593,11 +609,51 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "AKIAJ6S5Q43F4BT6ZJLQ";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "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";
     s3ConfigBean.s3Config.folder = FOLDER_NAME;
     s3ConfigBean.s3Config.delimiter = "/";
 
+    s3ConfigBean.advancedConfig = new ProxyConfig();
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createSourceWithWrongErrorHandlingPostProcessing() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.LOG;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.logMode = LogMode.COMMON_LOG_FORMAT;
+    s3ConfigBean.dataFormatConfig.logMaxObjectLen = 1024;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.ARCHIVE;
+    s3ConfigBean.postProcessingConfig.archivingOption = S3ArchivingOption.MOVE_TO_BUCKET;
+    s3ConfigBean.postProcessingConfig.postProcessBucket = BUCKET_NAME;
+    s3ConfigBean.postProcessingConfig.postProcessFolder = POSTPROCESS_FOLDER;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
+    s3ConfigBean.s3FileConfig.filePattern = "*.log";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "AKIAJ6S5Q43F4BT6ZJLQ";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "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";
+    s3ConfigBean.s3Config.folder = FOLDER_NAME;
+    s3ConfigBean.s3Config.delimiter = "/";
+    s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 

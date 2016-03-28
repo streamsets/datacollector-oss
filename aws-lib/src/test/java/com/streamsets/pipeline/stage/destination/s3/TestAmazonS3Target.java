@@ -35,6 +35,8 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -190,6 +192,7 @@ public class TestAmazonS3Target {
     S3Config s3Config = new S3Config();
     s3Config.setEndPointForTest("http://localhost:" + port);
     s3Config.bucket = BUCKET_NAME;
+    s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3Config.folder = folder;
@@ -200,6 +203,7 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.dataFormat = DataFormat.TEXT;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
     s3TargetConfigBean.s3Config = s3Config;
+    s3TargetConfigBean.advancedConfig = new ProxyConfig();
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = null;
