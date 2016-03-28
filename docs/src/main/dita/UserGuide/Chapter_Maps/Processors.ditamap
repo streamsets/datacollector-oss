@@ -79,6 +79,7 @@
    </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/JavaScript-ProcessingMode.dita"/>
    <topicref href="../Processors/JavaScript-ScriptingObjects.dita"/>
    <topicref href="../Processors/JavaScript-DelimData.dita"/>
    <topicref href="../Processors/JavaScript-TypeHandling.dita"/>
@@ -90,7 +91,7 @@
   </topicref>
   <topicref href="../Processors/Jython.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/Jython_ProcessingMode.dita"/>
+   <topicref href="../Processors/Jython-ProcessingMode.dita"/>
    <topicref href="../Processors/Jython-ScriptingObjects.dita"/>
    <topicref href="../Processors/Jython-DelimData.dita"/>
    <topicref href="../Processors/Jython-TypeHandling.dita"/>

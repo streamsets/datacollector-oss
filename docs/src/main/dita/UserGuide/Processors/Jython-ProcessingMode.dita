@@ -21,13 +21,17 @@
  <conbody>
     <p><indexterm>Jython Evaluator processor<indexterm>processing
         mode</indexterm></indexterm><indexterm>processing modes<indexterm>Jython
-          Evaluator</indexterm></indexterm>The Jython Evaluator provides the following processing
-        modes:<dl
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-DL-ProcessMode">
-        <dlentry>
-          <dt/>
-          <dd/>
-        </dlentry>
-      </dl></p>
+          Evaluator</indexterm></indexterm>The Jython Evaluator provides the following processing modes:<dl>
+            <dlentry
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ProcessMode-RbyR">
+              <dt/>
+              <dd/>
+            </dlentry>
+            <dlentry
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ProcessM-BbyB">
+              <dt/>
+              <dd/>
+            </dlentry>
+          </dl></p>
  </conbody>
 </concept>

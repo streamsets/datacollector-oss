@@ -45,7 +45,7 @@
       </dlentry>
       <dlentry>
         <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          configuration file</dt>
+          configuration file (sdc.properties)</dt>
         <dd>Cofiguration file with most <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           properties. Found in the following location:

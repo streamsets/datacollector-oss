@@ -399,12 +399,12 @@
             </p>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
-                  <draft-comment author="Loretta">Scripting processors - <uicontrol>P-DL-ProcessMode
-                        </uicontrol> - Groovy and Jython use the whole DL. JavaScript uses Record by
-                        Record only (<uicontrol>P-ProcessMode-RbyR</uicontrol>).</draft-comment>
+                  <draft-comment author="Loretta">Scripting processors -  - Groovy and Jython use
+                        both, JavaScript uses Record by Record only
+                              (<uicontrol>P-ProcessM-RbyR</uicontrol>).</draft-comment>
             </p>
             <p>
-                  <dl id="P-DL-ProcessMode">
+                  <dl>
                         <dlentry id="P-ProcessMode-RbyR">
                               <dt>Record by Record</dt>
                               <dd>The processor calls the script for each record. The processor
@@ -418,7 +418,7 @@
                                     Since this mode calls the script for each record, pipeline
                                     performance will be negatively affected. </dd>
                         </dlentry>
-                        <dlentry>
+                        <dlentry id="P-ProcessM-BbyB">
                               <dt>Batch by Batch</dt>
                               <dd>The processor calls the script for each batch. The processor
                                     passes the batch to the script as a list and processes the batch
