@@ -108,6 +108,15 @@
    </topicref>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/KinFirehose.dita" chunk="to-content">  
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/KinFirehose-DeliveryStream.dita"/>
+   <topicref href="../Destinations/KinFirehose-Credentials.dita"/>
+   <topicref href="../Destinations/KinFirehose-DataFormat.dita"/>
+   <topicref href="../Destinations/KinFirehose-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/KinProducer.dita" chunk="to-content">  
    <topicmeta>
    <shortdesc/>

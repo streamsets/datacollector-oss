@@ -19,7 +19,7 @@
         <context>
             <p><indexterm>Kinesis Consumer
                 origin<indexterm>configuring</indexterm></indexterm>Configure a Kinesis Consumer
-                origin to read data from an Amazon Kinesis cluster.</p>
+                origin to read data from Amazon Kinesis Streams.</p>
         </context>
         <steps id="steps_hqj_pw4_yr">
             <step
@@ -43,19 +43,19 @@
                             <tbody>
                                 <row>
                                     <entry>Access Key ID</entry>
-                                    <entry>AWS access key ID with privileges for the Kinesis
-                                            stream.<p>Required unless using IAM roles with IAM
+                                    <entry>AWS access key ID with privileges for Kinesis
+                                            Streams.<p>Required unless using IAM roles with IAM
                                             instance profile credentials. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Secret Access Key</entry>
-                                    <entry>AWS secret access key with privileges for the Kinesis
-                                            stream.<p>Required unless using IAM roles with IAM
+                                    <entry>AWS secret access key with privileges for Kinesis
+                                            Streams.<p>Required unless using IAM roles with IAM
                                             instance profile credentials. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Region</entry>
-                                    <entry>AWS region that hosts the cluster.</entry>
+                                    <entry>AWS region that hosts the Kinesis cluster.</entry>
                                 </row>
                                 <row>
                                     <entry>Stream Name</entry>

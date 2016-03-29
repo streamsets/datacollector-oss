@@ -30,7 +30,8 @@
         <li>InfluxDB - Writes data to InfluxDB.</li>
         <li>JDBC Producer - Writes data to JDBC.</li>
         <li>Kafka Producer - Writes data to a Kafka cluster.</li>
-        <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
+        <li>Kinesis Firehose - Writes data to a Kinesis Firehose delivery stream.</li>
+        <li>Kinesis Producer - Writes data to Kinesis Streams.</li>
         <li>Local FS - Writes data to a local file system. </li>
         <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
         <li>MapR FS - Writes data to MapR FS.</li>

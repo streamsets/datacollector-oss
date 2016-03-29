@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_anh_4y3_yr">
  <title>Kinesis Consumer</title>
- <shortdesc>The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. </shortdesc>
+ <shortdesc>The Kinesis Consumer origin reads data from Amazon Kinesis Streams. </shortdesc>
  <conbody>
   <p><indexterm>Kinesis Consumer
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kinesis

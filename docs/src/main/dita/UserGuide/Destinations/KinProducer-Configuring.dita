@@ -19,7 +19,7 @@
         <context>
             <p><indexterm>Kinesis Producer
                 destination<indexterm>configuring</indexterm></indexterm>Configure a Kinesis
-                Producer destination to write data to an Amazon Kinesis cluster.</p>
+                Producer destination to write data to Amazon Kinesis Streams.</p>
         </context>
         <steps id="steps_dsb_sn4_yr">
             <step
@@ -43,17 +43,17 @@
                             <tbody>
                                 <row>
                                     <entry>Access Key ID</entry>
-                                    <entry>AWS access key ID with privileges for the Kinesis
-                                        stream.</entry>
+                                    <entry>AWS access key ID with privileges for Kinesis
+                                        Streams.</entry>
                                 </row>
                                 <row>
                                     <entry>Secret Access Key</entry>
-                                    <entry>AWS secret access key with privileges for the Kinesis
-                                        stream.</entry>
+                                    <entry>AWS secret access key with privileges for Kinesis
+                                        Streams.</entry>
                                 </row>
                                 <row>
                                     <entry>Region</entry>
-                                    <entry>Amazon Web Services region that hosts the
+                                    <entry>Amazon Web Services region that hosts the Kinesis
                                         cluster.</entry>
                                 </row>
                                 <row>

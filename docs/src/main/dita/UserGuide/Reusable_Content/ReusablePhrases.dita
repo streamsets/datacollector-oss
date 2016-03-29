@@ -496,7 +496,7 @@
             </p>
             <p>
                   <draft-comment author="Loretta"><b>DESTDataF-Text</b> and others in this list are
-                        used by Kafka, Flume, Hadoop FS, Local FS. </draft-comment>
+                        used by Kafka, Flume, Hadoop FS, Local FS, Kinesis Firehose. </draft-comment>
                   <dl id="DESTDataFormats">
                         <dlentry id="DESTDataF-Text">
                               <dt>Text</dt>

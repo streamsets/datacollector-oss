@@ -545,7 +545,7 @@
                 <cmd>
                     <draft-comment author="Loretta"><b>JSON-2props </b> - Kafka Consumer, JMS
                         Consumer, Hadoop FS, Kinesis all use them. HTTP Client, and probably others
-                        use the 2nd row.</draft-comment>
+                        use the 2nd row. </draft-comment>
                 </cmd>
             </step>
             <step id="JSON-2props">
@@ -563,7 +563,7 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row id="ROW-JSONContent">
                                     <entry>JSON Content</entry>
                                     <entry>Type of JSON content. Use one of the following options: <p>
                                             <ul id="ul_atw_krl_5q">
@@ -1575,7 +1575,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in
-                        KProducer.</draft-comment>
+                        KProducer and KinFirehose.</draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-Mess">
@@ -1618,8 +1618,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DelimProps:</uicontrol> Use for the
-                        appropriate delimited destinations - currently Amazon S3, Flume, Hadoop FS
-                        and Kafka Producer:</draft-comment>
+                        appropriate delimited destinations - currently Amazon S3, Flume, Hadoop FS,
+                        Kafka Producer, and Kinesis Firehose:</draft-comment>
                 </cmd>
             </step>
             <step id="DelimProps">
@@ -1684,7 +1684,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>JSONProps</uicontrol> - Used for
-                        Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
+                        Hadoop FS, Kafka Producer, Amazon S3, Kinesis Producer, and Kinesis
+                        Firehose.</draft-comment>
                 </cmd>
             </step>
             <step id="JSONProps">

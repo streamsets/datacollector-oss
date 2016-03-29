@@ -15,7 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_avx_bnq_rt">
  <title>Amazon S3</title>
- <shortdesc>The Amazon S3 destination writes data to Amazon S3. </shortdesc>
+ <shortdesc>The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis
+        Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon
+        Kinesis Streams, use the Kinesis Producer destination.</shortdesc>
  <conbody>
         <p><indexterm>Amazon S3
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Amazon

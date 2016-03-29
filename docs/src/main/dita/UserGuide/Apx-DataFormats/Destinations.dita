@@ -132,6 +132,19 @@
                                     id="image_mlp_sxc_kv"/></entry>
                         </row>
                         <row>
+                             <entry>Kinesis Firehose</entry>
+                              <entry><image href="../Graphics/CheckIcon.png"
+                               scale="30" id="image_slj_zgd_lv"/></entry>
+                               <entry/>
+                               <entry><image href="../Graphics/CheckIcon.png"
+                               scale="30" id="image_gxs_zgd_lv"/></entry>
+                                <entry><image href="../Graphics/CheckIcon.png"
+                                scale="30" id="image_efh_1hd_lv"/></entry>
+                                <entry/>
+                                <entry/>
+                                <entry/>
+                         </row>
+                        <row>
                             <entry>Kinesis Producer</entry>
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_zhv_txc_kv"/></entry>

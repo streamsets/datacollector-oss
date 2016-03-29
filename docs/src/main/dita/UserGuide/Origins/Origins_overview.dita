@@ -29,7 +29,7 @@
         <li>JDBC Consumer - Reads database data through a JDBC connection.</li>
         <li>JMS Consumer - Reads messages from JMS. </li>
         <li>Kafka Consumer - Reads messages from Kafka.</li>
-        <li>Kinesis Consumer - Reads data from Kinesis.</li>
+        <li>Kinesis Consumer - Reads data from Kinesis Streams.</li>
         <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>

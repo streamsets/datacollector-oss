@@ -15,7 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_swk_h1j_yr">
  <title>Kinesis Producer</title>
- <shortdesc>The Kinesis Producer destination writes data to an Amazon Kinesis cluster. </shortdesc>
+ <shortdesc>The Kinesis Producer destination writes data to Amazon Kinesis Streams. To write data to
+        an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write
+        data to Amazon S3, use the Amazon S3 destination. </shortdesc>
  <conbody>
     <p><indexterm>Kinesis Producer
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kinesis
