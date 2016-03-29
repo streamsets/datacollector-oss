@@ -60,8 +60,8 @@ public class ClusterHdfsConfigBean {
       required = true,
       type = ConfigDef.Type.LIST,
       defaultValue = "[]",
-      label = "Directory Path",
-      description = "HDFS directory path",
+      label = "Input Paths",
+      description = "HDFS Input Paths",
       displayPosition = 20,
       group = "HADOOP_FS"
   )
@@ -72,7 +72,7 @@ public class ClusterHdfsConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       label = "Include All Subdirectories",
       defaultValue = "true",
-      description = "Reads all subdirectories within the directory path",
+      description = "Reads all subdirectories within the input paths",
       displayPosition = 30,
       group = "HADOOP_FS"
   )
