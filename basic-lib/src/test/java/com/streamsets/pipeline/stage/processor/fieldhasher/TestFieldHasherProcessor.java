@@ -1110,14 +1110,14 @@ public class TestFieldHasherProcessor {
       String hVal = outputRecord.get("/h").getValueAsString();
       String iVal = outputRecord.get("/i").getValueAsString();
 
-      Assert.assertTrue(
-          cVal.equals(
-              computeHashForRecordUsingFields(record,
-                  ImmutableList.of("/a", "/b"), HashType.MD5)));
-      Assert.assertTrue(
-          rh1Val.equals(
-              computeHashForRecordUsingFields(record,
-                  ImmutableList.of("/d", "/e"), HashType.SHA1)));
+      Assert.assertEquals(
+          cVal,
+          computeHashForRecordUsingFields(record, ImmutableList.of("/a", "/b"), HashType.MD5)
+      );
+      Assert.assertEquals(
+          rh1Val,
+          computeHashForRecordUsingFields(record, ImmutableList.of("/d", "/e"), HashType.SHA1)
+      );
       map.put("g", Field.create("g1"));
       map.put("h", Field.create("h1"));
 
@@ -1125,24 +1125,26 @@ public class TestFieldHasherProcessor {
       Record newRecord = RecordCreator.create("s", "s:s1");
       newRecord.set(Field.create(map));
 
-      Assert.assertTrue(
-          gVal.equals(
-              computeHashForRecordUsingFields(newRecord,
-                  ImmutableList.of("/g"), HashType.SHA2)));
+      Assert.assertEquals(
+          gVal,
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/g"), HashType.SHA2)
+      );
 
       //h is already hashed so create a new record to check the values are same.
       newRecord = RecordCreator.create("s", "s:s1");
       newRecord.set(Field.create(map));
-      Assert.assertTrue(
-          hVal.equals(computeHashForRecordUsingFields(newRecord,
-              ImmutableList.of("/h"), HashType.SHA2)));
+      Assert.assertEquals(
+          hVal,
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/h"), HashType.SHA2)
+      );
 
       //i is already hashed so create a new record to check the values are same.
       newRecord = RecordCreator.create("s", "s:s1");
       newRecord.set(Field.create(map));
-      Assert.assertTrue(
-          iVal.equals(computeHashForRecordUsingFields(newRecord,
-              ImmutableList.of("/i"), HashType.SHA2)));
+      Assert.assertEquals(
+          iVal,
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/i"), HashType.SHA2)
+      );
 
     } finally {
       runner.runDestroy();

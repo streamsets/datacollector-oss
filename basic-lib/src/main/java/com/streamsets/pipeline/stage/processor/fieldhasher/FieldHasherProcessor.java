@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashFunction;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
@@ -35,6 +34,7 @@ import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -197,7 +197,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       List<FieldHasherConfig> fieldHasherConfigs
   ) throws StageException {
     for (FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
-      Set<String> fieldsToHashForThisConfig = new HashSet<>();
+      Set<String> fieldsToHashForThisConfig = new LinkedHashSet<>();
       //Collect the matching fields to Hash.
       for (String fieldToHash : fieldHasherConfig.sourceFieldsToHash) {
         List<String> matchingFieldsPath =

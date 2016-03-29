@@ -90,7 +90,14 @@ public class ScriptingProcessorTestUtil {
       Assert.assertEquals("FOO", outRec.get("/foo").getValue());
       outRec = output.getRecords().get("lane").get(3);
       Assert.assertEquals(Field.Type.LIST, outRec.get("/").getType());
-      Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+      // JavaScript only defines "Number" as a type which is a 64-bit float (double)
+      if (System.getProperty("java.version").startsWith("1.7.")) {
+        Assert.assertEquals(Field.Type.DOUBLE, outRec.get("[0]").getType());
+      }
+      // Java8's Nashorn engine however, will respect the original Java type of Integer.
+      if (System.getProperty("java.version").startsWith("1.8")) {
+        Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+      }
       Assert.assertEquals(5, outRec.get("[0]").getValue());
     } finally {
       runner.runDestroy();
@@ -329,12 +336,21 @@ public class ScriptingProcessorTestUtil {
       Assert.assertEquals(2, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
       Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      // In this case the type passthrough works because the scripting processor didn't modify this field.
       Assert.assertEquals(1, outRec.get("/Hello").getValue());
       Assert.assertEquals(1, outRec.get("[0]").getValue());
       outRec = output.getRecords().get("lane").get(1);
       Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
-      Assert.assertEquals(2, outRec.get("/Hello").getValue());
-      Assert.assertEquals(2, outRec.get("[0]").getValue());
+      // JavaScript only defines "Number" as a type which is a 64-bit float (double)
+      if (System.getProperty("java.version").startsWith("1.7.")) {
+        Assert.assertEquals(2.0, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2.0, outRec.get("[0]").getValue());
+      }
+      // Java8's Nashorn engine however, will respect the original Java type of Integer.
+      if (System.getProperty("java.version").startsWith("1.8")) {
+        Assert.assertEquals(2, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2, outRec.get("[0]").getValue());
+      }
     } finally {
       runner.runDestroy();
     }
