@@ -33,23 +33,24 @@ public class HasherConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      label = "Hash to Target",
-      description="Hash the source fields to a target field or a header attribute",
+      label = "Hash in Place",
+      description="Replaces data in the specified fields with the hashed values",
       displayPosition = 10,
       group = "FIELD_HASHING"
   )
   @ListBeanModel
-  public List<TargetFieldHasherConfig> targetFieldHasherConfigs;
+  public List<FieldHasherConfig> inPlaceFieldHasherConfigs;
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      label = "Hash in Place",
-      description="Hash the source fields and assign back to themselves.",
+      label = "Hash to Target",
+      description="Hashes the specified fields and writes to a target field or header attribute." +
+          " Multiple fields are hashed together.",
       displayPosition = 20,
       group = "FIELD_HASHING"
   )
   @ListBeanModel
-  public List<FieldHasherConfig> inPlaceFieldHasherConfigs;
+  public List<TargetFieldHasherConfig> targetFieldHasherConfigs;
 
 }

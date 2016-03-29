@@ -30,7 +30,7 @@ public class RecordHasherConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue="false",
       label = "Hash Entire Record",
-      description="",
+      description = "",
       displayPosition = 10,
       group = "RECORD_HASHING"
   )
@@ -39,9 +39,9 @@ public class RecordHasherConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue="false",
+      defaultValue = "false",
       label = "Include Record Header",
-      description="Include Record Header for hashing along with the record fields.",
+      description = "Include the record header for hashing",
       displayPosition = 20,
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
@@ -54,7 +54,7 @@ public class RecordHasherConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue="MD5",
       label = "Hash Type",
-      description="",
+      description = "",
       displayPosition = 30,
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
@@ -66,10 +66,9 @@ public class RecordHasherConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
+      defaultValue = "",
       label = "Target Field",
-      description = "A Target field to store the hash value" +
-          " obtained by combining the source fields to hash.",
+      description = "String field to store the hashed value. Creates the field if it does not exist.",
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
@@ -81,10 +80,9 @@ public class RecordHasherConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      defaultValue="",
+      defaultValue = "",
       label = "Header Attribute",
-      description = "A Header Attribute to store the hash value" +
-          " obtained by combining the source fields to hash.",
+      description = "Header attribute to store the hashed value. Creates the attribute if it does not exist.",
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
