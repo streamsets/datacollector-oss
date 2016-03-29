@@ -75,7 +75,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_41("Base directory path could not be created"),
   HADOOPFS_42("Base directory path could not be created: '{}'"),
   HADOOPFS_43("Could not create a file/directory under base directory: '{}'"),
-  HADOOPFS_44("Could verify the base directory: '{}'"),
+  HADOOPFS_44("Could not verify the base directory: '{}'"),
   HADOOPFS_45("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
 
   HADOOPFS_46("The compression codec '{}' requires native libraries to be installed: {}"),
