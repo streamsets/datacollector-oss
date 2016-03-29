@@ -84,6 +84,15 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Additional JMS Configuration Properties</entry>
+                                    <entry><p>Additional JMS or JNDI configuration properties to use. To add properties, click
+                                                <uicontrol>Add</uicontrol> and define the JMS or
+                                            JNDI property name and value. </p>
+                                        <p>When you add a configuration property, enter the exact
+                                            property name and value. JMS Consumer does not validate
+                                            the property names or values. </p></entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
                                     <entry/>
