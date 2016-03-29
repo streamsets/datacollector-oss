@@ -69,6 +69,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -126,6 +129,10 @@ public class WebServerTask extends AbstractTask {
 
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
   private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
+
+
+  public static final String REMOTE_APPLICATION_TOKEN = "dpm.applicationToken";
+  private static final String REMOTE_APPLICATION_TOKEN_DEFAULT = "";
 
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
@@ -338,6 +345,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   private ConstraintSecurityHandler configureSSO(ServletContextHandler appHandler, String appContext) {
+    validateApplicationToken();
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     final SSOService ssoService = new ProxySSOService(new RemoteSSOService());
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
@@ -640,5 +648,27 @@ public class WebServerTask extends AbstractTask {
       }
     }
     return roles;
+  }
+
+  private void validateApplicationToken() {
+    if (conf.hasName(REMOTE_APPLICATION_TOKEN) && conf.hasName(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG)) {
+      String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, "");
+      String securityServiceBaseURL = conf.get(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG,
+          RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT);
+      String registrationURI = securityServiceBaseURL + "/public-rest/v1/components/registration";
+
+      Map<String, String> registrationData = new HashMap<>();
+      registrationData.put("authToken", applicationToken);
+      registrationData.put("componentId", this.runtimeInfo.getId());
+      Response response = ClientBuilder.newClient()
+          .target(registrationURI)
+          .request()
+          .post(Entity.json(registrationData));
+
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException("Registration to Remote Service failed : " +
+            response.readEntity(String.class));
+      }
+    }
   }
 }
