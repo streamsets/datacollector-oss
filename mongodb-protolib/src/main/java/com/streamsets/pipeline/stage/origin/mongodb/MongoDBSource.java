@@ -119,7 +119,7 @@ public class MongoDBSource extends BaseSource {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     try {
-      initialObjectId = new ObjectId(new SimpleDateFormat("YYYY-MM-DD HH:mm:ss").parse(initialOffset));
+      initialObjectId = new ObjectId(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(initialOffset));
     } catch (ParseException e) {
       issues.add(getContext()
               .createConfigIssue(
@@ -233,7 +233,7 @@ public class MongoDBSource extends BaseSource {
       } else {
         offset = new ObjectId(lastSourceOffset);
       }
-      LOG.debug("Getting new cursor with params: {} {} {}", maxBatchSize, offsetField, lastSourceOffset);
+      LOG.debug("Getting new cursor with params: {} {} {}", maxBatchSize, offsetField, offset);
       if (isCapped) {
         cursor = mongoCollection
             .find()
