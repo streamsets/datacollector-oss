@@ -52,7 +52,7 @@
             the field is present. </p>
         <p>For example, the following expression checks the datatype of the ID column with
             ignoreWhenMissing set to false:
-            <codeblock>${drift:type('/UserID'), false}</codeblock></p>
+            <codeblock>${drift:type('/UserID', false)}</codeblock></p>
         <p>Say all records include the UserID field, and then a single record passes without the
             UserID field. This expression triggers an alert for the record with the missing field,
             and again when the next record arrives that includes the UserID field. </p>
