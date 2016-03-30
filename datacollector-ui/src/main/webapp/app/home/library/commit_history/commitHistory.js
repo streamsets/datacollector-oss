@@ -51,9 +51,9 @@ angular
               api.pipelineAgent.importPipelineConfig(remotePipeline.name, pipelineEnvelope, true)
                 .then(
                   function(res) {
-                    $scope.downloading = false;
                     $scope.updatedPipelineConfig = res.data.pipelineConfig;
                     $scope.pipelineVersion = remotePipeline.version;
+                    $modalInstance.close($scope.updatedPipelineConfig);
                   },
                   function(res) {
                     $scope.common.errors = [res.data];
@@ -67,7 +67,7 @@ angular
           );
       },
       close : function () {
-        $modalInstance.close($scope.updatedPipelineConfig);
+        $modalInstance.close();
       }
     });
 

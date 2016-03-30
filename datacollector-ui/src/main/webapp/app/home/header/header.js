@@ -26,7 +26,7 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate,
-                                           pipelineService, pipelineConstant, $modal, $q) {
+                                           pipelineService, pipelineConstant, $modal, $q, $route) {
 
 
     var pipelineValidationInProgress = 'Validating Pipeline...',
@@ -317,17 +317,27 @@ angular
         pipelineService.publishPipelineCommand(pipelineInfo, $event)
           .then(
             function(metadata) {
-              console.log(metadata);
               $scope.pipelineConfig.metadata = metadata;
               $rootScope.common.successList.push({
-                message: 'Successfully Published Pipeline.'
+                message: 'Successfully Published Pipeline. New Pipeline Commit Version - ' +
+                metadata['dpm.pipeline.version']
               });
             });
       },
 
       showCommitHistory: function (pipelineInfo, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Show Commit History', 1);
-        pipelineService.showCommitHistoryCommand(pipelineInfo, $event);
+        pipelineService.showCommitHistoryCommand(pipelineInfo, $event)
+          .then(
+            function(updatedPipelineConfig) {
+              if (updatedPipelineConfig) {
+                $route.reload();
+                $rootScope.common.successList.push({
+                  message: 'Successfully Fetched Pipeline Commit Version - ' +
+                  updatedPipelineConfig.metadata['dpm.pipeline.version']
+                });
+              }
+            });
       }
     });
 

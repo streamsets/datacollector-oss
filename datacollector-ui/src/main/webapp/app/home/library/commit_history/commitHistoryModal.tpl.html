@@ -38,9 +38,9 @@
 
         <td>
           <a href="javascript:;" translate="global.form.getThisVersion"
-             ng-if="pipelineVersion !== remotePipeline.version"
+             ng-if="pipelineVersion !== remotePipeline.version && !downloading"
              ng-click="downloadRemotePipeline(remotePipeline, $index); $event.stopPropagation()">Get</a>
-          <span ng-if="pipelineVersion === remotePipeline.version">Current</span>
+          <span ng-if="pipelineVersion === remotePipeline.version && !downloading">Current</span>
         </td>
       </tr>
       </tbody>
@@ -48,6 +48,7 @@
 
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">close</button>
+    <button type="reset" class="btn btn-default"
+            ng-click="close()">{{((downloading) ? 'global.form.downloading' : 'global.form.close') | translate}}</button>
   </div>
 </form>

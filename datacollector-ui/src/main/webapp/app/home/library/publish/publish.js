@@ -31,7 +31,7 @@ angular
       },
       commitPipelineModel : {
         name: pipelineInfo.name,
-        commitMessage: 'Commit Message ...'
+        commitMessage: ''
       },
       publish : function () {
         $q.when(api.remote.publishPipeline(

@@ -463,7 +463,7 @@ angular.module('dataCollectorApp.common')
       }
 
       modalInstance.result.then(function (updatedPipelineConfig) {
-        $route.reload();
+        defer.resolve(updatedPipelineConfig);
       }, function () {
 
       });
