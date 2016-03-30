@@ -25,7 +25,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import com.streamsets.pipeline.lib.util.DirectoryPathCreationWatcher;
+import com.streamsets.pipeline.lib.io.DirectoryPathCreationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,12 +245,6 @@ public class DirectorySpooler {
         startSpooling(currentFile);
       }
 
-      if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
-        // create and schedule file purger only if the retention time is > 0
-        purger = new FilePurger();
-        scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
-      }
-
     } catch (IOException ex) {
       destroy();
       throw new RuntimeException(ex);
@@ -270,6 +264,12 @@ public class DirectorySpooler {
 
     finder = new FileFinder(lastFound);
     scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
+
+    if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
+      // create and schedule file purger only if the retention time is > 0
+      purger = new FilePurger();
+      scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
+    }
   }
 
   public void destroy() {
@@ -336,25 +336,30 @@ public class DirectorySpooler {
     }
   }
 
-  private void waitTillPathApperance() throws InterruptedException {
-    if (waitForPathAppearance) {
+  private boolean canPoolFiles(){
+    if(waitForPathAppearance) {
       try {
-        DirectoryPathCreationWatcher watcher = new DirectoryPathCreationWatcher(Arrays.asList(spoolDirPath));
-        watcher.waitForDirectoryCreation();
-        waitForPathAppearance = false;
-        startSpooling(this.currentFile);
+        DirectoryPathCreationWatcher watcher = new DirectoryPathCreationWatcher(Arrays.asList(spoolDirPath), 0);
+        if (!watcher.find().isEmpty()) {
+          waitForPathAppearance = false;
+          startSpooling(this.currentFile);
+        } else {
+          LOG.debug(Utils.format("Directory Paths does not exist yet: {}", spoolDirPath));
+        }
       } catch (IOException e) {
         throw new RuntimeException(Utils.format("Some Problem with the file system: {}", e.toString(), e));
       }
     }
+    return !waitForPathAppearance;
   }
-
 
   public File poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 
-    waitTillPathApperance();
+    if(!canPoolFiles()) {
+      return null;
+    }
 
     Preconditions.checkState(running, "Spool directory watcher not running");
     synchronized (this) {

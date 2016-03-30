@@ -71,7 +71,7 @@ public class TestFileTailSource {
   private final Logger LOGGER = LoggerFactory.getLogger(TestFileTailSource.class);
 
   @Test(expected = StageException.class)
-  //Non existing directory with conf.validatePath=true (default) will throw exception.
+  //Non existing directory with conf.allowLateDirectory=false (default) will throw exception.
   public void testInitDirDoesNotExist() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
 
@@ -896,10 +896,10 @@ public class TestFileTailSource {
     conf.fileInfos = Arrays.asList(fileInfo);
     conf.postProcessing = PostProcessingOptions.NONE;
     conf.dataFormatConfig.textMaxLineLen = 1024;
-    conf.validatePath = false;
+    conf.allowLateDirectories = true;
 
 
-    Source source = new FileTailSource(conf, SCAN_INTERVAL);
+    Source source = new FileTailSource(conf, 1);
 
     SourceRunner runner = createRunner(source);
     try {
@@ -1183,7 +1183,7 @@ public class TestFileTailSource {
     conf.maxWaitTimeSecs = 40;
     conf.fileInfos = Arrays.asList(fileInfo);
     conf.postProcessing = PostProcessingOptions.NONE;
-    conf.validatePath=false;
+    conf.allowLateDirectories = true;
 
     conf.dataFormatConfig.textMaxLineLen = 1024;
 

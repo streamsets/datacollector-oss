@@ -74,7 +74,7 @@ public class SpoolDirSource extends BaseSource {
     boolean waitForPathToBePresent = !validateDir(
         conf.spoolDir, Groups.FILES.name(),
         SPOOLDIR_CONFIG_BEAN_PREFIX + "spoolDir",
-        issues, conf.validatePath
+        issues, !conf.allowLateDirectory
     );
 
     // Whether overrunLimit is less than max limit is validated by DataParserFormatConfig.

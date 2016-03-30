@@ -101,13 +101,14 @@ public class FileTailConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Validate Path",
-      description = "Whether to validate the path of spool directory.",
+      label = "Allow Late Directories",
+      description = "Enables reading from late-arriving directories." +
+          " When enabled, the origin does not validate configured paths.",
       displayPosition = 70,
       group = "FILES",
-      defaultValue = "true"
+      defaultValue = "false"
   )
-  public boolean validatePath = true;
+  public boolean allowLateDirectories = false;
 
   @ConfigDef(
       required = true,

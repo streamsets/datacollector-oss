@@ -32,7 +32,7 @@ public class FileTailSourceUpgrader implements StageUpgrader {
 
   private static final String CONF = "conf";
   private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
-  private static final String VALIDATE_PATH = "validatePath";
+  private static final String ALLOW_LATE_DIRECTORIES = "allowLateDirectories";
   private static final Joiner joiner = Joiner.on(".");
 
   private final List<Config> configsToRemove = new ArrayList<>();
@@ -97,7 +97,7 @@ public class FileTailSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
-    configs.add(new Config(joiner.join(CONF,VALIDATE_PATH), true));
+    configs.add(new Config(joiner.join(CONF, ALLOW_LATE_DIRECTORIES), false));
   }
 
 }

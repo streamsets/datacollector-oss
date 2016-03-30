@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import com.streamsets.pipeline.lib.util.DirectoryPathCreationWatcher;
 import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +118,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
   private boolean allowForLateDirectoryCreation;
   private Map<Path, MultiFileInfo> nonExistingPaths = new HashMap<Path, MultiFileInfo>();
   private ScheduledExecutorService executor;
-  private DirectoryPathCreationWatcher directoryWatcher;
+  private DirectoryPathCreationWatcher directoryWatcher = null;
 
   public GlobFileContextProvider(
       boolean allowForLateDirectoryCreation,
@@ -134,49 +133,32 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
     globFileInfos = new CopyOnWriteArrayList<GlobFileInfo>();
     fileContexts = new ArrayList<>();
-    executor = (scanIntervalSecs == 0) ? null : new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
+
     this.allowForLateDirectoryCreation = allowForLateDirectoryCreation;
     this.scanIntervalSecs = scanIntervalSecs;
-
-    for (MultiFileInfo fileInfo : fileInfos) {
-      if (!checkForNonExistingPath(fileInfo)) {
-        addToContextOrGlobFileInfo(
-            scanIntervalSecs,
-            charset,
-            maxLineLength,
-            postProcessing,
-            archiveDir,
-            eventPublisher, fileInfo
-        );
-      }
-    }
-
-    if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
-      directoryWatcher = new DirectoryPathCreationWatcher(nonExistingPaths.keySet());
-      if (executor == null) {
-        executor = new SafeScheduledExecutorService(1, "Directory Creation Watcher");
-      }
-      executor.submit(directoryWatcher);
-    }
-
     this.charset = charset;
     this.maxLineLength = maxLineLength;
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
     this.eventPublisher = eventPublisher;
 
+    executor = (scanIntervalSecs == 0) ? null :
+        new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "File Finder");
+
+    for (MultiFileInfo fileInfo : fileInfos) {
+      if (!checkForNonExistingPath(fileInfo)) {
+        addToContextOrGlobFileInfo(fileInfo);
+      }
+    }
+
+    if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
+      directoryWatcher = new DirectoryPathCreationWatcher(nonExistingPaths.keySet(), this.scanIntervalSecs);
+    }
+
     LOG.debug("Created");
   }
 
-  private void addToContextOrGlobFileInfo(
-      int scanIntervalSecs,
-      Charset charset,
-      int maxLineLength,
-      PostProcessingOptions postProcessing,
-      String archiveDir,
-      FileEventPublisher eventPublisher,
-      MultiFileInfo fileInfo
-  ) throws IOException {
+  private void addToContextOrGlobFileInfo(MultiFileInfo fileInfo) throws IOException {
     //Make sure if it is a periodic pattern roll mode and there is no globbing in the parent path
     //if so add it to globFileInfo
     if (fileInfo.getFileRollMode() == FileRollMode.PATTERN
@@ -193,7 +175,8 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
           )
       );
     } else {
-      globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+      //If scanIntervalSecs == 0, the GlobFile Info doc says it is synchronous it does not need a executor.
+      globFileInfos.add(new GlobFileInfo(fileInfo, (scanIntervalSecs == 0)? null : executor, scanIntervalSecs));
     }
   }
 
@@ -213,21 +196,13 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
 
   private void findCreatedDirectories() throws IOException{
     if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
-      Path processingPath;
-      while ((processingPath = directoryWatcher.getCompletedPaths().poll()) != null) {
-        MultiFileInfo fileInfo = nonExistingPaths.get(processingPath);
-        addToContextOrGlobFileInfo(
-            scanIntervalSecs,
-            charset,
-            maxLineLength,
-            postProcessing,
-            archiveDir,
-            eventPublisher,
-            fileInfo
-        );
-        nonExistingPaths.remove(processingPath);
-        LOG.debug("Found Path '{}'", processingPath);
+      for (Path foundPath : directoryWatcher.find()) {
+        MultiFileInfo fileInfo = nonExistingPaths.get(foundPath);
+        addToContextOrGlobFileInfo(fileInfo);
+        nonExistingPaths.remove(foundPath);
+        LOG.debug("Found Path '{}'", foundPath);
       }
+
     }
   }
 
@@ -242,7 +217,8 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
       for (Path path : found) {
         FileContext fileContext = new FileContext(
             globfileInfo.getFileInfo(path),
-            charset, maxLineLength,
+            charset,
+            maxLineLength,
             postProcessing,
             archiveDir,
             eventPublisher
@@ -312,6 +288,11 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     if (executor != null) {
       executor.shutdownNow();
     }
+
+    if (directoryWatcher != null) {
+      directoryWatcher.close();
+    }
+
     for (GlobFileInfo globFileInfo : globFileInfos) {
       try {
         globFileInfo.close();

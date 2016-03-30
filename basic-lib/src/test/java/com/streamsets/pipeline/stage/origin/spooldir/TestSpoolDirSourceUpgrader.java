@@ -49,8 +49,8 @@ public class TestSpoolDirSourceUpgrader {
     Assert.assertEquals("*", upgrade.get(5).getValue());
     Assert.assertEquals("conf.dataFormatConfig.csvSkipStartLines", upgrade.get(6).getName());
     Assert.assertEquals(0, upgrade.get(6).getValue());
-    Assert.assertEquals("conf.validatePath", upgrade.get(7).getName());
-    Assert.assertEquals(true, upgrade.get(7).getValue());
+    Assert.assertEquals("conf.allowLateDirectory", upgrade.get(7).getName());
+    Assert.assertEquals(false, upgrade.get(7).getValue());
   }
 
 }

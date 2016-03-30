@@ -56,13 +56,14 @@ public class SpoolDirConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Validate Path",
-      description = "Whether to validate the path of spool directory.",
+      label = "Allow Late Directory",
+      description = "Enables reading from a late-arriving directory." +
+          " When enabled, the origin does not validate the configured path.",
       displayPosition = 12,
       group = "FILES",
-      defaultValue = "true"
+      defaultValue = "false"
   )
-  public boolean validatePath = true;
+  public boolean allowLateDirectory = false;
 
   @ConfigDef(
       required = true,

@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class TestSpoolDirSource {
@@ -124,6 +125,68 @@ public class TestSpoolDirSource {
     Assert.assertEquals("file1::0", source.createSourceOffset("file1", "0"));
     Assert.assertEquals("0", source.getOffsetFromSourceOffset(NULL_FILE_OFFSET));
     Assert.assertNull(source.getFileFromSourceOffset(NULL_FILE_OFFSET));
+  }
+
+  @Test
+  public void testAllowLateDirectory() throws Exception {
+    File f = new File("target", UUID.randomUUID().toString());
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = f.getAbsolutePath();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = createTestDir();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    TSpoolDirSource source = new TSpoolDirSource(conf);
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+    //Late Directories not allowed, init should fail.
+    conf.allowLateDirectory = false;
+    try {
+      runner.runInit();
+      Assert.fail("Should throw an exception if the directory does not exist");
+    } catch (StageException e) {
+      //Expected
+    }
+
+    //Late Directories allowed, wait and should be able to detect the file and read.
+    conf.allowLateDirectory = true;
+    source = new TSpoolDirSource(conf);
+    runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(NULL_FILE_OFFSET, output.getNewOffset());
+
+      Assert.assertTrue(f.mkdirs());
+
+      File file = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
+      Files.createFile(file.toPath());
+
+      source.file = file;
+      source.offset = 1;
+      source.maxBatchSize = 10;
+
+      Thread.sleep(1000);
+
+      output = runner.runProduce(source.createSourceOffset("file-0.log", "1"), 10);
+      Assert.assertEquals(source.createSourceOffset("file-0.log", "1"), output.getNewOffset());
+
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test

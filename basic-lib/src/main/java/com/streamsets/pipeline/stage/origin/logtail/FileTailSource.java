@@ -26,9 +26,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
@@ -43,8 +40,6 @@ import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.util.FileContextProviderUtil;
-import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -300,7 +295,7 @@ public class FileTailSource extends BaseSource {
               conf.archiveDir,
               true,
               scanIntervalSecs,
-              !conf.validatePath
+              conf.allowLateDirectories
           );
         } catch (IOException ex) {
           issues.add(
