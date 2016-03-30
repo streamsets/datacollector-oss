@@ -333,5 +333,41 @@
     </tgroup>
    </table>
   </p>
+  <draft-comment author="alisontaylor"><b>table-S3AdvProps</b> Amazon S3 origin/destination use the
+   whole table, Kinesis Consumer uses all rows but the first.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table-S3AdvProps">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Advanced Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Use Proxy</entry>
+      <entry>Specifies whether to use a proxy to connect to Amazon S3.</entry>
+     </row>
+     <row id="row-ProxyHost">
+      <entry>Proxy Host</entry>
+      <entry>Proxy host.</entry>
+     </row>
+     <row id="row-ProxyPort">
+      <entry>Proxy Port</entry>
+      <entry>Proxy port.</entry>
+     </row>
+     <row id="row-ProxyUser">
+      <entry>Proxy User</entry>
+      <entry>User name for proxy credentials.</entry>
+     </row>
+     <row id="row-ProxyPassword">
+      <entry>Proxy Password</entry>
+      <entry>Password for proxy credentials. </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

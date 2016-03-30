@@ -130,8 +130,22 @@
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/S3-AdvancedProps">
-                <cmd/>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure proxy
+                    information:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table-S3AdvProps"
+                        id="table_r4q_m2c_mv">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
                 <cmd/>
