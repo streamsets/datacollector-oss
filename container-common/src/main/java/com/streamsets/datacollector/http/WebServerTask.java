@@ -60,6 +60,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -651,17 +652,19 @@ public class WebServerTask extends AbstractTask {
   }
 
   private void validateApplicationToken() {
-    if (conf.hasName(REMOTE_APPLICATION_TOKEN) && conf.hasName(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG)) {
-      String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, "");
+    String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, "");
+
+    if (applicationToken != null && applicationToken.trim().length() > 0 &&
+        conf.hasName(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG)) {
       String securityServiceBaseURL = conf.get(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG,
           RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT);
       String registrationURI = securityServiceBaseURL + "/public-rest/v1/components/registration";
-
       Map<String, String> registrationData = new HashMap<>();
       registrationData.put("authToken", applicationToken);
       registrationData.put("componentId", this.runtimeInfo.getId());
       Response response = ClientBuilder.newClient()
           .target(registrationURI)
+          .register(new CsrfProtectionFilter("CSRF"))
           .request()
           .post(Entity.json(registrationData));
 
