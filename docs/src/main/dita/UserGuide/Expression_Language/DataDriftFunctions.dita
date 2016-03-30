@@ -32,7 +32,7 @@
                     </dd>
                     <dd>For example, to trigger an alert when any field name in the record changes
                         and ignore empty records, you can use the root field in the expression as
-                        follows:<codeblock>${drift:names('/'), true}</codeblock></dd>
+                        follows:<codeblock>${drift:names('/', true)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>drift:order('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
@@ -46,7 +46,7 @@
                     </dd>
                     <dd>To alert on field order or name changes within a delimited record and ignore
                         empty records, use the root field as
-                        follows:<codeblock>${drift:order('/'), true}</codeblock></dd>
+                        follows:<codeblock>${drift:order('/', true)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>drift:size('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
@@ -58,7 +58,7 @@
                     </dd>
                     <dd>To alert when the number of columns change within the Depts map field and
                         when a record is missing the Depts field, use the following
-                        expression:<codeblock>${drift:size('/Depts'), false}</codeblock></dd>
+                        expression:<codeblock>${drift:size('/Depts', false)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>drift:type('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
@@ -70,7 +70,7 @@
                     </dd>
                     <dd>For example, to receive alerts when the data type of the ID field changes
                         and when the ID field does not exist in the record, use the following
-                        expression:<codeblock>${drift:type('/ID'), false}</codeblock></dd>
+                        expression:<codeblock>${drift:type('/ID', false)}</codeblock></dd>
                 </dlentry>
             </dl></p>
  </conbody>

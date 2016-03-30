@@ -99,9 +99,7 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_wms_qvz_2t"/>
                                         </xref></entry>
-                                    <entry>Retries the pipeline upon error. <p>This option is not
-                                            supported for cluster mode pipelines at this time.
-                                        </p></entry>
+                                    <entry>Retries the pipeline upon error. </entry>
                                 </row>
                                 <row>
                                     <entry>Retry Attempts</entry>
