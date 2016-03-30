@@ -183,7 +183,7 @@ public class Configs {
           ok = false;
         }
       }
-      if (ok) {
+      if (ok && !context.isPreview()) {
         validateConnectivity(context, issues);
       }
     }

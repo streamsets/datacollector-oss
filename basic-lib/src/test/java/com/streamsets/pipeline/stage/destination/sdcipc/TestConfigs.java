@@ -32,6 +32,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.security.KeyPair;
 import java.security.cert.Certificate;
@@ -235,6 +236,40 @@ public class TestConfigs {
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();
+  }
+
+  @Test
+  public void testValidateInPreviewMode() throws Exception {
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    ForTestConfigs config = new ForTestConfigs(conn);
+    injectConfigsHttp(config);
+    // Mock that destination SDC PRC pipeline is not running.
+    Mockito.when(conn.getResponseCode()).thenThrow(new ConnectException("Connection Refused"));
+
+    // in Preview mode
+    Stage.Context previewMode = ContextInfoCreator.createTargetContext(
+        "SdcIpcDTargetInstance",
+        true,
+        OnRecordError.TO_ERROR
+    );
+    List<Stage.ConfigIssue> issues0 = config.init(previewMode);
+    // should not validate the connectivity, so no issues
+    Assert.assertTrue(issues0.isEmpty());
+
+    // Start SDC but still destination SDC PRC pipeline is not running
+    Stage.Context context = getContext();
+    List<Stage.ConfigIssue> issues1 = config.init(context);
+    Assert.assertEquals(1, issues1.size());
+    Assert.assertTrue(issues1.get(0).toString().contains(Errors.IPC_DEST_15.name()));
+
+    // destination SDC PRC pipeline is running
+    Mockito.reset(conn);
+    Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
+    List<Stage.ConfigIssue> issues4 = config.init(getContext());
+    Assert.assertEquals(0, issues4.size());
+    Mockito.verify(conn).setRequestMethod(Mockito.eq("GET"));
+    Mockito.verify(conn).setDefaultUseCaches(Mockito.eq(false));
   }
 
   @Test
