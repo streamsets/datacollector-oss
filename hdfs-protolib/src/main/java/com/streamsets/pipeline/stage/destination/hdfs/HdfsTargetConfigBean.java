@@ -319,7 +319,7 @@ public class HdfsTargetConfigBean {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "JSON",
+    defaultValue = "TEXT",
     label = "Data Format",
     description = "Data Format",
     displayPosition = 100,
