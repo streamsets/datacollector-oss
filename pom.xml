@@ -65,6 +65,7 @@
     <cdh_5_4-cluster-cdh_kafka_1_2-lib>none</cdh_5_4-cluster-cdh_kafka_1_2-lib>
     <cdh_5_4-cluster-cdh_kafka_1_3-lib>none</cdh_5_4-cluster-cdh_kafka_1_3-lib>
     <cdh_5_5-cluster-cdh_kafka_1_3-lib>none</cdh_5_5-cluster-cdh_kafka_1_3-lib>
+    <apache-kudu-0_7-lib>none</apache-kudu-0_7-lib>
     <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
     <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
@@ -159,6 +160,7 @@
     <module>aws-lib</module>
     <module>cluster-hdfs-protolib</module>
     <module>hbase-protolib</module>
+    <module>kudu-protolib</module>
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
     <module>spark-bootstrap</module>
@@ -423,6 +425,7 @@
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
+        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
@@ -443,6 +446,7 @@
         <module>cdh_5_4-lib</module>
         <module>hdp_2_2-lib</module>
         <module>mapr_5_0-lib</module>
+        <module>apache-kudu-0_7-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>

@@ -132,6 +132,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-apache-kudu-0_7-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-apache-kafka_0_8_2-lib</artifactId>
       <scope>provided</scope>
     </dependency>
