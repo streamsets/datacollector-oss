@@ -116,6 +116,9 @@ public class WebServerTask extends AbstractTask {
   public static final String HTTPS_KEYSTORE_PASSWORD_KEY = "https.keystore.password";
   private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@keystore-password.txt@";
 
+  public static final String HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG = "http.session.max.inactive.interval";
+  public static final int HTTP_SESSION_MAX_INACTIVE_INTERVAL_DEFAULT = 86400;  // in seconds = 24 hours
+
   public static final String AUTHENTICATION_KEY = "http.authentication";
   public static final String AUTHENTICATION_DEFAULT = "none"; //"form";
 
@@ -174,6 +177,9 @@ public class WebServerTask extends AbstractTask {
 
     // initialize a global session manager
     hashSessionManager = new HashSessionManager();
+    hashSessionManager.setMaxInactiveInterval(conf.get(HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG,
+        HTTP_SESSION_MAX_INACTIVE_INTERVAL_DEFAULT));
+
     ContextHandlerCollection appHandlers = new ContextHandlerCollection();
 
     // load web apps
