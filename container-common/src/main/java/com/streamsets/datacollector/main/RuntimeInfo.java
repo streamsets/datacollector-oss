@@ -59,7 +59,7 @@ public class RuntimeInfo {
   private String id;
   private String httpUrl;
   private final Map<String, Object> attributes;
-  private Runnable shutdownRunnable;
+  private ShutdownHandler shutdownRunnable;
   private final Map<String, String> authenticationTokens;
   private final String propertyPrefix;
   private final File baseDir;
@@ -224,12 +224,13 @@ public class RuntimeInfo {
     log.info("  Log dir      : {}", getLogDir());
   }
 
-  public void setShutdownHandler(Runnable runnable) {
+  public void setShutdownHandler(ShutdownHandler runnable) {
     shutdownRunnable = runnable;
   }
 
-  public void shutdown() {
+  public void shutdown(int status) {
     if (shutdownRunnable != null) {
+      shutdownRunnable.setExistStatus(status);
       shutdownRunnable.run();
     }
   }

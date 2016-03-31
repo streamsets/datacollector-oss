@@ -90,6 +90,7 @@ public class Main {
       log.info("Starting ...");
 
       final Logger finalLog = log;
+      final ShutdownHandler.ShutdownStatus shutdownStatus = new ShutdownHandler.ShutdownStatus();
       Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
@@ -102,13 +103,7 @@ public class Main {
             }
           };
           getRuntime().addShutdownHook(shutdownHookThread);
-          dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
-            @Override
-            public void run() {
-              finalLog.debug("Stopping, reason: requested");
-              task.stop();
-            }
-          });
+          dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(finalLog, task, shutdownStatus));
           task.run();
           task.waitWhileRunning();
           try {
@@ -121,7 +116,7 @@ public class Main {
           return null;
         }
       });
-       return 0;
+      return shutdownStatus.getExitStatus();
     } catch (Throwable ex) {
       if (log != null) {
         log.error("Abnormal exit: {}", ex.toString(), ex);

@@ -31,6 +31,7 @@ import com.streamsets.datacollector.main.LogConfigurator;
 import com.streamsets.datacollector.main.MainSlavePipelineManagerModule;
 import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.ShutdownHandler;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.task.Task;
@@ -162,13 +163,7 @@ public class EmbeddedDataCollector implements DataCollector {
         };
         shutdownHookThread.setContextClassLoader(classLoader);
         Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-        dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
-          @Override
-          public void run() {
-            LOG.debug("Stopping, reason: requested");
-            task.stop();
-          }
-        });
+        dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(LOG, task, new ShutdownHandler.ShutdownStatus()));
         task.run();
 
         // this thread waits until the pipeline is shutdown

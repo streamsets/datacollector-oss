@@ -148,10 +148,17 @@ then
   EXTRA_OPTIONS="-streamsetsLibrariesExtraDir ${STREAMSETS_LIBRARIES_EXTRA_DIR}"
 fi
 
-exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+status=88
+while [ $status = 88 ]; do
+
+${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
 -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
 -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
+
+status=$?
+
+done
 
 # Remove credential cache if exists
 #
@@ -159,6 +166,5 @@ if [ -f ${SDC_DATA}/sdc-krb5.ticketCache ]; then
   rm ${SDC_DATA}/sdc-krb5.ticketCache
 fi
 
-status=$?
 echo "Exit: $status"
 exit $status

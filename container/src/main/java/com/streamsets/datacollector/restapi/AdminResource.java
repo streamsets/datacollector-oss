@@ -75,7 +75,26 @@ public class AdminResource {
       public void run() {
         // sleeping  500ms to allow the HTTP response to go back
         ThreadUtil.sleep(500);
-        runtimeInfo.shutdown();
+        runtimeInfo.shutdown(0);
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/restart")
+  @ApiOperation(value = "Restart SDC", authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response restart() throws PipelineStoreException {
+    Thread thread = new Thread("Shutdown Request") {
+      @Override
+      public void run() {
+        // sleeping  500ms to allow the HTTP response to go back
+        ThreadUtil.sleep(500);
+        runtimeInfo.shutdown(88);
       }
     };
     thread.setDaemon(true);
