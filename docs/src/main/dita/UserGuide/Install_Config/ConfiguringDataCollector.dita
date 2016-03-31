@@ -116,6 +116,29 @@
                                     ldap.</p></entry>
                             </row>
                             <row>
+                                <entry>http.access.control.allow.origin</entry>
+                                <entry>List of domains allowed to access the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> REST API for cross-origin resource sharing (CORS). To
+                                    restrict access to specific domains, enter a comma-separated
+                                    list as
+                                        follows:<codeblock>http://www.mysite.com, http://www.myothersite.com</codeblock><p>Default
+                                        is the asterisk wildcard (*) which means that any domain can
+                                        access the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> REST API.</p></entry>
+                            </row>
+                            <row>
+                                <entry>http.access.control.allow.headers</entry>
+                                <entry>List of HTTP headers allowed during a cross-domain
+                                    request.</entry>
+                            </row>
+                            <row>
+                                <entry>http.access.control.allow.methods</entry>
+                                <entry>List of HTTP methods that can be called during a cross-domain
+                                    request.</entry>
+                            </row>
+                            <row>
                                 <entry>kerberos.client.enabled</entry>
                                 <entry>Enables Kerberos authentication for <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
