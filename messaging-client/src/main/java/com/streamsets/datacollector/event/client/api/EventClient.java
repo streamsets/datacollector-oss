@@ -17,19 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.dto;
+package com.streamsets.datacollector.event.client.api;
 
-public enum EventType  {
-  VALIDATE_PIPELINE,
-  SAVE_PIPELINE,
-  SAVE_RULES_PIPELINE,
-  START_PIPELINE,
-  STOP_PIPELINE,
-  RESET_OFFSET_PIPELINE,
-  DELETE_PIPELINE,
-  DELETE_HISTORY_PIPELINE,
-  PING_FREQUENCY_ADJUSTMENT,
-  STATUS_PIPELINE,
-  ACK_EVENT,
-  SDC_INFO_EVENT
+import java.util.List;
+import java.util.Map;
+
+import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
+
+public interface EventClient {
+
+  List<ServerEventJson> submit(
+    String path,
+    Map<String, String> queryParams,
+    Map<String, String> headerParams,
+    boolean compression,
+    List<ClientEventJson> clientEventJson) throws EventException;
+
 }

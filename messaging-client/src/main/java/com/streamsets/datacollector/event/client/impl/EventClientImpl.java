@@ -17,14 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+package com.streamsets.datacollector.event.client.impl;
+
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,15 +35,16 @@ import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.client.filter.EncodingFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 
+import com.streamsets.datacollector.event.client.api.EventClient;
+import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 
 public class EventClientImpl implements EventClient {
 
   private final String targetURL;
-  private Client client;
+  private final Client client;
 
-  @Inject
   public EventClientImpl(String targetURL) {
     this.targetURL = targetURL;
     this.client = ClientBuilder.newClient();
@@ -89,4 +88,3 @@ public class EventClientImpl implements EventClient {
     }
   }
 }
-

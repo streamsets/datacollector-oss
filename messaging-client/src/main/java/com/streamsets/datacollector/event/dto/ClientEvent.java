@@ -17,59 +17,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.datacollector.event.dto;
 
-public class ServerEvent {
+import java.util.List;
 
-  private String eventId;
-  private String from;
-  private boolean requiresAck;
-  private boolean isAckEvent;
-  private EventType eventType;
-  private Event event;
-  private long receivedTime;
+import com.streamsets.datacollector.event.dto.Event;
+
+public class ClientEvent {
+  private final String eventId;
+  private final List<String> destinations;
+  private final boolean requiresAck;
+  private final boolean isAckEvent;
+  private final EventType eventType;
+  private final Event event;
+  private final String orgId;
+  private final int eventTypeId;
+
+  public ClientEvent(String eventId,
+    List<String> destinations,
+    boolean requiresAck,
+    boolean isAckEvent,
+    EventType eventType,
+    Event event,
+    String orgId) {
+    this.eventId = eventId;
+    this.destinations = destinations;
+    this.requiresAck = requiresAck;
+    this.eventType = eventType;
+    this.eventTypeId = eventType.getValue();
+    this.event = event;
+    this.isAckEvent = isAckEvent;
+    this.orgId = orgId;
+  }
 
   public String getEventId() {
     return eventId;
   }
-  public void setEventId(String eventId) {
-    this.eventId = eventId;
-  }
-  public String getFrom() {
-    return from;
-  }
-  public void setFrom(String from) {
-    this.from = from;
-  }
-  public boolean isRequiresAck() {
-    return requiresAck;
-  }
-  public void setRequiresAck(boolean requiresAck) {
-    this.requiresAck = requiresAck;
-  }
+
   public boolean isAckEvent() {
     return isAckEvent;
   }
-  public void setAckEvent(boolean isAckEvent) {
-    this.isAckEvent = isAckEvent;
+
+  public List<String> getDestinations() {
+    return destinations;
   }
+
+  public boolean isRequiresAck() {
+    return requiresAck;
+  }
+
   public EventType getEventType() {
     return eventType;
   }
-  public void setEventType(EventType eventType) {
-    this.eventType = eventType;
-  }
+
   public Event getEvent() {
     return event;
   }
-  public void setEvent(Event event) {
-    this.event = event;
+
+  public String getOrgId() {
+    return orgId;
   }
 
-  public long getReceivedTime() {
-    return receivedTime;
+  public int getEventTypeId() {
+    return eventTypeId;
   }
-  public void setReceivedTime(long receivedTime) {
-    this.receivedTime = receivedTime;
-  }
+
 }

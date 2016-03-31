@@ -43,8 +43,8 @@ import fr.xebia.extras.selma.Maps;
 import fr.xebia.extras.selma.Selma;
 
 @Mapper
-public abstract class DtoJsonMapper {
-  public static final DtoJsonMapper INSTANCE = Selma.builder(DtoJsonMapper.class).build();
+public abstract class MessagingDtoJsonMapper {
+  public static final MessagingDtoJsonMapper INSTANCE = Selma.builder(MessagingDtoJsonMapper.class).build();
 
   public abstract PipelineSaveEventJson toPipelineSaveEventJson(PipelineSaveEvent pipelineSaveEvent);
 
@@ -75,12 +75,8 @@ public abstract class DtoJsonMapper {
   public abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
 
   @Maps(withIgnoreFields = {"payload", "event"})
-  abstract ServerEvent asServerEventDto(ServerEventJson serverEventJson);
+  public abstract ServerEvent asServerEventDto(ServerEventJson serverEventJson);
 
-  @Maps(withIgnoreFields = {"payload", "event"})
-  abstract ClientEventJson toClientEventJson(ClientEvent clientEvent);
+  @Maps(withIgnoreFields = {"payload", "event", "eventType"})
+  public abstract ClientEventJson toClientEventJson(ClientEvent clientEvent);
 }
-
-
-
-

@@ -22,14 +22,12 @@ package com.streamsets.datacollector.event.handler.dagger;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.streamsets.datacollector.event.EventClientImpl;
+import com.streamsets.datacollector.event.client.impl.EventClientImpl;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.NoOpEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
-import com.streamsets.datacollector.execution.executor.ExecutorModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.stagelibrary.StageLibraryModule;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;

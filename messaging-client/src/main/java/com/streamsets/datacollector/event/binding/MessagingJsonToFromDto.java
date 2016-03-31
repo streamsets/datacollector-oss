@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.datacollector.event.binding;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.Event;
@@ -51,12 +53,13 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 
-public class JsonToFromDto {
 
-  private static JsonToFromDto jsonToFromDtoInstance;
+public class MessagingJsonToFromDto {
+
+  public static final MessagingJsonToFromDto INSTANCE = getInstance();
   private static ObjectMapper mapper;
 
-  private JsonToFromDto() {
+  private MessagingJsonToFromDto() {
     mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -64,11 +67,8 @@ public class JsonToFromDto {
     mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
   }
 
-  public static JsonToFromDto getInstance() {
-    if(jsonToFromDtoInstance == null) {
-      jsonToFromDtoInstance = new JsonToFromDto();
-    }
-    return jsonToFromDtoInstance;
+  private static MessagingJsonToFromDto getInstance() {
+    return new MessagingJsonToFromDto();
   }
 
   public <T> T deserialize(String body, TypeReference<T> type) throws JsonParseException, JsonMappingException, IOException {
@@ -79,6 +79,45 @@ public class JsonToFromDto {
     return mapper.writeValueAsString(object);
   }
 
+  private ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
+    ClientEventJson clientEventJson = MessagingDtoJsonMapper.INSTANCE.toClientEventJson(clientEvent);
+    EventJson eventJson;
+    Event event = clientEvent.getEvent();
+    switch (clientEvent.getEventType()) {
+      case PING_FREQUENCY_ADJUSTMENT:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPingFrequencyAdjustmentEventJson((PingFrequencyAdjustmentEvent) event);
+        break;
+      case SAVE_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveEventJson((PipelineSaveEvent) event);
+        break;
+      case SAVE_RULES_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
+        break;
+      case STATUS_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
+        break;
+      case ACK_EVENT:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toAckEventJson((AckEvent) event);
+        break;
+      case SDC_INFO_EVENT:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
+        break;
+      case START_PIPELINE:
+      case STOP_PIPELINE:
+      case VALIDATE_PIPELINE:
+      case RESET_OFFSET_PIPELINE:
+      case DELETE_HISTORY_PIPELINE:
+      case DELETE_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
+        break;
+      default:
+        throw new IllegalStateException("Unrecognized event type: " + clientEvent.getEventType());
+    }
+    // Map payload
+    clientEventJson.setPayload(serialize(eventJson));
+    return clientEventJson;
+  }
+
   public List<ClientEventJson> toJson(List<ClientEvent> clientEventList) throws JsonProcessingException {
     List<ClientEventJson> clientEventJsonList = new ArrayList<>();
     for (ClientEvent clientEvent: clientEventList) {
@@ -87,49 +126,53 @@ public class JsonToFromDto {
     return clientEventJsonList;
   }
 
-  public ServerEvent asDto(ServerEventJson serverEventJson) throws JsonParseException, JsonMappingException, IOException {
-    ServerEvent serverEvent = DtoJsonMapper.INSTANCE.asServerEventDto(serverEventJson);
+  public ServerEvent asDto(ServerEventJson serverEventJson) throws JsonParseException, JsonMappingException,
+    IOException {
+    ServerEvent serverEvent = MessagingDtoJsonMapper.INSTANCE.asServerEventDto(serverEventJson);
     switch (serverEvent.getEventType()) {
       case ACK_EVENT: {
         TypeReference<AckEventJson> typeRef = new TypeReference<AckEventJson>() {
         };
         AckEventJson ackEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asAckEventDto(ackEventJson));
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asAckEventDto(ackEventJson));
         break;
       }
       case PING_FREQUENCY_ADJUSTMENT: {
-        TypeReference<PingFrequencyAdjustmentEventJson> typeRef = new TypeReference<PingFrequencyAdjustmentEventJson>() {
-        };
-        PingFrequencyAdjustmentEventJson pingFrequencyAdjustmentEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPingFrequencyAdjustmentEventDto(pingFrequencyAdjustmentEventJson));
+        TypeReference<PingFrequencyAdjustmentEventJson> typeRef =
+          new TypeReference<PingFrequencyAdjustmentEventJson>() {
+          };
+        PingFrequencyAdjustmentEventJson pingFrequencyAdjustmentEventJson =
+          deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent
+          .setEvent(MessagingDtoJsonMapper.INSTANCE.asPingFrequencyAdjustmentEventDto(pingFrequencyAdjustmentEventJson));
         break;
       }
       case SAVE_PIPELINE: {
         TypeReference<PipelineSaveEventJson> typeRef = new TypeReference<PipelineSaveEventJson>() {
         };
         PipelineSaveEventJson pipelineSaveEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineSaveEventDto(pipelineSaveEventJson));
-        break;
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineSaveEventDto(pipelineSaveEventJson));
       }
+        break;
       case SAVE_RULES_PIPELINE: {
         TypeReference<PipelineSaveRulesEventJson> typeRef = new TypeReference<PipelineSaveRulesEventJson>() {
         };
         PipelineSaveRulesEventJson pipelineSaveRulesEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineSaveRulesEventDto(pipelineSaveRulesEventJson));
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineSaveRulesEventDto(pipelineSaveRulesEventJson));
         break;
       }
       case SDC_INFO_EVENT: {
         TypeReference<SDCInfoEventJson> typeRef = new TypeReference<SDCInfoEventJson>() {
         };
         SDCInfoEventJson sdcInfoEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asSDCInfoEventDto(sdcInfoEventJson));
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSDCInfoEventDto(sdcInfoEventJson));
         break;
       }
       case STATUS_PIPELINE: {
         TypeReference<PipelineStatusEventJson> typeRef = new TypeReference<PipelineStatusEventJson>() {
         };
         PipelineStatusEventJson pipelineStatusEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pipelineStatusEventJson));
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pipelineStatusEventJson));
         break;
       }
       case DELETE_HISTORY_PIPELINE:
@@ -141,7 +184,7 @@ public class JsonToFromDto {
         TypeReference<PipelineBaseEventJson> typeRef = new TypeReference<PipelineBaseEventJson>() {
         };
         PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);
-        serverEvent.setEvent(DtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
         break;
       }
       default:
@@ -149,44 +192,4 @@ public class JsonToFromDto {
     }
     return serverEvent;
   }
-
-  private ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
-    ClientEventJson clientEventJson = DtoJsonMapper.INSTANCE.toClientEventJson(clientEvent);
-    EventJson eventJson;
-    Event event = clientEvent.getEvent();
-    switch (clientEvent.getEventType()) {
-      case PING_FREQUENCY_ADJUSTMENT:
-        eventJson = DtoJsonMapper.INSTANCE.toPingFrequencyAdjustmentEventJson((PingFrequencyAdjustmentEvent) event);
-        break;
-      case SAVE_PIPELINE:
-        eventJson = DtoJsonMapper.INSTANCE.toPipelineSaveEventJson((PipelineSaveEvent) event);
-        break;
-      case SAVE_RULES_PIPELINE:
-        eventJson = DtoJsonMapper.INSTANCE.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
-        break;
-      case STATUS_PIPELINE:
-        eventJson = DtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
-        break;
-      case ACK_EVENT:
-        eventJson = DtoJsonMapper.INSTANCE.toAckEventJson((AckEvent) event);
-        break;
-      case SDC_INFO_EVENT:
-        eventJson = DtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
-        break;
-      case START_PIPELINE:
-      case STOP_PIPELINE:
-      case VALIDATE_PIPELINE:
-      case RESET_OFFSET_PIPELINE:
-      case DELETE_HISTORY_PIPELINE:
-      case DELETE_PIPELINE:
-        eventJson = DtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
-        break;
-      default:
-        throw new IllegalStateException("Unrecognized event type: " + clientEvent.getEventType());
-    }
-    // Map payload
-    clientEventJson.setPayload(serialize(eventJson));
-    return clientEventJson;
-  }
-
 }

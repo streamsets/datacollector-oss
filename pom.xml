@@ -105,6 +105,7 @@
     <module>common</module>
     <module>container-common</module>
     <module>json-dto</module>
+    <module>messaging-client</module>
     <module>container</module>
     <module>miniSDC</module>
     <module>sdk</module>

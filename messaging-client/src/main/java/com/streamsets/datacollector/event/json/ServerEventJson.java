@@ -17,20 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.datacollector.event.json;
 
-import java.util.List;
-import com.streamsets.datacollector.event.json.EventTypeJson;
-
-public class ClientEventJson {
+public class ServerEventJson {
   private String eventId;
-  private List<String> destinations;
+  private String from;
   private boolean requiresAck;
   private boolean isAckEvent;
-  private EventTypeJson eventType;
+  private int eventTypeId;
   private String payload;
+  private long receivedTime;
+  private String orgId;
 
-  public ClientEventJson() {
+  public ServerEventJson() {
   }
 
   public String getEventId() {
@@ -41,12 +41,12 @@ public class ClientEventJson {
     this.eventId = eventId;
   }
 
-  public List<String> getDestinations() {
-    return destinations;
+  public String getFrom() {
+    return from;
   }
 
-  public void setDestinations(List<String> destinations) {
-    this.destinations = destinations;
+  public void setFrom(String from) {
+    this.from = from;
   }
 
   public boolean isRequiresAck() {
@@ -65,12 +65,12 @@ public class ClientEventJson {
     this.isAckEvent = isAckEvent;
   }
 
-  public EventTypeJson getEventType() {
-    return eventType;
+  public int getEventTypeId() {
+    return eventTypeId;
   }
 
-  public void setEventType(EventTypeJson eventType) {
-    this.eventType = eventType;
+  public void setEventTypeId(int eventTypeId) {
+    this.eventTypeId = eventTypeId;
   }
 
   public String getPayload() {
@@ -79,5 +79,21 @@ public class ClientEventJson {
 
   public void setPayload(String payload) {
     this.payload = payload;
+  }
+
+  public long getReceivedTime() {
+    return receivedTime;
+  }
+
+  public void setReceivedTime(long receivedTime) {
+    this.receivedTime = receivedTime;
+  }
+
+  public String getOrgId() {
+    return orgId;
+  }
+
+  public void setOrgId(String orgId) {
+    this.orgId = orgId;
   }
 }

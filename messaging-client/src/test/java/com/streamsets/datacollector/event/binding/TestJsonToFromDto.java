@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.datacollector.event.binding;
 
 import static org.junit.Assert.assertEquals;
@@ -32,36 +33,35 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
+import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.ClientEventJson;
-import com.streamsets.datacollector.event.json.EventTypeJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 
-public class TestDtoJsonMapper {
+public class TestJsonToFromDto {
 
   @Test
   public void testPipelineClientEventJson() throws Exception {
     UUID uuid = UUID.randomUUID();
     PipelineBaseEvent pde = new PipelineBaseEvent("name1", "rev1", "user1");
     ClientEvent clientEvent = new ClientEvent(uuid.toString(), Arrays.asList("SDC1"),
-      true, false, EventType.START_PIPELINE, pde);
-    String payload = JsonToFromDto.getInstance().serialize(pde);
+      true, false, EventType.START_PIPELINE, pde, "org1");
+    String payload = MessagingJsonToFromDto.INSTANCE.serialize(pde);
 
-    List<ClientEventJson> clientJson = JsonToFromDto.getInstance().toJson(Arrays.asList(clientEvent));
+    List<ClientEventJson> clientJson = MessagingJsonToFromDto.INSTANCE.toJson(Arrays.asList(clientEvent));
     assertEquals(1, clientJson.size());
     assertEquals(uuid.toString(), clientJson.get(0).getEventId());
     assertEquals(payload, clientJson.get(0).getPayload());
     assertEquals(false, clientJson.get(0).isAckEvent());
     assertEquals(true, clientJson.get(0).isRequiresAck());
-    assertEquals(EventTypeJson.START_PIPELINE, clientJson.get(0).getEventType());
-
-
-    PipelineBaseEvent actualEvent = JsonToFromDto.getInstance().deserialize(payload, new TypeReference<PipelineBaseEvent>() {});
+    assertEquals("org1", clientJson.get(0).getOrgId());
+    assertEquals(EventType.START_PIPELINE, EventType.fromValue(clientJson.get(0).getEventTypeId()));
+    PipelineBaseEvent actualEvent = MessagingJsonToFromDto.INSTANCE.deserialize(payload, new TypeReference<PipelineBaseEvent>() {});
     assertEquals("name1", actualEvent.getName());
     assertEquals("rev1", actualEvent.getRev());
     assertEquals("user1", actualEvent.getUser());
@@ -86,15 +86,17 @@ public class TestDtoJsonMapper {
     List<ServerEventJson> serverJsonList = new ArrayList<ServerEventJson>();
     ServerEventJson serverEventJson = new ServerEventJson();
     serverEventJson.setEventId(uuid.toString());
-    serverEventJson.setEventType(EventTypeJson.SAVE_PIPELINE);
+    serverEventJson.setEventTypeId(EventType.SAVE_PIPELINE.getValue());
     serverEventJson.setAckEvent(false);
     serverEventJson.setRequiresAck(true);
     serverEventJson.setFrom("JOB_RUNNER");
-    serverEventJson.setPayload(JsonToFromDto.getInstance().serialize(pipelineSaveEvent));
+    serverEventJson.setOrgId("org1");
+    serverEventJson.setPayload(MessagingJsonToFromDto.INSTANCE.serialize(pipelineSaveEvent));
     serverJsonList.add(serverEventJson);
-    ServerEvent serverEvent = JsonToFromDto.getInstance().asDto(serverEventJson);
+    ServerEvent serverEvent = MessagingJsonToFromDto.INSTANCE.asDto(serverEventJson);
     assertEquals(uuid.toString(), serverEvent.getEventId());
     assertEquals(EventType.SAVE_PIPELINE, serverEvent.getEventType());
+    assertEquals("org1", serverEvent.getOrgId());
     assertEquals("JOB_RUNNER", serverEvent.getFrom());
     assertEquals(false, serverEvent.isAckEvent());
     assertEquals(true, serverEvent.isRequiresAck());

@@ -17,83 +17,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.datacollector.event.dto;
 
-import java.util.List;
+import com.streamsets.datacollector.event.dto.Event;
 
-import com.streamsets.datacollector.event.dto.EventType;
+public class ServerEvent {
 
-public class ClientEvent {
   private String eventId;
-  private List<String> destinations;
+  private String from;
   private boolean requiresAck;
   private boolean isAckEvent;
-  private EventType eventType;
+  private int eventTypeId;
   private Event event;
-
-  public ClientEvent(String eventId,
-    List<String> destinations,
-    boolean requiresAck,
-    boolean isAckEvent,
-    EventType eventType,
-    Event event) {
-    this.eventId = eventId;
-    this.destinations = destinations;
-    this.requiresAck = requiresAck;
-    this.eventType = eventType;
-    this.event = event;
-    this.isAckEvent = isAckEvent;
-  }
+  private long receivedTime;
+  private EventType eventType;
+  private String orgId;
 
   public String getEventId() {
     return eventId;
   }
-
   public void setEventId(String eventId) {
     this.eventId = eventId;
   }
-
-  public ClientEvent() {
+  public String getFrom() {
+    return from;
   }
-
+  public void setFrom(String from) {
+    this.from = from;
+  }
+  public boolean isRequiresAck() {
+    return requiresAck;
+  }
+  public void setRequiresAck(boolean requiresAck) {
+    this.requiresAck = requiresAck;
+  }
   public boolean isAckEvent() {
     return isAckEvent;
   }
-
   public void setAckEvent(boolean isAckEvent) {
     this.isAckEvent = isAckEvent;
   }
 
-  public List<String> getDestinations() {
-    return destinations;
-  }
-
-  public void setDestinations(List<String> destinations) {
-    this.destinations = destinations;
-  }
-
-  public boolean isRequiresAck() {
-    return requiresAck;
-  }
-
-  public void setRequiresAck(boolean requiresAck) {
-    this.requiresAck = requiresAck;
+  public void setEventTypeId(int eventTypeId) {
+    this.eventTypeId = eventTypeId;
+    this.eventType = EventType.fromValue(eventTypeId);
   }
 
   public EventType getEventType() {
-    return eventType;
-  }
-
-  public void setEventType(EventType eventType) {
-    this.eventType = eventType;
+    if (eventType == null) {
+      throw new IllegalArgumentException("Event Type is not initialized");
+    }
+    return this.eventType;
   }
 
   public Event getEvent() {
     return event;
   }
-
-  public void setPayload(Event event) {
+  public void setEvent(Event event) {
     this.event = event;
   }
 
+  public long getReceivedTime() {
+    return receivedTime;
+  }
+
+  public void setReceivedTime(long receivedTime) {
+    this.receivedTime = receivedTime;
+  }
+  public String getOrgId() {
+    return orgId;
+  }
+  public void setOrgId(String orgId) {
+    this.orgId = orgId;
+  }
 }

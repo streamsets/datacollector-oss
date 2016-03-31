@@ -38,9 +38,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
-import com.streamsets.datacollector.event.EventException;
-import com.streamsets.datacollector.event.EventClient;
-import com.streamsets.datacollector.event.binding.JsonToFromDto;
+import com.streamsets.datacollector.event.client.api.EventClient;
+import com.streamsets.datacollector.event.client.api.EventException;
+import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
 import com.streamsets.datacollector.event.dto.ClientEvent;
@@ -85,7 +85,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String DEFAULT_APP_TYPE = "JOB_RUNNER";
   private final DataCollector remoteDataCollector;
   private final EventClient eventSenderReceiver;
-  private final JsonToFromDto jsonToFromDto;
+  private final MessagingJsonToFromDto jsonToFromDto;
   private final SafeScheduledExecutorService executorService;
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
@@ -102,7 +102,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     ) {
     super("REMOTE_EVENT_HANDLER");
     this.remoteDataCollector = remoteDataCollector;
-    this.jsonToFromDto = JsonToFromDto.getInstance();
+    this.jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
     this.executorService = executorService;
     this.eventSenderReceiver = eventSenderReceiver;
     this.stageLibrary = stageLibrary;
@@ -135,7 +135,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       new SDCInfoEvent(runtimeInfo.getId(), runtimeInfo.getBaseHttpUrl(), System.getProperty("java.runtime.version"),
         stageInfoList, new SDCBuildInfo(buildInfo.getVersion(), buildInfo.getBuiltBy(), buildInfo.getBuiltDate(),
           buildInfo.getBuiltRepoSha(), buildInfo.getSourceMd5Checksum()), labelList);
-    return new ClientEvent(UUID.randomUUID().toString(), Arrays.asList(appDestination), false, false, EventType.SDC_INFO_EVENT, sdcInfoEvent);
+    return new ClientEvent(UUID.randomUUID().toString(), Arrays.asList(appDestination), false, false, EventType.SDC_INFO_EVENT, sdcInfoEvent, null);
   }
 
   @Override
@@ -147,7 +147,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   static class EventHandlerCallable implements Callable<Void> {
     private final DataCollector remoteDataCollector;
     private final EventClient eventClient;
-    private final JsonToFromDto jsonToFromDto;
+    private final MessagingJsonToFromDto jsonToFromDto;
     private final SafeScheduledExecutorService executorService;
     private final Map<String, String> requestHeader;
     private final String jobEventDestination;
@@ -157,7 +157,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
     public EventHandlerCallable(DataCollector remoteDataCollector,
       EventClient eventSenderReceiver,
-      JsonToFromDto jsonToFromDto, List<ClientEvent> ackEventList,
+      MessagingJsonToFromDto jsonToFromDto, List<ClientEvent> ackEventList,
       ClientEvent sdcInfoEvent,
       SafeScheduledExecutorService executorService,
       long delay,
@@ -214,7 +214,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelineAndValidationStatus.getMessage(), pipelineAndValidationStatus.getValidationStatus(),
               jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())));
           clientEventList.add(new ClientEvent(UUID.randomUUID().toString(), Arrays.asList(jobEventDestination), false, false,
-            EventType.STATUS_PIPELINE, pipelineStatusEvent));
+            EventType.STATUS_PIPELINE, pipelineStatusEvent, null));
         }
       } catch (Exception ex) {
         LOG.warn(Utils.format("Error while creating/serializing pipeline status event: '{}'", ex), ex);
@@ -306,17 +306,17 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             break;
         }
       } catch (PipelineException | StageException ex) {
-        ackEventMessage = Utils.format("Remote event type: '{}' encountered exception '{}'", serverEventJson.getEventType(), ex.getMessage());
+        ackEventMessage = Utils.format("Remote event type: '{}' encountered exception '{}'", EventType.fromValue(serverEventJson.getEventTypeId()), ex.getMessage());
         LOG.warn(ackEventMessage, ex);
       } catch (IOException ex) {
         ackEventMessage =
-          Utils.format("Remote event type: '{}' encountered exception while being deserialized '{}'", serverEventJson.getEventType(), ex.getMessage());
+          Utils.format("Remote event type: '{}' encountered exception while being deserialized '{}'", EventType.fromValue(serverEventJson.getEventTypeId()), ex.getMessage());
         LOG.warn(ackEventMessage, ex);
       }
       if (serverEventJson.isRequiresAck()) {
         AckEvent ackEvent = new AckEvent(ackEventMessage == null ? AckEventStatus.SUCCESS : AckEventStatus.ERROR, ackEventMessage);
         return new ClientEvent(serverEventJson.getEventId(), Arrays.asList(serverEventJson.getFrom()), false, true, EventType.ACK_EVENT,
-          ackEvent);
+          ackEvent, null);
       } else {
         return null;
       }

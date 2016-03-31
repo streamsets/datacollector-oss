@@ -1,0 +1,6 @@
+This is catalog of event range owners
+
+SYSTEM_EVENTS: 0-999
+JOB_RUNNER: 1000-1999
+SDC: 2000-2999
+

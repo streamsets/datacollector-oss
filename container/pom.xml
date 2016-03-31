@@ -44,7 +44,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-json-dto</artifactId>
+      <artifactId>streamsets-datacollector-messaging-client</artifactId>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
