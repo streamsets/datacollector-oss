@@ -35,11 +35,18 @@ public class RegexParser extends LogCharDataParser {
   private final Pattern pattern;
   private final Map<String, Integer> fieldToGroupMap;
 
-  public RegexParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset, int maxObjectLen,
-                     boolean retainOriginalText, Pattern pattern, Map<String, Integer> fieldToGroupMap)
-    throws IOException {
-
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1);
+  public RegexParser(Stage.Context context,
+                     String readerId,
+                     OverrunReader reader,
+                     long readerOffset,
+                     int maxObjectLen,
+                     boolean retainOriginalText,
+                     Pattern pattern,
+                     Map<String, Integer> fieldToGroupMap,
+                     StringBuilder currentLine,
+                     StringBuilder previousLine
+  ) throws IOException {
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1, currentLine, previousLine);
     this.fieldToGroupMap = fieldToGroupMap;
     this.pattern = pattern;
   }

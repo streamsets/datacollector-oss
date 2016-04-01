@@ -41,7 +41,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
   private final String readerId;
   private final OverrunReader reader;
   private final int maxObjectLen;
-  private final StringBuilder sb;
+  private final StringBuilder currentLine;
   private final StringBuilder previousLine;
   private final boolean retainOriginalText;
   private final Map<String, Field> fieldsFromPrevLine;
@@ -49,8 +49,16 @@ public abstract class LogCharDataParser extends AbstractDataParser {
   private int previousRead;
   private long currentOffset;
 
-  public LogCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                           int maxObjectLen, boolean retainOriginalText, int maxStackTraceLines) throws IOException {
+  public LogCharDataParser(Stage.Context context,
+                           String readerId,
+                           OverrunReader reader,
+                           long readerOffset,
+                           int maxObjectLen,
+                           boolean retainOriginalText,
+                           int maxStackTraceLines,
+                           StringBuilder currentLine,
+                           StringBuilder previousLine
+  ) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.reader = reader;
@@ -59,8 +67,8 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     reader.setEnabled(false);
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
-    sb = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
-    previousLine = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
+    this.currentLine = currentLine;
+    this.previousLine = previousLine;
     fieldsFromPrevLine = new LinkedHashMap<>();
     currentOffset = readerOffset;
     this.maxStackTraceLines = maxStackTraceLines;
@@ -103,7 +111,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     }
 
     //read the next line
-    sb.setLength(0);
+    currentLine.setLength(0);
     Map<String, Field> fieldsFromLogLine = new LinkedHashMap<>();
     StringBuilder stackTrace = new StringBuilder();
     int read = readAhead(fieldsFromLogLine, stackTrace);
@@ -114,7 +122,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
       //create field for the record
       Map<String, Field> map = new HashMap<>();
       if (retainOriginalText) {
-        map.put(TEXT_FIELD_NAME, Field.create(sb.toString()));
+        map.put(TEXT_FIELD_NAME, Field.create(currentLine.toString()));
       }
       if (isTruncated(read)) {
         map.put(TRUNCATED_FIELD_NAME, Field.create(true));
@@ -131,11 +139,11 @@ public abstract class LogCharDataParser extends AbstractDataParser {
       fieldsFromPrevLine.clear();
       previousLine.setLength(0);
       fieldsFromPrevLine.putAll(fieldsFromLogLine);
-      previousLine.append(sb.toString());
+      previousLine.append(currentLine.toString());
       previousRead = read;
 
       //read ahead since there was no line from the previous round
-      sb.setLength(0);
+      currentLine.setLength(0);
       fieldsFromLogLine.clear();
       stackTrace.setLength(0);
       read = readAhead(fieldsFromLogLine, stackTrace);
@@ -166,7 +174,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     fieldsFromPrevLine.clear();
     previousLine.setLength(0);
     fieldsFromPrevLine.putAll(fieldsFromLogLine);
-    previousLine.append(sb.toString());
+    previousLine.append(currentLine.toString());
     previousRead = read;
     return record;
   }
@@ -176,7 +184,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     Record record = context.createRecord(readerId + "::" + currentOffset);
     Map<String, Field> map = new HashMap<>();
     if (retainOriginalText) {
-      map.put(TEXT_FIELD_NAME, Field.create(sb.toString()));
+      map.put(TEXT_FIELD_NAME, Field.create(currentLine.toString()));
     }
     if (isTruncated(previousRead)) {
       map.put(TRUNCATED_FIELD_NAME, Field.create(true));
@@ -188,7 +196,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
 
 
   /*
-   Captures valid lines in "sb" and corresponding fields in "fieldsFromLogLine".
+   Captures valid lines in "currentLine" and corresponding fields in "fieldsFromLogLine".
    Captures stack traces if any in the argument "stackTrace"
    */
   private int readAhead(Map<String, Field> fieldsFromLogLine, StringBuilder stackTrace)
@@ -200,7 +208,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
       try {
         Map<String, Field> stringFieldMap = parseLogLine(multilineLog);
         fieldsFromLogLine.putAll(stringFieldMap);
-        sb.append(multilineLog);
+        currentLine.append(multilineLog);
         //If the line can be parsed successfully, do not read further
         //This line will be used in the current record if this is the first line being read
         //or stored for the next round if there is a line from the previous round.

@@ -34,10 +34,19 @@ public class GrokParser extends LogCharDataParser {
   private final Grok compiledPattern;
   private final String formatName;
 
-  public GrokParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset, int maxObjectLen,
-                    boolean retainOriginalText, int maxStackTraceLines, Grok compiledPattern, String formatName)
-    throws IOException {
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines);
+  public GrokParser(Stage.Context context,
+                    String readerId,
+                    OverrunReader reader,
+                    long readerOffset,
+                    int maxObjectLen,
+                    boolean retainOriginalText,
+                    int maxStackTraceLines,
+                    Grok compiledPattern,
+                    String formatName,
+                    StringBuilder currentLine,
+                    StringBuilder previousLine
+  ) throws IOException {
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines, currentLine, previousLine);
     this.compiledPattern = compiledPattern;
     this.formatName = formatName;
   }

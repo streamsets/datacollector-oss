@@ -107,6 +107,8 @@ public class LogDataParserFactory extends DataParserFactory {
   private final OnParseError onParseError;
   private final int maxStackTraceLength;
   private final Map<String, Object> regexToPatternMap;
+  private final StringBuilder currentLine;
+  private final StringBuilder previousLine;
 
   public LogDataParserFactory(Settings settings) {
     super(settings);
@@ -124,6 +126,8 @@ public class LogDataParserFactory extends DataParserFactory {
     this.onParseError = settings.getConfig(ON_PARSE_ERROR_KEY);
     this.maxStackTraceLength = settings.getConfig(LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY);
     this.regexToPatternMap = new HashMap<>();
+    this.currentLine = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
+    this.previousLine = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
   }
 
   @Override
@@ -144,30 +148,30 @@ public class LogDataParserFactory extends DataParserFactory {
         case COMMON_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_COMMON_APACHE_LOG_FORMAT,
-            Collections.<String>emptyList()), "Common Log Format");
+            Collections.<String>emptyList()), "Common Log Format", currentLine, previousLine);
         case COMBINED_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_COMBINED_APACHE_LOG_FORMAT,
-            Collections.<String>emptyList()), "Combined Log Format");
+            Collections.<String>emptyList()), "Combined Log Format", currentLine, previousLine);
         case APACHE_CUSTOM_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat),
-            Collections.<String>emptyList()), "Apache Access Log Format");
+            Collections.<String>emptyList()), "Apache Access Log Format", currentLine, previousLine);
         case APACHE_ERROR_LOG_FORMAT:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Constants.GROK_APACHE_ERROR_LOG_FORMAT,
-            ImmutableList.of(Constants.GROK_APACHE_ERROR_LOG_PATTERNS_FILE_NAME)), "Apache Error Log Format");
+            ImmutableList.of(Constants.GROK_APACHE_ERROR_LOG_PATTERNS_FILE_NAME)), "Apache Error Log Format", currentLine, previousLine);
         case REGEX:
           return new RegexParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            createPattern(regex), fieldPathToGroup);
+            createPattern(regex), fieldPathToGroup, currentLine, previousLine);
         case GROK:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
-            getMaxStackTraceLines(), createGrok(grokPattern, grokDictionaries), "Grok Format");
+            getMaxStackTraceLines(), createGrok(grokPattern, grokDictionaries), "Grok Format", currentLine, previousLine);
         case LOG4J:
           return new GrokParser(context, id, reader, offset, maxObjectLen, retainOriginalText,
             getMaxStackTraceLines(), createGrok(Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat),
             ImmutableList.of(Constants.GROK_LOG4J_LOG_PATTERNS_FILE_NAME)),
-            "Log4j Log Format");
+            "Log4j Log Format", currentLine, previousLine);
         default:
           return null;
       }
