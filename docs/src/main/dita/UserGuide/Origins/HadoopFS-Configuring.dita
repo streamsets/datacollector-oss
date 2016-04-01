@@ -56,17 +56,18 @@
                                     <entry>Hadoop FS URI</entry>
                                     <entry>HDFS URI. Include the HDFS scheme and authority as
                                         follows:
-                                        <codeph>&lt;scheme>://&lt;authority></codeph>.</entry>
+                                            <codeph>&lt;scheme>://&lt;authority></codeph>.<p>For
+                                            example:<codeblock>hdfs://nameservice</codeblock></p></entry>
                                 </row>
                                 <row>
-                                    <entry>Directory Path</entry>
-                                    <entry>Directory for the data to be read. Include the HDFS
-                                        scheme and authority in the path as follows:
-                                            <codeph>&lt;scheme>://&lt;authority>/path</codeph>.</entry>
+                                    <entry>Input Paths</entry>
+                                    <entry>Location of the input data to be read. Enter the path as
+                                        follows: <codeph>/&lt;path></codeph>.<p>For
+                                            example:<codeblock>/user/hadoop/directory</codeblock></p></entry>
                                 </row>
                                 <row>
                                     <entry>Include All Subdirectories</entry>
-                                    <entry>Reads from all directories within the specified directory
+                                    <entry>Reads from all directories within the specified input
                                         path.</entry>
                                 </row>
                                 <row>
