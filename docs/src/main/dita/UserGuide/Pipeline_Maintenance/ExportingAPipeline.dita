@@ -20,7 +20,7 @@
     <taskbody>
         <context>
             <p><indexterm>pipelines<indexterm>exporting</indexterm></indexterm>When you export a
-                pipeline, the <ph
+                pipeline, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> generates a JSON file named after the pipeline, as follows: <codeph>&lt;pipeline
                     name>.json</codeph>. </p>
@@ -32,7 +32,11 @@
                     the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
             </step>
             <step>
-                <cmd>Click <uicontrol>Export</uicontrol>.</cmd>
+                <cmd>Click <uicontrol>Export</uicontrol> or <uicontrol>Export with Library
+                        Definitions</uicontrol>.</cmd>
+                <info>When you export with library definitions, the generated JSON file includes the
+                    definition of each stage library used in the pipeline. You can use either method
+                    to export a pipeline.</info>
                 <stepresult>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> console generates the JSON file and saves it to your default downloads
