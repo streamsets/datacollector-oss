@@ -41,8 +41,9 @@ public enum DataFormatErrors implements ErrorCode {
   DATA_FORMAT_300("Error validating avro schema : {}"),
   DATA_FORMAT_301("Error getting default values from avro schema : {}"),
 
-  DATA_FORMAT_302("Input data is not Base64 for record: {}")
+  DATA_FORMAT_302("Input data is not Base64 for record: {}"),
 
+  DATA_FORMAT_303("Could not parse XML object '{}'")
   ;
   private final String msg;
 
