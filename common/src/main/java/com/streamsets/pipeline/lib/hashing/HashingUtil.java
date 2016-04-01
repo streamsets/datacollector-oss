@@ -73,8 +73,8 @@ public final class HashingUtil {
   }
 
   public static class RecordFunnel implements Funnel<Record> {
-    private Collection<String> fieldsToHash;
-    private boolean includeRecordHeader;
+    private Collection<String> fieldsToHash = null;
+    private boolean includeRecordHeader = false;
 
     public RecordFunnel() {
     }

@@ -57,7 +57,7 @@ public class FieldHasherDProcessor extends DProcessor {
     description="Action for data that does not contain the specified fields, the field value is null or if the " +
       "field type is Map or List",
     displayPosition = 20,
-    group = "ERROR"
+    group = "FIELD_HASHING"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;

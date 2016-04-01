@@ -25,8 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   FIELD_HASHING("Hash Field"),
-  RECORD_HASHING("Hash Record"),
-  ERROR("Field Error Handling");
+  RECORD_HASHING("Hash Record");
 
   String label;
   Groups(String label) {

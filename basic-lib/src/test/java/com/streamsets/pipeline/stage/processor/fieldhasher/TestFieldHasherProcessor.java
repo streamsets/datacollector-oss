@@ -40,36 +40,58 @@ import com.streamsets.pipeline.api.impl.ShortTypeSupport;
 import com.streamsets.pipeline.api.impl.StringTypeSupport;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(FieldHasherProcessor.class)
 public class TestFieldHasherProcessor {
 
-  private String hashForRecordsWithFieldsHeader(
+  private String hashForRecordsWithFieldsAndHeaderAttr(
       Record record,
       Collection<String> fieldsToHash,
       HashType hashType,
       boolean includeRecordHeaderForHashing
   ) {
     HashFunction hasher = HashingUtil.getHasher(hashType.getDigest());
+    Set<String> validFieldsToHash = new HashSet<>();
+    for (String fieldPath : fieldsToHash) {
+      Field field = record.get(fieldPath);
+      Field.Type type = field.getType();
+      if (!(FieldHasherProcessor.UNSUPPORTED_FIELD_TYPES.contains(type) || field.getValue() == null)) {
+        validFieldsToHash.add(fieldPath);
+      }
+    }
     HashingUtil.RecordFunnel recordFunnel =
         HashingUtil.getRecordFunnel(
-            fieldsToHash,
+            validFieldsToHash,
             includeRecordHeaderForHashing
         );
     return hasher.hashObject(record, recordFunnel).toString();
@@ -80,11 +102,12 @@ public class TestFieldHasherProcessor {
       Collection<String> fieldsToHash,
       HashType hashType
   ) {
-    return hashForRecordsWithFieldsHeader(
+    return hashForRecordsWithFieldsAndHeaderAttr(
         record,
         fieldsToHash,
         hashType,
-        false);
+        false
+    );
   }
 
   private String computeHash(Field.Type fieldType, Object value, HashType hashType) {
@@ -161,6 +184,152 @@ public class TestFieldHasherProcessor {
     hasherConfig.inPlaceFieldHasherConfigs = ImmutableList.of(fieldHasherConfig);
     hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
     return hasherConfig;
+  }
+
+  private HasherConfig createTargetFieldHasherProcessor(
+      List<String> sourceFieldsToHash,
+      HashType hashType,
+      String targetField,
+      String headerAttr
+  ) {
+    HasherConfig hasherConfig = new HasherConfig();
+    populateEmptyRecordHasherConfig(hasherConfig);
+
+    TargetFieldHasherConfig tfieldHasherConfig = new TargetFieldHasherConfig();
+    tfieldHasherConfig.sourceFieldsToHash = sourceFieldsToHash;
+    tfieldHasherConfig.hashType = hashType;
+    tfieldHasherConfig.targetField = targetField;
+    tfieldHasherConfig.headerAttribute = headerAttr;
+    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
+    hasherConfig.targetFieldHasherConfigs =  ImmutableList.of(tfieldHasherConfig);
+
+    hasherConfig.targetFieldHasherConfigs = ImmutableList.of(tfieldHasherConfig);
+    hasherConfig.inPlaceFieldHasherConfigs =  Collections.EMPTY_LIST;
+    return hasherConfig;
+  }
+
+  private HasherConfig createRecordHasherConfig(
+      HashType hashType,
+      boolean includeRecordHeaderForHashing,
+      String targetField,
+      String headerAttribute
+  ) {
+    HasherConfig hasherConfig = new HasherConfig();
+    hasherConfig.recordHasherConfig = new RecordHasherConfig();
+    hasherConfig.recordHasherConfig.hashEntireRecord = true;
+    hasherConfig.recordHasherConfig.includeRecordHeaderForHashing = includeRecordHeaderForHashing;
+    hasherConfig.recordHasherConfig.headerAttribute = headerAttribute;
+    hasherConfig.recordHasherConfig.targetField = targetField;
+    hasherConfig.recordHasherConfig.hashType = hashType;
+
+    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
+    hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
+
+    return hasherConfig;
+  }
+
+  private Set<String> registerCallbackForValidFields() {
+    final Set<String> validFieldsFromTheProcessor = new HashSet<String>();
+    PowerMockito.replace(
+        MemberMatcher.method(
+            FieldHasherProcessor.class,
+            "validateAndExtractFieldsToHash"
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Object returnVal =  method.invoke(proxy, args);
+            validFieldsFromTheProcessor.addAll((HashSet<String>) returnVal);
+            return returnVal;
+          }
+        }
+    );
+    return validFieldsFromTheProcessor;
+  }
+
+  private void checkFieldIssueContinue(
+      Record record,
+      HasherConfig hasherConfig,
+      Set<String> expectedValidFields,
+      Map<String, Field> expectedVal
+  ) throws StageException {
+    StageRunner.Output output;
+    FieldHasherProcessor processor;
+    ProcessorRunner runner;
+
+    final Set<String> validFieldsFromTheProcessor = registerCallbackForValidFields();
+
+    processor = PowerMockito.spy(
+        new FieldHasherProcessor(
+            hasherConfig,
+            OnStagePreConditionFailure.CONTINUE
+        )
+    );
+
+    runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      output = runner.runProcess(Arrays.asList(record));
+      Assert.assertEquals("Valid Fields Size mismatch", expectedValidFields.size(), validFieldsFromTheProcessor.size());
+      Assert.assertTrue("Expected Valid Fields Not Present", validFieldsFromTheProcessor.containsAll(expectedValidFields));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record outputRecord = output.getRecords().get("a").get(0);
+
+      Field field = outputRecord.get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals("Expected fields does not match: ", expectedVal.size(), result.size());
+
+      Set<String> resultFieldPaths = new HashSet<String>();
+      for (String fieldKey : result.keySet()) {
+        Field outputField = result.get(fieldKey);
+        Field expectedField  = expectedVal.get(fieldKey);
+        Assert.assertEquals("Expected Type not present for field:" + fieldKey, expectedField.getType(), outputField.getType());
+        Assert.assertEquals("Expected Value not present for field: " + fieldKey, expectedField.getValue(), outputField.getValue());
+        resultFieldPaths.add("/" + fieldKey);
+      }
+    } catch (StageException e) {
+      Assert.fail("Should not throw an exception when On Stage Precondition Continue");
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private void checkFieldIssueToError(
+      Record record,
+      HasherConfig hasherConfig,
+      Set<String> expectedValidFields) throws StageException {
+
+    StageRunner.Output output;
+
+    final Set<String> validFieldsFromTheProcessor = registerCallbackForValidFields();
+
+    FieldHasherProcessor processor = PowerMockito.spy(
+        new FieldHasherProcessor(
+            hasherConfig,
+            OnStagePreConditionFailure.TO_ERROR
+        )
+    );
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    try {
+      output = runner.runProcess(Arrays.asList(record));
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Assert.assertEquals("Valid Fields Size mismatch", expectedValidFields.size(), validFieldsFromTheProcessor.size());
+      Assert.assertTrue("Expected Valid Fields Not Present", validFieldsFromTheProcessor.containsAll(expectedValidFields));
+      Assert.assertEquals(Errors.HASH_01.toString(), runner.getErrorRecords().get(0).getHeader().getErrorCode());
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
@@ -815,95 +984,179 @@ public class TestFieldHasherProcessor {
   }
 
   @Test
-  public void testUnsupportedFieldTypesContinue() throws StageException {
+  public void testUnsupportedFieldTypes() throws StageException {
+    //valid Fields
+    final String STRING_FIELD = "stringField";
+    final String INT_FIELD = "intField";
+    final String BOOLEAN_FIELD = "booleanField";
+
+    //Invalid Fields
+    final String NULL_FIELD = "nullField";
+    final String LIST_FIELD = "listField";
+    final String MAP_FIELD = "mapField";
+    final String LIST_MAP_FIELD = "listMapField";
+
+    final String ROOT_PATH = "/";
+    final String TARGET_FIELD = "targetField";
+
+
+    Field stringField = Field.create("string1");
+    Field intField = Field.create(1);
+    Field booleanField = Field.create(true);
+    Field nullField = Field.create(Field.Type.FLOAT, null);
+
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(1));
+    list.add(Field.create(2));
+    list.add(Field.create(3));
+    Field listField = Field.create(list);
+
+    Map<String, Field> map = new HashMap<>();
+    map.put("k1", Field.create("v1"));
+    map.put("k2", Field.create("v2"));
+    map.put("k3", Field.create("v3"));
+
+    Field mapField = Field.create(map);
+
+    LinkedHashMap<String, Field> listMap= new LinkedHashMap<>();
+    listMap.put("lk1", Field.create("v1"));
+    listMap.put("lk2", Field.create("v2"));
+    listMap.put("lk3", Field.create("v3"));
+    Field listMapField = Field.createListMap(listMap);
+
+    Map<String, Field> fieldMap = new LinkedHashMap<>();
+    fieldMap.put(STRING_FIELD, stringField);
+    fieldMap.put(INT_FIELD, intField);
+    fieldMap.put(BOOLEAN_FIELD, booleanField);
+    fieldMap.put(NULL_FIELD, nullField);
+    fieldMap.put(MAP_FIELD, mapField);
+    fieldMap.put(LIST_FIELD, listField);
+    fieldMap.put(LIST_MAP_FIELD, listMapField);
+
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
+
+    final List<String> fieldsToHash = ImmutableList.of(
+        ROOT_PATH + STRING_FIELD,
+        ROOT_PATH + INT_FIELD,
+        ROOT_PATH + BOOLEAN_FIELD,
+        ROOT_PATH + NULL_FIELD,
+        ROOT_PATH + LIST_FIELD,
+        ROOT_PATH + MAP_FIELD,
+        ROOT_PATH + LIST_MAP_FIELD
+    );
+
+    Set<String> expectedValidFields =  new HashSet<String>();
+    expectedValidFields.addAll(FieldRegexUtil.getMatchingFieldPaths(ROOT_PATH + STRING_FIELD, record.getEscapedFieldPaths()));
+    expectedValidFields.addAll(FieldRegexUtil.getMatchingFieldPaths(ROOT_PATH + INT_FIELD, record.getEscapedFieldPaths()));
+    expectedValidFields.addAll(FieldRegexUtil.getMatchingFieldPaths(ROOT_PATH + BOOLEAN_FIELD, record.getEscapedFieldPaths()));
+
+    //Test HashInPlace
     HasherConfig hasherConfig =
         createInPlaceHasherProcessor(
-            ImmutableList.of("/name", "/mapField", "/listField"),
+            fieldsToHash,
             HashType.SHA2
         );
+    Map<String, Field> expectedVals = new HashMap<String, Field>();
+    expectedVals.put(STRING_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + STRING_FIELD), HashType.SHA2)));
+    expectedVals.put(INT_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + INT_FIELD), HashType.SHA2)));
+    expectedVals.put(BOOLEAN_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + BOOLEAN_FIELD), HashType.SHA2)));
+    expectedVals.put(NULL_FIELD, nullField);
+    expectedVals.put(LIST_FIELD, listField);
+    expectedVals.put(MAP_FIELD, mapField);
+    expectedVals.put(LIST_MAP_FIELD, listMapField);
 
-    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+    checkFieldIssueToError(record, hasherConfig, expectedValidFields);
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
-        .addOutputLane("a").build();
-    runner.runInit();
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
 
-    try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("name", Field.create("streamsets"));
+    checkFieldIssueContinue(record, hasherConfig, expectedValidFields, expectedVals);
 
-      Map<String, Field> mapField = new HashMap<>();
-      mapField.put("e1", Field.create("e1"));
-      mapField.put("e2", Field.create("e2"));
-
-      map.put("mapField", Field.create(mapField));
-      map.put("listField", Field.create(Field.Type.LIST, ImmutableList.of(Field.create("e1"), Field.create("e2"))));
-
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 3);
-      Assert.assertTrue(result.containsKey("name"));
-      Assert.assertEquals(computeHash(Field.Type.STRING, "streamsets", HashType.SHA2),
-          result.get("name").getValue());
-
-      Assert.assertTrue(result.containsKey("mapField"));
-      Map<String, Field> m =  result.get("mapField").getValueAsMap();
-      Assert.assertEquals("e1", m.get("e1").getValueAsString());
-      Assert.assertEquals("e2", m.get("e2").getValueAsString());
-
-      Assert.assertTrue(result.containsKey("listField"));
-      List<Field> l = result.get("listField").getValueAsList();
-      Assert.assertEquals("e1", l.get(0).getValueAsString());
-      Assert.assertEquals("e2", l.get(1).getValueAsString());
-
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
-  @Test
-  public void testUnsupportedFieldTypesError() throws StageException {
-    HasherConfig hasherConfig =
-        createInPlaceHasherProcessor(
-            ImmutableList.of("/name", "/mapField", "/listField"),
-            HashType.SHA2
+    //Test HashToTarget
+    hasherConfig =
+        createTargetFieldHasherProcessor(
+            fieldsToHash,
+            HashType.SHA2,
+            ROOT_PATH + TARGET_FIELD,
+            ""
         );
-    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.TO_ERROR);
+
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
+    checkFieldIssueToError(record, hasherConfig, expectedValidFields);
+
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
+
+    expectedVals.clear();
+    expectedVals.put(STRING_FIELD, stringField);
+    expectedVals.put(INT_FIELD, intField);
+    expectedVals.put(BOOLEAN_FIELD, booleanField);
+    expectedVals.put(NULL_FIELD, nullField);
+    expectedVals.put(LIST_FIELD, listField);
+    expectedVals.put(MAP_FIELD, mapField);
+    expectedVals.put(LIST_MAP_FIELD, listMapField);
+    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, fieldsToHash, HashType.SHA2)));
+
+    checkFieldIssueContinue(record, hasherConfig, expectedValidFields, expectedVals);
+
+    //Test RecordHasherConfig
+    hasherConfig =
+        createRecordHasherConfig(
+            HashType.SHA2,
+            false,
+            ROOT_PATH + TARGET_FIELD,
+            ""
+        );
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
+
+    expectedValidFields.clear();
+    expectedValidFields.addAll(record.getEscapedFieldPaths());
+    expectedValidFields.remove("");
+    expectedValidFields.remove(ROOT_PATH + LIST_FIELD);
+    expectedValidFields.remove(ROOT_PATH + MAP_FIELD);
+    expectedValidFields.remove(ROOT_PATH + LIST_MAP_FIELD);
+    expectedValidFields.remove(ROOT_PATH + NULL_FIELD);
+
+    //Check On Field Error, Even specifying error should not throw error for record
+    // as we just skip unsupported data types and null fields
+
+    FieldHasherProcessor processor = PowerMockito.spy(
+        new FieldHasherProcessor(
+            hasherConfig,
+            OnStagePreConditionFailure.TO_ERROR
+        )
+    );
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a")
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addOutputLane("a").build();
+        .build();
     runner.runInit();
-
     try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("name", Field.create("streamsets"));
-
-      Map<String, Field> mapField = new HashMap<>();
-      mapField.put("e1", Field.create("e1"));
-      mapField.put("e2", Field.create("e2"));
-
-      map.put("mapField", Field.create(mapField));
-      map.put("listField", Field.create(Field.Type.LIST, ImmutableList.of(Field.create("e1"), Field.create("e2"))));
-
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-
-      Assert.assertEquals(0, output.getRecords().get("a").size());
-      Assert.assertEquals(1, runner.getErrorRecords().size());
-
-      Assert.assertEquals(Errors.HASH_01.toString(), runner.getErrorRecords().get(0).getHeader().getErrorCode());
+      StageRunner.Output output = runner.runProcess(Arrays.asList(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Assert.assertEquals(0, runner.getErrorRecords().size());
     } finally {
       runner.runDestroy();
     }
+
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(fieldMap));
+
+    expectedVals.clear();
+    expectedVals.put(STRING_FIELD, stringField);
+    expectedVals.put(INT_FIELD, intField);
+    expectedVals.put(BOOLEAN_FIELD, booleanField);
+    expectedVals.put(NULL_FIELD, nullField);
+    expectedVals.put(LIST_FIELD, listField);
+    expectedVals.put(MAP_FIELD, mapField);
+    expectedVals.put(LIST_MAP_FIELD, listMapField);
+    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.SHA2)));
+
+    checkFieldIssueContinue(record, hasherConfig, expectedValidFields, expectedVals);
   }
 
   @Test
@@ -1160,15 +1413,7 @@ public class TestFieldHasherProcessor {
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
 
-
-    HasherConfig hasherConfig = new HasherConfig();
-    hasherConfig.recordHasherConfig = new RecordHasherConfig();
-    hasherConfig.recordHasherConfig.hashEntireRecord = true;
-    hasherConfig.recordHasherConfig.headerAttribute = "/rf1";
-    hasherConfig.recordHasherConfig.targetField = "";
-    hasherConfig.recordHasherConfig.hashType = HashType.MD5;
-    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
-    hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
+    HasherConfig hasherConfig = createRecordHasherConfig(HashType.MD5, false, "", "/rf1");
 
     FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
@@ -1188,10 +1433,10 @@ public class TestFieldHasherProcessor {
 
 
     //There will be a record header field /rf1 already which will also be used for Hashing
-    hasherConfig.recordHasherConfig.includeRecordHeaderForHashing = true;
-    hasherConfig.recordHasherConfig.headerAttribute = "/rf2";
     record.getHeader().setAttribute("/rf1", "rf1");
+    hasherConfig = createRecordHasherConfig(HashType.MD5, true, "", "/rf2");
 
+    processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
     runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -1209,7 +1454,7 @@ public class TestFieldHasherProcessor {
       record.getHeader().setAttribute("/rf1", "rf1");
 
       Assert.assertEquals(
-          hashForRecordsWithFieldsHeader(
+          hashForRecordsWithFieldsAndHeaderAttr(
               record,
               record.getEscapedFieldPaths(),
               HashType.MD5,
@@ -1232,18 +1477,10 @@ public class TestFieldHasherProcessor {
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
 
-    HasherConfig hasherConfig = new HasherConfig();
-    hasherConfig.recordHasherConfig = new RecordHasherConfig();
-    hasherConfig.recordHasherConfig.hashEntireRecord = true;
-    hasherConfig.recordHasherConfig.headerAttribute = "";
-    hasherConfig.recordHasherConfig.targetField = "";
-    hasherConfig.recordHasherConfig.hashType = HashType.MD5;
-    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
-    hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
+    HasherConfig hasherConfig = createRecordHasherConfig(HashType.MD5, false, "", "");
 
     FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
-    //Check functionality
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
         .addOutputLane("a").build();
 
@@ -1266,20 +1503,14 @@ public class TestFieldHasherProcessor {
     record.set(Field.create(map));
 
     //Hash i & j to a target field with a wild card (Should throw exception as no wild cards are allowed)
-    TargetFieldHasherConfig tfieldHasherConfig5 = new TargetFieldHasherConfig();
-    tfieldHasherConfig5.sourceFieldsToHash = ImmutableList.of("/i", "/j");
-    tfieldHasherConfig5.hashType = HashType.MD5;
-    tfieldHasherConfig5.targetField = "/*";
-    tfieldHasherConfig5.headerAttribute = "";
-
-    HasherConfig hasherConfig = new HasherConfig();
-    populateEmptyRecordHasherConfig(hasherConfig);
-
-    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
-    hasherConfig.targetFieldHasherConfigs =  ImmutableList.of(tfieldHasherConfig5);
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/i", "/j"),
+        HashType.MD5,
+        "/*",
+        ""
+    );
 
     FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
-
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
         .addOutputLane("a").build();
     try {
@@ -1291,9 +1522,14 @@ public class TestFieldHasherProcessor {
 
 
     //Try specifying header attribute as wild card.
-    tfieldHasherConfig5.headerAttribute = "/*";
-    tfieldHasherConfig5.targetField = "/m";
+    hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/i", "/j"),
+        HashType.MD5,
+        "/*",
+        "/m"
+    );
 
+    processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
     runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
         .addOutputLane("a").build();
     try {
@@ -1314,19 +1550,12 @@ public class TestFieldHasherProcessor {
 
     //Hash i & j to an empty target field and header Attribute
     //(Should throw exception as empty fields are not allowed)
-    TargetFieldHasherConfig tfieldHasherConfig6 = new TargetFieldHasherConfig();
-    tfieldHasherConfig6.sourceFieldsToHash = ImmutableList.of("/i", "/j");
-    tfieldHasherConfig6.hashType = HashType.MD5;
-    tfieldHasherConfig6.targetField = "";
-    tfieldHasherConfig6.headerAttribute = "";
-
-    hasherConfig = new HasherConfig();
-    hasherConfig.recordHasherConfig = new RecordHasherConfig();
-    populateEmptyRecordHasherConfig(hasherConfig);
-
-    hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
-    hasherConfig.targetFieldHasherConfigs =  ImmutableList.of(tfieldHasherConfig6);
-
+    hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/i", "/j"),
+        HashType.MD5,
+        "",
+        ""
+    );
     processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
     runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
@@ -1338,5 +1567,4 @@ public class TestFieldHasherProcessor {
       //Expected Exception
     }
   }
-
 }

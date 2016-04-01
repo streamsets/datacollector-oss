@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.HashFunction;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -34,7 +35,6 @@ import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +42,11 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
   private final HasherConfig hasherConfig;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
   private static final Joiner JOINER = Joiner.on(".");
+  public static final Set<Field.Type> UNSUPPORTED_FIELD_TYPES = ImmutableSet.of(
+      Field.Type.MAP,
+      Field.Type.LIST,
+      Field.Type.LIST_MAP
+  );
 
   public FieldHasherProcessor(
       HasherConfig hasherConfig,
@@ -147,36 +152,50 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsDontExist = new HashSet<>();
     Set<String> fieldsWithListOrMapType = new HashSet<>();
     Set<String> fieldsWithNull = new HashSet<>();
 
     //Process inPlaceFieldHasherConfigs
     List<FieldHasherConfig> inPlaceFieldHasherConfigs = hasherConfig.inPlaceFieldHasherConfigs;
-    processFieldHasherConfigs(record, fieldPaths, fieldsDontExist, fieldsWithListOrMapType,
-        fieldsWithNull, inPlaceFieldHasherConfigs);
+    processFieldHasherConfigs(
+        record,
+        fieldsDontExist,
+        fieldsWithListOrMapType,
+        fieldsWithNull,
+        inPlaceFieldHasherConfigs
+    );
 
     //Process TargetFieldHasherConfigs
     processFieldHasherConfigs(
         record,
-        fieldPaths,
         fieldsDontExist,
         fieldsWithListOrMapType,
         fieldsWithNull,
-        Collections.unmodifiableList((List<? extends FieldHasherConfig>)hasherConfig.targetFieldHasherConfigs));
+        Collections.unmodifiableList((List<? extends FieldHasherConfig>) hasherConfig.targetFieldHasherConfigs)
+    );
 
     //Process Record Hasher Config
     RecordHasherConfig recordHasherConfig = hasherConfig.recordHasherConfig;
     if (recordHasherConfig.hashEntireRecord) {
+      //Skip Map, List and ListMap Fields and null fields, don't add it to error maps.
+      Set<String> validFieldsToHashForThisConfig = validateAndExtractFieldsToHash(
+          record,
+          new HashSet<String>(),
+          new HashSet<String>(),
+          new HashSet<String>(),
+          record.getEscapedFieldPaths()
+      );
+
       handleHashingForTarget(
           record,
           recordHasherConfig.hashType,
-          record.getEscapedFieldPaths(),
+          validFieldsToHashForThisConfig,
           fieldsDontExist,
           recordHasherConfig.targetField,
           recordHasherConfig.headerAttribute,
-          recordHasherConfig.includeRecordHeaderForHashing);
+          recordHasherConfig.includeRecordHeaderForHashing
+      );
     }
 
     if (onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR
@@ -188,37 +207,56 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
+  //Basically throw out map, list map, list and null values fields.
+  private Set<String> validateAndExtractFieldsToHash(
+      Record record,
+      Set<String> fieldsDontExist,
+      Set<String> fieldsWithListOrMapType,
+      Set<String> fieldsWithNull,
+      Collection<String> matchingFieldsPath
+  ) {
+    Set<String> validFieldsToHashForThisConfig = new HashSet<String>();
+    for (String matchingFieldPath : matchingFieldsPath) {
+      if (record.has(matchingFieldPath)) {
+        Field field = record.get(matchingFieldPath);
+        if (UNSUPPORTED_FIELD_TYPES.contains(field.getType())) {
+          fieldsWithListOrMapType.add(matchingFieldPath);
+        } else if (field.getValue() == null) {
+          fieldsWithNull.add(matchingFieldPath);
+        } else {
+          validFieldsToHashForThisConfig.add(matchingFieldPath);
+        }
+      } else {
+        fieldsDontExist.add(matchingFieldPath);
+      }
+    }
+    return validFieldsToHashForThisConfig;
+  }
+
+
   private void processFieldHasherConfigs(
       Record record,
-      Set<String> fieldPaths,
       Set<String> fieldsDontExist,
       Set<String> fieldsWithListOrMapType,
       Set<String> fieldsWithNull,
       List<FieldHasherConfig> fieldHasherConfigs
   ) throws StageException {
     for (FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
-      Set<String> fieldsToHashForThisConfig = new LinkedHashSet<>();
       //Collect the matching fields to Hash.
+      Set<String> matchingFieldsForTheConfig = new HashSet<String>();
       for (String fieldToHash : fieldHasherConfig.sourceFieldsToHash) {
         List<String> matchingFieldsPath =
-            FieldRegexUtil.getMatchingFieldPaths(fieldToHash, fieldPaths);
-        for (String matchingFieldPath : matchingFieldsPath) {
-          if (record.has(matchingFieldPath)) {
-            Field field = record.get(matchingFieldPath);
-            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST ||
-                field.getType() == Field.Type.LIST_MAP) {
-              fieldsWithListOrMapType.add(matchingFieldPath);
-            } else if (field.getValue() == null) {
-              fieldsWithNull.add(matchingFieldPath);
-            } else {
-              fieldsToHashForThisConfig.add(matchingFieldPath);
-            }
-          } else {
-            fieldsDontExist.add(matchingFieldPath);
-          }
-        }
+            FieldRegexUtil.getMatchingFieldPaths(fieldToHash, record.getEscapedFieldPaths());
+        matchingFieldsForTheConfig.addAll(matchingFieldsPath);
       }
-      performHashingForFields(record, fieldHasherConfig, fieldsToHashForThisConfig, fieldsDontExist);
+      Set<String> validFieldsToHashForThisConfig = validateAndExtractFieldsToHash(
+          record,
+          fieldsDontExist,
+          fieldsWithListOrMapType,
+          fieldsWithNull,
+          matchingFieldsForTheConfig
+      );
+      performHashingForFields(record, fieldHasherConfig, validFieldsToHashForThisConfig, fieldsDontExist);
     }
   }
 
