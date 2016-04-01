@@ -20,6 +20,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/Destinations_AWSCredentials.dita"/>
   </topicref>
   <topicref href="../Destinations/AmazonS3.dita" chunk="to-content">
    <topicmeta>
@@ -113,7 +114,6 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Destinations/KinFirehose-DeliveryStream.dita"/>
-   <topicref href="../Destinations/KinFirehose-Credentials.dita"/>
    <topicref href="../Destinations/KinFirehose-DataFormat.dita"/>
    <topicref href="../Destinations/KinFirehose-Configuring.dita"/>
   </topicref>

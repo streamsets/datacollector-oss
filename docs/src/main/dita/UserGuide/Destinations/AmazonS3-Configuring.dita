@@ -40,11 +40,11 @@
                             </thead>
                             <tbody>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3AccessKeyId">
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID">
                                     <entry/>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey">
                                     <entry/>
                                 </row>
                                 <row

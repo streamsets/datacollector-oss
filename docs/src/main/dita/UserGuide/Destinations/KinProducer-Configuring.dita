@@ -41,15 +41,13 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Access Key ID</entry>
-                                    <entry>AWS access key ID with privileges for Kinesis
-                                        Streams.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Secret Access Key</entry>
-                                    <entry>AWS secret access key with privileges for Kinesis
-                                        Streams.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Region</entry>

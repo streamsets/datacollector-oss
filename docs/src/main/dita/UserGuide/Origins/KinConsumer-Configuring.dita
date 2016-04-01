@@ -41,17 +41,13 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Access Key ID</entry>
-                                    <entry>AWS access key ID with privileges for Kinesis
-                                            Streams.<p>Required unless using IAM roles with IAM
-                                            instance profile credentials. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Secret Access Key</entry>
-                                    <entry>AWS secret access key with privileges for Kinesis
-                                            Streams.<p>Required unless using IAM roles with IAM
-                                            instance profile credentials. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Region</entry>

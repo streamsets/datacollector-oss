@@ -18,6 +18,7 @@
  <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Origins_AWSCredentials.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>

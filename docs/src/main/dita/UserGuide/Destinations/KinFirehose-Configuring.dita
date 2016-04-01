@@ -44,25 +44,13 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Access Key ID <xref href="KinFirehose-Credentials.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_zn3_b3q_kv"/></xref>
-                                    </entry>
-                                    <entry><p>AWS access key ID for the Kinesis Firehose account.</p>
-                                        <p>Required unless using IAM roles with IAM instance
-                                            profile credentials.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Secret Access Key <xref
-                                            href="KinFirehose-Credentials.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            /></xref></entry>
-                                    <entry>
-                                        <p>AWS secret access key for the Kinesis Firehose account. </p>
-                                        <p>Required unless using IAM roles with IAM instance profile
-                                            credentials. </p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Destination Type</entry>
