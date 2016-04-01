@@ -19,14 +19,15 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.io.IOUtils;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -37,8 +38,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -51,6 +54,8 @@ import java.util.Map;
 @Api(value = "system")
 @DenyAll
 public class AdminResource {
+
+  private static final String APP_TOKEN_FILE = "application-token.txt";
 
   private final RuntimeInfo runtimeInfo;
 
@@ -75,6 +80,20 @@ public class AdminResource {
     };
     thread.setDaemon(true);
     thread.start();
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/appToken")
+  @ApiOperation(value = "Update Application Token SDC", authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response updateAppToken(String authToken) throws IOException {
+    DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
+    OutputStream outputStream = dataStore.getOutputStream();
+    IOUtils.write(authToken, outputStream);
+    dataStore.commit(outputStream);
+    dataStore.close();
     return Response.ok().build();
   }
 
