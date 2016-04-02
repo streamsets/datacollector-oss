@@ -29,9 +29,9 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "Base64 Decoder",
-    icon = "base64encoder.png",
-    description = "Encodes a record into a Base64-encoded Byte Array",
+    label = "Base64 Field Decoder",
+    icon = "base64decoder.png",
+    description = "Decodes a Base64 encoded Byte Array field",
     onlineHelpRefUrl = "index.html#Processors/Base64Decoder.html#task_pnn_5py_kv"
 )
 @ConfigGroups(Groups.class)
@@ -42,7 +42,7 @@ public class Base64DecodingDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Field to Decode",
-      description = "Byte Array field that is to be decoded",
+      description = "Base64 encoded Byte Array field that is to be decoded",
       displayPosition = 10,
       group = "BASE64"
   )
@@ -52,8 +52,8 @@ public class Base64DecodingDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "New Decoded Field",
-      description = "New field to which decoded Byte Array is to be written to",
+      label = "Target Field",
+      description = "Target field to which decoded Byte Array is to be written to",
       displayPosition = 20,
       group = "BASE64"
   )

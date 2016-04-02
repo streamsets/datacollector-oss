@@ -29,9 +29,9 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "Base64 Encoder",
+    label = "Base64 Field Encoder",
     icon = "base64encoder.png",
-    description = "Encodes a record into a Base64-encoded Byte Array",
+    description = "Encodes a Byte Array field into a Base64 encoded Byte Array",
     onlineHelpRefUrl = "index.html#Processors/Base64Encoder.html#task_ekg_ppy_kv"
 )
 @ConfigGroups(Groups.class)
@@ -52,8 +52,8 @@ public class Base64EncodingDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "New Encoded Field",
-      description = "New field to which encoded Byte Array is to be written to",
+      label = "Target Field",
+      description = "Target field to which encoded Byte Array is to be written to",
       displayPosition = 20,
       group = "BASE64"
   )
@@ -64,7 +64,7 @@ public class Base64EncodingDProcessor extends DProcessor {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "URL Safe",
-      description = "Byte Array field that is to be encoded",
+      description = "Encode the field so that it can be safely sent in a URL",
       displayPosition = 30,
       group = "BASE64"
   )
