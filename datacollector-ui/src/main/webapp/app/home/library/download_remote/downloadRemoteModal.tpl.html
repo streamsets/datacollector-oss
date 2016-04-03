@@ -31,6 +31,12 @@
              ng-click="downloadRemotePipeline(remotePipeline, $index); $event.stopPropagation()">Download</a>
         </td>
       </tr>
+
+      <tr ng-if="remotePipelines.length === 0">
+        <td colspan="5" class="no-records text-center"
+            translate="home.downloadRemote.noPipelines">No Pipelines to view.</td>
+      </tr>
+
       </tbody>
     </table>
 

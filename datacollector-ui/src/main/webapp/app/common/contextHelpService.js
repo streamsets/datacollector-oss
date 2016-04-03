@@ -97,7 +97,6 @@ angular.module('dataCollectorApp.common')
       } else {
         uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
       }
-      console.log(uiHelpBaseURL);
       return uiHelpBaseURL;
     };
 

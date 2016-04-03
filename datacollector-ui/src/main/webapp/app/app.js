@@ -156,12 +156,36 @@ angular.module('dataCollectorApp')
         serverTimeDifference: 0,
 
         /**
+         * Open the Generate Application Token Modal Dialog
+         */
+        generateApplicationToken: function() {
+          $modal.open({
+            templateUrl: 'common/administration/applicationToken/applicationToken.tpl.html',
+            controller: 'ApplicationTokenModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
+
+        /**
          * Open the Shutdown Modal Dialog
          */
         shutdownCollector: function() {
           $modal.open({
             templateUrl: 'common/administration/shutdown/shutdownModal.tpl.html',
             controller: 'ShutdownModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
+
+        /**
+         * Open the Restart Modal Dialog
+         */
+        restartCollector: function() {
+          $modal.open({
+            templateUrl: 'common/administration/restart/restartModal.tpl.html',
+            controller: 'RestartModalInstanceController',
             size: '',
             backdrop: true
           });
@@ -339,6 +363,10 @@ angular.module('dataCollectorApp')
         $rootScope.common.headerTitle = configuration.getUIHeaderTitle();
         if(configuration.isAnalyticsEnabled()) {
           Analytics.createAnalyticsScriptTag();
+        }
+
+        if ($rootScope.common.authenticationType === 'sso') {
+          authService.fetchRemoteUserRoles();
         }
 
         var alertsInfoList = results[0].data;

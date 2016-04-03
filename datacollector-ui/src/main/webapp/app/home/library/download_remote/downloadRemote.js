@@ -44,7 +44,6 @@ angular
         api.remote.getPipeline(authService.getRemoteBaseUrl(), authService.getSSOToken(), remotePipeline)
           .then(
             function(res) {
-              console.log(res.data);
               var remotePipeline = res.data;
               var pipelineEnvelope = {
                 pipelineConfig: JSON.parse(remotePipeline.pipelineDefinition),
@@ -77,7 +76,6 @@ angular
       api.remote.fetchPipelines(authService.getRemoteBaseUrl(), authService.getSSOToken())
         .then(
           function(res) {
-            console.log(res.data);
             $scope.remotePipelines = res.data;
           },
           function(res) {

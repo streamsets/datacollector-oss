@@ -11,10 +11,12 @@
       },
       "admin": {
         "configuration": "Configuration",
+        "generateApplicationToken": "Application Token",
         "jvmMetrics": "JVM Metrics",
         "logs": "Logs",
         "main": "Administration",
         "resetLocalStorage": "Reset Browser Local Storage",
+        "restart": "Restart",
         "shutdown": "Shutdown"
       },
       "clusterManager": "Cluster Manager",
@@ -66,6 +68,7 @@
       "fromStage": "From Stage",
       "fromStageLane": "From Stage Stream",
       "fromStageLanePredicate": "From Stage Stream Condition",
+      "generate": "Generate",
       "getThisVersion": "Get",
       "help": "Help",
       "histogram": "Records Per Batch Histogram (5 minutes decay)",
@@ -97,6 +100,7 @@
       "refresh": "Refresh",
       "required": "Required",
       "remotePipelineMetadata": "Remote Pipeline Metadata",
+      "restart": "Restart Data Collector",
       "revertChanges": "Revert Data Changes",
       "sampleRecords": "Sample Records",
       "sampleValue": "Sample Value",
@@ -146,20 +150,28 @@
   },
   "home": {
     "ago": "ago",
+    "applicationToken": {
+      "headerLabel": "Generate Application Token",
+      "confirmationMessage": "Are you sure you want to generate remote Application Token and update the file 'etc/application-token.txt' ?",
+      "generatingTokenMessage": "Generating Application Token ...",
+      "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt'. Restart the Data Collector to register Application Token."
+    },
     "createPipeline": "Create New Pipeline",
     "commitPipelineHistory": {
-      "headerLabel": "Pipeline Commit History",
       "committer": "Committed By",
-      "commitTime": "Committed On"
+      "commitTime": "Committed On",
+      "headerLabel": "Pipeline Commit History",
+      "noCommits": "No Commits to view."
     },
     "downloadRemotePipeline": "Download Remote Pipeline",
     "downloadRemote": {
+      "actions": "Actions",
+      "commitMessage": "Commit Message",
       "headerLabel": "Download Remote Pipeline",
+      "noPipelines": "No Pipelines to view.",
       "pipelineName": "Pipeline Name",
       "pipelineId": "Pipeline ID",
-      "version": "Version",
-      "commitMessage": "Commit Message",
-      "actions": "Actions"
+      "version": "Version"
     },
     "remotePipeline": "Remote Pipeline",
     "getStarted": "Get Started",
@@ -485,10 +497,15 @@
       "successMessage": "Reset Origin is successful."
     },
     "runningStatus": "Pipeline is running",
+    "restart": {
+      "confirmationMessage": "Are you sure you want to restart Data Collector?",
+      "headerLabel": "Restart Collector",
+      "restarting": "Restarting Down the Data Collector...",
+      "successMessage": "Data Collector is restarted."
+    },
     "shutdown": {
       "confirmationMessage": "Are you sure you want to shutdown Data Collector?",
       "headerLabel": "Shutdown Collector",
-      "secretPlaceholder": "Enter Secret...",
       "shuttingDown": "Shutting Down the Data Collector...",
       "successMessage": "Collector is stopped."
     },

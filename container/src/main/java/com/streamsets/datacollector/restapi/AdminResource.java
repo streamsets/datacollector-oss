@@ -39,7 +39,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
@@ -109,10 +108,13 @@ public class AdminResource {
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response updateAppToken(String authToken) throws IOException {
     DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
-    OutputStream outputStream = dataStore.getOutputStream();
-    IOUtils.write(authToken, outputStream);
-    dataStore.commit(outputStream);
-    dataStore.close();
+    try (OutputStream os = dataStore.getOutputStream()) {
+      IOUtils.write(authToken, os);
+      dataStore.commit(os);
+    } finally {
+      dataStore.release();
+      dataStore.close();
+    }
     return Response.ok().build();
   }
 

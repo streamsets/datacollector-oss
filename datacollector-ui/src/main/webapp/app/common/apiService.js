@@ -133,6 +133,32 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Restart the Data Collector.
+       * @returns {*}
+       */
+      restartDataCollector: function() {
+        var url = apiBase + '/system/restart';
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      },
+
+      /**
+       * Update Application Token
+       * @returns {*}
+       */
+      updateApplicationToken: function(authToken) {
+        var url = apiBase + '/system/appToken';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: authToken
+        });
+      },
+
+
+      /**
        * logout
        */
       logout: function(authenticationType) {
@@ -870,7 +896,6 @@ angular.module('dataCollectorApp.common')
     };
 
     api.remote = {
-
       publishPipeline: function(remoteBaseURL, ssoToken, name, commitPipelineModel) {
         var deferred = $q.defer();
         var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
@@ -880,7 +905,6 @@ angular.module('dataCollectorApp.common')
           method: 'GET',
           url: url
         }).then(function(res) {
-          console.log(res.data);
           var pipeline = res.data;
 
           commitPipelineModel.pipelineDefinition = JSON.stringify(pipeline.pipelineConfig);
@@ -899,12 +923,10 @@ angular.module('dataCollectorApp.common')
             }
           });
         }).then(function(result) {
-          console.log(result);
           var remoteStorePipeline = result.data;
           var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
           deferred.resolve(pipelineDefinition.metadata);
         }, function(err) {
-          console.log(err);
           deferred.reject(err);
         });
 
@@ -953,6 +975,37 @@ angular.module('dataCollectorApp.common')
         return $http({
           method: 'GET',
           url: remoteURL,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      },
+
+      getRemoteRoles: function(remoteBaseURL, ssoToken) {
+        var remoteURL = remoteBaseURL + 'security/rest/v1/currentUser';
+        return $http({
+          method: 'GET',
+          url: remoteURL,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      },
+
+      generateApplicationToken: function(remoteBaseURL, ssoToken, orgId) {
+        var newComponentsModel = {
+          organization: orgId,
+          componentType: 'dc',
+          numberOfComponents: 1,
+          active: true
+        };
+        var remoteURL = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/components';
+        return $http({
+          method: 'PUT',
+          url: remoteURL,
+          data: newComponentsModel,
           headers:  {
             'Content-Type': 'application/json; charset=utf-8',
             'X-SS-User-Auth-Token': ssoToken

@@ -91,6 +91,16 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Fetch Remote User Roles
+     */
+    this.fetchRemoteUserRoles = function() {
+      api.remote.getRemoteRoles(this.getRemoteBaseUrl(), this.getSSOToken())
+        .then(function(res) {
+          self.remoteUserInfo = res.data;
+        });
+    };
+
+    /**
      * Return Remote Store Base URL
      */
     this.getRemoteBaseUrl = function() {
@@ -116,5 +126,16 @@ angular.module('dataCollectorApp.common')
         }
       });
       return ssoToken;
+    };
+
+    /**
+     * Return Remote Organization ID
+     * @returns {*}
+     */
+    this.getRemoteOrgId = function() {
+      if (self.remoteUserInfo) {
+        return self.remoteUserInfo.organizationId;
+      }
+      return '';
     };
   });

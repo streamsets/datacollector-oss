@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,27 +19,27 @@
  */
 
 /**
- * Controller for Shutdown Modal Dialog.
+ * Controller for Restart Modal Dialog.
  */
 
 angular
   .module('dataCollectorApp')
-  .controller('ShutdownModalInstanceController', function ($scope, $modalInstance, api) {
+  .controller('RestartModalInstanceController', function ($scope, $modalInstance, api) {
     angular.extend($scope, {
       issues: [],
-      isShuttingDown: false,
-      isShutdownSucceed: false,
+      isRestarting: false,
+      isRestartSucceed: false,
 
-      shutdown: function() {
-        $scope.isShuttingDown = true;
-        api.admin.shutdownCollector()
+      restart: function() {
+        $scope.isRestarting = true;
+        api.admin.restartDataCollector()
           .success(function() {
-            $scope.isShutdownSucceed = true;
-            $scope.isShuttingDown = false;
+            $scope.isRestartSucceed = true;
+            $scope.isRestarting = false;
           })
           .error(function(data) {
             $scope.issues = [data];
-            $scope.isShuttingDown = false;
+            $scope.isRestarting = false;
           });
       },
 

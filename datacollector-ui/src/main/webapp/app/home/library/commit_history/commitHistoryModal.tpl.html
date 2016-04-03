@@ -43,6 +43,12 @@
           <span ng-if="pipelineVersion === remotePipeline.version && !downloading">Current</span>
         </td>
       </tr>
+
+      <tr ng-if="pipelinesCommit.length === 0">
+        <td colspan="5" class="no-records text-center"
+            translate="home.commitPipelineHistory.noCommits">No Commits to view.</td>
+      </tr>
+
       </tbody>
     </table>
 
