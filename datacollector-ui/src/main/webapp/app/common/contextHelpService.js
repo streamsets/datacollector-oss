@@ -24,7 +24,7 @@
 
 angular.module('dataCollectorApp.common')
   .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService) {
- 
+
     // pre-populate with some static configurations
     var helpIds = {
         "pipeline-configuration": "index.html#Pipeline_Configuration/ConfiguringAPipeline.html",
@@ -39,8 +39,11 @@ angular.module('dataCollectorApp.common')
       buildInfo = {},
       helpWindow;
 
-    this.configInitPromise = $q.all([api.admin.getBuildInfo(), pipelineService.init(),
-      configuration.init()]).then(function(results) {
+    this.configInitPromise = $q.all([
+      api.admin.getBuildInfo(),
+      pipelineService.init(),
+      configuration.init()]
+    ).then(function(results) {
       var stageConfigDefinitions = pipelineService.getStageDefinitions();
       angular.forEach(stageConfigDefinitions, function(stageConfigDefinition) {
         helpIds[stageConfigDefinition.name] = stageConfigDefinition.onlineHelpRefUrl;
@@ -53,11 +56,7 @@ angular.module('dataCollectorApp.common')
         var uiHelpBaseURL, helpURL,
           relativeURL = helpIds[stagename];
 
-        if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
-          uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';
-        } else {
-          uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
-        }
+        uiHelpBaseURL = getHelpBaseUrl();
 
         helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
 
@@ -74,12 +73,7 @@ angular.module('dataCollectorApp.common')
     this.launchHelpContents = function() {
       this.configInitPromise.then(function() {
         var uiHelpBaseURL, helpURL;
-        if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
-          uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';
-        } else {
-          uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
-        }
-
+        uiHelpBaseURL = getHelpBaseUrl();
         helpURL = uiHelpBaseURL + '/index.html';
 
         if(typeof(helpWindow) == 'undefined' || helpWindow.closed) {
@@ -90,6 +84,21 @@ angular.module('dataCollectorApp.common')
         }
 
       });
+    };
+
+    var getHelpBaseUrl = function() {
+      var uiHelpBaseURL;
+      if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP && navigator && navigator.onLine) {
+        if (buildInfo.version.indexOf('-SNAPSHOT') === -1) {
+          uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';
+        } else {
+          uiHelpBaseURL = 'https://streamsets.com/documentation/datacollector/latest/help/';
+        }
+      } else {
+        uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
+      }
+      console.log(uiHelpBaseURL);
+      return uiHelpBaseURL;
     };
 
   });

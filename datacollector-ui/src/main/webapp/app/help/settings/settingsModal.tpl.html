@@ -31,12 +31,12 @@
       <select class="form-control"
               name="help"
               ng-model="$storage.helpLocation">
-        <option value="{{pipelineConstant.LOCAL_HELP}}"
-                ng-selected="$storage.helpLocation === pipelineConstant.LOCAL_HELP">
-          {{'global.menu.help.localHelp' | translate}}</option>
         <option value="{{pipelineConstant.HOSTED_HELP}}"
                 ng-selected="$storage.helpLocation === pipelineConstant.HOSTED_HELP">
           {{'global.menu.help.hostedHelp' | translate}}</option>
+        <option value="{{pipelineConstant.LOCAL_HELP}}"
+                ng-selected="$storage.helpLocation === pipelineConstant.LOCAL_HELP">
+          {{'global.menu.help.localHelp' | translate}}</option>
       </select>
     </div>
 

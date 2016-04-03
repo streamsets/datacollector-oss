@@ -125,7 +125,7 @@ angular.module('dataCollectorApp')
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
       displayDensity: pipelineConstant.DENSITY_COMFORTABLE,
-      helpLocation: pipelineConstant.LOCAL_HELP,
+      helpLocation: pipelineConstant.HOSTED_HELP,
       readNotifications: []
     });
 
