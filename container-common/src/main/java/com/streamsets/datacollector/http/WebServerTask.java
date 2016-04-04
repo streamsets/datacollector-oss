@@ -211,6 +211,17 @@ public class WebServerTask extends AbstractTask {
     if (isRedirectorToSSLEnabled()) {
       redirector = createRedirectorServer();
     }
+
+    addToPostStart(new Runnable() {
+      @Override
+      public void run() {
+        for (WebAppProvider appProvider : webAppProviders) {
+          appProvider.postStart();
+        }
+      }
+    });
+
+
   }
 
   private ServletContextHandler configureRootContext(SessionHandler sessionHandler) {

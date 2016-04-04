@@ -28,4 +28,6 @@ public interface WebAppProvider {
 
   ServletContextHandler get();
 
+  void postStart();
+
 }

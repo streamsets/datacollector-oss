@@ -372,6 +372,9 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
         return handler;
       }
+      @Override
+      public void postStart() {
+      }
     };
     Configuration conf = new Configuration();
     int httpPort = getRandomPort();
@@ -477,6 +480,9 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
         return handler;
       }
+      @Override
+      public void postStart() {
+      }
     };
     Configuration conf = new Configuration();
     int httpPort = getRandomPort();
@@ -510,6 +516,9 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/rest/v1/ping");
         handler.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
         return handler;
+      }
+      @Override
+      public void postStart() {
       }
     };
     Configuration conf = new Configuration();
