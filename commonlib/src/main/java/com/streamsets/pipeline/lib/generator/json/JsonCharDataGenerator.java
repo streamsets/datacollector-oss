@@ -37,7 +37,8 @@ import java.util.Map;
 
 public class JsonCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
-  private static final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final JsonFactory JSON_FACTORY = OBJECT_MAPPER.getFactory();
 
   private final boolean isArray;
   private final JsonGenerator generator;
@@ -88,32 +89,6 @@ public class JsonCharDataGenerator implements DataGenerator {
     Object obj;
     if (field == null || field.getValue() == null) {
       obj = null;
-    } else if (field.getType() == Field.Type.BOOLEAN) {
-      obj = field.getValueAsBoolean();
-    } else if (field.getType() == Field.Type.BYTE) {
-      obj = field.getValueAsByte();
-    } else if (field.getType() == Field.Type.BYTE_ARRAY) {
-      obj = field.getValueAsByteArray();
-    } else if (field.getType() == Field.Type.CHAR) {
-      obj = field.getValueAsChar();
-    } else if (field.getType() == Field.Type.DATE) {
-      obj = field.getValueAsDate();
-    } else if (field.getType() == Field.Type.DATETIME) {
-      obj = field.getValueAsDatetime();
-    } else if (field.getType() == Field.Type.DECIMAL) {
-      obj = field.getValueAsDecimal();
-    } else if (field.getType() == Field.Type.DOUBLE) {
-      obj = field.getValueAsDouble();
-    } else if (field.getType() == Field.Type.FLOAT) {
-      obj = field.getValueAsFloat();
-    } else if (field.getType() == Field.Type.INTEGER) {
-      obj = field.getValueAsInteger();
-    } else if (field.getType() == Field.Type.LONG) {
-      obj = field.getValueAsLong();
-    } else if (field.getType() == Field.Type.SHORT) {
-      obj = field.getValueAsShort();
-    } else if (field.getType() == Field.Type.STRING) {
-      obj = field.getValueAsString();
     } else if (field.getType() == Field.Type.LIST) {
       List<Field> list = field.getValueAsList();
       List<Object> toReturn = new ArrayList<>(list.size());
@@ -129,8 +104,7 @@ public class JsonCharDataGenerator implements DataGenerator {
       }
       obj = toReturn;
     } else {
-      throw new DataGeneratorException(Errors.JSON_GENERATOR_00, field.getType(), field.getValue(),
-        record.getHeader().getSourceId());
+      obj = field.getValue();
     }
     return obj;
   }
