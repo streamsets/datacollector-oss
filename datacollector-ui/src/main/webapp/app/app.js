@@ -160,6 +160,9 @@ angular.module('dataCollectorApp')
         fetchingLog: false,
         counters: {},
         serverTimeDifference: 0,
+        remoteServerInfo: {
+          registrationStatus: false
+        },
 
         /**
          * Open the Generate Application Token Modal Dialog
@@ -346,10 +349,17 @@ angular.module('dataCollectorApp')
 
 
     api.admin.getServerTime().then(function(res) {
-      if(res && res.data) {
+      if (res && res.data) {
         var serverTime = res.data.serverTime,
           browserTime = (new Date()).getTime();
         $rootScope.common.serverTimeDifference = serverTime - browserTime;
+      }
+    });
+
+    api.admin.getRemoteServerInfo().then(function(res) {
+      if (res && res.data) {
+        console.log(res);
+        $rootScope.common.remoteServerInfo.registrationStatus = res.data.registrationStatus;
       }
     });
 

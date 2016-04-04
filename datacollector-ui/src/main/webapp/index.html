@@ -64,6 +64,7 @@
         <img src="assets/logo.png" />
       </a>
       <span class="navbar-brand">{{common.headerTitle}}</span>
+      <span class="navbar-brand" ng-if="common.remoteServerInfo.registrationStatus">{{'global.menu.remotelyControlled' | translate}}</span>
     </div>
     <div class="collapse navbar-collapse" id="sdc-header-navbar-collapse">
 
@@ -179,7 +180,7 @@
               </a>
             </li>
 
-            <li ng-if="isAuthorized([userRoles.admin]) && common.authenticationType === 'sso'">
+            <li ng-if="isAuthorized([userRoles.admin]) && common.authenticationType === 'sso' && !common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.generateApplicationToken()">
                 <i class="fa fa-file-text"></i>
                 <span translate="global.menu.admin.generateApplicationToken">Application Token</span>

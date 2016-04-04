@@ -689,6 +689,8 @@ public class WebServerTask extends AbstractTask {
         throw new RuntimeException("Registration to Remote Service failed : " +
             response.readEntity(String.class));
       }
+
+      this.runtimeInfo.setRemoteRegistrationStatus(true);
     }
   }
 }

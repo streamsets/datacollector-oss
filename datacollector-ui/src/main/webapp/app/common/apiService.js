@@ -99,7 +99,7 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Fetched User Information
+       * Fetches User Information
        */
       getUserInfo: function() {
         var url = apiBase + '/system/info/currentUser';
@@ -110,10 +110,21 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Fetched Build Information
+       * Fetches Build Information
        */
       getBuildInfo: function() {
         var url = apiBase + '/system/info';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Fetches Remote Server Info
+       */
+      getRemoteServerInfo: function() {
+        var url = apiBase + '/system/info/remote';
         return $http({
           method: 'GET',
           url: url

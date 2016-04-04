@@ -64,6 +64,7 @@ public class RuntimeInfo {
   private final String propertyPrefix;
   private final File baseDir;
   private final UUID randomUUID;
+  private boolean remoteRegistrationSuccessful;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
                      List<? extends ClassLoader> stageLibraryClassLoaders) {
@@ -279,5 +280,13 @@ public class RuntimeInfo {
 
   public String getClusterCallbackURL() {
     return getBaseHttpUrl() + CALLBACK_URL;
+  }
+
+  public void setRemoteRegistrationStatus(boolean remoteRegistrationSuccessful) {
+    this.remoteRegistrationSuccessful = remoteRegistrationSuccessful;
+  }
+
+  public boolean isRemoteRegistrationSuccessful() {
+    return this.remoteRegistrationSuccessful;
   }
 }
