@@ -183,8 +183,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
-    Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev)).runner;
-    return (runner == null) ? false : runner.getState().getStatus().isActive();
+    RunnerInfo runnerInfo = runnerCache.getIfPresent(getNameAndRevString(name, rev));
+    return (runnerInfo == null) ? false : runnerInfo.runner.getState().getStatus().isActive();
   }
 
   @Override

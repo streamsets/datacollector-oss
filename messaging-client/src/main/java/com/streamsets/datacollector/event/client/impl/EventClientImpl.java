@@ -73,7 +73,7 @@ public class EventClientImpl implements EventClient {
     Invocation.Builder builder = target.request();
 
     for (Map.Entry<String, String> entry : headerParams.entrySet()) {
-      builder = builder.header(entry.getKey(), entry.getValue());
+      builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
     }
 
     Response response = builder.post(Entity.json(clientEventJson));
@@ -86,5 +86,9 @@ public class EventClientImpl implements EventClient {
     } catch (Exception ex) {
       throw new EventException("Failed to read response : " + ex);
     }
+  }
+
+  public String removeNewLine(String original) {
+    return original.replaceAll("(\\r|\\n)", "");
   }
 }
