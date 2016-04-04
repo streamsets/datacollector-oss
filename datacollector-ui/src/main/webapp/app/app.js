@@ -64,11 +64,17 @@ angular.module('dataCollectorApp')
         },
         responseError: function(rejection) {
           console.log(rejection);
-          if(rejection.status === 0 || rejection.status === -1 ||
+          if ((rejection.status === 0 || rejection.status === -1 ||
             (rejection.data && (typeof rejection.data.indexOf == 'function') &&
-            rejection.data.indexOf('login.html') !== -1)) {
-            window.location.reload();
-            return;
+            rejection.data.indexOf('login.html') !== -1))
+          )  {
+            // check if the error is related to remote service
+            if (rejection.config && rejection.config.headers && rejection.config.headers['X-SS-User-Auth-Token']) {
+              rejection.data = 'Failed to connect to Remote Service';
+            } else {
+              window.location.reload();
+              return;
+            }
           }
           return $q.reject(rejection);
         }

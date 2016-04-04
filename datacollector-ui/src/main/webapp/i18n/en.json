@@ -154,6 +154,7 @@
       "headerLabel": "Generate Application Token",
       "confirmationMessage": "Are you sure you want to generate remote Application Token and update the file 'etc/application-token.txt' ?",
       "generatingTokenMessage": "Generating Application Token ...",
+      "onlyOrgAdminMessage": "Only Organization Administrator can generate Application Token. Contact your Administrator for the assigning the role.",
       "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt'. Restart the Data Collector to register Application Token."
     },
     "createPipeline": "Create New Pipeline",
@@ -573,7 +574,7 @@
   },
   "about": {
     "builtBy": "built by",
-    "copyrightText": "Copyright &copy; 2015 StreamSets, Inc. All rights reserved.",
+    "copyrightText": "Copyright &copy; 2016 StreamSets, Inc. All rights reserved.",
     "on": "on",
     "productName": "StreamSets Data Collector",
     "title": "About",

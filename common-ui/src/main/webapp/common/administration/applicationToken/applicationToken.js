@@ -29,6 +29,7 @@ angular
       issues: [],
       isGeneratingToken: false,
       isGeneratingTokenSucceed: false,
+      isRemoteUserOrgAdmin: authService.isRemoteUserOrgAdmin(),
 
       restart: function() {
         api.admin.restartDataCollector();
