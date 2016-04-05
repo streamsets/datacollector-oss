@@ -243,6 +243,17 @@ public class PipelineConfigBean implements Stage {
   )
   public String hdfsS3ConfDir;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Rate Limit (records / sec)",
+      description = "Maximum number of events per second that should be accepted into the pipeline. " +
+          "Rate is not limited if this is not set, or is set to 0",
+      displayPosition = 180
+  )
+  public long rateLimit;
+
   @Override
   public List<ConfigIssue> init(Info info, Context context) {
     return Collections.emptyList();

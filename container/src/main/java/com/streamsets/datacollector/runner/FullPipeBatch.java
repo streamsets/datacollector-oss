@@ -21,11 +21,13 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +46,7 @@ public class FullPipeBatch implements PipeBatch {
   private String newOffset;
   private int inputRecords;
   private int outputRecords;
+  private RateLimiter rateLimiter;
 
   public FullPipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
     this.offsetTracker = offsetTracker;
@@ -75,6 +78,10 @@ public class FullPipeBatch implements PipeBatch {
     offsetTracker.setOffset(offset);
   }
 
+  public void setRateLimiter(@Nullable RateLimiter rateLimiter) {
+    this.rateLimiter = rateLimiter;
+  }
+
   @Override
   public BatchImpl getBatch(final Pipe pipe) {
     List<Record> records = new ArrayList<>();
@@ -99,7 +106,9 @@ public class FullPipeBatch implements PipeBatch {
     }
     int recordAllowance = (pipe.getStage().getDefinition().getType() == StageType.SOURCE)
                           ? getBatchSize() : Integer.MAX_VALUE;
-    return new BatchMakerImpl(pipe, stageOutputSnapshot != null, recordAllowance);
+    BatchMakerImpl batchMaker = new BatchMakerImpl(pipe, stageOutputSnapshot != null, recordAllowance);
+    batchMaker.setRateLimiter(rateLimiter);
+    return batchMaker;
   }
 
   @Override

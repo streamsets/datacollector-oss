@@ -133,6 +133,7 @@ public class ClusterRunner extends AbstractRunner {
   private int maxRetries;
   private boolean shouldRetry;
   private ScheduledFuture<Void> retryFuture;
+  private long rateLimit = -1L;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
      new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -653,6 +654,9 @@ public class ClusterRunner extends AbstractRunner {
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, new MetricRegistry(),
         null, null);
+    if (rateLimit > 0) {
+      runner.setRateLimit(rateLimit);
+    }
     ProductionPipelineBuilder builder =
       new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLibrary,  runner, null);
     return builder.build(pipelineConfiguration);
@@ -768,6 +772,7 @@ public class ClusterRunner extends AbstractRunner {
       }
       maxRetries = pipelineConfigBean.retryAttempts;
       shouldRetry = pipelineConfigBean.shouldRetry;
+      rateLimit = pipelineConfigBean.rateLimit;
       registerEmailNotifierIfRequired(pipelineConfigBean, name, rev);
 
       Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);

@@ -28,6 +28,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
@@ -69,6 +70,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -81,6 +83,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+
 
 public class ProductionPipelineRunner implements PipelineRunner {
 
@@ -109,6 +112,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final Meter batchErrorMessagesMeter;
   private final Counter memoryConsumedCounter;
   private MetricRegistryJson metricRegistryJson;
+  private Long rateLimit;
+
+  private RateLimiter rateLimiter;
 
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
@@ -213,6 +219,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public void setMemoryLimitConfiguration(MemoryLimitConfiguration memoryLimitConfiguration) {
     this.memoryLimitConfiguration = memoryLimitConfiguration;
+  }
+
+  public void setRateLimit(Long rateLimit) {
+    this.rateLimit = rateLimit;
+    rateLimiter = RateLimiter.create(rateLimit.doubleValue());
   }
 
   public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
@@ -374,7 +385,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
         configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT),
         false /*snapshot stage output*/);
     }
-
+    ((FullPipeBatch) pipeBatch).setRateLimiter(rateLimiter);
     long start = System.currentTimeMillis();
     sourceOffset = pipeBatch.getPreviousOffset();
     long lastBatchTime = offsetTracker.getLastBatchTime();

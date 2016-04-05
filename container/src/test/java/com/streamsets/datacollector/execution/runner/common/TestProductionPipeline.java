@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Exchanger;
 
 public class TestProductionPipeline {
 
@@ -308,28 +309,37 @@ public class TestProductionPipeline {
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch,
     boolean sourceOffsetCommitter) throws Exception {
+    return createProductionPipeline(deliveryGuarantee, captureNextBatch, -1L, sourceOffsetCommitter);
+  }
+
+
+  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch, long rateLimit,
+    boolean sourceOffsetCommitter) throws Exception {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getInfo(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(
-      new SnapshotInfoImpl("user", "SNAPSHOT_NAME", "SNAPSHOT LABEL", PIPELINE_NAME, REVISION,
-          System.currentTimeMillis(), false));
+        new SnapshotInfoImpl("user", "SNAPSHOT_NAME", "SNAPSHOT LABEL", PIPELINE_NAME, REVISION,
+            System.currentTimeMillis(), false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
     config.set("monitor.memory", true);
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(PIPELINE_NAME, REVISION, config, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null);
+        new ProductionPipelineRunner(PIPELINE_NAME, REVISION, config, runtimeInfo, new MetricRegistry(), snapshotStore,
+            null);
     runner.setObserveRequests(productionObserveRequests);
     runner.setMemoryLimitConfiguration(memoryLimit);
     runner.setDeliveryGuarantee(deliveryGuarantee);
+    if (rateLimit > 0) {
+      runner.setRateLimit(rateLimit);
+    }
     PipelineConfiguration pConf =
-      (sourceOffsetCommitter) ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
-        : MockStages.createPipelineConfigurationSourceProcessorTarget();
+        (sourceOffsetCommitter) ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
+            : MockStages.createPipelineConfigurationSourceProcessorTarget();
 
     ProductionPipeline pipeline =
-      new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
-        .build(pConf);
+        new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
+            .build(pConf);
     runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {
@@ -460,5 +470,52 @@ public class TestProductionPipeline {
       throws PipelineRuntimeException {
     }
 
+  }
+
+  private static class TestProducer extends BaseSource {
+    public Integer count = 0;
+    public String offset;
+    public Long totalDuration = 0L;
+
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      long start = System.nanoTime();
+      Record record = getContext().createRecord("e" + count);
+      record.set(Field.create(count));
+      batchMaker.addRecord(record);
+      count = count + 1;
+      totalDuration += (System.nanoTime() - start);
+      return "o::" + count;
+    }
+  }
+
+
+  @Test
+  public void testRateLimit() throws Exception {
+    final TestProducer p = new TestProducer();
+    MockStages.setSourceCapture(p);
+
+    final ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, 10L,
+        false/*source not committer*/);
+    pipeline.registerStatusListener(new MyStateListener());
+    final Exchanger<Double> rate = new Exchanger<>();
+    new Thread() {
+      @Override
+      public void run() {
+        try {
+          long start = System.nanoTime();
+          pipeline.run();
+          rate.exchange(p.count.doubleValue() * 1000 * 1000 * 1000 / (System.nanoTime() - start));
+        } catch (Exception ex) {
+
+        }
+      }
+    }.start();
+    Thread.sleep(10000);
+    pipeline.stop();
+    Double rateAchieved = rate.exchange(0.0);
+    // To account for the slight loss of precision, we compare the "long-ified" versions.
+    Assert.assertTrue(rateAchieved.longValue() <= 10);
   }
 }

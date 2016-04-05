@@ -20,9 +20,11 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -32,6 +34,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +54,7 @@ public class BatchMakerImpl implements BatchMaker {
   private int recordAllowance;
   private int size;
   private boolean recordByRef;
+  private Optional<RateLimiter> rateLimiterOptional = Optional.absent();
 
   public BatchMakerImpl(StagePipe stagePipe, boolean keepSnapshot) {
     this(stagePipe, keepSnapshot, Integer.MAX_VALUE);
@@ -97,6 +101,7 @@ public class BatchMakerImpl implements BatchMaker {
 
   @Override
   public void addRecord(Record record, String... lanes) {
+
     if (recordAllowance-- == 0) {
       //Some origins like "Kafka source" translate one message into multiple records [think JSON multiple objects mode]
       //the number of records may tip over the max batch size [both in preview and run].
@@ -112,6 +117,10 @@ public class BatchMakerImpl implements BatchMaker {
     if (getStagePipe().getStage().getDefinition().getType() == StageType.SOURCE) {
       RecordImpl recordSource = recordCopy.clone();
       recordCopy.getHeader().setSourceRecord(recordSource);
+      // Now slow down until we can actually add the record.
+      if (rateLimiterOptional.isPresent()) {
+        rateLimiterOptional.get().acquire();
+      }
     }
 
     if (lanes.length == 0) {
@@ -157,6 +166,10 @@ public class BatchMakerImpl implements BatchMaker {
 
   public int getSize(String lane) {
     return stageOutput.get(lane).size();
+  }
+
+  public void setRateLimiter(@Nullable RateLimiter rateLimiter) {
+    rateLimiterOptional = Optional.fromNullable(rateLimiter);
   }
 
   @Override

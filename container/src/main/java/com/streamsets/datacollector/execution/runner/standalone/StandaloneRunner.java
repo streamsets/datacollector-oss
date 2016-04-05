@@ -654,6 +654,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           }
           isRetrying = false;
         }
+        if (pipelineConfigBean.rateLimit > 0) {
+          runner.setRateLimit(pipelineConfigBean.rateLimit);
+        }
         ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
 
         //register email notifier with event listener manager
