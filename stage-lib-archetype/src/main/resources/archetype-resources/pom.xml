@@ -30,10 +30,11 @@
 
   <dependencies>
     <!-- Core StreamSets Dependencies for Stage Libraries -->
+    <!-- Need to be without snapshot at any the point of the release -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
-      <version>1.2.0.0</version>
+      <version>1.3.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
