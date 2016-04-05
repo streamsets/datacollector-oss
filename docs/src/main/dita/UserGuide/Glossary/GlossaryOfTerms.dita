@@ -93,6 +93,10 @@
           console saves your changes.</dd>
       </dlentry>
       <dlentry>
+        <dt>late directories</dt>
+        <dd>Directories that appear after the pipeline starts.</dd>
+      </dlentry>
+      <dlentry>
         <dt>metric alerts</dt>
         <dd>Monitoring or email alerts based stage or pipeline metrics. </dd>
       </dlentry>

@@ -81,9 +81,15 @@
                                         of information. </entry>
                                 </row>
                                 <row>
-                                    <entry>Path</entry>
+                                    <entry>Path <xref
+                                            href="FileTail-MultipleDirectories.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_prq_1zx_mv"/></xref></entry>
                                     <entry>Full path to the active file to tail. <p>You can use
-                                            wildcards to define glob patterns. </p></entry>
+                                            wildcards to define glob patterns. Do not use multiple
+                                            wildcards in a row. The path before the wildcard must
+                                            exist unless you enable reading from late
+                                            directories.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Naming <xref
@@ -120,6 +126,15 @@
                                                 id="image_gs4_vnx_fs"/></xref></entry>
                                     <entry>An optional attribute defined for the record to help you
                                         differentiate between different sets of records. </entry>
+                                </row>
+                                <row>
+                                    <entry>Allow Late Directories <xref
+                                            href="FileTail-LateDirectories.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_cxt_zfx_mv"/></xref></entry>
+                                    <entry>Allows reading files from directories that appear after
+                                        the pipeline starts. When enabled, the origin does not
+                                        validate the file path. </entry>
                                 </row>
                                 <row>
                                     <entry>Charset</entry>

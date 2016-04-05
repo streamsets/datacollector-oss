@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_d5j_vrx_fs">
- <title>Paths and Patterns for Files Matching a Pattern</title>
+ <title>Files Matching a Pattern - Pattern Constant</title>
  <conbody>
   <p><indexterm>File Tail origin<indexterm>PATTERN constant for file name
     patterns</indexterm></indexterm>When you use the Files Matching a Pattern naming option, use the

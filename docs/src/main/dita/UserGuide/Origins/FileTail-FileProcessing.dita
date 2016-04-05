@@ -30,23 +30,25 @@
       weblog.log.2015-10-15. </dd>
      <dd>File Tail intelligently tracks its relative progress through new and archived data and is
       not affected by file name changes.</dd>
-     <dd>Archived files can use the following naming conventions:<ul id="ul_ury_gzq_5r">
-       <li><uicontrol>Active File with Reverse Counter</uicontrol> - The server appends a number to
-        the end of each archived file, such as data.1, data.2, and so on.<p>File Tail processes
-         files in reverse numeric order before progressing to the active file.</p></li>
-       <li><uicontrol>Active File with Date</uicontrol> - The server appends a date to the end of
-        the archived file, such as event.log.2015-11, event.log.2015-12. This method is generally
-        used by Log4j servers. File Tail provides a set of available date patterns. If the date
-        pattern of your log files is not available, you might use Alphabetical.<p>File Tail
-         processes files in reverse order based on the selected date pattern before progressing to
-         the active file. </p></li>
-       <li><uicontrol>Active File with Alphabetical</uicontrol> - The server generates files in
-        alphabetically increasing order, such as file.json.a, file.json.b, file.json.c. You might
-        use this method to process Apache logs archived with the logrotate utility. You can also use
-        Alphabetical to process files with appended dates that do not match the provided date
-         patterns.<p>File Tail processes files in alphabetical order before progressing to the
-         active file.</p></li>
-      </ul></dd>
+     <dd>File Tail can process archived files that use the following naming conventions:<ul
+              id="ul_ury_gzq_5r">
+              <li><uicontrol>Active File with Reverse Counter</uicontrol> - The server appends a
+                number to the end of each archived file, such as data.1, data.2, and so on.<p>File
+                  Tail processes files in reverse numeric order before progressing to the active
+                  file.</p></li>
+              <li><uicontrol>Active File with Date</uicontrol> - The server appends a date to the
+                end of the archived file, such as event.log.2015-11, event.log.2015-12. This method
+                is generally used by Log4j servers. File Tail provides a set of available date
+                patterns. If the date pattern of your log files is not available, you might use
+                  Alphabetical.<p>File Tail processes files in reverse order based on the selected
+                  date pattern before progressing to the active file. </p></li>
+              <li><uicontrol>Active File with Alphabetical</uicontrol> - The server generates files
+                in alphabetically increasing order, such as file.json.a, file.json.b, file.json.c.
+                You might use this method to process Apache logs archived with the logrotate
+                utility. You can also use Alphabetical to process files with appended dates that do
+                not match the provided date patterns.<p>File Tail processes files in alphabetical
+                  order before progressing to the active file.</p></li>
+            </ul></dd>
     </dlentry>
     <dlentry>
      <dt>The server writes a new active file as needed, archiving the previous file without
