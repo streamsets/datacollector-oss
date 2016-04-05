@@ -21,10 +21,18 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
+
+import java.util.List;
+
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
 public class FirehoseConfigBean extends KinesisConfigBean {
 
@@ -66,4 +74,27 @@ public class FirehoseConfigBean extends KinesisConfigBean {
       group = "#0"
   )
   public int maxRecordSize = 1000;
+
+  public void init(
+      Stage.Context context,
+      List<Stage.ConfigIssue> issues
+  ) {
+    dataFormatConfig.init(
+        context,
+        dataFormat,
+        Groups.KINESIS.name(),
+        KINESIS_CONFIG_BEAN + ".dataFormatConfig",
+        issues
+    );
+
+    if (dataFormat == DataFormat.JSON && dataFormatConfig.jsonMode == JsonMode.ARRAY_OBJECTS) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.JSON.name(),
+              KINESIS_CONFIG_BEAN + ".dataFormatConfig.jsonMode",
+              Errors.KINESIS_07
+          )
+      );
+    }
+  }
 }

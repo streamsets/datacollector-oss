@@ -26,6 +26,8 @@ import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchResult;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
@@ -63,15 +65,8 @@ public class FirehoseTarget extends BaseKinesisTarget {
     List<ConfigIssue> issues = super.init();
 
     if (issues.isEmpty()) {
-      conf.dataFormatConfig.init(
-          getContext(),
-          conf.dataFormat,
-          Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN + ".dataGeneratorFormatConfig",
-          issues
-      );
+      conf.init(getContext(), issues);
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
-
       firehoseClient = new AmazonKinesisFirehoseClient(AWSUtil.getCredentialsProvider(conf.awsConfig));
       firehoseClient.configureRegion(conf.region);
     }

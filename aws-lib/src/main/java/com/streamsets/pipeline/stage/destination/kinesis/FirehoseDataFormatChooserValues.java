@@ -24,7 +24,8 @@ import com.streamsets.pipeline.config.DataFormat;
 
 public class FirehoseDataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
+  //Avro is not working properly, so we have to fix it before we support it.
   public FirehoseDataFormatChooserValues() {
-    super(DataFormat.JSON, DataFormat.AVRO, DataFormat.DELIMITED);
+    super(DataFormat.JSON, DataFormat.DELIMITED);
   }
 }
