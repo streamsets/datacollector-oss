@@ -53,6 +53,18 @@
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
+                                    <entry>Allow Late Directory  <xref
+                                            href="Directory-LateDir.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_wkt_wk1_4v"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Allows reading files from a directory that appears after
+                                            the pipeline starts. When enabled, the origin does not
+                                            validate the file path.</p>
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>Buffer Limit (KB) <xref
                                         href="Directory-BufferLimit.dita#concept_zp2_fqs_5r">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"

@@ -28,8 +28,8 @@
         <p>
             <codeblock>/logs/*/server/*/log.json</codeblock>
         </p>
-        <p>But when you start the pipeline, no valid directory or file exists. File Tail waits until
-            a valid directory and file appears before tailing the file. </p>
+        <p>If no valid directory or file exists when you start the pipeline, File Tail waits until a
+            valid directory and file appears before tailing the file. </p>
         <p>This file path allows the origin to tail the files in the following late-arriving
             directories:</p>
         <codeblock>/logs/region1/server/8/log.json
