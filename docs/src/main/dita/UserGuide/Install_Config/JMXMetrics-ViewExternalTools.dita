@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oz2_lkt_nv">
+ <title>Viewing JMX Metrics in External Tools</title>
+ <shortdesc>You can view the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> JMX
+        metrics in external tools. The <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> JMX
+        metric names all begin with "sdc.pipeline."</shortdesc>
+ <conbody>
+  <p><indexterm>JMX metrics<indexterm>viewing in external tools</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            JVM metrics use the following naming pattern:</p>
+        <codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.&lt;category: pipeline|stage|custom>.\
+[&lt;stage library>_&lt;library revision>].&lt;metric name>.&lt;metric type></codeblock>
+        <p>For example, the following is a batch count meter for the first revision of a pipeline
+            named Write to Kafka:</p>
+        <codeblock>sdc.pipeline.Write to Kafka.0.pipeline.batchCount.meter</codeblock>
+        <p>The following metric is a counter for the memory consumed by the File Tail origin in the
+            same Write to Kafka
+            pipeline:<codeblock>sdc.pipeline.Write to Kafka.0.stage.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_1.memoryConsumed.counter</codeblock></p>
+ </conbody>
+</concept>
