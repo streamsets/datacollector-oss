@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.kafka;
 
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -35,9 +36,24 @@ import com.streamsets.pipeline.config.DataFormat;
     onlineHelpRefUrl = "",
     upgrader = KafkaTargetUpgrader.class)
 @StatsAggregatorStage
-@HideConfigs(preconditions = true, onErrorRecord = true, value = {"kafkaConfigBean.dataFormat"})
+@HideConfigs(
+    preconditions = true,
+    onErrorRecord = true,
+    value = {"kafkaConfigBean.dataFormat", "kafkaConfigBean.kafkaConfig.runtimeTopicResolution", "kafkaConfigBean.kafkaConfig.singleMessagePerBatch"}
+)
 @GenerateResourceBundle
 public class StatsKafkaDTarget extends KafkaDTarget {
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "localhost:2181",
+    label = "ZooKeeper URI",
+    description = "Comma-separated list of ZooKeepers followed by optional chroot path. Use format: <HOST1>:<PORT1>,<HOST2>:<PORT2>,<HOST3>:<PORT3>/<ital><CHROOT_PATH></ital>",
+    displayPosition = 100,
+    group = "KAFKA"
+  )
+  public String zookeeperConnect;
 
   @Override
   protected Target createTarget() {
