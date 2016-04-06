@@ -14,15 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ujj_spy_kv">
- <title>Base64 Decoder</title>
- <shortdesc>The Base64 Decoder decodes Base64 encoded data to binary data. Use the processor to
-        decode Base64 encoded data before evaluating data in the field.</shortdesc>
+ <title>Base64 Field Decoder</title>
+ <shortdesc>The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor
+        to decode Base64 encoded data before evaluating data in the field.</shortdesc>
  <conbody>
-        <draft-comment author="alisontaylor">SDC-2685 requests changing processor name to "Base64
-            Field Decoder"</draft-comment>
-  <p><indexterm>processors<indexterm>Base64 Decoder</indexterm></indexterm><indexterm>Base64 Decoder
-                    processor<indexterm>overview</indexterm></indexterm>When you configure Base64
-            Decoder, you specify the byte array field to decode and the target byte array field to
-            pass the decoded value to. </p>
+  <p><indexterm>processors<indexterm>Base64 Field Decoder</indexterm></indexterm><indexterm>Base64
+                Field Decoder processor<indexterm>overview</indexterm></indexterm>When you configure
+            Base64 Field Decoder, you specify the byte array field to decode and the target byte
+            array field to pass the decoded value to. </p>
  </conbody>
 </concept>

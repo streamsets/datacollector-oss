@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_pnn_5py_kv">
-    <title>Configuring a Base64 Decoder</title>
+    <title>Configuring a Base64 Field Decoder</title>
     <taskbody>
         <context>
-            <p><indexterm>Base64 Decoder
-                processor<indexterm>configuring</indexterm></indexterm>Configure a Base64 Decoder to
-                decode Base64 encoded data to binary data. The processor can decode data from a
-                single byte array field. To decode additional fields, add additional Base64 Decoders
-                to the pipeline.</p>
+            <p><indexterm>Base64 Field Decoder
+                    processor<indexterm>configuring</indexterm></indexterm>Configure a Base64 Field
+                Decoder to decode Base64 encoded data to binary data. The processor can decode data
+                from a single byte array field. To decode additional fields, add additional Base64
+                Field Decoders to the pipeline.</p>
         </context>
         <steps>
             <step
@@ -38,7 +38,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Base64 Decoder Property</entry>
+                                    <entry>Base64 Field Decoder Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -48,16 +48,14 @@
                                     <entry>Byte array field to decode.</entry>
                                 </row>
                                 <row>
-                                    <entry>New Decoded Field<draft-comment author="alisontaylor"
-                                            >SDC-2685 requests changing label to "Target
-                                            Field"</draft-comment></entry>
+                                    <entry>Target Field</entry>
                                     <entry>
                                         <p>Byte array field in the record to use for the decoded
                                             data. </p>
                                         <p>You can specify the same field to replace the original
                                             data with the decoded data. Or you can specify another
                                             existing field or a new field. If the field does not
-                                            exist, Base64 Decoder creates the field.</p>
+                                            exist, Base64 Field Decoder creates the field.</p>
                                     </entry>
                                 </row>
                             </tbody>

@@ -14,20 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wtr_mpy_kv">
- <title>Base64 Encoder</title>
- <shortdesc>The Base64 Encoder encodes binary data using Base64. Use the processor to encode binary
-        data that must be sent over channels that expect ASCII data.</shortdesc>
+ <title>Base64 Field Encoder</title>
+ <shortdesc>The Base64 Field Encoder encodes binary data using Base64. Use the processor to encode
+        binary data that must be sent over channels that expect ASCII data.</shortdesc>
  <conbody>
-  <p>
-            <draft-comment author="alisontaylor">SDC-2685 requests changing processor name to
-                "Base64 Field Encoder"</draft-comment>
-        </p>
-        <p><indexterm>processors<indexterm>Base64 Encoder</indexterm></indexterm><indexterm>Base64
-                Encoder processor<indexterm>overview</indexterm></indexterm>For example, you can use
+        <p><indexterm>processors<indexterm>Base64 Field
+                Encoder</indexterm></indexterm><indexterm>Base64 Field Encoder
+                    processor<indexterm>overview</indexterm></indexterm>For example, you can use
             Base64 encoding to embed image data directly in HTML source code. When you encode the
             data, you prevent characters such as “&lt;” and “>” from being interpreted as tags.</p>
-        <p>When you configure Base64 Encoder, you specify the byte array field to encode and the
-            target byte array field to pass the encoded value to. You can also specify that the
+        <p>When you configure Base64 Field Encoder, you specify the byte array field to encode and
+            the target byte array field to pass the encoded value to. You can also specify that the
             processor encode the data so that it can be safely sent in a URL.</p>
  </conbody>
 </concept>

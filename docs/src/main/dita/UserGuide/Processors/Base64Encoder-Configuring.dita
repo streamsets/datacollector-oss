@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_ekg_ppy_kv">
-    <title>Configuring a Base64 Encoder</title>
+    <title>Configuring a Base64 Field Encoder</title>
     <taskbody>
         <context>
-            <p><indexterm>Base64 Encoder
-                processor<indexterm>configuring</indexterm></indexterm>Configure a Base64 Encoder to
-                encode binary data using Base64. The processor can encode data from a single byte
-                array field. To encode additional fields, add additional Base64 Encoders to the
-                pipeline.</p>
+            <p><indexterm>Base64 Field Encoder
+                    processor<indexterm>configuring</indexterm></indexterm>Configure a Base64 Field
+                Encoder to encode binary data using Base64. The processor can encode data from a
+                single byte array field. To encode additional fields, add additional Base64 Field
+                Encoders to the pipeline.</p>
         </context>
         <steps>
             <step
@@ -38,7 +38,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Base64 Encoder Property</entry>
+                                    <entry>Base64 Field Encoder Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -48,24 +48,22 @@
                                     <entry>Byte array field to encode.</entry>
                                 </row>
                                 <row>
-                                    <entry>New Encoded Field<draft-comment author="alisontaylor"
-                                            >SDC-2685 requests changing label to "Target
-                                            Field"</draft-comment></entry>
+                                    <entry>Target Field</entry>
                                     <entry>
                                         <p>Byte array field in the record to use for the encoded
                                             data. </p>
                                         <p>You can specify the same field to replace the original
                                             binary data with the encoded data. Or you can specify
                                             another existing field or a new field. If the field does
-                                            not exist, Base64 Encoder creates the field. </p>
+                                            not exist, Base64 Field Encoder creates the field. </p>
                                     </entry>
                                 </row>
                                 <row>
                                     <entry>URL Safe</entry>
                                     <entry>Specifies whether to encode the field so that it can be
                                         safely sent in a URL. For example, when selected, Base64
-                                        Encoder ensures that the encoded data does not contain a
-                                        forward slash (/) because it is a URL reserved character. </entry>
+                                        Field Encoder ensures that the encoded data does not contain
+                                        a forward slash (/) because it is a URL reserved character. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
