@@ -63,7 +63,7 @@
       <a class="logo" ng-href="{{common.baseHref}}">
         <img src="assets/logo.png" />
       </a>
-      <span class="navbar-brand">{{common.headerTitle}}</span>
+      <span class="navbar-brand" ng-if="common.headerTitle">{{common.headerTitle}}</span>
       <span class="navbar-brand" ng-if="common.remoteServerInfo.registrationStatus">{{'global.menu.remotelyControlled' | translate}}</span>
     </div>
     <div class="collapse navbar-collapse" id="sdc-header-navbar-collapse">
