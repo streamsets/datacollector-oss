@@ -73,6 +73,15 @@
                                     name.</p></entry>
                             </row>
                             <row>
+                                <entry>http.session.max.inactive.interval</entry>
+                                <entry>Maximum amount of time that the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> console can remain inactive before the user is logged out.
+                                    Use -1 to allow user sessions to remain inactive
+                                        indefinitely.<p>Default is 86,400 seconds (24
+                                    hours).</p></entry>
+                            </row>
+                            <row>
                                 <entry>http.authentication</entry>
                                 <entry>HTTP authentication. Use none, basic, digest, or form.<p>When
                                         using basic, digest, or form, use the associated

@@ -115,9 +115,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="35%" id="d65021e181">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d67111e181">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d65021e184">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d67111e184">Description</th>
 
                     </tr>
 
@@ -125,11 +125,11 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d65021e181 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d67111e181 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d65021e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d67111e184 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -149,9 +149,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d65021e181 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d67111e181 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d65021e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d67111e184 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -169,9 +169,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d65021e181 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d67111e181 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d65021e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d67111e184 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -188,11 +188,11 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d65021e181 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d67111e181 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d65021e184 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d67111e184 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -341,17 +341,26 @@
  </div>
 
 </div>
-<div class="topic concept nested2" id="concept_jdj_4rg_1t">
- <h3 class="title topictitle3">Enabling External JMX Tools</h3>
+</div>
+<div class="topic concept nested1" id="concept_jdj_4rg_1t">
+ <h2 class="title topictitle2">Enabling External JMX Tools</h2>
 
  
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data
                   Collector</span>
-    can provide JMX metrics to external tools. </p>
+    uses JMX metrics to generate the graphical display of the status of a running pipeline. You can
+    provide the same JMX metrics to external tools if desired.</p>
 
-  <div class="p">The following Java environment variables
-      expose the <span class="ph">Data
-                  Collector</span> JMX metrics on a specified port, allowing integration with external tools:<ul class="ul" id="concept_jdj_4rg_1t__ul_trq_qsh_1t">
+    <p class="p">
+      Information
+      provided by JMX metrics includes pipeline details like a histogram for the number of error
+      records per batch or the amount of memory the pipeline uses. Stage-related details are also
+      provided, such as the number of output records or stage errors. Some stages have stage-related
+      custom metrics.</p>
+
+    <div class="p">The following Java environment variables expose the <span class="ph">Data
+                  Collector</span> JMX
+      metrics on a specified port, allowing integration with external tools:<ul class="ul" id="concept_jdj_4rg_1t__ul_trq_qsh_1t">
         <li class="li">com.sun.management.jmxremote</li>
 
         <li class="li">com.sun.management.jmxremote.port=&lt;port_number&gt;</li>
@@ -380,6 +389,87 @@
 -Dcom.sun.management.jmxremote.ssl=false"</pre>
 
   </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_oz2_lkt_nv">
+ <h3 class="title topictitle3">Viewing JMX Metrics in External Tools</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can view the <span class="ph">Data
+                  Collector</span> JMX
+        metrics in external tools. The <span class="ph">Data
+                  Collector</span> JMX
+        metric names all begin with "sdc.pipeline."</p>
+
+  <p class="p"><span class="ph">Data
+                  Collector</span>
+            JVM metrics use the following naming pattern:</p>
+
+        <pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.&lt;category: pipeline|stage|custom&gt;.\
+[&lt;stage library&gt;_&lt;library revision&gt;].&lt;metric name&gt;.&lt;metric type&gt;</pre>
+
+        <p class="p">For example, the following is a batch count meter for the first revision of a pipeline
+            named Write to Kafka:</p>
+
+        <pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.pipeline.batchCount.meter</pre>
+
+        <div class="p">The following metric is a counter for the memory consumed by the File Tail origin in the
+            same Write to Kafka
+            pipeline:<pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.stage.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_1.memoryConsumed.counter</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_llw_2st_nv">
+ <h3 class="title topictitle3">Custom Metrics</h3>
+
+ <div class="body conbody">
+        
+  <div class="p"><span class="ph">Data
+                  Collector</span> provides
+            custom metrics for some stages. When you view JMX metrics using an external tool and
+            when a pipeline includes the stages below, you can view custom metrics for the stages:<dl class="dl">
+                
+                    <dt class="dt dlterm">File Tail origin</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, File Tail
+                        provides the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_yqv_kxt_nv">
+                            <li class="li">Offset Lag - The amount data remaining in the file being read. This
+                                metric displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.offsets.lag.&lt;file path&gt;.counter</pre>
+</li>
+
+                            <li class="li">Pending Files - The number of files in the directory that still need
+                                to be read. This metric displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.pending.files.&lt;file path&gt;.counter</pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Local FS destination</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, LocalFS provides
+                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
+                            <li class="li">Late Records meter and counter - The number of late records written
+                                to the destination system. The counter displays in external tools as
+                                    follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.&lt;counter | metric&gt;</pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
 
  </div>
 

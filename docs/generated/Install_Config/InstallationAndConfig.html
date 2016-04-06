@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can install Data Collector and start it manually or run it as a service. If you use Cloudera Manager, you can install and administer Data Collector through Cloudera Manager. For more information, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation and Configuration"></meta><meta name="abstract" content="You can install Data Collector and start it manually or run it as a service."></meta><meta name="description" content="You can install Data Collector and start it manually or run it as a service."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation and Configuration</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can install Data Collector and start it manually or run it as a service. If you use Docker, you can also run the Data Collector image from Docker Hub. If you use Cloudera Manager, you can install ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation"></meta><meta name="abstract" content="You can install Data Collector and start it manually or run it as a service."></meta><meta name="description" content="You can install Data Collector and start it manually or run it as a service."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,12 +32,16 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_gbn_4lv_1r">
- <h1 class="title topictitle1">Installation and Configuration</h1>
+ <h1 class="title topictitle1">Installation</h1>
 
  
   <div class="body conbody"><p class="shortdesc">You can install <span class="ph">Data
                   Collector</span> and start it
     manually or run it as a service. </p>
+
+    <p class="p">If you use Docker, you can also run the <span class="ph">Data
+                  Collector</span> image from
+      Docker Hub. </p>
 
     <p class="p">If you use Cloudera Manager, you can install and administer <span class="ph">Data
                   Collector</span> through
@@ -48,9 +52,9 @@
       additional stage libraries for additional functionality as needed. For more information, see
         <a class="xref" href="BasicInstall_Overview.html#concept_vvw_p3m_s5" title="You can download and install a basic version of Data Collector, and then install individual stage libraries as needed.">Basic Installation with Custom Libraries</a>.</p>
 
-    <p class="p">After installation, you can create additional users, customize <span class="ph">Data
-                  Collector</span>, and
-      configure the environment. </p>
+    <p class="p">After installation, you can install additional drivers for stages, create additional users,
+      customize <span class="ph">Data
+                  Collector</span>, and configure the environment. </p>
 
   </div>
 
@@ -69,9 +73,9 @@
         
         <thead class="thead" align="left">
           <tr class="row">
-            <th class="entry" valign="top" width="28.49002849002849%" id="d66122e103">Requirement</th>
+            <th class="entry" valign="top" width="28.49002849002849%" id="d68379e109">Requirement</th>
 
-            <th class="entry" valign="top" width="71.5099715099715%" id="d66122e110">Description</th>
+            <th class="entry" valign="top" width="71.5099715099715%" id="d68379e116">Description</th>
 
           </tr>
 
@@ -79,9 +83,9 @@
 
         <tbody class="tbody">
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d66122e103 ">Operating Systems</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d68379e109 ">Operating Systems</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d66122e110 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d68379e116 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
                 <li class="li">Mac OS X</li>
 
                 <li class="li">CentOS 6 or 7</li>
@@ -96,16 +100,16 @@
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d66122e103 ">Java</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d68379e109 ">Java</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d66122e110 ">Oracle Java 7 or 8</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d68379e116 ">Oracle Java 7 or 8</td>
 
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d66122e103 ">Browser</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d68379e109 ">Browser</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d66122e110 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d68379e116 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
                 <li class="li">Chrome</li>
 
                 <li class="li">Firefox</li>
@@ -124,148 +128,6 @@
 
  </div>
 
-</div>
-<div class="topic task nested1" id="task_bt1_zcp_kq">
-    <h2 class="title topictitle2">Full Installation and Launch (Manual Start)</h2>
-
-    <div class="body taskbody">
-        <div class="section context"></div>
-
-        <ol class="ol steps" id="task_bt1_zcp_kq__steps_g53_l3p_kq"><li class="li step stepexpand">
-                <span class="ph cmd">Use the following URL to download the full StreamSets <span class="ph">Data
-                  Collector</span> tarball  from the StreamSets website: <a class="xref" href="http://www.streamsets.com/opensource" target="_blank">http://www.streamsets.com/opensource</a>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Extract the tarball to the desired location.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Optionally, in the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file, set the
-                    following environment variables:</span>
-                <div class="itemgroup info">
-                    <ul class="ul" id="task_bt1_zcp_kq__ul_vbv_b44_1r">
-                        <li class="li">SDC_CONF - The <span class="ph">Data
-                  Collector</span> configuration directory.</li>
-
-                        <li class="li">SDC_DATA - The <span class="ph">Data
-                  Collector</span> directory for pipeline state and configuration information.</li>
-
-                        <li class="li">SDC_LOG - The <span class="ph">Data
-                  Collector</span> directory for logs.</li>
-
-                        <li class="li">SDC_RESOURCES - The <span class="ph">Data
-                  Collector</span> directory for runtime resource files. </li>
-
-                    </ul>
-
-                    <div class="note note"><span class="notetitle">Note:</span> If these variables are not set, the directories are created in
-                            <samp class="ph codeph">$SDC_DIST</samp>, the base <span class="ph">Data
-                  Collector</span> runtime directory. If this is the case, make sure the user who starts <span class="ph">Data
-                  Collector</span> has write permission for the base <span class="ph">Data
-                  Collector</span> runtime directory.</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to launch <span class="ph">Data Collector</span>:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
-
-                </div>
-                <div class="itemgroup info">Or, use the following command to launch <span class="ph">Data Collector</span> and run it in
-                    the
-                    background:<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
-</div>
-            </li>
-</ol>
-
-    </div>
-
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector can provide JMX metrics to external tools. Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Variables</a></div>
-</div>
-</div>
-</div>
-<div class="topic task nested1" id="task_pnf_344_1r">
-    <h2 class="title topictitle2">Full Installation and Launch (Service Start)</h2>
-
-    <div class="body taskbody">
-        <div class="section context"><p class="p">Installing the full
-                    <span class="ph">Data
-                  Collector</span> as a service requires sudo privileges on the root directory.</p>
-
-            <p class="p">This procedure walks through setting the default directories, but you can
-                alternatively use the <span class="ph filepath">$SDC_DIST/libexec/sdcd-env.sh</span> file to
-                modify the environment variables that define directories.</p>
-</div>
-
-        <ol class="ol steps" id="task_pnf_344_1r__steps_wnx_444_1r"><li class="li step stepexpand">
-                <span class="ph cmd">Use the following URL to download the StreamSets SDC tarball from the
-                    StreamSets website: <a class="xref" href="http://www.streamsets.com/opensource" target="_blank">http://www.streamsets.com/opensource</a>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Extract the tarball to the desired location, typically<samp class="ph codeph">
-                        /opt/local/</samp>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Copy <span class="ph filepath">initd/_sdcinitd_prototype</span> to the
-                        <span class="ph filepath">/etc/init.d/</span> directory as sdc.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Edit the sdc file and set the SDC_DIST and SDC_HOME environment variable to the
-                    location where you extracted the SDC tarball.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">sudo chmod 755 /etc/init.d/sdc</pre>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create a system user and group to run <span class="ph">Data
-                  Collector</span>. </span>
-                <div class="itemgroup info">The default user and group are sdc/sdc.</div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create the /etc/sdc directory and copy all files from etc into this
-                    directory.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create the SDC log directory at <samp class="ph codeph">/var/log/sdc</samp> and change the
-                    owner to sdc:sdc.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create the SDC data directory at <samp class="ph codeph">/var/lib/sdc</samp> and change the
-                    owner to sdc:sdc.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create the SDC resources directory at <samp class="ph codeph">/var/lib/sdc-resources</samp>
-                    and change the owner to sdc:sdc.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To start <span class="ph">Data
-                  Collector</span> as a service, use the following command: </span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">service sdc start  </pre>
-
-                    <div class="p">For CentOS, use the following
-                        command:<pre class="pre codeblock">chkconfig --add sdc</pre>
-</div>
-
-                    <div class="p">For Ubuntu, use the following
-                        command:<pre class="pre codeblock">update-rc.d sdc defaults 97 03</pre>
-</div>
-
-                </div>
-            </li>
-</ol>
-
-    </div>
-
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector can provide JMX metrics to external tools. Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Variables</a></div>
-</div>
-</div>
 </div>
 </div>
 <div class="navfooter"><!---->

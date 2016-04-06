@@ -1,0 +1,549 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift table that you specify ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Firehose"></meta><meta name="abstract" content="The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift table that you specify in the delivery stream."></meta><meta name="description" content="The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift table that you specify in the delivery stream."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bjv_dpk_kv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Firehose</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_bjv_dpk_kv">
+ <h1 class="title topictitle1">Kinesis Firehose</h1>
+
+    
+ <div class="body conbody"><p class="shortdesc">The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery
+        stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift
+        table that you specify in the delivery stream.</p>
+
+     <p class="p">To write data to Amazon Kinesis Streams, use the
+            Kinesis Producer destination. To write data directly to Amazon S3, use the Amazon S3
+            destination. When you use the Kinesis Firehose destination to deliver data to Amazon S3,
+            Firehose can buffer incoming records into larger file sizes before delivering the data
+            to Amazon S3. You configure the buffer size and buffer interval when you create the
+            delivery stream.</p>
+
+        <p class="p">When you configure the Kinesis Firehose destination, you specify an existing delivery
+            stream to write to, AWS credentials and region, and the data format to use. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_fm4_txq_kv">
+ <h2 class="title topictitle2">Delivery Stream</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">The Kinesis Firehose destination writes data to an existing delivery stream in Amazon
+        Kinesis Firehose. Before using the Kinesis Firehose destination, use the AWS Management
+        Console to create a delivery stream to an Amazon S3 bucket or Amazon Redshift
+        table.</p>
+
+     <p class="p">For more information about creating a Firehose
+         delivery stream, see the Amazon Kinesis Firehose documentation.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_wrk_rzp_kv">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+     <p class="p">The Kinesis Firehose destination writes data
+            to a Kinesis Firehose delivery stream based on the data format that you select. You can
+            use the following data formats:</p>
+
+        <dl class="dl">
+            
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema that you
+                                    provide. </dd>
+
+                              <dd class="dd">You can optionally include the schema definition as part of the
+                                    message. Omitting the schema definition can improve performance,
+                                    but requires the appropriate schema management to avoid losing
+                                    track of the schema associated with the data.</dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, you must ensure that the data uses the
+                                    following data structure:<ul class="ul" id="concept_wrk_rzp_kv__d1730e813">
+                                          <li class="li">A root field that contains an array of maps.</li>
+
+                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
+                                                optional <dfn class="term">header</dfn> element.</li>
+
+                                    </ul>
+</dd>
+
+                        
+            
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_wrk_rzp_kv__d1730e796">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_rpf_qbq_kv">
+    <h2 class="title topictitle2">Configuring a Kinesis Firehose Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Kinesis
+                Firehose destination to write data to an Amazon Kinesis Firehose delivery stream.
+                    </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d1618e2224" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d38825e195">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d38825e198">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e195 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e198 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e195 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e198 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e195 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_rpf_qbq_kv__d1618e2270" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e198 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e195 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_rpf_qbq_kv__d1618e2284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e198 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e195 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e198 ">Error record handling for the stage: <ul class="ul" id="task_rpf_qbq_kv__d1618e2300">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Kinesis</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__table_eqc_scq_kv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38825e307">Kinesis Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38825e310">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Access Key ID <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+        <img class="image" id="task_rpf_qbq_kv__d1632e232" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+       </td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 ">
+        <p class="p">AWS access key ID.</p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
+
+       </td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Secret Access Key <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+         <img class="image" id="task_rpf_qbq_kv__d1632e251" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 ">
+        <p class="p">AWS secret access key. </p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
+
+       </td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Destination Type</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 "><p class="p">Type of Amazon destination to write to. Select <span class="ph uicontrol">Existing Stream</span>. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Region</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 ">Amazon Web Services region.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 ">Data format to use: <ul class="ul" id="task_rpf_qbq_kv__ul_g5w_kyy_kv">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Stream Name <a class="xref" href="KinFirehose.html#concept_fm4_txq_kv" title="The Kinesis Firehose destination writes data to an existing delivery stream in Amazon Kinesis Firehose. Before using the Kinesis Firehose destination, use the AWS Management Console to create a delivery stream to an Amazon S3 bucket or Amazon Redshift table.">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 "><p class="p">Existing delivery stream to write to.</p>
+
+                                        <p class="p">Use the AWS Management Console to create the delivery
+                                            stream to an Amazon S3 bucket or Amazon Redshift table. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Maximum Record Size (KB)</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 "><p class="p">Maximum size of a single record. When records exceed this size, the destination handles the
+                                            records based on the error record handling configured
+                                            for the stage.</p>
+
+                                        <div class="note warning"><span class="warningtitle">Warning:</span> A Firehose record can have a maximum
+                                            size of 1,000 KB. If you configure a maximum size larger
+                                            than 1,000 KB, Firehose does not accept any data written
+                                            by the destination.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d38825e307 ">Charset</td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d38825e310 ">Character encoding of the files to be processed.<p class="p">Not used for all data
+        formats.</p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d1618e2888" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d38825e482">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d38825e485">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e482 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e485 ">Schema definition to use when writing data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e482 ">Include Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e485 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e482 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e485 ">The Avro compression type to use. <p class="p">When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d1618e2968" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d38825e550">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d38825e553">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Format for delimited data:<ul class="ul" id="task_rpf_qbq_kv__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Remove New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Removes new line characters from within a record.
+                                            <p class="p">Recommended when writing data as a single line of
+                                            text.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the pipe character ( |
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e550 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e553 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="ph uicontrol">JSON</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d1618e3083" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d38825e683">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d38825e686">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38825e683 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38825e686 ">Determines how JSON data is written:<ul class="ul" id="task_rpf_qbq_kv__d1618e3112">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div>
+</body>
+</html>

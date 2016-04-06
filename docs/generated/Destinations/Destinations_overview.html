@@ -60,7 +60,9 @@
 
         <li class="li">Kafka Producer - Writes data to a Kafka cluster.</li>
 
-        <li class="li">Kinesis Producer - Writes data to a Kinesis cluster.</li>
+        <li class="li">Kinesis Firehose - Writes data to a Kinesis Firehose delivery stream.</li>
+
+        <li class="li">Kinesis Producer - Writes data to Kinesis Streams.</li>
 
         <li class="li">Local FS - Writes data to a local file system. </li>
 
@@ -84,6 +86,53 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_adq_swp_kv">
+ <h2 class="title topictitle2">AWS Credentials</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When <span class="ph">Data
+                  Collector</span> writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must
+        pass credentials to Amazon Web Services. </p>
+
+  <p class="p">
+            Use one of the following
+            methods to pass AWS credentials:</p>
+
+     <dl class="dl">
+         
+             <dt class="dt dlterm">IAM roles</dt>
+
+             <dd class="dd">When <span class="ph">Data
+                  Collector</span> runs on an Amazon EC2 instance, you can use the AWS Management Console to
+                    configure an IAM role for the EC2 instance. <span class="ph">Data
+                  Collector</span> uses the IAM instance profile credentials to automatically connect to AWS. </dd>
+
+                <dd class="dd">When you use IAM roles, you do not need to specify the <span class="ph uicontrol">Access Key
+                        ID</span> and <span class="ph uicontrol">Secret Access Key</span> properties in
+                    the destination. </dd>
+
+                <dd class="dd">For more information about assigning an IAM role to an EC2 instance, see the
+                    Amazon EC2 documentation.</dd>
+
+         
+            
+                <dt class="dt dlterm">AWS access key pairs</dt>
+
+                <dd class="dd">
+                    <p class="p">When <span class="ph">Data
+                  Collector</span> does not run on an Amazon EC2 instance or when the EC2 instance doesn’t
+                        have an IAM role, you must specify the <span class="ph uicontrol">Access Key ID</span>
+                        and <span class="ph uicontrol">Secret Access Key</span> properties in the
+                        destination.</p>
+
+                </dd>
+
+            
+     </dl>
+
+ </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div>

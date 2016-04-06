@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector . When you export a pipeline, the Data Collector generates a JSON file named after the pipeline, as follows: ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Exporting a Pipeline"></meta><meta name="abstract" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector."></meta><meta name="description" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_dtz_4tr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Exporting a Pipeline</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector . When you export a pipeline, Data Collector generates a JSON file named after the pipeline, as follows: ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Exporting a Pipeline"></meta><meta name="abstract" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector."></meta><meta name="description" content="Export a pipeline to create a backup or to use the pipeline with another Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_dtz_4tr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Exporting a Pipeline</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -40,7 +40,7 @@
 
         <div class="section context">
             <p class="p">When you export a
-                pipeline, the <span class="ph">Data
+                pipeline, <span class="ph">Data
                   Collector</span> generates a JSON file named after the pipeline, as follows: <samp class="ph codeph">&lt;pipeline
                     name&gt;.json</samp>. </p>
 
@@ -52,7 +52,11 @@
                     the <span class="ph uicontrol">Actions</span> icon for the pipeline.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Click <span class="ph uicontrol">Export</span>.</span>
+                <span class="ph cmd">Click <span class="ph uicontrol">Export</span> or <span class="ph uicontrol">Export with Library
+                        Definitions</span>.</span>
+                <div class="itemgroup info">When you export with library definitions, the generated JSON file includes the
+                    definition of each stage library used in the pipeline. You can use either method
+                    to export a pipeline.</div>
                 <div class="itemgroup stepresult">The <span class="ph">Data
                   Collector</span> console generates the JSON file and saves it to your default downloads
                     directory.</div>

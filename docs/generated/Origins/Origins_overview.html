@@ -57,7 +57,7 @@
 
         <li class="li">Kafka Consumer - Reads messages from Kafka.</li>
 
-        <li class="li">Kinesis Consumer - Reads data from Kinesis.</li>
+        <li class="li">Kinesis Consumer - Reads data from Kinesis Streams.</li>
 
         <li class="li">MapR Streams Consumer - Reads messages from MapR Streams.</li>
 
@@ -85,6 +85,48 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tck_jzv_mv">
+ <h2 class="title topictitle2">AWS Credentials</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When <span class="ph">Data
+                  Collector</span> reads data from an Amazon S3 or Kinesis Consumer origin, it must pass credentials to
+        Amazon Web Services.</p>
+
+  <div class="p">Use one of the following
+            methods to pass AWS credentials:<dl class="dl">
+                
+                    <dt class="dt dlterm">IAM roles</dt>
+
+                    <dd class="dd">When <span class="ph">Data
+                  Collector</span> runs on an Amazon EC2 instance, you can use the AWS Management Console to
+                        configure an IAM role for the EC2 instance. <span class="ph">Data
+                  Collector</span> uses the IAM instance profile credentials to automatically connect to
+                        AWS. </dd>
+
+                    <dd class="dd">When you use IAM roles, you do not need to specify the <span class="ph uicontrol">Access Key
+                            ID</span> and <span class="ph uicontrol">Secret Access Key</span> properties
+                        in the origin.</dd>
+
+                    <dd class="dd">For more information about assigning an IAM role to an EC2 instance, see the
+                        Amazon EC2 documentation.</dd>
+
+                
+                
+                    <dt class="dt dlterm">AWS access key pairs</dt>
+
+                    <dd class="dd">When <span class="ph">Data
+                  Collector</span> does not run on an Amazon EC2 instance or when the EC2 instance doesn’t
+                        have an IAM role, you must specify the <span class="ph uicontrol">Access Key ID</span>
+                        and <span class="ph uicontrol">Secret Access Key</span> properties in the origin.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ypd_vgr_5q">
  <h2 class="title topictitle2">Batch Size and Wait Time</h2>
 
@@ -128,9 +170,9 @@
           
           <thead class="thead" align="left">
             <tr class="row">
-              <th class="entry" valign="top" width="30%" id="d95345e169">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d98670e252">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d95345e172">Description</th>
+              <th class="entry" valign="top" width="70%" id="d98670e255">Description</th>
 
             </tr>
 
@@ -138,16 +180,16 @@
 
           <tbody class="tbody">
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d95345e169 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d98670e252 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d95345e172 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d98670e255 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d95345e169 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d98670e252 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d95345e172 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d98670e255 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -168,9 +210,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d95345e169 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d98670e252 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d95345e172 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d98670e255 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -191,9 +233,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d95345e169 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d98670e252 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d95345e172 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d98670e255 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -244,9 +286,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d95345e348">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d98670e432">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d95345e351">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d98670e435">Description</th>
 
                                 </tr>
 
@@ -254,38 +296,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95345e348 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d98670e432 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95345e351 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95345e348 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95345e351 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d98670e435 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95345e348 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d98670e432 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95345e351 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d98670e435 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d98670e432 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d98670e435 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95345e348 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d98670e432 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95345e351 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d98670e435 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d95345e348 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d98670e432 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d95345e351 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d98670e435 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

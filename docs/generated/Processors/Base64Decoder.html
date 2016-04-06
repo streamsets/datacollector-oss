@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Information to come."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Base64 Decoder"></meta><meta name="abstract" content=""></meta><meta name="description" content=""></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ujj_spy_kv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Base64 Decoder</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor to decode Base64 encoded data before evaluating data in the field. When you configure Base64 Field Decoder, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Base64 Field Decoder"></meta><meta name="abstract" content="The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor to decode Base64 encoded data before evaluating data in the field."></meta><meta name="description" content="The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor to decode Base64 encoded data before evaluating data in the field."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ujj_spy_kv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Base64 Field Decoder</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,30 +32,160 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_ujj_spy_kv">
- <h1 class="title topictitle1">Base64 Decoder</h1>
+ <h1 class="title topictitle1">Base64 Field Decoder</h1>
 
  
- <div class="body conbody"><p class="shortdesc"></p>
+ <div class="body conbody"><p class="shortdesc">The Base64 Field Decoder decodes Base64 encoded data to binary data. Use the processor
+        to decode Base64 encoded data before evaluating data in the field.</p>
 
-  <p class="p"></p>
+  <p class="p">When you configure
+            Base64 Field Decoder, you specify the byte array field to decode and the target byte
+            array field to pass the decoded value to. </p>
 
  </div>
 
 <div class="related-links"></div>
 <div class="topic task nested1" id="task_pnn_5py_kv">
-    <h2 class="title topictitle2">Configuring a Base64 Decoder</h2>
+    <h2 class="title topictitle2">Configuring a Base64 Field Decoder</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Information to come.</p>
-
+    <div class="body taskbody">
         <div class="section context">
-            <p class="p"></p>
+            <p class="p">Configure a Base64 Field
+                Decoder to decode Base64 encoded data to binary data. The processor can decode data
+                from a single byte array field. To decode additional fields, add additional Base64
+                Field Decoders to the pipeline.</p>
 
         </div>
 
-        <div class="li step p">
-                <span class="ph cmd"></span><br xmlns="http://www.w3.org/1999/xhtml" />
-            </div>
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pnn_5py_kv__d13680e2224" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d115353e83">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d115353e86">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e83 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e86 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e83 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e86 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e83 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_pnn_5py_kv__d13680e2270" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e86 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e83 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_pnn_5py_kv__d13680e2284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e86 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e83 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e86 ">Error record handling for the stage: <ul class="ul" id="task_pnn_5py_kv__d13680e2300">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Base64</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pnn_5py_kv__table_hgn_y44_mv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d115353e195">Base64 Field Decoder Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d115353e198">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e195 ">Field to Decode</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e198 ">Byte array field to decode.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115353e195 ">Target Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115353e198 ">
+                                        <p class="p">Byte array field in the record to use for the decoded
+                                            data. </p>
+
+                                        <p class="p">You can specify the same field to replace the original
+                                            data with the decoded data. Or you can specify another
+                                            existing field or a new field. If the field does not
+                                            exist, Base64 Field Decoder creates the field.</p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
 
     </div>
 
