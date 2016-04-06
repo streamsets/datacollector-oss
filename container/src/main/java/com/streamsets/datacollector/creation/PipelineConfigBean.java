@@ -172,6 +172,7 @@ public class PipelineConfigBean implements Stage {
     required = false,
     type = ConfigDef.Type.MODEL,
     label = "Statistics Aggregator",
+    defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1",
     displayPosition = 95,
     group = "STATS"
   )
