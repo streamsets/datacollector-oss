@@ -239,7 +239,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     List<ConfigIssue> issues
   ) {
     MetricRegistryJson metricRegistryJson = null;
-    if (targetUrl != null) {
+    if (targetUrl != null && !targetUrl.isEmpty()) {
       // fetch latest aggregated metrics from dpm time series app and reset state
       AggregatedMetricsFetcher aggregatedMetricsFetcher = new AggregatedMetricsFetcher(
         getContext(),
