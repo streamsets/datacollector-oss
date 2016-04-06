@@ -669,6 +669,13 @@ angular
 
         $scope.configGroupTabs = angular.copy(groupDefn.groupNameToLabelMapList);
 
+        // handle stats group for Pipeline
+        if ($scope.selectedType === pipelineConstant.PIPELINE && $scope.pipelineConfig.metadata === null) {
+          $scope.configGroupTabs = _.filter($scope.configGroupTabs, function(configGroupTab) {
+            return (configGroupTab.name !== 'STATS');
+          });
+        }
+
         $scope.autoFocusConfigGroup = options.configGroup;
         $scope.autoFocusConfigName = options.configName;
 
