@@ -20,11 +20,11 @@
 package com.streamsets.datacollector.el;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +78,8 @@ public class RuntimeEL {
       description = "Loads the contents of a file under the Data Collector resources directory. " +
                     "If restricted is set to 'true', the file must be readable only by its owner."
   )
-  public static String loadResource(
+  public static String loadResource
+    (
       @ElParam("fileName") String fileName,
       @ElParam("restricted") boolean restricted) {
     String resource = null;
@@ -130,7 +131,11 @@ public class RuntimeEL {
       LOG.error("Could not read '{}' from classpath: {}", SDC_PROPERTIES, e.toString(), e);
     }
 
-    AUTH_TOKEN = sdcProps.getProperty(DPM_APPLICATION_TOKEN);
+    String authTokenFileName = sdcProps.getProperty(DPM_APPLICATION_TOKEN);
+    if (null != authTokenFileName && !authTokenFileName.isEmpty() && Configuration.FileRef.isValueMyRef(authTokenFileName)) {
+      Configuration.FileRef fileRef = new Configuration.FileRef(authTokenFileName);
+      AUTH_TOKEN = fileRef.getValue();
+    }
 
     RUNTIME_CONF_PROPS = new Properties();
     String runtimeConfLocation = sdcProps.getProperty(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
@@ -158,6 +163,7 @@ public class RuntimeEL {
     name = "authToken",
     description = "Returns the auth token of this data collector")
   public static String authToken() {
+
     return AUTH_TOKEN;
   }
 
