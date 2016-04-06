@@ -300,7 +300,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     if (ex instanceof StageException) {
       toError(record, new ErrorMessage((StageException) ex));
     } else {
-      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.toString()));
+      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.toString(), ex));
     }
   }
 
@@ -315,6 +315,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   public void toError(Record record, ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(record, "record cannot be null");
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+    // the last args needs to be Exception in order to show stack trace
     toError(record, new ErrorMessage(errorCode, args));
   }
 

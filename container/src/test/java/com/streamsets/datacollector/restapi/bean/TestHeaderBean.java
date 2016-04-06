@@ -37,7 +37,7 @@ public class TestHeaderBean {
   @Test
   public void testHeaderBean() {
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "ec", "em",
-      System.currentTimeMillis(), new HashMap<String, Object>());
+      System.currentTimeMillis(), "stack trace", new HashMap<String, Object>());
 
     HeaderJson headerJsonBean = new HeaderJson(header);
 
@@ -47,6 +47,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorPipelineName(), headerJsonBean.getErrorPipelineName());
     Assert.assertEquals(header.getErrorStage(), headerJsonBean.getErrorStage());
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getErrorTimestamp());
+    Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getPreviousTrackingId());
     Assert.assertEquals(header.getRaw(), headerJsonBean.getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getRawMimeType());
@@ -62,10 +63,10 @@ public class TestHeaderBean {
   public void testHeaderBeanConstructorWithArgs() {
     long timestamp = System.currentTimeMillis();
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "ec", "em",
-      timestamp, new HashMap<String, Object>());
+      timestamp, "stack trace", new HashMap<String, Object>());
 
     HeaderJson headerJsonBean = new HeaderJson("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "ec", "em",
-      timestamp, new HashMap<String, Object>());
+      timestamp, "stack trace", new HashMap<String, Object>());
 
     Assert.assertEquals(header.getErrorCode(), headerJsonBean.getErrorCode());
     Assert.assertEquals(header.getErrorMessage(), headerJsonBean.getErrorMessage());
@@ -73,6 +74,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorPipelineName(), headerJsonBean.getErrorPipelineName());
     Assert.assertEquals(header.getErrorStage(), headerJsonBean.getErrorStage());
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getErrorTimestamp());
+    Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getPreviousTrackingId());
     Assert.assertEquals(header.getRaw(), headerJsonBean.getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getRawMimeType());
@@ -90,6 +92,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorPipelineName(), headerJsonBean.getHeader().getErrorPipelineName());
     Assert.assertEquals(header.getErrorStage(), headerJsonBean.getHeader().getErrorStage());
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getHeader().getErrorTimestamp());
+    Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getHeader().getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getHeader().getPreviousTrackingId());
     Assert.assertEquals(header.getRaw(), headerJsonBean.getHeader().getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getHeader().getRawMimeType());

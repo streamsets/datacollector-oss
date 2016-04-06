@@ -274,6 +274,11 @@ public class RuleDefinitionValidator {
           public long getErrorTimestamp() {
             return 0;
           }
+
+          @Override
+          public String getErrorStackTrace() {
+            return null;
+          }
         };
       }
 

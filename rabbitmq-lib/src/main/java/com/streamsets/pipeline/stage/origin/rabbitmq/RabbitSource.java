@@ -175,7 +175,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
       record = parser.parse();
     } catch (DataParserException | IOException e) {
       LOG.error("Failed to parse record from received message: '{}'", e.toString(), e);
-      errorRecordHandler.onError(Errors.RABBITMQ_04, new String(data, parserFactory.getSettings().getCharset()));
+      errorRecordHandler.onError(Errors.RABBITMQ_04, new String(data, parserFactory.getSettings().getCharset()), e);
     }
     return Optional.fromNullable(record);
   }

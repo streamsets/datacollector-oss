@@ -354,7 +354,7 @@ public class CassandraTarget extends BaseTarget {
         case DISCARD:
           break;
         case TO_ERROR:
-          getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
+          getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString(), e);
           break;
         case STOP_PIPELINE:
           throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());

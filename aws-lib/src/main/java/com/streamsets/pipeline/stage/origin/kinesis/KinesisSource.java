@@ -256,7 +256,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(errorCode, context);
+        getContext().reportError(errorCode, context, e);
         break;
       case STOP_PIPELINE:
         throw new StageException(errorCode, context);

@@ -49,6 +49,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   private static final String SOURCE_RECORD_ATTR = RESERVED_PREFIX + "sourceRecord";
   private static final String ERROR_DATACOLLECTOR_ID_ATTR = RESERVED_PREFIX + "dataCollectorId";
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
+  private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
 
   private final Map<String, Object> map;
 
@@ -142,6 +143,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   }
 
   @Override
+  public String getErrorStackTrace() {
+    return (String) map.get(ERROR_STACKTRACE);
+  }
+
+  @Override
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
@@ -181,7 +187,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   public HeaderImpl(String stageCreator, String sourceId, String stagesPath, String trackingId,
                     String previousTrackingId, byte[] raw, String rawMimeType, String errorDataCollectorId,
                     String errorPipelineName, String errorStageInstance, String errorCode, String errorMessage,
-                    long errorTimestamp, Map<String, Object> map) {
+                    long errorTimestamp, String errorStackTrace, Map<String, Object> map) {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
@@ -191,7 +197,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
       setErrorContext(errorDataCollectorId, errorPipelineName);
     }
     if (errorCode != null) {
-      setError(errorStageInstance, errorCode, errorMessage, errorTimestamp);
+      setError(errorStageInstance, errorCode, errorMessage, errorTimestamp, errorStackTrace);
     }
     if (previousTrackingId != null) {
       setPreviousTrackingId(previousTrackingId);
@@ -242,12 +248,12 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
 
   public void setError(String errorStage, ErrorMessage errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
-    setError(errorStage, errorMessage.getErrorCode(), errorMessage.getNonLocalized(), System.currentTimeMillis());
+    setError(errorStage, errorMessage.getErrorCode(), errorMessage.getNonLocalized(), System.currentTimeMillis(), errorMessage.getErrorStackTrace());
   }
 
   public void copyErrorFrom(Record record) {
     Record.Header header = record.getHeader();
-    setError(header.getErrorStage(), header.getErrorCode(), header.getErrorMessage(), header.getErrorTimestamp());
+    setError(header.getErrorStage(), header.getErrorCode(), header.getErrorMessage(), header.getErrorTimestamp(), header.getErrorStackTrace());
   }
 
   public void setErrorContext(String datacollector, String pipelineName) {
@@ -255,11 +261,12 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
     map.put(ERROR_PIPELINE_NAME_ATTR, pipelineName);
 
   }
-  private void setError(String errorStage, String errorCode, String errorMessage, long errorTimestamp) {
+  private void setError(String errorStage, String errorCode, String errorMessage, long errorTimestamp, String errorStackTrace) {
     map.put(ERROR_STAGE_ATTR, errorStage);
     map.put(ERROR_CODE_ATTR, errorCode);
     map.put(ERROR_MESSAGE_ATTR, errorMessage);
     map.put(ERROR_TIMESTAMP_ATTR, errorTimestamp);
+    map.put(ERROR_STACKTRACE, errorStackTrace);
   }
 
   public void setSourceRecord(Record record) {

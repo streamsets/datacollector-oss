@@ -109,7 +109,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().reportError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset);
+              getContext().reportError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset, ex);
               break;
             case STOP_PIPELINE:
               throw new StageException(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset);
@@ -149,7 +149,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
             // throw an exception.
             throw new BadSpoolObjectException(s3Object.getKey(), exOffset, ex);
           case STOP_PIPELINE:
-            getContext().reportError(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString());
+            getContext().reportError(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString(), ex);
             throw new StageException(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString(), ex);
           default:
             throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
