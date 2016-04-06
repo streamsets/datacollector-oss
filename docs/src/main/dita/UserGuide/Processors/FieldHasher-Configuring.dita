@@ -105,6 +105,35 @@
                 </info>
             </step>
             <step>
+                <cmd>To configure field-level error handling, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_kbk_vl3_mv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Error Handling Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>On Field Issue</entry>
+                                    <entry>Determines the action if a record does not include values
+                                        for the fields to hash:<ul id="ul_e4v_fz5_lv">
+                                            <li>Continue - Passes nulls for the missing values.</li>
+                                            <li>Send to Error - Passes the record to the pipeline
+                                                for error handling.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
                 <cmd>To hash the entire record, on the <uicontrol>Hash Record</uicontrol> tab,
                     configure the following properties:</cmd>
                 <info>
@@ -138,35 +167,6 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-HashHeaderAtt">
                                     <entry/>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>To configure field-level error handling, click the <wintitle>Field Error
-                        Handling</wintitle> tab and configure the following property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_kbk_vl3_mv">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Field Error Handling Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>On Field Issue</entry>
-                                    <entry>Determines the action if a record does not include values
-                                        for the fields to hash:<ul id="ul_e4v_fz5_lv">
-                                            <li>Continue - Passes nulls for the missing values.</li>
-                                            <li>Send to Error - Passes the record to the pipeline
-                                                for error handling.</li>
-                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
