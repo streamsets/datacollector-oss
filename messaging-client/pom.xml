@@ -55,11 +55,6 @@
       <scope>compile</scope>
    </dependency>
    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <scope>compile</scope>
-   </dependency>
-   <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-json-dto</artifactId>
       <scope>compile</scope>
