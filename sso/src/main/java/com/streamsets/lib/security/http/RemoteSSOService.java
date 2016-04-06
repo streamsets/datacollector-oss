@@ -94,6 +94,8 @@ public class RemoteSSOService implements SSOService {
     ownAuthToken = conf.get(SECURITY_SERVICE_AUTH_TOKEN_CONFIG, null);
     if (ownAuthToken == null) {
       LOG.info("The '{}' property is not set, apps authentication is disabled", SECURITY_SERVICE_AUTH_TOKEN_CONFIG);
+    } else {
+      ownAuthToken = ownAuthToken.replaceAll("(\\n|\\r)", "");
     }
     ownComponentId = conf.get(SECURITY_SERVICE_COMPONENT_ID_CONFIG, null);
     if (ownComponentId == null) {
