@@ -725,7 +725,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private boolean isStatsAggregationEnabled(PipelineConfiguration pipelineConfiguration) {
     boolean isEnabled = false;
     StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
-    if (statsAggregatorStage != null && !statsAggregatorStage.getStageName().equals(STATS_NULL_TARGET)) {
+    if (statsAggregatorStage != null &&
+        !statsAggregatorStage.getStageName().equals(STATS_NULL_TARGET) &&
+        pipelineConfiguration.getMetadata() != null) {
       isEnabled = true;
     }
     return isEnabled;
