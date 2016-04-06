@@ -28,10 +28,11 @@
         <p>
             <codeblock>/logs/server/</codeblock>
         </p>
-        <p>If the directory does not exist when you start the pipeline, Directory waits until the
+        <p>The directory does not exist when you start the pipeline, so Directory waits until the
             directory and a file matching the file name pattern appears, and then processes the
-            data.</p>
-        <p>The origin can then process the following files in the directory:</p>
+            data. </p>
+        <p>After /logs/server appears, the origin can then process the following files that are
+            written to the directory:</p>
         <codeblock>/logs/server/log.json
 /logs/server/log1.json
 /logs/server/log2.json</codeblock>

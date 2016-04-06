@@ -25,8 +25,8 @@
                     <dt>File Tail origin</dt>
                     <dd>In addition to the standard metrics available for origins, File Tail
                         provides the following custom metrics:<ul id="ul_yqv_kxt_nv">
-                            <li>Offset Lag - The amount data remaining in the file being read. This
-                                metric displays in external tools as
+                            <li>Offset Lag - The amount of data remaining in the file being read.
+                                This metric displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version>.offsets.lag.&lt;file path>.counter</codeblock></li>
                             <li>Pending Files - The number of files in the directory that still need
