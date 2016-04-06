@@ -43,6 +43,7 @@
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldHasher-Methods.dita"/>
+   <topicref href="../Processors/FieldHasher-ListMapFields.dita"/>
    <topicref href="../Processors/FieldHasher-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldMasker.dita" chunk="to-content">

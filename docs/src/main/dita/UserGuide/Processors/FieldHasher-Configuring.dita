@@ -26,7 +26,7 @@
                 <cmd/>
             </step>
             <step id="SelectHashField">
-                <cmd>To hash a field, click the <wintitle>Hash</wintitle> tab.</cmd>
+                <cmd>To hash a field, click the <wintitle>Hash Field</wintitle> tab.</cmd>
             </step>
             <step>
                 <cmd>To hash fields in place, configure the following <uicontrol>Hash in
@@ -105,8 +105,8 @@
                 </info>
             </step>
             <step>
-                <cmd>To configure field-level error handling, configure the following
-                    property:</cmd>
+                <cmd>To configure field-level error handling, configure the following property on
+                    the <wintitle>Hash Field</wintitle> tab:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_kbk_vl3_mv">
                         <tgroup cols="2">
