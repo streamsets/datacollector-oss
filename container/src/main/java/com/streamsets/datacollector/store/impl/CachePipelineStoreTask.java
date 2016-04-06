@@ -29,6 +29,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import javax.inject.Inject;
 
 import java.util.ArrayList;
@@ -90,9 +91,9 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
+  public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
-      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, description);
+      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, description, false);
       pipelineInfoMap.put(name, pipelineConf.getInfo());
       return pipelineConf;
     }
@@ -170,6 +171,11 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   @Override
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
     pipelineStore.saveUiInfo(name, rev, uiInfo);
+  }
+
+  @Override
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    return pipelineStore.isRemotePipeline(name, rev);
   }
 
 }

@@ -35,12 +35,15 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,6 +117,11 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
           ex);
       }
     }
+  }
+
+  @Override
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -24,6 +24,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -50,12 +51,15 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -297,6 +301,13 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   public void outputRetrieved(String id) {
     LOG.debug("Removing previewer with id:  '{}' from cache as output is retrieved", id);
     previewerCache.invalidate(id);
+  }
+
+  @Override
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    Object isRemote = pipelineStateStore.getState(name, rev).getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
+    // remote attribute will be null for pipelines with version earlier than 1.3
+    return (isRemote == null) ? false : (boolean) isRemote;
   }
 
   private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {

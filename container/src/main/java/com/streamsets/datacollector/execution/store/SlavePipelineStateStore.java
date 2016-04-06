@@ -37,7 +37,7 @@ public class SlavePipelineStateStore implements PipelineStateStore {
   private volatile PipelineState pipelineState;
 
   @Override
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode)
+  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote)
     throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }

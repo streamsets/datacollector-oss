@@ -416,7 +416,7 @@ public class ClusterRunner extends AbstractRunner {
       pipelineConf = getPipelineConf(name, rev);
       doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
     } catch (Exception e) {
-      validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), new HashMap<String, Object>());
+      validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;
     }
   }
@@ -600,6 +600,7 @@ public class ClusterRunner extends AbstractRunner {
         PipelineRuntimeException e =
           new PipelineRuntimeException(ContainerError.CONTAINER_0800, name, issues.get(0).getMessage());
         Map<String, Object> attributes = new HashMap<>();
+        attributes.putAll(getAttributes());
         attributes.put("issues", new IssuesJson(new Issues(issues)));
         validateAndSetStateTransition(PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
         throw e;
@@ -791,6 +792,7 @@ public class ClusterRunner extends AbstractRunner {
           sourceInfo, SUBMIT_TIMEOUT_SECS, getRules());
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = new HashMap<>();
+      attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
       attributes.put(APPLICATION_STATE_START_TIME, System.currentTimeMillis());
       slaveCallbackManager.setClusterToken(applicationState.getSdcToken());

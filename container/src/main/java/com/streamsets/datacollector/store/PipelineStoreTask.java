@@ -29,7 +29,7 @@ import java.util.Map;
 public interface PipelineStoreTask extends Task {
   public static final int SCHEMA_VERSION = 1;
 
-  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException;
+  public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException;
 
   public void delete(String name) throws PipelineStoreException;
 
@@ -52,6 +52,8 @@ public interface PipelineStoreTask extends Task {
     throws PipelineStoreException;
 
   public boolean deleteRules(String name) throws PipelineStoreException;
+
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
 
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException;
 

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -53,6 +54,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,12 +85,24 @@ public class FilePipelineStateStore implements PipelineStateStore {
   }
 
   @Override
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
-    PipelineState pipelineState = getState(name, rev);
-    Utils.checkState(!pipelineState.getStatus().isActive(),
-      Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getStatus()));
-    if (pipelineState.getStatus() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
-      return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode, null, 0, 0);
+  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote) throws PipelineStoreException {
+    PipelineState pipelineState = null;
+    if (getPipelineStateFile(name, rev).exists()) {
+      pipelineState = getState(name, rev);
+      Utils.checkState(!pipelineState.getStatus().isActive(),
+        Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getStatus()));
+    }
+    // first time when pipeline is created
+    Map<String, Object> attributes = null;
+    if (pipelineState == null) {
+      attributes = new HashMap<>();
+      attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, isRemote);
+    }
+    if (pipelineState == null
+      || pipelineState.getStatus() != PipelineStatus.EDITED
+      || executionMode != pipelineState.getExecutionMode()
+      ) {
+      return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", attributes, executionMode, null, 0, 0);
     } else {
       return null;
     }
@@ -108,11 +122,17 @@ public class FilePipelineStateStore implements PipelineStateStore {
 
   @Override
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp)
+    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp
+   )
     throws PipelineStoreException {
     register(name, rev);
     LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}';" + "status msg is '{}'",
       name, rev, user, status, executionMode, message);
+    if (getPipelineStateFile(name, rev).exists()) {
+      if (attributes == null) {
+        attributes = getState(name, rev).getAttributes();
+      }
+    }
     PipelineState pipelineState =
       new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode,
         metrics, retryAttempt, nextRetryTimeStamp);

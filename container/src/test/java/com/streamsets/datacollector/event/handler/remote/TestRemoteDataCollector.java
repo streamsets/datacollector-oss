@@ -157,6 +157,11 @@ public class TestRemoteDataCollector {
     public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
       return stateMap.get(name + "::" + rev).getStatus().isActive();
     }
+
+    @Override
+    public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+      return (name.contains(":") ? true: false);
+    }
   }
 
   private static class MockPreviewer implements Previewer {
@@ -287,7 +292,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
+    public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -312,14 +317,6 @@ public class TestRemoteDataCollector {
 
     @Override
     public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
-    @Override
-    public PipelineConfiguration
-      save(String user, String name, String tag, String tagDescription, PipelineConfiguration pipeline)
-        throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -359,6 +356,23 @@ public class TestRemoteDataCollector {
     public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
       // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public PipelineConfiguration save(
+      String user,
+      String name,
+      String tag,
+      String tagDescription,
+      PipelineConfiguration pipeline) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return false;
     }
 
   }

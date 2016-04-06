@@ -34,6 +34,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.io.DataStore;
@@ -53,6 +54,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.validation.Issue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,7 +157,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public PipelineConfiguration create(String user, String name, String description) throws PipelineStoreException {
+  public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
@@ -180,8 +182,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       }
       pipeline.setPipelineInfo(info);
       if (pipelineStateStore != null) {
-        pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null,
-          ExecutionMode.STANDALONE, null, 0, 0);
+        pipelineStateStore.edited(user, name, REV, ExecutionMode.STANDALONE, isRemote);
       }
       return pipeline;
     }
@@ -290,7 +291,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
           PipelineBeanCreator.get().create(pipeline, errors);
-          pipelineStateStore.edited(user, name, tag,  PipelineBeanCreator.get().getExecutionMode(pipeline, errors));
+          pipelineStateStore.edited(user, name, tag,  PipelineBeanCreator.get().getExecutionMode(pipeline, errors), false);
           pipeline.getIssues().addAll(errors);
         }
 
@@ -457,6 +458,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       }
     }
     return pipelineConf;
+  }
+
+  @Override
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    Object isRemote = pipelineStateStore.getState(name, rev).getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
+    // remote attribute will be null for pipelines with version earlier than 1.3
+    return (isRemote == null) ? false : (boolean) isRemote;
   }
 
 }

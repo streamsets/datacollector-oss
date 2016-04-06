@@ -34,7 +34,7 @@ public interface PipelineStateStore {
 
   // the edited method should record only a change from <new> to EDITED or <other-status> to EDITED,
   // ignoring all EDITED to EDITED.
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException;
+  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote) throws PipelineStoreException;
 
  //called by PipelineStore when the pipeline is being deleted from the store.
   public void delete(String name, String rev) throws PipelineStoreException;

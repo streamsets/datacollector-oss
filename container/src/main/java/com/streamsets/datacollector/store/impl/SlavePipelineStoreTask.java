@@ -38,7 +38,7 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
+  public PipelineConfiguration create(String name, String description, String user, boolean isRemote) throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }
 
@@ -127,6 +127,11 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   @Override
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
     //NOP
+  }
+
+  @Override
+  public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    return false;
   }
 
 }

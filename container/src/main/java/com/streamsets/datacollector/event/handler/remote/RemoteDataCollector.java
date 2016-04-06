@@ -52,6 +52,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class RemoteDataCollector implements DataCollector {
 
+  public static final String IS_REMOTE_PIPELINE = "IS_REMOTE_PIPELINE";
   private static final String NAME_AND_REV_SEPARATOR = "::";
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDataCollector.class);
   private final Manager manager;
@@ -65,33 +66,33 @@ public class RemoteDataCollector implements DataCollector {
     this.validatorIdList = new ArrayList<String>();
   }
 
-  private void validateIfRemote(String name, String operation) throws PipelineException {
-    if (!RemotePipelineUtils.isRemotePipeline(name)) {
+  private void validateIfRemote(String name, String rev, String operation) throws PipelineException {
+    if (!manager.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01100, operation, name);
     }
   }
 
   @Override
   public void start(String user, String name, String rev) throws PipelineException, StageException {
-    validateIfRemote(name, "START");
+    validateIfRemote(name, rev, "START");
     manager.getRunner(user, name, rev).start();
   }
 
   @Override
   public void stop(String user, String name, String rev) throws PipelineException {
-    validateIfRemote(name, "STOP");
+    validateIfRemote(name, rev, "STOP");
     manager.getRunner(user, name, rev).stop();
   }
 
   @Override
   public void delete(String name, String rev) throws PipelineException {
-    validateIfRemote(name, "DELETE");
+    validateIfRemote(name, rev, "DELETE");
     pipelineStore.delete(name);
   }
 
   @Override
   public void deleteHistory(String user, String name, String rev) throws PipelineException {
-    validateIfRemote(name, "DELETE_HISTORY");
+    validateIfRemote(name, rev, "DELETE_HISTORY");
     manager.getRunner(user, name, rev).deleteHistory();
   }
 
@@ -103,7 +104,6 @@ public class RemoteDataCollector implements DataCollector {
     PipelineConfiguration pipelineConfiguration,
     RuleDefinitions ruleDefinitions) throws PipelineException {
 
-    validateIfRemote(name, "SAVE");
     List<PipelineState> pipelineInfoList = manager.getPipelines();
     boolean pipelineExists = false;
     for (PipelineState pipelineState : pipelineInfoList) {
@@ -114,8 +114,9 @@ public class RemoteDataCollector implements DataCollector {
     }
     UUID uuid;
     if (!pipelineExists) {
-      uuid = pipelineStore.create(user, name, description).getUuid();
+      uuid = pipelineStore.create(user, name, description, true).getUuid();
     } else {
+      validateIfRemote(name, rev, "SAVE");
       PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
       uuid = pipelineInfo.getUuid();
       ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
@@ -127,7 +128,7 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException {
-    validateIfRemote(name, "SAVE_RULES");
+    validateIfRemote(name, rev, "SAVE_RULES");
     // Check for existence of pipeline first
     pipelineStore.getInfo(name);
     ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
@@ -137,14 +138,14 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void resetOffset(String user, String name, String rev) throws PipelineException,
     PipelineManagerException {
-    validateIfRemote(name, "RESET_OFFSET");
+    validateIfRemote(name, rev, "RESET_OFFSET");
     manager.getRunner(user, name, rev).resetOffset();
   }
 
   @Override
   public void validateConfigs(String user, String name, String rev) throws PipelineException {
     Previewer previewer = manager.createPreviewer(user, name, rev);
-    validateIfRemote(name, "VALIDATE_CONFIGS");
+    validateIfRemote(name, rev, "VALIDATE_CONFIGS");
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -157,8 +158,7 @@ public class RemoteDataCollector implements DataCollector {
       boolean isRemote = false;
       String name = pipelineState.getName();
       String rev = pipelineState.getRev();
-      // TODO - Make remote an attribute of PipelineState
-      if (RemotePipelineUtils.isRemotePipeline(pipelineState.getName())) {
+      if (manager.isRemotePipeline(name, rev)) {
         isRemote = true;
       }
       // ignore local and non active pipelines

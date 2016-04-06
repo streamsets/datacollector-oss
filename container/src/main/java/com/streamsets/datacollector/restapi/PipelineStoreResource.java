@@ -42,14 +42,17 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +74,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -195,8 +199,7 @@ public class PipelineStoreResource {
       @QueryParam("description") @DefaultValue("") String description)
       throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "CREATE_PIPELINE");
-    PipelineConfiguration pipeline = store.create(user, name, description);
+    PipelineConfiguration pipeline = store.create(user, name, description, false);
 
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
@@ -247,7 +250,9 @@ public class PipelineStoreResource {
       @PathParam("pipelineName") String name)
       throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "DELETE_PIPELINE");
+    if (store.isRemotePipeline(name, "0")) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_PIPELINE", name);
+    }
     store.delete(name);
     store.deleteRules(name);
     return Response.ok().build();
@@ -268,8 +273,10 @@ public class PipelineStoreResource {
       @QueryParam("description") String description,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
       throws URISyntaxException, PipelineException {
+    if (store.isRemotePipeline(name, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_PIPELINE", name);
+    }
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "SAVE_PIPELINE");
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
@@ -331,8 +338,10 @@ public class PipelineStoreResource {
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
     @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineException {
+    if (store.isRemotePipeline(name, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_RULES_PIPELINE", name);
+    }
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "SAVE_RULES_PIPELINE");
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
     ruleDefinitionValidator.validateRuleDefinition(ruleDefs);
@@ -455,10 +464,10 @@ public class PipelineStoreResource {
       if (store.hasPipeline(name)) {
         newPipelineConfig = store.load(name, rev);
       } else {
-        newPipelineConfig = store.create(user, name, pipelineConfig.getDescription());
+        newPipelineConfig = store.create(user, name, pipelineConfig.getDescription(), false);
       }
     } else {
-      newPipelineConfig = store.create(user, name, pipelineConfig.getDescription());
+      newPipelineConfig = store.create(user, name, pipelineConfig.getDescription(), false);
     }
 
     newRuleDefinitions = store.retrieveRules(name, rev);

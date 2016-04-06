@@ -67,9 +67,9 @@ public class CachePipelineStateStore implements PipelineStateStore {
   }
 
   @Override
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode)
+  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote)
       throws PipelineStoreException {
-    PipelineState pipelineState = pipelineStateStore.edited(user, name, rev, executionMode);
+    PipelineState pipelineState = pipelineStateStore.edited(user, name, rev, executionMode, isRemote);
     if (pipelineState != null) {
       pipelineStateCache.put(getNameAndRevString(name, rev), pipelineState);
     }

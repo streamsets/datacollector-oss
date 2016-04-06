@@ -82,7 +82,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
   private static final String DEFAULT_REMOTE_JOB_LABELS = "";
   private static final String REMOTE_CONTROL_APP_TYPE = REMOTE_CONTROL + "targetapp.type";
-  private static final String DEFAULT_APP_TYPE = "JOB_RUNNER";
+  private static final String DEFAULT_APP_TYPE = "DPM";
   private final DataCollector remoteDataCollector;
   private final EventClient eventSenderReceiver;
   private final MessagingJsonToFromDto jsonToFromDto;
@@ -228,6 +228,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         return;
       }
       List<ClientEvent> ackClientEventList = new ArrayList<ClientEvent>();
+      LOG.info(Utils.format("Got '{}' events ", serverEventJsonList.size()));
       for (ServerEventJson serverEventJson : serverEventJsonList) {
         ClientEvent clientEvent = handlePipelineEvent(serverEventJson);
         if (clientEvent != null) {
@@ -245,6 +246,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         serverEvent = jsonToFromDto.asDto(serverEventJson);
         Event event = serverEvent.getEvent();
         EventType eventType = serverEvent.getEventType();
+        LOG.debug(Utils.format("Handling event of type: '{}' ", eventType));
         switch (eventType) {
           case PING_FREQUENCY_ADJUSTMENT:
             delay = ((PingFrequencyAdjustmentEvent)event).getPingFrequency();

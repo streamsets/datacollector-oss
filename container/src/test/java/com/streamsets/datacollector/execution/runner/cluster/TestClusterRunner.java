@@ -116,10 +116,10 @@ public class TestClusterRunner {
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, new LockCache<String>());
     pipelineStoreTask.init();
-    pipelineStoreTask.create("admin", NAME, "some desc");
+    pipelineStoreTask.create("admin", NAME, "some desc", false);
    //Create an invalid pipeline
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.create("user2", TestUtil.HIGHER_VERSION_PIPELINE,
-      "description2");
+      "description2", false);
     PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTargetHigherVersion();
     mockPipelineConf.getConfiguration().add(new Config("executionMode",
       ExecutionMode.CLUSTER_BATCH.name()));
@@ -484,22 +484,22 @@ public class TestClusterRunner {
     PipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
       new LockCache<String>());
     pipelineStoreTask.init();
-    pipelineStoreTask.create("admin", "a", "some desc");
+    pipelineStoreTask.create("admin", "a", "some desc", false);
     pipelineStateStore.saveState("admin", "a", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineStoreTask.create("admin", "b", "some desc");
+    pipelineStoreTask.create("admin", "b", "some desc", false);
     pipelineStateStore.saveState("admin", "b", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineStoreTask.create("admin", "c", "some desc");
+    pipelineStoreTask.create("admin", "c", "some desc", false);
     pipelineStateStore.saveState("admin", "c", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineStoreTask.create("admin", "d", "some desc");
+    pipelineStoreTask.create("admin", "d", "some desc", false);
     pipelineStateStore.saveState("admin", "d", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineStoreTask.create("admin", "e", "some desc");
+    pipelineStoreTask.create("admin", "e", "some desc", false);
     pipelineStateStore.saveState("admin", "e", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineStoreTask.create("admin", "f", "some desc");
+    pipelineStoreTask.create("admin", "f", "some desc", false);
     pipelineStateStore.saveState("admin", "f", "0", PipelineStatus.EDITED, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
 

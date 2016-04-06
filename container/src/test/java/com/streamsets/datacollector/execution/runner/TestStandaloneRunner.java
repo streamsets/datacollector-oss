@@ -147,8 +147,6 @@ public class TestStandaloneRunner {
       ExecutionMode.STANDALONE, null, 0, 0);
     runner.start();
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
-      ExecutionMode.STANDALONE, null, 0, 0);
   }
 
   @Test

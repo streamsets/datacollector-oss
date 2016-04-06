@@ -141,7 +141,9 @@ public class ManagerResource {
     throws StageException, PipelineException {
     if(pipelineName != null) {
       RestAPIUtils.injectPipelineInMDC(pipelineName);
-      RestAPIUtils.validateNotRemote(pipelineName, "START_PIPELINE");
+      if (manager.isRemotePipeline(pipelineName, rev)) {
+        throw new PipelineException(ContainerError.CONTAINER_01101, "START_PIPELINE", pipelineName);
+      }
       try {
         Runner runner = manager.getRunner(user, pipelineName, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
@@ -176,7 +178,9 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
-    RestAPIUtils.validateNotRemote(pipelineName, "STOP_PIPELINE");
+    if (manager.isRemotePipeline(pipelineName, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineName);
+    }
     Runner runner = manager.getRunner(user, pipelineName, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -198,7 +202,9 @@ public class ManagerResource {
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "RESET_OFFSET_PIPELINE");
+    if (manager.isRemotePipeline(name, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "RESET_OFFSET", name);
+    }
     Runner runner = manager.getRunner(user, name, rev);
     runner.resetOffset();
     return Response.ok().build();
@@ -401,7 +407,9 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
-
+    if (manager.isRemotePipeline(pipelineName, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_HISTORY", pipelineName);
+    }
     Runner runner = manager.getRunner(user, pipelineName, rev);
     if(runner != null) {
       runner.deleteHistory();
@@ -474,7 +482,6 @@ public class ManagerResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
-    RestAPIUtils.validateNotRemote(name, "DELETE_HISTORY_PIPELINE");
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
@@ -546,7 +553,6 @@ public class ManagerResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("alertId") String alertId) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
-    RestAPIUtils.validateNotRemote(pipelineName, "DELETE_ALERTS_PIPELINE");
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       manager.getRunner(user, pipelineName, rev).deleteAlert(alertId)).build();
   }
