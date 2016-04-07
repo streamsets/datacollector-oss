@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.mongodb;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class MongoTargetConfigBean {
@@ -54,13 +55,14 @@ public class MongoTargetConfigBean {
   public String collection;
 
   @ConfigDef(
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.MODEL,
     label = "Unique Key Field",
     description = "Unique key field is required for upserts and optional for inserts and deletes",
     required = false,
     group = "MONGODB",
     displayPosition = 40
   )
+  @FieldSelectorModel(singleValued = true)
   public String uniqueKeyField;
 
   @ConfigDef(

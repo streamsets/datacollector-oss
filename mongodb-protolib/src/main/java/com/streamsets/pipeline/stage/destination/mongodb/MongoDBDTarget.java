@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   label = "MongoDB",
   description = "Writes data to MongoDB",
   icon="mongodb.png",
-  onlineHelpRefUrl = "index.html#Destinations/KinProducer.html#task_q2j_ml4_yr"
+  onlineHelpRefUrl = "index.html#Destinations/MongoDB.html#task_mrc_k5n_4v"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
