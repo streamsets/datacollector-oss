@@ -205,8 +205,14 @@ public class DataRuleHandler {
         switch (dataRuleDefinition.getThresholdType()) {
           case COUNT:
             if (matchingRecordCounter.getCount() > threshold) {
-              if (dataRuleDefinition instanceof DriftRuleDefinition || dataRuleDefinition instanceof DataRuleDefinition) {
-                rulesEvaluator.alert(metrics, dataRuleDefinition, matchingRecordCounter, ruleToAlertTextForMatchedRecords);
+              if (dataRuleDefinition instanceof DriftRuleDefinition ||
+                dataRuleDefinition instanceof DataRuleDefinition) {
+                rulesEvaluator.alert(
+                    metrics,
+                    dataRuleDefinition,
+                    matchingRecordCounter.getCount(),
+                    ruleToAlertTextForMatchedRecords
+                );
               } else {
                 throw new RuntimeException(Utils.format(
                   "Unexpected RuleDefinition class '{}'",
@@ -219,7 +225,12 @@ public class DataRuleHandler {
             Counter evaluatedRecordCounter = evaluatedRecordCounterMap.get(dataRuleDefinition.getId());
             if ((matchingRecordCounter.getCount() * 100.0 / evaluatedRecordCounter.getCount()) > threshold
               && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
-              rulesEvaluator.alert(metrics, dataRuleDefinition, matchingRecordCounter, ruleToAlertTextForMatchedRecords);
+              rulesEvaluator.alert(
+                  metrics,
+                  dataRuleDefinition,
+                  matchingRecordCounter.getCount(),
+                  ruleToAlertTextForMatchedRecords
+              );
             }
             break;
           default:

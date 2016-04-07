@@ -332,7 +332,7 @@ public class TestMetricAggregationProcessor {
     SortedMap<String, Gauge> gauges = metrics.getGauges();
     Assert.assertTrue(gauges.containsKey("alert.x.gauge"));
     Map<String, Object> gaugeValue = (Map<String, Object>) gauges.get("alert.x.gauge").getValue();
-    Assert.assertEquals(400, ((Counter)gaugeValue.get("currentValue")).getCount());
+    Assert.assertEquals(400L, gaugeValue.get("currentValue"));
 
     List<String> alertTexts = (List<String>) gaugeValue.get("alertTexts");
     Assert.assertEquals(1, alertTexts.size());
