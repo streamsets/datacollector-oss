@@ -20,24 +20,19 @@
                 formats</indexterm></indexterm><indexterm>data formats<indexterm>Kinesis Firehose
                     destinations</indexterm></indexterm>The Kinesis Firehose destination writes data
             to a Kinesis Firehose delivery stream based on the data format that you select. You can
-            use the following data formats:<draft-comment author="alisontaylor">Adam to file Jira
-                ticket to remove Avro from the UI, and to remove Array option from JSON. Update Data
-                Formats appendix too when fixed.</draft-comment></p>
+            use the following data formats:</p>
         <dl>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroMess">
-                <dt/>
-                <dd/>
-            </dlentry>
             <dlentry
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-Delim">
                 <dt/>
                 <dd/>
             </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
-                <dt/>
-                <dd/>
+            <dlentry>
+                <dt>JSON</dt>
+                <dd>The destination writes records as JSON data. Use the multiple objects format,
+                    where each file includes multiple JSON objects. Each object is a JSON
+                    representation of a record.<note>The JSON array of objects format is not
+                        supported for the Kinesis Firehose destination. </note></dd>
             </dlentry>
         </dl>
  </conbody>

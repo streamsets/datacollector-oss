@@ -23,10 +23,11 @@
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kinesis
                     Firehose</indexterm></indexterm>To write data to Amazon Kinesis Streams, use the
             Kinesis Producer destination. To write data directly to Amazon S3, use the Amazon S3
-            destination. When you use the Kinesis Firehose destination to deliver data to Amazon S3,
-            Firehose can buffer incoming records into larger file sizes before delivering the data
-            to Amazon S3. You configure the buffer size and buffer interval when you create the
-            delivery stream.</p>
+            destination. </p>
+        <p>When you use the Kinesis Firehose destination to deliver data to Amazon S3, Firehose can
+            buffer incoming records into larger file sizes before delivering the data to Amazon S3.
+            You configure the buffer size and buffer interval when you create the delivery
+            stream.</p>
         <p>When you configure the Kinesis Firehose destination, you specify an existing delivery
             stream to write to, AWS credentials and region, and the data format to use. </p>
  </conbody>

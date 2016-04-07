@@ -19,10 +19,7 @@
         <context>
             <p><indexterm>Kinesis Firehose
                 destination<indexterm>configuring</indexterm></indexterm>Configure a Kinesis
-                Firehose destination to write data to an Amazon Kinesis Firehose delivery stream.
-                    <draft-comment author="alisontaylor">Adam to file Jira ticket to remove Avro
-                    from the UI, and to remove Array option from JSON. Update Data Formats appendix
-                    too when fixed.</draft-comment></p>
+                Firehose destination to write data to an Amazon Kinesis Firehose delivery stream. </p>
         </context>
         <steps>
             <step
@@ -54,7 +51,8 @@
                                 </row>
                                 <row>
                                     <entry>Destination Type</entry>
-                                    <entry><p>Type of Amazon destination to write to. Select <uicontrol>Existing Stream</uicontrol>. </p></entry>
+                                    <entry>Type of Amazon destination to write to. Select
+                                            <uicontrol>Existing Stream</uicontrol>. </entry>
                                 </row>
                                 <row>
                                     <entry>Region</entry>
@@ -63,7 +61,6 @@
                                 <row>
                                     <entry>Data Format</entry>
                                     <entry>Data format to use: <ul id="ul_g5w_kyy_kv">
-                                            <li>Avro</li>
                                             <li>Delimited</li>
                                             <li>JSON</li>
                                         </ul></entry>
@@ -72,19 +69,19 @@
                                     <entry>Stream Name <xref href="KinFirehose-DeliveryStream.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>
-                                    <entry><p>Existing delivery stream to write to.</p>
-                                        <p>Use the AWS Management Console to create the delivery
-                                            stream to an Amazon S3 bucket or Amazon Redshift table. </p></entry>
+                                    <entry>Existing delivery stream to write to.<p>Use the AWS
+                                            Management Console to create the delivery stream to an
+                                            Amazon S3 bucket or Amazon Redshift table. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Maximum Record Size (KB)</entry>
-                                    <entry><p>Maximum size of a single record. When records exceed this size, the destination handles the
-                                            records based on the error record handling configured
-                                            for the stage.</p>
-                                        <note type="warning">A Firehose record can have a maximum
-                                            size of 1,000 KB. If you configure a maximum size larger
-                                            than 1,000 KB, Firehose does not accept any data written
-                                            by the destination.</note></entry>
+                                    <entry>Maximum size of a single record. When records exceed this
+                                        size, the destination handles the records based on the error
+                                        record handling configured for the stage.<note
+                                            type="warning">A Firehose record can have a maximum size
+                                            of 1,000 KB. If you configure a maximum size larger than
+                                            1,000 KB, Firehose does not accept any data written by
+                                            the destination.</note></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
@@ -95,16 +92,37 @@
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Mess">
-                <cmd/>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
-                <cmd/>
-            </step>   
-
+            <step>
+                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wlp_tc3_4v">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JSON Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JSON Content</entry>
+                                    <entry>Determines how JSON data is written. Select Multiple JSON
+                                        Objects. Each file includes multiple JSON objects. Each
+                                        object is a JSON representation of a record.<note>The JSON
+                                            array of objects format is not supported for the Kinesis
+                                            Firehose destination. </note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step> 
         </steps>
     </taskbody>
 </task>
