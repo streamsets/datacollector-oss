@@ -39,7 +39,6 @@ import org.kududb.client.PartialRowHelper;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -144,5 +143,11 @@ public class TestKuduRecordConverter {
     } catch (OnRecordErrorException ex) {
       Assert.assertEquals(Errors.KUDU_09, ex.getErrorCode());
     }
+  }
+
+  @Test
+  public void testNullButExists() throws Exception {
+    record.set("/short1", Field.create((String)null));
+    kuduRecordConverter.convert(record, partialRow); // must not throw NPE
   }
 }

@@ -49,45 +49,52 @@ public class KuduRecordConverter {
       String fieldName = entry.getKey();
       String column = entry.getValue();
       Field.Type type = columnsToFieldTypes.get(column);
+      ColumnSchema columnSchema = schema.getColumn(column);
       if (record.has(fieldName)) {
         Field field = record.get(fieldName);
-        try {
-          switch (type) {
-            case BOOLEAN:
-              row.addBoolean(column, field.getValueAsBoolean());
-              break;
-            case BYTE:
-              row.addByte(column, field.getValueAsByte());
-              break;
-            case SHORT:
-              row.addShort(column, field.getValueAsShort());
-              break;
-            case INTEGER:
-              row.addInt(column, field.getValueAsInteger());
-              break;
-            case LONG:
-              row.addLong(column, field.getValueAsLong());
-              break;
-            case FLOAT:
-              row.addFloat(column, field.getValueAsFloat());
-              break;
-            case DOUBLE:
-              row.addDouble(column, field.getValueAsDouble());
-              break;
-            case STRING:
-              row.addString(column, field.getValueAsString());
-              break;
-            case BYTE_ARRAY:
-              row.addBinary(column, field.getValueAsByteArray());
-              break;
-            default:
-              throw new OnRecordErrorException(record, Errors.KUDU_04, fieldName, type.name());
+        if (field.getValue() == null) {
+          if (!columnSchema.isNullable()) {
+            throw new OnRecordErrorException(record, Errors.KUDU_06, column, fieldName);
           }
-        } catch (NumberFormatException nfe) {
-          throw new OnRecordErrorException(record, Errors.KUDU_09, fieldName, type.name(), nfe.toString(), nfe);
+          row.setNull(column);
+        } else {
+          try {
+            switch (type) {
+              case BOOLEAN:
+                row.addBoolean(column, field.getValueAsBoolean());
+                break;
+              case BYTE:
+                row.addByte(column, field.getValueAsByte());
+                break;
+              case SHORT:
+                row.addShort(column, field.getValueAsShort());
+                break;
+              case INTEGER:
+                row.addInt(column, field.getValueAsInteger());
+                break;
+              case LONG:
+                row.addLong(column, field.getValueAsLong());
+                break;
+              case FLOAT:
+                row.addFloat(column, field.getValueAsFloat());
+                break;
+              case DOUBLE:
+                row.addDouble(column, field.getValueAsDouble());
+                break;
+              case STRING:
+                row.addString(column, field.getValueAsString());
+                break;
+              case BYTE_ARRAY:
+                row.addBinary(column, field.getValueAsByteArray());
+                break;
+              default:
+                throw new OnRecordErrorException(record, Errors.KUDU_04, fieldName, type.name());
+            }
+          } catch (NumberFormatException nfe) {
+            throw new OnRecordErrorException(record, Errors.KUDU_09, fieldName, type.name(), nfe.toString(), nfe);
+          }
         }
       } else {
-        ColumnSchema columnSchema = schema.getColumn(column);
         if (!columnSchema.isNullable()) {
           throw new OnRecordErrorException(record, Errors.KUDU_06, column, fieldName);
         }

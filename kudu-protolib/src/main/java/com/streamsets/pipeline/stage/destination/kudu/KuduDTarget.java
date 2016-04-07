@@ -38,7 +38,7 @@ import java.util.List;
     description = "Writes data to Kudu",
     icon = "kudu.png",
     privateClassLoader = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Destinations/Kudu.html#task_c4x_tmh_4v"
 )
 @ConfigGroups(Groups.class)
 public class KuduDTarget extends DTarget {
@@ -80,8 +80,8 @@ public class KuduDTarget extends DTarget {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "CLIENT_PROPAGATED",
-    label = "Storage Type",
-    description = "The storage type for row key",
+    label = "External Consistency",
+    description = "The external consistency mode",
     displayPosition = 10,
     group = "ADVANCED"
   )
