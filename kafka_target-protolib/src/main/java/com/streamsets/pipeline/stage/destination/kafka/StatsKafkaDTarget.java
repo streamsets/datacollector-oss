@@ -39,7 +39,7 @@ import com.streamsets.pipeline.config.DataFormat;
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
-    value = {"kafkaConfigBean.dataFormat", "kafkaConfigBean.kafkaConfig.runtimeTopicResolution", "kafkaConfigBean.kafkaConfig.singleMessagePerBatch"}
+    value = {"kafkaConfigBean.dataFormat", "kafkaConfigBean.kafkaConfig.singleMessagePerBatch"}
 )
 @GenerateResourceBundle
 public class StatsKafkaDTarget extends KafkaDTarget {
