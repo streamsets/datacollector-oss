@@ -65,7 +65,7 @@ public class TestHttpTarget extends JerseyTest {
 
   @Test
   public void testHttpTarget() throws StageException, IOException {
-    HttpTarget httpTarget = new HttpTarget(URL, "token", "sdc");
+    HttpTarget httpTarget = new HttpTarget(URL, "token", "sdc", "x");
     TargetRunner targetRunner = new TargetRunner.Builder(HttpTarget.class, httpTarget)
       .build();
     targetRunner.runInit();
@@ -76,6 +76,7 @@ public class TestHttpTarget extends JerseyTest {
       Assert.assertEquals(String.valueOf(i), record.getSdcId());
       Assert.assertEquals("a", record.getMetadata().entrySet().iterator().next().getKey());
       Assert.assertEquals("b", record.getMetadata().entrySet().iterator().next().getValue());
+      Assert.assertEquals("x", record.getMetadata().get(HttpTarget.DPM_PIPELINE_COMMIT_ID));
       Assert.assertTrue(record.isAggregated());
     }
   }

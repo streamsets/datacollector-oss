@@ -71,8 +71,19 @@ public class HttpDTarget extends DTarget {
   )
   public String sdcId;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "${PIPELINE_COMMIT_ID}",
+    label = "Pipeline commit Id",
+    displayPosition = 40,
+    group = "HTTP"
+  )
+  public String pipelineCommitId;
+
+
   @Override
   protected Target createTarget() {
-    return new HttpTarget(targetUrl, authToken, sdcId);
+    return new HttpTarget(targetUrl, authToken, sdcId, pipelineCommitId);
   }
 }

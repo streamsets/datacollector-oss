@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
@@ -52,19 +53,27 @@ public class HttpTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpTarget.class);
   private static final String SDC = "sdc";
+  private static final String X_REQUESTED_BY = "X-Requested-By";
+  private static final String X_SS_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
+  private static final String X_SS_APP_COMPONENT_ID = "X-SS-App-Component-Id";
+
+  @VisibleForTesting
+  static final String DPM_PIPELINE_COMMIT_ID = "dpm.pipeline.commitId";
 
   private final String targetUrl;
   private final String sdcAuthToken;
   private final String sdcId;
+  private final String pipelineCommitId;
 
 
   private Client client;
   private WebTarget target;
 
-  public HttpTarget(String targetUrl, String authToken, String appComponentId) {
+  public HttpTarget(String targetUrl, String authToken, String appComponentId, String pipelineCommitId) {
     this.targetUrl = targetUrl;
     this.sdcAuthToken = authToken;
     this.sdcId = appComponentId;
+    this.pipelineCommitId = pipelineCommitId;
   }
 
   @Override
@@ -87,6 +96,7 @@ public class HttpTarget extends BaseTarget {
           for (Map.Entry<String, Field> e : valueAsListMap.entrySet()) {
             metadata.put(e.getKey(), e.getValue().getValueAsString());
           }
+          metadata.put(DPM_PIPELINE_COMMIT_ID, pipelineCommitId);
           sdcMetricsJson.setMetadata(metadata);
         }
         String metricRegistryJson = currentRecord.get("/" + AggregatorUtil.METRIC_JSON_STRING).getValueAsString();
@@ -96,19 +106,21 @@ public class HttpTarget extends BaseTarget {
     } catch (IOException e) {
       handleException(e, currentRecord);
     }
-    Response response = target.request()
-        .header("X-Requested-By", SDC)
-        .header("X-SS-App-Auth-Token", sdcAuthToken)
-        .header("X-SS-App-Component-Id", sdcId)
+    if (!sdcMetricsJsonList.isEmpty()) {
+      Response response = target.request()
+        .header(X_REQUESTED_BY, SDC)
+        .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken)
+        .header(X_SS_APP_COMPONENT_ID, sdcId)
         .post(
           Entity.json(
             sdcMetricsJsonList
           )
         );
-    if (response.getStatus() != 200) {
-      String responseMessage = response.readEntity(String.class);
-      LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
-      throw new StageException(Errors.HTTP_02, responseMessage);
+      if (response.getStatus() != 200) {
+        String responseMessage = response.readEntity(String.class);
+        LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
+        throw new StageException(Errors.HTTP_02, responseMessage);
+      }
     }
   }
 
