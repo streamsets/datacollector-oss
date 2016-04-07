@@ -162,6 +162,13 @@
    <topicref href="../Destinations/MapRStreamsProd-AddProps.dita"/>
    <topicref href="../Destinations/MapRStreamsProd-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/MongoDB.dita" chunk="to-content"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/MongoDB-OperationHeader.dita"/>
+   <topicref href="../Destinations/MongoDB-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/RabbitMQ.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

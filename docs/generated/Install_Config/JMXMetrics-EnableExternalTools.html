@@ -1,0 +1,171 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Data Collector uses JMX metrics to generate the graphical display of the status of a running pipeline. You can provide the same JMX metrics to external tools if desired. Information provided by JMX ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Enabling External JMX Tools"></meta><meta name="abstract" content="Data Collector uses JMX metrics to generate the graphical display of the status of a running pipeline. You can provide the same JMX metrics to external tools if desired."></meta><meta name="description" content="Data Collector uses JMX metrics to generate the graphical display of the status of a running pipeline. You can provide the same JMX metrics to external tools if desired."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jdj_4rg_1t"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Enabling External JMX Tools</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_jdj_4rg_1t">
+ <h1 class="title topictitle1">Enabling External JMX Tools</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+    uses JMX metrics to generate the graphical display of the status of a running pipeline. You can
+    provide the same JMX metrics to external tools if desired.</p>
+
+    <p class="p">
+      Information
+      provided by JMX metrics includes pipeline details like a histogram for the number of error
+      records per batch or the amount of memory the pipeline uses. Stage-related details are also
+      provided, such as the number of output records or stage errors. Some stages have stage-related
+      custom metrics.</p>
+
+    <div class="p">The following Java environment variables expose the <span class="ph">Data
+                  Collector</span> JMX
+      metrics on a specified port, allowing integration with external tools:<ul class="ul" id="concept_jdj_4rg_1t__ul_trq_qsh_1t">
+        <li class="li">com.sun.management.jmxremote</li>
+
+        <li class="li">com.sun.management.jmxremote.port=&lt;port_number&gt;</li>
+
+        <li class="li">com.sun.management.jmxremote.local.only=&lt;true | false&gt;</li>
+
+        <li class="li">com.sun.management.jmxremote.authenticate=&lt;true | false&gt;</li>
+
+        <li class="li">com.sun.management.jmxremote.ssl=&lt;true | false&gt;</li>
+
+      </ul>
+</div>
+
+  <p class="p">You can pass the variables in the command line as part of the SDC_JAVA_OPTS environment
+      variable. Or, you can add the variables to the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
+                  Collector</span>
+      environment file. </p>
+
+  <p class="p">For example, the following set of variables passes JMX metrics through port 3333:</p>
+
+  <div class="p">
+   <pre class="pre codeblock">export SDC_JAVA_OPTS="-Dcom.sun.management.jmxremote \
+-Dcom.sun.management.jmxremote.port=3333 \
+-Dcom.sun.management.jmxremote.local.only=false \
+-Dcom.sun.management.jmxremote.authenticate=false \
+-Dcom.sun.management.jmxremote.ssl=false"</pre>
+
+  </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_oz2_lkt_nv">
+ <h2 class="title topictitle2">Viewing JMX Metrics in External Tools</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can view the <span class="ph">Data
+                  Collector</span> JMX
+        metrics in external tools. The <span class="ph">Data
+                  Collector</span> JMX
+        metric names all begin with "sdc.pipeline."</p>
+
+  <p class="p"><span class="ph">Data
+                  Collector</span>
+            JVM metrics use the following naming pattern:</p>
+
+        <pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.&lt;category: pipeline|stage|custom&gt;.\
+[&lt;stage library&gt;_&lt;library revision&gt;].&lt;metric name&gt;.&lt;metric type&gt;</pre>
+
+        <p class="p">For example, the following is a batch count meter for the first revision of a pipeline
+            named Write to Kafka:</p>
+
+        <pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.pipeline.batchCount.meter</pre>
+
+        <div class="p">The following metric is a counter for the memory consumed by the File Tail origin in the
+            same Write to Kafka
+            pipeline:<pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.stage.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_1.memoryConsumed.counter</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_llw_2st_nv">
+ <h2 class="title topictitle2">Custom Metrics</h2>
+
+ <div class="body conbody">
+        
+  <div class="p"><span class="ph">Data
+                  Collector</span> provides
+            custom metrics for some stages. When you view JMX metrics using an external tool and
+            when a pipeline includes the stages below, you can view custom metrics for the stages:<dl class="dl">
+                
+                    <dt class="dt dlterm">File Tail origin</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, File Tail
+                        provides the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_yqv_kxt_nv">
+                            <li class="li">Offset Lag - The amount of data remaining in the file being read.
+                                This metric displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.offsets.lag.&lt;file path&gt;.counter</pre>
+</li>
+
+                            <li class="li">Pending Files - The number of files in the directory that still need
+                                to be read. This metric displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.pending.files.&lt;file path&gt;.counter</pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Local FS destination</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, LocalFS provides
+                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
+                            <li class="li">Late Records meter and counter - The number of late records written
+                                to the destination system. The counter displays in external tools as
+                                    follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.&lt;counter | metric&gt;</pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div>
+</body>
+</html>

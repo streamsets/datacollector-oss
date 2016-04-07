@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Data Collector provides two environment configuration files: $SDC_DIST/libexec/sdc-env.sh - Used when you start Data Collector manually from the command line. $SDC_DIST/libexec/sdcd-env.sh - Used when ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Variables"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Variables</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Data Collector provides two environment configuration files: $SDC_DIST/libexec/sdc-env.sh - Used when you start Data Collector manually from the command line. $SDC_DIST/libexec/sdcd-env.sh - Used when ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,7 +32,7 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_rng_qym_qr">
- <h1 class="title topictitle1">Data Collector Environment Variables</h1>
+ <h1 class="title topictitle1">Data Collector Environment Configuration</h1>
 
  <div class="body conbody">
     <p class="p"><span class="ph">Data
@@ -53,7 +53,7 @@
 
     </div>
 
-   <p class="p">Use a text editor to edit the appropriate environment configuration file. Some of the
+    <p class="p">Use a text editor to edit the appropriate environment configuration file. Some of the
       environment variables in the <samp class="ph codeph">sdc-env.sh</samp> file are commented out and do not
       reflect the default values. Be sure to uncomment the line when you change a variable
       value.</p>
@@ -62,7 +62,9 @@
                   Collector</span> to enable
       the changes. </p>
 
-        <div class="p">You can modify the environment variables in the file to customize the following areas:<ul class="ul" id="concept_rng_qym_qr__ul_ulw_sjr_3v">
+    <div class="p">Modify the <span class="ph">Data
+                  Collector</span>
+      environment configuration files to customize the following areas:<ul class="ul" id="concept_rng_qym_qr__ul_ulw_sjr_3v">
         <li class="li"><span class="ph">Data
                   Collector</span>
           directories</li>
@@ -73,11 +75,14 @@
 
         <li class="li">Java configuration options</li>
 
+        <li class="li">Java Security Manager that restricts the runtime permissions of user libraries</li>
+
         <li class="li">Path to jar files to be added to the root classloader</li>
 
       </ul>
+</div>
 
-    </div>
+    <p class="p"> </p>
 
   </div>
 
@@ -115,9 +120,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="35%" id="d67797e181">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d68277e190">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d67797e184">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d68277e193">Description</th>
 
                     </tr>
 
@@ -125,11 +130,11 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d67797e181 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d68277e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d67797e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d68277e193 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -149,9 +154,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d67797e181 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d68277e190 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d67797e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d68277e193 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -169,9 +174,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d67797e181 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d68277e190 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d67797e184 ">
+                        <td class="entry" valign="top" width="65%" headers="d68277e193 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -188,11 +193,11 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d67797e181 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d68277e190 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d67797e184 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d68277e193 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -336,139 +341,6 @@
     <div class="p">If, for example, you doubled the heap size to 2048 MB, you might set the options as
       follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m  <span class="ph uicontrol">-XX:PermSize=256M -XX:MaxPermSize=512M</span> -server ${SDC_JAVA_OPTS} "
 </pre>
-</div>
-
- </div>
-
-</div>
-</div>
-<div class="topic concept nested1" id="concept_jdj_4rg_1t">
- <h2 class="title topictitle2">Enabling External JMX Tools</h2>
-
- 
- <div class="body conbody"><p class="shortdesc"><span class="ph">Data
-                  Collector</span>
-    uses JMX metrics to generate the graphical display of the status of a running pipeline. You can
-    provide the same JMX metrics to external tools if desired.</p>
-
-    <p class="p">
-      Information
-      provided by JMX metrics includes pipeline details like a histogram for the number of error
-      records per batch or the amount of memory the pipeline uses. Stage-related details are also
-      provided, such as the number of output records or stage errors. Some stages have stage-related
-      custom metrics.</p>
-
-    <div class="p">The following Java environment variables expose the <span class="ph">Data
-                  Collector</span> JMX
-      metrics on a specified port, allowing integration with external tools:<ul class="ul" id="concept_jdj_4rg_1t__ul_trq_qsh_1t">
-        <li class="li">com.sun.management.jmxremote</li>
-
-        <li class="li">com.sun.management.jmxremote.port=&lt;port_number&gt;</li>
-
-        <li class="li">com.sun.management.jmxremote.local.only=&lt;true | false&gt;</li>
-
-        <li class="li">com.sun.management.jmxremote.authenticate=&lt;true | false&gt;</li>
-
-        <li class="li">com.sun.management.jmxremote.ssl=&lt;true | false&gt;</li>
-
-      </ul>
-</div>
-
-  <p class="p">You can pass the variables in the command line as part of the SDC_JAVA_OPTS environment
-      variable. Or, you can add the variables to the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
-                  Collector</span>
-      environment file. </p>
-
-  <p class="p">For example, the following set of variables passes JMX metrics through port 3333:</p>
-
-  <div class="p">
-   <pre class="pre codeblock">export SDC_JAVA_OPTS="-Dcom.sun.management.jmxremote \
--Dcom.sun.management.jmxremote.port=3333 \
--Dcom.sun.management.jmxremote.local.only=false \
--Dcom.sun.management.jmxremote.authenticate=false \
--Dcom.sun.management.jmxremote.ssl=false"</pre>
-
-  </div>
-
- </div>
-
-<div class="topic concept nested2" id="concept_oz2_lkt_nv">
- <h3 class="title topictitle3">Viewing JMX Metrics in External Tools</h3>
-
- 
- <div class="body conbody"><p class="shortdesc">You can view the <span class="ph">Data
-                  Collector</span> JMX
-        metrics in external tools. The <span class="ph">Data
-                  Collector</span> JMX
-        metric names all begin with "sdc.pipeline."</p>
-
-  <p class="p"><span class="ph">Data
-                  Collector</span>
-            JVM metrics use the following naming pattern:</p>
-
-        <pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.&lt;category: pipeline|stage|custom&gt;.\
-[&lt;stage library&gt;_&lt;library revision&gt;].&lt;metric name&gt;.&lt;metric type&gt;</pre>
-
-        <p class="p">For example, the following is a batch count meter for the first revision of a pipeline
-            named Write to Kafka:</p>
-
-        <pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.pipeline.batchCount.meter</pre>
-
-        <div class="p">The following metric is a counter for the memory consumed by the File Tail origin in the
-            same Write to Kafka
-            pipeline:<pre class="pre codeblock">sdc.pipeline.Write to Kafka.0.stage.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_1.memoryConsumed.counter</pre>
-</div>
-
- </div>
-
-</div>
-<div class="topic concept nested2" id="concept_llw_2st_nv">
- <h3 class="title topictitle3">Custom Metrics</h3>
-
- <div class="body conbody">
-        
-  <div class="p"><span class="ph">Data
-                  Collector</span> provides
-            custom metrics for some stages. When you view JMX metrics using an external tool and
-            when a pipeline includes the stages below, you can view custom metrics for the stages:<dl class="dl">
-                
-                    <dt class="dt dlterm">File Tail origin</dt>
-
-                    <dd class="dd">In addition to the standard metrics available for origins, File Tail
-                        provides the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_yqv_kxt_nv">
-                            <li class="li">Offset Lag - The amount of data remaining in the file being read.
-                                This metric displays in external tools as
-                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.offsets.lag.&lt;file path&gt;.counter</pre>
-</li>
-
-                            <li class="li">Pending Files - The number of files in the directory that still need
-                                to be read. This metric displays in external tools as
-                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.pending.files.&lt;file path&gt;.counter</pre>
-</li>
-
-                        </ul>
-</dd>
-
-                
-                
-                    <dt class="dt dlterm">Local FS destination</dt>
-
-                    <dd class="dd">In addition to the standard metrics available for origins, LocalFS provides
-                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
-                            <li class="li">Late Records meter and counter - The number of late records written
-                                to the destination system. The counter displays in external tools as
-                                    follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.&lt;counter | metric&gt;</pre>
-</li>
-
-                        </ul>
-</dd>
-
-                
-            </dl>
 </div>
 
  </div>

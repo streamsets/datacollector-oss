@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bkc_m24_4v">
+ <title>Define the Operation Header Attribute</title>
+ <shortdesc>To write to MongoDB, you need to define the MongoDB operation header attribute for each
+        record. Use an Expression Evaluator in the pipeline to define the operation header
+        attribute.</shortdesc>
+ <conbody>
+  <p>Use the following header to define the operation to perform:
+            <codeblock>SDC.MONGODB.OPERATION</codeblock></p>
+        <p>For each record, set the operation to one of the following values:<ul id="ul_p2k_cf4_4v">
+                <li>INSERT</li>
+                <li>UPSERT</li>
+                <li>DELETE</li>
+            </ul></p>
+        <p>For example, the following Expression Evaluator sets the MongoDB operation header
+            attribute to UPSERT, so the destination system updates or inserts every record:</p>
+        <p><image href="../Graphics/MongoDBDest-EEval.png" id="image_d4b_qs4_4v" scale="70"/></p>
+        <p>You can alternatively use an expression that defines the operation for each record.</p>
+ </conbody>
+</concept>

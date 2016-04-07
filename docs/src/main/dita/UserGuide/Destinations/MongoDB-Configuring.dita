@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_mrc_k5n_4v">
+    <title>Configuring a MongoDB Destination</title>
+    <shortdesc>Configure a MongoDB destination to write to MongoDB.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>MongoDB</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_x4n_hwn_4v">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MongoDB Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Connection String </entry>
+                                    <entry>MongoDB connection string. You can include any valid
+                                        MongoDB component in the connection string. <p>For more
+                                            information, see the MongoDB documentation.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Database</entry>
+                                    <entry>MongoDB database name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Collection</entry>
+                                    <entry>MongoDB collection name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Unique Key Field</entry>
+                                    <entry>Field in the record to be used to upsert or delete
+                                        records. When not set, upsert records are sent to stage for
+                                        error handling.</entry>
+                                </row>
+                                <row>
+                                    <entry>Write Concern</entry>
+                                    <entry>The acknowledgement level requested from the destination
+                                        system. <p>For information about the write concern levels,
+                                            see the MongoDB documentation.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

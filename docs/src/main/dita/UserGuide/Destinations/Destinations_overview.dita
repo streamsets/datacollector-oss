@@ -34,6 +34,7 @@
         <li>Kinesis Producer - Writes data to Kinesis Streams.</li>
         <li>Kudu - Writes data to Kudu.</li>
         <li>Local FS - Writes data to a local file system. </li>
+        <li>MongoDB - Writes data to MongoDB.</li>
         <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
         <li>MapR FS - Writes data to MapR FS.</li>
         <li>MapR Streams Producer - Writes data to MapR Streams.</li>

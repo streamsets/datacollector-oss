@@ -79,17 +79,15 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Storage Type</entry>
+                                    <entry>External Consistency</entry>
                                     <entry>External consistency mode used to write to Kudu:<ul
                                             id="ul_hrm_wsh_4v">
-                                            <li>Client Propagated - Uses the Kudu client-propagated
-                                                consistency mode, which writes data to the cluster
-                                                with a single client. Ensures that data is
-                                                externally consistent.</li>
-                                            <li>Commit Wait - Uses the Kudu experimental commit-wait
-                                                consistency mode to autogenerate synchronized
-                                                timestamps across the cluster in an attempt to
-                                                ensure external consistency.</li>
+                                            <li>Client Propagated - Ensures that writes from a
+                                                single client are automatically externally
+                                                consistent. </li>
+                                            <li>Commit Wait - An experimental external consistency
+                                                model that tightly synchronizes the clocks on all
+                                                machines in the cluster.</li>
                                         </ul><p>For more information, see the Kudu
                                             documentation.</p></entry>
                                 </row>
