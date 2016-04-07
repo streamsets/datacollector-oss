@@ -1,6 +1,5 @@
 
 // Auto generated index for searching.
-w["post"]="95*7,96*6,97*2,98*0";
 w["post-processing"]="95*2,96*3";
 w["postgres"]="55*0";
 w["potentially"]="87*0";
@@ -358,6 +357,7 @@ w["rit"]="26*0";
 w["rite"]="60*0";
 w["rn"]="95*0";
 w["robin"]="56*1,62*1,65*0,113*1,170*0";
+w["rol"]="85*0";
 w["role"]="48*2,83*16,85*3,86*11,108*2,114*0,184*0";
 w["rolebasedn"]="83*1";
 w["rolememberattribute"]="83*1";

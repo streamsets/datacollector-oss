@@ -53,15 +53,15 @@
                                 </row>
                                 <row>
                                     <entry>Unique Key Field</entry>
-                                    <entry>Field in the record to be used to upsert or delete
-                                        records. When not set, upsert records are sent to stage for
-                                        error handling.</entry>
+                                    <entry>Field in the record to be used to upsert records. When
+                                        not set, upsert records are sent to stage for error
+                                        handling.</entry>
                                 </row>
                                 <row>
                                     <entry>Write Concern</entry>
                                     <entry>The acknowledgement level requested from the destination
-                                        system. <p>For information about the write concern levels,
-                                            see the MongoDB documentation.</p></entry>
+                                        system. <p>For details about write concern levels, see the
+                                            MongoDB documentation.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
