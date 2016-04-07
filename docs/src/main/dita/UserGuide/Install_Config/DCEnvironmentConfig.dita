@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rng_qym_qr">
- <title>Data Collector Environment Variables</title>
+ <title>Data Collector Environment Configuration</title>
  <conbody>
     <p><indexterm>Data Collector
         environment<indexterm>configuring</indexterm></indexterm><indexterm>sdc-env.sh
@@ -32,23 +32,25 @@
           service.</li>
       </ul>
     </p>
-   <p>Use a text editor to edit the appropriate environment configuration file. Some of the
+    <p>Use a text editor to edit the appropriate environment configuration file. Some of the
       environment variables in the <codeph>sdc-env.sh</codeph> file are commented out and do not
       reflect the default values. Be sure to uncomment the line when you change a variable
       value.</p>
     <p>After you edit the file, restart <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to enable
       the changes. </p>
-        <p>You can modify the environment variables in the file to customize the following areas:<ul
-        id="ul_ulw_sjr_3v">
+    <p>Modify the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      environment configuration files to customize the following areas:<ul id="ul_ulw_sjr_3v">
         <li><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           directories</li>
         <li>User and group used to start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
           service</li>
         <li>Java configuration options</li>
+        <li>Java Security Manager that restricts the runtime permissions of user libraries</li>
         <li>Path to jar files to be added to the root classloader</li>
-      </ul>
-    </p>
+      </ul></p>
+    <p> </p>
   </conbody>
 </concept>
