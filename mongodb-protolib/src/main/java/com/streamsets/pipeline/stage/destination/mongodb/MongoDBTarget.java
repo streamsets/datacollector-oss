@@ -153,7 +153,6 @@ public class MongoDBTarget extends BaseTarget {
             );
             break;
           case DELETE:
-            validateUniqueKey(operation, record);
             recordList.add(record);
             documentList.add(new DeleteOneModel<Document>(document));
             break;

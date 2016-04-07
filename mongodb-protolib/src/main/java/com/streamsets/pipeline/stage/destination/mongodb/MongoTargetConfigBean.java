@@ -56,7 +56,7 @@ public class MongoTargetConfigBean {
   @ConfigDef(
     type = ConfigDef.Type.STRING,
     label = "Unique Key Field",
-    description = "Unique key field is required for upserts and deletes and optional for inserts",
+    description = "Unique key field is required for upserts and optional for inserts and deletes",
     required = false,
     group = "MONGODB",
     displayPosition = 40
