@@ -21,10 +21,8 @@
                 <dlentry>
                     <dt>A pipeline fails to start with the following validation error:</dt>
                     <dd>
-                        <codeblock>IPC_DEST_15 Could not connect to any IPC destination : [&lt;host name>: 
+                        <codeblock>IPC_DEST_15 Could not connect to any SDC RPC destination : [&lt;host name>: 
 java.net.ConnectException: Connection refused]</codeblock>
-                        <draft-comment author="Loretta">update error message after SDC-1889
-                            fixed.</draft-comment>
                     </dd>
                     <dd>You configured the pipeline to write error records to a pipeline, but the
                         configuration information for the error records pipeline is invalid. </dd>
