@@ -88,6 +88,7 @@ public class RemoteDataCollector implements DataCollector {
   public void delete(String name, String rev) throws PipelineException {
     validateIfRemote(name, rev, "DELETE");
     pipelineStore.delete(name);
+    pipelineStore.deleteRules(name);
   }
 
   @Override
