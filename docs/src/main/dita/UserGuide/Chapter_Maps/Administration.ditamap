@@ -41,6 +41,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Administration/Restarting.dita"/>
   <topicref href="../Administration/RESTResponse.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

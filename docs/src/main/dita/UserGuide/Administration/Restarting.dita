@@ -3,41 +3,40 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
+  
       http://www.apache.org/licenses/LICENSE-2.0
-
+      
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
-<task id="task_uvg_bjk_br">
-    <title>Shutting Down Data Collector</title>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_pjr_5h4_4v">
+    <title>Restarting Data Collector</title>
     <taskbody>
-        <context><indexterm>Data Collector<indexterm>shutting down</indexterm></indexterm>You can
-            shut down and then manually launch <ph
+        <context><indexterm>Data Collector<indexterm>restarting</indexterm></indexterm>You can
+            restart <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             apply changes to the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file, environment configuration file, or user logins.<p>To use the command
-                line for shut down, use the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> process ID in the following
-                command:<codeblock>kill -3 &lt;process ID></codeblock></p><p>To use the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> console for shut down:</p></context>
-        <steps id="steps_hqp_kjk_br">
+            configuration file, environment configuration file, or user logins. During the restart
+            process, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            shuts down and then automatically restarts.</context>
+        <steps>
             <step>
                 <cmd>Click <menucascade>
                         <uicontrol>Administration</uicontrol>
-                        <uicontrol>Shut Down</uicontrol>
+                        <uicontrol>Restart</uicontrol>
                     </menucascade>.</cmd>
             </step>
             <step>
                 <cmd>When a confirmation dialog box appears, click <uicontrol>Yes</uicontrol>.
                 </cmd>
+                <info> The restart process can take a few moments to complete. Refresh the browser
+                    to log in again.</info>
             </step>
         </steps>
     </taskbody>
