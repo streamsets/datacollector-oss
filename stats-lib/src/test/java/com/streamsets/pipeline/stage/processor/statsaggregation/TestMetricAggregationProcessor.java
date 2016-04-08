@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -400,7 +401,7 @@ public class TestMetricAggregationProcessor {
       Resources.getResource("testMetricAggregation.json"),
       Charset.defaultCharset()
     );
-    return new MetricAggregationProcessor(pipelineConfigJson, null, "myUrl", null, null, null);
+    return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null, "myUrl", null, null, null);
   }
 
   private Record createTestMetricRecord() {

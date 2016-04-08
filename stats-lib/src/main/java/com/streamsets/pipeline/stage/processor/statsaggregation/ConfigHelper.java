@@ -23,6 +23,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.pipeline.api.Stage;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +38,7 @@ public class ConfigHelper {
     if (ruleDefJson != null) {
       try {
         ruleDefJson = ObjectMapperFactory.get().readValue(
-          ruleDefinitionsJson,
+          new String(Base64.decodeBase64(ruleDefinitionsJson)),
           RuleDefinitionsJson.class
         );
       } catch (IOException ex) {
@@ -62,7 +63,7 @@ public class ConfigHelper {
     PipelineConfigurationJson pipelineConfigurationJson = null;
     try {
       pipelineConfigurationJson = ObjectMapperFactory.get().readValue(
-        pipelineConfigJson,
+        new String(Base64.decodeBase64(pipelineConfigJson)),
         PipelineConfigurationJson.class
       );
     } catch (IOException ex) {
