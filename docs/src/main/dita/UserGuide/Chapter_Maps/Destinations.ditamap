@@ -68,6 +68,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/HBase-FieldMappings.dita"/>
    <topicref href="../Destinations/HBase-Kerberos.dita"/>
    <topicref href="../Destinations/HBase-HBaseUser.dita"/>
    <topicref href="../Destinations/HBase-HBaseProperties.dita"/>

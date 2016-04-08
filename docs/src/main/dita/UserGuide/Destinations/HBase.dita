@@ -23,7 +23,7 @@
                destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>HBase</indexterm></indexterm>When
          you configure the HBase destination, you specify the HBase configuration properties,
          including the ZooKeeper Quorum, parent znode, and table name. You specify the row key for
-         the table, and then map fields from the pipeline to HBase columns. </p>
+         the table, and then map fields from the pipeline to HBase columns.</p>
       <p>When necessary, you can enable Kerberos authentication and add additional HBase
          configuration properties.</p>
    </conbody>
