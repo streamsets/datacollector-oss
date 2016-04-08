@@ -108,6 +108,7 @@ public class MessagingJsonToFromDto {
       case RESET_OFFSET_PIPELINE:
       case DELETE_HISTORY_PIPELINE:
       case DELETE_PIPELINE:
+      case STOP_DELETE_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
         break;
       default:
@@ -180,7 +181,8 @@ public class MessagingJsonToFromDto {
       case START_PIPELINE:
       case STOP_PIPELINE:
       case VALIDATE_PIPELINE:
-      case RESET_OFFSET_PIPELINE: {
+      case RESET_OFFSET_PIPELINE:
+      case STOP_DELETE_PIPELINE: {
         TypeReference<PipelineBaseEventJson> typeRef = new TypeReference<PipelineBaseEventJson>() {
         };
         PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);

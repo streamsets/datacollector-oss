@@ -89,6 +89,7 @@ public class TestRemoteEventHandler {
   private static final UUID id4 = UUID.randomUUID();
   private static final UUID id5 = UUID.randomUUID();
   private static final UUID id6 = UUID.randomUUID();
+  private static final UUID id7 = UUID.randomUUID();
 
   private static final long PING_FREQUENCY = 10;
   private static final MessagingJsonToFromDto jsonDto = MessagingJsonToFromDto.INSTANCE;
@@ -116,6 +117,7 @@ public class TestRemoteEventHandler {
         ServerEventJson serverEventJson4 = new ServerEventJson();
         ServerEventJson serverEventJson5 = new ServerEventJson();
         ServerEventJson serverEventJson6 = new ServerEventJson();
+        ServerEventJson serverEventJson7 = new ServerEventJson();
         setServerEvent(serverEventJson1, id1.toString(), EventType.START_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
         setServerEvent(serverEventJson2, id2.toString(), EventType.STOP_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
         setServerEvent(serverEventJson3, id3.toString(), EventType.DELETE_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
@@ -124,8 +126,10 @@ public class TestRemoteEventHandler {
         setServerEvent(serverEventJson5, id5.toString(), EventType.VALIDATE_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
         setServerEvent(serverEventJson6, id6.toString(), EventType.RESET_OFFSET_PIPELINE, false, true,
           jsonDto.serialize(pipelineBaseEventJson));
+        setServerEvent(serverEventJson7, id7.toString(), EventType.STOP_DELETE_PIPELINE, false, true, jsonDto.serialize(pipelineBaseEventJson));
+
         serverEventJsonList.addAll(Arrays.asList(serverEventJson1, serverEventJson2, serverEventJson3, serverEventJson4, serverEventJson5,
-          serverEventJson6));
+          serverEventJson6, serverEventJson7));
 
       } catch (JsonProcessingException e) {
         throw new EventException("Cannot create event for test case" + e.getMessage());
@@ -234,6 +238,7 @@ public class TestRemoteEventHandler {
     public boolean getPipelinesCalled;
     public boolean errorInjection;
     public boolean putDummyPipelineStatus;
+    public boolean stopDeletePipelineCalled;
 
     @Override
     public void start(String user, String name, String rev) throws PipelineException, StageException {
@@ -295,6 +300,11 @@ public class TestRemoteEventHandler {
       }
       return list;
     }
+
+    @Override
+    public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
+      stopDeletePipelineCalled = true;
+    }
   }
 
   @Test
@@ -308,7 +318,7 @@ public class TestRemoteEventHandler {
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(6, ackEventList.size());
+    assertEquals(7, ackEventList.size());
     assertEquals(id1.toString(), ackEventList.get(0).getEventId());
     assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
     AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();
@@ -339,8 +349,14 @@ public class TestRemoteEventHandler {
     ackEvent = (AckEvent)ackEventList.get(5).getEvent();
     assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
 
+    assertEquals(id7.toString(), ackEventList.get(6).getEventId());
+    assertTrue(ackEventList.get(6).getEvent() instanceof AckEvent);
+    ackEvent = (AckEvent)ackEventList.get(6).getEvent();
+    assertEquals(AckEventStatus.SUCCESS, ackEvent.getAckEventStatus());
+
     assertEquals(1, mockRemoteDataCollector.startCalled);
     assertTrue(mockRemoteDataCollector.stopCalled);
+    assertTrue(mockRemoteDataCollector.stopDeletePipelineCalled);
     assertTrue(mockRemoteDataCollector.resetOffsetCalled);
     assertTrue(mockRemoteDataCollector.validateConfigsCalled);
     assertTrue(mockRemoteDataCollector.deleteCalled);
@@ -382,7 +398,7 @@ public class TestRemoteEventHandler {
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
-    assertEquals(6, ackEventList.size());
+    assertEquals(7, ackEventList.size());
     assertEquals(id1.toString(), ackEventList.get(0).getEventId());
     assertTrue(ackEventList.get(0).getEvent() instanceof AckEvent);
     AckEvent ackEvent = (AckEvent)ackEventList.get(0).getEvent();

@@ -38,6 +38,8 @@ import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -58,11 +60,13 @@ public class RemoteDataCollector implements DataCollector {
   private final Manager manager;
   private final PipelineStoreTask pipelineStore;
   private final List<String> validatorIdList;
+  private final PipelineStateStore pipelineStateStore;
 
   @Inject
-  public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore) {
+  public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
+    this.pipelineStateStore = pipelineStateStore;
     this.validatorIdList = new ArrayList<String>();
   }
 
@@ -152,6 +156,30 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
+  public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
+    validateIfRemote(name, rev, "STOP_AND_DELETE");
+    manager.getRunner(user, name, rev).stop();
+    PipelineState pipelineState = pipelineStateStore.getState(name, rev);
+    long now = System.currentTimeMillis();
+    // wait for 10 secs for a graceful stop
+    while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < 10000) {
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        throw new IllegalStateException("Interrupted while waiting for pipeline to stop " + e, e);
+      }
+      pipelineState = pipelineStateStore.getState(name, rev);
+    }
+    // If still active, force stop of this pipeline as we are deleting this anyways
+    if (pipelineState.getStatus().isActive()) {
+      pipelineStateStore.saveState(user, name, rev, PipelineStatus.STOPPED,
+        "Stopping pipeline forcefully as we are performing a delete afterwards", pipelineState.getAttributes(), pipelineState.getExecutionMode(),
+        pipelineState.getMetrics(), pipelineState.getRetryAttempt(), pipelineState.getNextRetryTimeStamp());
+    }
+    delete(name, rev);
+  }
+
+  @Override
   public Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException {
     List<PipelineState> pipelineStates = manager.getPipelines();
     Map<String, PipelineAndValidationStatus> pipelineStatusMap = new HashMap<String, PipelineAndValidationStatus>();
@@ -233,5 +261,6 @@ public class RemoteDataCollector implements DataCollector {
   List<String> getValidatorList() {
     return validatorIdList;
   }
+
 }
 

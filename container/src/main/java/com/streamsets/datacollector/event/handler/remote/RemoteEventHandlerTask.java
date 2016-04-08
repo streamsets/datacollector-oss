@@ -302,6 +302,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             PipelineBaseEvent pipelineDeleteEvent = (PipelineBaseEvent) event;
             remoteDataCollector.delete(pipelineDeleteEvent.getName(), pipelineDeleteEvent.getRev());
             break;
+          case STOP_DELETE_PIPELINE:
+            PipelineBaseEvent pipelineStopDeleteEvent = (PipelineBaseEvent) event;
+            remoteDataCollector.stopAndDelete(pipelineStopDeleteEvent.getUser(), pipelineStopDeleteEvent.getName(),
+              pipelineStopDeleteEvent.getRev());
+            break;
           default:
             ackEventMessage = Utils.format("Unrecognized event: '{}'", eventType);
             LOG.warn(ackEventMessage);

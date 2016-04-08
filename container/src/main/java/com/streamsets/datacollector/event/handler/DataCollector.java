@@ -51,6 +51,8 @@ public interface DataCollector {
 
   void validateConfigs(String user, String name, String rev) throws PipelineException;
 
+  void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException;
+
   Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException;
 
 }

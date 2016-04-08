@@ -33,6 +33,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.junit.Test;
 
+import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
@@ -40,15 +41,21 @@ import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationSt
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.Snapshot;
+import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
+import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -58,6 +65,9 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 public class TestRemoteDataCollector {
 
@@ -115,8 +125,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public Runner getRunner(String user, String name, String rev) throws PipelineStoreException, PipelineManagerException {
-      // TODO Auto-generated method stub
-      return null;
+      return new MockRunner();
     }
 
     @Override
@@ -160,8 +169,193 @@ public class TestRemoteDataCollector {
 
     @Override
     public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
-      return (name.contains(":") ? true: false);
+      return (name.contains(":") ? true : false);
     }
+  }
+
+  private static class MockRunner implements Runner {
+
+    public static int stopCalled;
+
+    @Override
+    public String getName() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public String getRev() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public String getUser() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void resetOffset() throws PipelineStoreException, PipelineRunnerException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public PipelineState getState() throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onDataCollectorStart() throws PipelineException, StageException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void stop() throws PipelineException {
+      stopCalled++;
+    }
+
+    @Override
+    public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize) throws PipelineException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public String updateSnapshotLabel(String snapshotName, String snapshotLabel) throws PipelineException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public Snapshot getSnapshot(String id) throws PipelineException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public List<SnapshotInfo> getSnapshotsInfo() throws PipelineException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void deleteSnapshot(String id) throws PipelineException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public List<PipelineState> getHistory() throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void deleteHistory() {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Object getMetrics() throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public List<AlertInfo> getAlerts() throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    public Collection<CallbackInfo> getSlaveCallbackList() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void close() {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Map getUpdateInfo() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public String getToken() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
   }
 
   private static class MockPreviewer implements Previewer {
@@ -212,7 +406,8 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void start(int batches,
+    public void start(
+      int batches,
       int batchSize,
       boolean skipTargets,
       String stopStage,
@@ -253,7 +448,79 @@ public class TestRemoteDataCollector {
     }
   }
 
+  private static class MockPipelineStateStore implements PipelineStateStore {
+
+    public static int getStateCalled;
+
+    @Override
+    public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote)
+      throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void delete(String name, String rev) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public PipelineState saveState(
+      String user,
+      String name,
+      String rev,
+      PipelineStatus status,
+      String message,
+      Map<String, Object> attributes,
+      ExecutionMode executionMode,
+      String metrics,
+      int retryAttempt,
+      long nextRetryTimeStamp) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public PipelineState getState(String name, String rev) throws PipelineStoreException {
+      if (getStateCalled == 1) {
+        getStateCalled++;
+        return new PipelineStateImpl("user", name, rev, PipelineStatus.STOPPED, null, -1, null, null, null, -1, -1);
+      } else {
+        getStateCalled++;
+        return new PipelineStateImpl("user", name, rev, PipelineStatus.RUNNING, null, -1, null, null, null, -1, -1);
+      }
+    }
+
+    @Override
+    public List<PipelineState> getHistory(String name, String rev, boolean fromBeginning) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void deleteHistory(String name, String rev) {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void init() {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void destroy() {
+      // TODO Auto-generated method stub
+    }
+
+  }
+
   private static class MockPipelineStoreTask implements PipelineStoreTask {
+
+    public static int deleteCalled;
+    public static int deleteRulesCalled;
 
     @Override
     public String getName() {
@@ -299,8 +566,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public void delete(String name) throws PipelineStoreException {
-      // TODO Auto-generated method stub
-
+      deleteCalled++;
     }
 
     @Override
@@ -340,15 +606,14 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
-      throws PipelineStoreException {
+    public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
 
     @Override
     public boolean deleteRules(String name) throws PipelineStoreException {
-      // TODO Auto-generated method stub
+      deleteRulesCalled++;
       return false;
     }
 
@@ -359,12 +624,8 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public PipelineConfiguration save(
-      String user,
-      String name,
-      String tag,
-      String tagDescription,
-      PipelineConfiguration pipeline) throws PipelineStoreException {
+    public PipelineConfiguration save(String user, String name, String tag, String tagDescription, PipelineConfiguration pipeline)
+      throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -380,7 +641,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testValidateConfigs() throws Exception {
     try {
-      RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask());
+      RemoteDataCollector dataCollector =
+        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
       assertEquals(2, MockPreviewer.validateConfigsCalled);
@@ -392,9 +654,28 @@ public class TestRemoteDataCollector {
   }
 
   @Test
+  public void testStopAndDelete() throws Exception {
+    try {
+      RemoteDataCollector dataCollector =
+        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
+      dataCollector.stopAndDelete("user", "ns:name", "rev");
+      assertEquals(1, MockRunner.stopCalled);
+      assertEquals(1, MockPipelineStoreTask.deleteCalled);
+      assertEquals(1, MockPipelineStoreTask.deleteRulesCalled);
+      assertEquals(2, MockPipelineStateStore.getStateCalled);
+    } finally {
+      MockRunner.stopCalled = 0;
+      MockPipelineStateStore.getStateCalled = 0;
+      MockPipelineStoreTask.deleteCalled = 0;
+      MockPipelineStoreTask.deleteRulesCalled = 0;
+    }
+  }
+
+  @Test
   public void testGetPipelineStatus() throws Exception {
     try {
-      RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask());
+      RemoteDataCollector dataCollector =
+        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
       Collection<PipelineAndValidationStatus> collectionPipelines = dataCollector.getPipelines();
