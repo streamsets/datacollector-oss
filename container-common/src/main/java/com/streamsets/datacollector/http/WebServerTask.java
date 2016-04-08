@@ -21,6 +21,7 @@ package com.streamsets.datacollector.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -363,7 +364,14 @@ public class WebServerTask extends AbstractTask {
   }
 
   private ConstraintSecurityHandler configureSSO(ServletContextHandler appHandler, String appContext) {
-    validateApplicationToken();
+    addToPostStart(new Runnable() {
+      @Override
+      public void run() {
+        LOG.debug("Validating Application Token with Remote Service");
+        validateApplicationToken();
+      }
+    });
+
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     final SSOService ssoService = new ProxySSOService(new RemoteSSOService());
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
@@ -676,9 +684,10 @@ public class WebServerTask extends AbstractTask {
       String securityServiceBaseURL = conf.get(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG,
           RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT);
       String registrationURI = securityServiceBaseURL + "/public-rest/v1/components/registration";
-      Map<String, String> registrationData = new HashMap<>();
+      Map<String, Object> registrationData = new HashMap<>();
       registrationData.put("authToken", applicationToken);
       registrationData.put("componentId", this.runtimeInfo.getId());
+      registrationData.put("attributes", ImmutableMap.of("baseHttpUrl", this.runtimeInfo.getBaseHttpUrl()));
       Response response = ClientBuilder.newClient()
           .target(registrationURI)
           .register(new CsrfProtectionFilter("CSRF"))
