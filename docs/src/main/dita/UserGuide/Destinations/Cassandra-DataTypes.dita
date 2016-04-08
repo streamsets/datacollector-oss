@@ -20,10 +20,7 @@
     earlier in the pipeline to convert data types. </shortdesc>
  <conbody>
   <p>For details about the conversion of Java data types to Cassandra data types, see the Cassandra
-      documentation: <xref
-        href="http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/javaClass2Cql3Datatypes_r.html"
-        format="html" scope="external"
-        >http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/javaClass2Cql3Datatypes_r.html</xref>. </p>
+      documentation. </p>
   <p>The Cassandra destination supports the following Cassandra data types:<ul id="ul_qjk_2t3_ms">
     <li>ASCII</li>
     <li>Bigint</li>

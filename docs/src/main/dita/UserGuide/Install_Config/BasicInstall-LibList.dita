@@ -45,10 +45,15 @@
                                     Kafka Producer.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-apache-kudu-0_7-lib</entry>
+                            <entry>For Kudu version 0.7.1.<p>Includes the Kudu
+                                destination.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-aws-lib </entry>
                             <entry>For Amazon Web Services 1.10.20. <p>Includes the Amazon S3 origin
-                                    and destination, the Kinesis Consumer and Kinesis
-                                Producer.</p></entry>
+                                    and destination, the Kinesis Consumer, the Kinesis Firehose
+                                    destination, and the Kinesis Producer.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
