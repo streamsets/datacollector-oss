@@ -42,7 +42,7 @@
       <p class="p">When
          you configure the HBase destination, you specify the HBase configuration properties,
          including the ZooKeeper Quorum, parent znode, and table name. You specify the row key for
-         the table, and then map fields from the pipeline to HBase columns. </p>
+         the table, and then map fields from the pipeline to HBase columns.</p>
 
       <p class="p">When necessary, you can enable Kerberos authentication and add additional HBase
          configuration properties.</p>
@@ -50,6 +50,63 @@
    </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_vn5_cr5_4v">
+ <h2 class="title topictitle2">Field Mappings</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you configure the HBase destination, you map fields from records to HBase
+        columns.</p>
+
+  <p class="p">You can map fields
+            to columns in the following ways:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Explicit field mappings</dt>
+
+                <dd class="dd">By default, the HBase destination uses explicit field mappings. You select the
+                    fields from records to map to HBase columns. Specify the HBase columns using the
+                    following format: <samp class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</samp>. You then
+                    define the storage type for the column in HBase. </dd>
+
+                <dd class="dd">When you use explicit field mappings, you can configure the destination to
+                    ignore missing field paths. If the destination encounters a mapped field path
+                    that doesn’t exist in the record, the destination does not send the record to
+                    the pipeline for error handling. </dd>
+
+            
+            
+                <dt class="dt dlterm">Implicit field mappings</dt>
+
+                <dd class="dd">When you configure the HBase destination to use implicit field mappings, the
+                    destination writes data based on the matching field names. Use implicit field
+                    mappings when the field paths use the following
+                    format:<pre class="pre codeblock">&lt;column-family&gt;:&lt;qualifier&gt;</pre>
+</dd>
+
+                <dd class="dd">For example, if a field path is 'cf:a', the destination can implicitly map the
+                    field to the HBase table with the column family 'cf' and the qualifier 'a'. </dd>
+
+                <dd class="dd">When you use implicit field mappings, you can configure the destination to
+                    ignore invalid columns. If the destination encounters a field path that cannot
+                    be mapped to a valid HBase column, the destination does not send the record to
+                    the pipeline for error handling. </dd>
+
+            
+        </dl>
+
+            <p class="p">You can configure the destination to use implicit field mappings and then you can
+            override the mappings by defining explicit mappings for specific fields. For example, a
+            record might contain some field paths that use the
+                <samp class="ph codeph">&lt;column-family&gt;:&lt;qualifier&gt;</samp> format and other field paths that
+            don’t use the required format. You can add explicit field mappings for the field paths
+            that do not use the required format. Or, a field path might use the required format, but
+            you want to write the data to a different column. You can add an explicit field mapping
+            to override the column that the data is written to.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_xy5_4tm_vs">
  <h2 class="title topictitle2">Kerberos Authentication</h2>
 
@@ -168,9 +225,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d28825e250">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d28821e324">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d28825e253">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d28821e327">Description</th>
 
                                 </tr>
 
@@ -178,31 +235,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_pyq_qx5_vr__d1649e2613" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -210,10 +267,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_pyq_qx5_vr__d1649e2627" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -221,9 +278,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28825e250 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d28821e324 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28825e253 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d1649e2644">
+                                    <td class="entry" valign="top" width="70%" headers="d28821e327 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d1649e2644">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -252,9 +309,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d28825e372">HBase Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d28821e446">HBase Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d28825e375">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d28821e449">Description</th>
 
                                 </tr>
 
@@ -262,9 +319,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">ZooKeeper Quorum</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">ZooKeeper Quorum</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Comma-separated list of servers in the ZooKeeper quorum.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Comma-separated list of servers in the ZooKeeper quorum.
                                         Use the following format:
                                             <pre class="pre codeblock">&lt;host&gt;.&lt;domain&gt;.com</pre>
 <p class="p">To
@@ -275,25 +332,25 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">ZooKeeper Client Port</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">ZooKeeper Client Port</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Port number clients use to connect to the ZooKeeper
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Port number clients use to connect to the ZooKeeper
                                         servers. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">ZooKeeper Parent Znode</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">ZooKeeper Parent Znode</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Root node that contains all znodes used by the HBase
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Root node that contains all znodes used by the HBase
                                         cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">Table Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Name of the HBase table to use. Enter a table name or a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Name of the HBase table to use. Enter a table name or a
                                         namespace and table name as follows:
                                         &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
                                             table name, HBase uses the default namespace.
@@ -303,37 +360,76 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">Row Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Row Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Row key for the table. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Row key for the table. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">Storage Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Storage Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Storage type of the row key. Choose
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Storage type of the row key. Choose
                                             <span class="ph uicontrol">Text</span> or
                                             <span class="ph uicontrol">Binary</span>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">Fields</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Fields
+                                        <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                            <img class="image" id="task_pyq_qx5_vr__image_a3h_bfn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Map fields from records to HBase columns, and then define
-                                        the storage type for the column in HBase.<p class="p">Use the
-                                                <span class="ph uicontrol">Add</span> icon to create additional
-                                            field mappings. </p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Explicitly map fields from records to HBase columns, and
+                                        then define the storage type for the column in HBase. <p class="p">Use
+                                            the <span class="ph uicontrol">Add</span> icon to create additional
+                                            explicit field mappings. </p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Ignore Missing Field Path</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Ignores missing field paths. Used when you define
+                                        explicit field mappings.<p class="p">If the destination encounters a
+                                            mapped field path that doesn’t exist in the record, the
+                                            destination does not send the record to the pipeline for
+                                            error handling. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Implicit Field Mapping
+                                        <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                            <img class="image" id="task_pyq_qx5_vr__image_a7z_jfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Uses implicit field mappings so that the destination
+                                        writes data to HBase columns based on the matching field
+                                        names. The field paths must use the following
+                                        format:<pre class="pre codeblock">&lt;column-family&gt;:&lt;qualifier&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Ignore Invalid Column</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Ignores invalid columns. Used when you configure implicit
+                                        field mappings.<p class="p">If the destination encounters a field path
+                                            that cannot be mapped to a valid HBase column, the
+                                            destination does not send the record to the pipeline for
+                                            error handling. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HBase.">
                                             <img class="image" id="task_pyq_qx5_vr__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </p>
@@ -342,10 +438,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls" title="You can configure the destination to use an HBase user to write data to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls" title="You can configure the destination to use an HBase user to write data to HBase.">
                                             <img class="image" id="task_pyq_qx5_vr__image_ytm_zzx_kt" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">The HBase user to use to connect to HBase. When using
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">The HBase user to use to connect to HBase. When using
                                         this property, make sure HBase is configured
                                             appropriately.<p class="p">By default, the pipeline uses the Data
                                             Collector user to connect to HBase.</p>
@@ -354,10 +450,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
                                             <img class="image" id="task_pyq_qx5_vr__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">Location of the HDFS configuration files. Use a directory
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">Location of the HDFS configuration files. Use a directory
                                         or symlink within the <span class="ph">Data
                   Collector</span> resources directory.<div class="p">You can use the following file
                                             with the HBase destination:<ul class="ul" id="task_pyq_qx5_vr__ul_ezj_cvr_bt">
@@ -373,9 +469,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28825e372 ">HBase Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d28821e446 ">HBase Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28825e375 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d28821e449 ">
                                         <p class="p">Additional HBase configuration properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and

@@ -74,11 +74,44 @@
                                             <uicontrol>Binary</uicontrol>.</entry>
                                 </row>
                                 <row>
-                                    <entry>Fields</entry>
-                                    <entry>Map fields from records to HBase columns, and then define
-                                        the storage type for the column in HBase.<p>Use the
-                                                <uicontrol>Add</uicontrol> icon to create additional
-                                            field mappings. </p></entry>
+                                    <entry>Fields
+                                        <xref
+                                            href="HBase-FieldMappings.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a3h_bfn_vs"
+                                            /></xref></entry>
+                                    <entry>Explicitly map fields from records to HBase columns, and
+                                        then define the storage type for the column in HBase. <p>Use
+                                            the <uicontrol>Add</uicontrol> icon to create additional
+                                            explicit field mappings. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Ignore Missing Field Path</entry>
+                                    <entry>Ignores missing field paths. Used when you define
+                                        explicit field mappings.<p>If the destination encounters a
+                                            mapped field path that doesn’t exist in the record, the
+                                            destination does not send the record to the pipeline for
+                                            error handling. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Implicit Field Mapping
+                                        <xref
+                                            href="HBase-FieldMappings.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a7z_jfn_ws"
+                                            /></xref></entry>
+                                    <entry>Uses implicit field mappings so that the destination
+                                        writes data to HBase columns based on the matching field
+                                        names. The field paths must use the following
+                                        format:<codeblock>&lt;column-family>:&lt;qualifier></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Ignore Invalid Column</entry>
+                                    <entry>Ignores invalid columns. Used when you configure implicit
+                                        field mappings.<p>If the destination encounters a field path
+                                            that cannot be mapped to a valid HBase column, the
+                                            destination does not send the record to the pipeline for
+                                            error handling. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication <xref
