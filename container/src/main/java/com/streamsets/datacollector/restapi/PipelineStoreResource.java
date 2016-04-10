@@ -389,6 +389,11 @@ public class PipelineStoreResource {
         fetchStageDefinition(errorStageConfig, stageDefinitions, stageIcons);
       }
 
+      StageConfiguration statsAggregatorStageConfig = pipelineConfig.getStatsAggregatorStage();
+      if (statsAggregatorStageConfig != null) {
+        fetchStageDefinition(statsAggregatorStageConfig, stageDefinitions, stageIcons);
+      }
+
       List<StageDefinitionJson> stages = new ArrayList<>();
       stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
       definitions.setStages(stages);
