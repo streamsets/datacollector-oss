@@ -97,7 +97,7 @@ public class AggregatedMetricsFetcher {
       .queryParam("pipelineVersion", pipelineVersion)
       .request()
       .header("X-Requested-By", MetricAggregationConstants.SDC)
-      .header("X-SS-App-Auth-Token", authToken)
+      .header("X-SS-App-Auth-Token", authToken.replaceAll("(\\r|\\n)", ""))
       .header("X-SS-App-Component-Id", appComponentId)
       .post(Entity.json(metricRegistryJson));
 
