@@ -109,7 +109,7 @@ public class HttpTarget extends BaseTarget {
     if (!sdcMetricsJsonList.isEmpty()) {
       Response response = target.request()
         .header(X_REQUESTED_BY, SDC)
-        .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken)
+        .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
         .header(X_SS_APP_COMPONENT_ID, sdcId)
         .post(
           Entity.json(
