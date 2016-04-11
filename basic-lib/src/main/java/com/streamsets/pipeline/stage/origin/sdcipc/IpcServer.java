@@ -42,6 +42,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings({"squid:S2095", "squid:S00112"})
 public class IpcServer {
   private static final Logger LOG = LoggerFactory.getLogger(IpcServer.class);
 
@@ -92,11 +93,11 @@ public class IpcServer {
     server.setConnectors(new Connector[]{connector});
 
     servlet = new IpcServlet(context, configs, queue);
-    ServletContextHandler context = new ServletContextHandler();
-    context.addServlet(new ServletHolder(new PingServlet()), Constants.PING_PATH);
-    context.addServlet(new ServletHolder(servlet), Constants.IPC_PATH);
-    context.setContextPath("/");
-    server.setHandler(context);
+    ServletContextHandler contextHandler = new ServletContextHandler();
+    contextHandler.addServlet(new ServletHolder(new PingServlet()), Constants.PING_PATH);
+    contextHandler.addServlet(new ServletHolder(servlet), Constants.IPC_PATH);
+    contextHandler.setContextPath("/");
+    server.setHandler(contextHandler);
     server.start();
 
     LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
@@ -110,7 +111,7 @@ public class IpcServer {
       try {
         servlet.setShuttingDown();
         try {
-          // wait up to 30secs for servlet ot finish POST request then continue with the shutdown
+          // wait up to 30secs for servlet to finish POST request then continue with the shutdown
           long start = System.currentTimeMillis();
           while (servlet.isInPost() && System.currentTimeMillis() - start < 30000) {
             Thread.sleep(50);
@@ -119,7 +120,7 @@ public class IpcServer {
             LOG.warn("Servlet not completing POST after 30secs, forcing a shutdown");
           }
         } catch (InterruptedException ex) {
-          //NOP
+          Thread.currentThread().interrupt();
         }
         httpServer.stop();
       } catch (Exception ex) {
@@ -135,6 +136,7 @@ public class IpcServer {
 
   public void cancelBatch() {
     LOG.debug("Cancel batch");
+    servlet.batchCancelled();
     synchronized (queue) {
       queue.notify();
     }

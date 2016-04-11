@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+@SuppressWarnings({"squid:S2226", "squid:S1989", "squid:S1948"})
 public class IpcServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(IpcServlet.class);
 
@@ -47,6 +48,7 @@ public class IpcServlet extends HttpServlet {
   private final int maxObjectLen;
   private final BlockingQueue<List<Record>> queue;
   private volatile boolean batchDone;
+  private volatile boolean batchCancelled;
   private volatile boolean shuttingDown;
   private volatile boolean inPost;
 
@@ -116,29 +118,31 @@ public class IpcServlet extends HttpServlet {
               }
               LOG.debug("Got '{}' records from '{}'", records.size(), req.getRemoteAddr());
               batchDone = false;
+              batchCancelled = false;
               queue.add(records);
               synchronized (queue) {
                 LOG.debug("Waiting for signal of batch completion");
-                queue.wait();
-              }
-              if (batchDone) {
-                LOG.debug("Batch done");
-                resp.setStatus(HttpServletResponse.SC_OK);
-              } else {
-                // there is a very small chance of this happening, when the pipeline is shutdown exactly after
-                // the servlet adds a batch of data to the queue and before the batch of data is gotten from the queue
-                // by the source
-                LOG.warn("Batch interrupted");
-                resp.setStatus(HttpServletResponse.SC_GONE);
+                while (!(batchDone || batchCancelled)) {
+                  queue.wait();
+                }
+                if (batchDone) {
+                  LOG.debug("Batch done");
+                  resp.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                  // Batch cancelled
+                  LOG.debug("Batch cancelled: {}", batchCancelled);
+                  resp.setStatus(HttpServletResponse.SC_GONE);
+                }
               }
             }
-          }catch(IOException ex){
+          } catch (IOException ex) {
             LOG.warn("Error while reading records: {}", ex.toString(), ex);
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.toString());
-          }catch(InterruptedException ex){
+          } catch (InterruptedException ex) {
             LOG.warn("Pipeline stopped while waiting for completion for batch from '{}'", req.getRemoteAddr());
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                           "Pipeline stopped while waiting for batch completion");
+                "Pipeline stopped while waiting for batch completion");
+            Thread.currentThread().interrupt();
           }
         }
       }
@@ -153,6 +157,10 @@ public class IpcServlet extends HttpServlet {
 
   public void batchDone() {
     batchDone = true;
+  }
+
+  public void batchCancelled() {
+    batchCancelled = true;
   }
 
   public boolean isInPost() {
