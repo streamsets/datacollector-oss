@@ -132,7 +132,7 @@ public class RecordWriter {
   public long getLength() throws IOException {
     long length = -1;
     if (generator != null) {
-      length = textOutputStream.getCount();
+      length = textOutputStream.getByteCount();
     } else if (seqWriter != null) {
       length = seqWriter.getLength();
     }

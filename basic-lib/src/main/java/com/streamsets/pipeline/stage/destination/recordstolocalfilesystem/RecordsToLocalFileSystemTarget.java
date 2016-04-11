@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class RecordsToLocalFileSystemTarget extends BaseTarget {
-  private final static Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RecordsToLocalFileSystemTarget.class);
   private static final String CHARSET_UTF8 = "UTF-8";
 
   private final String directory;
@@ -53,22 +53,22 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
   private final String rotationIntervalSecs;
   private final int maxFileSizeMbs;
 
-  public RecordsToLocalFileSystemTarget(String directory, String uniquePrefix, String rotationIntervalSecs,
-      int maxFileSizeMbs) {
-    this.directory = directory;
-    this.uniquePrefix = (uniquePrefix == null) ? "" : uniquePrefix;
-    this.rotationIntervalSecs = rotationIntervalSecs;
-    this.maxFileSizeMbs = maxFileSizeMbs;
-  }
-
   private File dir;
   private long rotationMillis;
-  private int maxFileSizeBytes;
+  private long maxFileSizeBytes;
   private long lastRotation;
   private File activeFile;
   private CountingOutputStream countingOutputStream;
   private DataGeneratorFactory generatorFactory;
   private DataGenerator generator;
+
+  public RecordsToLocalFileSystemTarget(String directory, String uniquePrefix, String rotationIntervalSecs,
+                                        int maxFileSizeMbs) {
+    this.directory = directory;
+    this.uniquePrefix = (uniquePrefix == null) ? "" : uniquePrefix;
+    this.rotationIntervalSecs = rotationIntervalSecs;
+    this.maxFileSizeMbs = maxFileSizeMbs;
+  }
 
   private ELEval createRotationMillisEval(ELContext elContext) {
     return elContext.createELEval("rotationIntervalSecs");
@@ -102,7 +102,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "maxFileSizeMbs", Errors.RECORDFS_00,
                                                 maxFileSizeMbs));
     }
-    maxFileSizeBytes = maxFileSizeMbs * 1024 * 1024;
+    maxFileSizeBytes = maxFileSizeMbs * 1024L * 1024L;
 
     activeFile = new File(dir, "_tmp_" + uniquePrefix + ".sdc").getAbsoluteFile();
 

@@ -44,7 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class HdfsTarget extends BaseTarget {
-  private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
 
   private final HdfsTargetConfigBean hdfsTargetConfigBean;
   private Date batchTime;
