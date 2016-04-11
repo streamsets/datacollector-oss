@@ -14,9 +14,10 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_uxh_nc4_45">
- <title>Protobuf Data Format Prerequisites</title>
- <shortdesc>Perform the following prerequisites before reading or writing protobuf data.</shortdesc>
- <conbody>
+    <title>Protobuf Data Format Prerequisites</title>
+    <shortdesc>Perform the following prerequisites before reading or writing protobuf
+        data.</shortdesc>
+    <conbody>
         <p><indexterm>protobuf data format<indexterm>processing
                 prerequisites</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -53,22 +54,7 @@
                         href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</dd>
             </dlentry>
         </dl>
-        <p>After completing the prerequisites, you can use the following origins to read protobuf
-                data:<ul id="ul_qmf_3gm_55">
-                <li>Amazon S3</li>
-                <li>Directory</li>
-                <li>JMS Consumer</li>
-                <li>Kafka Consumer</li>
-                <li>Kinesis Consumer</li>
-                <li>RabbitMQ Consumer</li>
-            </ul></p>
-        <p>You can also use the following destinations to write protobuf data:<ul id="ul_vzs_kgm_55">
-                <li>Amazon S3</li>
-                <li>Flume</li>
-                <li>Hadoop FS</li>
-                <li>Kafka Producer</li>
-                <li>Kinesis Producer</li>
-                <li>Local FS</li>
-            </ul></p>
- </conbody>
+        <p>For a list of origins and destinations that process protobuf data, see <xref
+                href="../Apx-DataFormats/DataFormat_Overview.dita#concept_bcw_qzb_kv"/>.</p>
+    </conbody>
 </concept>
