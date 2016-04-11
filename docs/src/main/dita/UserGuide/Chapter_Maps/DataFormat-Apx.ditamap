@@ -16,16 +16,13 @@
 <map>
  <title>Data Format Support</title>
     <topicref href="../Apx-DataFormats/DataFormat_Title.dita">
-        <topicref href="../Apx-DataFormats/DataFormat_Overview.dita">
+        <topicref href="../Apx-DataFormats/DataFormat_Overview.dita" chunk="to-content">
             <topicmeta>
                 <shortdesc/>
-            </topicmeta></topicref>
-        <topicref href="../Apx-DataFormats/Origins.dita">
-            <topicmeta>
-                <shortdesc/>
-            </topicmeta></topicref>
-        <topicref href="../Apx-DataFormats/Destinations.dita"><topicmeta>
-            <shortdesc/>
-        </topicmeta></topicref>
+            </topicmeta>
+            <topicref href="../Apx-DataFormats/Origins.dita"/>
+                
+            <topicref href="../Apx-DataFormats/Destinations.dita"/>
+        </topicref>
     </topicref>
 </map>

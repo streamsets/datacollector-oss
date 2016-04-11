@@ -28,11 +28,13 @@
                             <li>Offset Lag - The amount of data remaining in the file being read.
                                 This metric displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version>.offsets.lag.&lt;file path>.counter</codeblock></li>
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
+&lt;library version>.offsets.lag.&lt;file path>.counter</codeblock></li>
                             <li>Pending Files - The number of files in the directory that still need
                                 to be read. This metric displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version>.pending.files.&lt;file path>.counter</codeblock></li>
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
+&lt;library version>.pending.files.&lt;file path>.counter</codeblock></li>
                         </ul></dd>
                 </dlentry>
                 <dlentry>
@@ -42,7 +44,9 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version
                             <li>Late Records meter and counter - The number of late records written
                                 to the destination system. The counter displays in external tools as
                                     follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_&lt;library version>.lateRecords.&lt;file path>.&lt;counter | metric></codeblock><draft-comment
+com_streamsets_pipeline_stage_destination_localfilesystem_\
+LocalFileSystemDTarget_&lt;library version>.lateRecords.&lt;file path>.\
+&lt;counter | metric></codeblock><draft-comment
                                     author="Loretta">no idea what this is - q out to slack. Another
                                     bullet point that I'm commenting out because I don't know what
                                     it is yet. To HDFS records - </draft-comment></li>

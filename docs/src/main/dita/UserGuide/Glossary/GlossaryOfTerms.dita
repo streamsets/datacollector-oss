@@ -94,7 +94,7 @@
       </dlentry>
       <dlentry>
         <dt>late directories</dt>
-        <dd>Directories that appear after the pipeline starts.</dd>
+        <dd>Origin directories that appear after a pipeline starts.</dd>
       </dlentry>
       <dlentry>
         <dt>metric alerts</dt>
