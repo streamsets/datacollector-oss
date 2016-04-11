@@ -33,30 +33,34 @@
                     define the storage type for the column in HBase. </dd>
                 <dd>When you use explicit field mappings, you can configure the destination to
                     ignore missing field paths. If the destination encounters a mapped field path
-                    that doesn’t exist in the record, the destination does not send the record to
-                    the pipeline for error handling. </dd>
+                    that doesn’t exist in the record, the destination ignores the missing field path
+                    and writes the remaining fields in the record to HBase.  </dd>
             </dlentry>
             <dlentry>
                 <dt>Implicit field mappings</dt>
                 <dd>When you configure the HBase destination to use implicit field mappings, the
-                    destination writes data based on the matching field names. Use implicit field
-                    mappings when the field paths use the following
+                    destination writes data based on the matching field names. You can use implicit
+                    field mappings when the field paths use the following
                     format:<codeblock>&lt;column-family>:&lt;qualifier></codeblock></dd>
-                <dd>For example, if a field path is 'cf:a', the destination can implicitly map the
-                    field to the HBase table with the column family 'cf' and the qualifier 'a'. </dd>
+                <dd>For example, if a field path is "cf:a", the destination can implicitly map the
+                    field to the HBase table with the column family "cf" and the qualifier "a". </dd>
                 <dd>When you use implicit field mappings, you can configure the destination to
                     ignore invalid columns. If the destination encounters a field path that cannot
-                    be mapped to a valid HBase column, the destination does not send the record to
-                    the pipeline for error handling. </dd>
+                    be mapped to a valid HBase column, the destination ignores the invalid column
+                    and writes the remaining fields in the record to HBase. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Both implicit and explicit field mappings</dt>
+                <dd>You can configure the destination to use implicit field mappings and then you
+                    can override the mappings by defining explicit mappings for specific fields. </dd>
+                <dd>For example, a record might contain some field paths that use the
+                        <codeph>&lt;column-family>:&lt;qualifier></codeph> format and other field
+                    paths that don’t use the required format. You can add explicit field mappings
+                    for the field paths that do not use the required format. Or, a field path might
+                    use the required format, but you want to write the data to a different column.
+                    You can add an explicit field mapping to override the column that the data is
+                    written to. </dd>
             </dlentry>
         </dl>
-            <p>You can configure the destination to use implicit field mappings and then you can
-            override the mappings by defining explicit mappings for specific fields. For example, a
-            record might contain some field paths that use the
-                <codeph>&lt;column-family>:&lt;qualifier></codeph> format and other field paths that
-            don’t use the required format. You can add explicit field mappings for the field paths
-            that do not use the required format. Or, a field path might use the required format, but
-            you want to write the data to a different column. You can add an explicit field mapping
-            to override the column that the data is written to.</p>
  </conbody>
 </concept>
