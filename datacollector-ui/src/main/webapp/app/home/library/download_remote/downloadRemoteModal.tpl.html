@@ -28,7 +28,11 @@
         <td>{{remotePipeline.commitMessage}}</td>
         <td>
           <a href="javascript:;" translate="global.form.download"
+             ng-if="!downloading[remotePipeline.commitId] && !downloaded[remotePipeline.commitId]"
              ng-click="downloadRemotePipeline(remotePipeline, $index); $event.stopPropagation()">Download</a>
+
+          <span ng-if="downloaded[remotePipeline.commitId]">Downloaded</span>
+          <span ng-if="downloading[remotePipeline.commitId]">Downloading ....</span>
         </td>
       </tr>
 
