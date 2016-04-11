@@ -59,21 +59,31 @@ public class HttpTarget extends BaseTarget {
 
   @VisibleForTesting
   static final String DPM_PIPELINE_COMMIT_ID = "dpm.pipeline.commitId";
+  @VisibleForTesting
+  static final String DPM_JOB_ID = "dpm.job.id";
 
   private final String targetUrl;
   private final String sdcAuthToken;
   private final String sdcId;
   private final String pipelineCommitId;
+  private final String jobId;
 
 
   private Client client;
   private WebTarget target;
 
-  public HttpTarget(String targetUrl, String authToken, String appComponentId, String pipelineCommitId) {
+  public HttpTarget(
+      String targetUrl,
+      String authToken,
+      String appComponentId,
+      String pipelineCommitId,
+      String jobId
+  ) {
     this.targetUrl = targetUrl;
     this.sdcAuthToken = authToken;
     this.sdcId = appComponentId;
     this.pipelineCommitId = pipelineCommitId;
+    this.jobId = jobId;
   }
 
   @Override
@@ -97,6 +107,7 @@ public class HttpTarget extends BaseTarget {
             metadata.put(e.getKey(), e.getValue().getValueAsString());
           }
           metadata.put(DPM_PIPELINE_COMMIT_ID, pipelineCommitId);
+          metadata.put(DPM_JOB_ID, jobId);
           sdcMetricsJson.setMetadata(metadata);
         }
         String metricRegistryJson = currentRecord.get("/" + AggregatorUtil.METRIC_JSON_STRING).getValueAsString();
