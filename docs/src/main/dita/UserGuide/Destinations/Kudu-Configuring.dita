@@ -44,7 +44,7 @@
                                 <row>
                                     <entry>Kudu Masters</entry>
                                     <entry>Comma-separated list of connection information for the
-                                        Kudu masters you want to use. Use the following format:
+                                        Kudu masters to use. Use the following format:
                                         <codeblock>&lt;host>:&lt;port></codeblock></entry>
                                 </row>
                                 <row>
@@ -85,6 +85,7 @@
                                             <li>Client Propagated - Ensures that writes from a
                                                 single client are automatically externally
                                                 consistent. </li>
+
                                             <li>Commit Wait - An experimental external consistency
                                                 model that tightly synchronizes the clocks on all
                                                 machines in the cluster.</li>

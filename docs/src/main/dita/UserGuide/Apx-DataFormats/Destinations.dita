@@ -207,6 +207,11 @@
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_irl_1zc_kv"/></entry>
                         </row>
+                                                <row>
+                                                  <entry>MongoDB</entry>
+                                                  <entry namest="c2" nameend="c9">* * * Not
+                                                  Applicable * * *</entry>
+                                                </row>
                         <row>
                             <entry>RabbitMQ Producer</entry>
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"

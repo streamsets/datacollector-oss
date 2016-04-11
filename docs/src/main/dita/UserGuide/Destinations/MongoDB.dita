@@ -17,14 +17,16 @@
  <title>MongoDB</title>
  <shortdesc>The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must use
         an Expression Evaluator to define an operation header attribute. The operation header
-        attribute indicates the operation to perform for each record: insert, upsert, or
-        delete.</shortdesc>
+        attribute indicates the operation to perform for each record: insert, upsert, or delete. </shortdesc>
  <conbody>
   <p><indexterm>MongoDB
-                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MongoDB</indexterm></indexterm>When
-            you configure the MongoDB destination, you configure the connection string, database,
-            and collection, and write concern to use. To perform upserts, you must specify a unique
-            key field. When you do not specify a unique key field, upsert records are sent to
-            error.</p>
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MongoDB</indexterm></indexterm></p>
+        <p>When you configure the MongoDB destination, you configure the connection string,
+            database, and collection, and write concern to use. To perform upserts, you must specify
+            a unique key field. When you do not specify a unique key field, upsert records are sent
+            to the stage for error handling.</p>
+        <p>Note that when performing a delete operation, the destination deletes a maximum of one
+            matching document in MongoDB. It does not delete all matching documents, as is sometimes
+            possible with MongoDB.</p>
  </conbody>
 </concept>
