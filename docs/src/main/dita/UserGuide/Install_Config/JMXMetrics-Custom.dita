@@ -38,7 +38,7 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version
                 <dlentry>
                     <dt>Local FS destination</dt>
                     <dd>In addition to the standard metrics available for origins, LocalFS provides
-                        the following custom metrics:<ul id="ul_m4h_txt_nv">
+                        the following custom metric:<ul id="ul_m4h_txt_nv">
                             <li>Late Records meter and counter - The number of late records written
                                 to the destination system. The counter displays in external tools as
                                     follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\

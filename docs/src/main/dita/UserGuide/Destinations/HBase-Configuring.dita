@@ -88,10 +88,13 @@
                                 <row>
                                     <entry>Ignore Missing Field Path</entry>
                                     <entry>Ignores missing field paths. Used when you define
-                                        explicit field mappings.<p>If the destination encounters a
-                                            mapped field path that doesn’t exist in the record, the
-                                            destination does not send the record to the pipeline for
-                                            error handling. </p></entry>
+                                        explicit field mappings.<p>If selected and the destination
+                                            encounters a mapped field path that doesn’t exist in the
+                                            record, the destination ignores the missing field path
+                                            and writes the remaining fields in the record to HBase.
+                                            If cleared and the destination encounters a mapped field
+                                            path that doesn't exist in the record, the record is
+                                            sent to the stage for error handling.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Implicit Field Mapping
@@ -108,10 +111,13 @@
                                 <row>
                                     <entry>Ignore Invalid Column</entry>
                                     <entry>Ignores invalid columns. Used when you configure implicit
-                                        field mappings.<p>If the destination encounters a field path
-                                            that cannot be mapped to a valid HBase column, the
-                                            destination does not send the record to the pipeline for
-                                            error handling. </p></entry>
+                                        field mappings.<p>If selected and the destination encounters
+                                            a field path that cannot be mapped to a valid HBase
+                                            column, the destination ignores the invalid column and
+                                            writes the remaining fields in the record to HBase. If
+                                            cleared and the destination encounters an invalid
+                                            column, the record is sent to the stage for error
+                                            handling. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication <xref
