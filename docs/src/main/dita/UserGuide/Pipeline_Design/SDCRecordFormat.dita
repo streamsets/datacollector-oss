@@ -14,33 +14,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qkk_mwk_br">
- <title>SDC Record Data Format</title>
- <shortdesc>SDC Record is a proprietary data format that <ph
+    <title>SDC Record Data Format</title>
+    <shortdesc>SDC Record is a proprietary data format that <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         to generate error records. <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
         also use the data format to read and write data. </shortdesc>
- <conbody>
-  <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>pipeline
-          design<indexterm>SDC Record data format</indexterm></indexterm>Use the SDC Record data
-      format to process data from another pipeline or to generate data to be processed by another
-      pipeline.</p>
-  <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
-    <li>Amazon S3</li>
-                <li>Directory</li>
-        <li>JMS Consumer</li>
-    <li>Kafka Consumer</li>
-        <li>Kinesis Consumer</li>
-                <li>MapR Streams Consumer</li>
-                <li>RabbitMQ Consumer</li>
-   </ul></p>
-  <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
-                <li>Amazon S3</li>
-        <li>Flume</li>
-    <li>Kafka Producer</li>
-        <li>Kinesis Producer</li>
-                <li>MapR Streams Producer</li>
-                <li>RabbitMQ Producer</li>
-   </ul></p>
- </conbody>
+    <conbody>
+        <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>pipeline
+                    design<indexterm>SDC Record data format</indexterm></indexterm>Use the SDC
+            Record data format to process data from another pipeline or to generate data to be
+            processed by another pipeline.</p>
+        <p>For a list of origins and destinations that process SDC Record data, see <xref
+                href="../Apx-DataFormats/DataFormat_Overview.dita#concept_bcw_qzb_kv"/>.</p>
+    </conbody>
 </concept>
