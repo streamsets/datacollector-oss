@@ -76,11 +76,6 @@ public class StageLibraryResource {
   @VisibleForTesting
   static final String EL_CATALOG = "elCatalog";
 
-  private static final String INCLUDE_STATS_STAGE_LIB_KEY = "include.stats.stage.lib";
-  public static final String INCLUDE_STATS_STAGE_LIB_DEFAULT = "false";
-  public static final String INCLUDE_STATS_STAGE_LIB = "true";
-  public static final String STREAMSETS_DATACOLLECTOR_STATS_LIB = "streamsets-datacollector-stats-lib";
-
   private final StageLibraryTask stageLibrary;
 
   @Inject
@@ -100,20 +95,9 @@ public class StageLibraryResource {
     //Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
     List<StageDefinitionJson> stages = new ArrayList<>(stageDefinitions.size());
-
-    String includeStatsLib = System.getProperty(INCLUDE_STATS_STAGE_LIB_KEY, INCLUDE_STATS_STAGE_LIB_DEFAULT);
-
-    if (INCLUDE_STATS_STAGE_LIB.equalsIgnoreCase(includeStatsLib)) {
-      stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
-    } else {
-      for (StageDefinition stageDefinition : stageDefinitions) {
-        if (!STREAMSETS_DATACOLLECTOR_STATS_LIB.equals(stageDefinition.getLibrary())) {
-          stages.add(BeanHelper.wrapStageDefinition(stageDefinition));
-        }
-      }
-    }
-
+    stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
     definitions.setStages(stages);
+
     //Populate the definitions with the PipelineDefinition
     List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));

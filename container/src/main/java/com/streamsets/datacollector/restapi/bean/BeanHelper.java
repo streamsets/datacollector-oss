@@ -34,7 +34,6 @@ import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -349,13 +348,6 @@ public class BeanHelper {
       stageDefinitionJsonList.add(new StageDefinitionJson(s));
     }
     return stageDefinitionJsonList;
-  }
-
-  public static StageDefinitionJson wrapStageDefinition(com.streamsets.datacollector.config.StageDefinition stageDefinition) {
-    if(stageDefinition == null) {
-      return null;
-    }
-    return new StageDefinitionJson(stageDefinition);
   }
 
   public static List<RuleIssueJson> wrapRuleIssues(List<com.streamsets.datacollector.validation.RuleIssue> ruleIssues) {
@@ -1201,5 +1193,4 @@ public class BeanHelper {
     }
     return recordJsonList;
   }
-
 }
