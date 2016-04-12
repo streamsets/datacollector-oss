@@ -125,13 +125,14 @@ public class AggregatorUtil {
     Map<String, Field> stageMetrics = new HashMap<>();
     for (Map.Entry<String, Object> entry : stageBatchMetrics.entrySet()) {
       Map<String, Field> stageBatchMetricsMap = new HashMap<>();
-      stageBatchMetricsMap.put(PROCESSING_TIME, Field.create(Field.Type.LONG, stageBatchMetrics.get(PROCESSING_TIME)));
-      stageBatchMetricsMap.put(INPUT_RECORDS, Field.create(Field.Type.INTEGER, stageBatchMetrics.get(INPUT_RECORDS)));
-      stageBatchMetricsMap.put(ERROR_RECORDS, Field.create(Field.Type.INTEGER, stageBatchMetrics.get(ERROR_RECORDS)));
-      stageBatchMetricsMap.put(OUTPUT_RECORDS, Field.create(Field.Type.INTEGER, stageBatchMetrics.get(OUTPUT_RECORDS)));
-      stageBatchMetricsMap.put(STAGE_ERROR, Field.create(Field.Type.INTEGER, stageBatchMetrics.get(STAGE_ERROR)));
+      Map<String, Object> value = (Map<String, Object>) entry.getValue();
+      stageBatchMetricsMap.put(PROCESSING_TIME, Field.create(Field.Type.LONG, value.get(PROCESSING_TIME)));
+      stageBatchMetricsMap.put(INPUT_RECORDS, Field.create(Field.Type.INTEGER, value.get(INPUT_RECORDS)));
+      stageBatchMetricsMap.put(ERROR_RECORDS, Field.create(Field.Type.INTEGER, value.get(ERROR_RECORDS)));
+      stageBatchMetricsMap.put(OUTPUT_RECORDS, Field.create(Field.Type.INTEGER, value.get(OUTPUT_RECORDS)));
+      stageBatchMetricsMap.put(STAGE_ERROR, Field.create(Field.Type.INTEGER, value.get(STAGE_ERROR)));
 
-      Map<String, Integer> outputRecordsPerLane = (Map<String, Integer>) stageBatchMetrics.get(OUTPUT_RECORDS_PER_LANE);
+      Map<String, Integer> outputRecordsPerLane = (Map<String, Integer>) value.get(OUTPUT_RECORDS_PER_LANE);
       Map<String, Field> outputRecordsPerLaneMap = new HashMap<>();
 
       if (outputRecordsPerLane != null) {

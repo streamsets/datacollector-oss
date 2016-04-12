@@ -143,7 +143,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
       }
 
-      if (getStage().getConfiguration().getOutputLanes().size() > 1) {
+      if (getStage().getConfiguration().getOutputLanes().size() > 0) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
         for (String lane : getStage().getConfiguration().getOutputLanes()) {
@@ -240,7 +240,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     stageErrorsHistogram.update(stageErrorsCount);
 
     Map<String, Integer> outputRecordsPerLane = new HashMap<>();
-    if (getStage().getConfiguration().getOutputLanes().size() > 1) {
+    if (getStage().getConfiguration().getOutputLanes().size() > 0) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
         int outputRecords = batchMaker.getSize(lane);
         outputRecordsPerLane.put(lane, outputRecords);
