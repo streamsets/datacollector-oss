@@ -242,7 +242,8 @@ public class TestDataRuleEvaluator {
     gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 6, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
-    Assert.assertEquals(2, ((List)((Map<String, Object>) gauge.getValue()).get("alertTexts")).size());
+    // alerts texts is jut one since we throw away new text if its same as the old text
+    Assert.assertEquals(1, ((List)((Map<String, Object>) gauge.getValue()).get("alertTexts")).size());
 
   }
 

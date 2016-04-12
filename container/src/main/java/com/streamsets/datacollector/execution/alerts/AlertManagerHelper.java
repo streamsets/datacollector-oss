@@ -37,11 +37,11 @@ public class AlertManagerHelper {
   private static final String USER_PREFIX = "user.";
 
   public static void alertException(
-      String pipelineName,
-      String revision,
-      MetricRegistry metrics,
-      Object value,
-      RuleDefinition ruleDefinition
+    String pipelineName,
+    String revision,
+    MetricRegistry metrics,
+    Object value,
+    RuleDefinition ruleDefinition
   ) {
     final Map<String, Object> alertResponse = new HashMap<>();
     alertResponse.put(EmailConstants.EXCEPTION_MESSAGE, value);
@@ -69,19 +69,44 @@ public class AlertManagerHelper {
     // add new alert text
     List<String> alertTexts = (List<String>) alertResponse.get(EmailConstants.ALERT_TEXTS);
     alertTexts = new ArrayList<>(alertTexts);
-    alertTexts.add(ruleDefinition.getAlertText());
-    if (alertTexts.size() > 10) {
-      alertTexts.remove(0);
-    }
+    updateAlertText(ruleDefinition, alertTexts);
     alertResponse.put(EmailConstants.ALERT_TEXTS, alertTexts);
   }
 
+  private static void updateAlertText(RuleDefinition ruleDefinition, List<String> alertTexts) {
+    // As of today Data and Metric Rules have the same fixed alert texts for a given rule.
+    // But Drift rules can have different alert texts based on the drift in the values.
+
+    // The check below will avoid collecting the same alert texts again and again in case of metric and data rules.
+
+    // One may ask why not just add alert texts the first time for metric and data rules and skip updating it?
+    // Because when we add EL support in alert texts then metric and data rules may produce different alert texts.
+
+    int size = alertTexts.size();
+    String alertText = ruleDefinition.getAlertText();
+    if (size > 0) {
+      String lastAlertText = alertTexts.get(size - 1);
+      if (!lastAlertText.equals(alertText)) {
+        alertTexts.add(alertText);
+        if (alertTexts.size() > 10) {
+          alertTexts.remove(0);
+        }
+      }
+    } else {
+      // add
+      alertTexts.add(alertText);
+      if (alertTexts.size() > 10) {
+        alertTexts.remove(0);
+      }
+    }
+  }
+
   public static Gauge<Object> createAlertResponseGauge(
-      String pipelineName,
-      String revision,
-      MetricRegistry metrics,
-      Object value,
-      RuleDefinition ruleDefinition) {
+    String pipelineName,
+    String revision,
+    MetricRegistry metrics,
+    Object value,
+    RuleDefinition ruleDefinition) {
     final Map<String, Object> alertResponse = new HashMap<>();
     alertResponse.put(EmailConstants.CURRENT_VALUE, value);
     Gauge<Object> alertResponseGauge = new Gauge<Object>() {
@@ -122,11 +147,11 @@ public class AlertManagerHelper {
   }
 
   public static void updateDataRuleMeter(
-      MetricRegistry metrics,
-      DataRuleDefinition dataRuleDefinition,
-      long matchingCount,
-      String pipelineName,
-      String revision
+    MetricRegistry metrics,
+    DataRuleDefinition dataRuleDefinition,
+    long matchingCount,
+    String pipelineName,
+    String revision
   ) {
     if (dataRuleDefinition.isMeterEnabled() && matchingCount > 0) {
       Meter meter = MetricsConfigurator.getMeter(metrics, USER_PREFIX + dataRuleDefinition.getId());
