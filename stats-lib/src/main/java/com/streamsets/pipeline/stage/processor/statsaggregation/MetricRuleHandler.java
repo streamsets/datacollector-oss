@@ -80,7 +80,6 @@ public class MetricRuleHandler {
 
   private final String pipelineName;
   private final String revision;
-  private final Map<String, Counter> evaluatedRecordCounterMap;
   private final Map<String, RuleDefinition> ruleDefinitionMap;
   private final MetricRegistry metrics;
   private final RulesEvaluator evaluator;
@@ -93,12 +92,10 @@ public class MetricRuleHandler {
     MetricRegistry metrics,
     MetricRegistryJson metricRegistryJson,
     PipelineConfigurationJson pipelineConfigurationJson,
-    Map<String, Counter> evaluatedRecordCounterMap,
     Map<String, RuleDefinition> ruleDefinitionMap
   ) {
     this.pipelineName = pipelineName;
     this.revision = revision;
-    this.evaluatedRecordCounterMap = evaluatedRecordCounterMap;
     this.metrics = metrics;
     this.ruleDefinitionMap = ruleDefinitionMap;
     this.evaluator = new RulesEvaluator(pipelineName, revision, pipelineUrl, context);
@@ -467,7 +464,6 @@ public class MetricRuleHandler {
           revision
         );
         outputLaneToCounterMap.put(lane, counter);
-        evaluatedRecordCounterMap.put(lane, counter);
       }
       outputRecordsPerLaneMeter.put(stageInstanceName, outputLaneToMeterMap);
       outputRecordsPerLaneCounter.put(stageInstanceName, outputLaneToCounterMap);

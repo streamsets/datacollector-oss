@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.statsaggregation;
 
-import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.annotations.VisibleForTesting;
@@ -54,8 +53,6 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
   private final String authToken;
   private final String appComponentId;
 
-  // Tracks number of records seen per lane. It is shared by both MetricRuleHandler and DataRuleHandler
-  private Map<String, Counter> evaluatedRecordCounterMap;
   // Metadata obtained from pipeline configuration
   private Map<String, String> metadata;
 
@@ -79,7 +76,6 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     this.targetUrl = targetUrl;
     this.authToken = authToken;
     this.appComponentId = appComponentId;
-    this.evaluatedRecordCounterMap = new HashMap<>();
   }
 
   @Override
@@ -112,7 +108,6 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           pipelineConfigurationJson,
           metrics,
           metricRegistryJson,
-          evaluatedRecordCounterMap,
           ruleDefinitionMap
       );
       metricRuleHandler = new MetricRuleHandler(
@@ -123,7 +118,6 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           metrics,
           metricRegistryJson,
           pipelineConfigurationJson,
-          evaluatedRecordCounterMap,
           ruleDefinitionMap
       );
     }

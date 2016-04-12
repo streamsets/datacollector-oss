@@ -30,7 +30,6 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
-import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -69,7 +68,6 @@ public class DataRuleHandler {
       PipelineConfigurationJson pipelineConfigurationJson,
       MetricRegistry metrics,
       MetricRegistryJson metricRegistryJson,
-      Map<String, Counter> evaluatedRecordCounterMap,
       Map<String, RuleDefinition> ruleDefinitionMap
   ) {
     this.pipelineName = pipelineName;
@@ -79,7 +77,7 @@ public class DataRuleHandler {
     this.ruleToAlertTextForMatchedRecords = new HashMap<>();
     this.metricRegistryJson = metricRegistryJson;
     this.metrics = metrics;
-    this.evaluatedRecordCounterMap = evaluatedRecordCounterMap;
+    this.evaluatedRecordCounterMap = new HashMap<>();
     this.stageToOutputLanesMap = new HashMap<>();
     for (StageConfigurationJson s : pipelineConfigurationJson.getStages()) {
       stageToOutputLanesMap.put(s.getInstanceName(), s.getOutputLanes());
@@ -90,7 +88,6 @@ public class DataRuleHandler {
   void handleDataRuleRecord(Record record) {
 
     String ruleId = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.RULE_ID).getValueAsString();
-    String lane = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.STREAM_NAME).getValueAsString();
     long evaluatedRecordCount = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.EVALUATED_RECORDS).getValueAsInteger();
     long matchedRecordCount = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.MATCHED_RECORDS).getValueAsInteger();
 
@@ -107,12 +104,12 @@ public class DataRuleHandler {
     }
 
     if (RulesHelper.isDataRuleRecordValid(ruleDefinitionMap, record)) {
-      Counter evaluatedRecordCounter = evaluatedRecordCounterMap.get(lane);
+      Counter evaluatedRecordCounter = evaluatedRecordCounterMap.get(ruleId);
       if (evaluatedRecordCounter == null) {
         evaluatedRecordCounter = MetricsHelper.createAndInitCounter(
           metricRegistryJson,
           metrics,
-          LaneResolver.getPostFixedLaneForObserver(lane),
+          getEvaluatedCounterName(ruleId),
           pipelineName,
           revision
         );
@@ -124,27 +121,29 @@ public class DataRuleHandler {
         matchingRecordCounter = MetricsHelper.createAndInitCounter(
           metricRegistryJson,
           metrics,
-          MetricAggregationConstants.USER_PREFIX + ruleId,
+          getMatchedCounterName(ruleId),
           pipelineName,
           revision
         );
         matchedRecordCounterMap.put(ruleId, matchingRecordCounter);
       }
       matchingRecordCounter.inc(matchedRecordCount);
+      AlertManagerHelper.updateDataRuleMeter(
+          metrics,
+          (DataRuleDefinition)ruleDefinitionMap.get(ruleId),
+          matchedRecordCount,
+          pipelineName,
+          revision
+      );
     }
 
   }
 
   void handleRuleChangeRecord(Record record) {
     if (RulesHelper.isRuleDefinitionLatest(ruleDefinitionMap, record)) {
-      RuleDefinition rDef;
-      if (record.getHeader().getSourceId().equals(AggregatorUtil.METRIC_RULE_CHANGE)) {
-        rDef = AggregatorUtil.getMetricRuleDefinition(record);
-      } else {
-        rDef = AggregatorUtil.getDataRuleDefinition(record);
-        // remove data rule counters associated with the rule
-        removeDataRuleMetrics(rDef.getId());
-      }
+      RuleDefinition rDef = AggregatorUtil.getDataRuleDefinition(record);
+      // remove data rule counters associated with the rule
+      removeDataRuleMetrics(rDef.getId());
       // remove gauge associated with rule
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(rDef.getId()), pipelineName, revision);
       ruleDefinitionMap.put(rDef.getId(), rDef);
@@ -175,10 +174,7 @@ public class DataRuleHandler {
     rulesEvaluator.setEmails(emails);
 
     Map<String, Field> rulesToRemove = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.RULES_TO_REMOVE).getValueAsListMap();
-    for (Map.Entry<String, Field> e : rulesToRemove.entrySet()) {
-      String ruleId = e.getKey();
-      MetricsConfigurator.removeMeter(metrics, MetricAggregationConstants.USER_PREFIX + ruleId, pipelineName, revision);
-      MetricsConfigurator.removeCounter(metrics, MetricAggregationConstants.USER_PREFIX + ruleId, pipelineName, revision);
+    for (String ruleId : rulesToRemove.keySet()) {
       removeDataRuleMetrics(ruleId);
     }
 
@@ -241,13 +237,6 @@ public class DataRuleHandler {
               )
             );
         }
-        AlertManagerHelper.updateDataRuleMeter(
-          metrics,
-          dataRuleDefinition,
-          matchingRecordCounter.getCount(),
-          pipelineName,
-          revision
-        );
       }
     }
   }
@@ -255,10 +244,21 @@ public class DataRuleHandler {
   private void removeDataRuleMetrics(String ruleId) {
     evaluatedRecordCounterMap.remove(ruleId);
     matchedRecordCounterMap.remove(ruleId);
-    MetricsConfigurator.removeCounter(metrics, MetricAggregationConstants.USER_PREFIX + ruleId, pipelineName, revision);
+    MetricsConfigurator.removeCounter(metrics, getEvaluatedCounterName(ruleId), pipelineName, revision);
     if (metricRegistryJson != null) {
-      metricRegistryJson.getCounters().remove(MetricAggregationConstants.USER_PREFIX + ruleId + MetricsConfigurator.COUNTER_SUFFIX);
+      metricRegistryJson.getCounters().remove(getEvaluatedCounterName(ruleId) + MetricsConfigurator.COUNTER_SUFFIX);
+    }
+    MetricsConfigurator.removeCounter(metrics, getMatchedCounterName(ruleId), pipelineName, revision);
+    if (metricRegistryJson != null) {
+      metricRegistryJson.getCounters().remove(getMatchedCounterName(ruleId) + MetricsConfigurator.COUNTER_SUFFIX);
     }
   }
 
+  private String getMatchedCounterName(String ruleId) {
+    return MetricAggregationConstants.USER_PREFIX + ruleId + ".matched";
+  }
+
+  private String getEvaluatedCounterName(String ruleId) {
+    return MetricAggregationConstants.USER_PREFIX + ruleId + ".evaluated";
+  }
 }

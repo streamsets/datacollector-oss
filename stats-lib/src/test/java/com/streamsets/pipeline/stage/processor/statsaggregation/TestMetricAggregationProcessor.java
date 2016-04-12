@@ -323,11 +323,11 @@ public class TestMetricAggregationProcessor {
     MetricRegistry metrics = metricAggregationProcessor.getMetrics();
 
     SortedMap<String, Counter> counters = metrics.getCounters();
-    Assert.assertTrue(counters.containsKey("user.x.counter"));
-    Assert.assertEquals(400, counters.get("user.x.counter").getCount());
+    Assert.assertTrue(counters.containsKey("user.x.matched.counter"));
+    Assert.assertEquals(400, counters.get("user.x.matched.counter").getCount());
 
-    Assert.assertTrue(counters.containsKey("x::s.counter"));
-    Assert.assertEquals(2000, counters.get("x::s.counter").getCount());
+    Assert.assertTrue(counters.containsKey("user.x.evaluated.counter"));
+    Assert.assertEquals(2000, counters.get("user.x.evaluated.counter").getCount());
 
     // Alert expected as threshold type is count and threshold value is 100
     SortedMap<String, Gauge> gauges = metrics.getGauges();
