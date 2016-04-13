@@ -34,9 +34,21 @@ function log {
 function update_users {
   IFS=';' read -r -a array <<< "$CONFIGURED_USERS"
   for element in "${array[@]}"; do
-    echo "$element" >> "$CONF_DIR"/"$AUTH_TYPE"-realm.properties
+    echo "$element" >> "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
   done
-  chmod 600 "$CONF_DIR"/"$AUTH_TYPE"-realm.properties
+  chmod 600 "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
+}
+
+function generate_ldap_configs {
+  ldap_configs=`cat "$CONF_DIR"/ldap.properties | grep "ldap" | grep -v "ldap.bindPassword" | sed -e 's/ldap\.\([^=]*\)=\(.*\)/  \1=\"\2\"/g'`
+  echo "ldap {
+  com.streamsets.datacollector.http.LdapLoginModule required
+  bindPassword=\"@ldap-bind-password.txt@\"
+  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"
+$ldap_configs;
+};" >> "$CONF_DIR"/ldap-login.conf
+  ldap_bind_password=`cat "$CONF_DIR"/ldap.properties | grep "ldap.bindPassword"`
+  echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' >> "$CONF_DIR"/ldap-bind-password.txt
 }
 
 export SDC_CONF=$CONF_DIR
@@ -45,8 +57,12 @@ case $CMD in
 
   (start)
     log "Starting StreamSets Data Collector"
-    update_users
-                source "$CONF_DIR"/sdc-env.sh
+    if [[ "$LOGIN_MODULE" = "file" ]]; then
+      update_users
+    else
+      generate_ldap_configs
+    fi
+    source "$CONF_DIR"/sdc-env.sh
     exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing
 
   (update_users)

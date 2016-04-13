@@ -41,7 +41,8 @@
           "SDC_DATA": "${data.directory}",
           "SDC_RESOURCES": "${resources.directory}",
           "CONFIGURED_USERS": "${datacollector.users}",
-          "AUTH_TYPE": "${http.authentication}"
+          "FILE_AUTH_TYPE": "${http.authentication}",
+          "LOGIN_MODULE": "${http.authentication.login.module}"
         }
       },
       "kerberosPrincipals" : [
@@ -87,39 +88,59 @@
                 "propertyName" : "kerberos.client.principal"
               }
             ],
-            "includeParams": [
+            "includedParams": [
               "http.port",
               "https.port",
               "https.keystore.path",
               "https.keystore.password",
               "http.authentication",
+              "http.authentication.login.module",
+              "http.authentication.ldap.role.mapping",
               "http.realm.file.permission.check",
               "kerberos.client.enabled",
               "preview.maxBatchSize",
               "preview.maxBatches",
               "production.maxBatchSize",
               "production.maxErrorRecordsPerStage",
-              "production.maxPipelineErrors",
-              "mail.transport.protocol",
-              "mail.smtp.host",
-              "mail.smtp.port",
-              "mail.smtp.auth",
-              "mail.smtp.starttls.enable",
-              "mail.smtps.host",
-              "mail.smtps.port",
-              "mail.smtps.auth",
-              "xmail.username",
-              "xmail.password",
-              "xmail.from.address"
+              "production.maxPipelineErrors"
             ],
-            "excludeParams": [
-              "datacollector.users"
+            "excludedParams": [
+              "datacollector.users",
+              "ldap.bindPassword",
+              "ldap.bindDn"
             ],
             "additionalConfigs" : [
               {
                 "key" : "kerberos.client.keytab",
                 "value" : "streamsets.keytab"
               }
+            ]
+          },
+          {
+            "filename": "ldap.properties",
+            "configFormat": "properties",
+            "includedParams": [
+              "ldap.debug",
+              "ldap.hostname",
+              "ldap.port",
+              "ldap.useLdaps",
+              "ldap.bindDn",
+              "ldap.bindPassword",
+              "ldap.authenticationMethod",
+              "ldap.forceBindingLogin",
+              "ldap.userBaseDn",
+              "ldap.userRdnAttribute",
+              "ldap.userIdAttribute",
+              "ldap.userPasswordAttribute",
+              "ldap.userObjectClass",
+              "ldap.roleBaseDn",
+              "ldap.roleNameAttribute",
+              "ldap.roleMemberAttribute",
+              "ldap.roleObjectClass"
+            ],
+            "excludedParams": [
+              "http.authentication.ldap.role.mapping",
+              "http.authentication.login.module"
             ]
           }
         ],
@@ -130,7 +151,7 @@
           },
           {
             "filename": "sdc-env.sh",
-            "sourceFilename": "aux/sdc-env.sh"
+            "souceFilename": "aux/sdc-env.sh"
           }
         ]
       },
@@ -179,8 +200,8 @@
         },
         {
           "name": "http.authentication",
-          "label": "HTTP Authentication Method",
-          "description": "Authentication method for the Data Collector HTTP endpoint",
+          "label": "HTTP File Authentication Method",
+          "description": "File-based authentication method for the Data Collector HTTP endpoint",
           "type": "string_enum",
           "validValues": [
             "form",
@@ -191,9 +212,27 @@
           "default": "form"
         },
         {
+          "name": "http.authentication.login.module",
+          "label": "HTTP Authentication Login Module",
+          "description": "For 'file', the authentication and role information is read from a property file (etc/basic-realm.properties, etc/digest-realm.properties or etc/form-realm.properties based on the 'http.authentication' value). For 'ldap', the authentication and role information is read from a LDAP or Active Directory server.",
+          "type": "string_enum",
+          "validValues": [
+            "file",
+            "ldap"
+          ],
+          "default": "file"
+        },
+        {
+          "name": "http.authentication.ldap.role.mapping",
+          "label": "HTTP Authentication LDAP Role Mapping",
+          "description": "Mapping between LDAP groups and StreamSets Roles. The mapping is specified as the following pattern: &ltldap-group&gt:&ltsdc-role&gt(,&ltsdc-role&gt)*(;&ltldap-group&gt:&ltsdc-role&gt(,&ltsdc-role&gt)*)*. e.g. Administrator:admin;Manager:manager;DevOP:creator;Tester:guest;",
+          "type": "string",
+          "default": ""
+        },
+        {
           "name": "datacollector.users",
           "label": "Data Collector Users",
-          "description": "Users that should have access to Data Collectors. Users are specified in the format  \\<user\\>: MD5:\\<password_hash\\>,user[,\\<role\\>,\\<role\\>,...]. Supported roles are: admin, manager, creator, guest.",
+          "description": "Users that should have access to Data Collectors. Only used for file-based authentication. Users are specified in the format  &ltuser&gt: MD5:&ltpassword_hash&gt,user[,&ltrole&gt,&ltrole&gt,...]. Supported roles are: admin, manager, creator, guest.",
           "type": "string_array",
           "default": [
             "admin:   MD5:21232f297a57a5a743894a0e4a801fc3,user,admin",
@@ -259,6 +298,125 @@
           "description": "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
           "type": "long",
           "default": 100
+        },
+        {
+          "name": "ldap.hostname",
+          "label": "LDAP Host",
+          "description": "LDAP server host name.",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "ldap.port",
+          "label": "LDAP Port",
+          "description": "LDAP server port. Typically 389 for LDAP and 636 for LDAPS.",
+          "type": "port",
+          "default": "389"
+        },
+        {
+          "name": "ldap.useLdaps",
+          "label": "Use Secure LDAP",
+          "description": "Enables using LDAP over SSL.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "ldap.bindDn",
+          "label": "LDAP Bind DN",
+          "description": "The distinguished name to use for binding to LDAP for authentiction.",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "ldap.bindPassword",
+          "label": "LDAP Bind Password",
+          "description": "The password to use for binding to LDAP for authentiction.",
+          "type": "password",
+          "default": ""
+        },
+        {
+          "name": "ldap.authenticationMethod",
+          "label": "LDAP Authentication Method",
+          "description": "Authentication method for LDAP (simple, sasl, tls, etc.)",
+          "type": "string",
+          "default": "simple"
+        },
+        {
+          "name": "ldap.forceBindingLogin",
+          "label": "Force Binding Login for LDAP",
+          "description": "Determines if binding login checks are performed.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "ldap.userBaseDn",
+          "label": "LDAP User Base DN",
+          "description": "Base DN under which user accounts are located.",
+          "type": "string",
+          "default": "ou=people,dc=company"
+        },
+        {
+          "name": "ldap.userRdnAttribute",
+          "label": "LDAP Username Attribute",
+          "description": "Name of the username attribute.",
+          "type": "string",
+          "default": "uid"
+        },
+        {
+          "name": "ldap.userIdAttribute",
+          "label": "LDAP User ID Attribute",
+          "description": "Name of the user ID attribute.",
+          "type": "string",
+          "default": "uid"
+        },
+        {
+          "name": "ldap.userPasswordAttribute",
+          "label": "LDAP User Password Attribute",
+          "description": "Name of the attribute where the user password is stored.",
+          "type": "string",
+          "default": "userPassword"
+        },
+        {
+          "name": "ldap.userObjectClass",
+          "label": "LDAP User Object Class",
+          "description": "Name of the user object class.",
+          "type": "string",
+          "default": "inetOrgPerson"
+        },
+        {
+          "name": "ldap.roleBaseDn",
+          "label": "LDAP Role Base DN",
+          "description": "Base DN to search for role membership.",
+          "type": "string",
+          "default": "ou=groups,dc=example,dc=com"
+        },
+        {
+          "name": "ldap.roleNameAttribute",
+          "label": "LDAP Role Name Attribute",
+          "description": "Name of the attribute for role names.",
+          "type": "string",
+          "default": "cn"
+        },
+        {
+          "name": "ldap.roleMemberAttribute",
+          "label": "LDAP Role Member Attribute",
+          "description": "Name of the role attribute for user names.",
+          "type": "string",
+          "default": "uniqueMember"
+        },
+        {
+          "name": "ldap.roleObjectClass",
+          "label": "LDAP Role Object Class",
+          "description": "Name of the Role object class.",
+          "type": "string",
+          "default": "groupOfUniqueNames"
+        },
+        {
+          "name": "ldap.debug",
+          "label": "Enable LDAP Debug Logging",
+          "description": "Enable debug logging for LDAP connections.",
+          "type": "boolean",
+          "default": "false"
         }
       ]
     }
