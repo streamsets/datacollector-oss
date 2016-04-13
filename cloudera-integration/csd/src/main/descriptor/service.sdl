@@ -113,6 +113,10 @@
               {
                 "key" : "kerberos.client.keytab",
                 "value" : "streamsets.keytab"
+              },
+              {
+                "key" : "ui.local.help.base.url",
+                "value" : "/docs"
               }
             ]
           },
