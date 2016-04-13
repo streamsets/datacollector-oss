@@ -23,7 +23,7 @@
     </div>
 
     <div class="alert alert-success alert-dismissible" role="alert"
-         ng-show="isGeneratingTokenSucceed && isRemoteUserOrgAdmin"
+         ng-show="isGeneratingTokenSucceed && isRemoteUserOrgAdmin && !isRestartInProgress"
          translate="home.applicationToken.successMessage">
     </div>
 
@@ -32,9 +32,14 @@
          translate="home.applicationToken.onlyOrgAdminMessage">
     </div>
 
+    <div class="alert alert-success alert-dismissible" role="alert"
+         ng-show="isRestartInProgress"
+         translate="home.restart.successMessage">
+    </div>
+
 
   </div>
-  <div class="modal-footer" ng-hide="isShutdownSucceed">
+  <div class="modal-footer" ng-hide="isRestartInProgress">
     <button type="reset" class="btn btn-default"
             ng-click="cancel()" translate="global.form.no" ng-disabled="isGeneratingToken">No</button>
 

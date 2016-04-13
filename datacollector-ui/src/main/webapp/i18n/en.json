@@ -31,7 +31,7 @@
         "settings": "Settings"
       },
       "home": "Home",
-      "remotelyControlled": "Remotely Controlled",
+      "remotelyControlled": "Data Performance Manager Enabled",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
@@ -503,7 +503,7 @@
       "confirmationMessage": "Are you sure you want to restart Data Collector?",
       "headerLabel": "Restart Collector",
       "restarting": "Restarting Down the Data Collector...",
-      "successMessage": "Data Collector is restarted."
+      "successMessage": "Restarting Data Collector..."
     },
     "shutdown": {
       "confirmationMessage": "Are you sure you want to shutdown Data Collector?",

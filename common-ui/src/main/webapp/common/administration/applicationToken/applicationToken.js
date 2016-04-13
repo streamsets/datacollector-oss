@@ -30,8 +30,10 @@ angular
       isGeneratingToken: false,
       isGeneratingTokenSucceed: false,
       isRemoteUserOrgAdmin: authService.isRemoteUserOrgAdmin(),
+      isRestartInProgress: false,
 
       restart: function() {
+        $scope.isRestartInProgress = true;
         api.admin.restartDataCollector();
       },
 
@@ -43,13 +45,9 @@ angular
           authService.getRemoteOrgId()
         )
           .success(function(res) {
-            console.log(res);
             var authToken = res[0].fullAuthToken;
-
             api.admin.updateApplicationToken(authToken)
               .success(function(res) {
-                console.log(res);
-
                 $scope.isGeneratingTokenSucceed = true;
                 $scope.isGeneratingToken = false;
               })

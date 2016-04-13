@@ -172,7 +172,7 @@ angular.module('dataCollectorApp')
             templateUrl: 'common/administration/applicationToken/applicationToken.tpl.html',
             controller: 'ApplicationTokenModalInstanceController',
             size: '',
-            backdrop: true
+            backdrop: 'static'
           });
         },
 
@@ -358,7 +358,6 @@ angular.module('dataCollectorApp')
 
     api.admin.getRemoteServerInfo().then(function(res) {
       if (res && res.data) {
-        console.log(res);
         $rootScope.common.remoteServerInfo.registrationStatus = res.data.registrationStatus;
       }
     });
