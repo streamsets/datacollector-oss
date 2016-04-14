@@ -16,8 +16,7 @@
 <concept id="concept_bkc_m24_4v">
  <title>Define the Operation Header Attribute</title>
  <shortdesc>To write to MongoDB, you need to define the MongoDB operation header attribute for each
-        record. Use an Expression Evaluator in the pipeline to define the operation header
-        attribute.</shortdesc>
+        record. </shortdesc>
  <conbody>
   <p>Use the following header to define the operation to perform:
             <codeblock>SDC.MONGODB.OPERATION</codeblock></p>
@@ -26,9 +25,15 @@
                 <li>UPSERT</li>
                 <li>DELETE</li>
             </ul></p>
+        <p>To define the header attribute easily, you might use an Expression Evaluator. Or to
+            perform a more complex evaluation before setting the header attribute, you might try a
+            scripting processor. </p>
         <p>For example, the following Expression Evaluator sets the MongoDB operation header
             attribute to UPSERT, so the destination system updates or inserts every record:</p>
         <p><image href="../Graphics/MongoDBDest-EEval.png" id="image_d4b_qs4_4v" scale="70"/></p>
-        <p>You can alternatively use an expression that defines the operation for each record.</p>
+        <p>Alternatively, the Jython Evaluator in the following pipeline sets the operation header
+            attribute based on the value in the _operator field:</p>
+        <p>
+            <image href="../Graphics/MondoDBDest-Jython.png" id="image_qxt_z2h_qv" scale="70"/></p>
  </conbody>
 </concept>
