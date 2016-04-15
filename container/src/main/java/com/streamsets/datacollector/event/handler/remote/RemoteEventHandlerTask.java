@@ -76,10 +76,11 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 public class RemoteEventHandlerTask extends AbstractTask implements EventHandlerTask {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteEventHandlerTask.class);
-  private static final Long DEFAULT_PING_INTERVAL = Long.valueOf(10000);
+  private static final Long DEFAULT_PING_FREQUENCY = Long.valueOf(5000);
   private static final String REMOTE_CONTROL = "remote.control.";
   public static final String REMOTE_CONTROL_URL = REMOTE_CONTROL + "url";
   private static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
+  private static final String REMOTE_URL_PING_INTERVAL = REMOTE_CONTROL_URL  + ".ping.frequency";
   private static final String DEFAULT_REMOTE_JOB_LABELS = "";
   private static final String REMOTE_CONTROL_APP_TYPE = REMOTE_CONTROL + "targetapp.type";
   private static final String DEFAULT_APP_TYPE = "DPM";
@@ -92,6 +93,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final String appDestination;
   private final List<String> labelList;
   private final Map<String, String> requestHeader;
+  private final long defaultPingFrequency;
 
   public RemoteEventHandlerTask(DataCollector remoteDataCollector,
     EventClient eventSenderReceiver,
@@ -111,6 +113,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     String labels = conf.get(REMOTE_JOB_LABELS, DEFAULT_REMOTE_JOB_LABELS);
     String appToken = conf.get(WebServerTask.REMOTE_APPLICATION_TOKEN, "");
     labelList = Lists.newArrayList(Splitter.on(",").split(labels));
+    defaultPingFrequency = conf.get(REMOTE_URL_PING_INTERVAL, DEFAULT_PING_FREQUENCY);
     requestHeader = new HashMap<>();
     requestHeader.put("X-Requested-By", "SDC");
     requestHeader.put("X-SS-App-Auth-Token", appToken);
@@ -120,7 +123,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   @Override
   public void runTask() {
     executorService.submit(new EventHandlerCallable(remoteDataCollector, eventSenderReceiver, jsonToFromDto,
-      new ArrayList<ClientEvent>(), getStartupReportEvent(), executorService, DEFAULT_PING_INTERVAL, appDestination,
+      new ArrayList<ClientEvent>(), getStartupReportEvent(), executorService, defaultPingFrequency, appDestination,
       requestHeader));
 
   }
@@ -228,7 +231,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         return;
       }
       List<ClientEvent> ackClientEventList = new ArrayList<ClientEvent>();
-      LOG.info(Utils.format("Got '{}' events ", serverEventJsonList.size()));
+      LOG.debug(Utils.format("Got '{}' events ", serverEventJsonList.size()));
       for (ServerEventJson serverEventJson : serverEventJsonList) {
         ClientEvent clientEvent = handlePipelineEvent(serverEventJson);
         if (clientEvent != null) {
@@ -246,7 +249,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         serverEvent = jsonToFromDto.asDto(serverEventJson);
         Event event = serverEvent.getEvent();
         EventType eventType = serverEvent.getEventType();
-        LOG.debug(Utils.format("Handling event of type: '{}' ", eventType));
+        LOG.info(Utils.format("Handling event of type: '{}' ", eventType));
         switch (eventType) {
           case PING_FREQUENCY_ADJUSTMENT:
             delay = ((PingFrequencyAdjustmentEvent)event).getPingFrequency();
