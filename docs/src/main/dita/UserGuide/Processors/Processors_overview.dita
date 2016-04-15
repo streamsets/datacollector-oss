@@ -43,5 +43,19 @@
         <li>Value Replacer - Replaces null values or replaces values with nulls.</li>
         <li>XML Parser - Parses XML data in a string field. </li>
       </ul></p>
+    <p>To help create or test pipelines, you can use the following development processors:<ul
+        id="ul_c3m_m1p_qv">
+        <li>
+          <p>Dev Identity</p>
+        </li>
+        <li>
+          <p>Dev Random Error</p>
+        </li>
+        <li>
+          <p>Dev Record Creator </p>
+        </li>
+      </ul></p>
+    <p>For more information, see <xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+      />.</p>
   </conbody>
 </concept>
