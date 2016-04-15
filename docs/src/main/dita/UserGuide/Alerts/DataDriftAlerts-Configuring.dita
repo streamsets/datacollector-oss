@@ -115,4 +115,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r"/>
+    </related-links>
 </task>

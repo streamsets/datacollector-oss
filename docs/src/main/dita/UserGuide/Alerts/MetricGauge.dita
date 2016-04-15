@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ky2_g4f_qv">
+ <title>Gauge</title>
+ <shortdesc>The gauge metric type provides alerts based on the age of the current batch, the amount
+        of time a stage takes to process a batch, or the time that <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> last
+        received a record from the origin.</shortdesc>
+ <conbody>
+        <p><indexterm>metric rules and
+                    alerts<indexterm>gauge</indexterm></indexterm><indexterm>gauge<indexterm>metric
+                    rules and alerts</indexterm></indexterm>The gauge metric type provides alerts
+            about some of the Runtime Statistics displayed in Monitor mode:</p>
+        <image href="../Graphics/MetricGauge.png" scale="50" id="image_r5z_hpf_qv"/>
+        <p>The gauge metric type includes a single metric ID, Runtime Statistics Gauge. You can
+            configure the alert to trigger on the following metric elements:<ul id="ul_d1h_kqf_qv">
+                <li>Current Batch Age</li>
+                <li>Time in Current Stage</li>
+                <li>Time of Last Received Record</li>
+            </ul></p>
+        <p>For example, you can configure a gauge metric rule that triggers an alert when the
+            pipeline has been processing a batch for more than 5 minutes.</p>
+    </conbody>
+</concept>

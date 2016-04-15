@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_aq1_5lf_qv">
+ <title>Default Metric Rules</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        provides a set of default metric rules that you can edit and enable for any
+        pipeline.</shortdesc>
+ <conbody>
+        <p>You might want to edit a default metric rule to modify the alert text or the condition
+            for the rule. By default, none of the rules are enabled. Select
+                <uicontrol>Active</uicontrol> to enable a rule. </p>
+        <p><indexterm>metric rules and alerts<indexterm>default</indexterm></indexterm>Data
+            Collector provides the following default metric rules:</p>
+        <image href="../Graphics/MetricDefaultRules.png" scale="40" id="image_gjs_zlf_qv"/>
+    </conbody>
+</concept>
