@@ -40,7 +40,45 @@ SDC_DIST=${BASEDIR}
 
 SDC_HOME=${SDC_HOME:=${SDC_DIST}}
 
-if [ ! "$1" = "-skipenvsourcing" ]
+PRG="${0}"
+VERBOSE=0
+EXEC=0
+SKIP_ENV_SOURCING=0
+while test $# -gt 0; do
+  case "${1}" in
+    -verbose)
+      VERBOSE=1
+      shift
+      ;;
+    -exec)
+      EXEC=1
+      shift
+      ;;
+    -skipenvsourcing)
+      SKIP_ENV_SOURCING=1
+      shift
+      ;;
+    -help)
+      echo ""
+      echo "streamsets dc <OPTIONS>"
+      echo ""
+      echo "  Options:"
+      echo "    -verbose          : prints out Data Collector detailed environment settings"
+      echo "    -exec             : starts Data Collector JVM within the same process of the script"
+      echo "    -skipenvsourcing  : skips the sourcing of the libexec/sdc-env.sh file"
+      echo ""
+      exit 0
+      ;;
+    *)
+      echo ""
+      echo "Invalid option(s)"
+      ${PRG} -help
+      exit 1
+      ;;
+  esac
+done
+
+if [ $SKIP_ENV_SOURCING -eq 0 ]
 then
   if [ -f ${SDC_HOME}/libexec/sdc-env.sh ]
   then
@@ -116,7 +154,7 @@ then
   SDC_JAVA_OPTS="${SDC_SECURITY_MANAGER} ${SDC_JAVA_OPTS}"
 fi
 
-if [ "$1" = "-verbose" ];
+if [ $VERBOSE -eq 1 ];
 then
   echo "SDC Agent:"
   echo "  DIST                           : ${SDC_DIST}"
@@ -148,17 +186,27 @@ then
   EXTRA_OPTIONS="-streamsetsLibrariesExtraDir ${STREAMSETS_LIBRARIES_EXTRA_DIR}"
 fi
 
-status=88
-while [ $status = 88 ]; do
+# we may need to exec the process in some cases. This is determined by option "-exec"
+# Restart will not be possible in such a case
 
-${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
--mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
--streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
--libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
+if [ $EXEC -eq 1 ]; then
+  exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+       -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
+       -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
+       -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
 
-status=$?
+  status=$?
+else
+  status=88
+  while [ $status = 88 ]; do
+    ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+    -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
+    -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
+    -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
 
-done
+    status=$?
+  done
+fi
 
 # Remove credential cache if exists
 #
