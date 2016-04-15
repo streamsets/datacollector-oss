@@ -27,6 +27,7 @@
                   this</draft-comment>
             <p>Full, init cap version of the product name: <ph id="pName-long">Data
                   Collector</ph></p>
+            <p>DPM long only: <ph id="DPM-LongOnly">Data Performance Manager</ph></p>
             <p>
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>

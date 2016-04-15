@@ -86,6 +86,7 @@
    <topicref href="../Install_Config/Kerberos.dita"/>
    <topicref href="../Install_Config/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Install_Config/HTTP_protocols.dita"/>
+   <topicref href="../Install_Config/BlacklistWhitelist.dita"/>
    <topicref href="../Install_Config/ConfiguringDataCollector.dita"/>
   </topicref>
   <topicref href="../Install_Config/DCEnvironmentConfig.dita" chunk="to-content">
