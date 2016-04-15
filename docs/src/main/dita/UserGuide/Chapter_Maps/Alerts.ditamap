@@ -25,9 +25,16 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Alerts/MetricTypes.dita"/>
+   <topicref href="../Alerts/MetricDefault.dita"/>
+   <topicref href="../Alerts/MetricTypes.dita">
+    <topicref href="../Alerts/MetricGauge.dita"/>
+    <topicref href="../Alerts/MetricCounter.dita"/>
+    <topicref href="../Alerts/MetricHistogram.dita"/>
+    <topicref href="../Alerts/MetricMeter.dita"/>
+    <topicref href="../Alerts/MetricTimer.dita"/>
+   </topicref>
+   <topicref href="../Alerts/MetricConditions.dita"/>
    <topicref href="../Alerts/MetricAlerts-Configuring.dita"/>
-   <topicref href="../Alerts/MetricAlerts-Viewing.dita"/>
   </topicref>
   <topicref href="../Alerts/DataAlerts.dita" chunk="to-content">
    <topicmeta>

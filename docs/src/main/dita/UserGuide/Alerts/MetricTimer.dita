@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_j5r_xhg_qv">
+ <title>Timer</title>
+ <shortdesc>The timer metric type provides alerts based on batch processing timers for the pipeline
+        or for a stage in the pipeline.</shortdesc>
+ <conbody>
+        <p><indexterm>metric rules and
+                    alerts<indexterm>timer</indexterm></indexterm><indexterm>timer<indexterm>metric
+                    rules and alerts</indexterm></indexterm>The timer metric type provides alerts
+            about the Batch Throughput and Batch Processing Timer statistics displayed in Monitor
+            mode for the pipeline or for a stage:</p>
+        <image href="../Graphics/MetricTimer.png" scale="50" id="image_fsb_llg_qv"/>
+        <p>The timer metric type includes the following metric IDs:<ul id="ul_uxn_4lg_qv">
+                <li>Pipeline Batch Processing Timer - Amount of time for the pipeline to process a
+                    batch.</li>
+                <li>&lt;stage_name> Batch Processing Timer - Amount of time for a stage to process a
+                    batch.</li>
+            </ul></p>
+        <p>You can configure the alert to trigger on the following metric elements displayed in the
+            Batch Processing Timer statistics: mean, standard deviation, percentage, time rates, or
+            count.</p>
+        <p>For example, you can configure a timer metric rule that triggers an alert when the mean
+            amount of time that the pipeline takes to process a batch reaches 10 minutes.</p>
+    </conbody>
+</concept>

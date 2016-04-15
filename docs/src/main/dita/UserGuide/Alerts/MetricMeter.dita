@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_d3x_d2g_qv">
+ <title>Meter</title>
+ <shortdesc>The meter metric type provides alerts based on rates of different record types and stage
+        errors for pipeline batches or for a stage in the pipeline. </shortdesc>
+ <conbody>
+        <p><indexterm>metric rules and
+                    alerts<indexterm>meter</indexterm></indexterm><indexterm>meter<indexterm>metric
+                    rules and alerts</indexterm></indexterm>The meter metric type can provide alerts
+            about the number of batches processed by the pipeline. The meter metric type can also
+            provide alerts about the Record Count and Record Throughput statistics displayed in
+            Monitor mode for the pipeline or for a stage:</p>
+     <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"/></p>
+        <p>The meter metric type includes metric IDs for the pipeline batch count and for the input
+            records, output records, error records, or stage errors for the pipeline or for a stage
+            in the pipeline. You can configure the alert to trigger on the following metric elements
+            displayed in the Record Count and Record Throughput statistics: count, time rates, or
+            mean.</p>
+        <p>For example, you can configure a meter metric rule that triggers an alert when the number
+            of output records that a stage processes reaches 5,000.</p>
+    </conbody>
+</concept>

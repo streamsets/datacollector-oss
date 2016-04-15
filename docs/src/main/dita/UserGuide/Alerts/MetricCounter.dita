@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ov2_vvf_qv">
+ <title>Counter</title>
+ <shortdesc>The counter metric type provides alerts based on the memory usage for the pipeline or
+        for a stage in the pipeline.</shortdesc>
+ <conbody>
+  <p><indexterm>metric rules and
+                    alerts<indexterm>counter</indexterm></indexterm><indexterm>counter<indexterm>metric
+                    rules and alerts</indexterm></indexterm>The counter metric type includes the
+            following metric IDs:<ul id="ul_lqs_4wf_qv">
+                <li>Pipeline Memory Consumption Counter (MB) - Amount of memory being consumed by
+                    the pipeline.</li>
+                <li>&lt;stage_name> Heap Memory Usage Counter (MB) - Amount of memory being consumed
+                    by the named stage.</li>
+            </ul></p>
+        <p>For either of the selected metric IDs, you can configure the alert to trigger on the
+            count metric element.</p>
+        <p>For example, you can configure a counter metric rule that triggers an alert when a stage
+            uses 65% of the Java heap size allocated to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</p>
+ </conbody>
+</concept>

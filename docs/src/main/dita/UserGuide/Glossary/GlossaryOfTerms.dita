@@ -98,7 +98,7 @@
       </dlentry>
       <dlentry>
         <dt>metric alerts</dt>
-        <dd>Monitoring or email alerts based stage or pipeline metrics. </dd>
+        <dd>Monitoring or email alerts based on stage or pipeline metrics. </dd>
       </dlentry>
    <dlentry>
     <dt>origin</dt>

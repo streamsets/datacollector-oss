@@ -22,7 +22,9 @@
     <taskbody>
         <prereq><indexterm>email addresses<indexterm>configuring for
             alerts</indexterm></indexterm>To send email alerts, create an email account to send the
-            alerts and define the SMTP properties in the sdc.properties file. </prereq>
+            alerts and define the SMTP properties in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </prereq>
         <context/>
         <steps id="steps_rl5_tsw_1r">
             <step>

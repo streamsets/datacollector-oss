@@ -15,13 +15,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hcf_11k_br">
     <title>Configuring a Metric Rule and Alert</title>
-    <shortdesc>Create a metric rule to receive alerts when the specified conditions occur. You can
-        configure metric rules and alerts when you configure or monitor a pipeline. You can edit or
-        delete metric rules when they are not enabled. </shortdesc>
+    <shortdesc>Create a custom metric rule to receive alerts when a real-time statistic reaches a
+        certain threshold. You can create metric rules and alerts when you configure or monitor a
+        pipeline. You can edit or delete metric rules when they are not enabled. </shortdesc>
     <taskbody>
-        <context><indexterm>metric alerts<indexterm>configuring</indexterm></indexterm> Configure
-            metric alerts based on the metric type, the metric, an element associated with the
-            metric, and a condition. </context>
+        <context><indexterm>metric rules and
+            alerts<indexterm>configuring</indexterm></indexterm>Configure metric rules based on the
+            metric type, the metric, an element associated with the metric, and a condition. </context>
         <steps id="steps_jzm_f1k_br">
             <step>
                 <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Metric
@@ -33,7 +33,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lcs_4bk_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -74,7 +74,11 @@
                                         elements based on the metric ID.</entry>
                                 </row>
                                 <row>
-                                    <entry>Condition</entry>
+                                    <entry>Condition
+                                        <xref href="MetricConditions.dita#concept_qyv_1tf_qv">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref>
+                                    </entry>
                                     <entry>Condition to trigger the alert. Use the expression
                                         language to configure the condition. </entry>
                                 </row>
@@ -82,9 +86,7 @@
                                     <entry>Send Email</entry>
                                     <entry>Sends an email when the alert is triggered. <p>To send an
                                             email, add email addresses for alerts and configure the
-                                                <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> email properties.</p></entry>
+                                            Data Collector email properties.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -97,12 +99,12 @@
             </step>
             <step>
                 <cmd>To enable the rule, select <uicontrol>Active</uicontrol>.</cmd>
-                <info>You can enable and disable email alerts from the list of rules. You can edit
-                    and delete inactive rules. </info>
+                <info>You can enable and disable email alerts from the list of rules. </info>
             </step>
         </steps>
     </taskbody>
     <related-links>
-        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
+        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq" type="topic"/>
+        <link href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r" type="topic"/>
     </related-links>
 </task>
