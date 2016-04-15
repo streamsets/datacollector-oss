@@ -68,7 +68,8 @@
                                 <entry>https.keystore.password</entry>
                                 <entry>File that contains the password to the keystore file. <p>By
                                         default, the file name is
-                                            <filepath>keystore-password.txt</filepath> and expected in the <codeph>$SDC_CONF</codeph> directory.</p><p>When
+                                            <filepath>keystore-password.txt</filepath> and expected
+                                        in the <codeph>$SDC_CONF</codeph> directory.</p><p>When
                                         appropriate, you can replace the default file
                                     name.</p></entry>
                             </row>
@@ -83,12 +84,13 @@
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
-                                <entry>HTTP authentication. Use none, basic, digest, or form.<p>When
+                                <entry>HTTP authentication. Use none, basic, digest, form.<p>When
                                         using basic, digest, or form, use the associated
                                         realm.properties file to define user accounts. The
                                         realm.properties files are located in the
                                             <codeph>$SDC_CONF</codeph> directory.</p><p>Default is
-                                        form. </p></entry>
+                                        form. <draft-comment author="Loretta">Not mentioning dpm
+                                            until they add it. </draft-comment></p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication.login.module</entry>
@@ -358,7 +360,95 @@
                         </row>
                     </tbody>
                 </tgroup>
-            </table></context>
+            </table><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file includes the following observer properties, used to process
+                data rules and alerts:<table frame="all" rowsep="1" colsep="1" id="table_hwc_b5z_pv">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                        <thead>
+                            <row>
+                                <entry>Observer Properties</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>observer.queue.size</entry>
+                                <entry>Maximum queue size for data rule evaluation requests. Each
+                                    data rule generates an evaluation request for every batch that
+                                    passes through the stream. When the number of requests outstrips
+                                    the queue size, requests are dropped.<p>Default is 100.
+                                    </p></entry>
+                            </row>
+                            <row>
+                                <entry>observer.sampled.records.cache.size</entry>
+                                <entry>Maximum number of records to be cached for display for each
+                                    rule. The exact number of records is specified in the data rule.
+                                        <p>Default is 100. You can reduce this number as
+                                    needed.</p></entry>
+                            </row>
+                            <row>
+                                <entry>observer.queue.offer.max.wait.time.ms</entry>
+                                <entry>Maximum number of milliseconds to wait before dropping a data
+                                    rule evaluation request when the observer queue is full.</entry>
+                            </row>
+                            <row>
+                                <entry>max.stage.private.classloaders</entry>
+                                <entry>Maximum number of stage libraries <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> allows. <p>Default is 50.</p></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table></p><p>The configuration file includes stage and stage library aliases to
+                enable backward compability for pipelines created with earlier versions of <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />, such
+                as:<codeblock>stage.alias.streamsets-datacollector-basic-lib,
+com_streamsets_pipeline_stage_destination_jdbc_JdbcDTarget=
+streamsets-datacollector-jdbc-lib,
+com_streamsets_pipeline_stage_destination_jdbc_JdbcDTarget
+
+library.alias.streamsets-datacollector-apache-kafka_0_8_1_1-lib=
+streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
+                you should not need to change or remove these aliases.</p><p>You can optionally add
+                stage libraries to the blacklist or whitelist properties to limit the stage
+                libraries <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses:<table frame="all" rowsep="1" colsep="1" id="table_gmf_fvf_qv">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                        <thead>
+                            <row>
+                                <entry>Blacklist / Whitelist Properties <xref
+                                        href="BlacklistWhitelist.dita"><image
+                                            href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_pvr_lgg_qv"/>
+                                    </xref></entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>system.stagelibs.whitelist<p>system.stagelibs.blacklist</p></entry>
+                                <entry>Use one list to limit the StreamSets stage libraries that can
+                                    be used in <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />. Do not use both.</entry>
+                            </row>
+                            <row>
+                                <entry>user.stagelibs.whitelist<p>user.stagelibs.blacklist</p></entry>
+                                <entry>Use one list to limit the third-party stage libraries that
+                                    can be used in <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />. Do not use both.</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table></p></context>
     </taskbody>
     <related-links>
         <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
