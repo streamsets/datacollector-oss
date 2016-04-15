@@ -38,6 +38,11 @@ import java.util.UUID;
 
 public class TestConfiguration {
 
+  @After
+  public void cleanUp() {
+    Configuration.setFileRefsBaseDir(null);
+  }
+
   @Test
   public void testBasicMethods() {
     Configuration conf = new Configuration();
@@ -153,11 +158,6 @@ public class TestConfiguration {
 
   }
 
-  @After
-  public void cleanUp() {
-    Configuration.setFileRefsBaseDir(null);
-  }
-
   @Test
   public void testFileRefs() throws IOException {
     File dir = new File("target", UUID.randomUUID().toString());
@@ -238,4 +238,32 @@ public class TestConfiguration {
     Assert.assertEquals("X", uconf.get("x", null));
   }
 
+  @Test
+  public void testIncludes() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    Configuration.setFileRefsBaseDir(dir);
+
+    Writer writer = new FileWriter(new File(dir, "config.properties"));
+    IOUtils.write("a=A\nconfig.includes=include1.properties , ", writer);
+    writer.close();
+
+    writer = new FileWriter(new File(dir, "include1.properties"));
+    IOUtils.write("b=B\nconfig.includes=include2.properties , ", writer);
+    writer.close();
+
+    writer = new FileWriter(new File(dir, "include2.properties"));
+    IOUtils.write("c=C\n", writer);
+    writer.close();
+
+    Configuration conf = new Configuration();
+    Reader reader = new FileReader(new File(dir, "config.properties"));
+    conf.load(reader);
+    reader.close();
+
+    Assert.assertEquals("A", conf.get("a", null));
+    Assert.assertEquals("B", conf.get("b", null));
+    Assert.assertEquals("C", conf.get("c", null));
+    Assert.assertNull(conf.get(Configuration.CONFIG_INCLUDES, null));
+  }
 }

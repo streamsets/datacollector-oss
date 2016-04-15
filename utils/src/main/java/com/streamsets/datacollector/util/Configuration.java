@@ -21,6 +21,7 @@ package com.streamsets.datacollector.util;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.BufferedReader;
@@ -263,7 +264,33 @@ public class Configuration {
     for (Map.Entry entry : props.entrySet()) {
       map.put((String) entry.getKey(), createRef((String) entry.getValue()));
     }
+    loadConfigIncludes();
     reader.close();
+  }
+
+  public static final String CONFIG_INCLUDES = "config.includes";
+
+  void loadConfigIncludes() {
+    String includes = get(CONFIG_INCLUDES, null);
+    if (includes != null) {
+      map.remove(CONFIG_INCLUDES);
+      for (String include : Splitter.on(",").trimResults().omitEmptyStrings().split(includes)) {
+        File file = new File(fileRefsBaseDir, include);
+        try (Reader reader = new FileReader(file)) {
+          Configuration conf = new Configuration();
+          conf.load(reader);
+          conf.map.remove(CONFIG_INCLUDES);
+          for (Map.Entry<String, Ref> entry : conf.map.entrySet()) {
+            map.put(entry.getKey(), entry.getValue());
+          }
+        } catch (IOException ex) {
+          throw new IllegalArgumentException(Utils.format("Include config file '{}' could not be read: {}",
+              file.getAbsolutePath(),
+              ex.toString()
+          ));
+        }
+      }
+    }
   }
 
   public void save(Writer writer) throws IOException {
