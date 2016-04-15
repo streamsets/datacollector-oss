@@ -42,7 +42,7 @@ import java.util.Set;
 public class RuntimeEL {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeEL.class);
-  private static final String SDC_PROPERTIES = "sdc.properties";
+  private static final String DPM_PROPERTIES = "dpm.properties";
   private static final String RUNTIME_CONF_LOCATION_KEY = "runtime.conf.location";
   private static final String RUNTIME_CONF_LOCATION_DEFAULT = "embedded";
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
@@ -125,10 +125,10 @@ public class RuntimeEL {
      */
 
     Properties sdcProps = new Properties();
-    try(InputStream is = new FileInputStream(new File(runtimeInfo.getConfigDir(), SDC_PROPERTIES))) {
+    try(InputStream is = new FileInputStream(new File(runtimeInfo.getConfigDir(), DPM_PROPERTIES))) {
       sdcProps.load(is);
     } catch (IOException e) {
-      LOG.error("Could not read '{}' from classpath: {}", SDC_PROPERTIES, e.toString(), e);
+      LOG.error("Could not read '{}' from classpath: {}", DPM_PROPERTIES, e.toString(), e);
     }
 
     String authTokenFileName = sdcProps.getProperty(DPM_APPLICATION_TOKEN);
