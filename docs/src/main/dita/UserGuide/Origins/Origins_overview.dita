@@ -41,5 +41,13 @@
         <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
         <li>Kafka Consumer - Reads messages from Kafka. Use the cluster version of the origin.</li>
       </ul></p>
+    <p>To help create or test pipelines, you can use the following development origins:<ul
+        id="ul_nr2_c1p_qv">
+        <li>Dev Data Generator </li>
+        <li>Dev Random Source</li>
+        <li>Dev Raw Data Source </li>
+      </ul></p>
+    <p>For more information, see <xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+      />.</p>
  </conbody>
 </concept>
