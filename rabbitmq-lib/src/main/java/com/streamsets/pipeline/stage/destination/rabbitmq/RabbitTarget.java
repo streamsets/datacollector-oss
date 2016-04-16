@@ -146,7 +146,7 @@ public class RabbitTarget extends BaseTarget {
       }
       this.rabbitCxnManager.getChannel().basicPublish(
           exchange.name,
-          exchange.routingKey,
+          exchange.routingKey.isEmpty() ? conf.queue.name : exchange.routingKey,
           conf.mandatory,
           properties,
           data
