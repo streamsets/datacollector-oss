@@ -63,7 +63,7 @@ case $CMD in
       generate_ldap_configs
     fi
     source "$CONF_DIR"/sdc-env.sh
-    exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing
+    exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing -exec
 
   (update_users)
     update_users
