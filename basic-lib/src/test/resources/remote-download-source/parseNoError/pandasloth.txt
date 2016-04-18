@@ -1,0 +1,10 @@
+{
+  "name": "sloth",
+  "age": "5",
+  "characterisitics": ["cute", "slooooow", "sloooooow", "sloooooooow"]
+}
+{
+  "name": "panda",
+  "age": "3",
+  "characterisitics": ["cool", "cute", "round", "playful", "hungry"]
+}

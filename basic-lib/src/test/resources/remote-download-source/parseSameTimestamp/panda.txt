@@ -1,0 +1,5 @@
+{
+  "name": "panda",
+  "age": "3",
+  "characterisitics": ["cool", "cute", "round", "playful", "hungry"]
+}
