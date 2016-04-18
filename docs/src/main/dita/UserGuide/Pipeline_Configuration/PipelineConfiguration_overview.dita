@@ -29,8 +29,7 @@
    help you configure the pipeline. You can also perform a data preview to view how the pipeline
    transforms data.</p>
   <p>To define pipeline properties, such as the delivery guarantee, constants or error handling,
-   click in any unused space of the canvas. To define the properties for a stage, select the
-   stage.You can configure metric or data alerts on the Rules tab of the pipeline properties panel.
-  </p>
+   click in any unused space of the canvas. To define the properties for a stage, select the stage.
+   You can configure metric or data alerts on the Rules tab of the pipeline properties panel. </p>
  </conbody>
 </concept>

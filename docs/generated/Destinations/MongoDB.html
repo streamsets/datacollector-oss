@@ -39,12 +39,11 @@
         an Expression Evaluator to define an operation header attribute. The operation header
         attribute indicates the operation to perform for each record: insert, upsert, or delete. </p>
 
-  <p class="p"></p>
-
-        <p class="p">When you configure the MongoDB destination, you configure the connection string,
-            database, and collection, and write concern to use. To perform upserts, you must specify
-            a unique key field. When you do not specify a unique key field, upsert records are sent
-            to the stage for error handling.</p>
+  <p class="p">When
+            you configure the MongoDB destination, you configure the connection string, database,
+            and collection, and write concern to use. To perform upserts, you must specify a unique
+            key field. When you do not specify a unique key field, upsert records are sent to the
+            stage for error handling.</p>
 
         <p class="p">Note that when performing a delete operation, the destination deletes a maximum of one
             matching document in MongoDB. It does not delete all matching documents, as is sometimes
@@ -98,14 +97,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d1649e2443" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d1696e2443" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d50835e125">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d51063e123">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d50835e128">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d51063e126">Description</th>
 
                                 </tr>
 
@@ -113,24 +112,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e125 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e128 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e125 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d50835e128 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e125 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mrc_k5n_4v__d1649e2489" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e128 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mrc_k5n_4v__d1696e2489" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -138,10 +137,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e125 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mrc_k5n_4v__d1649e2503" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mrc_k5n_4v__d1696e2503" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e128 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -149,9 +148,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e125 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e128 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d1649e2519">
+                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d1696e2519">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -181,9 +180,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d50835e237">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d51063e235">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d50835e240">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d51063e238">Description</th>
 
                                 </tr>
 
@@ -191,9 +190,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e237 ">Connection String </td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Connection String </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e240 ">MongoDB connection string. You can include any valid
+                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB connection string. You can include any valid
                                         MongoDB component in the connection string. <p class="p">For more
                                             information, see the MongoDB documentation.</p>
 </td>
@@ -201,32 +200,32 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e237 ">Database</td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Database</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e240 ">MongoDB database name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e237 ">Collection</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d50835e240 ">MongoDB collection name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB database name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e237 ">Unique Key Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e240 ">Field in the record to be used to upsert records. When
+                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB collection name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Unique Key Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">Field in the record to be used to upsert records. When
                                         not set, upsert records are sent to stage for error
                                         handling.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d50835e237 ">Write Concern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Write Concern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50835e240 ">The acknowledgement level requested from the destination
+                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">The acknowledgement level requested from the destination
                                         system. <p class="p">For details about write concern levels, see the
                                             MongoDB documentation.</p>
 </td>

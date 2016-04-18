@@ -28,7 +28,7 @@
                     conditions for any type of metric rule.<p>For example, the default rule for the
                         Pipeline Batch Bad Records Meter metric includes the following
                         condition:<codeblock>${value() > 100}</codeblock></p><p>The alert is
-                        tiggered when the pipeline encounters more than 100 error records.</p></dd>
+                        triggered when the pipeline encounters more than 100 error records.</p></dd>
             </dlentry>
             <dlentry>
                 <dt>time.now()</dt>
