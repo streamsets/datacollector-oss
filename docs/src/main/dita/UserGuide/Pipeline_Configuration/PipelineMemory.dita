@@ -26,9 +26,9 @@
    heap size. For example, with the default <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java heap size
    of 1024 MB, the highest setting for the pipeline memory should be 665 MB.</p>
-  <p>Use the Max Pipeline Memory pipeline property to define the maximum amount of memory to use.
-   When you configure the pipeline, you can also configure the action to take when pipeline memory
-   usage exceeds the configured amount.</p>
+  <p>Use the <uicontrol>Max Pipeline Memory</uicontrol> pipeline property to define the maximum
+   amount of memory to use. When you configure the pipeline, you can also configure the action to
+   take when pipeline memory usage exceeds the configured amount.</p>
   <p>
    <note type="tip">To avoid errors, you might create an alert to indicate when the memory usage
     approaches the configured limit.</note>

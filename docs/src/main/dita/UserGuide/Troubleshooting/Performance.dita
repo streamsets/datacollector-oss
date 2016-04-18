@@ -30,6 +30,19 @@
        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
        configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>
     </dlentry>
+        <dlentry>
+          <dt>How can I decrease the delay between reads from the origin system?</dt>
+          <dd>A long delay can occur between reads from the origin system when a pipeline reads
+            records faster than it can process them or write them to the destination system. Because
+            a pipeline processes one batch at a time, the pipeline must wait until a batch is
+            committed to the destination system before reading the next batch, preventing the
+            pipeline from reading at a steady rate. Reading data at a steady rate provides better
+            performance than reading sporadically.</dd>
+          <dd>If you cannot increase the throughput for the processors or destination, limit the
+            rate at which the pipeline reads records from the origin system. Configure the
+              <uicontrol>Rate Limit</uicontrol> property for the pipeline to define the maximum
+            number of records that the pipeline can read in a second.</dd>
+        </dlentry>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
      <dd>Review the information available in the <ph

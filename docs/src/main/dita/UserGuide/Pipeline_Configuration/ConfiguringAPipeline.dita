@@ -150,6 +150,17 @@
                                     <entry>Email addresses to receive notification about pipeline
                                         state changes. </entry>
                                 </row>
+                                <row>
+                                    <entry>Rate Limit (records / sec)
+                                        <xref
+                                            href="PipelineRateLimit.dita"
+                                            ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_lgk_s6g_cs"/>
+                                        </xref></entry>
+                                    <entry>Maximum number of records that the pipeline can read in a
+                                        second. Use 0 or no value to set no rate limit.<p>Default is
+                                            0.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

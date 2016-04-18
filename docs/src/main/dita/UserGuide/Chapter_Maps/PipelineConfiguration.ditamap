@@ -27,6 +27,11 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/PipelineRateLimit.dita">
+  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+ </topicref>
   <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
    <topicmeta>
     <shortdesc/>

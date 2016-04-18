@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_erj_qg4_qv">
+ <title>Rate Limit</title>
+ <shortdesc>You can limit the rate at which a pipeline processes records by defining the maximum
+        number of records that the pipeline can read in a second.</shortdesc>
+ <conbody>
+  <p><indexterm>pipeline properties<indexterm>rate limit</indexterm></indexterm><indexterm>rate
+                    limit<indexterm>pipeline</indexterm></indexterm>By default, a pipeline has no
+            rate limit. You might want to limit the rate for the following reasons:</p>
+        <dl>
+            <dlentry>
+                <dt>The pipeline reads records faster than it can write them to the destination
+                    system</dt>
+                <dd>Because a pipeline processes one batch at a time, pipeline performance slows
+                    when a pipeline reads records faster than it can process them or write them to
+                    the destination system. The pipeline must wait until a batch is committed to the
+                    destination system before reading the next batch, causing a delay before the
+                    next batch is read and preventing the pipeline from reading at a steady rate.
+                    Reading data at a steady rate provides better performance than reading
+                    sporadically. </dd>
+                <dd>
+                    <p>You can limit the rate at which the pipeline reads records to decrease the
+                        delay between reads from the origin system.</p>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>The origin system requires that the data be read at a slower rate</dt>
+                <dd>
+                    <p>If the origin system is being used for other purposes, it might not be able
+                        to handle the rate at which the pipeline reads records. You can limit the
+                        rate to meet the origin system requirements.</p>
+                </dd>
+            </dlentry>
+        </dl>
+        <p>Use the <uicontrol>Rate Limit</uicontrol> pipeline property to define the maximum number
+            of records that the pipeline can read in a second.</p>
+ </conbody>
+</concept>
