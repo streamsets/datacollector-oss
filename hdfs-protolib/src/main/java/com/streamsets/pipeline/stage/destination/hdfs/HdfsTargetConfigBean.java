@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HdfsTargetConfigBean {
 
@@ -541,12 +542,19 @@ public class HdfsTargetConfigBean {
     }
 
     if (issues.isEmpty()) {
+
       try {
-        FileSystem fs = getFileSystemForInitDestroy();
-        getCurrentWriters().commitOldFiles(fs);
-        if (getLateWriters() != null) {
-          getLateWriters().commitOldFiles(fs);
-        }
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            FileSystem fs = getFileSystemForInitDestroy();
+            getCurrentWriters().commitOldFiles(fs);
+            if (getLateWriters() != null) {
+              getLateWriters().commitOldFiles(fs);
+            }
+            return null;
+          }
+        });
       } catch (Exception ex) {
         issues.add(context.createConfigIssue(null, null, Errors.HADOOPFS_23, ex.toString(), ex));
       }
@@ -560,15 +568,21 @@ public class HdfsTargetConfigBean {
   public void destroy() {
     LOG.info("Destroy");
     try {
-      if (currentWriters != null) {
-        currentWriters.closeAll();
-      }
-      if (lateWriters != null) {
-        lateWriters.closeAll();
-      }
-      if (loginUgi != null) {
-        getFileSystemForInitDestroy().close();
-      }
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception {
+          if (currentWriters != null) {
+            currentWriters.closeAll();
+          }
+          if (lateWriters != null) {
+            lateWriters.closeAll();
+          }
+          if (loginUgi != null) {
+            getFileSystemForInitDestroy().close();
+          }
+          return null;
+        }
+      });
     } catch (Exception ex) {
       LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.toString(), ex);
     }
@@ -797,49 +811,55 @@ public class HdfsTargetConfigBean {
     return validHapoopFsUri;
   }
 
-  private boolean validateHadoopDir(Stage.Context context, String configName, String configGroup,
-                            String dirPathTemplate, List<Stage.ConfigIssue> issues) {
-    boolean ok;
+  private boolean validateHadoopDir(final Stage.Context context, final String configName, final String configGroup,
+                            String dirPathTemplate, final List<Stage.ConfigIssue> issues) {
+    final AtomicBoolean ok = new AtomicBoolean(true);
     if (!dirPathTemplate.startsWith("/")) {
       issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_40));
-      ok = false;
+      ok.set(false);
     } else {
       dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
       try {
-        Path dir = new Path(dirPathTemplate);
-        FileSystem fs = getFileSystemForInitDestroy();
-        if (!fs.exists(dir)) {
-          try {
-            if (fs.mkdirs(dir)) {
-              ok = true;
+        final Path dir = new Path(dirPathTemplate);
+        final FileSystem fs = getFileSystemForInitDestroy();
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            if (!fs.exists(dir)) {
+              try {
+                if (fs.mkdirs(dir)) {
+                  ok.set(true);
+                } else {
+                  issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
+                  ok.set(false);
+                }
+              } catch (IOException ex) {
+                issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_42,
+                    ex.toString()));
+                ok.set(false);
+              }
             } else {
-              issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
-              ok = false;
+              try {
+                Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
+                fs.create(dummy).close();
+                fs.delete(dummy, false);
+                ok.set(true);
+              } catch (IOException ex) {
+                issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_43,
+                    ex.toString()));
+                ok.set(false);
+              }
             }
-          } catch (IOException ex) {
-            issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_42,
-              ex.toString()));
-            ok = false;
+            return null;
           }
-        } else {
-          try {
-            Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
-            fs.create(dummy).close();
-            fs.delete(dummy, false);
-            ok = true;
-          } catch (IOException ex) {
-            issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_43,
-              ex.toString()));
-            ok = false;
-          }
-        }
+        });
       } catch (Exception ex) {
         issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
           ex.toString()));
-        ok = false;
+        ok.set(false);
       }
     }
-    return ok;
+    return ok.get();
   }
 
   private FileSystem getFileSystemForInitDestroy() throws Exception {
