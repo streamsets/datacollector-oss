@@ -54,11 +54,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-1.3.0.0/streamsets-datacollector-1.3.0.0/bin/streamsets dc`
+`dist/target/streamsets-datacollector-1.3.0.1/streamsets-datacollector-1.3.0.1/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-1.3.0.0/streamsets-datacollector-1.3.0.0/bin/streamsets cli`
+`dist/target/streamsets-datacollector-1.3.0.1/streamsets-datacollector-1.3.0.1/bin/streamsets cli`
 
 To skip the RAT report during the build use the `-DskipRat` option.
 
@@ -70,12 +70,12 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/tar/streamsets-datacollector-1.3.0.0.tgz`
+`release/target/tar/streamsets-datacollector-1.3.0.1.tgz`
 
 Untar the tarball in your prefered location :
 
-`tar xvzf streamsets-datacollector-1.3.0.0.tgz`
+`tar xvzf streamsets-datacollector-1.3.0.1.tgz`
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-1.3.0.0/bin/streamsets dc`
+`streamsets-datacollector-1.3.0.1/bin/streamsets dc`
