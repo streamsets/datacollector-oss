@@ -73,7 +73,7 @@ angular.module('dataCollectorApp.common')
      * @returns number
      */
     this.getRefreshInterval = function() {
-      if (self.config) {
+      if (self.config && self.config[REFRESH_INTERVAL] !== undefined) {
         return self.config[REFRESH_INTERVAL];
       }
       return 2000;
@@ -85,7 +85,7 @@ angular.module('dataCollectorApp.common')
      * @returns number
      */
     this.getJVMMetricsRefreshInterval = function() {
-      if (self.config) {
+      if (self.config && self.config[JVM_METRICS_REFRESH_INTERVAL] !== undefined) {
         return self.config[JVM_METRICS_REFRESH_INTERVAL];
       }
       return 4000;
@@ -162,7 +162,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.isWebSocketUseEnabled = function() {
-      if (self.config) {
+      if (self.config && self.config[UI_ENABLE_WEB_SOCKET] !== undefined) {
         return self.config[UI_ENABLE_WEB_SOCKET] === 'true';
       }
       return true;
