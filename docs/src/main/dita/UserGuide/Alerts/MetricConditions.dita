@@ -48,8 +48,8 @@
                         rule for the Pipeline Memory Consumption Counter metric includes the
                         following
                         condition:<codeblock>${value() > (jvm:maxMemoryMB() * 0.65)}</codeblock></p><p>The
-                        alert is trigged when the pipeline uses 65% of the Java heap size allocated
-                        to <ph
+                        alert is triggered when the pipeline uses 65% of the Java heap size
+                        allocated to <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         />.</p></dd>
             </dlentry>
