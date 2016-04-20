@@ -108,7 +108,7 @@
   <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>
-   <topicref href="../Destinations/MapRStreamsProd-DataFormats.dita">
+   <topicref href="../Origins/MapRStreamsCons-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/MapRStreamsCons-AllData.dita"/>

@@ -521,12 +521,7 @@
                         <dlentry id="DEST-DataF-Delim">
                               <dt>Delimited</dt>
                               <dd>The destination writes records as delimited data. When you use
-                                    this data format, you must ensure that the data uses the
-                                    following data structure:<ul id="ul_tr1_ms1_wr">
-                                          <li>A root field that contains an array of maps.</li>
-                                          <li>Each map includes a <term>value</term> element and an
-                                                optional <term>header</term> element.</li>
-                                    </ul></dd>
+                                    this data format, the root field must be list or list-map.</dd>
                         </dlentry>
                         <dlentry>
                               <dt/>
