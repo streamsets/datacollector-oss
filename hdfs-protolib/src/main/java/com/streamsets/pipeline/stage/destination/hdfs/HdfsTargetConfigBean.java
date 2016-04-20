@@ -289,6 +289,20 @@ public class HdfsTargetConfigBean {
   public String lateRecordsLimit;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${1 * HOURS}",
+      label = "Idle Timeout (secs)",
+      description = "Time limit (in seconds) after which a file to which no records are written is closed. " +
+          "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
+          "'${30 * MINUTES}'. Set this to -1 to not close the files on idle.",
+      group = "OUTPUT_FILES",
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String idleTimeout;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "SEND_TO_ERROR",
@@ -336,10 +350,10 @@ public class HdfsTargetConfigBean {
   private Configuration hdfsConfiguration;
   private UserGroupInformation loginUgi;
   private long lateRecordsLimitSecs;
+  private long idleTimeSecs = -1;
   private ActiveRecordWriters currentWriters;
   private ActiveRecordWriters lateWriters;
   private ELEval timeDriverElEval;
-  private ELEval lateRecordsLimitEvaluator;
   private CompressionCodec compressionCodec;
   private Counter toHdfsRecordsCounter;
   private Meter toHdfsRecordsMeter;
@@ -351,31 +365,10 @@ public class HdfsTargetConfigBean {
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean hadoopFSValidated = validateHadoopFS(context, issues);
 
-    try {
-      lateRecordsLimitEvaluator = context.createELEval("lateRecordsLimit");
-      context.parseEL(lateRecordsLimit);
-      lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(context.createELVars(),
-        lateRecordsLimit, Long.class);
-      if (lateRecordsLimitSecs <= 0) {
-        issues.add(
-            context.createConfigIssue(
-                Groups.LATE_RECORDS.name(),
-                HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsLimit",
-                Errors.HADOOPFS_10
-            )
-        );
-      }
-    } catch (Exception ex) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.LATE_RECORDS.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsLimit",
-              Errors.HADOOPFS_06,
-              lateRecordsLimit,
-              ex.toString(),
-              ex
-          )
-      );
+    lateRecordsLimitSecs =
+        initTimeConfigs(context, "lateRecordsLimit", lateRecordsLimit, Groups.LATE_RECORDS, issues);
+    if (idleTimeout != null && !idleTimeout.isEmpty()) {
+      idleTimeSecs = initTimeConfigs(context, "idleTimeout", idleTimeout, Groups.OUTPUT_FILES, issues);
     }
     if (maxFileSize < 0) {
       issues.add(
@@ -453,6 +446,11 @@ public class HdfsTargetConfigBean {
                 dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize * MEGA_BYTE,
                 maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
+
+        if (idleTimeSecs > 0) {
+          mgr.setIdleTimeoutSeconds(idleTimeSecs);
+        }
+
         // validate if the dirPathTemplate can be resolved by Els constants
         if (mgr.validateDirTemplate(
             Groups.OUTPUT_FILES.name(),
@@ -494,6 +492,10 @@ public class HdfsTargetConfigBean {
                   dataGeneratorFormatConfig.getDataGeneratorFactory(),
                   (Target.Context) context, "lateRecordsDirPathTemplate"
           );
+
+          if (idleTimeSecs > 0) {
+            mgr.setIdleTimeoutSeconds(idleTimeSecs);
+          }
 
           // validate if the lateRecordsDirPathTemplate can be resolved by Els constants
           if (mgr.validateDirTemplate(
@@ -574,6 +576,41 @@ public class HdfsTargetConfigBean {
     }
   }
 
+  private long initTimeConfigs(
+      Stage.Context context,
+      String configName,
+      String configuredValue,
+      Groups configGroup,
+      List<Stage.ConfigIssue> issues) {
+    long timeInSecs = 0;
+    try {
+      ELEval timeEvaluator = context.createELEval(configName);
+      context.parseEL(configuredValue);
+      timeInSecs = timeEvaluator.eval(context.createELVars(),
+          configuredValue, Long.class);
+      if (timeInSecs <= 0) {
+        issues.add(
+            context.createConfigIssue(
+                configGroup.name(),
+                HDFS_TARGET_CONFIG_BEAN_PREFIX + configName,
+                Errors.HADOOPFS_10
+            )
+        );
+      }
+    } catch (Exception ex) {
+      issues.add(
+          context.createConfigIssue(
+              configGroup.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + configName,
+              Errors.HADOOPFS_06,
+              configuredValue,
+              ex.toString(),
+              ex
+          )
+      );
+    }
+    return timeInSecs;
+  }
   Counter getToHdfsRecordsCounter() {
     return toHdfsRecordsCounter;
   }

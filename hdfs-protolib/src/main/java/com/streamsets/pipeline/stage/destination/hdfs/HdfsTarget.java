@@ -166,28 +166,51 @@ public class HdfsTarget extends BaseTarget {
       if (recordTime == null) {
         throw new StageException(Errors.HADOOPFS_47, hdfsTargetConfigBean.getTimeDriver());
       }
-
-      RecordWriter writer = hdfsTargetConfigBean.getCurrentWriters().get(getBatchTime(), recordTime, record);
-      if (writer != null) {
-        hdfsTargetConfigBean.getToHdfsRecordsCounter().inc();
-        hdfsTargetConfigBean.getToHdfsRecordsMeter().mark();
-        writer.write(record);
-        hdfsTargetConfigBean.getCurrentWriters().release(writer);
-      } else {
-        hdfsTargetConfigBean.getLateRecordsCounter().inc();
-        hdfsTargetConfigBean.getLateRecordsMeter().mark();
-        switch (hdfsTargetConfigBean.lateRecordsAction) {
-          case SEND_TO_ERROR:
-            getContext().toError(record, Errors.HADOOPFS_12, record.getHeader().getSourceId());
-            break;
-          case SEND_TO_LATE_RECORDS_FILE:
-            RecordWriter lateWriter = hdfsTargetConfigBean.getLateWriters().get(getBatchTime(), getBatchTime(), record);
-            lateWriter.write(record);
-            hdfsTargetConfigBean.getLateWriters().release(lateWriter);
-            break;
-          default:
-            throw new RuntimeException(Utils.format("Unknown late records action: {}",
-              hdfsTargetConfigBean.lateRecordsAction));
+      boolean write = true;
+      while (write) {
+        write = false;
+        RecordWriter writer = hdfsTargetConfigBean.getCurrentWriters().get(getBatchTime(), recordTime, record);
+        if (writer != null) {
+          try {
+            writer.write(record);
+            // To avoid double counting, in case of IdleClosedException
+            hdfsTargetConfigBean.getToHdfsRecordsCounter().inc();
+            hdfsTargetConfigBean.getToHdfsRecordsMeter().mark();
+            hdfsTargetConfigBean.getCurrentWriters().release(writer);
+          } catch (IdleClosedException ex) {
+            hdfsTargetConfigBean.getCurrentWriters().release(writer);
+            // Try to write again, this time with a new writer
+            write = true;
+            // No use printing path, since it is a temp path - the real one is created later.
+            LOG.debug("Writer was idle closed. Retrying.. ");
+          }
+        } else {
+          switch (hdfsTargetConfigBean.lateRecordsAction) {
+            case SEND_TO_ERROR:
+              incrementAndMarkLateRecords();
+              getContext().toError(record, Errors.HADOOPFS_12, record.getHeader().getSourceId());
+              break;
+            case SEND_TO_LATE_RECORDS_FILE:
+              RecordWriter lateWriter =
+                  hdfsTargetConfigBean.getLateWriters().get(getBatchTime(), getBatchTime(), record);
+              try {
+                lateWriter.write(record);
+                // To avoid double counting, in case of IdleClosedException
+                incrementAndMarkLateRecords();
+                hdfsTargetConfigBean.getLateWriters().release(lateWriter);
+              } catch (IdleClosedException ex) {
+                // Try to write again, this time with a new lateWriter
+                hdfsTargetConfigBean.getCurrentWriters().release(lateWriter);
+                write = true;
+                // No use printing path, since it is a temp path - the real one is created later.
+                LOG.debug("Writer was idle closed. Retrying.. ");
+              }
+              break;
+            default:
+              incrementAndMarkLateRecords();
+              throw new RuntimeException(Utils.format("Unknown late records action: {}",
+                  hdfsTargetConfigBean.lateRecordsAction));
+          }
         }
       }
     } catch (IOException ex) {
@@ -195,6 +218,11 @@ public class HdfsTarget extends BaseTarget {
     } catch (StageException ex) {
       throw new OnRecordErrorException(ex.getErrorCode(), ex.getParams()); // params includes exception
     }
+  }
+
+  private void incrementAndMarkLateRecords() {
+    hdfsTargetConfigBean.getLateRecordsCounter().inc();
+    hdfsTargetConfigBean.getLateRecordsMeter().mark();
   }
 
   @VisibleForTesting

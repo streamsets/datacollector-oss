@@ -132,7 +132,7 @@ public class ActiveRecordWriters {
   }
 
   public void release(RecordWriter writer) throws IOException {
-    if (manager.isOverThresholds(writer)) {
+    if (manager.isOverThresholds(writer) || writer.isClosed()) {
       if (IS_TRACE_ENABLED) {
         LOG.trace("Release '{}'", writer.getPath());
       }
