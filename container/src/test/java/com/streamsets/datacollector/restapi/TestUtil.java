@@ -141,13 +141,13 @@ public class TestUtil {
         MOCK_LIB_DEF, false, TSource.class, "source", 1, "label", "description",
         StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
         null, Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false, new StageUpgrader.Default(),
-        Collections.<String>emptyList(), false, "", false);
+        Collections.<String>emptyList(), false, "", false, false);
     StageDefinition targetDef = new StageDefinition(
         MOCK_LIB_DEF, false, TTarget.class, "target", 1, "label", "description",
         StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
         "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER_BATCH,
                                                               ExecutionMode.STANDALONE), false,
-        new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false);
+        new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq(false)))
            .thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq(false)))

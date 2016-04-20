@@ -96,6 +96,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_309("{} outputStreamsDrivenByConfig='{}' not defined as configuration"),
   DEF_310("{} configuration '{}' has an undefined group '{}'"),
   DEF_311("{} icon file '{}' not found in the classpath"),
+  DEF_312("{} only a TARGET can trigger offset commit"),
 
   DEF_400("Stage library '{}', file '{}' not found"),
   DEF_401("Stage library '{}', could not read file '{}': {}"),

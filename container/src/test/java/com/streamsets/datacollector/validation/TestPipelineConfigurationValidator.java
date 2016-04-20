@@ -227,4 +227,27 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0007.name(), issues.get(1).getErrorCode());
   }
 
+  @Test
+  public void testValidateOffsetControlMultipleTargets() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineWith2OffsetCommitController(ExecutionMode.STANDALONE);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0091.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testValidateOffsetControlDeliveryGuarantee() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineWithOffsetCommitController(ExecutionMode.STANDALONE);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0092.name(), issues.get(0).getErrorCode());
+  }
 }

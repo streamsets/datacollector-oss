@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageDef;
@@ -41,7 +42,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -204,6 +204,21 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  @StageDef(version = 1, label = "L", outputStreams = StageDef.VariableOutputStreams.class,
+    outputStreamsDrivenByConfig = "config1", onlineHelpRefUrl = "")
+  public static class OffsetCommitSource extends Source1 implements OffsetCommitTrigger {
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      return null;
+    }
+
+    @Override
+    public boolean commit() {
+      return false;
+    }
+  }
+
   private static final StageLibraryDefinition MOCK_LIB_DEF =
       new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties(),
                                  null, null, null);
@@ -305,6 +320,11 @@ public class TestStageDefinitionExtractor {
   @Test(expected = IllegalArgumentException.class)
   public void testExtractMissingIcon() {
     StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, MissingIcon.class, "x");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNonTargetOffsetCommit() {
+    StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, OffsetCommitSource.class, "x");
   }
 
   @Test

@@ -99,6 +99,7 @@ public class TestStageDefinitionLocalization {
         Collections.<String>emptyList(),
         false,
         "",
+        false,
         false
     );
     return def;

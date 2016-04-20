@@ -69,6 +69,7 @@ public class StageDefinition {
   private final List<String> libJarsRegex;
   private final boolean resetOffset;
   private final String onlineHelpRefUrl;
+  private final boolean offsetCommitTrigger;
 
   // localized version
   private StageDefinition(
@@ -97,7 +98,8 @@ public class StageDefinition {
       List<String> libJarsRegex,
       boolean resetOffset,
       String onlineHelpRefUrl,
-      boolean statsAggregatorStage
+      boolean statsAggregatorStage,
+      boolean offsetCommitTrigger
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -139,7 +141,7 @@ public class StageDefinition {
     this.upgrader = upgrader;
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
-
+    this.offsetCommitTrigger = offsetCommitTrigger;
   }
 
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
@@ -175,6 +177,7 @@ public class StageDefinition {
     resetOffset = def.resetOffset;
     onlineHelpRefUrl = def.onlineHelpRefUrl;
     statsAggregatorStage = def.statsAggregatorStage;
+    offsetCommitTrigger = def.offsetCommitTrigger;
   }
 
   public StageDefinition(
@@ -202,7 +205,8 @@ public class StageDefinition {
       List<String> libJarsRegex,
       boolean resetOffset,
       String onlineHelpRefUrl,
-      boolean statsAggregatorStage
+      boolean statsAggregatorStage,
+      boolean offsetCommitTrigger
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -243,6 +247,7 @@ public class StageDefinition {
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
     this.statsAggregatorStage = statsAggregatorStage;
+    this.offsetCommitTrigger = offsetCommitTrigger;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -324,6 +329,10 @@ public class StageDefinition {
     }
     configDefinitionsMap.put(confDef.getName(), confDef);
     configDefinitions.add(confDef);
+  }
+
+  public boolean isOffsetCommitTrigger() {
+    return offsetCommitTrigger;
   }
 
   public List<ConfigDefinition> getConfigDefinitions() {
@@ -508,7 +517,8 @@ public class StageDefinition {
         libJarsRegex,
         resetOffset,
         onlineHelpRefUrl,
-      statsAggregatorStage
+        statsAggregatorStage,
+        offsetCommitTrigger
     );
   }
 

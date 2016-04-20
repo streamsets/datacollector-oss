@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -36,12 +37,10 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
-
 import java.util.ArrayList;
 
 public class ProductionPipelineBuilder {
@@ -80,12 +79,14 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(stageLib, configuration, name + PRODUCTION_PIPELINE_SUFFIX, name, rev,
       pipelineConf).setObserver(observer).build(runner);
 
+    SourceOffsetTracker sourceOffsetTracker;
     if (pipeline.getSource() instanceof OffsetCommitter) {
-      runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
-        (OffsetCommitter) pipeline.getSource()));
+      sourceOffsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
+        (OffsetCommitter) pipeline.getSource());
     } else {
-      runner.setOffsetTracker(new ProductionSourceOffsetTracker(name, rev, runtimeInfo));
+      sourceOffsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     }
+    runner.setOffsetTracker(sourceOffsetTracker);
     PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, new ArrayList<Issue>());
     return new ProductionPipeline(name, rev, pipelineConf, configuration, pipeline, pipelineConfigBean.shouldRetry);
   }

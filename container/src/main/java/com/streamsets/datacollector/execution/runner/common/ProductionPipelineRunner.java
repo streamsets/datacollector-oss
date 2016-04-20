@@ -24,6 +24,7 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
@@ -61,19 +62,18 @@ import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.ErrorListener;
+import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -230,12 +230,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.offsetTracker = offsetTracker;
   }
 
-  //TODO<Hari>  remove this when we remove the other constructor
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
     this.threadHealthReporter = threadHealthReporter;
   }
 
-  //TODO<Hari>  remove this when we remove the other constructor
   @Override
   public void setObserver(Observer observer) {
     this.observer = observer;
@@ -262,6 +260,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
       BadRecordsHandler badRecordsHandler,
       StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
+
+    OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(pipes);
+
     while (!offsetTracker.isFinished() && !stop) {
       if (threadHealthReporter != null) {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
@@ -270,7 +271,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
         for (BatchListener batchListener : batchListenerList) {
           batchListener.preBatch();
         }
-        runBatch(pipes, badRecordsHandler, statsAggregationHandler);
+        runBatch(pipes, badRecordsHandler, statsAggregationHandler, offsetCommitTrigger);
         for (BatchListener batchListener : batchListenerList) {
           batchListener.postBatch();
         }
@@ -366,7 +367,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private void runBatch(
       Pipe[] pipes,
       BadRecordsHandler badRecordsHandler,
-      StatsAggregationHandler statsAggregationHandler
+      StatsAggregationHandler statsAggregationHandler,
+      OffsetCommitTrigger offsetCommitTrigger
   ) throws PipelineException, StageException {
     boolean committed = false;
     /*value true indicates that this batch is captured */
@@ -397,6 +399,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       //TODO Define an interface to handle delivery guarantee
       if (deliveryGuarantee == DeliveryGuarantee.AT_MOST_ONCE
           && pipe.getStage().getDefinition().getType() == StageType.TARGET && !committed) {
+        // target cannot control offset commit in AT_MOST_ONCE mode
         offsetTracker.commitOffset();
         committed = true;
       }
@@ -411,7 +414,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     enforceMemoryLimit(memoryConsumedByStage);
     badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
     if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
-      offsetTracker.commitOffset();
+      // When AT_LEAST_ONCE commit only if
+      // 1. There is no offset commit trigger for this pipeline or
+      // 2. there is a commit trigger and it is on
+      if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
+        offsetTracker.commitOffset();
+      }
     }
 
     long batchDuration = System.currentTimeMillis() - start;
@@ -620,4 +628,16 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private boolean isStatsAggregationEnabled() {
     return null != statsAggregatorRequests;
   }
+
+  private OffsetCommitTrigger getOffsetCommitTrigger(Pipe[] pipes) {
+    for (Pipe pipe : pipes) {
+      Stage stage = pipe.getStage().getStage();
+      if (stage instanceof Target &&
+        stage instanceof OffsetCommitTrigger) {
+        return (OffsetCommitTrigger) stage;
+      }
+    }
+    return null;
+  }
+
 }

@@ -82,6 +82,10 @@ public class StageDefinitionJson {
     return stageDefinition.isStatsAggregatorStage();
   }
 
+  public boolean isOffsetCommitTrigger() {
+    return stageDefinition.isOffsetCommitTrigger();
+  }
+
   @JsonProperty("preconditions")
   public boolean hasRequiredFields() {
     return stageDefinition.hasPreconditions();

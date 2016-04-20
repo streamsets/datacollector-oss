@@ -104,6 +104,8 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0082("Cannot create runner with execution mode '{}', another runner with execution mode '{}'"
             + " is active"),
   VALIDATION_0090("Encountered exception while validating configuration : {}"),
+  VALIDATION_0091("Found more than one Target stage that triggers offset commit"),
+  VALIDATION_0092("Delivery Guarantee can only be {} if pipeline contains a Target that triggers offset commit"),
   ;
 
   private final String msg;

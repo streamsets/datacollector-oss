@@ -26,6 +26,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -142,6 +143,7 @@ public class PipelineConfigurationValidator {
       canPreview &= validateErrorStage();
       canPreview &= validateStatsAggregatorStage();
       canPreview &= validateStagesExecutionMode(pipelineConfiguration);
+      canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -1135,4 +1137,47 @@ public class PipelineConfigurationValidator {
     }
     return preview;
   }
+
+  private boolean validateCommitTriggerStage(PipelineConfiguration pipelineConfiguration) {
+    boolean valid = true;
+    StageConfiguration target = null;
+    int offsetCommitTriggerCount = 0;
+    // Count how many targets can trigger offset commit in this pipeline
+    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+      StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
+      if (stageDefinition != null) {
+        if (stageDefinition.getType() == StageType.TARGET && stageDefinition.isOffsetCommitTrigger()) {
+          target = stageConf;
+          offsetCommitTriggerCount++;
+        }
+      } else {
+        valid = false;
+        IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
+        issues.add(
+          issueCreator.create(
+            ValidationError.VALIDATION_0006,
+            stageConf.getLibrary(),
+            stageConf.getStageName(),
+            stageConf.getStageVersion()
+          )
+        );
+      }
+    }
+    // If a pipeline contains a target that triggers offset commit then,
+    // 1. delivery guarantee must be AT_LEAST_ONCE
+    // 2. the pipeline can have only one target that triggers offset commit
+    if (offsetCommitTriggerCount == 1) {
+      Config deliveryGuarantee = pipelineConfiguration.getConfiguration("deliveryGuarantee");
+      DeliveryGuarantee value = (DeliveryGuarantee) deliveryGuarantee.getValue();
+      if (value != DeliveryGuarantee.AT_LEAST_ONCE) {
+        IssueCreator issueCreator = IssueCreator.getStage(target.getInstanceName());
+        issues.add(issueCreator.create(ValidationError.VALIDATION_0092, DeliveryGuarantee.AT_LEAST_ONCE));
+      }
+    } else if (offsetCommitTriggerCount > 1) {
+      IssueCreator issueCreator = IssueCreator.getPipeline();
+      issues.add(issueCreator.create(ValidationError.VALIDATION_0091));
+    }
+    return valid;
+  }
+
 }
