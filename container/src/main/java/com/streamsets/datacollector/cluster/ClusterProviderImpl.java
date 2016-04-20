@@ -522,6 +522,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       throw new IllegalStateException(msg);
     }
     pipelineConfigurations.add(pipelineBean.getErrorStage().getConfiguration());
+    pipelineConfigurations.add(pipelineBean.getStatsAggregatorStage().getConfiguration());
     for (StageBean stageBean : pipelineBean.getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
