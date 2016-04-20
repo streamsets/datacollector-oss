@@ -21,10 +21,8 @@ package com.streamsets.datacollector.el;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -89,7 +87,7 @@ public class TestRuntimeEL {
   public void testRuntimeELExternal() throws IOException {
     File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(configDir.mkdirs());
-    try (OutputStream os = new FileOutputStream(new File(configDir, "sdc.properties"))) {
+    try (OutputStream os = new FileOutputStream(new File(configDir, "dpm.properties"))) {
       Properties props = new Properties();
       props.setProperty("runtime.conf.location", "foo.properties");
       props.store(os, "");
@@ -106,7 +104,7 @@ public class TestRuntimeEL {
   }
 
   private void createSDCFile(String sdcFileName) throws IOException {
-    String sdcFile = new File(runtimeInfo.getConfigDir(), "sdc.properties").getAbsolutePath();
+    String sdcFile = new File(runtimeInfo.getConfigDir(), "dpm.properties").getAbsolutePath();
     OutputStream os = new FileOutputStream(sdcFile);
 
     InputStream is = Thread.currentThread().getContextClassLoader().
