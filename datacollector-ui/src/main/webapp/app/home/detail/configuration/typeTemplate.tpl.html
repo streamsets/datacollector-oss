@@ -93,7 +93,6 @@
       <input type="text" class="form-control character-type pull-left" name="{{configDefinition.name}}"
              focus-me="{{autoFocusConfigName === configDefinition.name}}"
              ng-if="characterModel === 'Other'"
-             ng-maxlength="1"
              ng-readonly="isPipelineReadOnly || isPipelineRunning"
              ng-model="detailPaneConfig.configuration[configIndex].value"
              ng-required="configDefinition.required">
