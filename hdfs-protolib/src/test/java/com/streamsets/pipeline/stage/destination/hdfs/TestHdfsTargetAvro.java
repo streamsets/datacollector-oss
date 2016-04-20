@@ -86,7 +86,8 @@ public class TestHdfsTargetAvro {
       LateRecordsAction.SEND_TO_ERROR,
       "",
       DataFormat.AVRO,
-      dataGeneratorFormatConfig
+      dataGeneratorFormatConfig,
+      null
     );
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
@@ -113,6 +114,9 @@ public class TestHdfsTargetAvro {
         return false;
       }
     });
+    for(String f: files) {
+      System.out.println("File: " + f);
+    }
     Assert.assertEquals(1, files.length);
 
     File avroDataFile = new File(dirPathTemplate, files[0]);

@@ -52,7 +52,8 @@ public class HdfsTargetUtil {
       LateRecordsAction lateRecordsAction,
       String lateRecordsDirPathTemplate,
       DataFormat dataFormat,
-      DataGeneratorFormatConfig dataGeneratorFormatConfig
+      DataGeneratorFormatConfig dataGeneratorFormatConfig,
+      String idleTimeout
   ) {
     HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
     hdfsTargetConfigBean.hdfsUri = hdfsUri;
@@ -75,6 +76,7 @@ public class HdfsTargetUtil {
     hdfsTargetConfigBean.lateRecordsDirPathTemplate = lateRecordsDirPathTemplate;
     hdfsTargetConfigBean.dataFormat = dataFormat;
     hdfsTargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
+    hdfsTargetConfigBean.idleTimeout = idleTimeout;
     return new HdfsTarget(hdfsTargetConfigBean);
   }
 }

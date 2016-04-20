@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
+import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -77,6 +78,7 @@ public class RecordWriterManager {
   private Target.Context context;
   private final Path tempFilePath;
   private final LoadingCache<String, Path> dirPathCache;
+  private long idleTimeoutSeconds = -1L;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
       TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
@@ -116,6 +118,10 @@ public class RecordWriterManager {
       List<Stage.ConfigIssue> issues
   ) {
     return pathResolver.validate(group, config, qualifiedConfigName, issues);
+  }
+
+  public void setIdleTimeoutSeconds(long idleTimeoutSeconds) {
+    this.idleTimeoutSeconds = idleTimeoutSeconds;
   }
 
   public long getCutOffMillis() {
@@ -191,7 +197,11 @@ public class RecordWriterManager {
               unsatisfiedLinkError);
           }
         }
-        return new RecordWriter(path, timeToLiveMillis, os, generatorFactory);
+        RecordWriter recordWriter = new RecordWriter(path, timeToLiveMillis, os, generatorFactory);
+        if (idleTimeoutSeconds != -1) {
+          recordWriter.setIdleTimeout(idleTimeoutSeconds);
+        }
+        return recordWriter;
       case SEQUENCE_FILE:
         Utils.checkNotNull(compressionType, "compressionType");
         Utils.checkNotNull(keyEL, "keyEL");
@@ -200,7 +210,12 @@ public class RecordWriterManager {
         try {
           SequenceFile.Writer writer = SequenceFile.createWriter(fs, hdfsConf, path, Text.class, Text.class,
                                                                  compressionType, compressionCodec);
-          return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory, context);
+          RecordWriter seqRecordWriter =
+              new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory, context);
+          if (idleTimeoutSeconds != -1) {
+            seqRecordWriter.setIdleTimeout(idleTimeoutSeconds);
+          }
+          return seqRecordWriter;
         } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
           throw new StageException(Errors.HADOOPFS_46, compressionType.name(), unsatisfiedLinkError,
             unsatisfiedLinkError);
@@ -234,7 +249,11 @@ public class RecordWriterManager {
       // Unset the interrupt flag before close(). InterruptedIOException makes close() fail
       // resulting that the tmp file never gets renamed when stopping the pipeline.
       boolean interrupted = Thread.interrupted();
-      writer.close();
+      try {
+        writer.close();
+      } catch (IdleClosedException e) {
+        LOG.info("Failed to close writer writer for {} was closed as it was idle", writer.getPath());
+      }
       // Reset the interrupt flag back.
       if (interrupted) {
         Thread.currentThread().interrupt();

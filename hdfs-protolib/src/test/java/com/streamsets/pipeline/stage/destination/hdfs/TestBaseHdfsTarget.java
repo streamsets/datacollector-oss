@@ -426,7 +426,8 @@ public class TestBaseHdfsTarget {
       LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
       dir.toString(),
       DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig
+      dataGeneratorFormatConfig,
+      null
     );
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
@@ -484,7 +485,8 @@ public class TestBaseHdfsTarget {
       LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
       dir.toString(),
       DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig
+      dataGeneratorFormatConfig,
+      null
     );
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
@@ -539,7 +541,8 @@ public class TestBaseHdfsTarget {
       LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
       dir.toString(),
       DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig
+      dataGeneratorFormatConfig,
+      null
     );
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
