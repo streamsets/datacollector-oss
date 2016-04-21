@@ -326,6 +326,9 @@ public class WebServerTask extends AbstractTask {
         case "form":
           securityHandler = configureForm(server, auth);
           break;
+        case "sso":
+          securityHandler = configureSSO(appHandler, appContext);
+          break;
         default:
           throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
               auth, AUTHENTICATION_MODES));
