@@ -41,10 +41,10 @@ public class RemoteSSOService implements SSOService {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  public static final String CONFIG_PREFIX = "http.authentication.sso.service.";
+  public static final String DPM_BASE_URL_CONFIG = "dpm.base.url";
+  public static final String DPM_BASE_URL_DEFAULT = "http://localhost:18631";
 
-  public static final String SECURITY_SERVICE_BASE_URL_CONFIG = CONFIG_PREFIX + "url";
-  public static final String SECURITY_SERVICE_BASE_URL_DEFAULT = "http://localhost:18631/security";
+  public static final String CONFIG_PREFIX = "http.authentication.sso.service.";
 
   public static final String SECURITY_SERVICE_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "authToken";
   public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
@@ -79,7 +79,9 @@ public class RemoteSSOService implements SSOService {
 
   @Override
   public void setConfiguration(Configuration conf) {
-    String baseUrl = conf.get(SECURITY_SERVICE_BASE_URL_CONFIG, SECURITY_SERVICE_BASE_URL_DEFAULT);
+    String dpmBaseUrl = getValidURL(conf.get(DPM_BASE_URL_CONFIG, DPM_BASE_URL_DEFAULT));
+    String baseUrl = dpmBaseUrl + "security";
+
     Utils.checkArgument(
         baseUrl.toLowerCase().startsWith("http:") || baseUrl.toLowerCase().startsWith("https:"),
         Utils.formatL("Security service base URL must be HTTP/HTTPS '{}'", baseUrl)
@@ -346,6 +348,13 @@ public class RemoteSSOService implements SSOService {
       principal = null;
     }
     return principal;
+  }
+
+  public static String getValidURL(String url) {
+    if (!url.endsWith("/")) {
+      url += "/";
+    }
+    return url;
   }
 
 }

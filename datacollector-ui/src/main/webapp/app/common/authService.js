@@ -104,14 +104,11 @@ angular.module('dataCollectorApp.common')
      * Return Remote Store Base URL
      */
     this.getRemoteBaseUrl = function() {
-      var remoteBaseURL = '';
-      var ssoServiceURL = configuration.getSSOServiceURL();
-
-      if (ssoServiceURL) {
-        remoteBaseURL = ssoServiceURL.replace('security', '');
+      var remoteBaseUrl = configuration.getRemoteBaseUrl();
+      if (remoteBaseUrl && remoteBaseUrl[remoteBaseUrl.length] !== '/') {
+        remoteBaseUrl += '/';
       }
-
-      return remoteBaseURL;
+      return remoteBaseUrl;
     };
 
     /**

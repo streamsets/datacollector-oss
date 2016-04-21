@@ -32,13 +32,13 @@ angular.module('dataCollectorApp.common')
       UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
       UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket',
       HTTP_AUTHENTICATION = 'http.authentication',
-      HTTP_AUTHENTICATION_SSO_SERVICE_URL = 'http.authentication.sso.service.url',
       PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode',
       CALLBACK_SERVER_URL = 'callback.server.url',
       UI_UNDO_LIMIT = 'ui.undo.limit',
       METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable',
       MONITOR_MEMORY = 'monitor.memory',
-      DPM_ENABLED = 'dpm.enabled';
+      DPM_ENABLED = 'dpm.enabled',
+      DPM_BASE_URL = 'dpm.base.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -216,9 +216,9 @@ angular.module('dataCollectorApp.common')
      * Returns http.authentication.sso.service.url config value
      * @returns {*}
      */
-    this.getSSOServiceURL = function() {
+    this.getRemoteBaseUrl = function() {
       if (self.config) {
-        return self.config[HTTP_AUTHENTICATION_SSO_SERVICE_URL];
+        return self.config[DPM_BASE_URL];
       }
       return '';
     };

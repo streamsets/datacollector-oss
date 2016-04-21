@@ -137,10 +137,10 @@ public class WebServerTask extends AbstractTask {
 
 
   public static final String REMOTE_APPLICATION_TOKEN = "dpm.applicationToken";
-  private static final String REMOTE_APPLICATION_TOKEN_DEFAULT = "";
+  public static final String REMOTE_APPLICATION_TOKEN_DEFAULT = "";
 
   public static final String DPM_ENABLED = "dpm.enabled";
-  private static final boolean DPM_ENABLED_DEFAULT = false;
+  public static final boolean DPM_ENABLED_DEFAULT = false;
 
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
@@ -688,10 +688,11 @@ public class WebServerTask extends AbstractTask {
     String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, REMOTE_APPLICATION_TOKEN_DEFAULT);
 
     if (applicationToken != null && applicationToken.trim().length() > 0 &&
-        conf.hasName(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG)) {
-      String securityServiceBaseURL = conf.get(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG,
-          RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT);
-      String registrationURI = securityServiceBaseURL + "/public-rest/v1/components/registration";
+        conf.hasName(RemoteSSOService.DPM_BASE_URL_CONFIG)) {
+      String dpmBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
+          RemoteSSOService.DPM_BASE_URL_DEFAULT));
+      String registrationURI = dpmBaseURL + "security/public-rest/v1/components/registration";
+
       Map<String, Object> registrationData = new HashMap<>();
       registrationData.put("authToken", applicationToken);
       registrationData.put("componentId", this.runtimeInfo.getId());
