@@ -28,17 +28,21 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Kudu",
     description = "Writes data to Kudu",
     icon = "kudu.png",
     privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Destinations/Kudu.html#task_c4x_tmh_4v"
+    onlineHelpRefUrl = "index.html#Destinations/Kudu.html#task_c4x_tmh_4v",
+    upgrader = KuduTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 public class KuduDTarget extends DTarget {
@@ -56,13 +60,15 @@ public class KuduDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "${record:attribute('tableName')}",
       label = "Table Name",
-      description = "Table must exist",
+      description = "Kudu table to write to. If table doesn't exist, records will be treated as error records.",
       displayPosition = 20,
       group = "KUDU"
   )
-  public String tableName;
+  public String tableNameTemplate;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
@@ -101,7 +107,7 @@ public class KuduDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new KuduTarget(kuduMaster, tableName, consistencyMode, fieldMappingConfigs, operationTimeout);
+    return new KuduTarget(kuduMaster, tableNameTemplate, consistencyMode, fieldMappingConfigs, operationTimeout);
 
   }
 

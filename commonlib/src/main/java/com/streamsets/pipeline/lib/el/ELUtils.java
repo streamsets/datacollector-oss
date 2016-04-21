@@ -19,15 +19,24 @@
  */
 package com.streamsets.pipeline.lib.el;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class ELUtils {
+  private static final Logger LOG = LoggerFactory.getLogger(ELUtils.class);
 
   private ELUtils() {}
 
@@ -56,6 +65,31 @@ public class ELUtils {
     } catch (Exception ex) {
       issues.add(context.createConfigIssue(group, config, err, expression, ex.toString(), ex));
     }
+  }
+
+  public static Multimap<String, Record> partitionBatchByExpression(
+      ELEval elEvaluator,
+      ELVars variables,
+      String expression,
+      Batch batch
+  ) {
+    Multimap<String, Record> partitions = ArrayListMultimap.create();
+
+    Iterator<Record> batchIterator = batch.getRecords();
+
+    while (batchIterator.hasNext()) {
+      Record record = batchIterator.next();
+      RecordEL.setRecordInContext(variables, record);
+      try {
+        String partitionName = elEvaluator.eval(variables, expression, String.class);
+        LOG.debug("Expression '{}' is evaluated to '{}' : ", expression, partitionName);
+        partitions.put(partitionName, record);
+      } catch (ELEvalException e) {
+        LOG.error("Failed to evaluate expression '{}' : ", expression, e.toString(), e);
+      }
+    }
+
+    return partitions;
   }
 
 }

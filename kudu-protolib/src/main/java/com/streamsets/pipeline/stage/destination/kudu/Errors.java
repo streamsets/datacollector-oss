@@ -34,7 +34,8 @@ public enum Errors implements ErrorCode {
   KUDU_08("Row '{}' already exists"),
   KUDU_09("Field '{}' does not match destination type '{}': {}"),
   KUDU_10("Column/field '{}' is type '{}' which doesn't have an associated StreamSets type"),
-  KUDU_11("Stage not initialized correctly, cannot write batch")
+  KUDU_11("Stage not initialized correctly, cannot write batch"),
+  KUDU_12("Invalid table name template expression '{}': {}")
   ;
   private final String msg;
 
