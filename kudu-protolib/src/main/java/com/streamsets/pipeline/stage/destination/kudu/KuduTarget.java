@@ -22,14 +22,23 @@ package com.streamsets.pipeline.stage.destination.kudu;
 
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
 import org.kududb.ColumnSchema;
@@ -45,7 +54,6 @@ import org.kududb.client.OperationResponse;
 import org.kududb.client.PartialRow;
 import org.kududb.client.RowError;
 import org.kududb.client.SessionConfiguration;
-import org.kududb.client.shaded.com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +62,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class KuduTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KuduTarget.class);
@@ -70,26 +79,47 @@ public class KuduTarget extends BaseTarget {
     .put(Type.BOOL, Field.Type.BOOLEAN)
     .build();
 
+  private static final String EL_PREFIX = "${";
+  private static final String KUDU_MASTER = "kuduMaster";
+  private static final String KUDU_SESSION = "kuduSession";
+  private static final String CONSISTENCY_MODE = "consistencyMode";
+  private static final String TABLE_NAME_TEMPLATE = "tableNameTemplate";
+  private static final String FIELD_MAPPING_CONFIGS = "fieldMappingConfigs";
+
   private final String kuduMaster;
-  private final String tableName;
+  private final String tableNameTemplate;
   private final ConsistencyMode consistencyMode;
   private final List<KuduFieldMappingConfig> fieldMappingConfigs;
   private final int operationTimeout;
+  private final LoadingCache<String, KuduTable> kuduTables = CacheBuilder.newBuilder()
+      .maximumSize(500)
+      .expireAfterAccess(1, TimeUnit.HOURS)
+      .build(new CacheLoader<String, KuduTable>() {
+        @Override
+        public KuduTable load(String tableName) throws Exception {
+          if (kuduClient.tableExists(tableName)) {
+            return kuduClient.openTable(tableName);
+          } else {
+            throw new KuduTableNotFoundException();
+          }
+        }
+      });
+
   private ErrorRecordHandler errorRecordHandler;
-  private Optional<KuduRecordConverter> kuduRecordConverter = Optional.absent();
+  private ELVars tableNameVars;
+  private ELEval tableNameEval;
   private KuduClient kuduClient;
-  private KuduTable kuduTable;
   private KuduSession kuduSession;
 
   public KuduTarget(
     String kuduMaster,
-    String tableName,
+    String tableNameTemplate,
     ConsistencyMode consistencyMode,
     List<KuduFieldMappingConfig> fieldMappingConfigs,
     int operationTimeout
   ) {
     this.kuduMaster = Strings.nullToEmpty(kuduMaster).trim();
-    this.tableName = Strings.nullToEmpty(tableName).trim();
+    this.tableNameTemplate = Strings.nullToEmpty(tableNameTemplate).trim();
     this.consistencyMode = consistencyMode;
     this.fieldMappingConfigs = fieldMappingConfigs == null ? Collections.<KuduFieldMappingConfig>emptyList() :
       fieldMappingConfigs;
@@ -99,6 +129,8 @@ public class KuduTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    tableNameVars = getContext().createELVars();
+    tableNameEval = getContext().createELEval(TABLE_NAME_TEMPLATE);
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     validateServerSideConfig(issues);
     return issues;
@@ -106,42 +138,86 @@ public class KuduTarget extends BaseTarget {
 
   private void validateServerSideConfig(final List<ConfigIssue> issues) {
     LOG.info("Validating connection to Kudu cluster " + kuduMaster +
-      " and whether table " + tableName + " exists and is enabled");
+      " and whether table " + tableNameTemplate + " exists and is enabled");
     if (kuduMaster.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "tableName", Errors.KUDU_02));
+      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), TABLE_NAME_TEMPLATE, Errors.KUDU_02));
     }
-    if (tableName.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "tableName", Errors.KUDU_02));
+    if (tableNameTemplate.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), TABLE_NAME_TEMPLATE, Errors.KUDU_02));
     }
-    try {
+
+    kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(operationTimeout).build();
+    if (issues.isEmpty()) {
+      kuduSession = openKuduSession(issues);
+    }
+
+    if (tableNameTemplate.contains(EL_PREFIX)) {
+      ELUtils.validateExpression(
+          tableNameEval,
+          tableNameVars,
+          tableNameTemplate,
+          getContext(),
+          Groups.KUDU.getLabel(),
+          TABLE_NAME_TEMPLATE,
+          Errors.KUDU_12,
+          String.class,
+          issues
+      );
+    } else {
+      KuduTable table = null;
       if (issues.isEmpty()) {
-        kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(operationTimeout).build();
-        if(kuduClient.tableExists(tableName)) {
-          kuduTable = kuduClient.openTable(tableName);
-          kuduSession = kuduClient.newSession();
-          try {
-            kuduSession.setExternalConsistencyMode(ExternalConsistencyMode.valueOf(consistencyMode.name()));
-          } catch (IllegalArgumentException ex) {
-            LOG.error(Errors.KUDU_02.getMessage() + ": {}", ex.toString(), ex);
-            issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "consistencyMode",
-              Errors.KUDU_02));
+        try {
+          if (!kuduClient.tableExists(tableNameTemplate)) {
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.KUDU.name(),
+                    TABLE_NAME_TEMPLATE,
+                    Errors.KUDU_01,
+                    tableNameTemplate
+                )
+            );
+          } else {
+            table = kuduTables.getUnchecked(tableNameTemplate);
           }
-          kuduSession.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
-          validateSchemaPopulateMapping(issues, kuduTable);
-        } else {
-          issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "tableName", Errors.KUDU_01, tableName));
+        } catch (Exception ex) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.KUDU.name(),
+                  KUDU_MASTER,
+                  Errors.KUDU_00,
+                  ex.toString(),
+                  ex
+              )
+          );
         }
       }
-    } catch (KuduException | InterruptedException ex) {
-      LOG.warn(Errors.KUDU_00.getMessage(), ex.toString(), ex);
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "kuduMaster", Errors.KUDU_00, ex.toString(), ex));
-    } catch (Exception ex) {
-      LOG.error(Errors.KUDU_00.getMessage(), ex.toString(), ex);
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "kuduMaster", Errors.KUDU_00, ex.toString(), ex));
+      if (issues.isEmpty()) {
+        createKuduRecordConverter(issues, table);
+      }
     }
   }
 
-  private void validateSchemaPopulateMapping(List<ConfigIssue> issues, KuduTable table) {
+  private KuduSession openKuduSession(List<ConfigIssue> issues) {
+    KuduSession session = null;
+    try {
+      session = kuduClient.newSession();
+      try {
+        session.setExternalConsistencyMode(ExternalConsistencyMode.valueOf(consistencyMode.name()));
+      } catch (IllegalArgumentException ex) {
+        issues.add(getContext().createConfigIssue(Groups.KUDU.name(), CONSISTENCY_MODE, Errors.KUDU_02));
+      }
+      session.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
+    } catch (KuduException ex) {
+      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), KUDU_MASTER, Errors.KUDU_00, ex.toString(), ex));
+    }
+    return session;
+  }
+
+  private Optional<KuduRecordConverter> createKuduRecordConverter(KuduTable table) {
+    return createKuduRecordConverter(null, table);
+  }
+
+  private Optional<KuduRecordConverter> createKuduRecordConverter(List<ConfigIssue> issues, KuduTable table) {
     Map<String, Field.Type> columnsToFieldTypes = new HashMap<>();
     Map<String, String> fieldsToColumns = new HashMap<>();
     Schema schema = table.getSchema();
@@ -158,14 +234,23 @@ public class KuduTarget extends BaseTarget {
     for (KuduFieldMappingConfig fieldMappingConfig : fieldMappingConfigs) {
       Field.Type type = columnsToFieldTypes.get(fieldMappingConfig.columnName);
       if (type == null) {
-        issues.add(getContext().createConfigIssue(Groups.KUDU.name(), "fieldMappingConfigs", Errors.KUDU_05,
-          fieldMappingConfig.columnName));
+        LOG.error(Errors.KUDU_05.getMessage(), fieldMappingConfig.columnName);
+        if (issues != null) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.KUDU.name(),
+                  FIELD_MAPPING_CONFIGS,
+                  Errors.KUDU_05,
+                  fieldMappingConfig.columnName
+              )
+          );
+        }
       } else {
         fieldsToColumns.remove("/" + fieldMappingConfig.columnName); // remove default mapping
         fieldsToColumns.put(fieldMappingConfig.field, fieldMappingConfig.columnName);
       }
     }
-    kuduRecordConverter = Optional.of(new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema));
+    return Optional.of(new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema));
   }
 
   @Override
@@ -190,53 +275,77 @@ public class KuduTarget extends BaseTarget {
   }
 
   private void writeBatch(Batch batch) throws StageException {
-    KuduTable table = Preconditions.checkNotNull(kuduTable, "kuduTable");
-    KuduSession session = Preconditions.checkNotNull(kuduSession, "kuduSession");
-    Map<String, Record> keyToRecordMap = new HashMap<>();
-    Iterator<Record> it = batch.getRecords();
-    if (!kuduRecordConverter.isPresent()) {
-      throw new StageException(Errors.KUDU_11);
-    }
-    KuduRecordConverter recordConverter = kuduRecordConverter.get();
-    try {
-      while (it.hasNext()) {
-        try {
-          Record record = it.next();
-          Insert insert = table.newInsert();
-          PartialRow row = insert.getRow();
-          recordConverter.convert(record, row);
-          keyToRecordMap.put(insert.getRow().stringifyRowKey(), record);
-          session.apply(insert);
-        } catch (OnRecordErrorException onRecordError) {
-          errorRecordHandler.onError(onRecordError);
+    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(
+        tableNameEval,
+        tableNameVars,
+        tableNameTemplate,
+        batch
+    );
+
+    KuduSession session = Preconditions.checkNotNull(kuduSession, KUDU_SESSION);
+
+    for (String tableName : partitions.keySet()) {
+      Map<String, Record> keyToRecordMap = new HashMap<>();
+      Iterator<Record> it = partitions.get(tableName).iterator();
+
+      // if table doesn't exist, send records to the error handler and continue
+      KuduTable table;
+      try {
+        table = kuduTables.getUnchecked(tableName);
+      } catch (UncheckedExecutionException ex) {
+        while (it.hasNext()) {
+          errorRecordHandler.onError(new OnRecordErrorException(it.next(), Errors.KUDU_01, tableName));
         }
+        continue;
       }
-      List<RowError> rowErrors = Collections.emptyList();
-      List<OperationResponse> responses = session.flush(); // can return null
-      if (responses != null) {
-        rowErrors = OperationResponse.collectErrors(responses);
+
+      Optional<KuduRecordConverter> kuduRecordConverter = createKuduRecordConverter(table);
+      if (!kuduRecordConverter.isPresent()) {
+        throw new StageException(Errors.KUDU_11);
       }
-      // log ALL errors then process them
-      for (RowError error : rowErrors) {
-        LOG.warn(Errors.KUDU_03.getMessage(), error.toString());
-      }
-      for (RowError error : rowErrors) {
-        Insert insert = (Insert)error.getOperation();
-        // TODO SDC-2701 - support update on duplicate key
-        if ("ALREADY_PRESENT".equals(error.getStatus())) {
-          // duplicate row key
-          String rowKey = insert.getRow().stringifyRowKey();
-          Record record = keyToRecordMap.get(rowKey);
-          errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_08, rowKey));
-        } else {
-          throw new StageException(Errors.KUDU_03, error.toString());
+      KuduRecordConverter recordConverter = kuduRecordConverter.get();
+
+      try {
+        while (it.hasNext()) {
+          try {
+            Record record = it.next();
+            Insert insert = table.newInsert();
+            PartialRow row = insert.getRow();
+            recordConverter.convert(record, row);
+            keyToRecordMap.put(insert.getRow().stringifyRowKey(), record);
+            session.apply(insert);
+          } catch (OnRecordErrorException onRecordError) {
+            errorRecordHandler.onError(onRecordError);
+          }
         }
+        List<RowError> rowErrors = Collections.emptyList();
+        List<OperationResponse> responses = session.flush(); // can return null
+        if (responses != null) {
+          rowErrors = OperationResponse.collectErrors(responses);
+        }
+        // log ALL errors then process them
+        for (RowError error : rowErrors) {
+          LOG.warn(Errors.KUDU_03.getMessage(), error.toString());
+        }
+        for (RowError error : rowErrors) {
+          Insert insert = (Insert) error.getOperation();
+          // TODO SDC-2701 - support update on duplicate key
+          if ("ALREADY_PRESENT".equals(error.getStatus())) {
+            // duplicate row key
+            String rowKey = insert.getRow().stringifyRowKey();
+            Record record = keyToRecordMap.get(rowKey);
+            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_08, rowKey));
+          } else {
+            throw new StageException(Errors.KUDU_03, error.toString());
+          }
+        }
+      } catch (Exception ex) {
+        LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
+        throw throwStageException(ex);
       }
-    } catch (Exception ex) {
-      LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
-      throw throwStageException(ex);
     }
   }
+
   @Override
   public void destroy() {
     if (kuduClient != null) {
@@ -247,8 +356,8 @@ public class KuduTarget extends BaseTarget {
       }
     }
     kuduClient = null;
-    kuduTable = null;
     kuduSession = null;
+    kuduTables.invalidateAll();
     super.destroy();
   }
 }
