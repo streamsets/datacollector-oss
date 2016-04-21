@@ -185,7 +185,7 @@
               </a>
             </li>
 
-            <li ng-if="isAuthorized([userRoles.admin]) && common.authenticationType === 'sso' && !common.remoteServerInfo.registrationStatus">
+            <li ng-if="isAuthorized([userRoles.admin]) && common.isDPMEnabled && !common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.generateApplicationToken()">
                 <i class="fa fa-file-text"></i>
                 <span translate="global.menu.admin.generateApplicationToken">Application Token</span>
@@ -237,7 +237,7 @@
 
             <li role="presentation" class="divider"></li>
 
-            <li ng-if="common.authenticationType === 'form' || common.authenticationType === 'sso'">
+            <li ng-if="common.authenticationType === 'form' || common.isDPMEnabled">
               <a href="javascript:;" ng-click="common.logout()">
                 <span class="glyphicon glyphicon-log-out"></span>
                 <span translate="global.menu.account.logout">Logout</span>

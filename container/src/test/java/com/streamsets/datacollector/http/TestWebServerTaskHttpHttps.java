@@ -486,7 +486,7 @@ public class TestWebServerTaskHttpHttps {
     };
     Configuration conf = new Configuration();
     int httpPort = getRandomPort();
-    conf.set(WebServerTask.AUTHENTICATION_KEY, "sso");
+    conf.set(WebServerTask.DPM_ENABLED, true);
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
     try {

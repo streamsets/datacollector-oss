@@ -204,7 +204,7 @@ angular.module('dataCollectorApp')
          * Logout header link command handler
          */
         logout: function() {
-          api.admin.logout($rootScope.common.authenticationType)
+          api.admin.logout($rootScope.common.authenticationType, $rootScope.common.isDPMEnabled)
             .success(function() {
               location.reload();
             })
@@ -372,6 +372,7 @@ angular.module('dataCollectorApp')
     $q.all([api.pipelineAgent.getAllAlerts(), configuration.init()])
       .then(function(results) {
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
+        $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();
         $rootScope.common.isSlaveNode = configuration.isSlaveNode();
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
@@ -380,7 +381,7 @@ angular.module('dataCollectorApp')
           Analytics.createAnalyticsScriptTag();
         }
 
-        if ($rootScope.common.authenticationType === 'sso') {
+        if ($rootScope.common.isDPMEnabled) {
           authService.fetchRemoteUserRoles();
         }
 

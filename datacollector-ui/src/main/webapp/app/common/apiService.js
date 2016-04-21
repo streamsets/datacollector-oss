@@ -172,9 +172,9 @@ angular.module('dataCollectorApp.common')
       /**
        * logout
        */
-      logout: function(authenticationType) {
+      logout: function(authenticationType, isDPMEnabled) {
         var url;
-        if (authenticationType && authenticationType === 'sso') {
+        if (isDPMEnabled) {
           url = 'logout';
           return $http({
             method: 'GET',

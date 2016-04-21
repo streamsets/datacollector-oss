@@ -99,12 +99,14 @@ public class TestHttpAccessControl {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
-  private static String startServer(String authenticationType) throws  Exception {
+  private static String startServer(String authenticationType, boolean dpmEnabled) throws  Exception {
     int port = getRandomPort();
 
     Configuration conf = new Configuration();
     conf.set(WebServerTask.HTTP_PORT_KEY, port);
     conf.set(WebServerTask.AUTHENTICATION_KEY, authenticationType);
+    conf.set(WebServerTask.DPM_ENABLED, dpmEnabled);
+
     Writer writer = writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
       RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
@@ -142,7 +144,7 @@ public class TestHttpAccessControl {
 
   @Test
   public void testForFormAuthentication() throws Exception {
-    String userInfoURI =  startServer("form") + "/rest/v1/system/info/currentUser";
+    String userInfoURI =  startServer("form", false) + "/rest/v1/system/info/currentUser";
     testPreFlightRequest(userInfoURI);
 
     // failing in jenkins
@@ -151,7 +153,7 @@ public class TestHttpAccessControl {
 
   @Test
   public void testForSSOAuthentication() throws Exception {
-    String userInfoURI =  startServer("sso") + "/rest/v1/system/info/currentUser";
+    String userInfoURI =  startServer("", true) + "/rest/v1/system/info/currentUser";
     testPreFlightRequest(userInfoURI);
   }
 

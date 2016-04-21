@@ -37,7 +37,8 @@ angular.module('dataCollectorApp.common')
       CALLBACK_SERVER_URL = 'callback.server.url',
       UI_UNDO_LIMIT = 'ui.undo.limit',
       METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable',
-      MONITOR_MEMORY = 'monitor.memory';
+      MONITOR_MEMORY = 'monitor.memory',
+      DPM_ENABLED = 'dpm.enabled';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -220,5 +221,16 @@ angular.module('dataCollectorApp.common')
         return self.config[HTTP_AUTHENTICATION_SSO_SERVICE_URL];
       }
       return '';
+    };
+
+    /*
+     * Returns dpm.enabled flag value
+     * @returns {*}
+     */
+    this.isDPMEnabled = function() {
+      if (self.config && self.config[DPM_ENABLED] !== undefined) {
+        return self.config[DPM_ENABLED] === 'true';
+      }
+      return false;
     };
   });

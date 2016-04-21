@@ -139,6 +139,9 @@ public class WebServerTask extends AbstractTask {
   public static final String REMOTE_APPLICATION_TOKEN = "dpm.applicationToken";
   private static final String REMOTE_APPLICATION_TOKEN_DEFAULT = "";
 
+  public static final String DPM_ENABLED = "dpm.enabled";
+  private static final boolean DPM_ENABLED_DEFAULT = false;
+
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
@@ -308,23 +311,25 @@ public class WebServerTask extends AbstractTask {
   private SecurityHandler createSecurityHandler(Server server, ServletContextHandler appHandler, String appContext) {
     ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
-    switch (auth) {
-      case "none":
-        securityHandler = null;
-        break;
-      case "digest":
-      case "basic":
-        securityHandler = configureDigestBasic(server, auth);
-        break;
-      case "form":
-        securityHandler = configureForm(server, auth);
-        break;
-      case "sso":
-        securityHandler = configureSSO(appHandler, appContext);
-        break;
-      default:
-        throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
-            auth, AUTHENTICATION_MODES));
+    boolean isDPMEnabled = conf.get(DPM_ENABLED, DPM_ENABLED_DEFAULT);
+    if (isDPMEnabled) {
+      securityHandler = configureSSO(appHandler, appContext);
+    } else {
+      switch (auth) {
+        case "none":
+          securityHandler = null;
+          break;
+        case "digest":
+        case "basic":
+          securityHandler = configureDigestBasic(server, auth);
+          break;
+        case "form":
+          securityHandler = configureForm(server, auth);
+          break;
+        default:
+          throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
+              auth, AUTHENTICATION_MODES));
+      }
     }
     if (securityHandler != null) {
       List<ConstraintMapping> constraintMappings = new ArrayList<>();
@@ -677,7 +682,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   private void validateApplicationToken() {
-    String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, "");
+    String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, REMOTE_APPLICATION_TOKEN_DEFAULT);
 
     if (applicationToken != null && applicationToken.trim().length() > 0 &&
         conf.hasName(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG)) {

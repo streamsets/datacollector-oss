@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <div ng-if="common.authenticationType === 'sso'">
+      <div ng-if="common.isDPMEnabled">
         <button class="btn btn-primary download-pipeline-btn"
                 ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
                 ng-click="downloadRemotePipelineConfig()">
@@ -144,7 +144,7 @@
           </a>
 
           <a href="" class="btn btn-link import-pipeline-btn-link"
-             ng-if="common.authenticationType === 'sso'"
+             ng-if="common.isDPMEnabled"
              ng-click="downloadRemotePipelineConfig()">
             <span class="fa fa-cloud-download"></span>
             <span translate="home.remotePipeline">Remote Pipeline</span>
