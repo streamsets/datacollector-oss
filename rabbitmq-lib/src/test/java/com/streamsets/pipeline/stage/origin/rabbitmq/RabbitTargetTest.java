@@ -19,25 +19,38 @@
  */
 package com.streamsets.pipeline.stage.origin.rabbitmq;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseStage;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.rabbitmq.RabbitDTarget;
 import com.streamsets.pipeline.stage.destination.rabbitmq.RabbitTarget;
 import com.streamsets.pipeline.stage.destination.rabbitmq.RabbitTargetConfigBean;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.reflect.Whitebox;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -105,5 +118,71 @@ public class RabbitTargetTest extends BaseRabbitStageTest{
 
     ((TargetRunner)runner).runWrite(Collections.<Record>emptyList());
     runner.runDestroy();
+  }
+
+
+  private void checkMessageDeliverySemantics(
+      final RabbitTargetConfigBean config,
+      int expectedNumberOfDeliveries,
+      List<Record> records
+  ) throws Exception{
+    final AtomicInteger noOfDeliveries = new AtomicInteger(0);
+    PowerMockito.replace(
+        MemberMatcher.method(
+            RabbitTarget.class,
+            "handleDelivery"
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            noOfDeliveries.incrementAndGet();
+            //call the real getOffsetsLag private method
+            return null;
+          }
+        }
+    );
+
+
+    stage = PowerMockito.spy(newStage());
+    doReturn(new ArrayList<Stage.ConfigIssue>()).when((RabbitTarget)stage).init();
+    runner = newStageRunner("output");
+
+    config.dataFormat = DataFormat.JSON;
+    config.dataFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
+    config.dataFormatConfig.init(runner.getContext(), config.dataFormat, "", "", new ArrayList<Stage.ConfigIssue>());
+    Whitebox.setInternalState(stage, "generatorFactory", config.dataFormatConfig.getDataGeneratorFactory());
+
+
+    runner.runInit();
+    ((TargetRunner) runner).runWrite(records);
+    Assert.assertEquals(expectedNumberOfDeliveries, noOfDeliveries.get());
+    runner.runDestroy();
+  }
+
+  @Test
+  public void testSingleMessagePerBatchAndRecord() throws Exception {
+    final RabbitTargetConfigBean config = ((RabbitTargetConfigBean)this.conf);
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("char", Field.create(Field.Type.CHAR, 'c'));
+    map.put("int", Field.create(Field.Type.INTEGER, 1));
+    map.put("string", Field.create(Field.Type.STRING, "string"));
+
+    Record record1 = RecordCreator.create("s", "s:1");
+    record1.set(Field.create(map));
+    Record record2 = RecordCreator.create("s", "s:2");
+    record1.set(Field.create(map));
+    Record record3 = RecordCreator.create("s", "s:3");
+    record1.set(Field.create(map));
+
+
+    //Run with singleMessagePerBatch
+    config.singleMessagePerBatch = true;
+    checkMessageDeliverySemantics(config, 1, Arrays.asList(record1, record2, record3));
+
+    //Run with singleMessagePerRecord
+    config.singleMessagePerBatch = false;
+    checkMessageDeliverySemantics(config, 3, Arrays.asList(record1, record2, record3));
   }
 }

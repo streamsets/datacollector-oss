@@ -19,8 +19,8 @@
  */
 package com.streamsets.pipeline.stage.origin.rabbitmq;
 
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
@@ -119,14 +120,13 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
           continue;
         }
         String recordId = message.getEnvelope().toString();
-        Optional<Record> optional = parseRecord(recordId, message.getBody());
-        if (optional.isPresent()) {
-          Record record = optional.get();
+        List<Record> records = parseRabbitMessage(recordId, message.getBody());
+        for (Record record : records){
           record.getHeader().setAttribute("deliveryTag", Long.toString(message.getEnvelope().getDeliveryTag()));
           batchMaker.addRecord(record);
           nextSourceOffset = record.getHeader().getAttribute("deliveryTag");
+          numRecords++;
         }
-        numRecords++;
       } catch (InterruptedException e) {
         LOG.warn("Pipeline is shutting down.");
       }
@@ -168,16 +168,31 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
     }
   }
 
-  private Optional<Record> parseRecord(String id, byte[] data) throws StageException {
-    Record record = null;
-    try {
-      DataParser parser = parserFactory.getParser(id, data);
-      record = parser.parse();
-    } catch (DataParserException | IOException e) {
+  private List<Record> parseRabbitMessage(String id, byte[] data) throws StageException {
+    List<Record> records = new ArrayList<>();
+    try (DataParser parser = parserFactory.getParser(id, data)) {
+      Record record = parser.parse();
+      while (record != null) {
+        records.add(record);
+        record = parser.parse();
+      }
+    } catch (IOException|DataParserException e) {
       LOG.error("Failed to parse record from received message: '{}'", e.toString(), e);
       errorRecordHandler.onError(Errors.RABBITMQ_04, new String(data, parserFactory.getSettings().getCharset()));
     }
-    return Optional.fromNullable(record);
+    if (conf.produceSingleRecordPerMessage) {
+      List<Field> list = new ArrayList<>();
+      for (Record record : records) {
+        list.add(record.get());
+      }
+      if (!list.isEmpty()) {
+        Record record = records.get(0);
+        record.set(Field.create(list));
+        records.clear();
+        records.add(record);
+      }
+    }
+    return records;
   }
 
   private boolean isConnected() {
