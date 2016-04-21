@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -32,6 +33,8 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
 import com.streamsets.pipeline.lib.rabbitmq.config.RabbitExchangeConfigBean;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitCxnManager;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitUtil;
+import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +51,7 @@ public class RabbitTarget extends BaseTarget {
   private DataGeneratorFactory generatorFactory = null;
   private RabbitCxnManager rabbitCxnManager = new RabbitCxnManager();
   private AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
+  private ErrorRecordHandler errorRecordHandler = null;
 
   public RabbitTarget(RabbitTargetConfigBean conf) {
     this.conf = conf;
@@ -104,6 +108,7 @@ public class RabbitTarget extends BaseTarget {
       );
 
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
+      errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     }
     return issues;
   }
@@ -120,15 +125,16 @@ public class RabbitTarget extends BaseTarget {
           writeRecord(generator, records.next());
         }
         generator.close();
+        handleDelivery(baos.toByteArray());
       } else {
         while (records.hasNext()) {
           baos.reset();
           DataGenerator generator = this.generatorFactory.getGenerator(baos);
           writeRecord(generator, records.next());
           generator.close();
+          handleDelivery(baos.toByteArray());
         }
       }
-      handleDelivery(baos.toByteArray());
     }  catch (IOException ex) {
       LOG.error("Failed to write Records: {}", ex);
       throw new StageException(Errors.RABBITMQ_02, ex.toString());
@@ -160,23 +166,14 @@ public class RabbitTarget extends BaseTarget {
     } catch (IOException e) {
       //Record Error
       LOG.error("Record Write error", e);
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          getContext().toError(record, e);
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              record,
               Errors.RABBITMQ_07,
-              record.getHeader().getSourceId(),
               e.toString(),
               e
-          );
-        default:
-          throw new IllegalStateException(Utils.format("Unknown OnErrorRecord option '{}'",
-              getContext().getOnErrorRecord()));
-      }
+          )
+      );
     }
   }
 

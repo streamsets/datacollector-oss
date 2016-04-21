@@ -30,12 +30,13 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "RabbitMQ Consumer",
     description = "Reads data from a RabbitMQ source.",
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    upgrader = RabbitSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/RabbitMQ.html#task_hrz_mq1_h5"
 )
 @ConfigGroups(value = Groups.class)

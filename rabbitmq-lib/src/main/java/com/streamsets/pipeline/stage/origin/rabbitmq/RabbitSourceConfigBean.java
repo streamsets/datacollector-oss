@@ -40,6 +40,17 @@ public class RabbitSourceConfigBean extends BaseRabbitConfigBean{
   )
   public String consumerTag = "";
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "One Record per Message",
+      description = "Generates a single Record for a Rabbit MQ message",
+      displayPosition = 30,
+      group = "#0"
+  )
+  public boolean produceSingleRecordPerMessage = false;
+
   @ConfigDefBean(groups = "RABBITMQ")
   public BasicConfig basicConfig = new BasicConfig();
 
