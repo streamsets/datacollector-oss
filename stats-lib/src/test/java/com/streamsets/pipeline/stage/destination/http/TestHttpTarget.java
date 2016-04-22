@@ -65,7 +65,7 @@ public class TestHttpTarget extends JerseyTest {
 
   @Test
   public void testHttpTarget() throws StageException, IOException {
-    HttpTarget httpTarget = new HttpTarget(URL, "token", "sdc", "x", "y");
+    HttpTarget httpTarget = new HttpTarget(URL, "token", "sdc", "x", "y", 0);
     TargetRunner targetRunner = new TargetRunner.Builder(HttpTarget.class, httpTarget)
       .build();
     targetRunner.runInit();

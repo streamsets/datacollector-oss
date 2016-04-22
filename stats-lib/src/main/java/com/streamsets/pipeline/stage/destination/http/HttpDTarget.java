@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.SdcEL;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.configurablestage.DTargetOffsetCommitTrigger;
 
 @StageDef(
   version = 1,
@@ -36,7 +36,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class HttpDTarget extends DTarget {
+public class HttpDTarget extends DTargetOffsetCommitTrigger {
 
   @ConfigDef(
     required = true,
@@ -91,8 +91,21 @@ public class HttpDTarget extends DTarget {
   )
   public String jobId;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "${UPDATE_WAIT_TIME_MS}",
+    label = "Wait Time (ms) between updates",
+    description = "Time to wait between stats updates",
+    displayPosition = 60,
+    group = "HTTP",
+    min = 0,
+    max = Integer.MAX_VALUE
+  )
+  public int waitTimeBetweenUpdates;
+
   @Override
   protected Target createTarget() {
-    return new HttpTarget(targetUrl, authToken, sdcId, pipelineCommitId, jobId);
+    return new HttpTarget(targetUrl, authToken, sdcId, pipelineCommitId, jobId, waitTimeBetweenUpdates);
   }
 }
