@@ -41,12 +41,20 @@
        <entry>Decimal, Double, Float, Integer, Long, Short,  String</entry>
       </row>
       <row>
+       <entry>Byte Array</entry>
+       <entry>String</entry>
+      </row>
+      <row>
        <entry>Character</entry>
        <entry>String</entry>
       </row>
       <row>
        <entry>Date</entry>
-       <entry>Long, String</entry>
+       <entry>Datetime, Long, String</entry>
+      </row>
+      <row>
+       <entry>Datetime</entry>
+       <entry>Date, Long, String</entry>
       </row>
       <row>
        <entry>Decimal</entry>
@@ -66,7 +74,7 @@
       </row>
       <row>
        <entry>Long</entry>
-       <entry>Byte, Decimal, Double, Float, Integer, Short, String</entry>
+       <entry>Byte, Date, Datetime, Decimal, Double, Float, Integer, Short, String</entry>
       </row>
       <row>
        <entry>Short</entry>
