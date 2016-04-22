@@ -1168,8 +1168,8 @@ public class PipelineConfigurationValidator {
     // 2. the pipeline can have only one target that triggers offset commit
     if (offsetCommitTriggerCount == 1) {
       Config deliveryGuarantee = pipelineConfiguration.getConfiguration("deliveryGuarantee");
-      DeliveryGuarantee value = (DeliveryGuarantee) deliveryGuarantee.getValue();
-      if (value != DeliveryGuarantee.AT_LEAST_ONCE) {
+      Object value = deliveryGuarantee.getValue();
+      if (!DeliveryGuarantee.AT_LEAST_ONCE.name().equals(String.valueOf(value))) {
         IssueCreator issueCreator = IssueCreator.getStage(target.getInstanceName());
         issues.add(issueCreator.create(ValidationError.VALIDATION_0092, DeliveryGuarantee.AT_LEAST_ONCE));
       }

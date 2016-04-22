@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.configurablestage;
 
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
-import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -32,7 +31,7 @@ public abstract class DTargetOffsetCommitTrigger extends DTarget implements Offs
   @Override
   Stage<Target.Context> createStage() {
     target = (Target) super.createStage();
-    if (!(target instanceof OffsetCommitter)) {
+    if (!(target instanceof OffsetCommitTrigger)) {
       throw new RuntimeException(
         Utils.format(
             "Stage '{}' does not implement '{}'",
