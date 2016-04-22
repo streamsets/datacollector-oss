@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="This appendix lists the data formats supported by Data Collector origins and destinations."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Format Support"></meta><meta name="abstract" content="This appendix lists the data formats supported by Data Collector origins and destinations."></meta><meta name="description" content="This appendix lists the data formats supported by Data Collector origins and destinations."></meta><meta name="DC.Relation" scheme="URI" content="../Apx-DataFormats/DataFormat_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bcw_qzb_kv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Format Support</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="This appendix lists the data formats supported by Data Collector origins and destinations. The following table lists the data formats supported by each origin. Origin Avro Binary Delimited JSON Log ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Format Support"></meta><meta name="abstract" content="This appendix lists the data formats supported by Data Collector origins and destinations."></meta><meta name="description" content="This appendix lists the data formats supported by Data Collector origins and destinations."></meta><meta name="DC.Relation" scheme="URI" content="../Apx-DataFormats/DataFormat_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bcw_qzb_kv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Format Support</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_bcw_qzb_kv"><script>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -31,7 +31,7 @@
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Apx-DataFormats/DataFormat_Title.html" title="Data Formats by Stage">Data Formats by Stage</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Apx-DataFormats/DataFormat_Title.html" title="Data Formats by Stage"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Formats by Stage</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_bcw_qzb_kv">
  <h1 class="title topictitle1">Data Format Support</h1>
 
  
@@ -44,6 +44,674 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_kgd_11c_kv">
+ <h2 class="title topictitle2">Origins</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The following table lists the data formats supported by each origin.</p>
+
+  <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kgd_11c_kv__table_crn_f1c_kv" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="10%" id="d7190e79">Origin</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e82">Avro</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e85">Binary</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e88">Delimited</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e91">JSON</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e95">Log</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e98">Protobuf</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e101">SDC Record</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e104">Text</th>
+
+                            <th class="entry" valign="top" width="10%" id="d7190e107">XML</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Amazon S3</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_c1h_ddc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_gfm_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_nwn_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_jgp_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_r11_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_acr_fdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_kt2_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_svf_gdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Directory</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_gtg_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_wv3_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_xxj_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_kkp_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_khq_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_ll5_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_erv_qdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_r31_rdc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">File Tail</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_lsy_m2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_utz_m2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_mbc_n2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "> </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Hadoop FS</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_j5s_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_mg5_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_gjw_p2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "> </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">HTTP Client</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_vwy_q2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_fw1_r2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_xxb_r2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">JDBC Consumer</td>
+
+                            <td class="entry" colspan="9" valign="top" headers="d7190e82 d7190e85 d7190e88 d7190e91 d7190e95 d7190e98 d7190e101 d7190e104 d7190e107 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">JMS Consumer</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_xx2_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_dv3_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_gwn_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_qdw_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_pbx_52c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_bqb_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_dvc_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_pdg_v2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Kafka Consumer</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_gth_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "><img class="image" id="concept_kgd_11c_kv__image_k43_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_gkj_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_ljk_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_ajl_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_blm_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_okn_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_kk4_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_smp_w2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Kinesis Consumer</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_mhp_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "><img class="image" id="concept_kgd_11c_kv__image_g2q_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_qzv_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_m4x_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_cty_x2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_eb1_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_xfb_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_ckc_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_ntd_y2c_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">MapR Streams Consumer</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_rp1_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "><img class="image" id="concept_kgd_11c_kv__image_rpc_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_tqd_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_bx2_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_tgg_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_gkh_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_jl3_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_knj_2gc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "> </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">MongoDB</td>
+
+                            <td class="entry" colspan="9" valign="top" headers="d7190e82 d7190e85 d7190e88 d7190e91 d7190e95 d7190e98 d7190e101 d7190e104 d7190e107 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">Omniture</td>
+
+                            <td class="entry" colspan="9" valign="top" headers="d7190e82 d7190e85 d7190e88 d7190e91 d7190e95 d7190e98 d7190e101 d7190e104 d7190e107 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">RabbitMQ Consumer</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "><img class="image" id="concept_kgd_11c_kv__image_lvv_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "><img class="image" id="concept_kgd_11c_kv__image_dyw_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "><img class="image" id="concept_kgd_11c_kv__image_rxx_4qc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "><img class="image" id="concept_kgd_11c_kv__image_ztd_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "><img class="image" id="concept_kgd_11c_kv__image_xt2_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "><img class="image" id="concept_kgd_11c_kv__image_t4j_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_lmk_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "><img class="image" id="concept_kgd_11c_kv__image_dkl_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "><img class="image" id="concept_kgd_11c_kv__image_jlp_pqc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">SDC RPC</td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e82 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e85 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e88 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e91 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e95 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e98 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e101 "><img class="image" id="concept_kgd_11c_kv__image_fwg_zzc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e104 "> </td>
+
+                            <td class="entry" valign="top" width="10%" headers="d7190e107 "> </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="10%" headers="d7190e79 ">UDP Source</td>
+
+                            <td class="entry" colspan="9" valign="top" headers="d7190e82 d7190e85 d7190e88 d7190e91 d7190e95 d7190e98 d7190e101 d7190e104 d7190e107 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_odv_w5c_kv">
+ <h2 class="title topictitle2">Destinations</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The following table lists the data formats supported by each destination.</p>
+
+  <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_odv_w5c_kv__table_bhk_kwc_kv" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="12.5%" id="d7190e542">Destination</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e545">Avro</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e548">Binary</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e551">Delimited</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e554">JSON</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e558">Protobuf</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e561">SDC Record</th>
+
+                            <th class="entry" valign="top" width="12.5%" id="d7190e564">Text</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Amazon S3</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_c1h_ddc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_s3w_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_wjx_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_hky_4wc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_wp1_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_ix2_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_cwf_pwc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Cassandra</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Elasticsearch</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Flume</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_ph3_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_amj_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_zvn_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_y54_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_xzs_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_ff5_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_cfv_1xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Hadoop FS</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_wgl_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_hsp_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_zpq_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_pg5_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_llv_bxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">HBase</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Hive Streaming</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">InfluxDB</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">JDBC Producer</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Kafka Producer</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_dwc_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_qvd_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_qt2_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_kjk_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_znm_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_jd4_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_mlp_sxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                             <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Kinesis Firehose</td>
+
+                              <td class="entry" valign="top" width="12.5%" headers="d7190e545 "> </td>
+
+                               <td class="entry" valign="top" width="12.5%" headers="d7190e548 "> </td>
+
+                               <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_gxs_zgd_lv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                                <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_efh_1hd_lv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                                <td class="entry" valign="top" width="12.5%" headers="d7190e558 "> </td>
+
+                                <td class="entry" valign="top" width="12.5%" headers="d7190e561 "> </td>
+
+                                <td class="entry" valign="top" width="12.5%" headers="d7190e564 "> </td>
+
+                         </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Kinesis Producer</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_zhv_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_o3x_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_kdy_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_bbz_txc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_of2_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_wkf_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_jxg_5xc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Local FS</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_jk1_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_nrc_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_uwg_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_oxh_vxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_b53_wxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">MapR FS</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_vkm_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_rcy_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_mdz_xxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_nf1_yxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_dyd_yxc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">MapR Streams Producer</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_gl4_5yc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_w3c_vyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_hmd_vyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_n1z_zyc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_tg1_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_trk_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_irl_1zc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                                                <tr class="row">
+                                                  <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">MongoDB</td>
+
+                                                  <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not
+                                                  Applicable * * *</td>
+
+                                                </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">RabbitMQ Producer</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "><img class="image" id="concept_odv_w5c_kv__image_zp4_bzc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "><img class="image" id="concept_odv_w5c_kv__image_vmf_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "><img class="image" id="concept_odv_w5c_kv__image_gyg_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "><img class="image" id="concept_odv_w5c_kv__image_bwq_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "><img class="image" id="concept_odv_w5c_kv__image_lcs_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_ikt_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "><img class="image" id="concept_odv_w5c_kv__image_r35_czc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">SDC RPC</td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e545 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e548 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e551 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e554 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e558 "> </td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e561 "><img class="image" id="concept_odv_w5c_kv__image_zmk_dzc_kv" src="../Graphics/CheckIcon.png" height="20" width="23"></img></td>
+
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e564 "> </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Solr</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">To Error</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="12.5%" headers="d7190e542 ">Trash</td>
+
+                            <td class="entry" colspan="7" valign="top" headers="d7190e545 d7190e548 d7190e551 d7190e554 d7190e558 d7190e561 d7190e564 ">* * * Not Applicable * * *</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+ </div>
+
+</div>
+</div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Apx-DataFormats/DataFormat_Title.html" title="Data Formats by Stage"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Formats by Stage</span></a></span>  </div>
 </body>

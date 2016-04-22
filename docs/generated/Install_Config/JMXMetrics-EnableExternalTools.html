@@ -130,13 +130,15 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_1.memoryConsumed.co
                             <li class="li">Offset Lag - The amount of data remaining in the file being read.
                                 This metric displays in external tools as
                                 follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.offsets.lag.&lt;file path&gt;.counter</pre>
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
+&lt;library version&gt;.offsets.lag.&lt;file path&gt;.counter</pre>
 </li>
 
                             <li class="li">Pending Files - The number of files in the directory that still need
                                 to be read. This metric displays in external tools as
                                 follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version&gt;.pending.files.&lt;file path&gt;.counter</pre>
+com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
+&lt;library version&gt;.pending.files.&lt;file path&gt;.counter</pre>
 </li>
 
                         </ul>
@@ -147,11 +149,13 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_&lt;library version
                     <dt class="dt dlterm">Local FS destination</dt>
 
                     <dd class="dd">In addition to the standard metrics available for origins, LocalFS provides
-                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
+                        the following custom metric:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
                             <li class="li">Late Records meter and counter - The number of late records written
                                 to the destination system. The counter displays in external tools as
                                     follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
-com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.&lt;counter | metric&gt;</pre>
+com_streamsets_pipeline_stage_destination_localfilesystem_\
+LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt;</pre>
 </li>
 
                         </ul>
