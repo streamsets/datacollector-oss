@@ -23,7 +23,7 @@ package com.streamsets.pipeline.stage.destination.solr;
 import org.apache.solr.SolrTestCaseJ4;
 
 @SolrTestCaseJ4.SuppressSSL
-public class TestSolrTargetCDH54 extends TestSolrTarget {
+public class TestSolrTargetCDH55 extends TestSolrTarget {
 
 
 }

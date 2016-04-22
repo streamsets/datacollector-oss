@@ -127,6 +127,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cdh_kafka_2_0-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-jython_2_7-lib</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -153,6 +158,11 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cdh_5_7-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
