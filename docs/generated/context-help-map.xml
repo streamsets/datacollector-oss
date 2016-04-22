@@ -37,7 +37,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_1481733013"/>
+               path="Install_Config/CMInstall-Overview.html#unique_996280794"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -299,8 +299,8 @@
                path="Origins/MapRStreamsCons.html#concept_cvy_xsf_2v"/>
    <appContext helpID="concept_lzy_xlg_2v"
                path="Origins/MapRStreamsCons.html#concept_lzy_xlg_2v"/>
-   <appContext helpID="concept_izv_vcn_2v"
-               path="Origins/MapRStreamsCons.html#concept_izv_vcn_2v"/>
+   <appContext helpID="concept_zb5_mkg_2v"
+               path="Origins/MapRStreamsCons.html#concept_zb5_mkg_2v"/>
    <appContext helpID="concept_tr1_spd_sr"
                path="Origins/MapRStreamsCons.html#concept_tr1_spd_sr"/>
    <appContext helpID="concept_ynx_vzg_2v"
@@ -426,6 +426,10 @@
    <appContext helpID="concept_szj_slw_tr"
                path="Processors/Jython.html#concept_szj_slw_tr"/>
    <appContext helpID="task_fty_jwx_nr" path="Processors/Jython.html#task_fty_jwx_nr"/>
+   <appContext helpID="concept_aqz_t4r_pv"
+               path="Processors/LocalLookup.html#concept_aqz_t4r_pv"/>
+   <appContext helpID="task_xk1_z4r_pv"
+               path="Processors/LocalLookup.html#task_xk1_z4r_pv"/>
    <appContext helpID="concept_ulm_qdq_fs"
                path="Processors/LogParser.html#concept_ulm_qdq_fs"/>
    <appContext helpID="concept_tr1_spd_sr"
@@ -438,6 +442,10 @@
                path="Processors/RDeduplicator.html#concept_swx_lbf_zq"/>
    <appContext helpID="task_ikr_c2f_zq"
                path="Processors/RDeduplicator.html#task_ikr_c2f_zq"/>
+   <appContext helpID="concept_ng3_lpr_pv"
+               path="Processors/RedisLookup.html#concept_ng3_lpr_pv"/>
+   <appContext helpID="task_gpv_npr_pv"
+               path="Processors/RedisLookup.html#task_gpv_npr_pv"/>
    <appContext helpID="concept_tqv_t5r_wq"
                path="Processors/StreamSelector.html#concept_tqv_t5r_wq"/>
    <appContext helpID="concept_xr4_zt3_3r"
@@ -450,6 +458,10 @@
                path="Processors/ValueReplacer.html#concept_o5k_dmf_zq"/>
    <appContext helpID="task_ihq_ymf_zq"
                path="Processors/ValueReplacer.html#task_ihq_ymf_zq"/>
+   <appContext helpID="concept_ck4_255_sv"
+               path="Processors/XMLFlattener.html#concept_ck4_255_sv"/>
+   <appContext helpID="task_pmb_l55_sv"
+               path="Processors/XMLFlattener.html#task_pmb_l55_sv"/>
    <appContext helpID="concept_dtt_q5q_k5"
                path="Processors/XMLParser.html#concept_dtt_q5q_k5"/>
    <appContext helpID="task_txd_55q_k5"
@@ -860,7 +872,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_1576832325"/>
+               path="Troubleshooting/Destinations.html#unique_1414979460"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must use an Expression Evaluator to define an operation header attribute. The operation header attribute indicates the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MongoDB"></meta><meta name="abstract" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must use an Expression Evaluator to define an operation header attribute. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete."></meta><meta name="description" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must use an Expression Evaluator to define an operation header attribute. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_eth_k5n_4v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MongoDB"></meta><meta name="abstract" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete."></meta><meta name="description" content="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_eth_k5n_4v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,9 +35,9 @@
  <h1 class="title topictitle1">MongoDB</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must use
-        an Expression Evaluator to define an operation header attribute. The operation header
-        attribute indicates the operation to perform for each record: insert, upsert, or delete. </p>
+ <div class="body conbody"><p class="shortdesc">The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must
+        define an operation record header attribute in the pipeline. The operation header attribute
+        indicates the operation to perform for each record: insert, upsert, or delete. </p>
 
   <p class="p">When
             you configure the MongoDB destination, you configure the connection string, database,
@@ -57,8 +57,7 @@
 
  
  <div class="body conbody"><p class="shortdesc">To write to MongoDB, you need to define the MongoDB operation header attribute for each
-        record. Use an Expression Evaluator in the pipeline to define the operation header
-        attribute.</p>
+        record. </p>
 
   <div class="p">Use the following header to define the operation to perform:
             <pre class="pre codeblock">SDC.MONGODB.OPERATION</pre>
@@ -74,12 +73,20 @@
             </ul>
 </div>
 
+        <p class="p">To define the header attribute easily, you might use an Expression Evaluator. Or to
+            perform a more complex evaluation before setting the header attribute, you might try a
+            scripting processor. </p>
+
         <p class="p">For example, the following Expression Evaluator sets the MongoDB operation header
             attribute to UPSERT, so the destination system updates or inserts every record:</p>
 
         <p class="p"><img class="image" id="concept_bkc_m24_4v__image_d4b_qs4_4v" src="../Graphics/MongoDBDest-EEval.png" height="333" width="823"></img></p>
 
-        <p class="p">You can alternatively use an expression that defines the operation for each record.</p>
+        <p class="p">Alternatively, the Jython Evaluator in the following pipeline sets the operation header
+            attribute based on the value in the _operator field:</p>
+
+        <p class="p">
+            <img class="image" id="concept_bkc_m24_4v__image_qxt_z2h_qv" src="../Graphics/MondoDBDest-Jython.png" height="472" width="547"></img></p>
 
  </div>
 
@@ -102,9 +109,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d51063e123">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d50865e131">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d51063e126">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d50865e134">Description</th>
 
                                 </tr>
 
@@ -112,24 +119,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e131 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d50865e134 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d50865e131 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50865e134 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50865e131 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_mrc_k5n_4v__d1696e2489" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d50865e134 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -137,10 +144,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d50865e131 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_mrc_k5n_4v__d1696e2503" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d50865e134 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -148,9 +155,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e123 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e131 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e126 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d1696e2519">
+                                    <td class="entry" valign="top" width="70%" headers="d50865e134 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d1696e2519">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -180,9 +187,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d51063e235">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d50865e243">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d51063e238">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d50865e246">Description</th>
 
                                 </tr>
 
@@ -190,9 +197,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Connection String </td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e243 ">Connection String </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB connection string. You can include any valid
+                                    <td class="entry" valign="top" width="70%" headers="d50865e246 ">MongoDB connection string. You can include any valid
                                         MongoDB component in the connection string. <p class="p">For more
                                             information, see the MongoDB documentation.</p>
 </td>
@@ -200,32 +207,32 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Database</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e243 ">Database</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB database name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Collection</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">MongoDB collection name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d50865e246 ">MongoDB database name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Unique Key Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e243 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">Field in the record to be used to upsert records. When
+                                    <td class="entry" valign="top" width="70%" headers="d50865e246 ">MongoDB collection name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50865e243 ">Unique Key Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50865e246 ">Field in the record to be used to upsert records. When
                                         not set, upsert records are sent to stage for error
                                         handling.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51063e235 ">Write Concern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50865e243 ">Write Concern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51063e238 ">The acknowledgement level requested from the destination
+                                    <td class="entry" valign="top" width="70%" headers="d50865e246 ">The acknowledgement level requested from the destination
                                         system. <p class="p">For details about write concern levels, see the
                                             MongoDB documentation.</p>
 </td>

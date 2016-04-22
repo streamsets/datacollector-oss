@@ -90,15 +90,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">The destination writes records as delimited data. When you use
-                                    this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_x33_b5c_r5__d1808e818">
-                                          <li class="li">A root field that contains an array of maps.</li>
-
-                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
-                                                optional <dfn class="term">header</dfn> element.</li>
-
-                                    </ul>
-</dd>
+                                    this data format, the root field must be list or list-map.</dd>
 
                         
             
@@ -169,9 +161,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e221">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e207">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e224">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e210">Description</th>
 
                                 </tr>
 
@@ -179,24 +171,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e221 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e207 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e224 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e221 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d40788e224 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d40678e210 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e221 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d40678e207 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d40678e210 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d40678e207 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_q2j_ml4_yr__d1696e2270" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e224 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d40678e210 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -204,10 +196,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e221 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d40678e207 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_q2j_ml4_yr__d1696e2284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e224 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d40678e210 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -215,9 +207,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e221 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e207 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e224 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d1696e2300">
+                                    <td class="entry" valign="top" width="70%" headers="d40678e210 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d1696e2300">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -248,9 +240,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d40788e333">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d40678e319">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d40788e336">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d40678e322">Description</th>
 
                                 </tr>
 
@@ -258,11 +250,11 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Access Key ID <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Access Key ID <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
         <img class="image" id="task_q2j_ml4_yr__d1710e232" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
        </td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -272,10 +264,10 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Secret Access Key <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Secret Access Key <a class="xref" href="Destinations_overview.html#concept_adq_swp_kv" title="When Data Collector writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must pass credentials to Amazon Web Services.">
          <img class="image" id="task_q2j_ml4_yr__d1710e251" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -285,24 +277,24 @@
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Region</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Region</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Amazon Web Services region that hosts the Kinesis
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Amazon Web Services region that hosts the Kinesis
                                         cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Kinesis stream name.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Kinesis stream name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Data Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_q2j_ml4_yr__ul_un2_cqd_br">
                                             <li class="li">Avro</li>
 
@@ -325,16 +317,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Partitioning Strategy</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Partitioning Strategy</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Strategy to write data to Kinesis shards. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Strategy to write data to Kinesis shards. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Partition Expression</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Partition Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Expression to use to pass data to different partitions.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Expression to use to pass data to different partitions.
                                             <p class="p">Use for the expression partition strategy.
                                         </p>
 </td>
@@ -342,9 +334,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Kinesis Producer Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Kinesis Producer Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Additional Kinesis properties. <p class="p">When you add a
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Additional Kinesis properties. <p class="p">When you add a
                                             configuration property, enter the exact property name
                                             and the value. The Kinesis Producer does not validate
                                             the property names or values. </p>
@@ -353,16 +345,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Preserve Record Order</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Preserve Record Order</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Select to preserve the order of records. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Select to preserve the order of records. </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d40788e333 ">Charset</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d40678e319 ">Charset</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d40788e336 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d40678e322 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
 </td>
 
       </tr>
@@ -385,9 +377,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e537">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e523">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e540">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e526">Description</th>
 
                                 </tr>
 
@@ -395,16 +387,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e537 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e523 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e540 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d40678e526 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e537 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e523 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e540 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="70%" headers="d40678e526 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -413,9 +405,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e537 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e523 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e540 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d40678e526 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -439,9 +431,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e605">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e591">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e608">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e594">Description</th>
 
                                 </tr>
 
@@ -449,9 +441,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e605 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e591 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e608 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d40678e594 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -472,9 +464,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e651">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e637">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e654">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e640">Description</th>
 
                                 </tr>
 
@@ -482,9 +474,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Format for delimited data:<ul class="ul" id="task_q2j_ml4_yr__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Format for delimited data:<ul class="ul" id="task_q2j_ml4_yr__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -508,16 +500,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Remove New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Remove New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Removes new line characters from within a record.
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Removes new line characters from within a record.
                                             <p class="p">Recommended when writing data as a single line of
                                             text.</p>
 </td>
@@ -525,9 +517,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the pipe character ( |
                                         ).</p>
@@ -536,9 +528,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -547,9 +539,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e651 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e637 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e654 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d40678e640 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -574,9 +566,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e785">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e771">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e788">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e774">Description</th>
 
                                 </tr>
 
@@ -584,9 +576,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e785 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e771 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e788 ">Determines how JSON data is written:<ul class="ul" id="task_q2j_ml4_yr__d1696e3112">
+                                    <td class="entry" valign="top" width="70%" headers="d40678e774 ">Determines how JSON data is written:<ul class="ul" id="task_q2j_ml4_yr__d1696e3112">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -617,9 +609,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e839">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e825">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e842">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e828">Description</th>
 
                                 </tr>
 
@@ -627,9 +619,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e839 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e825 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e842 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d40678e828 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>. <p class="p">For more information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information
                                             about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
@@ -638,9 +630,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e839 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e825 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e842 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d40678e828 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -666,9 +658,9 @@ Use a message type defined in the
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d40788e944">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d40678e930">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d40788e947">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d40678e933">Description</th>
 
                                 </tr>
 
@@ -676,17 +668,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e944 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e930 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e947 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d40678e933 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d40788e944 ">Empty Line If No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d40678e930 ">Empty Line If No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d40788e947 ">Creates an empty line when a record does not include the
+                                    <td class="entry" valign="top" width="70%" headers="d40678e933 ">Creates an empty line when a record does not include the
                                         text field specified above. <p class="p">When not selected, records
                                             without the specified text field are
                                         discarded.</p>
