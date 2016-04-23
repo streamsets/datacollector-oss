@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.stage.destination.hbase;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -28,13 +29,19 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.apache.hadoop.conf.Configuration;
@@ -96,7 +103,9 @@ public class TestHBaseTarget {
       utility.startMiniCluster();
       miniZK = utility.getZkCluster();
       HTableDescriptor htd = new HTableDescriptor(TableName.valueOf(tableName));
-      htd.addFamily(new HColumnDescriptor(familyName));
+      HColumnDescriptor hcd = new HColumnDescriptor(familyName);
+      hcd.setMaxVersions(HConstants.ALL_VERSIONS);
+      htd.addFamily(hcd);
       utility.getHBaseAdmin().createTable(htd);
     } catch (Throwable throwable) {
       LOG.error("Error in startup: " + throwable, throwable);
@@ -133,6 +142,7 @@ public class TestHBaseTarget {
             .addConfiguration("implicitFieldMapping", false)
             .addConfiguration("ignoreMissingFieldPath", false)
             .addConfiguration("ignoreInvalidColumn", false)
+            .addConfiguration("timeDriver", "${time:now()}")
             .setOnRecordError(OnRecordError.DISCARD).build();
     assertTrue(targetRunner.runValidateConfigs().isEmpty());
   }
@@ -144,10 +154,14 @@ public class TestHBaseTarget {
     dTarget.zookeeperQuorum = "";
     dTarget.clientPort = 0;
     dTarget.zookeeperParentZnode = "";
+    dTarget.timeDriver = "${time:now()}";
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
-    List<Stage.ConfigIssue> issues =
-        target.init(null,
-                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+
+    TargetRunner runner = new TargetRunner.Builder(HBaseDTarget.class, target)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(3, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_04"));
     assertTrue(issues.get(1).toString().contains("HBASE_09"));
@@ -156,18 +170,20 @@ public class TestHBaseTarget {
     configure(dTarget);
     dTarget.tableName = "NonExistingTable";
     target = (HBaseTarget) dTarget.createTarget();
-    issues =
-        target.init(null,
-                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+    runner = new TargetRunner.Builder(HBaseDTarget.class, target)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_07"));
 
     configure(dTarget);
     dTarget.zookeeperQuorum = "dummyhost";
     target = (HBaseTarget) dTarget.createTarget();
-    issues =
-        target.init(null,
-                    ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
+    runner = new TargetRunner.Builder(HBaseDTarget.class, target)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_06"));
     assertTrue(issues.get(0).toString().contains("UnknownHostException"));
@@ -709,12 +725,12 @@ public class TestHBaseTarget {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner =
-        buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.TO_ERROR, "", false, "[0]", false, false);
+        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", false, "[0]", false, false);
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
 
-    int rowKey = 3333;
+    String rowKey = "testMultipleRecordsOnError1";
     // / Invalid record
     fields.add(Field.create(rowKey));
     fields.add(Field.create("20")); // Invalid
@@ -726,7 +742,7 @@ public class TestHBaseTarget {
     // Now enter a valid record
     Record record2 = RecordCreator.create();
     List<Field> fields2 = new ArrayList<>();
-    int rowKey2 = 4444;
+    String rowKey2 = "testMultipleRecordsOnError2";
     fields2.add(Field.create(rowKey2));
     fields2.add(Field.create(60));
     fields2.add(Field.create(70));
@@ -758,6 +774,188 @@ public class TestHBaseTarget {
     assertEquals("90", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
   }
 
+  @Test(timeout=60000)
+  public void testCustomTimeBasis() throws InterruptedException, StageException, IOException, ParseException {
+    List<HBaseFieldMappingConfig> fieldMappings =
+        ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT),
+            new HBaseFieldMappingConfig("cf:b", "[2]", StorageType.TEXT),
+            new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
+            new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
+
+    TargetRunner targetRunner =
+        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", false, "[0]", false, false,
+            "${record:value('[4]')}");
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    String rowKey = "testCustomTimeBasis1";
+    fields1.add(Field.create(rowKey));
+    fields1.add(Field.create(70));
+    fields1.add(Field.create(80));
+    fields1.add(Field.create(90));
+    Date d = sdf.parse("1986-01-17");
+    fields1.add(Field.create(Type.DATE, d));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    String rowKey2 = "testCustomTimeBasis2";
+    fields2.add(Field.create(rowKey2));
+    fields2.add(Field.create(60));
+    fields2.add(Field.create(70));
+    fields2.add(Field.create(80));
+    d = sdf.parse("1988-01-19");
+    fields2.add(Field.create(Type.DATE, d));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    List<Field> fields3 = new ArrayList<>();
+    fields3.add(Field.create(rowKey));
+    fields3.add(Field.create(60));
+    fields3.add(Field.create(70));
+    fields3.add(Field.create(80));
+    d = sdf.parse("1993-01-18");
+    fields3.add(Field.create(Type.DATE, d));
+    record3.set(Field.create(fields3));
+
+    List<Record> multipleRecords = ImmutableList.of(record1, record2, record3);
+    targetRunner.runInit();
+    targetRunner.runWrite(multipleRecords);
+
+    targetRunner.runDestroy();
+
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    Result r = htable.get(g);
+    NavigableMap<Long, byte[]> map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+
+    assertEquals(2, map.size());
+    Set<Long> timestamps = Sets.newHashSet(sdf.parse("1993-01-18").getTime(), sdf.parse("1986-01-17").getTime());
+    for (Long ts : map.keySet()) {
+      assertTrue(timestamps.contains(ts));
+    }
+
+    g = new Get(Bytes.toBytes(rowKey2));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    r = htable.get(g);
+    map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+    assertEquals(1, map.size());
+    assertEquals(Long.valueOf(sdf.parse("1988-01-19").getTime()), map.firstKey());
+  }
+
+  @Test(timeout=60000)
+  public void testEmptyTimeBasis() throws InterruptedException, StageException, IOException, ParseException {
+    List<HBaseFieldMappingConfig> fieldMappings =
+        ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.BINARY),
+            new HBaseFieldMappingConfig("cf:b", "[2]", StorageType.TEXT),
+            new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT));
+
+    TargetRunner targetRunner =
+        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", false, "[0]", false, false, "");
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    String rowKey = "testEmptyTimeBasis1";
+    fields1.add(Field.create(rowKey));
+    fields1.add(Field.create(70));
+    fields1.add(Field.create(80));
+    fields1.add(Field.create(90));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    fields2.add(Field.create(rowKey));
+    fields2.add(Field.create(60));
+    fields2.add(Field.create(70));
+    fields2.add(Field.create(80));
+    record2.set(Field.create(fields2));
+
+    targetRunner.runInit();
+    targetRunner.runWrite(ImmutableList.of(record1));
+    targetRunner.runWrite(ImmutableList.of(record2));
+
+    assertEquals(0, targetRunner.getErrorRecords().size());
+
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    Result r = htable.get(g);
+    NavigableMap<Long, byte[]> map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+    assertEquals(2, map.size());
+    assertArrayEquals(Bytes.toBytes(60), map.firstEntry().getValue());
+    assertArrayEquals(Bytes.toBytes(70), map.lastEntry().getValue());
+  }
+
+  @Test(timeout=60000)
+  public void testTimeNowTimeBasis() throws InterruptedException, StageException, IOException, ParseException {
+    List<HBaseFieldMappingConfig> fieldMappings =
+        ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.BINARY),
+            new HBaseFieldMappingConfig("cf:b", "[2]", StorageType.TEXT),
+            new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT));
+
+    TargetRunner targetRunner =
+        buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.TO_ERROR, "", false, "[0]", false, false,
+            "${time:now()}");
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    String rowKey = "testTimeNowTimeBasis1";
+    fields1.add(Field.create(rowKey));
+    fields1.add(Field.create(70));
+    fields1.add(Field.create(80));
+    fields1.add(Field.create(90));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    String rowKey2 = "testTimeNowTimeBasis2";
+    fields2.add(Field.create(rowKey2));
+    fields2.add(Field.create(60));
+    fields2.add(Field.create(70));
+    fields2.add(Field.create(80));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    List<Field> fields3 = new ArrayList<>();
+    fields3.add(Field.create(rowKey));
+    fields3.add(Field.create(60));
+    fields3.add(Field.create(70));
+    fields3.add(Field.create(80));
+    record3.set(Field.create(fields3));
+
+    List<Record> multipleRecords = ImmutableList.of(record1, record2, record3);
+    targetRunner.runInit();
+    targetRunner.runWrite(multipleRecords);
+
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    Result r = htable.get(g);
+    NavigableMap<Long, byte[]> map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+    assertEquals(1, map.size());
+    // last one wins with a single batch
+    assertArrayEquals(Bytes.toBytes(60), map.firstEntry().getValue());
+
+    targetRunner.runWrite(ImmutableList.of(record1));
+    targetRunner.runDestroy();
+
+    g = new Get(Bytes.toBytes(rowKey));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    r = htable.get(g);
+    map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+    assertEquals(2, map.size());
+    assertArrayEquals(Bytes.toBytes(70), map.firstEntry().getValue());
+
+    g = new Get(Bytes.toBytes(rowKey2));
+    g.setMaxVersions(HConstants.ALL_VERSIONS);
+    r = htable.get(g);
+    map = r.getMap().get(Bytes.toBytes("cf")).get(Bytes.toBytes("a"));
+    assertEquals(1, map.size());
+  }
+
   @Test(timeout = 60000)
   public void testInvalidColumnFamily() throws Exception {
     List<HBaseFieldMappingConfig> fieldMappings =
@@ -775,7 +973,7 @@ public class TestHBaseTarget {
     protected Target createTarget() {
       return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
         rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
-        ignoreMissingFieldPath, ignoreInvalidColumn) {
+        ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver) {
         @Override
         public void write(Batch batch) throws StageException {
         }
@@ -810,6 +1008,7 @@ public class TestHBaseTarget {
     Files.write("<configuration><property><name>zz</name><value>ZZ</value></property></configuration>",
       new File(absoluteFilePath, "hbase-site.xml"), StandardCharsets.UTF_8);
     dTarget.hbaseConfDir = absoluteFilePath.getAbsolutePath();
+    dTarget.timeDriver = "${time:now()}";
     target = (HBaseTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
@@ -835,10 +1034,19 @@ public class TestHBaseTarget {
     target.hbaseFieldColumnMapping
         .add(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT));
     target.hbaseUser = "";
+    target.timeDriver = "${time:now()}";
   }
 
   private TargetRunner buildRunner(List<HBaseFieldMappingConfig> fieldMappings,
-      StorageType storageType, OnRecordError onRecordError, String hbaseUser, boolean implicitFieldMapping, String hbaseRowKey, boolean ignoreMissingFieldPath, boolean ignoreInvalidColumn) {
+                                   StorageType storageType, OnRecordError onRecordError, String hbaseUser, boolean implicitFieldMapping,
+                                   String hbaseRowKey, boolean ignoreMissingFieldPath, boolean ignoreInvalidColumn) {
+    return buildRunner(fieldMappings, storageType, onRecordError, hbaseUser, implicitFieldMapping, hbaseRowKey,
+        ignoreMissingFieldPath, ignoreInvalidColumn, "${time:now()}");
+  }
+
+  private TargetRunner buildRunner(List<HBaseFieldMappingConfig> fieldMappings,
+      StorageType storageType, OnRecordError onRecordError, String hbaseUser, boolean implicitFieldMapping,
+      String hbaseRowKey, boolean ignoreMissingFieldPath, boolean ignoreInvalidColumn, String timeDriver) {
     TargetRunner targetRunner =
         new TargetRunner.Builder(HBaseDTarget.class)
             .addConfiguration("zookeeperQuorum", "127.0.0.1")
@@ -855,6 +1063,7 @@ public class TestHBaseTarget {
             .addConfiguration("hbaseUser", hbaseUser)
             .addConfiguration("ignoreMissingFieldPath", ignoreMissingFieldPath)
             .addConfiguration("ignoreInvalidColumn", ignoreInvalidColumn)
+            .addConfiguration("timeDriver", timeDriver)
             .build();
     return targetRunner;
   }
@@ -924,6 +1133,7 @@ public class TestHBaseTarget {
         .addConfiguration("implicitFieldMapping", false)
         .addConfiguration("ignoreMissingFieldPath", false)
         .addConfiguration("ignoreInvalidColumn", false)
+        .addConfiguration("timeDriver", "${time:now()}")
       .setOnRecordError(OnRecordError.DISCARD)
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH).build();
 

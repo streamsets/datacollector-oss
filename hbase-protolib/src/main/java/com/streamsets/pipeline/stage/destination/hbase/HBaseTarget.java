@@ -29,7 +29,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
@@ -66,6 +71,7 @@ import java.net.UnknownHostException;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -94,9 +100,12 @@ public class HBaseTarget extends BaseTarget {
   private final boolean implicitFieldMapping;
   private final boolean ignoreMissingFieldPath;
   private final boolean ignoreInvalidColumn;
+  private final String timeDriver;
   private Configuration hbaseConf;
   private UserGroupInformation loginUgi;
   private ErrorRecordHandler errorRecordHandler;
+  private ELEval timeDriverElEval;
+  private Date batchTime;
 
   public HBaseTarget(
       String zookeeperQuorum,
@@ -112,8 +121,9 @@ public class HBaseTarget extends BaseTarget {
       String hbaseUser,
       boolean implicitFieldMapping,
       boolean ignoreMissingFieldPath,
-      boolean ignoreInvalidColumn
-   ) {
+      boolean ignoreInvalidColumn,
+      String timeDriver
+  ) {
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -128,6 +138,7 @@ public class HBaseTarget extends BaseTarget {
     this.implicitFieldMapping = implicitFieldMapping;
     this.ignoreMissingFieldPath = ignoreMissingFieldPath;
     this.ignoreInvalidColumn = ignoreInvalidColumn;
+    this.timeDriver = timeDriver;
   }
 
   @Override
@@ -149,6 +160,24 @@ public class HBaseTarget extends BaseTarget {
       hbaseConf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, this.zookeeperParentZnode);
       hTableDescriptor = checkConnectionAndTableExistence(issues, this.tableName);
     }
+
+    if (!timeDriver.trim().isEmpty()) {
+      timeDriverElEval = getContext().createELEval("timeDriver");
+      try {
+        setBatchTime();
+        getRecordTime(getContext().createRecord("validateTimeDriver"));
+      } catch (OnRecordErrorException ex) {
+        // OREE is just a wrapped ElEvalException, so unwrap this for the error message
+        issues.add(getContext().createConfigIssue(
+            Groups.HBASE.name(),
+            "timeDriverEval",
+            Errors.HBASE_33,
+            ex.getCause().toString(),
+            ex.getCause()
+        ));
+      }
+    }
+
     validateStorageTypes(issues);
     if (issues.isEmpty()) {
       Collection<byte[]> families = hTableDescriptor.getFamiliesKeys();
@@ -370,7 +399,7 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException {
+  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException, ELEvalException {
     Put p = new Put(rowKeyBytes);
     StringBuilder errorMsgBuilder = new StringBuilder();
     doExplicitFieldMapping(p, record, errorMsgBuilder);
@@ -383,13 +412,47 @@ public class HBaseTarget extends BaseTarget {
     return p;
   }
 
+  @VisibleForTesting
+  Date setBatchTime() {
+    batchTime = new Date();
+    return batchTime;
+  }
+
+  private Date getBatchTime() {
+    return batchTime;
+  }
+
+  private Date getRecordTime(Record record) throws OnRecordErrorException {
+    if (timeDriver.trim().isEmpty()) {
+      return null;
+    }
+
+    try {
+      ELVars variables = getContext().createELVars();
+      TimeNowEL.setTimeNowInContext(variables, getBatchTime());
+      RecordEL.setRecordInContext(variables, record);
+      return timeDriverElEval.eval(variables, timeDriver, Date.class);
+    } catch (ELEvalException e) {
+      throw new OnRecordErrorException(Errors.HBASE_34, e);
+    }
+  }
+
   private void doExplicitFieldMapping(Put p, Record record, StringBuilder errorBuilder) throws OnRecordErrorException {
+    Date recordTime = getRecordTime(record);
     for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
       HBaseColumn hbaseColumn = mapEntry.getValue().hbaseColumn;
       byte[] value = getBytesForValue(record, mapEntry.getKey(), mapEntry.getValue().storageType, errorBuilder);
       if (value != null) {
-        p.add(hbaseColumn.cf, hbaseColumn.qualifier, value);
+        addCell(p, hbaseColumn.cf, hbaseColumn.qualifier, recordTime, value);
       }
+    }
+  }
+
+  private void addCell(Put p, byte[] columnFamily, byte[] qualifier, Date recordTime, byte[] value) {
+    if (recordTime != null) {
+      p.add(columnFamily, qualifier, recordTime.getTime(), value);
+    } else {
+      p.add(columnFamily, qualifier, value);
     }
   }
 
@@ -406,12 +469,11 @@ public class HBaseTarget extends BaseTarget {
   }
 
   private void doImplicitFieldMapping(Put p, Record record, StringBuilder errorMsgBuilder, Set<String> explicitFields)
-    throws OnRecordErrorException {
+      throws OnRecordErrorException {
     validateRootLevelType(record);
+    Date recordTime = getRecordTime(record);
     for (String fieldPath : record.getEscapedFieldPaths()) {
-      if (fieldPath.isEmpty() || fieldPath.equals(this.hbaseRowKey) || explicitFields.contains(fieldPath)) {
-        // ignore
-      } else {
+      if (!fieldPath.isEmpty() && !fieldPath.equals(this.hbaseRowKey) && !explicitFields.contains(fieldPath)) {
         String fieldPathColumn = fieldPath;
         if (fieldPath.charAt(0) == '/') {
           fieldPathColumn = fieldPath.substring(1);
@@ -419,7 +481,7 @@ public class HBaseTarget extends BaseTarget {
         HBaseColumn hbaseColumn = getColumn(fieldPathColumn.replace("'", ""));
         if (hbaseColumn != null) {
           byte[] value = getValueImplicitTypeMapping(record, fieldPath);
-          p.add(hbaseColumn.cf, hbaseColumn.qualifier, value);
+          addCell(p, hbaseColumn.cf, hbaseColumn.qualifier, recordTime, value);
         } else {
           if (ignoreInvalidColumn) {
             String errorMessage = Utils.format(Errors.HBASE_28.getMessage(), fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
@@ -485,6 +547,7 @@ public class HBaseTarget extends BaseTarget {
 
   @Override
   public void write(final Batch batch) throws StageException {
+    setBatchTime();
     try {
       getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
