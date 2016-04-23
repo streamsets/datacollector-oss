@@ -57,7 +57,9 @@ public enum Errors implements ErrorCode {
   HBASE_29("Record root type: '{}' is not eligible to be inserted in HBase; Root type must be a MAP or LIST_MAP "),
   HBASE_30("All fields encountered error: '{}'"),
   HBASE_31("Error converting '{}' to '{}'"),
-  HBASE_32("Column family '{}' doesn't exist for table '{}'")
+  HBASE_32("Column family '{}' doesn't exist for table '{}'"),
+  HBASE_33("Invalid time driver expression"),
+  HBASE_34("Could not evaluate time driver expression: {}")
   ;
   private final String msg;
 

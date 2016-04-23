@@ -28,6 +28,9 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
 import java.util.Map;
@@ -149,6 +152,21 @@ public class HBaseDTarget extends DTarget {
     group = "HBASE")
   public boolean ignoreInvalidColumn;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Time Basis",
+      description = "Time basis to use for cell timestamps. Enter an expression that evaluates to a datetime. To use the " +
+          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<fieldpath>\")}'. If left blank," +
+          "system time will be used.",
+      displayPosition = 130,
+      group = "HBASE",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String timeDriver;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
@@ -190,7 +208,7 @@ public class HBaseDTarget extends DTarget {
   protected Target createTarget() {
     return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
         rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
-        ignoreMissingFieldPath, ignoreInvalidColumn);
+        ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver);
 
   }
 
