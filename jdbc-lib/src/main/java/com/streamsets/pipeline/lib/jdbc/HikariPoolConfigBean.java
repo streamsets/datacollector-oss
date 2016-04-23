@@ -39,7 +39,7 @@ public class HikariPoolConfigBean {
   private static final String DEFAULT_MAX_LIFETIME_EL = "${30 * MINUTES}";
 
   private static final int MAX_POOL_SIZE_MIN = 1;
-  private static final int MIN_IDLE_MIN = 1;
+  private static final int MIN_IDLE_MIN = 0;
   private static final int CONNECTION_TIMEOUT_MIN = 1;
   private static final int IDLE_TIMEOUT_MIN = 0;
   private static final int MAX_LIFETIME_MIN = 0;
@@ -152,7 +152,7 @@ public class HikariPoolConfigBean {
       label = "Minimum Idle Connections",
       description = "Minimum number of connections to maintain. It is recommended to set this to the same value" +
           "as Maximum Pool Size which effectively creates a fixed connection pool.",
-      min = 1,
+      min = 0,
       defaultValue = "1",
       displayPosition = 20,
       group = "ADVANCED"
