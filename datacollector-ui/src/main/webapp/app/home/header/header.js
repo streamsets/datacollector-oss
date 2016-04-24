@@ -322,6 +322,7 @@ angular
                 message: 'Successfully Published Pipeline. New Pipeline Commit Version - ' +
                 metadata['dpm.pipeline.version']
               });
+              $scope.clearUndoRedoArchive();
             });
       },
 

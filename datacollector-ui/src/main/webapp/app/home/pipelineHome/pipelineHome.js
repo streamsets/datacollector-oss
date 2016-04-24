@@ -657,6 +657,14 @@ angular
         return currArchivePos < archive.length-1;
       },
 
+      /**
+       * Clear undo redo archive
+       */
+      clearUndoRedoArchive: function () {
+        archive = [];
+        currArchivePos = null;
+      },
+
       reloadingNewPipeline: function() {
         reloadingNew = true;
       },
