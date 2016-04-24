@@ -23,6 +23,13 @@
         <span class="field-index" ng-if="fieldIndex !== undefined" ng-bind-html="fieldIndex"></span>
         <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}" ng-bind-html="fieldName"></span> :
 
+
+        <a class="view-stack-trace"
+           ng-if="isRoot && record.header.errorStackTrace"
+           ng-click="showStackTrace(record.header)">
+          ( <span translate="home.graphPane.viewStackTrace">View Stack Trace</span>... )
+        </a>
+
         <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="record.dirty && isRoot"></span>
       </label>
 

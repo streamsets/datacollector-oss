@@ -716,16 +716,19 @@ angular
         $scope.stageLibraries = pipelineService.getStageDefinitions();
 
         $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE;
+          return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
+            stageLibrary.library !== 'streamsets-datacollector-stats-lib';
         });
 
         $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE;
+          return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+            stageLibrary.library !== 'streamsets-datacollector-stats-lib';
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
           return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
-          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage);
+          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib');
         });
 
         //Pipelines

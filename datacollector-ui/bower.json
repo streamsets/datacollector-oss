@@ -5,12 +5,12 @@
     "d3": "3.5.6",
     "jquery": "2.1.1",
     "bootstrap": "~3.3.1",
-    "angular": "1.5.0",
-    "angular-route": "1.5.0",
-    "angular-resource": "1.5.0",
-    "angular-cookies": "1.5.0",
-    "angular-i18n": "1.5.0",
-    "angular-sanitize": "1.5.0",
+    "angular": "1.5.5",
+    "angular-route": "1.5.5",
+    "angular-resource": "1.5.5",
+    "angular-cookies": "1.5.5",
+    "angular-i18n": "1.5.5",
+    "angular-sanitize": "1.5.5",
     "angular-translate": "2.4.1",
     "angular-translate-loader-static-files": "2.4.1",
     "angular-translate-storage-cookie": "2.4.1",
@@ -28,11 +28,11 @@
     "angular-xeditable": "~0.1.9"
   },
   "devDependencies": {
-    "angular-mocks": "1.5.0",
-    "angular-scenario": "1.5.0"
+    "angular-mocks": "1.5.5",
+    "angular-scenario": "1.5.5"
   },
   "resolutions": {
-    "angular": "1.5.0",
+    "angular": "1.5.5",
     "d3": "3.5.6",
     "moment": "2.9.0"
   }

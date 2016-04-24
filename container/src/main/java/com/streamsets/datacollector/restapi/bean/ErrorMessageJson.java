@@ -47,6 +47,10 @@ public class ErrorMessageJson {
     return errorMessage.getLocalized();
   }
 
+  public String getErrorStackTrace() {
+    return errorMessage.getErrorStackTrace();
+  }
+
   @JsonIgnore
   public com.streamsets.pipeline.api.impl.ErrorMessage getErrorMessage() {
     return errorMessage;

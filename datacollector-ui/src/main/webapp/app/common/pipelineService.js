@@ -1058,6 +1058,17 @@ angular.module('dataCollectorApp.common')
         var y = stage.inputLanes.length ? laneYPos[stage.inputLanes[0]]: yPos,
           x = stage.inputLanes.length ? laneXPos[stage.inputLanes[0]] + 220 : xPos;
 
+        // handle stages with multiple inputs
+        if (stage.inputLanes.length > 1) {
+          var mX = 0;
+          angular.forEach(stage.inputLanes, function(inputLane)  {
+            if (laneXPos[inputLane] > mX) {
+              mX = laneXPos[inputLane];
+            }
+          });
+          x = mX + 220;
+        }
+
         if (laneYPos[stage.inputLanes[0]]) {
           laneYPos[stage.inputLanes[0]] += 150;
         }

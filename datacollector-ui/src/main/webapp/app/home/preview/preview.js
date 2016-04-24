@@ -272,6 +272,30 @@ angular
             }
           }
         });
+      },
+
+      /**
+       * Display stack trace in modal dialog.
+       *
+       * @param errorMessage
+       */
+      showStackTrace: function (errorMessage) {
+        $modal.open({
+          templateUrl: 'errorModalContent.html',
+          controller: 'ErrorModalInstanceController',
+          size: 'lg',
+          backdrop: true,
+          resolve: {
+            errorObj: function () {
+              return {
+                RemoteException: {
+                  localizedMessage: errorMessage.localized,
+                  stackTrace: errorMessage.errorStackTrace
+                }
+              };
+            }
+          }
+        });
       }
     });
 

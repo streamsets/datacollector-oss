@@ -214,7 +214,14 @@
             <tr ng-repeat="errorMessage in stagePreviewData.stageErrors">
               <td>{{errorMessage.timestamp | date:'medium'}}</td>
               <td ng-bind="errorMessage.errorCode"> </td>
-              <td ng-bind="errorMessage.localized"> </td>
+              <td>
+                <span ng-bind="errorMessage.localized"></span>
+                <a class="view-stack-trace"
+                   ng-if="errorMessage.errorStackTrace"
+                   ng-click="showStackTrace(errorMessage)">
+                  ( <span translate="home.graphPane.viewStackTrace">View Stack Trace</span>... )
+                </a>
+              </td>
             </tr>
             </tbody>
           </table>
