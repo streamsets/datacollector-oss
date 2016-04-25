@@ -38,6 +38,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Expression_Language/DateTimeVariables.dita"/>
   <topicref href="../Expression_Language/Literals.dita">
    <topicmeta>
     <shortdesc/>

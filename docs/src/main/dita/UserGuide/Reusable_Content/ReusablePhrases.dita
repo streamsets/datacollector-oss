@@ -602,7 +602,7 @@
             <p id="EXP-p1">Use the expression language to configure expressions and conditions in
                   processors, such as the Expression Evaluator or Stream Selector. Some destination
                   properties also require the expression language, such as the directory template
-                  for Hadoop FS. </p>
+                  for Hadoop FS or Local FS. </p>
             <p id="EXP-p2">Optionally, you can use the expression language to define any stage or
                   pipeline property that represents a numeric or string value. This allows you to
                   use constants or runtime properties throughout the pipeline. You can use
@@ -611,6 +611,7 @@
             <p id="EXP-p3">You can use the following elements in an expression:<ul
                         id="ul_w34_vxl_2s">
                         <li>Constants</li>
+                        <li>Datetime variables</li>
                         <li>Field names</li>
                         <li>Functions</li>
                         <li>Literals</li>
@@ -785,5 +786,124 @@
                   process MapR data. For more information, see <xref
                         href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.
 </p>
+            <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
+                  and MapR FS destinations</draft-comment>
+            <p id="DirectoryTemplate_Intro">You can use a mix of constants, field values, and
+                  datetime variables in a directory template. You can use the <codeph>every</codeph>
+                  function to create new directories at regular intervals based on seconds or
+                  minutes. You can also use the <codeph>record:valueOrDefault</codeph> function to
+                  use field values or a default in the directory template. </p>
+            <p id="DirectoryTemplate_Example">For example, the following directory template creates
+                  output directories for event data based on the state and timestamp of a record
+                  with hours as the smallest unit of measure, creating a new directory every twelve
+                  hours:<codeblock> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</codeblock></p>
+            <p id="DirectoryTemplate_DL">You can use the following elements in a directory template:<dl>
+                        <dlentry>
+                              <dt>Constants</dt>
+                              <dd>You can use any constant, such as "output" or "lateRecords."</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Datetime Variables</dt>
+                              <dd>You can use datetime variables, such as <codeph>${YYYY()}</codeph>
+                                    or <codeph>${DD()}</codeph>. The destination creates directories
+                                    as needed, based on the smallest datetime variable that you use.
+                                    For example, if the smallest variable is hours, then the
+                                    directories are created for every hour of the day that receives
+                                    output records.</dd>
+                              <dd>When you use datetime variables in an expression, use all of
+                                  the datetime variables between one of the year variables
+                                  and the smallest variable that you want to use. For
+                                  example, to create directories on a daily basis for a
+                                  Hadoop FS destination, use a year variable, a month
+                                  variable, and then a day variable. You might use one of
+                                  the following datetime variable progressions:
+                              </dd>
+                              <dd>
+                                    <codeblock>${YYYY()}-${MM()}-${DD()}
+${YY()}_${MM()}_${DD()}</codeblock>
+                              </dd>
+                              <dd>For details about datetime variables, see <xref
+                                          href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
+                                    />.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>every() function</dt>
+                              <dd>You can use the <codeph>every()</codeph> function in a directory
+                                    template to create directories at regular intervals based on
+                                    minutes or seconds. The intervals should be a submultiple or
+                                    integer factor of 60. For example, you can create directories
+                                    every 15 minutes or 30 seconds. </dd>
+                              <dd>Use the <codeph>every()</codeph> function to replace the smallest
+                                    datetime variable used in the template.</dd>
+                              <dd>For example, the following directory template creates directories
+                                    every 5
+                                    minutes:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
+                              <dd>For details about the <codeph>every()</codeph> function, see <xref
+                                          href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                    />.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>record:valueOrDefault function</dt>
+                              <dd>You can use the following expression to use the value of a field
+                                    and the specified default value if the field does not exist:
+                                    <codeblock>${record:valueOrDefault("/&lt;field name>", &lt;default value>)}</codeblock></dd>
+                              <dd>For example, the following directory template creates a directory
+                                    based on the product field every day, and if the product field
+                                    is empty, uses Misc in the directory path:
+                                    <codeblock>/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</codeblock></dd>
+                              <dd>This template might create the following
+                                    paths:<codeblock>/Shirts/2015-07-31 
+/Misc/2015-07-31</codeblock></dd>
+                              <dd>For a tip on how to replace null values, see <xref
+                                          href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"
+                                    />.</dd>
+                        </dlentry>
+                  </dl></p>
+            <draft-comment author="alisontaylor">Time Basis - used for Hadoop FS, Local FS, and MapR
+                  FS destinations</draft-comment>
+            <dl id="TimeBasis">
+                  <dlentry>
+                        <dt>Processing Time</dt>
+                        <dd>When you use processing time as the time basis, the destination creates
+                              directories based on the processing time and the directory template,
+                              and writes records to the directories based on when they are
+                              processed.</dd>
+                        <dd>For example, say a directory template creates directories every minute
+                              and the time basis is the time of processing. Then, directories are
+                              created for every minute that the destination writes output records.
+                              And the output records are written to the directory for that minute of
+                              processing. </dd>
+                        <dd>To use the processing time as the time basis, use the following
+                              expression: <codeph>${time:now()}</codeph>. This is the default time
+                              basis. </dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>Record Time</dt>
+                        <dd>When you use the time associated with a record as the time basis, you
+                              specify a Date field in the record. The destination creates
+                              directories based on the datetimes associated with the records and
+                              writes the records to the appropriate directories. </dd>
+                        <dd>For example, say a directory template creates directories every hour and
+                              the time basis is based on the record. Then, directories are created
+                              for every hour associated with output records and the destination
+                              writes the records to the related output directory. </dd>
+                        <dd>To use a time associated with the record, use an expression that calls a
+                              field and resolves to a datetime value, such as
+                                    <codeph>${record:value("/Timestamp")}</codeph>. </dd>
+                  </dlentry>
+            </dl>
+            <draft-comment author="alisontaylor">Late Records and Late Record Handling - used for
+                  Hadoop FS, Local FS, and MapR FS destinations</draft-comment>
+            <p id="LateRecordsOverview">You can define a time limit for records to be written to its
+                  associated output directory. Any record that arrives past this limit is considered
+                  late. This limit is appropriate when you use the time of the record as the time
+                  basis. </p>
+            <p id="LateRecordsExample">For example, the destination writes event data to hourly
+                  output directories based on the timestamp of the event, and it has a time limit of
+                  one day. Any records that arrive more than a day after the hourly output directory
+                  window are considered late. </p>
+            <p id="LateRecordsError">You can send late records to a late records file or to the
+                  stage for error handling. When you send records to a late records file, you define
+                  a late records directory template. </p>
       </conbody>
 </concept>

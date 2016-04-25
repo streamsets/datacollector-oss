@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gh4_qd2_sv">
+ <title>Datetime Variables</title>
+ <shortdesc>The expression language provides datetime variables for use in expressions. </shortdesc>
+ <conbody>
+        <p><indexterm>expression language<indexterm>datetime
+                variables</indexterm></indexterm><indexterm>datetime variables<indexterm>in the
+                    expression language</indexterm></indexterm>You can use datetime variables to
+            configure a Hadoop FS, Local FS, or MapR FS destination to write records to time-based
+            directories. You can also use the variables to configure an Elasticsearch destination to
+            write records to time-based indexes. </p>
+        <p>The expression language provides the following datetime variables:</p>
+        <ul id="ul_obj_nf2_sv">
+            <li>${YYYY()} - four digit year</li>
+            <li>${YY()} - two digit year</li>
+            <li>${MM()} - two digit month</li>
+            <li>${DD()} - two digit date</li>
+            <li>${hh()} - two digit hour</li>
+            <li>${mm()} - two digit minute</li>
+            <li>${ss()} - two digit second</li>
+        </ul>
+        <p>When you use datetime variables in an expression, use all of the datetime variables
+            between one of the year variables and the smallest variable that you want to use. For
+            example, to create directories on a daily basis for a Hadoop FS destination, use a year
+            variable, a month variable, and then a day variable. You might use one of the following
+            datetime variable
+            progressions:<codeblock>${YYYY()}-${MM()}-${DD()}
+${YY()}_${MM()}_${DD()}</codeblock></p>
+ </conbody>
+</concept>

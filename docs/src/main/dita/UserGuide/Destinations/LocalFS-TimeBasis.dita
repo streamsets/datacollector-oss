@@ -15,36 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gkz_smd_br">
  <title>Time Basis</title>
- <shortdesc>The time basis helps determine when directories are created and which directory Local FS
-  uses when writing a record. You can use the following times as the time basis: </shortdesc>
  <conbody>
-  <p>
-   <dl>
-    <dlentry>
-     <dt>Processing Time</dt>
-     <dd><indexterm>Local FS destination<indexterm>time basis</indexterm></indexterm><indexterm>time
-        basis<indexterm>Local FS</indexterm></indexterm>When you use processing time as the time
-      basis, Local FS creates directories based on the processing time and the directory template,
-      and writes records to the directories based on when they are processed.</dd>
-     <dd>For example, say a directory template creates directories every minute and the time basis
-      is the time of processing. Then, directories are created for every minute that Local FS writes
-      output records. And the output records are written to the directory for that minute of
-      processing. </dd>
-     <dd>To use the processing time as the time basis, use the following expression:
-       <codeph>${time:now()}</codeph>. This is the default time basis. </dd>
-    </dlentry>
-    <dlentry>
-     <dt>Record Time</dt>
-     <dd>When you use the time associated with a record as the time basis, you specify a Date field
-      in the record. Local FS creates directories based on the datetimes associated with the records
-      and writes the records to the appropriate directories. </dd>
-     <dd>For example, say a directory template creates directories every hour and the time basis is
-      based on the record. Then, directories are created for every hour associated with output
-      records and Local FS writes the records to the related output directory. </dd>
-     <dd>To use a time associated with the record, use an expression that calls a field and resolves
-      to a datetime value, such as <codeph>${record:value("/Timestamp")}</codeph>. </dd>
-    </dlentry>
-   </dl>
-  </p>
+  <p><indexterm>Local FS destination<indexterm>time basis</indexterm></indexterm><indexterm>time
+     basis<indexterm>Local FS</indexterm></indexterm>The time basis helps determine when directories
+   are created and which directory Local FS uses when writing a record. You can use the following
+   times as the time basis:</p>
+  <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TimeBasis">
+   <dlentry>
+    <dt/>
+    <dd/>
+   </dlentry>
+  </dl>
  </conbody>
 </concept>

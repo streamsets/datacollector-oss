@@ -15,17 +15,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xgm_g4d_br">
  <title>Late Records and Late Record Handling </title>
- <shortdesc>You can define a time limit for records to be written to its associated output
-    directory. Any record that arrives past this limit is considered late. This limit is appropriate
-    when you use the time of the record as the time basis. </shortdesc>
  <conbody>
   <p><indexterm>Local FS destination<indexterm>late record
                 handling</indexterm></indexterm><indexterm>late record handling<indexterm>Local
-                    FS</indexterm></indexterm>For example, a Local FS destination writes event data
-            to hourly output directories based on the timestamp of the event, and it has a time
-            limit of one day. Any records that arrive more than a day after the hourly output
-            directory window are considered late. </p>
-  <p>You can send late records to a late records file or to the stage for error handling. When you
-            send records to a late records file, you define a late records directory template. </p>
+                    FS</indexterm></indexterm></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsOverview"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsExample"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsError"/>
  </conbody>
 </concept>
