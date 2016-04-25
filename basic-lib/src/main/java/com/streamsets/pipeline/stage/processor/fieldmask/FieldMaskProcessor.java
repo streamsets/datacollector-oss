@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,18 +46,35 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   private static final char NON_MASK_CHAR = '#';
   private static final char MASK_CHAR = 'x';
 
-  private final List<FieldMaskConfig> fieldMaskConfigs;
+  /**
+   * All configurations as they were specified by user
+   */
+  private final List<FieldMaskConfig> allFieldMaskConfigs;
+  /**
+   * Configurations for which it makes sense to use - potentially a subset of all configurations
+   */
+  private final List<FieldMaskConfig> activeFieldMaskConfigs;
+
   private Map<String, Set<Integer>> regexToGroupsToShowMap = new HashMap<>();
   private Map<String, Pattern> regExToPatternMap = new HashMap<>();
 
   public FieldMaskProcessor(List<FieldMaskConfig> fieldMaskConfigs) {
-    this.fieldMaskConfigs = fieldMaskConfigs;
+    this.allFieldMaskConfigs = fieldMaskConfigs;
+    this.activeFieldMaskConfigs = new LinkedList<>();
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
-    for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
+    activeFieldMaskConfigs.clear();
+
+    for(FieldMaskConfig fieldMaskConfig : allFieldMaskConfigs) {
+
+      // Skip configurations with empty fields
+      if(!fieldMaskConfig.fields.isEmpty()) {
+        activeFieldMaskConfigs.add(fieldMaskConfig);
+      }
+
       if(fieldMaskConfig.maskType == MaskType.REGEX) {
         Pattern p = Pattern.compile(fieldMaskConfig.regex);
         int maxGroupCount = p.matcher("").groupCount();
@@ -96,8 +114,11 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     List<String> nonStringFields = new ArrayList<>();
-    for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
+    // For each individual configuration entry
+    for(FieldMaskConfig fieldMaskConfig : activeFieldMaskConfigs) {
+      // For each configured field expression
       for (String toMask : fieldMaskConfig.fields) {
+        // Find all actual fields that matches given configured expression
         for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(toMask, fieldPaths)) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);
