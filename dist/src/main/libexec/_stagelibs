@@ -101,20 +101,43 @@ verifySHA1() {
 }
 
 #
-# Checks if 'curl' is availabe
+# Checks if given command is available
+#
+# parameters: <command>
+#
+# output: fails if not OK
+#
+verifyIfCommandIsAvailable() {
+  which ${1} &> /dev/null
+  if [[ $? != 0 ]]; then
+    echo
+    echo "The system does not have '${1}' in the PATH"
+    echo
+    exit 1
+  fi
+}
+
+#
+# Checks if 'sha1sum' is available
+#
+# parameters: NONE
+#
+# output: fails if not OK
+#
+verifySha1sumIsAvailable() {
+  verifyIfCommandIsAvailable 'sha1sum'
+}
+
+#
+# Checks if 'curl' is available
 #
 # parameters: NONE
 #
 # output: fails if not OK
 #
 verifyCurlIsAvailable() {
-  which curl &> /dev/null
-  if [[ $? != 0 ]]; then
-    echo
-    echo "The system does not have 'curl' in the PATH"
-    echo
-    exit 1
-  fi
+  verifyIfCommandIsAvailable 'curl'
+
   CURL_VERSION=`curl --version | head -1| awk '{print $2}' | sed 's|\.| |g'`
   CURL_MAJOR_VERSION=`echo ${CURL_VERSION} | awk '{print $1}'`
   CURL_MINOR_VERSION=`echo ${CURL_VERSION} | awk '{print $2}'`
@@ -263,7 +286,7 @@ cleanTempDir() {
 #
 # output: ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
 #         ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
-#         ${STAGE_LIB_NAME[#]}: Name of all te stage libraries in the repo
+#         ${STAGE_LIB_NAME[#]}: Name of all the stage libraries in the repo
 #         ${STAGE_LIB_INSTALLED[#]}: If a stage library is locally installed or not
 #
 findStageLibsStatus() {
@@ -292,7 +315,7 @@ findStageLibsStatus() {
 # expected VARs: ${REPO_URL}: stage library repo URL
 #                ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
 #                ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
-#                ${STAGE_LIB_NAME[#]}: Name of all te stage libraries in the repo
+#                ${STAGE_LIB_NAME[#]}: Name of all the stage libraries in the repo
 #                ${STAGE_LIB_INSTALLED[#]}: If a stage library is locally installed or not
 #
 # parameters: NONE
@@ -486,6 +509,7 @@ createTempDir
 
 detectSdcDist
 
+verifySha1sumIsAvailable
 verifyCurlIsAvailable
 
 downloadManifest
