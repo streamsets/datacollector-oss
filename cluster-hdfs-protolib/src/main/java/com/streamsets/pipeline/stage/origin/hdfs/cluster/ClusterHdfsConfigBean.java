@@ -50,8 +50,9 @@ public class ClusterHdfsConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Hadoop FS URI",
-      description = "Include the HDFS scheme and authority: hdfs://<authority>:<port>. If this is not set, the URI will be set to the value of "
-          + "'fs.defaultFS' configuration",
+      description = "Include the HDFS scheme and authority: <scheme>://<authority> (for example" +
+          " hdfs://nameservice). If this is not set, the URI will be set to the value of 'fs.defaultFS'" +
+          " configuration.",
       displayPosition = 10,
       group = "HADOOP_FS")
   public String hdfsUri;
@@ -61,7 +62,7 @@ public class ClusterHdfsConfigBean {
       type = ConfigDef.Type.LIST,
       defaultValue = "[]",
       label = "Input Paths",
-      description = "HDFS Input Paths",
+      description = "Location of the input data to be read",
       displayPosition = 20,
       group = "HADOOP_FS"
   )
