@@ -2040,7 +2040,10 @@
                                         use a constant, datetime variables, a field that includes
                                         the index information, or any valid combination. <p>When
                                             using datetime variables, make sure to configure the
-                                            time basis appropriately. </p></entry>
+                                            time basis appropriately. For details about datetime
+                                            variables, see <xref
+                                                href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Mapping</entry>

@@ -15,76 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cvc_skd_br">
  <title>Directory Templates</title>
- <shortdesc>The Local FS destination uses directory templates to create output and late record
-  directories. Local FS writes records to the directories based on the configured time
-  basis.</shortdesc>
  <conbody>
   <p><indexterm>Local FS destination<indexterm>directory
     templates</indexterm></indexterm><indexterm>directory templates<indexterm>Local
-    FS</indexterm></indexterm>You can use a mix of constants, field values, and datetime variables
-   in a directory template. You can use the <codeph>every</codeph> function to create new
-   directories at regular intervals based on seconds or minutes. You can also use the
-    <codeph>record:valueOrDefault</codeph> function to use field values or a default in the
-   directory template. </p>
-  <p>For example, the following directory template creates output directories for event data based
-   on the state and timestamp of a record with hours as the smallest unit of measure, creating a new
-   directory every twelve
-   hours:<codeblock> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</codeblock></p>
-  <p>You can use the following elements in a directory template:<dl>
-    <dlentry>
-     <dt>Constants</dt>
-     <dd>You can use any constant, such as "output" or "lateRecords."</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Datetime Variables</dt>
-     <dd>Local FS creates directories as needed, based on the smallest datetime variable that you
-      use. For example, if the smallest variable is hours, then the directories are created for
-      every hour of the day that receives output records.</dd>
-     <dd>You can use the following datetime variables in a directory template:<ul id="ul_s2x_5qq_1r">
-       <li>${YYYY()} - four digit year</li>
-       <li>${YY()} - two digit year</li>
-       <li>${MM()} - two digit month</li>
-       <li>${DD()} - two digit date</li>
-       <li>${hh()} - two digit hour</li>
-       <li>${mm()} - two digit minute</li>
-       <li>${ss()} - two digit second</li>
-      </ul></dd>
-     <dd>When you define a directory template, use all of the datetime variables between one of the
-      year variables and the smallest variable that you want to use. For example, to create
-      directories on a daily basis, you might use one of the following datetime variable
-      progressions:</dd>
-     <dd>
-      <codeblock>${YYYY()}-${MM()}-${DD()}
-${YY()}_${MM()}_${DD()}</codeblock>
-     </dd>
-    </dlentry>
-    <dlentry>
-     <dt>every() function</dt>
-     <dd>You can use the <codeph>every()</codeph> function in a directory template to create
-      directories at regular intervals based on minutes or seconds. The intervals should be a
-      submultiple or integer factor of 60. For example, you can create directories every 15 minutes
-      or 30 seconds. </dd>
-     <dd>Use the <codeph>every()</codeph> function to replace the smallest datetime variable used in
-      the template.</dd>
-     <dd>For example, the following directory template creates directories every 5
-      minutes:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
-     <dd>For details about the <codeph>every()</codeph> function, see <xref
-       href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"/>.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>record:valueOrDefault function</dt>
-     <dd>You can use the following expression to use the value of a field and the specified default
-      value if the field does not exist:
-      <codeblock>${record:valueOrDefault("/&lt;field name>", &lt;default value>)}</codeblock></dd>
-     <dd>For example, the following directory template creates a directory based on the product
-      field every day, and if the product field is empty, uses Misc in the directory path:
-      <codeblock>/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</codeblock></dd>
-     <dd>This template might create the following
-      paths:<codeblock>/Shirts/2015-07-31 
-/Misc/2015-07-31</codeblock></dd>
-     <dd>For a tip on how to replace null values, see <xref
-       href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
-    </dlentry>
-   </dl></p>
+    FS</indexterm></indexterm>The Local FS destination uses directory templates to create output and
+   late record directories. Local FS writes records to the directories based on the configured time
+   basis.</p>
+  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Intro"/>
+  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Example"/>
+  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_DL"/>
  </conbody>
 </concept>
