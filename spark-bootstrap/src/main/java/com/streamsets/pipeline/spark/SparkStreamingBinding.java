@@ -92,7 +92,9 @@ public class SparkStreamingBinding implements ClusterBinding {
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
     Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"
       + getProperty("sdc.id") + "/" + encode(topic));
-    final Path checkPointPath = new Path(sdcCheckpointPath, getProperty("cluster.pipeline.name"));
+    // encode as remote pipeline name might have colon within it
+    String pipelineName = encode(getProperty("cluster.pipeline.name"));
+    final Path checkPointPath = new Path(sdcCheckpointPath, pipelineName);
     hdfs.mkdirs(checkPointPath);
     if (!hdfs.isDirectory(checkPointPath)) {
       throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);

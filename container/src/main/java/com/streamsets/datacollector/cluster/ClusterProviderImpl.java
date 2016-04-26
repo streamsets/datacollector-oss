@@ -46,6 +46,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
@@ -258,6 +259,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
+      sdcProperties.remove(Configuration.CONFIG_INCLUDES);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
       sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
@@ -273,8 +275,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       if (mesosURL.isPresent()) {
         sdcProperties.setProperty(Constants.MESOS_JAR_URL, mesosURL.get());
       }
-      checkForNullEntries(sourceConfigs, sdcProperties);
-      checkForNullEntries(sourceInfo, sdcProperties);
+      addClusterConfigs(sourceConfigs, sdcProperties);
+      addClusterConfigs(sourceInfo, sdcProperties);
 
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
       sdcProperties.store(sdcOutStream, null);
@@ -293,15 +295,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private void checkForNullEntries(Map<String, String> configs, Properties properties) {
+  private void addClusterConfigs(Map<String, String> configs, Properties properties) {
     for (Map.Entry<String, String> entry : configs.entrySet()) {
-      try {
-        properties.setProperty(entry.getKey(), entry.getValue());
-      } catch (NullPointerException ex) {
-        // we've had bugs where a key or value was null in the past
-        String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
-        throw new NullPointerException(msg);
-      }
+      properties.setProperty(entry.getKey(), entry.getValue());
     }
   }
 
