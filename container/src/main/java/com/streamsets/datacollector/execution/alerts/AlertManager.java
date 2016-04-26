@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -89,7 +88,7 @@ public class AlertManager {
         .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(timestamp)))
         .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineName)
         .replace(EmailConstants.DESCRIPTION_KEY, description)
-        .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineName.replaceAll(" ", "%20"));
+        .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineName);
       subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + subject;
       if (LOG.isDebugEnabled()) {
         LOG.debug("Email Alert: subject = " + subject + ", body = " + emailBody);
@@ -129,10 +128,7 @@ public class AlertManager {
             .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date((Long) System.currentTimeMillis())))
             .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineName)
             .replace(EmailConstants.CONDITION_KEY, ruleDefinition.getCondition())
-            .replace(
-                EmailConstants.URL_KEY,
-                URLEncoder.encode(runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineName, "UTF-8")
-            );
+            .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineName);
 
           if(ruleDefinition instanceof DataRuleDefinition) {
             emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ((DataRuleDefinition)ruleDefinition).getLabel());
