@@ -47,12 +47,16 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
 
   private Configuration conf;
   private String loadBalancerURL;
+  private boolean loadBalancerSecure;
 
   public SSOUserAuthenticator(SSOService ssoService, Configuration conf) {
     super(ssoService);
     this.conf = conf;
     if (this.conf != null) {
       this.loadBalancerURL = conf.get(HTTP_LOAD_BALANCER_URL, null);
+      if (this.loadBalancerURL != null && this.loadBalancerURL.trim().toLowerCase().startsWith("https")) {
+        this.loadBalancerSecure = true;
+      }
     }
   }
 
@@ -161,7 +165,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     Cookie authCookie = new Cookie(getAuthCookieName(httpReq), authToken);
     authCookie.setPath("/");
     authCookie.setMaxAge(secondsToLive);
-    authCookie.setSecure(httpReq.isSecure());
+    authCookie.setSecure(httpReq.isSecure() || loadBalancerSecure);
     return authCookie;
   }
 
