@@ -484,6 +484,44 @@ public class TestHdfsTarget {
   }
 
   @Test
+  public void tesAbsenceOfHdfsUriAndConfDir() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    // Both HDFS URI and Config directory are invalid
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      "",
+      "foo",
+      false,
+      null,
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      5,
+      0,
+      "${record:value('/time')}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_ERROR,
+      "",
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig,
+      null
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_49.name()));
+  }
+
+  @Test
   public void testIdleTimeout() throws Exception {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();

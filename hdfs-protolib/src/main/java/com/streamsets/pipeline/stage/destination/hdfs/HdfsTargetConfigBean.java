@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -840,9 +841,22 @@ public class HdfsTargetConfigBean {
         });
       }
     } catch (Exception ex) {
-      LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
-      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
-        String.valueOf(ex), ex));
+      // Having both hdfsUri and hdfsConfDir empty is highly suspicious sign of miss configuration. However HDFS will
+      // automatically scan the classpath for the HDFS configs and there are ways how they can get to the classpath
+      // (for example in cluster mode). Hence we can't report both their absence immediately as an error state. Instead
+      // we do the check here, after we know that we can't connect to HDFS.
+      if(StringUtils.isEmpty(hdfsUri) && StringUtils.isEmpty(hdfsConfDir)) {
+        LOG.info("Validation Error: " + Errors.HADOOPFS_49.getMessage(), ex.toString(), ex);
+        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_49, String.valueOf(ex), ex));
+      } else {
+        // Any other general error when connecting to HDFS
+        LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
+        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
+          String.valueOf(ex), ex));
+      }
+
+      // We weren't able connect to the cluster and hence setting the validity to false
+      validHapoopFsUri = false;
     }
     LOG.info("Authentication Config: " + logMessage);
     return validHapoopFsUri;

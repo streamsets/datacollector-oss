@@ -81,6 +81,9 @@ public enum Errors implements ErrorCode {
   HADOOPFS_46("The compression codec '{}' requires native libraries to be installed: {}"),
   HADOOPFS_47("Time basis expression '{}' evaluated to NULL for this record"),
   HADOOPFS_48("Failed to instantiate compression codec due to error: {}"),
+
+  HADOOPFS_49("Failed to configure or connect to the Hadoop file system (please make sure that Hadoop FS URI and/or Hadoop FS Configuration Directory have proper values): {}"),
+
   ;
 
   private final String msg;
