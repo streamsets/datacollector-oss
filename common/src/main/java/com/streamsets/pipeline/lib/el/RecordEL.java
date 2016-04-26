@@ -83,14 +83,14 @@ public class RecordEL {
     prefix = RECORD_EL_PREFIX,
     name = "valueOrDefault",
     description = "Returns the value of the field represented by path 'fieldPath' for the record in context or "
-      + "the default value if the field is not present")
+      + "the default value if the field is not present or if the field is null")
   public static Object getValueOrDefault(
     @ElParam("fieldPath") String fieldPath, @ElParam("defaultValue") String defaultValue) {
     Object value = null;
     Record record = getRecordInContext();
     if (record != null) {
       Field field = record.get(fieldPath);
-      if (field != null) {
+      if (field != null && field.getValue() != null) {
         value = field.getValue();
       } else {
         value = defaultValue;
