@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -55,6 +56,7 @@ public class SpoolDirSource extends BaseSource {
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
   public static final String SPOOLDIR_CONFIG_BEAN_PREFIX = "conf.";
   public static final String SPOOLDIR_DATAFORMAT_CONFIG_PREFIX = SPOOLDIR_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+  private boolean useLastModified;
 
 
   private final SpoolDirConfigBean conf;
@@ -189,6 +191,9 @@ public class SpoolDirSource extends BaseSource {
         builder.setErrorArchiveDir(conf.errorArchiveDir);
       }
       builder.setContext(getContext());
+      LOG.info("Ordering: " + conf.useLastModified.getLabel());
+      this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
+      builder.setUseLastModifiedTimestamp(useLastModified);
       spooler = builder.build();
       spooler.init(conf.initialFileToProcess);
     }
@@ -329,6 +334,7 @@ public class SpoolDirSource extends BaseSource {
         currentFile == null ||
             // we don't have a file half way processed from a previous agent execution via offset tracking
             file == null ||
+            (useLastModified && compareFiles(new File(spooler.getSpoolDir(), file), currentFile)) ||
             // the current file is lexicographically lesser than the one reported via offset tracking
             // this can happen if somebody drop
             currentFile.getName().compareTo(file) < 0 ||
@@ -350,11 +356,22 @@ public class SpoolDirSource extends BaseSource {
       // and we didn't fully process (not -1) the current file
       return true;
     }
+    if (useLastModified && compareFiles(spoolerFile, new File(spooler.getSpoolDir(), offsetFile))) {
+      return true;
+    }
     if (spoolerFile.getName().compareTo(offsetFile) > 0) {
       // file reported by spooler is newer than current offset file
       return true;
     }
     return false;
+  }
+
+  /**
+   * True if f1 is "newer" than f2.
+   */
+  private boolean compareFiles(File f1, File f2) {
+    return f1.lastModified() > f2.lastModified() ||
+            (f1.lastModified() == f2.lastModified() && f1.getName().compareTo(f2.getName()) > 0);
   }
 
   @Override
@@ -388,7 +405,18 @@ public class SpoolDirSource extends BaseSource {
           // file we take the file returned by the spooler as the new file and set the offset to zero
           // if not, it means the spooler returned us the current file, we just keep processing it from the last
           // offset we processed (known via offset tracking)
-          if (file == null || nextAvailFile.getName().compareTo(file) > 0) {
+          boolean pickFileFromSpooler = false;
+          if (file == null) {
+            pickFileFromSpooler = true;
+          } else if (useLastModified) {
+            File fileObject = new File(spooler.getSpoolDir(), file);
+            if (compareFiles(nextAvailFile, fileObject)) {
+              pickFileFromSpooler = true;
+            }
+          } else if (nextAvailFile.getName().compareTo(file) > 0) {
+            pickFileFromSpooler = true;
+          }
+          if (pickFileFromSpooler) {
             file = currentFile.getName();
             offset = ZERO;
           }

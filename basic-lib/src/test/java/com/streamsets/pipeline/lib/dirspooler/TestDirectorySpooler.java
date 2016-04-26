@@ -37,6 +37,9 @@ import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -232,6 +235,96 @@ public class TestDirectorySpooler {
   }
 
   @Test
+  public void testOlderMultipleNewerMatchingFileSpoolDirTimestamp() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    long baseTime = 1461867389000L;
+    Assert.assertTrue(logFile3.setLastModified(baseTime + 1000));
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    Assert.assertTrue(logFile1.setLastModified(baseTime + 2000));
+    System.out.println("Last Modified: " + logFile1.lastModified());
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    Assert.assertTrue(logFile2.setLastModified(baseTime + 3000));
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setMaxSpoolFiles(3);
+    DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
+
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testOlderMultipleNewerMatchingFileSpoolDirSameTimestamp() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    long baseTime = 1461867389000L;
+    Assert.assertTrue(logFile3.setLastModified(baseTime + 1000));
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    Assert.assertTrue(logFile1.setLastModified(baseTime + 2000));
+    System.out.println("Last Modified: " + logFile1.lastModified());
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    Assert.assertTrue(logFile2.setLastModified(baseTime + 3000));
+    File logFile4 = new File(spoolDir, "x4.log").getAbsoluteFile();
+    new FileWriter(logFile4).close();
+    Assert.assertTrue(logFile4.setLastModified(baseTime + 3000));
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setMaxSpoolFiles(4);
+    DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
+
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile4, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
+  public void testOlderMultipleNewerMatchingFileSpoolDirNewFiles() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    long baseTime = 1461867389000L;
+    Assert.assertTrue(logFile3.setLastModified(baseTime + 1000));
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    Assert.assertTrue(logFile1.setLastModified(baseTime + 2000));
+    System.out.println("Last Modified: " + logFile1.lastModified());
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    Assert.assertTrue(logFile2.setLastModified(baseTime + 3000));
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setMaxSpoolFiles(4);
+    DirectorySpooler spooler = builder.setUseLastModifiedTimestamp(true).build();
+
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile1, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    //x4 and x5 have same timestamp, so order should be exactly the same.
+    File logFile5 = new File(spoolDir, "x5.log").getAbsoluteFile();
+    new FileWriter(logFile5).close();
+    Assert.assertTrue(logFile5.setLastModified(baseTime + 3000));
+    File logFile4 = new File(spoolDir, "x4.log").getAbsoluteFile();
+    new FileWriter(logFile4).close();
+    Assert.assertTrue(logFile4.setLastModified(baseTime + 3000));
+    spooler.finder.run();
+    Assert.assertEquals(logFile4, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile5, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
+  @Test
   public void testDelete() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
@@ -354,10 +447,17 @@ public class TestDirectorySpooler {
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(0, spoolDir.list().length);
     Assert.assertEquals(3, archiveDir.list().length);
-    Assert.assertTrue(new File(archiveDir, "x1.log").exists());
-    Assert.assertTrue(new File(archiveDir, "x2.log").exists());
-    Assert.assertTrue(new File(archiveDir, "x3.log").exists());
+    File archiveLog1 = new File(archiveDir, "x1.log");
+    File archiveLog2 = new File(archiveDir, "x2.log");
+    File archiveLog3 = new File(archiveDir, "x3.log");
+    Assert.assertTrue(archiveLog1.exists());
+    Assert.assertTrue(archiveLog2.exists());
+    Assert.assertTrue(archiveLog3.exists());
 
+    // Be paranoid and update the mtimes to ensure the first purge is < 1 second from mtime.
+    Assert.assertTrue(archiveLog1.setLastModified(System.currentTimeMillis()));
+    Assert.assertTrue(archiveLog2.setLastModified(System.currentTimeMillis()));
+    Assert.assertTrue(archiveLog3.setLastModified(System.currentTimeMillis()));
     // no purging
     spooler.purger.run();
     Assert.assertEquals(3, archiveDir.list().length);

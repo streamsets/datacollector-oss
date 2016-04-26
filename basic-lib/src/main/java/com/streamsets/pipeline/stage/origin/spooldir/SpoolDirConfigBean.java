@@ -104,6 +104,19 @@ public class SpoolDirConfigBean {
   public long poolingTimeoutSecs;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LEXICOGRAPHICAL",
+      label = "Order By",
+      description = "Select files for spooling based on last modified timestamp or by lexicographical order. " +
+          "If timestamp based ordering is used, files with same timestamp will be ordered lexicographically.",
+      displayPosition = 35,
+      group = "FILES"
+  )
+  @ValueChooserModel(FileOrderingChooseValues.class)
+  public FileOrdering useLastModified = FileOrdering.LEXICOGRAPHICAL;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
