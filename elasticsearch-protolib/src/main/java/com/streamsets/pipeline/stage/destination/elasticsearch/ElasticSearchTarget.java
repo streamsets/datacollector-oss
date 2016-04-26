@@ -209,6 +209,10 @@ public class ElasticSearchTarget extends BaseTarget {
     }
     validateUri(conf.httpUri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUri");
 
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
     try {
       String response = Request
           .Get("http://" + conf.httpUri + "?pretty=false")
@@ -431,7 +435,7 @@ public class ElasticSearchTarget extends BaseTarget {
 
   private void validateUri(String uri, List<ConfigIssue> issues, String configName) {
     Matcher matcher = URI_PATTERN.matcher(uri);
-    if (!matcher.matches()) {
+    if (uri.startsWith("http://") || uri.startsWith("https://") || !matcher.matches()) {
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
