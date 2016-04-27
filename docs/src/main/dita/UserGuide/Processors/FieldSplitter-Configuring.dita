@@ -50,7 +50,12 @@
                                     <entry>The character to use to split data in a field. Select one
                                         of the listed characters or select
                                             <uicontrol>Other</uicontrol> and enter a single
-                                        character to use.</entry>
+                                        character to use.<p>You can enter a Unicode control
+                                            character using the format \u<i>NNNN</i>, where
+                                                ​<i>N</i> is a hexadecimal digit from the numbers
+                                            0-9 or the letters A-F. For example, enter \u0000 to use
+                                            the null character as the delimiter or \u2028 to use a
+                                            line separator as the delimiter.</p></entry>
                                 </row>
                                 <row>
                                     <entry>New Split Fields</entry>

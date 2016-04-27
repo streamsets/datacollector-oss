@@ -507,7 +507,15 @@
                                 </row>
                                 <row>
                                     <entry>Delimiter Character</entry>
-                                    <entry>Delimiter character for a custom file type.</entry>
+                                    <entry>Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                            character.<p>You can enter a Unicode control character
+                                            using the format \u<i>NNNN</i>, where ​<i>N</i> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p><p>Default is the pipe character ( |
+                                            ).</p></entry>
                                 </row>
                                 <row>
                                     <entry>Escape Character</entry>
@@ -1659,8 +1667,13 @@
                                     <entry>Delimiter Character</entry>
                                     <entry>Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
-                                        character. <p>Default is the pipe character ( |
-                                        ).</p></entry>
+                                        character. <p>You can enter a Unicode control character
+                                            using the format \u<i>NNNN</i>, where ​<i>N</i> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p><p>Default is the pipe character ( |
+                                            ).</p></entry>
                                 </row>
                                 <row>
                                     <entry>Escape Character </entry>
