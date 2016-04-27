@@ -57,14 +57,14 @@ public class S3ErrorConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = "Error Folder",
-    description = "Files in error will be moved into this folder",
+    label = "Error Prefix",
+    description = "Files in error will be moved into this prefix",
     displayPosition = 30,
     group = "#0",
     dependsOn = "errorHandlingOption",
     triggeredByValue = { "ARCHIVE" }
   )
-  public String errorFolder;
+  public String errorPrefix;
 
   @ConfigDef(
     required = false,

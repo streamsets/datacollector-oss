@@ -44,6 +44,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -92,5 +95,24 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
   private void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
     configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "s3ConfigBean.s3Config.folder":
+          configsToAdd.add(new Config("s3ConfigBean.s3Config.commonPrefix", config.getValue()));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no op
+      }
+    }
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 }

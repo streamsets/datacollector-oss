@@ -333,7 +333,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
-    s3ConfigBean.s3FileConfig.filePattern = "*.log";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -341,7 +341,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
@@ -370,7 +370,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
-    s3ConfigBean.s3FileConfig.filePattern = "*.csv";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.csv";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -378,7 +378,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
@@ -403,7 +403,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
-    s3ConfigBean.s3FileConfig.filePattern = "*.sdc";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.sdc";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -411,7 +411,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
@@ -438,7 +438,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
-    s3ConfigBean.s3FileConfig.filePattern = "*.xml";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.xml";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -446,7 +446,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
@@ -473,7 +473,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
-    s3ConfigBean.s3FileConfig.filePattern = "*.json";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.json";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -481,7 +481,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
@@ -507,7 +507,7 @@ public class TestAmazonS3SourceDataFormats {
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 128;
-    s3ConfigBean.s3FileConfig.filePattern = "*.avro";
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.avro";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -515,7 +515,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.advancedConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);

@@ -75,17 +75,17 @@ public class S3Config {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = "Folder",
+    label = "Common Prefix",
     description = "",
     displayPosition = 30,
     group = "#0"
   )
-  public String folder;
+  public String commonPrefix;
 
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "Object Path Delimiter",
+    label = "Delimiter",
     description = "",
     defaultValue = "/",
     displayPosition = 40,
@@ -107,9 +107,9 @@ public class S3Config {
       List<Stage.ConfigIssue> issues
   ) {
     validateConnection(context, configPrefix, proxyConfig, issues);
-    //if the folder does not end with delimiter, add one
-    if(folder != null && !folder.isEmpty() && !folder.endsWith(delimiter)) {
-      folder = folder + delimiter;
+    //if the commonPrefix does not end with delimiter, add one
+    if (commonPrefix != null && !commonPrefix.isEmpty() && !commonPrefix.endsWith(delimiter)) {
+      commonPrefix = commonPrefix + delimiter;
     }
   }
 

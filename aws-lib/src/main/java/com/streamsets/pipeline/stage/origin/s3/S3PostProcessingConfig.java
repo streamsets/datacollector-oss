@@ -57,14 +57,14 @@ public class S3PostProcessingConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = "Post Process Folder",
+    label = "Post Process Prefix",
     description = "",
     displayPosition = 30,
     group = "#0",
     dependsOn = "postProcessing",
     triggeredByValue = { "ARCHIVE" }
   )
-  public String postProcessFolder;
+  public String postProcessPrefix;
 
   @ConfigDef(
     required = false,

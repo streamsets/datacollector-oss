@@ -64,7 +64,7 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
-    String keyPrefix = s3TargetConfigBean.s3Config.folder + s3TargetConfigBean.fileNamePrefix + "-" +
+    String keyPrefix = s3TargetConfigBean.s3Config.commonPrefix + s3TargetConfigBean.fileNamePrefix + "-" +
       System.currentTimeMillis() + "-";
     Iterator<Record> records = batch.getRecords();
     int writtenRecordCount = 0;
