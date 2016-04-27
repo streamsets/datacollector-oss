@@ -34,7 +34,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     icon = "httpclient.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
+    onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
