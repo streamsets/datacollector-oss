@@ -43,7 +43,7 @@ do
 done
 
 ui_version=$(echo $version | perl -pe 's@(\d+.\d+.\d+).(\d+)(-SNAPSHOT)?@${1}${2}${3}@g')
-for f in datacollector-ui/package.json datacollector-ui/bower.json
+for f in datacollector-ui/package.json datacollector-ui/bower.json e2e-tests/package.json
 do
   perl -i -pe 's@^(\s+"version"\s*:\s*").*("\s*,\s*)@${1}'"$ui_version"'${2}@g' $f
 done
