@@ -30,8 +30,6 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -61,7 +59,7 @@ public class AmazonS3Util {
   static List<S3ObjectSummary> listObjectsChronologically(
       AmazonS3Client s3Client,
       S3ConfigBean s3ConfigBean,
-      PathMatcher pathMatcher,
+      AntPathMatcher pathMatcher,
       AmazonS3Source.S3Offset s3Offset,
       int fetchSize
   ) {
@@ -83,20 +81,21 @@ public class AmazonS3Util {
       });
 
     S3Objects s3ObjectSummaries = S3Objects
-      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.folder)
+      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.commonPrefix)
       .withBatchSize(BATCH_SIZE);
-    for(S3ObjectSummary s : s3ObjectSummaries) {
-      String fileName = s.getKey().substring(s3ConfigBean.s3Config.folder.length(), s.getKey().length());
-      if(!fileName.isEmpty()) {
-        //fileName can be empty.
-        //If the user manually creates a folder "myFolder/mySubFolder" in bucket "myBucket" and uploads "myObject",
+    for (S3ObjectSummary s : s3ObjectSummaries) {
+      String commonPrefix = s.getKey();
+      String remainingPrefix = commonPrefix.substring(s3ConfigBean.s3Config.commonPrefix.length(), commonPrefix.length());
+      if (!remainingPrefix.isEmpty()) {
+        // remainingPrefix can be empty.
+        // If the user manually creates a prefix "myFolder/mySubFolder" in bucket "myBucket" and uploads "myObject",
         // then the first objects returned here are:
         // myFolder/mySubFolder
         // myFolder/mySubFolder/myObject
         //
         // All is good when pipeline is run but preview returns with no data. So we should ignore the empty file as it
         // has no data
-        if (pathMatcher.matches(Paths.get(fileName)) && isEligible(s, s3Offset)) {
+        if (pathMatcher.match(s3ConfigBean.s3FileConfig.prefixPattern, remainingPrefix) && isEligible(s, s3Offset)) {
           treeSet.add(s);
         }
         if (treeSet.size() > fetchSize) {

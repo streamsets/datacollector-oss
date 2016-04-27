@@ -30,8 +30,6 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.FileSystems;
-import java.nio.file.PathMatcher;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -47,7 +45,7 @@ public class S3Spooler {
   private final Source.Context context;
   private final S3ConfigBean s3ConfigBean;
   private final AmazonS3Client s3Client;
-  private PathMatcher pathMatcher;
+  private AntPathMatcher pathMatcher;
 
   public S3Spooler(Source.Context context, S3ConfigBean s3ConfigBean) {
     this.context = context;
@@ -63,9 +61,7 @@ public class S3Spooler {
     try {
       objectQueue = new ArrayBlockingQueue<>(SPOOLER_QUEUE_SIZE);
       spoolQueueMeter = context.createMeter("spoolQueue");
-
-      pathMatcher = createPathMatcher(s3ConfigBean.s3FileConfig.filePattern);
-
+      pathMatcher = new AntPathMatcher(s3ConfigBean.s3Config.delimiter);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -174,11 +170,11 @@ public class S3Spooler {
 
   public void handleCurrentObjectAsError() {
     if (currentObject != null) {
-      //Move to error directory only if the error bucket and folder is specified and is different from
-      //source bucket and folder
+      //Move to error prefix only if the error bucket and prefix is specified and is different from
+      //source bucket and prefix
       Utils.checkNotNull(s3ConfigBean.errorConfig, "s3ConfigBean.errorConfig");
       postProcessOrErrorHandle(currentObject.getKey(), s3ConfigBean.errorConfig.errorHandlingOption,
-          s3ConfigBean.errorConfig.errorBucket, s3ConfigBean.errorConfig.errorFolder,
+          s3ConfigBean.errorConfig.errorBucket, s3ConfigBean.errorConfig.errorPrefix,
           s3ConfigBean.errorConfig.archivingOption);
       currentObject = null;
     } else {
@@ -204,15 +200,10 @@ public class S3Spooler {
       if(objectSummary != null &&
         objectSummary.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) {
         postProcessOrErrorHandle(s3Offset.getKey(), s3ConfigBean.postProcessingConfig.postProcessing,
-          s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessFolder,
+          s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessPrefix,
           s3ConfigBean.postProcessingConfig.archivingOption);
       }
     }
     currentObject = null;
   }
-
-  public static PathMatcher createPathMatcher(String pattern) {
-    return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
-  }
-
 }

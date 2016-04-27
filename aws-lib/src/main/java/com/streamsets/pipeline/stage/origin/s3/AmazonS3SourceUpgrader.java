@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AmazonS3SourceUpgrader implements StageUpgrader {
@@ -35,6 +36,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -55,5 +59,36 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "s3ConfigBean.s3Config.folder":
+          configsToAdd.add(new Config("s3ConfigBean.s3Config.commonPrefix", config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "s3ConfigBean.s3FileConfig.filePattern":
+          configsToAdd.add(new Config("s3ConfigBean.s3FileConfig.prefixPattern", config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "s3ConfigBean.errorConfig.errorFolder":
+          configsToAdd.add(new Config("s3ConfigBean.errorConfig.errorPrefix", config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "s3ConfigBean.postProcessingConfig.postProcessFolder":
+          configsToAdd.add(new Config("s3ConfigBean.postProcessingConfig.postProcessPrefix", config.getValue()));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no op
+      }
+    }
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 }

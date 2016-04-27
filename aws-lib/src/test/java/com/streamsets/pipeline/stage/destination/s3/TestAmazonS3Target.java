@@ -99,22 +99,22 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteTextData() throws Exception {
 
-    String folder = "textFolder";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(folder, false);
+    String prefix = "textPrefix";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords();
 
-    //Make sure the folder is empty
-    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
-    //check that folder contains 1 file
-    objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //check that prefix contains 1 file
+    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertEquals(1, objectListing.getObjectSummaries().size());
     S3ObjectSummary objectSummary = objectListing.getObjectSummaries().get(0);
 
@@ -132,22 +132,22 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteTextDataWithCompression() throws Exception {
 
-    String folder = "textFolderCompression";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(folder, true);
+    String prefix = "textPrefixrCompression";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, true);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
     List<Record> logRecords = TestUtil.createStringRecords();
 
-    //Make sure the folder is empty
-    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
-    //check that folder contains 1 file
-    objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //check that prefix contains 1 file
+    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertEquals(1, objectListing.getObjectSummaries().size());
     S3ObjectSummary objectSummary = objectListing.getObjectSummaries().get(0);
 
@@ -167,27 +167,27 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteEmptyBatch() throws Exception {
 
-    String folder = "textFolder";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(folder, false);
+    String prefix = "textPrefix";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
     List<Record> logRecords = new ArrayList<>();
 
-    //Make sure the folder is empty
-    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
-    //Make sure the folder is empty as no records were written
-    objectListing = s3client.listObjects(BUCKET_NAME, folder);
+    //Make sure the prefix is empty as no records were written
+    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
   }
 
-  private AmazonS3Target createS3targetWithTextData(String folder, boolean useCompression) {
+  private AmazonS3Target createS3targetWithTextData(String prefix, boolean useCompression) {
 
     S3Config s3Config = new S3Config();
     s3Config.setEndPointForTest("http://localhost:" + port);
@@ -195,7 +195,7 @@ public class TestAmazonS3Target {
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3Config.folder = folder;
+    s3Config.commonPrefix = prefix;
     s3Config.delimiter = DELIMITER;
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
