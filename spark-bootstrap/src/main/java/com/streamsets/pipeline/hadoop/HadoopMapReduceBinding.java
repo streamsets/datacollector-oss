@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -41,6 +42,10 @@ public class HadoopMapReduceBinding implements ClusterBinding {
   private final String[] args;
   private Properties properties;
   private Job job;
+  // JVM heap for map task
+  private static final String MAPREDUCE_JAVA_OPTS = "mapreduce.map.java.opts";
+  // Total physical memory in MB for a map task
+  static final String MAPREDUCE_MAP_MEMORY_MB = "mapreduce.map.memory.mb";
 
   public HadoopMapReduceBinding(String[] args) {
     this.args = args;
@@ -77,7 +82,11 @@ public class HadoopMapReduceBinding implements ClusterBinding {
         String value = getProperty(realKey);
         conf.set(realKey, value, source);
       }
-      conf.set("mapred.child.java.opts", javaOpts);
+      Integer mapMemoryMb = getMapMemoryMb(javaOpts, conf);
+      if (mapMemoryMb != null) {
+        conf.set(MAPREDUCE_MAP_MEMORY_MB, String.valueOf(mapMemoryMb));
+      }
+      conf.set(MAPREDUCE_JAVA_OPTS, javaOpts);
       conf.setBoolean("mapreduce.map.speculative", false);
       conf.setBoolean("mapreduce.reduce.speculative", false);
       if ("AVRO".equalsIgnoreCase(dataFormat)) {
@@ -96,6 +105,44 @@ public class HadoopMapReduceBinding implements ClusterBinding {
 
       job.setOutputFormatClass(NullOutputFormat.class);
     }
+  }
+
+  // visible for testing (can't annotate as can't depend on Guava)
+  static Integer getMapMemoryMb(String javaOpts, Configuration conf) {
+    String[] javaOptsArray = javaOpts.split(" ");
+    Integer upperLimitMemory = null;
+    for (String opts : javaOptsArray) {
+      if (opts.contains("-Xmx")) {
+        Integer memoryMb = Integer.valueOf(opts.substring(4, opts.length() - 1));
+        switch (opts.charAt(opts.length() - 1)) {
+          case 'm':
+          case 'M':
+            break;
+          case 'k':
+          case 'K':
+            memoryMb = memoryMb / (1024);
+            break;
+          case 'g':
+          case 'G':
+            memoryMb = memoryMb * 1024;
+            break;
+          default:
+            memoryMb = Integer.valueOf(opts.substring(4, opts.length())) / (1024 * 1024);
+            break;
+        }
+        // Add 25% to Java heap as MAP_MEMORY_MB is the total physical memory for the map task
+        upperLimitMemory = ((int) (memoryMb * 0.25)) + memoryMb;
+        // dont break as there could be multiple -Xmx, we need to honor the last
+      }
+    }
+    if (upperLimitMemory != null) {
+      String defaultMapMemoryString = conf.get(MAPREDUCE_MAP_MEMORY_MB);
+      if (defaultMapMemoryString != null) {
+        Integer defaultMapMemory = Integer.valueOf(defaultMapMemoryString);
+        upperLimitMemory = (upperLimitMemory > defaultMapMemory ? upperLimitMemory : defaultMapMemory);
+      }
+    }
+    return upperLimitMemory;
   }
 
   @Override
