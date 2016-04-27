@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -43,18 +42,27 @@ public class Configuration {
     fileRefsBaseDir = dir;
   }
 
-  private static abstract class Ref {
+  private abstract static class Ref {
     private String unresolvedValue;
 
     protected Ref(String unresolvedValue) {
       this.unresolvedValue = unresolvedValue;
     }
 
-    public abstract  String getTokenDelimiter();
+    public abstract String getPrefix();
+    public abstract String getSuffix();
+    @Deprecated
+    public abstract String getDelimiter();
 
-    protected static boolean isValueMyRef(String  tokenDelimiter, String value) {
-      value = value.trim();
-      return value.startsWith(tokenDelimiter) && value.endsWith(tokenDelimiter);
+    protected static boolean isValueMyRef(String prefix, String suffix, String value) {
+      String trimmed = value.trim();
+      return trimmed.startsWith(prefix) && trimmed.endsWith(suffix);
+    }
+
+    @Deprecated
+    protected static boolean isValueMyRef(String tokenDelimiter, String value) {
+      String trimmed = value.trim();
+      return trimmed.startsWith(tokenDelimiter) && trimmed.endsWith(tokenDelimiter);
     }
 
     public String getUnresolvedValue() {
@@ -62,11 +70,13 @@ public class Configuration {
     }
 
     protected String getUnresolvedValueWithoutDelimiter() {
-      return unresolvedValue.substring(getTokenDelimiter().length(),
-                                       unresolvedValue.length() - getTokenDelimiter().length());
+      if (isValueMyRef(getPrefix(), getSuffix(), unresolvedValue)) {
+        return unresolvedValue.substring(getPrefix().length(), unresolvedValue.length() - getSuffix().length());
+      }
+      return unresolvedValue.substring(getDelimiter().length(), unresolvedValue.length() - getDelimiter().length());
     }
 
-    public abstract  String getValue();
+    public abstract String getValue();
 
     @Override
     public String toString() {
@@ -82,7 +92,17 @@ public class Configuration {
     }
 
     @Override
-    public String getTokenDelimiter() {
+    public String getPrefix() {
+      return "";
+    }
+
+    @Override
+    public String getSuffix() {
+      return "";
+    }
+
+    @Override
+    public String getDelimiter() {
       return "";
     }
 
@@ -93,20 +113,34 @@ public class Configuration {
 
   }
 
-  public static class FileRef extends Ref {
-    private static final String DELIMITER = "@";
 
-    public static boolean isValueMyRef(String value) {
-      return isValueMyRef(DELIMITER, value);
-    }
+  public static class FileRef extends Ref {
+    @Deprecated
+    private static final String DELIMITER = "@";
+    private static final String PREFIX = "${file(";
+    private static final String SUFFIX = ")}";
 
     public FileRef(String unresolvedValue) {
       super(unresolvedValue);
       Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
     }
 
+    public static boolean isValueMyRef(String value) {
+      return isValueMyRef(PREFIX, SUFFIX, value) || isValueMyRef(DELIMITER, value);
+    }
+
     @Override
-    public String getTokenDelimiter() {
+    public String getPrefix() {
+      return PREFIX;
+    }
+
+    @Override
+    public String getSuffix() {
+      return SUFFIX;
+    }
+
+    @Override
+    public String getDelimiter() {
       return DELIMITER;
     }
 
@@ -116,7 +150,7 @@ public class Configuration {
       try (Reader reader = new FileReader(new File(fileRefsBaseDir, getUnresolvedValueWithoutDelimiter()))) {
         int c = reader.read();
         while (c > -1) {
-          sb.append((char)c);
+          sb.append((char) c);
           c = reader.read();
         }
         return sb.toString();
@@ -128,18 +162,29 @@ public class Configuration {
   }
 
   private static class EnvRef extends Ref {
+    @Deprecated
     private static final String DELIMITER = "$";
-
-    public static boolean isValueMyRef(String value) {
-      return isValueMyRef(DELIMITER, value);
-    }
+    private static final String PREFIX = "${env(";
+    private static final String SUFFIX = ")}";
 
     protected EnvRef(String unresolvedValue) {
       super(unresolvedValue);
     }
 
+    public static boolean isValueMyRef(String value) {
+      return isValueMyRef(PREFIX, SUFFIX, value) || isValueMyRef(DELIMITER, value);
+    }
+
     @Override
-    public String getTokenDelimiter() {
+    public String getPrefix() {
+      return PREFIX;
+    }
+
+    @Override
+    public String getSuffix() { return SUFFIX; }
+
+    @Override
+    public String getDelimiter() {
       return DELIMITER;
     }
 
@@ -174,7 +219,7 @@ public class Configuration {
   public Configuration getUnresolvedConfiguration() {
     Map<String, Ref> subSetMap = new LinkedHashMap<>();
     for (Map.Entry<String, Ref> entry : map.entrySet()) {
-        subSetMap.put(entry.getKey(), new StringRef(entry.getValue().getUnresolvedValue()));
+      subSetMap.put(entry.getKey(), new StringRef(entry.getValue().getUnresolvedValue()));
     }
     return new Configuration(subSetMap);
   }
