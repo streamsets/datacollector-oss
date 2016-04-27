@@ -30,11 +30,13 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TestDriftRuleEL {
 
@@ -52,6 +54,11 @@ public class TestDriftRuleEL {
       @Override
       Map<String, Object> getContext() {
         return context;
+      }
+
+      @Override
+      public Set<Field.Type> supportedTypes() {
+        return null;
       }
 
       @Override
@@ -194,6 +201,24 @@ public class TestDriftRuleEL {
   }
 
   @Test
+  public void testDriftNamesIncompatibleTypes() throws Exception {
+    ELVars vars = new ELVariables();
+
+    Record record = new RecordImpl("creator", "id", null, null);
+    record.set(Field.create(1));
+
+    RecordEL.setRecordInContext(vars, record);
+
+    vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
+    vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
+
+    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+
+    Assert.assertFalse(elEval.eval(vars, "${drift:names('/', true)}", Boolean.TYPE));
+    Assert.assertThat(elEval.eval(vars, "${alert:info()}", String.class), JUnitMatchers.containsString("Field / have unsupported type of INTEGER."));
+  }
+
+  @Test
   public void testDriftOrder() throws Exception {
     ELVars vars = new ELVariables();
 
@@ -218,6 +243,24 @@ public class TestDriftRuleEL {
 
     Assert.assertTrue(elEval.eval(vars, "${drift:order('/', true)}", Boolean.TYPE));
     Assert.assertNotEquals("", elEval.eval(vars, "${alert:info()}", String.class));
+  }
+
+  @Test
+  public void testDriftOrderIncompatibleTypes() throws Exception {
+    ELVars vars = new ELVariables();
+
+    Record record = new RecordImpl("creator", "id", null, null);
+    record.set(Field.create(1));
+
+    RecordEL.setRecordInContext(vars, record);
+
+    vars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap<>());
+    vars.addContextVariable(DataRuleEvaluator.RULE_ID_CONTEXT, "ID");
+
+    ELEval elEval = new ELEvaluator("", DriftRuleEL.class, AlertInfoEL.class);
+
+    Assert.assertFalse(elEval.eval(vars, "${drift:order('/', true)}", Boolean.TYPE));
+    Assert.assertThat(elEval.eval(vars, "${alert:info()}", String.class), JUnitMatchers.containsString("Field / have unsupported type of INTEGER."));
   }
 
   @Test
