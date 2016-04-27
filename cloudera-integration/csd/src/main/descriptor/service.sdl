@@ -155,7 +155,7 @@
           },
           {
             "filename": "sdc-env.sh",
-            "souceFilename": "aux/sdc-env.sh"
+            "sourceFilename": "aux/sdc-env.sh"
           }
         ]
       },
