@@ -41,7 +41,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -381,7 +380,7 @@ public abstract class PipelineBeanCreator {
     if (value instanceof String) {
       String strValue = value.toString();
       if (!strValue.isEmpty() && strValue.startsWith("\\u") && strValue.length() > 5 &&
-          StringUtils.isNumeric(strValue.substring(2))) {
+          strValue.substring(2).matches("^[0-9a-fA-F]+$")) {
         // To support non printable unicode control characters
         value = (char) Integer.parseInt(strValue.substring(2), 16 );
       } else if (strValue.isEmpty() || strValue.length() > 1) {
