@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.rules;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -28,6 +29,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,6 +55,12 @@ public class DriftRuleEL {
       return ((Map)ELEval.getVariablesInScope().getContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT));
     }
 
+    /**
+     * Return set of supported types for this drift detector.
+     * Null denotes "I'm supporting all types, please don't do any checks".
+     */
+    public abstract Set<Field.Type> supportedTypes();
+
     @SuppressWarnings("unchecked")
     public boolean detect(String fieldPath, boolean ignoreWhenMissing) {
       boolean drifted = false;
@@ -60,6 +68,12 @@ public class DriftRuleEL {
       boolean missing = false;
       Field field = getRecord().get(fieldPath);
       if (field != null) {
+        // Check that the field have supported type
+        if(supportedTypes() != null && !supportedTypes().contains(field.getType())) {
+          AlertInfoEL.setInfo(composeTypeAlert(fieldPath, field.getType(), supportedTypes()));
+          return drifted;
+        }
+
         if (field.getValue() != null) {
           valueInRecord = getValue(field);
         } else {
@@ -104,9 +118,22 @@ public class DriftRuleEL {
     protected abstract T getValue(Field field);
 
     protected abstract String composeAlert(String fieldPath, T stored, T inRecord);
+
+    String composeTypeAlert(String fieldPath, Field.Type givenType, Set<Field.Type> supportedTypes) {
+      return Utils.format("Field {} have unsupported type of {}. Supported types are {}",
+        fieldPath,
+        givenType.toString(),
+        StringUtils.join(supportedTypes, ",")
+      );
+    }
   }
 
   private static final DriftDetector<Integer> SIZE_DRIFT_DETECTOR = new DriftDetector<Integer>() {
+    @Override
+    public Set<Field.Type> supportedTypes() {
+      return Sets.newHashSet(Field.Type.LIST, Field.Type.MAP, Field.Type.LIST_MAP);
+    }
+
     @Override
     protected String getContextPrefix() {
       return super.getContextPrefix() + ":size";
@@ -158,6 +185,11 @@ public class DriftRuleEL {
 
   private static final DriftDetector<Set<String>> NAME_DRIFT_DETECTOR = new DriftDetector<Set<String>>() {
     @Override
+    public Set<Field.Type> supportedTypes() {
+      return Sets.newHashSet(Field.Type.MAP, Field.Type.LIST_MAP);
+    }
+
+    @Override
     protected String getContextPrefix() {
       return super.getContextPrefix() + ":names";
     }
@@ -204,6 +236,11 @@ public class DriftRuleEL {
 
   private static final DriftDetector<List<String>> ORDER_DRIFT_DETECTOR = new DriftDetector<List<String>>() {
     @Override
+    public Set<Field.Type> supportedTypes() {
+      return Sets.newHashSet(Field.Type.LIST_MAP);
+    }
+
+    @Override
     protected String getContextPrefix() {
       return super.getContextPrefix() + ":order";
     }
@@ -248,6 +285,11 @@ public class DriftRuleEL {
   }
 
   private static final DriftDetector<Field.Type> TYPE_DRIFT_DETECTOR = new DriftDetector<Field.Type>() {
+    @Override
+    public Set<Field.Type> supportedTypes() {
+      return null;
+    }
+
     @Override
     protected String getContextPrefix() {
       return super.getContextPrefix() + ":type";
