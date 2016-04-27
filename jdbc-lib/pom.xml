@@ -20,12 +20,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.3.0.0-SNAPSHOT</version>
+    <version>1.4.0.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-jdbc-lib</artifactId>
-  <version>1.3.0.0-SNAPSHOT</version>
+  <version>1.4.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector JDBC Lib</description>
   <name>StreamSets Data Collector JDBC Lib</name>
 
