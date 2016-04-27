@@ -15,13 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bnl_n3n_s5">
  <title>Step 2. Install Additional Libraries</title>
- <shortdesc>Use the command line to install additional libraries to use stages that are not included
-        in the basic installation. This is an optional step, but generally you'll want to install
-        additional libraries to process data. </shortdesc>
  <conbody>
         <p><indexterm>basic install<indexterm>installing additional
-                libraries</indexterm></indexterm>You can use the following commands to install
-            additional libraries:<dl>
+                libraries</indexterm></indexterm>Use the <codeph>stagelibs</codeph> command to
+            install additional libraries to use stages that are not included in the basic
+            installation. This is an optional step, but generally you'll want to install additional
+            libraries to process data.</p>
+        <note>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
+            sha1sum utilities are installed on the machine. Verify that these utilities are
+            installed before running the command.</note>
+        <p>Use the following commands to install additional libraries:<dl>
                 <dlentry>
                     <dt>To view the list of available libraries:</dt>
                     <dd>Use the following
