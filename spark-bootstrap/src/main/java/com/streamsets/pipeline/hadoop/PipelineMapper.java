@@ -98,7 +98,7 @@ public class PipelineMapper extends Mapper {
     if (fileSplit != null) {
       file = fileSplit.getPath() + "::" + fileSplit.getStart();
       if (properties.getProperty(CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormat").equals("DELIMITED")
-        && properties.getProperty(CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "csvHeader").equals("WITH_HEADER")) {
+        && properties.getProperty(CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.csvHeader").equals("WITH_HEADER")) {
         if (fileSplit.getStart() == 0) {
           boolean hasNext = context.nextKeyValue();
           if (hasNext) {
