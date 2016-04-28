@@ -70,10 +70,11 @@ public class Configuration {
     }
 
     protected String getUnresolvedValueWithoutDelimiter() {
+      String unquoted = unresolvedValue.replace("\"", "").replace("'", "");
       if (isValueMyRef(getPrefix(), getSuffix(), unresolvedValue)) {
-        return unresolvedValue.substring(getPrefix().length(), unresolvedValue.length() - getSuffix().length());
+        return unquoted.substring(getPrefix().length(), unquoted.length() - getSuffix().length());
       }
-      return unresolvedValue.substring(getDelimiter().length(), unresolvedValue.length() - getDelimiter().length());
+      return unquoted.substring(getDelimiter().length(), unquoted.length() - getDelimiter().length());
     }
 
     public abstract String getValue();
