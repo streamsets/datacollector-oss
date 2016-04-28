@@ -771,6 +771,8 @@ public class HdfsTargetConfigBean {
   }
 
   private boolean validateHadoopFS(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    hdfsConfiguration = getHadoopConfiguration(context, issues);
+
     boolean validHapoopFsUri = true;
     // if hdfsUri is empty, we'll use the default fs uri from hdfs config. no validation required.
     if (!hdfsUri.isEmpty()) {
@@ -782,6 +784,9 @@ public class HdfsTargetConfigBean {
               ex.toString(), ex));
           validHapoopFsUri = false;
         }
+
+        // Configured URI have precedence
+        hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
       } else {
         issues.add(
             context.createConfigIssue(
@@ -793,14 +798,19 @@ public class HdfsTargetConfigBean {
         );
         validHapoopFsUri = false;
       }
+    } else {
+      // HDFS URI is not set, we're expecting that it will be available in config files
+      hdfsUri = hdfsConfiguration.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
+    }
+
+    // We must have value of default.FS otherwise it's clear miss configuration
+    if (hdfsUri == null || hdfsUri.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_49));
+      validHapoopFsUri = false;
     }
 
     StringBuilder logMessage = new StringBuilder();
     try {
-      hdfsConfiguration = getHadoopConfiguration(context, issues);
-
-      hdfsConfiguration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
-
       // forcing UGI to initialize with the security settings from the stage
       UserGroupInformation.setConfiguration(hdfsConfiguration);
       Subject subject = Subject.getSubject(AccessController.getContext());
@@ -841,19 +851,9 @@ public class HdfsTargetConfigBean {
         });
       }
     } catch (Exception ex) {
-      // Having both hdfsUri and hdfsConfDir empty is highly suspicious sign of miss configuration. However HDFS will
-      // automatically scan the classpath for the HDFS configs and there are ways how they can get to the classpath
-      // (for example in cluster mode). Hence we can't report both their absence immediately as an error state. Instead
-      // we do the check here, after we know that we can't connect to HDFS.
-      if(StringUtils.isEmpty(hdfsUri) && StringUtils.isEmpty(hdfsConfDir)) {
-        LOG.info("Validation Error: " + Errors.HADOOPFS_49.getMessage(), ex.toString(), ex);
-        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_49, String.valueOf(ex), ex));
-      } else {
-        // Any other general error when connecting to HDFS
-        LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
-        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
-          String.valueOf(ex), ex));
-      }
+      LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
+      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
+        String.valueOf(ex), ex));
 
       // We weren't able connect to the cluster and hence setting the validity to false
       validHapoopFsUri = false;

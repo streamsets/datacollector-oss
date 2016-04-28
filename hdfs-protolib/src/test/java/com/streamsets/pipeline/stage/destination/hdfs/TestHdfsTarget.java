@@ -34,12 +34,15 @@ import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -131,6 +134,54 @@ public class TestHdfsTarget {
     records.add(record);
 
     runner.runWrite(records);
+
+    runner.runDestroy();
+  }
+
+  @Test
+  public void testOnlyConfDirectory() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    // Create core-site.xml
+    Configuration configuration = new Configuration();
+    configuration.clear();
+    configuration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, "file:///");
+    FileOutputStream configOut = FileUtils.openOutputStream(new File(getTestDir() + "/conf-dir/core-site.xml"));
+    configuration.writeXml(configOut);
+    configOut.close();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "",
+        "foo",
+        false,
+        getTestDir() + "/conf-dir/",
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+        "",
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig,
+        null
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
+    runner.runInit();
+
+    // The configuration object should have the FS config from core-site.xml
+    Assert.assertEquals("file:///", hdfsTarget.getHdfsConfiguration().get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY));
 
     runner.runDestroy();
   }
@@ -481,44 +532,6 @@ public class TestHdfsTarget {
     } catch (StageException e) {
       Assert.assertTrue(e.getMessage().contains("HADOOPFS_45"));
     }
-  }
-
-  @Test
-  public void tesAbsenceOfHdfsUriAndConfDir() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    // Both HDFS URI and Config directory are invalid
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "",
-      "foo",
-      false,
-      null,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      5,
-      0,
-      "${record:value('/time')}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_ERROR,
-      "",
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null
-    );
-
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
-
-    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
-    Assert.assertEquals(1, configIssues.size());
-    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_49.name()));
   }
 
   @Test

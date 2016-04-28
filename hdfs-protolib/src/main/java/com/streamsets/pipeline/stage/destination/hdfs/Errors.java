@@ -82,7 +82,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_47("Time basis expression '{}' evaluated to NULL for this record"),
   HADOOPFS_48("Failed to instantiate compression codec due to error: {}"),
 
-  HADOOPFS_49("Failed to configure or connect to the Hadoop file system (please make sure that Hadoop FS URI and/or Hadoop FS Configuration Directory have proper values): {}"),
+  HADOOPFS_49("HDFS URI is not set and is also not available through 'fs.defaultFS' config"),
 
   ;
 
