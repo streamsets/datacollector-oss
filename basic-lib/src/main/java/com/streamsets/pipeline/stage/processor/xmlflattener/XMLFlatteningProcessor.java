@@ -101,6 +101,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
           newR = getContext().createRecord(record);
           newR.set(Field.create(new HashMap<String, Field>()));
           prefix = root.getTagName();
+          addAttrs(newR, root, prefix);
           results.add(newR);
         }
         processXML(newR, currentlyInRecord, new XMLNode(root, prefix), results, record);

@@ -52,7 +52,7 @@ public class TestXMLFlatteningProcessor {
   }
 
   private String getXML(String id) {
-    return "<contact><name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME" + id + "</name>" +
+    return "<contact type=\"person\"><name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME" + id + "</name>" +
         "<phone>(111)111-1111" + id + "</phone><phone>(222)222-2222" + id + "</phone></contact>";
   }
 
@@ -68,6 +68,7 @@ public class TestXMLFlatteningProcessor {
     String baseName = prefix + "contact" + offset + ".";
 
     if (addAttrs) {
+      fields.put("contact#type", Field.create("person"));
       fields.put(baseName + "name#type", Field.create("maiden"));
     }
 
