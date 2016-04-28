@@ -158,6 +158,11 @@
       <version>${hbase.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-lookup-protolib</artifactId>
+      <version>1.4.0.0-SNAPSHOT</version>
+    </dependency>
 
   </dependencies>
 

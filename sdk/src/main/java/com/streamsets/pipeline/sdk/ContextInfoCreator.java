@@ -25,6 +25,7 @@ import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
@@ -106,6 +107,10 @@ public class ContextInfoCreator {
   }
 
   public static Target.Context createTargetContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
+    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null);
+  }
+
+  public static Processor.Context createProcessorContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
     return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null);
   }
 

@@ -17,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.destination.hbase;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -44,6 +43,8 @@ import java.util.UUID;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import com.streamsets.pipeline.lib.hbase.common.Errors;
+import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
@@ -125,24 +126,12 @@ public class HBaseTargetIT {
 
   @Test(timeout=60000)
   public void validateNoConfigIssues() throws Exception {
+    HBaseDTarget dTarget = new ForTestHBaseTarget();
+    configure(dTarget);
+    HBaseTarget target = (HBaseTarget) dTarget.createTarget();
+
     TargetRunner targetRunner =
-        new TargetRunner.Builder(HBaseDTarget.class)
-            .addConfiguration("zookeeperQuorum", "127.0.0.1")
-            .addConfiguration("clientPort", miniZK.getClientPort())
-            .addConfiguration("zookeeperParentZnode", "/hbase")
-            .addConfiguration("tableName", tableName)
-            .addConfiguration("hbaseRowKey", "[0]")
-            .addConfiguration("hbaseFieldColumnMapping",
-              ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)))
-            .addConfiguration("kerberosAuth", false)
-            .addConfiguration("hbaseConfigs", new HashMap<String, String>())
-            .addConfiguration("hbaseUser", "")
-            .addConfiguration("hbaseConfDir", "")
-            .addConfiguration("rowKeyStorageType", StorageType.BINARY)
-            .addConfiguration("implicitFieldMapping", false)
-            .addConfiguration("ignoreMissingFieldPath", false)
-            .addConfiguration("ignoreInvalidColumn", false)
-            .addConfiguration("timeDriver", "${time:now()}")
+        new TargetRunner.Builder(HBaseDTarget.class, target)
             .setOnRecordError(OnRecordError.DISCARD).build();
     assertTrue(targetRunner.runValidateConfigs().isEmpty());
   }
@@ -151,9 +140,9 @@ public class HBaseTargetIT {
   public void testInvalidConfigs() throws Exception {
     HBaseDTarget dTarget = new ForTestHBaseTarget();
     configure(dTarget);
-    dTarget.zookeeperQuorum = "";
-    dTarget.clientPort = 0;
-    dTarget.zookeeperParentZnode = "";
+    dTarget.hBaseConnectionConfig.zookeeperQuorum = "";
+    dTarget.hBaseConnectionConfig.clientPort = 0;
+    dTarget.hBaseConnectionConfig.zookeeperParentZnode = "";
     dTarget.timeDriver = "${time:now()}";
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
 
@@ -168,7 +157,7 @@ public class HBaseTargetIT {
     assertTrue(issues.get(2).toString().contains("HBASE_13"));
 
     configure(dTarget);
-    dTarget.tableName = "NonExistingTable";
+    dTarget.hBaseConnectionConfig.tableName = "NonExistingTable";
     target = (HBaseTarget) dTarget.createTarget();
     runner = new TargetRunner.Builder(HBaseDTarget.class, target)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -178,7 +167,7 @@ public class HBaseTargetIT {
     assertTrue(issues.get(0).toString().contains("HBASE_07"));
 
     configure(dTarget);
-    dTarget.zookeeperQuorum = "dummyhost";
+    dTarget.hBaseConnectionConfig.zookeeperQuorum = "dummyhost";
     target = (HBaseTarget) dTarget.createTarget();
     runner = new TargetRunner.Builder(HBaseDTarget.class, target)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -227,7 +216,6 @@ public class HBaseTargetIT {
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
     TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "", false, "[0]", false, false);
-
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
     String rowKey = "row_key";
@@ -998,9 +986,12 @@ public class HBaseTargetIT {
   static class ForTestHBaseTarget extends HBaseDTarget {
     @Override
     protected Target createTarget() {
-      return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
-        ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver) {
+      return new HBaseTarget(hBaseConnectionConfig.zookeeperQuorum, hBaseConnectionConfig.clientPort,
+          hBaseConnectionConfig.zookeeperParentZnode, hBaseConnectionConfig.tableName, hbaseRowKey,
+          rowKeyStorageType, hbaseFieldColumnMapping, hBaseConnectionConfig.kerberosAuth, hBaseConnectionConfig.hbaseConfDir,
+          hBaseConnectionConfig.hbaseConfigs, hBaseConnectionConfig.hbaseUser, implicitFieldMapping,
+          ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver
+      ) {
         @Override
         public void write(Batch batch) throws StageException {
         }
@@ -1017,7 +1008,7 @@ public class HBaseTargetIT {
                 new File(fooDir, "hbase-site.xml"), StandardCharsets.UTF_8);
     HBaseDTarget dTarget = new ForTestHBaseTarget();
     configure(dTarget);
-    dTarget.hbaseConfDir = fooDir.getName();
+    dTarget.hBaseConnectionConfig.hbaseConfDir = fooDir.getName();
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HBaseDTarget.class, "n", false,
@@ -1034,7 +1025,7 @@ public class HBaseTargetIT {
     Assert.assertTrue(absoluteFilePath.mkdirs());
     Files.write("<configuration><property><name>zz</name><value>ZZ</value></property></configuration>",
       new File(absoluteFilePath, "hbase-site.xml"), StandardCharsets.UTF_8);
-    dTarget.hbaseConfDir = absoluteFilePath.getAbsolutePath();
+    dTarget.hBaseConnectionConfig.hbaseConfDir = absoluteFilePath.getAbsolutePath();
     dTarget.timeDriver = "${time:now()}";
     target = (HBaseTarget) dTarget.createTarget();
     try {
@@ -1049,18 +1040,20 @@ public class HBaseTargetIT {
   }
 
   private void configure(HBaseDTarget target) {
-    target.zookeeperQuorum = "127.0.0.1";
-    target.clientPort = miniZK.getClientPort();
-    target.zookeeperParentZnode = "/hbase";
-    target.tableName = tableName;
+    target.hBaseConnectionConfig.zookeeperQuorum = "127.0.0.1";
+    target.hBaseConnectionConfig.clientPort = miniZK.getClientPort();
+    target.hBaseConnectionConfig.zookeeperParentZnode = "/hbase";
+    target.hBaseConnectionConfig.tableName = tableName;
     target.hbaseRowKey = "[0]";
     target.rowKeyStorageType = StorageType.BINARY;
-    target.hbaseConfigs = new HashMap<String, String>();
-    target.hbaseConfigs.put("x", "X");
+    target.hBaseConnectionConfig.hbaseConfigs = new HashMap<String, String>();
+    target.hBaseConnectionConfig.hbaseConfigs.put("x", "X");
     target.hbaseFieldColumnMapping = new ArrayList<HBaseFieldMappingConfig>();
     target.hbaseFieldColumnMapping
         .add(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT));
-    target.hbaseUser = "";
+    target.hBaseConnectionConfig.kerberosAuth = false;
+    target.hBaseConnectionConfig.hbaseConfDir = "";
+    target.hBaseConnectionConfig.hbaseUser = "";
     target.timeDriver = "${time:now()}";
   }
 
@@ -1074,23 +1067,23 @@ public class HBaseTargetIT {
   private TargetRunner buildRunner(List<HBaseFieldMappingConfig> fieldMappings,
       StorageType storageType, OnRecordError onRecordError, String hbaseUser, boolean implicitFieldMapping,
       String hbaseRowKey, boolean ignoreMissingFieldPath, boolean ignoreInvalidColumn, String timeDriver) {
+
+    HBaseDTarget dTarget = new HBaseDTarget();
+    configure(dTarget);
+    dTarget.hbaseFieldColumnMapping = fieldMappings;
+    dTarget.rowKeyStorageType = storageType;
+    dTarget.hBaseConnectionConfig.hbaseUser = hbaseUser;
+    dTarget.implicitFieldMapping = implicitFieldMapping;
+    dTarget.hbaseRowKey = hbaseRowKey;
+    dTarget.ignoreMissingFieldPath = ignoreMissingFieldPath;
+    dTarget.ignoreInvalidColumn = ignoreInvalidColumn;
+    dTarget.timeDriver = timeDriver;
+    HBaseTarget target = (HBaseTarget)dTarget.createTarget();
+    //new TargetRunner.Builder(HBaseDTarget.class, target);
+
     TargetRunner targetRunner =
-        new TargetRunner.Builder(HBaseDTarget.class)
-            .addConfiguration("zookeeperQuorum", "127.0.0.1")
-            .addConfiguration("clientPort", miniZK.getClientPort())
-            .addConfiguration("zookeeperParentZnode", "/hbase")
-            .addConfiguration("tableName", tableName)
-            .addConfiguration("hbaseRowKey", hbaseRowKey)
-            .addConfiguration("hbaseFieldColumnMapping", fieldMappings)
-            .addConfiguration("kerberosAuth", false)
-            .addConfiguration("hbaseConfDir", "")
-            .addConfiguration("hbaseConfigs", new HashMap<String, String>())
-            .addConfiguration("implicitFieldMapping", implicitFieldMapping)
-            .addConfiguration("rowKeyStorageType", storageType).setOnRecordError(onRecordError)
-            .addConfiguration("hbaseUser", hbaseUser)
-            .addConfiguration("ignoreMissingFieldPath", ignoreMissingFieldPath)
-            .addConfiguration("ignoreInvalidColumn", ignoreInvalidColumn)
-            .addConfiguration("timeDriver", timeDriver)
+        new TargetRunner.Builder(HBaseDTarget.class, target)
+            .setOnRecordError(onRecordError)
             .build();
     return targetRunner;
   }
@@ -1139,28 +1132,17 @@ public class HBaseTargetIT {
 
   @Test(timeout=60000)
   public void testClusterModeHbaseConfDirAbsPath() throws Exception {
-
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
 
+    HBaseDTarget dTarget = new ForTestHBaseTarget();
+    configure(dTarget);
+    dTarget.hBaseConnectionConfig.hbaseConfDir = dir.getAbsolutePath();
+
+    HBaseTarget target = (HBaseTarget) dTarget.createTarget();
+
     TargetRunner targetRunner =
-      new TargetRunner.Builder(HBaseDTarget.class)
-        .addConfiguration("zookeeperQuorum", "127.0.0.1")
-        .addConfiguration("clientPort", miniZK.getClientPort())
-        .addConfiguration("zookeeperParentZnode", "/hbase")
-        .addConfiguration("tableName", tableName)
-        .addConfiguration("hbaseRowKey", "[0]")
-        .addConfiguration("hbaseFieldColumnMapping",
-          ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)))
-        .addConfiguration("kerberosAuth", false)
-        .addConfiguration("hbaseConfigs", new HashMap<String, String>())
-        .addConfiguration("hbaseUser", "")
-        .addConfiguration("hbaseConfDir", dir.getAbsolutePath())
-        .addConfiguration("rowKeyStorageType", StorageType.BINARY)
-        .addConfiguration("implicitFieldMapping", false)
-        .addConfiguration("ignoreMissingFieldPath", false)
-        .addConfiguration("ignoreInvalidColumn", false)
-        .addConfiguration("timeDriver", "${time:now()}")
+      new TargetRunner.Builder(HBaseDTarget.class, target)
       .setOnRecordError(OnRecordError.DISCARD)
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH).build();
 
@@ -1171,5 +1153,36 @@ public class HBaseTargetIT {
     } catch (StageException e) {
       Assert.assertTrue(e.getMessage().contains("HBASE_24"));
     }
+  }
+
+  private HBaseTarget getDefaultTarget() {
+    return new HBaseTarget(
+        "localhost",
+        miniZK.getClientPort(),
+        "/hbase",
+        tableName,
+        "[0]",
+        StorageType.TEXT,
+        ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)),
+        false,
+        "",
+        new HashMap<String, String>(),
+        "",
+        false,
+        false,
+        false,
+        "${time:now()}"
+    );
+  }
+
+  private HBaseConnectionConfig getDefaultConfig() {
+    HBaseConnectionConfig config = new HBaseConnectionConfig();
+    config.zookeeperQuorum = "127.0.0.1";
+    config.clientPort = miniZK.getClientPort();
+    config.zookeeperParentZnode = "/hbase";
+    config.tableName = tableName;
+    config.hbaseUser = "";
+    config.hbaseConfigs = new HashMap<String, String>();
+    return config;
   }
 }
