@@ -44,7 +44,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue="",
       label = "XML Field",
-      description = "The field containing XML to flatten",
+      description = "The field containing XML to flatten.",
       displayPosition = 10,
       group = "XML"
   )
@@ -56,7 +56,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue="",
       label = "Record Delimiter",
-      description = "The tag used to delimit records. If this is not specified, only a single record is generated",
+      description = "The tag used to delimit records. If this is not specified, only a single record is generated.",
       displayPosition = 30,
       group = "XML"
   )
@@ -64,11 +64,33 @@ public class XMLFlatteningDProcessor extends DProcessor {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue=".",
+      label = "Field Delimiter",
+      description = "The string used to separate entity names in the flattened field names.",
+      displayPosition = 30,
+      group = "XML"
+  )
+  public String fieldDelimiter;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue="#",
+      label = "Attribute Delimiter",
+      description = "The string used to separate attributes in the flattened field names.",
+      displayPosition = 50,
+      group = "XML"
+  )
+  public String attrDelimiter;
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Ignore Attributes",
-      description = "Whether attributes of tags should be ignored",
-      displayPosition = 40,
+      description = "Whether attributes of tags should be ignored.",
+      displayPosition = 60,
       group = "XML"
   )
   public boolean ignoreAttributes;
@@ -78,14 +100,26 @@ public class XMLFlatteningDProcessor extends DProcessor {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Ignore Namespace URI",
-      description = "Whether namespace URIs should be ignored",
-      displayPosition = 50,
+      description = "Whether namespace URIs should be ignored.",
+      displayPosition = 70,
       group = "XML"
   )
   public boolean ignoreNamespace;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Ignore Empty Values",
+      description = "Whether entities with blank values should be ignored.",
+      displayPosition = 80,
+      group = "XML"
+  )
+  public boolean ignoreEmptyValues;
+
   @Override
   protected Processor createProcessor() {
-    return new XMLFlatteningProcessor(fromField, recordDelimiter, ignoreAttributes, ignoreNamespace);
+    return new XMLFlatteningProcessor(fromField, recordDelimiter, fieldDelimiter, attrDelimiter,
+        ignoreAttributes, ignoreNamespace, ignoreEmptyValues);
   }
 }

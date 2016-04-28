@@ -37,6 +37,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,21 +53,48 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final String recordDelimiter;
   private final boolean ignoreAttrs;
   private final boolean ignoreNamespace;
+  private final boolean ignoreEmptyValues;
+  private final String fieldDelimiter;
+  private final String attrDelimiter;
   private final DocumentBuilderFactory factory;
 
   public XMLFlatteningProcessor(
       String fieldPath,
       String recordDelimiter,
+      String fieldDelimiter,
+      String attrDelimiter,
       boolean ignoreAttrs,
-      boolean ignoreNamespace
+      boolean ignoreNamespace,
+      boolean ignoreEmptyValues
   ) {
     super();
     this.fieldPath = fieldPath;
     this.recordDelimiter = recordDelimiter;
+    this.fieldDelimiter = fieldDelimiter;
+    this.attrDelimiter = attrDelimiter;
     this.ignoreAttrs = ignoreAttrs;
     this.ignoreNamespace = ignoreNamespace;
+    this.ignoreEmptyValues = ignoreEmptyValues;
     factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    super.init();
+
+    List<ConfigIssue> issues = new ArrayList<>();
+    String invalidCharsRegex = ".*[\\]\\[\\'\\\"\\/]+.*";
+
+    if (this.fieldDelimiter.matches(invalidCharsRegex)) {
+      issues.add(getContext().createConfigIssue(Groups.XML.name(), "fieldDelimiter", Errors.XMLF_02, fieldDelimiter));
+    }
+
+    if (this.attrDelimiter.matches(invalidCharsRegex)) {
+      issues.add(getContext().createConfigIssue(Groups.XML.name(), "attrDelimiter", Errors.XMLF_01, attrDelimiter));
+    }
+
+    return issues;
   }
 
   @Override
@@ -111,7 +139,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       } catch (OnRecordErrorException ex) {
         handleErrorRecord(record, ex);
       } catch (Exception ex) {
-        handleErrorRecord(record, new OnRecordErrorException(DataFormatErrors.DATA_FORMAT_303, xmlData));
+        handleErrorRecord(record, new OnRecordErrorException(DataFormatErrors.DATA_FORMAT_303, xmlData, ex));
       }
     }
   }
@@ -158,7 +186,10 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       Node next = nodeList.item(i);
       // Text node - add it as a field, if we are currently in a record
       if (currentlyInRecord && next.getNodeType() == Node.TEXT_NODE) {
-        record.set("/" + current.prefix, Field.create(((Text)next).getWholeText()));
+        String value = ((Text)next).getWholeText();
+        if (!ignoreEmptyValues || !value.trim().isEmpty()) {
+          record.set("/" + current.prefix, Field.create(value));
+        }
       } else if (next.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) next;
         String tagName = element.getTagName();
@@ -176,7 +207,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         } else { // This is not a record delimiter, or we are currently already in a record
           // Check if this is the first time we are seeing this prefix?
           // The map tracks the next index to append. If the map does not have the key, don't add an index.
-          elementPrefix = current.prefix + "." + tagName;
+          elementPrefix = current.prefix + fieldDelimiter + tagName;
           if (current.nodeCounters.containsKey(tagName)) {
             Integer nextCount = current.nodeCounters.get(tagName);
             elementPrefix =  elementPrefix + "(" + nextCount.toString() + ")";
@@ -201,7 +232,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         if (attrName.equals("xmlns")) { //handled separately.
           continue;
         }
-        record.set("/" + elementPrefix + "#" + attr.getNodeName(), Field.create(attr.getNodeValue()));
+        record.set("/" + elementPrefix + attrDelimiter + attr.getNodeName(), Field.create(attr.getNodeValue()));
       }
     }
     if (!ignoreNamespace) {
