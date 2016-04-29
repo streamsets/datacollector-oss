@@ -46,9 +46,9 @@ function generate_ldap_configs {
   bindPassword=\"@ldap-bind-password.txt@\"
   contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"
 $ldap_configs;
-};" >> "$CONF_DIR"/ldap-login.conf
+};" > "$CONF_DIR"/ldap-login.conf
   ldap_bind_password=`cat "$CONF_DIR"/ldap.properties | grep "ldap.bindPassword"`
-  echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' >> "$CONF_DIR"/ldap-bind-password.txt
+  echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
 }
 
 export SDC_CONF=$CONF_DIR
