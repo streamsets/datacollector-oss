@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.AsyncInvoker;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -51,11 +52,13 @@ import java.util.concurrent.TimeoutException;
  */
 class HttpStreamConsumer implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
-  private final HttpClientConfigBean conf;
-  private WebTarget resource;
-  private AccessToken authToken;
 
+  private final HttpClientConfigBean conf;
+  private final Client client;
+  private final WebTarget resource;
   private final BlockingQueue<String> entityQueue;
+
+  private AccessToken authToken;
   private Response.StatusType lastResponseStatus;
   private Optional<Exception> error = Optional.absent();
 
@@ -96,7 +99,9 @@ class HttpStreamConsumer implements Runnable {
 
     configureProxy(clientBuilder);
 
-    resource = clientBuilder.build().target(conf.resourceUrl);
+    client = clientBuilder.build();
+    resource = client.target(conf.resourceUrl);
+
     for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
       LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
     }
@@ -163,6 +168,10 @@ class HttpStreamConsumer implements Runnable {
       LOG.warn("HTTP request future timed out", e.toString(), e);
       error = Optional.of((Exception)e);
       Thread.currentThread().interrupt();
+    } finally {
+      if (stop) {
+        client.close();
+      }
     }
   }
 
