@@ -103,8 +103,8 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
     for (Config config : configs) {
       switch (config.getName()) {
-        case "s3ConfigBean.s3Config.folder":
-          configsToAdd.add(new Config("s3ConfigBean.s3Config.commonPrefix", config.getValue()));
+        case "s3TargetConfigBean.s3Config.folder":
+          configsToAdd.add(new Config("s3TargetConfigBean.s3Config.commonPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
         default:
