@@ -117,6 +117,22 @@
               {
                 "key" : "ui.local.help.base.url",
                 "value" : "/docs"
+              },
+              {
+                "key" : "ui.enable.webSocket",
+                "value" : "true"
+              },
+              {
+                "key" : "ui.refresh.interval.ms",
+                "value" : "2000"
+              },
+              {
+                "key" : "ui.jvmMetrics.refresh.interval.ms",
+                "value" : "4000"
+              },
+              {
+                "key" : "ui.enable.usage.data.collection",
+                "value" : "true"
               }
             ]
           },
