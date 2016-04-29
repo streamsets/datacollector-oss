@@ -21,11 +21,15 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,18 +46,41 @@ public class AmazonS3Target extends BaseTarget {
 
   private final static Logger LOG = LoggerFactory.getLogger(AmazonS3Target.class);
 
+  private static final String EL_PREFIX = "${";
   private static final String GZIP_EXTENSION = ".gz";
+  private static final String PARTITION_TEMPLATE = "partitionTemplate";
 
   private final S3TargetConfigBean s3TargetConfigBean;
+  private final String partitionTemplate;
+  private ELEval partitionEval;
+  private ELVars partitionVars;
   private int fileCount = 0;
 
-  public AmazonS3Target (S3TargetConfigBean s3TargetConfigBean) {
+  public AmazonS3Target(S3TargetConfigBean s3TargetConfigBean) {
     this.s3TargetConfigBean = s3TargetConfigBean;
+    this.partitionTemplate = s3TargetConfigBean.partitionTemplate == null ? "" : s3TargetConfigBean.partitionTemplate;
   }
 
   @Override
   public List<ConfigIssue> init() {
-    return s3TargetConfigBean.init(getContext(), super.init());
+    partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
+    partitionVars = getContext().createELVars();
+
+    List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init());
+    if (partitionTemplate.contains(EL_PREFIX)) {
+      ELUtils.validateExpression(
+          partitionEval,
+          partitionVars,
+          partitionTemplate,
+          getContext(),
+          Groups.S3.getLabel(),
+          S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + PARTITION_TEMPLATE,
+          Errors.S3_03,
+          String.class,
+          issues
+      );
+    }
+    return issues;
   }
 
   @Override
@@ -64,59 +91,77 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
-    String keyPrefix = s3TargetConfigBean.s3Config.commonPrefix + s3TargetConfigBean.fileNamePrefix + "-" +
-      System.currentTimeMillis() + "-";
-    Iterator<Record> records = batch.getRecords();
-    int writtenRecordCount = 0;
-    DataGenerator generator;
-    Record currentRecord;
+    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(
+        partitionEval,
+        partitionVars,
+        partitionTemplate,
+        batch
+    );
 
-    try {
-      ByRefByteArrayOutputStream bOut = new ByRefByteArrayOutputStream();
-      OutputStream out = bOut;
-
-      // wrap with gzip compression output stream if required
-      if(s3TargetConfigBean.compress) {
-        out = new GZIPOutputStream(bOut);
-      }
-
-      generator = s3TargetConfigBean.getGeneratorFactory().getGenerator(out);
-      while (records.hasNext()) {
-        currentRecord = records.next();
-        try {
-          generator.write(currentRecord);
-          writtenRecordCount++;
-        } catch (IOException | StageException e) {
-          handleException(e, currentRecord);
+    for (String partition : partitions.keySet()) {
+      // commonPrefix always ends with a delimiter, so no need to append one to the end
+      String keyPrefix = s3TargetConfigBean.s3Config.commonPrefix;
+      // partition is optional
+      if (!partition.isEmpty()) {
+        keyPrefix += partition;
+        if (!partition.endsWith(s3TargetConfigBean.s3Config.delimiter)) {
+          keyPrefix += s3TargetConfigBean.s3Config.delimiter;
         }
       }
-      generator.close();
+      keyPrefix += s3TargetConfigBean.fileNamePrefix + "-" + System.currentTimeMillis() + "-";
 
-      // upload file on Amazon S3 only if at least one record was successfully written to the stream
-      if (writtenRecordCount > 0) {
-        fileCount++;
-        StringBuilder fileName = new StringBuilder();
-        fileName = fileName.append(keyPrefix).append(fileCount);
+      Iterator<Record> records = partitions.get(partition).iterator();
+      int writtenRecordCount = 0;
+      DataGenerator generator;
+      Record currentRecord;
+
+      try {
+        ByRefByteArrayOutputStream bOut = new ByRefByteArrayOutputStream();
+        OutputStream out = bOut;
+
+        // wrap with gzip compression output stream if required
         if(s3TargetConfigBean.compress) {
-          fileName = fileName.append(GZIP_EXTENSION);
+          out = new GZIPOutputStream(bOut);
         }
 
-        // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
-        // ByRefByteArrayOutputStream
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
+        generator = s3TargetConfigBean.getGeneratorFactory().getGenerator(out);
+        while (records.hasNext()) {
+          currentRecord = records.next();
+          try {
+            generator.write(currentRecord);
+            writtenRecordCount++;
+          } catch (IOException | StageException e) {
+            handleException(e, currentRecord);
+          }
+        }
+        generator.close();
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket,
-          fileName.toString(), byteArrayInputStream, null);
+        // upload file on Amazon S3 only if at least one record was successfully written to the stream
+        if (writtenRecordCount > 0) {
+          fileCount++;
+          StringBuilder fileName = new StringBuilder();
+          fileName = fileName.append(keyPrefix).append(fileCount);
+          if(s3TargetConfigBean.compress) {
+            fileName = fileName.append(GZIP_EXTENSION);
+          }
 
-        LOG.debug("Uploading object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
-          s3TargetConfigBean.s3Config.delimiter + fileName);
-        s3TargetConfigBean.s3Config.getS3Client().putObject(putObjectRequest);
-        LOG.debug("Successfully uploaded object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
-          s3TargetConfigBean.s3Config.delimiter + fileName);
+          // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
+          // ByRefByteArrayOutputStream
+          ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
+
+          PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket,
+              fileName.toString(), byteArrayInputStream, null);
+
+          LOG.debug("Uploading object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
+              s3TargetConfigBean.s3Config.delimiter + fileName);
+          s3TargetConfigBean.s3Config.getS3Client().putObject(putObjectRequest);
+          LOG.debug("Successfully uploaded object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
+              s3TargetConfigBean.s3Config.delimiter + fileName);
+        }
+      } catch (AmazonClientException | IOException e) {
+        LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
+        throw new StageException(Errors.S3_21, e.toString(), e);
       }
-    } catch (AmazonClientException | IOException e) {
-      LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
-      throw new StageException(Errors.S3_21, e.toString(), e);
     }
   }
 
