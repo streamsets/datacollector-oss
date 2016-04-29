@@ -131,9 +131,15 @@ fi
 
 if [ -z "$JAVA_HOME" ]
 then
-  JAVA=`which java`
+  JAVA=`which java 2> /dev/null`
 else
   JAVA="$JAVA_HOME/bin/java"
+fi
+
+if [ -z "$JAVA" ]
+then
+  echo "Can't find java, please set JAVA_HOME pointing to your java installation"
+  exit 1
 fi
 
 SDC_POLICY_FILE=""
