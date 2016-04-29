@@ -24,6 +24,9 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
@@ -41,6 +44,19 @@ public class S3TargetConfigBean {
 
   @ConfigDefBean(groups = "ADVANCED")
   public ProxyConfig advancedConfig;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "",
+      label = "Partition Prefix",
+      description = "Partition to write to. If the partition doesn't exist on Amazon S3, it will be created.",
+      displayPosition = 180,
+      group = "S3"
+  )
+  public String partitionTemplate;
 
   @ConfigDef(
     required = true,

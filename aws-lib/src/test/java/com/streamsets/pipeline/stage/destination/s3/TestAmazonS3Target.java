@@ -130,6 +130,35 @@ public class TestAmazonS3Target {
   }
 
   @Test
+  public void testWriteTextDataWithPartitionPrefix() throws Exception {
+
+    String prefix = "textPrefix";
+    //partition by the record id
+    String partition = "${record:id()}";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, partition, false);
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    targetRunner.runInit();
+
+    List<Record> logRecords = TestUtil.createStringRecords();
+
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
+    Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
+
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    //check that prefix contains 9 partitions
+    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
+    List<S3ObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+    Assert.assertEquals(9, objectSummaries.size());
+    //check that full path is prefix / partition / filename
+    for (int i = 0; i < objectSummaries.size(); i++) {
+      Assert.assertTrue(objectSummaries.get(i).getKey().startsWith(prefix + DELIMITER + "s:" + i + DELIMITER + "sdc"));
+    }
+  }
+
+  @Test
   public void testWriteTextDataWithCompression() throws Exception {
 
     String prefix = "textPrefixrCompression";
@@ -186,8 +215,11 @@ public class TestAmazonS3Target {
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
   }
+  private AmazonS3Target createS3targetWithTextData(String commonPrefix, boolean useCompression) {
+    return createS3targetWithTextData(commonPrefix, "", useCompression);
+  }
 
-  private AmazonS3Target createS3targetWithTextData(String prefix, boolean useCompression) {
+  private AmazonS3Target createS3targetWithTextData(String commonPrefix, String partition, boolean useCompression) {
 
     S3Config s3Config = new S3Config();
     s3Config.setEndPointForTest("http://localhost:" + port);
@@ -195,12 +227,13 @@ public class TestAmazonS3Target {
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
-    s3Config.commonPrefix = prefix;
+    s3Config.commonPrefix = commonPrefix;
     s3Config.delimiter = DELIMITER;
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.compress = useCompression;
     s3TargetConfigBean.dataFormat = DataFormat.TEXT;
+    s3TargetConfigBean.partitionTemplate = partition;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
     s3TargetConfigBean.s3Config = s3Config;
     s3TargetConfigBean.advancedConfig = new ProxyConfig();

@@ -61,19 +61,19 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
     for (Config config : configs) {
       switch (config.getName()) {
-        case "s3TargetConfigBean.charset":
-        case "s3TargetConfigBean.csvFileFormat":
-        case "s3TargetConfigBean.csvHeader":
-        case "s3TargetConfigBean.csvReplaceNewLines":
-        case "s3TargetConfigBean.jsonMode":
-        case "s3TargetConfigBean.textFieldPath":
-        case "s3TargetConfigBean.textEmptyLineIfNull":
-        case "s3TargetConfigBean.avroSchema":
-        case "s3TargetConfigBean.binaryFieldPath":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "charset":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "csvFileFormat":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "csvHeader":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "csvReplaceNewLines":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "jsonMode":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "textFieldPath":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "textEmptyLineIfNull":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "avroSchema":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "binaryFieldPath":
           configsToRemove.add(config);
           configsToAdd.add(
               new Config(
-                  "s3TargetConfigBean.dataGeneratorFormatConfig." + config.getName().substring(19),
+                  S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig." + config.getName().substring(19),
                   config.getValue()
               )
           );
@@ -87,14 +87,14 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
 
-    configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter", '|'));
-    configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
-    configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.csvCustomDelimiter", '|'));
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.csvCustomEscape", '\\'));
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.csvCustomQuote", '\"'));
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
-    configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 
   private void upgradeV3ToV4(List<Config> configs) {
@@ -103,8 +103,8 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
     for (Config config : configs) {
       switch (config.getName()) {
-        case "s3TargetConfigBean.s3Config.folder":
-          configsToAdd.add(new Config("s3TargetConfigBean.s3Config.commonPrefix", config.getValue()));
+        case S3TargetConfigBean.S3_CONFIG_PREFIX + "folder":
+          configsToAdd.add(new Config(S3TargetConfigBean.S3_CONFIG_PREFIX + "commonPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
         default:
@@ -114,5 +114,7 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "partitionTemplate", ""));
   }
 }

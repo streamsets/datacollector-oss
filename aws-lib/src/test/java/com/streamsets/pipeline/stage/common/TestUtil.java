@@ -61,7 +61,7 @@ public class TestUtil {
   public static List<Record> createStringRecords() {
     List<Record> records = new ArrayList<>(9);
     for (int i = 0; i < 9; i++) {
-      Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
+      Record r = RecordCreator.create("s", "s:" + i, (TEST_STRING + i).getBytes(), MIME);
       r.set(Field.create((TEST_STRING + i)));
       records.add(r);
     }
