@@ -39,6 +39,7 @@ import de.flapdoodle.embed.process.runtime.Network;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -269,6 +270,7 @@ public class TestMongoDBSource {
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
   }
 
+  @Ignore
   @Test
   public void testReadCollection() throws Exception {
     MongoDBSource origin = new MongoDBSource(

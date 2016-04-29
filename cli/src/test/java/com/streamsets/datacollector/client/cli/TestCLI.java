@@ -23,6 +23,7 @@ import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class TestCLI {
     System.out.println(cliOutput);
   }
 
+  @Ignore
   @Test
   public void testForDifferentAuthenticationTypes() {
     Task server = null;

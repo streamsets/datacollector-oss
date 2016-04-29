@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.executor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestSafeScheduledExecutorService {
   private static final Logger LOG = LoggerFactory.getLogger(TestSafeScheduledExecutorService.class);
+
   @Test
   public void testCorePoolSize() throws Exception {
     long start = System.currentTimeMillis();
@@ -53,12 +55,14 @@ public class TestSafeScheduledExecutorService {
     Assert.assertTrue("Elapsed was "  + elapsed + " expected between 200 and 30000",
       elapsed > 200 && elapsed < 30000);
   }
+
   static class RunnableWhichThrows implements Runnable {
     @Override
     public void run() {
       throw new SafeScheduledExecutorServiceRethrowsException();
     }
   }
+
   static class ExecutorSupportForTests extends ExecutorSupport {
     private AtomicInteger uncaughtThrowableInRunnableCount = new AtomicInteger(0);
     public ExecutorSupportForTests(Logger logger) {
@@ -72,6 +76,7 @@ public class TestSafeScheduledExecutorService {
   static class SafeScheduledExecutorServiceRethrowsException extends RuntimeException {
 
   }
+
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testSubmitReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
@@ -82,6 +87,7 @@ public class TestSafeScheduledExecutorService {
       throw e.getCause();
     }
   }
+
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleAtFixedRateReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
@@ -94,6 +100,7 @@ public class TestSafeScheduledExecutorService {
     }
     executorService.shutdown();
   }
+
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleWithFixedDelayReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
@@ -106,6 +113,7 @@ public class TestSafeScheduledExecutorService {
     }
     executorService.shutdown();
   }
+
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
@@ -117,6 +125,8 @@ public class TestSafeScheduledExecutorService {
     }
     executorService.shutdown();
   }
+
+  @Ignore
   @Test
   public void testScheduleAtFixedRateDoesNotRethrow() throws Throwable {
     SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");

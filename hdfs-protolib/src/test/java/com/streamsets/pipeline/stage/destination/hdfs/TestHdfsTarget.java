@@ -39,6 +39,7 @@ import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -229,6 +230,7 @@ public class TestHdfsTarget {
     }
   }
 
+  @Ignore
   @Test
   public void testEmptyBatch() throws Exception {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
