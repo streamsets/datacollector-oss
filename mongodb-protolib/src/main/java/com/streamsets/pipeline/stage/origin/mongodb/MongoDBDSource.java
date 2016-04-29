@@ -36,7 +36,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     icon="mongodb.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/MongoDB.html#task_mdf_2rs_ns"
+    onlineHelpRefUrl = "index.html#Origins/MongoDB.html#task_mdf_2rs_ns",
+    resetOffset = true
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
