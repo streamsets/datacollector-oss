@@ -77,6 +77,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -107,6 +108,9 @@ import java.util.Set;
  *
  */
 public class WebServerTask extends AbstractTask {
+  public static final String HTTP_BIND_HOST = "http.bindHost";
+  private static final String HTTP_BIND_HOST_DEFAULT = "0.0.0.0";
+
   public static final String HTTP_PORT_KEY = "http.port";
   private static final int HTTP_PORT_DEFAULT = 0;
 
@@ -449,12 +453,16 @@ public class WebServerTask extends AbstractTask {
   }
 
   private Server createServer() {
-    Server server = new Server();
+    port = isSSLEnabled() ?
+      conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT) :
+      conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT);
+
+    String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
+
     if (!isSSLEnabled()) {
-      port = conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT);
-      return new Server(port);
+      return new Server(new InetSocketAddress(hostname, port));
     } else {
-      port = conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT);
+      Server server = new Server();
 
       File keyStore = getHttpsKeystore(conf, runtimeInfo.getConfigDir());
 
@@ -474,9 +482,11 @@ public class WebServerTask extends AbstractTask {
                                                            new SslConnectionFactory(sslContextFactory, "http/1.1"),
                                                            new HttpConnectionFactory(httpsConf));
       httpsConnector.setPort(port);
+      httpsConnector.setHost(hostname);
       server.setConnectors(new Connector[]{httpsConnector});
+
+      return server;
     }
-    return server;
   }
 
   @VisibleForTesting
@@ -491,7 +501,8 @@ public class WebServerTask extends AbstractTask {
 
   private Server createRedirectorServer() {
     int unsecurePort = conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT);
-    Server server = new Server(unsecurePort);
+    String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
+    Server server = new Server(new InetSocketAddress(hostname, unsecurePort));
     ServletContextHandler context = new ServletContextHandler();
     context.addServlet(new ServletHolder(new RedirectorServlet()), "/*");
     context.setContextPath("/");
@@ -540,7 +551,9 @@ public class WebServerTask extends AbstractTask {
           if (isSSLEnabled()) {
             baseHttpUrl = "https://";
           }
-          baseHttpUrl += InetAddress.getLocalHost().getCanonicalHostName() + ":" + port;
+          String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
+          baseHttpUrl += !"0.0.0.0".equals(hostname) ? hostname : InetAddress.getLocalHost().getCanonicalHostName();
+          baseHttpUrl += ":" + port;
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
           LOG.info("Running on URI : '{}'", baseHttpUrl);
           System.out.println(Utils.format("Running on URI : '{}'", baseHttpUrl));
