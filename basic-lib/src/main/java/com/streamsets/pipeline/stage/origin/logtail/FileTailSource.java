@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -433,7 +434,8 @@ public class FileTailSource extends BaseSource {
               if (tag != null) {
                 record.getHeader().setAttribute("tag", tag);
               }
-              record.getHeader().setAttribute("file", chunk.getFile().getPath().toString());
+              record.getHeader().setAttribute(HeaderAttributeConstants.FILE, chunk.getFile().getPath().toString());
+              record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(line.getFileOffset()));
               batchMaker.addRecord(record, outputLane);
               recordCounter++;
             }

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -440,6 +441,8 @@ public class SpoolDirSource extends BaseSource {
         try {
           Record record = parser.parse();
           if (record != null) {
+            record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
+            record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
             batchMaker.addRecord(record);
             offset = parser.getOffset();
           } else {

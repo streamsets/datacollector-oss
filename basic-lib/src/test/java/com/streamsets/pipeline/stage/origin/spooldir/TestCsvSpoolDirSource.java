@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -119,13 +120,16 @@ public class TestCsvSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createDelimitedFile(), "0", 10, batchMaker));
+      File testFile = createDelimitedFile();
+      Assert.assertEquals("-1", source.produce(testFile, "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(3, records.size());
       Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("B", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertEquals(testFile.getPath(), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE));
+      Assert.assertEquals("0", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
       Assert.assertFalse(records.get(0).has("[0]/header"));
       Assert.assertFalse(records.get(0).has("[1]/header"));
       Assert.assertFalse(records.get(0).has("[2]"));

@@ -107,9 +107,9 @@ public class TestSDCRecordSpoolDirSource {
       Assert.assertEquals(2, records.size());
       Record r = RecordCreator.create("s", "c::1");
       r.set(Field.create("Hello"));
-      Assert.assertEquals(r, records.get(0));
+      Assert.assertEquals("Hello", records.get(0).get("/").getValueAsString());
       r.set(Field.create("Bye"));
-      Assert.assertEquals(r, records.get(1));
+      Assert.assertEquals("Bye", records.get(1).get("/").getValueAsString());
     } finally {
       runner.runDestroy();
     }
