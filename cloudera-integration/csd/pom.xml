@@ -34,6 +34,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-dist</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.cloudera.enterprise</groupId>
+      <artifactId>schema-validator</artifactId>
+      <version>5.5.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -55,6 +61,32 @@
             <goals>
               <goal>single</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <id>run-validator</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <keeyAlive>true</keeyAlive>
+              <classpathScope>test</classpathScope>
+              <arguments>
+                <argument>-cp</argument>
+                <classpath/>
+                <argument>com.cloudera.cli.validator.Main</argument>
+                <argument>-s</argument>
+                <argument>${basedir}/src/main/descriptor/service.sdl</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>
