@@ -49,7 +49,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ROUND_ROBIN",
+      defaultValue = "RANDOM",
       label = "Partitioning Strategy",
       description = "Partitioning strategy for partition key generation",
       displayPosition = 40,
