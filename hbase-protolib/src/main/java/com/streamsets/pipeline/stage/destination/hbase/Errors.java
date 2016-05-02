@@ -59,7 +59,8 @@ public enum Errors implements ErrorCode {
   HBASE_31("Error converting '{}' to '{}'"),
   HBASE_32("Column family '{}' doesn't exist for table '{}'"),
   HBASE_33("Invalid time driver expression"),
-  HBASE_34("Could not evaluate time driver expression: {}")
+  HBASE_34("Could not evaluate time driver expression: {}"),
+  HBASE_35("Row key field has empty value")
   ;
   private final String msg;
 

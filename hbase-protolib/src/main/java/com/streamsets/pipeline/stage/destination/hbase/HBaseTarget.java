@@ -534,14 +534,21 @@ public class HBaseTarget extends BaseTarget {
   private byte[] getBytesForRowKey(Record record) throws OnRecordErrorException {
     byte[] value;
     Field field = record.get(this.hbaseRowKey);
+
     if (field == null) {
       throw new OnRecordErrorException(record, Errors.HBASE_27, this.hbaseRowKey);
     }
+
     if (rowKeyStorageType == StorageType.TEXT) {
       value = Bytes.toBytes(field.getValueAsString());
     } else {
       value = convertToBinary(field, record);
     }
+
+    if (value.length == 0) {
+      throw new OnRecordErrorException(record, Errors.HBASE_35);
+    }
+
     return value;
   }
 
