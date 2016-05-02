@@ -399,6 +399,33 @@ public class TestHBaseTarget {
 
   }
 
+  @Test
+  public void testInvalidRowKey() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    TargetRunner targetRunner = buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
+
+    Record record1 = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("cf:a", Field.create("value_a"));
+    map.put("cf:b", Field.create("value_b"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(""));
+    record1.set(Field.create(map));
+
+    Record record2 = RecordCreator.create();
+    map = new HashMap<>();
+    map.put("cf:a", Field.create("value_a"));
+    map.put("cf:b", Field.create("value_b"));
+    record2.set(Field.create(map));
+
+    List<Record> records = ImmutableList.of(record1, record2);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+    assertEquals(2, targetRunner.getErrorRecords().size());
+    assertEquals(Errors.HBASE_35.getCode(), targetRunner.getErrorRecords().get(0).getHeader().getErrorCode());
+    assertEquals(Errors.HBASE_27.getCode(), targetRunner.getErrorRecords().get(1).getHeader().getErrorCode());
+    targetRunner.runDestroy();
+  }
+
   @Test(timeout = 60000)
   public void testNotFlatMap() throws Exception {
     String rowKeyFieldPath = "/row_key";
