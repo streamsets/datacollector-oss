@@ -76,13 +76,20 @@
                                 </row>
                                 <row>
                                     <entry>Partitioning Strategy</entry>
-                                    <entry>Strategy to write data to Kinesis shards. </entry>
+                                    <entry>Strategy to write data to Kinesis shards:<ul
+                                            id="ul_pd5_pkp_vv">
+                                            <li>Random - Generates a random partition key.</li>
+                                            <li>
+                                                <p>Expression - Uses the result of an expression as
+                                                  the partition key.</p>
+                                            </li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Expression</entry>
-                                    <entry>Expression to use to pass data to different partitions.
-                                            <p>Use for the expression partition strategy.
-                                        </p></entry>
+                                    <entry>Expression to generate the partition key used to pass
+                                        data to different shards. <p>Use for the expression
+                                            partition strategy. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Kinesis Producer Configuration</entry>
@@ -93,7 +100,8 @@
                                 </row>
                                 <row>
                                     <entry>Preserve Record Order</entry>
-                                    <entry>Select to preserve the order of records. </entry>
+                                    <entry>Select to preserve the order of records. Enabling this
+                                        option can reduce pipeline performance.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
