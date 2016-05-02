@@ -27,8 +27,7 @@ public class TestExpressionPartitioner {
   public void testExpressionPartitioner() {
     Partitioner partitioner = new ExpressionPartitioner();
 
-    long numShards = 100;
     String partitionKey = "abcdef";
-    assertEquals(partitionKey, partitioner.partition(partitionKey, numShards));
+    assertEquals(partitionKey, partitioner.partition(partitionKey));
   }
 }

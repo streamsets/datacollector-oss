@@ -22,10 +22,10 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class RandomPartitioner implements Partitioner {
-  RandomDataGenerator random = new RandomDataGenerator();
+  private RandomDataGenerator random = new RandomDataGenerator();
 
   @Override
-  public String partition(Object key, long numPartitions) {
-    return String.format(PK_FORMAT, random.nextLong(0, numPartitions));
+  public String partition(Object key) {
+    return random.nextHexString(16);
   }
 }

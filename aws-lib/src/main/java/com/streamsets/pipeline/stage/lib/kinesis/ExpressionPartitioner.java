@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 public class ExpressionPartitioner implements Partitioner {
   @Override
-  public String partition(Object key, long numPartitions) {
+  public String partition(Object key) {
     return String.valueOf(key);
   }
 }

@@ -40,9 +40,6 @@ import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Partitioner;
 import com.streamsets.pipeline.stage.lib.kinesis.RandomPartitioner;
-import com.streamsets.pipeline.stage.lib.kinesis.RoundRobinPartitioner;
-import com.streamsets.pipeline.stage.lib.kinesis.ShardMap;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,8 +65,6 @@ public class KinesisTarget extends BaseKinesisTarget {
   private DataGeneratorFactory generatorFactory;
   private KinesisProducer kinesisProducer;
   private Partitioner partitioner;
-  private long numShards;
-  private ShardMap shardMap;
 
   private ELEval partitionEval;
   private ELVars partitionVars;
@@ -82,8 +77,6 @@ public class KinesisTarget extends BaseKinesisTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
-    shardMap = new ShardMap();
 
     createPartitioner(issues);
 
@@ -105,7 +98,7 @@ public class KinesisTarget extends BaseKinesisTarget {
       );
     }
 
-    numShards = KinesisUtil.checkStreamExists(
+    KinesisUtil.checkStreamExists(
         conf.region,
         conf.streamName,
         conf.awsConfig,
@@ -139,9 +132,6 @@ public class KinesisTarget extends BaseKinesisTarget {
 
   private void createPartitioner(List<ConfigIssue> issues) {
     switch (conf.partitionStrategy) {
-      case ROUND_ROBIN:
-        partitioner = new RoundRobinPartitioner();
-        break;
       case RANDOM:
         partitioner = new RandomPartitioner();
         break;
@@ -171,9 +161,8 @@ public class KinesisTarget extends BaseKinesisTarget {
   public void write(Batch batch) throws StageException {
     Iterator<Record> batchIterator = batch.getRecords();
 
-    List<Pair<ListenableFuture<UserRecordResult>, String>> putFutures = new LinkedList<>();
+    List<ListenableFuture<UserRecordResult>> putFutures = new LinkedList<>();
 
-    int i = 0;
     while (batchIterator.hasNext()) {
       Record record = batchIterator.next();
       ByteArrayOutputStream bytes = new ByteArrayOutputStream(ONE_MB);
@@ -184,35 +173,31 @@ public class KinesisTarget extends BaseKinesisTarget {
 
         ByteBuffer data = ByteBuffer.wrap(bytes.toByteArray());
 
-        Object partitionerKey;
+        String partitionerKey = null;
         if (conf.partitionStrategy == PartitionStrategy.EXPRESSION) {
           RecordEL.setRecordInContext(partitionVars, record);
           try {
-            partitionerKey = partitionEval.eval(partitionVars, conf.partitionExpression, Object.class);
+            partitionerKey = partitionEval.eval(partitionVars, conf.partitionExpression, String.class);
           } catch (ELEvalException e) {
+            LOG.error(Errors.KINESIS_06.getMessage(), conf.partitionExpression, record.getHeader().getSourceId(), e);
             throw new StageException(
                 Errors.KINESIS_06, conf.partitionExpression, record.getHeader().getSourceId(), e.toString()
             );
           }
-        } else {
-          partitionerKey = i;
         }
 
-        String partitionKey = partitioner.partition(partitionerKey, numShards);
+        String partitionKey = partitioner.partition(partitionerKey);
 
         // To preserve ordering we flush after each record.
         if (conf.preserveOrdering) {
           Future<UserRecordResult> resultFuture = kinesisProducer
               .addUserRecord(conf.streamName, partitionKey, data);
-          getAndCheck(resultFuture, partitionKey);
+          getAndCheck(resultFuture);
           kinesisProducer.flushSync();
         } else {
-          putFutures.add(
-              Pair.of(kinesisProducer.addUserRecord(conf.streamName, partitionKey, data), partitionKey)
-          );
+          putFutures.add(kinesisProducer.addUserRecord(conf.streamName, partitionKey, data));
         }
 
-        ++i;
       } catch (IOException e) {
         LOG.error(Errors.KINESIS_05.getMessage(), record, e.toString(), e);
         handleFailedRecord(record, e.toString());
@@ -220,23 +205,16 @@ public class KinesisTarget extends BaseKinesisTarget {
     }
 
     // This has no effect when preserveOrdering is true because the list is empty.
-    for (Pair<ListenableFuture<UserRecordResult>, String> pair : putFutures) {
-      getAndCheck(pair.getLeft(), pair.getRight());
+    for (ListenableFuture<UserRecordResult> future : putFutures) {
+      getAndCheck(future);
     }
     kinesisProducer.flushSync();
   }
 
-  private void getAndCheck(Future<UserRecordResult> future, String partitionKey) throws StageException {
+  private void getAndCheck(Future<UserRecordResult> future) throws StageException {
     try {
       UserRecordResult result = future.get();
-      if (result.isSuccessful()) {
-        if (shardMap.put(partitionKey, result.getShardId())) {
-          LOG.warn("Expected a different shardId. The stream may have been resharded. Updating shard count.");
-          long oldNumShards = numShards;
-          numShards = KinesisUtil.getShardCount(conf.region, conf.awsConfig, conf.streamName);
-          LOG.info("Updated shard count from {} to {}", oldNumShards, numShards);
-        }
-      } else {
+      if (!result.isSuccessful()) {
         for (Attempt attempt : result.getAttempts()) {
           LOG.error("Failed to put record: {}", attempt.getErrorMessage());
         }
