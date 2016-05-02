@@ -28,8 +28,7 @@ public enum Errors implements ErrorCode {
   S3_SPOOLDIR_01("Failed to process object '{}' at position '{}': {}"),
   S3_SPOOLDIR_02("Object with key '{}' at offset '{}' exceeds maximum length"),
   S3_SPOOLDIR_03("Object '{}' could not be fully processed, failed on '{}' offset: {}"),
-  S3_SPOOLDIR_04("Buffer Limit must be equal or greater than 64KB and equal or less than 1024MB"),
-  S3_SPOOLDIR_05("Max files in directory cannot be less than 1"),
+  S3_SPOOLDIR_04("Buffer Limit must be equal or greater than {}KB and equal or less than {}MB"),
   S3_SPOOLDIR_06("File Pattern configuration is required"),
   S3_SPOOLDIR_07("Error Handling cannot be {} when Post Processing is {}"),
 
