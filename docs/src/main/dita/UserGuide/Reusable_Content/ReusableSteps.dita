@@ -1978,12 +1978,17 @@
                                 </row>
                                 <row>
                                     <entry>Cluster URIs</entry>
-                                    <entry>URI of one or more nodes in the cluster. <p>To ensure a
-                                            connection, enter additional URIs.</p></entry>
+                                    <entry>URI of one or more nodes in the cluster. Use the
+                                        following format:
+                                            <codeblock>&lt;host>:&lt;port></codeblock><p>To ensure a
+                                            connection, enter a comma-separated list of
+                                        URIs.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Cluster HTTP URI</entry>
-                                    <entry>Use when the cluster uses a custom HTTP URI. <p>Unless
+                                    <entry>Use when the cluster uses a custom HTTP URI. Use the
+                                        following format:
+                                            <codeblock>&lt;host>:&lt;port></codeblock><p>Unless
                                             configured, the destination uses the default HTTP URI to
                                             verify that the cluster version is compatible with the
                                             destination libraries.</p></entry>
