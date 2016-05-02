@@ -23,8 +23,9 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
 public class PartitionStrategyChooserValues extends BaseEnumChooserValues {
 
+  @SuppressWarnings("unchecked")
   public PartitionStrategyChooserValues() {
-    super(PartitionStrategy.class);
+    super(PartitionStrategy.EXPRESSION, PartitionStrategy.RANDOM);
   }
 
 }

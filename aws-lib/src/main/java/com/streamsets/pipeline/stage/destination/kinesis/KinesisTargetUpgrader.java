@@ -49,6 +49,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
       case 2:
         upgradeV2toV3(configs);
         break;
+      case 3:
+        upgradeV3toV4(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -83,5 +86,23 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     AWSUtil.renameAWSCredentialsConfigs(configs);
 
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.avroCompression", "NULL"));
+  }
+
+  private void upgradeV3toV4(List<Config> configs) {
+    Config roundRobinPartitioner = null;
+
+    for (Config config : configs) {
+      if ((KINESIS_CONFIG_BEAN + ".partitionStrategy").equals(config.getName()) &&
+          PartitionStrategy.ROUND_ROBIN.toString().equals(config.getValue())
+          ) {
+        roundRobinPartitioner = config;
+      }
+    }
+
+    if (roundRobinPartitioner != null) {
+      configs.remove(roundRobinPartitioner);
+      configs.add(new Config(KINESIS_CONFIG_BEAN + ".partitionStrategy", PartitionStrategy.RANDOM));
+    }
+
   }
 }

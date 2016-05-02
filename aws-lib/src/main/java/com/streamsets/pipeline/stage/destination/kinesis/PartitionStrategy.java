@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum PartitionStrategy implements Label {
-  ROUND_ROBIN("Round Robin"),
+  @Deprecated ROUND_ROBIN("Round Robin"),
   RANDOM("Random"),
   EXPRESSION("Expression"),
   ;

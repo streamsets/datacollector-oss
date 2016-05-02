@@ -21,13 +21,8 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 /**
  * Kinesis doesn't come with any out of the box
- * partitioning strategy implementations. This is
- * the interface we use for the ones we provide,
- * similar to Kafka's.
+ * partitioning strategy implementations.
  */
 public interface Partitioner {
-  // Use zero padded string representation of a long since that is the maximum partitions we currently support.
-  String PK_FORMAT = "%019d";
-
-  String partition(Object key, long numPartitions);
+  String partition(Object key);
 }

@@ -150,7 +150,7 @@ public class TestKinesisTarget {
     conf.dataFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
     conf.dataFormatConfig.charset = "UTF-8";
 
-    conf.partitionStrategy = PartitionStrategy.ROUND_ROBIN;
+    conf.partitionStrategy = PartitionStrategy.RANDOM;
     conf.preserveOrdering = false;
     conf.producerConfigs = new HashMap<>();
 
