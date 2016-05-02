@@ -30,8 +30,10 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaServer;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -48,8 +50,8 @@ public class TestLowLevelKafkaConsumer {
   private static int port;
   private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
-  @Before
-  public void setUp() throws IOException {
+  @BeforeClass
+  public static void setUp() throws IOException {
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(1);
     producer = sdcKafkaTestUtil.createProducer(sdcKafkaTestUtil.getMetadataBrokerURI(), true);
@@ -58,8 +60,8 @@ public class TestLowLevelKafkaConsumer {
     port = Integer.parseInt(split[1]);
   }
 
-  @After
-  public void tearDown() {
+  @AfterClass
+  public static void tearDown() {
     sdcKafkaTestUtil.shutdown();
   }
 
@@ -78,8 +80,12 @@ public class TestLowLevelKafkaConsumer {
     kafkaConsumer.init();
     //shutdown zookeeper server
     kafkaServer.shutdown();
-    //attempt to read
-    kafkaConsumer.read(0);
+    try {
+      //attempt to read
+      kafkaConsumer.read(0);
+    } finally {
+      kafkaServer.startup();
+    }
   }
 
   @Test(expected = StageException.class)
@@ -97,7 +103,12 @@ public class TestLowLevelKafkaConsumer {
     //shutdown zookeeper server
     kafkaServer.shutdown();
     //attempt to read
-    kafkaConsumer.read(0);
+    try {
+      //attempt to read
+      kafkaConsumer.read(0);
+    } finally {
+      kafkaServer.startup();
+    }
   }
 
   @Test

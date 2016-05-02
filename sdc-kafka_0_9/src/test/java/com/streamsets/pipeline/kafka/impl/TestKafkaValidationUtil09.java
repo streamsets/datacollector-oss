@@ -34,9 +34,9 @@ import kafka.utils.TestUtils;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
 import org.apache.kafka.common.security.JaasUtils;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,18 +45,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 public class TestKafkaValidationUtil09 {
 
-  private int port;
-  private EmbeddedZookeeper zookeeper;
-  private String zkConnect;
-  private ZkUtils zkUtils;
-  private KafkaServer kafkaServer;
-  private SdcKafkaValidationUtil sdcKafkaValidationUtil;
+  private static int port;
+  private static EmbeddedZookeeper zookeeper;
+  private static String zkConnect;
+  private static ZkUtils zkUtils;
+  private static KafkaServer kafkaServer;
+  private static SdcKafkaValidationUtil sdcKafkaValidationUtil;
 
-  @Before
-  public void setUp() throws IOException {
+  @BeforeClass
+  public static void setUp() throws IOException {
     int zkConnectionTimeout = 6000;
     int zkSessionTimeout = 6000;
 
@@ -71,8 +72,8 @@ public class TestKafkaValidationUtil09 {
     sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
   }
 
-  @After
-  public void tearDown() {
+  @AfterClass
+  public static void tearDown() {
     kafkaServer.shutdown();
     zookeeper.shutdown();
   }
@@ -85,13 +86,9 @@ public class TestKafkaValidationUtil09 {
   @Test
   public void testGetPartitionCount() throws IOException, StageException {
 
-    final String topic1 = "TestKafkaValidationUtil09_1";
-    final String topic2 = "TestKafkaValidationUtil09_2";
-    final String topic3 = "TestKafkaValidationUtil09_3";
-
-    createTopic(zkUtils, topic1, 1, kafkaServer);
-    createTopic(zkUtils, topic2, 2, kafkaServer);
-    createTopic(zkUtils, topic3, 3, kafkaServer);
+    final String topic1 = createTopic(zkUtils, 1, kafkaServer);
+    final String topic2 = createTopic(zkUtils, 2, kafkaServer);
+    final String topic3 = createTopic(zkUtils, 3, kafkaServer);
 
     Assert.assertEquals(1, sdcKafkaValidationUtil.getPartitionCount(
         "localhost:" + port,
@@ -132,10 +129,8 @@ public class TestKafkaValidationUtil09 {
   @Test(timeout = 10000)
   public void testTopicExists() throws IOException, StageException {
 
-    final String topic1 = "TestKafkaValidationUtil09_1";
+    final String topic1 = createTopic(zkUtils, 1, kafkaServer);
     final String topicX = "TestKafkaValidationUtil09_X";
-
-    createTopic(zkUtils, topic1, 1, kafkaServer);
 
     Source.Context sourceContext = ContextInfoCreator.createSourceContext(
         "s",
@@ -182,9 +177,11 @@ public class TestKafkaValidationUtil09 {
     );
   }
 
-  private void createTopic(ZkUtils zkUtils, String topic, int partitionCount, KafkaServer kafkaServer) {
+  private String createTopic(ZkUtils zkUtils, int partitionCount, KafkaServer kafkaServer) {
+    String topic = UUID.randomUUID().toString();
     AdminUtils.createTopic(zkUtils, topic, partitionCount, 1, new Properties());
     TestUtils.waitUntilMetadataIsPropagated(
       scala.collection.JavaConversions.asScalaBuffer(Arrays.asList(kafkaServer)), topic, 0, 3000);
+    return topic;
   }
 }

@@ -44,6 +44,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import kafka.utils.TestUtils;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
@@ -118,7 +119,7 @@ public class TestKafkaSource {
 
 
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void setUp() throws IOException, InterruptedException {
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(3);
 
@@ -140,6 +141,21 @@ public class TestKafkaSource {
     sdcKafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC15, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC16, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+
+    for (int i = 1; i <= 16 ; i++) {
+      TestUtils.waitUntilMetadataIsPropagated(
+          scala.collection.JavaConversions.asScalaBuffer(sdcKafkaTestUtil.getKafkaServers()),
+          "TestKafkaSource" + String.valueOf(i), 0, 5000);
+      // For now, the only topic that needs more than one partition is topic 2. Eventually we should put all these into
+      // a class and make sure we create the topics based on a list of Topic/Partition info, rather than this.
+      if (i == 2) {
+        for (int j = 0; j < MULTIPLE_PARTITIONS; j++) {
+          TestUtils.waitUntilMetadataIsPropagated(
+              scala.collection.JavaConversions.asScalaBuffer(sdcKafkaTestUtil.getKafkaServers()),
+              "TestKafkaSource" + String.valueOf(i), j, 5000);
+        }
+      }
+    }
 
     producer = sdcKafkaTestUtil.createProducer(sdcKafkaTestUtil.getMetadataBrokerURI(), true);
     tempDir = Files.createTempDir();
@@ -163,7 +179,7 @@ public class TestKafkaSource {
     return factory.create();
   }
 
-  @Test(timeout = 5000)
+  @Test
   public void testProduceStringRecords() throws StageException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
@@ -988,6 +1004,7 @@ public class TestKafkaSource {
     Assert.assertNull(newOffset);
 
     List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(0, sourceRunner.getErrorRecords().size());
     Assert.assertEquals(3, records.size());
 
     Record e3Record = records.get(2);
@@ -1216,6 +1233,7 @@ public class TestKafkaSource {
     Properties props = new Properties();
     props.put("metadata.broker.list", sdcKafkaTestUtil.getMetadataBrokerURI());
     props.put("serializer.class", "kafka.serializer.DefaultEncoder");
+    props.put("batch.size", 1); // force messages to be sent immediately.
     props.put("key.serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);

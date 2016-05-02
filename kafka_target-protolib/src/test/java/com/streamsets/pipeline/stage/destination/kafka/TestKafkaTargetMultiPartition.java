@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
+import kafka.utils.TestUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -78,7 +79,7 @@ public class TestKafkaTargetMultiPartition {
   private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
   
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void setUp() throws IOException, InterruptedException {
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(3);
     // create topic
@@ -95,6 +96,14 @@ public class TestKafkaTargetMultiPartition {
     sdcKafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC12, PARTITIONS, REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC13, PARTITIONS, REPLICATION_FACTOR);
+
+    for (int i = 1; i <= 13 ; i++) {
+      for (int j = 0; j < PARTITIONS; j++) {
+        TestUtils.waitUntilMetadataIsPropagated(
+            scala.collection.JavaConversions.asScalaBuffer(sdcKafkaTestUtil.getKafkaServers()),
+            "TestKafkaTargetMultiPartition" + String.valueOf(i), j, 5000);
+      }
+    }
 
     kafkaStreams1 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC1, PARTITIONS);
     kafkaStreams2 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC2, PARTITIONS);

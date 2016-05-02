@@ -39,6 +39,7 @@ import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
+import kafka.utils.TestUtils;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -115,7 +116,7 @@ public class TestKafkaTargetSinglePartition {
   private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
   
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void setUp() throws IOException, InterruptedException {
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(1);
     // create topic
@@ -140,6 +141,13 @@ public class TestKafkaTargetSinglePartition {
     sdcKafkaTestUtil.createTopic(TOPIC19, PARTITIONS, REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC20, PARTITIONS, REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC21, PARTITIONS, REPLICATION_FACTOR);
+
+    for (int i = 1; i <= 21 ; i++) {
+      TestUtils.waitUntilMetadataIsPropagated(
+          scala.collection.JavaConversions.asScalaBuffer(sdcKafkaTestUtil.getKafkaServers()),
+          "TestKafkaTargetSinglePartition" + String.valueOf(i), 0, 5000);
+    }
+
 
     kafkaStreams1 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC1, PARTITIONS);
     kafkaStreams2 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC2, PARTITIONS);

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
+import kafka.utils.TestUtils;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
 
@@ -40,7 +41,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.security.JaasUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,8 +53,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 public class TestKafkaProducer09 {
+
+  private static int port;
+  private static ZkUtils zkUtils = null;
+  private static EmbeddedZookeeper zookeeper = null;
+  private static String zkConnect = null;
+  private static KafkaServer kafkaServer = null;
+  private static String[] topics = new String[4];
+  private int topicIndex = 0;
+
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    int zkConnectionTimeout = 6000;
+    int zkSessionTimeout = 6000;
+
+    zookeeper = new EmbeddedZookeeper();
+    zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
+    zkUtils = ZkUtils.apply(
+        zkConnect, zkSessionTimeout, zkConnectionTimeout,
+        JaasUtils.isZkSecurityEnabled());
+
+    port = TestUtil.getFreePort();
+    kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+    for (int i = 0; i < topics.length; i++) {
+      topics[i] = UUID.randomUUID().toString();
+      AdminUtils.createTopic(zkUtils, topics[i], 1, 1, new Properties());
+
+      TestUtils.waitUntilMetadataIsPropagated(
+          scala.collection.JavaConversions.asScalaBuffer(Arrays.asList(kafkaServer)),
+          topics[i], 0, 5000);
+    }
+  }
+
+  @AfterClass
+  public static void tearDownClass() {
+    for (int i = 0; i < topics.length; i++) {
+      AdminUtils.deleteTopic(zkUtils, topics[i]);
+    }
+    kafkaServer.shutdown();
+    zookeeper.shutdown();
+  }
+
+  private String getNextTopic() {
+    return topics[topicIndex++];
+  }
 
   @Test
   public void testKafkaProducer09Version() throws IOException {
@@ -61,19 +109,7 @@ public class TestKafkaProducer09 {
 
   @Test
   public void testKafkaProducer09Write() throws IOException, StageException {
-    int zkConnectionTimeout = 6000;
-    int zkSessionTimeout = 6000;
 
-    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
-    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
-    ZkUtils zkUtils = ZkUtils.apply(
-      zkConnect, zkSessionTimeout, zkConnectionTimeout,
-      JaasUtils.isZkSecurityEnabled());
-
-    int port = TestUtil.getFreePort();
-    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
-
-    final String topic = "TestKafkaProducer09_1";
     final String message = "Hello StreamSets";
 
     HashMap<String, Object> kafkaProducerConfigs = new HashMap<>();
@@ -81,37 +117,17 @@ public class TestKafkaProducer09 {
     kafkaProducerConfigs.put("batch.size", 100);
     kafkaProducerConfigs.put("linger.ms", 0);
 
+    String topic = getNextTopic();
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
     sdcKafkaProducer.init();
     sdcKafkaProducer.enqueueMessage(topic, message.getBytes(), "0");
     sdcKafkaProducer.write();
 
     verify(topic, 1, "localhost:" + port, message);
-
-    AdminUtils.deleteTopic(
-      zkUtils,
-      topic
-    );
-
-    kafkaServer.shutdown();
-    zookeeper.shutdown();
   }
 
   @Test
   public void testKafkaProducer09WriteFailsRecordTooLarge() throws IOException, StageException {
-    int zkConnectionTimeout = 6000;
-    int zkSessionTimeout = 6000;
-
-    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
-    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
-    ZkUtils zkUtils = ZkUtils.apply(
-      zkConnect, zkSessionTimeout, zkConnectionTimeout,
-      JaasUtils.isZkSecurityEnabled());
-
-    int port = TestUtil.getFreePort();
-    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
-
-    final String topic = "TestKafkaProducer09_1";
 
     HashMap<String, Object> kafkaProducerConfigs = new HashMap<>();
     kafkaProducerConfigs.put("retries", 0);
@@ -121,6 +137,7 @@ public class TestKafkaProducer09 {
     final String message = StringUtils.leftPad("a", 510, "b");
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
     sdcKafkaProducer.init();
+    String topic = getNextTopic();
     sdcKafkaProducer.enqueueMessage(topic, message.getBytes(), "0");
     try {
       sdcKafkaProducer.write();
@@ -130,31 +147,10 @@ public class TestKafkaProducer09 {
     } catch (Exception e) {
       fail("Expected Stage Exception but got " + e);
     }
-
-    AdminUtils.deleteTopic(
-      zkUtils,
-      topic
-    );
-
-    kafkaServer.shutdown();
-    zookeeper.shutdown();
   }
 
   @Test
   public void testKafkaProducer09WriteException() throws IOException, StageException {
-    int zkConnectionTimeout = 6000;
-    int zkSessionTimeout = 6000;
-
-    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
-    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
-    ZkUtils zkUtils = ZkUtils.apply(
-      zkConnect, zkSessionTimeout, zkConnectionTimeout,
-      JaasUtils.isZkSecurityEnabled());
-
-    int port = TestUtil.getFreePort();
-    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
-
-    final String topic = "TestKafkaProducer09_1";
     final String message = "Hello StreamSets";
 
     HashMap<String, Object> kafkaProducerConfigs = new HashMap<>();
@@ -164,13 +160,9 @@ public class TestKafkaProducer09 {
 
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
     sdcKafkaProducer.init();
+    String topic = getNextTopic();
     sdcKafkaProducer.enqueueMessage(topic, message.getBytes(), "0");
     sdcKafkaProducer.write();
-
-    AdminUtils.deleteTopic(
-      zkUtils,
-      topic
-    );
 
     kafkaServer.shutdown();
 
@@ -184,7 +176,7 @@ public class TestKafkaProducer09 {
       Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
 
-    zookeeper.shutdown();
+    kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
   }
 
   private void verify(

@@ -19,12 +19,15 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
+import kafka.server.BrokerState;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
+import kafka.server.RunningAsBroker;
 import kafka.utils.SystemTime$;
 import kafka.utils.TestUtils;
 import kafka.utils.ZkUtils;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class KafkaTestUtil09 extends SdcKafkaTestUtil {
 
@@ -93,6 +97,11 @@ public class KafkaTestUtil09 extends SdcKafkaTestUtil {
     for (int i = 0; i < numberOfBrokers; i++) {
       int port = TestUtil.getFreePort();
       KafkaServer kafkaServer = createKafkaServer(++brokerId, port, zkConnect);
+      long start = System.currentTimeMillis();
+      while (System.currentTimeMillis() < start + 5000L &&
+          kafkaServer.brokerState().currentState() != RunningAsBroker.state()) {
+        Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
+      }
       kafkaServers.add(kafkaServer);
       sb.append("localhost:" + port).append(",");
     }
@@ -103,14 +112,6 @@ public class KafkaTestUtil09 extends SdcKafkaTestUtil {
 
   public void createTopic(String topic, int partitions, int replicationFactor) {
     AdminUtils.createTopic(zkUtils, topic, partitions, replicationFactor, new Properties());
-    for(int i = 0; i < partitions; i++) {
-      TestUtils.waitUntilMetadataIsPropagated(
-          scala.collection.JavaConversions.asScalaBuffer(kafkaServers),
-          topic,
-          i,
-          TIME_OUT
-      );
-    }
   }
 
   public void shutdown() {

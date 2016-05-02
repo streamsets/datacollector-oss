@@ -100,7 +100,6 @@ public class KafkaTestUtil08 extends SdcKafkaTestUtil {
 
   public void createTopic(String topic, int partitions, int replicationFactor) {
     AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, TIME_OUT);
   }
 
   public void shutdown() {
