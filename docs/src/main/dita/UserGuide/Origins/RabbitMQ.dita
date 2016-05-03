@@ -23,6 +23,9 @@
             information needed to connect to RabbitMQ client. You also define a queue and the
             bindings to use. You can use multiple bindings to read messages from one or more
             exchanges. </p>
+        <p>You can configure the origin to generate a single record for each RabbitMQ message. By
+            default, if a message includes multiple objects, the origin generates a record for each
+            object.</p>
         <p>You can add custom configuration options and define connection credentials as needed. </p>
  </conbody>
 </concept>

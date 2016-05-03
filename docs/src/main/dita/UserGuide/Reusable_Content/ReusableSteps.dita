@@ -984,6 +984,12 @@
                                     <entry>RabbitMQ consumer tag. Leave empty to use an
                                         automatically generated consumer tag. </entry>
                                 </row>
+                                <row>
+                                    <entry>One Record per Message</entry>
+                                    <entry>Generates a single record for each RabbitMQ message.
+                                            <p>When not selected, the origin generates a record for
+                                            each object in the message. </p></entry>
+                                </row>
                                 <row id="Rabbit-AddConfig">
                                     <entry>Additional Client Configuration</entry>
                                     <entry>Additional RabbitMQ client configuration properties to
