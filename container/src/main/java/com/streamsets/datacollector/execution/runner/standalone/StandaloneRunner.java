@@ -86,16 +86,20 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -467,7 +471,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
     throws PipelineRuntimeException {
     try {
-      validateAndSetStateTransition(pipelineStatus, message, attributes);
+      Map<String, Object> allAttributes = null;
+      if (attributes != null) {
+        allAttributes = new HashMap<>();
+        allAttributes.putAll(getState().getAttributes());
+        allAttributes.putAll(attributes);
+      }
+      validateAndSetStateTransition(pipelineStatus, message, allAttributes);
     } catch (PipelineStoreException | PipelineRunnerException ex) {
       throw new PipelineRuntimeException(ex.getErrorCode(), ex);
     }
