@@ -201,8 +201,8 @@ public class RemoteSSOService implements SSOService {
     try {
       HttpURLConnection conn = getSecurityInfoConnection();
       conn.setUseCaches(false);
-      conn.setConnectTimeout(1000);
-      conn.setReadTimeout(1000);
+      conn.setConnectTimeout(5000);
+      conn.setReadTimeout(5000);
       conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
       if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
         Map map = OBJECT_MAPPER.readValue(conn.getInputStream(), Map.class);

@@ -185,8 +185,8 @@ public class TestRemoteSSOService {
     service.fetchInfoForClientServices();
 
     Mockito.verify(conn).setUseCaches(Mockito.eq(false));
-    Mockito.verify(conn).setConnectTimeout(Mockito.eq(1000));
-    Mockito.verify(conn).setReadTimeout(Mockito.eq(1000));
+    Mockito.verify(conn).setConnectTimeout(Mockito.eq(5000));
+    Mockito.verify(conn).setReadTimeout(Mockito.eq(5000));
 
     ArgumentCaptor<String> publicKey = ArgumentCaptor.forClass(String.class);
     Mockito.verify(parser).setVerificationData(publicKey.capture());
