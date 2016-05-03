@@ -158,8 +158,10 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
     validateIfRemote(name, rev, "STOP_AND_DELETE");
-    manager.getRunner(user, name, rev).stop();
     PipelineState pipelineState = pipelineStateStore.getState(name, rev);
+    if (pipelineState.getStatus().isActive()) {
+      manager.getRunner(user, name, rev).stop();
+    }
     long now = System.currentTimeMillis();
     // wait for 10 secs for a graceful stop
     while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < 10000) {
