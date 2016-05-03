@@ -52,7 +52,7 @@ export SDC_CONF=/etc/sdc
 # Includes the JARs in extra lib in the root classloader, this is required to support
 # Snappy compression in Cassandra
 #
-export SDC_ROOT_CLASSPATH=${SDC_DIST}/root-lib/'*'
+export SDC_ROOT_CLASSPATH=${SDC_ROOT_CLASSPATH:-${SDC_DIST}/root-lib/'*'}
 
 # JVM options for the data collector process
 #

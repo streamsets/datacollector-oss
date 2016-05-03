@@ -43,7 +43,7 @@
 # Includes the JARs in extra lib in the root classloader, this is required to support
 # Snappy compression in Cassandra
 #
-export SDC_ROOT_CLASSPATH=${SDC_DIST}/root-lib/'*'
+export SDC_ROOT_CLASSPATH=${SDC_ROOT_CLASSPATH:-${SDC_DIST}/root-lib/'*'}
 
 export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"
 
