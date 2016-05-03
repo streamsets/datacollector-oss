@@ -29,30 +29,22 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import org.bson.Document;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.GenericContainer;
 
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestMongoDBSource {
-  private static final Logger LOG = LoggerFactory.getLogger(TestMongoDBSource.class);
+public class MongoDBSourceIT {
+  private static final Logger LOG = LoggerFactory.getLogger(MongoDBSourceIT.class);
   private static final String DATABASE_NAME = "test";
   private static final String CAPPED_COLLECTION = "capped";
   private static final String COLLECTION = "uncapped";
@@ -62,31 +54,23 @@ public class TestMongoDBSource {
 
   private static final List<Document> documents = new ArrayList<>(TEST_COLLECTION_SIZE);
   private static final UUID uuidValue = UUID.randomUUID();
-  private static MongodExecutable mongodExecutable = null;
-  private static int port = 0;
+  private static final int MONGO_PORT = 27017;
+
+  @ClassRule
+  public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
+
+  private static int mongoContainerMappedPort = 0;
+  private static String mongoContainerIp = null;
 
   @BeforeClass
   public static void setUpClass() throws Exception {
     for (int i = 0; i < TEST_COLLECTION_SIZE; i++) {
       documents.add(new Document("value", "document " + i));
     }
+    mongoContainerMappedPort = mongoContainer.getMappedPort(MONGO_PORT);
+    mongoContainerIp = mongoContainer.getContainerIpAddress();
 
-    MongodStarter starter = MongodStarter.getDefaultInstance();
-
-    ServerSocket s = new ServerSocket(0);
-    port = s.getLocalPort();
-    s.close();
-
-    IMongodConfig mongodConfig = new MongodConfigBuilder()
-        .version(Version.Main.PRODUCTION)
-        .net(new Net(port, Network.localhostIsIPv6()))
-        .build();
-
-
-    mongodExecutable = starter.prepare(mongodConfig);
-    mongodExecutable.start();
-
-    MongoClient mongo = new MongoClient("localhost", port);
+    MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
     MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
     db.createCollection(CAPPED_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
     db.createCollection(COLLECTION);
@@ -103,16 +87,10 @@ public class TestMongoDBSource {
     mongo.close();
   }
 
-  @AfterClass
-  public static void tearDownClass() throws Exception {
-    if (mongodExecutable != null)
-      mongodExecutable.stop();
-  }
-
   @Test
   public void testInvalidInitialOffset() throws StageException {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost:" + port,
+        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
         DATABASE_NAME,
         CAPPED_COLLECTION,
         true,
@@ -139,7 +117,7 @@ public class TestMongoDBSource {
   @Test
   public void testInvalidHostname() throws StageException {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhostsdfsd:" + port,
+        "mongodb://localhostsdfsd:" + mongoContainerMappedPort,
         DATABASE_NAME,
         CAPPED_COLLECTION,
         true,
@@ -165,7 +143,7 @@ public class TestMongoDBSource {
   @Test
   public void testInvalidHostPort() throws StageException {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost",
+        "mongodb://" + mongoContainerIp,
         DATABASE_NAME,
         CAPPED_COLLECTION,
         true,
@@ -191,7 +169,7 @@ public class TestMongoDBSource {
   @Test
   public void testInvalidPort() throws StageException {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost:abcd",
+        "mongodb://" + mongoContainerIp + ":abcd",
         DATABASE_NAME,
         CAPPED_COLLECTION,
         true,
@@ -217,7 +195,7 @@ public class TestMongoDBSource {
   @Test
   public void testReadCappedCollection() throws Exception {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost:" + port,
+        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
         DATABASE_NAME,
         CAPPED_COLLECTION,
         true,
@@ -270,11 +248,10 @@ public class TestMongoDBSource {
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
   }
 
-  @Ignore
   @Test
   public void testReadCollection() throws Exception {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost:" + port,
+        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
         DATABASE_NAME,
         COLLECTION,
         false,
@@ -332,7 +309,7 @@ public class TestMongoDBSource {
   @Test
   public void testReadUUIDType() throws Exception {
     MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhost:" + port,
+        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
         DATABASE_NAME,
         UUID_COLLECTION,
         false,
@@ -363,7 +340,7 @@ public class TestMongoDBSource {
   }
 
   private void insertNewDocs(String collectionName) {
-    MongoClient mongo = new MongoClient("localhost", port);
+    MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
     MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
 
     MongoCollection<Document> collection = db.getCollection(collectionName);

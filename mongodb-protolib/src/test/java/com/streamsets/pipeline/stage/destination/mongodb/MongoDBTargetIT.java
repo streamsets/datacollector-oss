@@ -51,7 +51,6 @@ public class MongoDBTargetIT {
   private static final String UNIQUE_KEY_EXCEPTION_COLLECTION = "testRecordDoesNotContainUniqueKeyException";
 
   private static MongoCollection<Document> testWriteCollection = null;
-  private static MongodExecutable mongodExecutable = null;
   private static MongoClient mongo = null;
   private static final int MONGO_PORT = 27017;
 
@@ -70,9 +69,6 @@ public class MongoDBTargetIT {
   @AfterClass
   public static void tearDownClass() throws Exception {
     mongo.close();
-    if (mongodExecutable != null) {
-      mongodExecutable.stop();
-    }
   }
 
   @Test
