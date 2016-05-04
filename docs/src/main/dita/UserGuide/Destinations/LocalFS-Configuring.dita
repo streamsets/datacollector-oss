@@ -25,36 +25,6 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>
             </step>
-         
-            <step>
-                <cmd>Click the <wintitle>Files</wintitle> tab and configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_alc_1cv_1r">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.67*"/>
-                            <thead>
-                                <row>
-                                    <entry>Local File System Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Directory</entry>
-                                    <entry>Local directory for the output files.</entry>
-                                </row>
-                                <row>
-                                    <entry>File Wait Time</entry>
-                                    <entry>Amount of time to wait for records. After the configured
-                                        time, Local File System creates a new output file. </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
             <step id="FS-OutputFiles">
                 <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
                     options:</cmd>
@@ -70,6 +40,15 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row>
+                                    <entry>Idle Timeout (secs) <xref
+                                            href="LocalFS-IdleTimeout.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_m3p_rfp_vv"/></xref>
+                                    </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-IdleTimeout"/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DataFormat">
                                     <entry/>
@@ -78,17 +57,29 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FilePrefix">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryTemplate">
-                                    <entry/>
+                                <row>
+                                    <entry>Directory Template
+                                        <xref
+                                            href="LocalFS-DirectoryTemplates.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_br8_fgs_3r"/></xref>
+                                    </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-DirectoryTemplate"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DataTimeZone">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-TimeBasis">
-                                    <entry/>
+                                <row>
+                                    <entry>Time Basis
+                                        <xref
+                                            href="LocalFS-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_bh5_fgs_9r"/></xref>
+                                    </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TimeBasis"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxRecords">

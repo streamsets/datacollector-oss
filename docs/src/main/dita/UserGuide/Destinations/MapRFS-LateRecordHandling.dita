@@ -20,7 +20,10 @@
                 handling</indexterm></indexterm><indexterm>late record handling<indexterm>MapR
                     FS</indexterm></indexterm></p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsOverview"/>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsExample"/>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsError"/>
+        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsTip"/>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsError"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsExample1"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsExample2"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LateRecordsExample3"/>
     </conbody>
 </concept>

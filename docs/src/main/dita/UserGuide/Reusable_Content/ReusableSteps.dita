@@ -1831,8 +1831,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>FS-OutputFiles</uicontrol> - for
-                        Hadoop FS and Local FS</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>FS-OutputFiles</uicontrol> - Local FS
+                        and MapR FS conref the entire table. Hadoop FS conrefs each
+                        row</draft-comment>
                 </cmd>
             </step>
             <step id="FS-OutputFiles">
@@ -1851,6 +1852,17 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Idle Timeout (secs)</entry>
+                                    <entry id="entry-IdleTimeout">Maximum time that an output file
+                                        can remain idle. After no records are written to a file for
+                                        this amount of time, the destination closes the file. Enter
+                                        a time in seconds or use the <codeph>MINUTES</codeph> or
+                                            <codeph>HOURS</codeph> constant in an expression to
+                                        define the time increment.<p>Use -1 to set no limit. Default
+                                            is 1 hour, defined as follows: <codeph>${1 *
+                                                HOURS}</codeph>.</p></entry>
+                                </row>
+                                <row id="row-FileType">
                                     <entry>File Type</entry>
                                     <entry>Output file type:<ul id="ul_pzp_dd1_s5">
                                             <li>Text files</li>
@@ -1883,7 +1895,7 @@
                                             href="../Destinations/HadoopFS-DirectoryTemplates.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_c1q_dd1_s5"/></xref></entry>
-                                    <entry>Template for creating output directories. You can use
+                                    <entry id="entry-DirectoryTemplate">Template for creating output directories. You can use
                                         constants, field values, and datetime variables. <p>Output
                                             directories are created based on the smallest datetime
                                             variable in the template.</p></entry>
@@ -1899,7 +1911,7 @@
                                             href="../Destinations/HadoopFS-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_f1q_dd1_s5"/></xref></entry>
-                                    <entry>Time basis to use for creating output directories and
+                                    <entry id="entry-TimeBasis">Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
                                             expressions:<ul id="ul_h1q_dd1_s5">
                                             <li>${time:now()} - Uses the processing time as the time
@@ -1936,7 +1948,7 @@
                                     <entry>Full class name of the other compression codec that you
                                         want to use. </entry>
                                 </row>
-                                <row>
+                                <row id="row-SequenceFileKey">
                                     <entry>Sequence File Key</entry>
                                     <entry>Record key for creating sequence files. Use one of the
                                         following options:<ul id="ul_v1q_dd1_s5">
@@ -1944,7 +1956,7 @@
                                             <li>${uuid()}</li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="row-CompressionType">
                                     <entry>Compression Type</entry>
                                     <entry>Compression type for sequence files when using a
                                         compression codec:<ul id="ul_bbq_dd1_s5">
@@ -2178,8 +2190,9 @@
                 <cmd>On the <wintitle>Late Records</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <note>These properties are only relevant for a time basis based on the time of a
-                        record.</note>
+                    <note type="tip">These properties are relevant for a time basis based on the
+                        time of a record. If you use processing time as the time basis, set the late
+                        record time limit to one second.</note>
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>

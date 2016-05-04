@@ -61,6 +61,7 @@
    <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
+   <topicref href="../Destinations/HadoopFS-IdleTimeout.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
   </topicref>
@@ -139,6 +140,7 @@
    <topicref href="../Destinations/LocalFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/LocalFS-TimeBasis.dita"/>
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
+   <topicref href="../Destinations/LocalFS-IdleTimeout.dita"/>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/MapRFS.dita" chunk="to-content"> 
@@ -151,6 +153,7 @@
    <topicref href="../Destinations/MapRFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/MapRFS-TimeBasis.dita"/>
    <topicref href="../Destinations/MapRFS-LateRecordHandling.dita"/>
+   <topicref href="../Destinations/MapRFS-IdleTimeout.dita"/>
    <topicref href="../Destinations/MapRFS-HadoopProps.dita"/>
    <topicref href="../Destinations/MapRFS-Configuring.dita"/></topicref>
   <topicref href="../Destinations/MapRStreamsProd.dita" chunk="to-content">

@@ -894,16 +894,62 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </dl>
             <draft-comment author="alisontaylor">Late Records and Late Record Handling - used for
                   Hadoop FS, Local FS, and MapR FS destinations</draft-comment>
-            <p id="LateRecordsOverview">You can define a time limit for records to be written to its
-                  associated output directory. Any record that arrives past this limit is considered
-                  late. This limit is appropriate when you use the time of the record as the time
-                  basis. </p>
-            <p id="LateRecordsExample">For example, the destination writes event data to hourly
-                  output directories based on the timestamp of the event, and it has a time limit of
-                  one day. Any records that arrive more than a day after the hourly output directory
-                  window are considered late. </p>
+            <p id="LateRecordsOverview">When you use a record time as the time basis, you can define
+                  a time limit for records to be written to their associated output file. When the
+                  destination creates a new output file in a new directory, the previous output file
+                  is kept open for the specified late record time limit. When records that belong in
+                  that file arrive within the time limit, the destination writes the records to the
+                  open output file. When the late record time limit is reached, the output file is
+                  closed and any record that arrives past this limit is considered late.</p>
+            <note type="tip" id="LateRecordsTip">The late records properties are not applicable if
+                  you use processing time as the time basis. If you use processing time, set the
+                  late record time limit to one second.</note>
             <p id="LateRecordsError">You can send late records to a late records file or to the
                   stage for error handling. When you send records to a late records file, you define
                   a late records directory template. </p>
+            <p id="LateRecordsExample1">For example, you use a record time as the time basis,
+                  configure a one hour late record time limit, configure late records to be sent to
+                  the stage for error handling, and use the default directory template value:
+                  <codeblock>/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()} </codeblock></p>
+            <p id="LateRecordsExample2">The first records that arrive have a datetime between the
+                  hours of 02:00 and 02:59, and so are written to an output file in the 02
+                  directory. When records with a datetime between the hours of 03:00 and 03:59
+                  arrive, the destination creates a new file in an 03 directory. The destination
+                  keeps the file in the 02 directory open for another hour. </p>
+            <p id="LateRecordsExample3">If a record with a datetime between the hours of 02:00 and
+                  02:59 arrives before the hour time limit, the destination writes the record to the
+                  open file in the 02 directory. After one hour, the destination closes the output
+                  file in the 02 directory. Any records with a datetime between the hours of 02:00
+                  and 02:59 that arrive after the one hour time limit are considered late. The late
+                  records are sent to the stage for error handling.</p>
+            <draft-comment author="alisontaylor">Timeout to Close Idle Files - used for Hadoop FS,
+                  Local FS, and MapR FS destinations</draft-comment>
+            <p id="IdleTimeoutOverview">You might want to configure an idle timeout when output
+                  files remain open and idle for too long, thus delaying another system from
+                  processing the files.</p>
+            <p id="IdleTimeoutReasons">Output files might remain idle for too long for the following
+                  reasons:            <ul>
+                        <li>You configured the maximum number of records to be written to output
+                              files or the maximum size of output files, but records have stopped
+                              arriving. An output file that has not reached the maximum number of
+                              records or the maximum file size stays open until more records
+                              arrive.</li>
+                        <li>You configured a date field in the record as the time basis and have
+                              configured a late record time limit, but records arrive in
+                              chronological order. When a new directory is created, the output file
+                              in the previous directory remains open for the configured late record
+                              time limit. However, no records are ever written to the open file in
+                              the previous directory.<p>For example, when a record with a datetime
+                                    of 03:00 arrives, the destination creates a new file in a new 03
+                                    directory. The previous file in the 02 directory is kept open
+                                    for the late record time limit, which is an hour by default.
+                                    However, when records arrive in chronological order, no records
+                                    that belong in the 02 directory arrive after the 03 directory is
+                                    created. </p></li>
+            </ul></p>
+
+            <p id="IdleTimeoutSummary">In either situation, configure an idle timeout so that other
+                  systems can process the files sooner, instead of waiting for the configured
+                  maximum records, maximum file size, or late records conditions to occur. </p>
       </conbody>
 </concept>
