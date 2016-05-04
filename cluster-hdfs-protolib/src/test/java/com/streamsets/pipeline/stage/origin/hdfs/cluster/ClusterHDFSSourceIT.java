@@ -76,7 +76,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 
-public class TestClusterHDFSSource {
+public class ClusterHDFSSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private static MiniDFSCluster miniDFS;
   private static Path dir;

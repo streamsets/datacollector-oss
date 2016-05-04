@@ -84,8 +84,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class TestHBaseTarget {
-  private static final Logger LOG = LoggerFactory.getLogger(TestHBaseTarget.class);
+public class HBaseTargetIT {
+  private static final Logger LOG = LoggerFactory.getLogger(HBaseTargetIT.class);
   private static HBaseTestingUtility utility;
   private static MiniZooKeeperCluster miniZK;
   private static final String tableName = "TestHBaseSink";

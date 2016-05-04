@@ -69,7 +69,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
-public class TestBaseHdfsTarget {
+public class BaseHdfsTargetIT {
   private static MiniDFSCluster miniDFS;
   private static UserGroupInformation fooUgi;
 
