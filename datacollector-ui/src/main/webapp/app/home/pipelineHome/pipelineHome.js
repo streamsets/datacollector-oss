@@ -77,6 +77,7 @@ angular
       monitorMemoryEnabled: false,
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
       isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
+      isRemotePipeline: false,
       selectedType: pipelineConstant.PIPELINE,
       loaded: false,
       isPipelineRunning: false,
@@ -1724,6 +1725,11 @@ angular
     infoNameWatchListener = $scope.$watch('pipelineConfig.info.name', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
       $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
+      if ($scope.activeConfigStatus && $scope.activeConfigStatus.attributes &&
+        $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
+        $scope.isRemotePipeline = true;
+        $scope.isPipelineReadOnly = true;
+      }
     });
 
     pipelineStatusWatchListener = $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]', function() {
@@ -1748,6 +1754,12 @@ angular
 
       if($scope.activeConfigStatus.status === 'RETRY') {
         updateRetryCountdown($scope.activeConfigStatus.nextRetryTimeStamp);
+      }
+
+      if ($scope.activeConfigStatus && $scope.activeConfigStatus.attributes &&
+        $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
+        $scope.isRemotePipeline = true;
+        $scope.isPipelineReadOnly = true;
       }
 
     });

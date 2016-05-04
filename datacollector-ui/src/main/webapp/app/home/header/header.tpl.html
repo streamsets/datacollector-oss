@@ -149,7 +149,7 @@
          tooltip-popup-delay="500"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="selectedType === pipelineConstant.PIPELINE"
-         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !isPipelineReadOnly"
          ng-click="(selectedType === pipelineConstant.PIPELINE) || deleteSelection()">
         <span class="fa fa-trash fa-14x"></span>
       </a>
@@ -160,7 +160,7 @@
          tooltip-popup-delay="500"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-disabled="selectedType !== pipelineConstant.STAGE_INSTANCE || selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE"
-         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !isPipelineReadOnly"
          ng-click="(selectedType !== pipelineConstant.STAGE_INSTANCE || selectedObject.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) || duplicateStage()">
         <span class="glyphicon glyphicon-duplicate fa-14x"></span>
       </a>
