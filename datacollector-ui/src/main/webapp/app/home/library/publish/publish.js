@@ -26,6 +26,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('PublishModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q, authService) {
     angular.extend($scope, {
+      publishing: false,
       common: {
         errors: []
       },
@@ -34,6 +35,7 @@ angular
         commitMessage: ''
       },
       publish : function () {
+        $scope.publishing = true;
         $q.when(api.remote.publishPipeline(
           authService.getRemoteBaseUrl(),
           authService.getSSOToken(),
@@ -51,6 +53,7 @@ angular
             } else {
               $scope.common.errors = [res.data];
             }
+            $scope.publishing = false;
           }
         );
       },
