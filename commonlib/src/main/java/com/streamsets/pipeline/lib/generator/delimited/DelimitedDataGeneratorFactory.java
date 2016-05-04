@@ -40,8 +40,15 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
   static final String HEADER_DEFAULT = "header";
   public static final String VALUE_KEY = KEY_PREFIX + "value";
   static final String VALUE_DEFAULT = "value";
+  /*
+   * We can't store null inside our configurations because underneath our code uses ImmutableMap
+   * from guava that have this limitation. Hence we're modeling the optional argument with non-null
+   * default value and explicit boolean argument stating if the option is on/off.
+   */
   public static final String REPLACE_NEWLINES_KEY = KEY_PREFIX + "replaceNewLines";
   static final boolean REPLACE_NEWLINES_DEFAULT = true;
+  public static final String REPLACE_NEWLINES_STRING_KEY = KEY_PREFIX + "replaceNewLinesString";
+  static final String REPLACE_NEWLINES_STRING_DEFAULT = " ";
 
   public static final Map<String, Object> CONFIGS;
 
@@ -50,6 +57,7 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
     configs.put(HEADER_KEY, HEADER_DEFAULT);
     configs.put(VALUE_KEY, VALUE_DEFAULT);
     configs.put(REPLACE_NEWLINES_KEY, REPLACE_NEWLINES_DEFAULT);
+    configs.put(REPLACE_NEWLINES_STRING_KEY, REPLACE_NEWLINES_STRING_DEFAULT);
     configs.put(DelimitedDataConstants.DELIMITER_CONFIG, '|');
     configs.put(DelimitedDataConstants.ESCAPE_CONFIG, '\\');
     configs.put(DelimitedDataConstants.QUOTE_CONFIG, '"');
@@ -64,6 +72,7 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
   private final String headerKey;
   private final String valueKey;
   private final boolean replaceNewLines;
+  private final String replaceNewLinesString;
 
   public DelimitedDataGeneratorFactory(Settings settings) {
     super(settings);
@@ -71,6 +80,7 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
     headerKey = settings.getConfig(HEADER_KEY);
     valueKey = settings.getConfig(VALUE_KEY);
     replaceNewLines = settings.getConfig(REPLACE_NEWLINES_KEY);
+    replaceNewLinesString = settings.getConfig(REPLACE_NEWLINES_STRING_KEY);
   }
 
   @Override
@@ -81,7 +91,7 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
         .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
         .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
     }
-    return new DelimitedCharDataGenerator(createWriter(os), csvFormat, header, headerKey, valueKey, replaceNewLines);
+    return new DelimitedCharDataGenerator(createWriter(os), csvFormat, header, headerKey, valueKey, replaceNewLines ? replaceNewLinesString : null);
   }
 
 }

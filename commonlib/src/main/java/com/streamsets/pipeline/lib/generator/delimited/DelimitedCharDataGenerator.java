@@ -42,10 +42,14 @@ public class DelimitedCharDataGenerator implements DataGenerator {
   private final CSVPrinter printer;
   private boolean firstRecord;
   private boolean closed;
-  private boolean replaceNewLines;
+  /**
+   * Optional replacement string that will be used to substitute all new line
+   * characters (\n and \r) when serializing data to delimited format.
+   */
+  private String replaceNewLines;
 
   public DelimitedCharDataGenerator(Writer writer, CSVFormat format, CsvHeader header, String headerKey, String valueKey,
-                                    boolean replaceNewLines)
+                                    String replaceNewLines)
       throws IOException {
     format = format.withHeader((String[])null);
     this.format = format;
@@ -131,12 +135,12 @@ public class DelimitedCharDataGenerator implements DataGenerator {
         value = column.getValueAsString();
       }
       if (value != null) {
-        if (replaceNewLines) {
+        if (replaceNewLines != null) {
           if (value.contains("\n")) {
-            value = value.replace('\n', ' ');
+            value = value.replace("\n", replaceNewLines);
           }
           if (value.contains("\r")) {
-            value = value.replace('\r', ' ');
+            value = value.replace("\r", replaceNewLines);
           }
         }
       } else {

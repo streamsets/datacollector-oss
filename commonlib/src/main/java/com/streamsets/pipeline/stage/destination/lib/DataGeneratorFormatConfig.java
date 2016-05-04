@@ -120,6 +120,19 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
     required = false,
+    type = ConfigDef.Type.STRING,
+    defaultValue = " ",
+    label = "New Line Character Replacement",
+    description = "Character that will be used to substitute new line characters.",
+    displayPosition = 335,
+    group = "DELIMITED",
+    dependsOn = "csvReplaceNewLines",
+    triggeredByValue = "true"
+  )
+  public String csvReplaceNewLinesString;
+
+  @ConfigDef(
+    required = false,
     type = ConfigDef.Type.CHARACTER,
     defaultValue = "|",
     label = "Delimiter Character",
@@ -327,7 +340,9 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case DELIMITED:
         builder.setMode(csvFileFormat);
         builder.setMode(csvHeader);
-        builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLines);
+        if(csvReplaceNewLines) {
+          builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLinesString);
+        }
         builder.setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter);
         builder.setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape);
         builder.setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
