@@ -74,9 +74,9 @@ public class TestHdfsTargetUpgrader {
     configs.add(new Config("includeSchema", true));
 
     HdfsTargetUpgrader hdfsTargetUpgrader = new HdfsTargetUpgrader();
-    hdfsTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
+    hdfsTargetUpgrader.upgrade("a", "b", "c", 1, 3, configs);
 
-    Assert.assertEquals(32, configs.size());
+    Assert.assertEquals(33, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for(Config c : configs) {
@@ -183,6 +183,21 @@ public class TestHdfsTargetUpgrader {
 
     Assert.assertEquals("NULL", configValues.get("hdfsTargetConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
+    // Version 3 new configs
+    Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.idleTimeout"));
+    Assert.assertEquals("-1", configValues.get("hdfsTargetConfigBean.idleTimeout"));
   }
 
+  @Test
+  public void testPresenceOfIdleInV2() throws StageException {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("hdfsTargetConfigBean.idleTimeout", "10"));
+
+    HdfsTargetUpgrader hdfsTargetUpgrader = new HdfsTargetUpgrader();
+    hdfsTargetUpgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("hdfsTargetConfigBean.idleTimeout", configs.get(0).getName());
+    Assert.assertEquals("10", configs.get(0).getValue());
+  }
 }

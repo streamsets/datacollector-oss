@@ -41,6 +41,9 @@ public class HdfsTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -106,5 +109,23 @@ public class HdfsTargetUpgrader implements StageUpgrader {
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    // We've released version of HDFS Target that wasn't properly adding idleTimeout if it was missing. Hence
+    // we can see both version 2 with and without this property, all depending upon on which particular SDC
+    // version the pipeline was created.
+    final String propertyName = "hdfsTargetConfigBean.idleTimeout";
+    boolean found = false;
+    for(Config config: configs) {
+      if(propertyName.equals(config.getName())) {
+        found = true;
+        break;
+      }
+    }
+
+    if(!found) {
+      configs.add(new Config(propertyName, "-1"));
+    }
   }
 }

@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Hadoop FS",
     description = "Writes to a Hadoop file system",
     icon = "hdfs.png",
