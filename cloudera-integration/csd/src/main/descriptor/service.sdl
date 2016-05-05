@@ -89,6 +89,7 @@
               }
             ],
             "includedParams": [
+              "sdc.base.http.url",
               "http.port",
               "https.port",
               "https.keystore.path",
@@ -97,6 +98,25 @@
               "http.authentication.login.module",
               "http.authentication.ldap.role.mapping",
               "http.realm.file.permission.check",
+              "http.session.max.inactive.interval",
+              "http.access.control.allow.origin",
+              "http.access.control.allow.headers",
+              "http.access.control.allow.methods",
+              "ui.header.title",
+              "ui.enable.usage.data.collection",
+              "ui.enable.webSocket",
+              "ui.undo.limit",
+              "mail.transport.protocol",
+              "mail.smtp.host",
+              "mail.smtp.port",
+              "mail.smtp.auth",
+              "mail.smtp.starttls.enable",
+              "mail.smtps.host",
+              "mail.smtps.port",
+              "mail.smtps.auth",
+              "xmail.username",
+              "xmail.password",
+              "xmail.from.address",
               "kerberos.client.enabled",
               "preview.maxBatchSize",
               "preview.maxBatches",
@@ -171,6 +191,12 @@
       },
       "parameters": [
         {
+          "name": "sdc.base.http.url",
+          "label": "Data collector base URL",
+          "description": "The base URL is used in created email alerts. By default value from http.port and machine's hostname will be used.",
+          "type": "string"
+        },
+        {
           "name": "http.port",
           "label": "Web UI Port",
           "description": "The port that will be used for the Data Collector Web UI. If set to 0, port will be selected randomly",
@@ -187,6 +213,14 @@
           "zeroAllowed": "true",
           "negativeOneAllowed": "true",
           "default": -1
+        },
+        {
+          "name": "http.session.max.inactive.interval",
+          "label": "HTTP Session Timeout",
+          "description": "Max period of inactivity, after which the HTTP session is invalidated, in seconds.",
+          "type": "long",
+          "unit": "seconds",
+          "default": 86400
         },
         {
           "name": "data.directory",
@@ -277,6 +311,27 @@
           "description": "Validate that the permissions of the realm file are owner-readable only",
           "type": "boolean",
           "default": "false"
+        },
+        {
+          "name": "http.access.control.allow.origin",
+          "label": "HTTP access control origins",
+          "description": "List of domains allowed to access the Data Collector REST API for cross-origin resource sharing (CORS). Default is the asterisk wildcard (*) which means that any domain can access the Data Collector REST API.",
+          "type": "string_array",
+          "default": ["*"]
+        },
+        {
+          "name": "http.access.control.allow.headers",
+          "label": "HTTP access control headers",
+          "description": "List of HTTP headers allowed during a cross-domain request.",
+          "type": "string_array",
+          "default": ["origin", "content-type", "accept", "authorization", "x-requested-by", "x-ss-user-auth-token", "x-ss-rest-call"]
+        },
+        {
+          "name": "http.access.control.allow.methods",
+          "label": "HTTP access control methods",
+          "description": "List of HTTP methods that can be called during a cross-domain request.",
+          "type": "string_array",
+          "default": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"]
         },
         {
           "name": "production.maxBatchSize",
@@ -433,18 +488,117 @@
           "default": "false"
         },
         {
+          "name": "ui.header.title",
+          "label": "Header title",
+          "description": "Optional text to display in the Data Collector console next to the StreamSets logo.",
+          "type": "string",
+          "default":  ""
+        },
+        {
+          "name": "ui.enable.usage.data.collection",
+          "label": "Usage collection",
+          "description": "Allows anonymous Google Analytics information to be sent to StreamSets.",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
           "name": "ui.enable.webSocket",
-          "label": "Enable WebSocket for UI",
+          "label": "Enable websockets",
           "description": "Enables Data Collector to use WebSocket to gather pipeline information.",
           "type": "boolean",
           "default": "true"
         },
         {
-          "name": "ui.enable.usage.data.collection",
-          "label": "Enable Anonymous Usage Collection",
-          "description": "Allows anonymous Google Analytics information to be sent StreamSets.",
+          "name": "ui.undo.limit",
+          "label": "Undo limit",
+          "description": "Number of recent actions stored so you can undo them.",
+          "type": "long",
+          "default": 10
+        },
+        {
+          "name": "mail.transport.protocol",
+          "label": "Email protocol",
+          "description": "Use smtp or smtps.",
+          "type": "string_enum",
+          "validValues": ["smtp", "smtps"],
+          "default":  "smtp"
+        },
+        {
+          "name": "mail.smtp.host",
+          "label": "SMTP Host name",
+          "description": "Hostname of the SMTP server.",
+          "type": "string",
+          "default": "localhost"
+        },
+        {
+          "name": "mail.smtp.port",
+          "label": "SMTP Port number",
+          "description": "Port of the SMTP server.",
+          "type": "port",
+          "default": 25
+        },
+        {
+          "name": "mail.smtp.auth",
+          "label": "SMTP Authentication",
+          "description": "Whether the SMTP host uses authentication. ",
           "type": "boolean",
-          "default": "true"
+          "default": "false"
+        },
+        {
+          "name": "mail.smtp.starttls.enable",
+          "label": "Enable SMTP TLS",
+          "description": "Whether the SMTP host uses STARTTLS encryption.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "mail.smtps.host",
+          "label": "SMTPS Host name",
+          "description": "Hostname of the SMTPS server.",
+          "type": "string",
+          "default": "localhost"
+        },
+        {
+          "name": "mail.smtps.port",
+          "label": "SMTPS Port number",
+          "description": "Port of the SMTPS server.",
+          "type": "port",
+          "default": 25
+        },
+        {
+          "name": "mail.smtps.auth",
+          "label": "SMTPS Authentication",
+          "description": "Whether the SMTPS host uses authentication.",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "xmail.username",
+          "label": "Mail username",
+          "description": "User name for the email account to send alert email.",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "xmail.password",
+          "label": "Mail password file",
+          "description": "File that contains the password for the email account. By default, the file name is email-password.txt and expected in the $SDC_CONF directory.",
+          "type": "string",
+          "default": "${file(email-password.txt)}"
+        },
+        {
+          "name": "runner.thread.pool.size",
+          "label": "Pipeline runner thread pool",
+          "description": "Number of threads that are used for running pipelines.",
+          "type": "long",
+          "default": 20
+        },
+        {
+          "name": "xmail.from.address",
+          "label": "Mail from address",
+          "description": "Email address to send alert email.",
+          "type": "string",
+          "default": "sdc@localhost"
         }
       ]
     }
