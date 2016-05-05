@@ -36,10 +36,12 @@ import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.DefaultCodec;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -49,7 +51,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 public class TestActiveRecordWriters {
-  private static Path testDir;
+  private Path testDir;
 
   public static class DummyDataGeneratorFactory extends DataGeneratorFactory {
     protected DummyDataGeneratorFactory(Settings settings) {
@@ -76,8 +78,8 @@ public class TestActiveRecordWriters {
     }
   }
 
-  @BeforeClass
-  public static void setUpClass() {
+  @Before
+  public void setUpClass() {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     testDir = new Path(dir.getAbsolutePath());
@@ -150,6 +152,58 @@ public class TestActiveRecordWriters {
     Assert.assertNotNull(writer);
     writers.closeAll();
     Assert.assertTrue(writer.isClosed());
+  }
+
+  @Test
+  public void testRenameOnIdle() throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    final String prefix = "prefix";
+    String template = getTestDir().toString();
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSecs = 2;
+    long cutOffSize = 10000;
+    long cutOffRecords = 2;
+    HdfsFileType fileType = HdfsFileType.SEQUENCE_FILE;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    compressionCodec.setConf(conf);
+    SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
+    String keyEL = "uuid()";
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+        cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
+        ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
+            null), "dirPathTemplate");
+    mgr.setIdleTimeoutSeconds(1L);
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
+
+    Date now = new Date();
+
+    Record record = RecordCreator.create();
+
+    RecordWriter writer = writers.get(now, now, record);
+    Assert.assertNotNull(writer);
+    writer.write(record);
+    //writer should still be open
+    Assert.assertFalse(writer.isClosed());
+
+    Thread.sleep(1500);
+    Assert.assertTrue(writer.isClosed());
+    File[] files = new File(getTestDir().toString()).listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith(prefix);
+      }
+    });
+    Assert.assertEquals(1, files.length);
+    files = new File(getTestDir().toString()).listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("_tmp_");
+      }
+    });
+    Assert.assertEquals(0, files.length);
   }
 
 }

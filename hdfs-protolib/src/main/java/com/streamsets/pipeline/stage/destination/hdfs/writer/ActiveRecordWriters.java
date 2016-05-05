@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class ActiveRecordWriters {
   private DelayQueue<DelayedRecordWriter> cutOffQueue;
 
   public ActiveRecordWriters(RecordWriterManager manager) {
-    writers = new HashMap<>();
+    writers = Collections.synchronizedMap(new HashMap<String, RecordWriter>());
     cutOffQueue = new DelayQueue<>();
     this.manager = manager;
   }
@@ -114,6 +115,7 @@ public class ActiveRecordWriters {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Got '{}'", writer.getPath());
         }
+        writer.setActiveRecordWriters(this);
         writers.put(path, writer);
         cutOffQueue.add(new DelayedRecordWriter(writer));
       }
@@ -132,12 +134,17 @@ public class ActiveRecordWriters {
   }
 
   public void release(RecordWriter writer) throws IOException {
-    if (manager.isOverThresholds(writer) || writer.isClosed()) {
-      if (IS_TRACE_ENABLED) {
-        LOG.trace("Release '{}'", writer.getPath());
+    writer.closeLock();
+    try {
+      if (writer.isIdleClosed() || manager.isOverThresholds(writer)) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Release '{}'", writer.getPath());
+        }
+        writers.remove(writer.getPath().toString());
+        manager.commitWriter(writer);
       }
-      writers.remove(writer.getPath().toString());
-      manager.commitWriter(writer);
+    } finally {
+      writer.closeUnlock();
     }
     purge();
   }

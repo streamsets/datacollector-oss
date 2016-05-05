@@ -245,7 +245,7 @@ public class RecordWriterManager {
 
   public Path commitWriter(RecordWriter writer) throws IOException {
     Path path = null;
-    if (!writer.isClosed()) {
+    if (!writer.isClosed() || writer.isIdleClosed()) {
       // Unset the interrupt flag before close(). InterruptedIOException makes close() fail
       // resulting that the tmp file never gets renamed when stopping the pipeline.
       boolean interrupted = Thread.interrupted();
@@ -258,9 +258,10 @@ public class RecordWriterManager {
       if (interrupted) {
         Thread.currentThread().interrupt();
       }
-      LOG.debug("Path[{}] - Committing Writer to '{}'", writer.getPath(), path);
+      LOG.debug("Path[{}] - Committing Writer", writer.getPath());
       FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       path = renameToFinalName(fs, writer.getPath());
+      LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
     }
     return path;
   }

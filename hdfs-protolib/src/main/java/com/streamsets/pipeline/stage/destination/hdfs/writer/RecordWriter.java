@@ -71,6 +71,7 @@ public class RecordWriter {
   private boolean seqFile;
   private boolean idleClosed;
   private Future<Void> currentIdleCloseFuture = null;
+  private ActiveRecordWriters writers = null;
 
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
   private ScheduledExecutorService idleCloseExecutor = Executors.newSingleThreadScheduledExecutor(
@@ -125,6 +126,18 @@ public class RecordWriter {
 
   public long getExpiresOn() {
     return expires;
+  }
+
+  void setActiveRecordWriters(ActiveRecordWriters writers) {
+    this.writers = writers;
+  }
+
+  void closeLock() {
+    closeLock.writeLock().lock();
+  }
+
+  void closeUnlock() {
+    closeLock.writeLock().unlock();
   }
 
   public void write(Record record) throws IdleClosedException, IOException, StageException {
@@ -195,6 +208,9 @@ public class RecordWriter {
 
   private void close(boolean idleClosed) throws IOException {
     closeLock.writeLock().lock();
+    if (isClosed()) {
+      return;
+    }
     LOG.debug("Path[{}] - Closing", path);
     try {
       if (generator != null) {
@@ -203,6 +219,10 @@ public class RecordWriter {
         seqWriter.close();
       }
       this.idleClosed = idleClosed;
+      // writers can never be null, except in tests
+      if (idleClosed && writers != null) {
+        writers.release(this);
+      }
     } finally {
       generator = null;
       seqWriter = null;
@@ -235,6 +255,10 @@ public class RecordWriter {
     boolean isClosed = (generator == null && seqWriter == null);
     closeLock.readLock().unlock();
     return isClosed;
+  }
+
+  public boolean isIdleClosed() {
+    return idleClosed;
   }
 
   private void scheduleIdleClose() {
