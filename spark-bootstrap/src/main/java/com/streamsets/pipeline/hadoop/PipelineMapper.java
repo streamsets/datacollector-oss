@@ -94,6 +94,13 @@ public class PipelineMapper extends Mapper {
     } else {
       throw new IllegalStateException("Unsupported InputSplit: " + inputSplit.getClass().getName());
     }
+    long splitLength = fileSplit.getLength();
+    if (splitLength == 0) {
+      LOG.info("Not processing as length of split is 0");
+      return;
+    } else {
+      LOG.debug("Length of split is " + splitLength);
+    }
     String header = null;
     if (fileSplit != null) {
       file = fileSplit.getPath() + "::" + fileSplit.getStart();

@@ -266,18 +266,25 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     throws IOException, InterruptedException {
     TextInputFormat textInputFormat = new TextInputFormat();
     long fileLength = fileStatus.getLen();
+    List<Map.Entry> batch = new ArrayList<>();
+    Path filePath = fileStatus.getPath();
+    // MR allows file length to be 0 for text data (not for avro)
+    if (fileLength == 0) {
+      LOG.info("File length is 0 for " + filePath);
+      return batch;
+    }
     // Hadoop does unsafe casting from long to int, so split length should not be greater than int
     // max value
     long splitLength = (fileLength < Integer.MAX_VALUE) ? fileLength: Integer.MAX_VALUE;
-    InputSplit fileSplit = new FileSplit(fileStatus.getPath(), 0, splitLength, null);
+    InputSplit fileSplit = new FileSplit(filePath, 0, splitLength, null);
     TaskAttemptContext taskAttemptContext = new TaskAttemptContextImpl(hadoopConf,
       TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
     RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext);
     recordReader.initialize(fileSplit, taskAttemptContext);
     boolean hasNext = recordReader.nextKeyValue();
-    List<Map.Entry> batch = new ArrayList<>();
+
     while (hasNext && batch.size() < batchSize) {
-      batch.add(new Pair(fileStatus.getPath().toUri().getPath() + "::" + recordReader.getCurrentKey(),
+      batch.add(new Pair(filePath.toUri().getPath() + "::" + recordReader.getCurrentKey(),
         String.valueOf(recordReader.getCurrentValue())));
       hasNext = recordReader.nextKeyValue(); // not like iterator.hasNext, actually advances
     }
@@ -285,7 +292,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   private List<Map.Entry> previewAvroBatch(FileStatus fileStatus, int batchSize) throws IOException, InterruptedException {
-    SeekableInput input = new FsInput(fileStatus.getPath(), hadoopConf);
+    Path filePath = fileStatus.getPath();
+    SeekableInput input = new FsInput(filePath, hadoopConf);
     DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader);
     List<Map.Entry> batch = new ArrayList<>();
@@ -299,7 +307,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       dataFileWriter.append(datum);
       dataFileWriter.close();
       out.close();
-      batch.add(new Pair(fileStatus.getPath().toUri().getPath() + "::" + count, out.toByteArray()));
+      batch.add(new Pair(filePath.toUri().getPath() + "::" + count, out.toByteArray()));
       count++;
     }
     return batch;
