@@ -283,28 +283,30 @@ public class MongoDBSource extends BaseSource {
   }
 
   private boolean createMongoClient(List<ConfigIssue> issues) {
-    boolean isOk = true;
     if (null == mongoClient) {
       List<ServerAddress> servers = new ArrayList<>();
-      isOk = parseServerList(mongoConnectionString, servers, issues);
-      List<MongoCredential> credentials = createCredentials();
-      MongoClientOptions options = MongoClientOptions.builder().build();
 
-      if (isOk) {
-        try {
-          mongoClient = new MongoClient(servers, credentials, options);
-        } catch (MongoException e) {
-          issues.add(getContext().createConfigIssue(
-              Groups.MONGODB.name(),
-              "mongoClientURI",
-              Errors.MONGODB_01,
-              e.toString()
-          ));
-          isOk = false;
-        }
+      MongoClientURI mongoURI = new MongoClientURI(mongoConnectionString);
+      List<MongoCredential> credentials = createCredentials();
+
+      if (!validateServerList(mongoURI.getHosts(), servers, issues)) {
+        return false;
+      }
+
+      try {
+        mongoClient = new MongoClient(servers, credentials, mongoURI.getOptions());
+      } catch (MongoException e) {
+        issues.add(getContext().createConfigIssue(
+            Groups.MONGODB.name(),
+            "mongoClientURI",
+            Errors.MONGODB_01,
+            e.toString()
+        ));
+        return false;
       }
     }
-    return isOk;
+
+    return true;
   }
 
   private boolean checkMongoDatabase(List<ConfigIssue> issues) {
@@ -369,13 +371,10 @@ public class MongoDBSource extends BaseSource {
     }
   }
 
-  private boolean parseServerList(String mongoConnectionString, List<ServerAddress> servers, List<ConfigIssue> issues) {
-    boolean isOk = true;
-    MongoClientURI mongoURI = new MongoClientURI(mongoConnectionString);
-    List<String> hosts = mongoURI.getHosts();
-
+  private boolean validateServerList(List<String> hosts, List<ServerAddress> servers, List<ConfigIssue> issues) {
     // Validate each host in the connection string is valid. MongoClient will not tell us
     // if something is wrong when we try to open it.
+    boolean isOk = true;
     for (String host : hosts) {
       String[] hostport = host.split(":");
       if (hostport.length != 2) {
