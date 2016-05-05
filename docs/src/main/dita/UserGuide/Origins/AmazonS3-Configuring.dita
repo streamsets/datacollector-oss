@@ -129,18 +129,16 @@
                                 <row>
                                     <entry>Archiving Option</entry>
                                     <entry>The action to take when archiving a file that cannot be
-                                        processed. You can move the file to another folder or
-                                        bucket.</entry>
+                                        processed. You can configure a prefix or bucket for the
+                                        files.</entry>
                                 </row>
                                 <row>
-                                    <entry>Error Folder</entry>
-                                    <entry>Archive folder or directory for files that cannot be
-                                        processed.</entry>
+                                    <entry>Error Prefix</entry>
+                                    <entry>Location for files that cannot be processed.</entry>
                                 </row>
                                 <row>
                                     <entry>Error Bucket</entry>
-                                    <entry>Archive bucket for files that cannot be
-                                        processed.</entry>
+                                    <entry>Bucket for files that cannot be processed.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -174,15 +172,16 @@
                                 <row>
                                     <entry>Archiving Option</entry>
                                     <entry>The action to take when archiving a processed file. You
-                                        can move the file to another folder or bucket.</entry>
+                                        can configure a prefix or bucket for processed
+                                        files.</entry>
                                 </row>
                                 <row>
-                                    <entry>Post Process Folder</entry>
-                                    <entry>Archive folder or directory for processed files. </entry>
+                                    <entry>Post Process Prefix</entry>
+                                    <entry>Location for processed files. </entry>
                                 </row>
                                 <row>
                                     <entry>Post Process Bucket</entry>
-                                    <entry>Archive bucket for processed files.</entry>
+                                    <entry>Bucket for processed files.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

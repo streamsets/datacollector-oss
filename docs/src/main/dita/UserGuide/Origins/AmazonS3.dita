@@ -15,13 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kvs_3hh_ht">
  <title>Amazon S3</title>
- <shortdesc>The Amazon S3 origin reads files stored in Amazon S3. The file names must all share a
-        file name pattern and should be fully written.</shortdesc>
+ <shortdesc>The Amazon S3 origin reads files stored in Amazon S3. The file names must share a prefix
+        pattern and should be fully written.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>Amazon S3</indexterm></indexterm><indexterm>Amazon S3
-          origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you define the
-      region, bucket, optional folder, file name pattern, and compression format. These properties
-      determine the files that the origin processes. </p>
+                    origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you
+            define the region, bucket, prefix pattern and optional common prefix. These properties
+            determine the files that the origin processes. </p>
   <p>After processing a file or upon encountering errors, the origin can keep, archive, or delete
             the file. </p>
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline

@@ -53,20 +53,25 @@
                                 </row>
                                 <row>
                                     <entry>Bucket</entry>
-                                    <entry>Bucket containing the folder to use.</entry>
+                                    <entry>Bucket to use when writing files.</entry>
                                 </row>
                                 <row>
-                                    <entry>Folder</entry>
-                                    <entry>Folder or directory to use.</entry>
+                                    <entry>Common Prefix</entry>
+                                    <entry>Common prefix that determines where files are written. </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3ObjectPathDelimiter">
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>File Name Prefix</entry>
-                                    <entry>Defines a prefix for output files. By default, file names
-                                        are prefixed by "sdc".</entry>
+                                    <entry>File Name Prefix <xref
+                                            href="../Destinations/AmazonS3.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_d34_kf2_wv"/>
+                                        </xref></entry>
+                                    <entry>Defines a prefix for output file names. By default, file
+                                        names start with "sdc" as follows: sdc-&lt;UTC
+                                        timestamp>-&lt;counter>. </entry>
                                 </row>
                                 <row>
                                     <entry>Data Format <xref

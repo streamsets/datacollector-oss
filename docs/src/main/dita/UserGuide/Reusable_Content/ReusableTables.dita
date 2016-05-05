@@ -202,14 +202,15 @@
       </row>
       <row id="S3Bucket">
        <entry>Bucket</entry>
-       <entry>Bucket where the data resides.</entry>
+       <entry>Bucket that contains the files to be read.</entry>
       </row>
       <row id="S3Folder">
-       <entry>Folder</entry>
-       <entry>Optional folder where the data resides. If used with a file name pattern, acts as a
-        root folder for the file name pattern and any directory included in the file name pattern.
-         <p>To read data from more than one folder, use glob patterns to represent the directory
-         structure in the file naming pattern. </p></entry>
+       <entry>Common Prefix <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wm3_212_wv"/>
+        </xref></entry>
+       <entry>Optional common prefix that describes where the location of the data. When defined,
+        the common prefix acts as a root for the prefix pattern.<p>You can use Ant-style path
+         patterns to read files recursively. </p></entry>
       </row>
       <row id="S3ObjectPathDelimiter">
        <entry>Object Path Delimiter</entry>
@@ -217,14 +218,12 @@
          ).</p></entry>
       </row>
       <row id="S3FileNamePattern">
-       <entry>File Name Pattern <xref href="../Origins/AmazonS3-Folder_FileNamePattern.dita">
+       <entry>Prefix Pattern <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_tfr_bk5_ht"/>
         </xref></entry>
        <entry>
-        <p>Regular expression that describes the pattern of the file names to process. You can use
-         UNIX-style wildcards, such as an asterisk or question mark. For example, *.log. </p>
-        <p>To process data in more than one folder, you can include the path to the files to be
-         processed and use wildcards to define glob patterns. </p>
+        <p>Prefix pattern that describes the files to be processed. </p>
+        <p>You can use Ant-style path patterns to read files recursively. </p>
        </entry>
       </row>
       <row id="S3BufferLimit">
