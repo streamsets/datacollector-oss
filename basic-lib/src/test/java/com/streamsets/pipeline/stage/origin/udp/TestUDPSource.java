@@ -19,8 +19,10 @@
  */
 package com.streamsets.pipeline.stage.origin.udp;
 
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.parser.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -103,6 +105,21 @@ public class TestUDPSource {
     }
     if (failures.size() >= maxRuns) {
       throw failures.get(0);
+    }
+  }
+
+  @Test
+  public void testPrivilegedPort() throws Exception {
+    List<String> ports = Lists.newArrayList("514", "10000");
+    ParserConfig parserConfig = new ParserConfig();
+    parserConfig.put(CHARSET, "UTF-8");
+    TUDPSource source = new TUDPSource(ports, parserConfig, UDPDataFormat.SYSLOG, 20, 100L);
+    SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    if (System.getProperty("user.name").equals("root")) {
+      Assert.assertEquals(0, issues.size());
+    } else {
+      Assert.assertEquals(1, issues.size());
     }
   }
 

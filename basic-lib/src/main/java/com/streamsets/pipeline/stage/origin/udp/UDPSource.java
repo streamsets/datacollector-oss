@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -70,6 +71,7 @@ public class UDPSource extends BaseSource {
   private UDPConsumingServer udpServer;
   private AbstractParser parser;
   private BlockingQueue<ParseResult> incomingQueue;
+  private boolean privilegedPortUsage = false;
 
   public UDPSource(
       List<String> ports,
@@ -99,7 +101,10 @@ public class UDPSource extends BaseSource {
       for (String candidatePort : ports) {
         try {
           int port = Integer.parseInt(candidatePort.trim());
-          if (port > 1023 && port < 65536) {
+          if (port > 0 && port < 65536) {
+            if (port < 1024) {
+              privilegedPortUsage = true; // only for error handling purposes
+            }
             addresses.add(new InetSocketAddress(port));
           } else {
             issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports",
@@ -150,7 +155,13 @@ public class UDPSource extends BaseSource {
         } catch (Exception ex) {
           udpServer.destroy();
           udpServer = null;
-          issues.add(getContext().createConfigIssue(null, null, Errors.UDP_00, addresses.toString(), ex.toString(), ex));
+
+          if (ex instanceof SocketException && privilegedPortUsage) {
+            issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_07, ports, ex));
+          } else {
+            LOG.debug("Caught exception while starting up UDP server: {}", ex);
+            issues.add(getContext().createConfigIssue(null, null, Errors.UDP_00, addresses.toString(), ex.toString(), ex));
+          }
         }
       }
     }

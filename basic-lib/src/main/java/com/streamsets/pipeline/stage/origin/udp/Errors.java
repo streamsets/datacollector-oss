@@ -32,6 +32,7 @@ public enum Errors implements ErrorCode {
   UDP_04("Charset '{}' is not supported"),
   UDP_05("collectd Types DB '{}' not found"),
   UDP_06("collectd Auth File '{}' not found"),
+  UDP_07("Insufficient permissions to listen on privileged port {}")
   ;
 
   private final String msg;
