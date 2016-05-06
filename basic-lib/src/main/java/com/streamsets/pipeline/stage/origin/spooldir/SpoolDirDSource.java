@@ -31,7 +31,7 @@ import com.streamsets.pipeline.config.FileRawSourcePreviewer;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",

@@ -54,6 +54,8 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         upgradeV4ToV5(configs);
       case 5:
         upgradeV5ToV6(configs);
+      case 6:
+        upgradeV6ToV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -176,5 +178,9 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("csvRecordType", "LIST"));
+  }
+
+  private void upgradeV6ToV7(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "useLastModified"), FileOrdering.LEXICOGRAPHICAL.name()));
   }
 }

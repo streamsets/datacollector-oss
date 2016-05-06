@@ -33,8 +33,8 @@ public class TestSpoolDirSourceUpgrader {
   public void testSpoolDirSourceUpgrader() throws StageException {
     SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
 
-    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 5, new ArrayList<Config>());
-    Assert.assertEquals(8, upgrade.size());
+    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 7, new ArrayList<Config>());
+    Assert.assertEquals(9, upgrade.size());
     Assert.assertEquals("conf.dataFormatConfig.compression", upgrade.get(0).getName());
     Assert.assertEquals("NONE", upgrade.get(0).getValue());
     Assert.assertEquals("conf.dataFormatConfig.csvCustomDelimiter", upgrade.get(1).getName());
@@ -51,6 +51,8 @@ public class TestSpoolDirSourceUpgrader {
     Assert.assertEquals(0, upgrade.get(6).getValue());
     Assert.assertEquals("conf.allowLateDirectory", upgrade.get(7).getName());
     Assert.assertEquals(false, upgrade.get(7).getValue());
+    Assert.assertEquals("conf.useLastModified", upgrade.get(8).getName());
+    Assert.assertEquals(FileOrdering.LEXICOGRAPHICAL.name(), upgrade.get(8).getValue());
   }
 
 }
