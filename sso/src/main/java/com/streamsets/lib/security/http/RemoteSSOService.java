@@ -314,8 +314,8 @@ public class RemoteSSOService implements SSOService {
       conn.setDoOutput(true);
       conn.setDoInput(true);
       conn.setUseCaches(false);
-      conn.setConnectTimeout(1000);
-      conn.setReadTimeout(1000);
+      conn.setConnectTimeout(5000);
+      conn.setReadTimeout(5000);
       conn.setRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
       conn.setRequestProperty(ACCEPT, APPLICATION_JSON);
       conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");

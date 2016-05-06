@@ -241,8 +241,8 @@ public class TestRemoteSSOService {
     Mockito.verify(conn).setDoOutput(Mockito.eq(true));
     Mockito.verify(conn).setDoInput(Mockito.eq(true));
     Mockito.verify(conn).setUseCaches(Mockito.eq(false));
-    Mockito.verify(conn).setConnectTimeout(Mockito.eq(1000));
-    Mockito.verify(conn).setReadTimeout(Mockito.eq(1000));
+    Mockito.verify(conn).setConnectTimeout(Mockito.eq(5000));
+    Mockito.verify(conn).setReadTimeout(Mockito.eq(5000));
     Mockito.verify(conn).setRequestProperty(Mockito.eq(SSOConstants.X_REST_CALL), Mockito.eq("-"));
     Mockito.verify(conn).setRequestProperty(Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN), Mockito.eq("serviceToken"));
   }
