@@ -133,21 +133,21 @@ public class TestRemoteDataCollector {
       // Create 3 remote pipelines
       PipelineState pipelineStatus1 =
         new PipelineStateImpl("user", "ns:name", "rev", PipelineStatus.EDITED, null, System.currentTimeMillis(), null,
-          ExecutionMode.CLUSTER_BATCH, null, 0, -1);
+          ExecutionMode.STANDALONE, null, 0, -1);
       PipelineState pipelineStatus2 =
         new PipelineStateImpl("user1", "ns:name1", "rev1", PipelineStatus.EDITED, null, System.currentTimeMillis(), null,
-          ExecutionMode.CLUSTER_BATCH, null, 0, -1);
+          ExecutionMode.STANDALONE, null, 0, -1);
       PipelineState pipelineStatus3 =
         new PipelineStateImpl("user1", "ns:name2", "rev1", PipelineStatus.RUNNING, null, System.currentTimeMillis(), null,
-          ExecutionMode.CLUSTER_BATCH, null, 0, -1);
+          ExecutionMode.STANDALONE, null, 0, -1);
       // create one local pipeline in active state
       PipelineState pipelineStatus4 =
         new PipelineStateImpl("user1", "local", "rev1", PipelineStatus.RUNNING, null, System.currentTimeMillis(), null,
-          ExecutionMode.CLUSTER_BATCH, null, 0, -1);
+          ExecutionMode.STANDALONE, null, 0, -1);
       // create one local pipeline in non active state
       PipelineState pipelineStatus5 =
         new PipelineStateImpl("user1", "localError", "rev1", PipelineStatus.RUN_ERROR, null, System.currentTimeMillis(), null,
-          ExecutionMode.CLUSTER_BATCH, null, 0, -1);
+          ExecutionMode.STANDALONE, null, 0, -1);
       List<PipelineState> pipelineList = new ArrayList<PipelineState>();
       pipelineList.add(pipelineStatus1);
       pipelineList.add(pipelineStatus2);
@@ -485,10 +485,10 @@ public class TestRemoteDataCollector {
     public PipelineState getState(String name, String rev) throws PipelineStoreException {
       if (getStateCalled == 1) {
         getStateCalled++;
-        return new PipelineStateImpl("user", name, rev, PipelineStatus.STOPPED, null, -1, null, null, null, -1, -1);
+        return new PipelineStateImpl("user", name, rev, PipelineStatus.STOPPED, null, -1, null, ExecutionMode.STANDALONE, null, -1, -1);
       } else {
         getStateCalled++;
-        return new PipelineStateImpl("user", name, rev, PipelineStatus.RUNNING, null, -1, null, null, null, -1, -1);
+        return new PipelineStateImpl("user", name, rev, PipelineStatus.RUNNING, null, -1, null, ExecutionMode.STANDALONE, null, -1, -1);
       }
     }
 

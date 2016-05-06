@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
@@ -49,6 +50,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -189,13 +191,22 @@ public class RemoteDataCollector implements DataCollector {
       boolean isRemote = false;
       String name = pipelineState.getName();
       String rev = pipelineState.getRev();
+      String user = pipelineState.getUser();
       if (manager.isRemotePipeline(name, rev)) {
         isRemote = true;
       }
       // ignore local and non active pipelines
       if (isRemote || manager.isPipelineActive(name, rev)) {
+        Collection<String> workerURLList = null;
+        if (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) {
+          workerURLList = new ArrayList<>();
+          for (CallbackInfo callbackInfo : manager.getRunner(user, name, rev).getSlaveCallbackList()) {
+            workerURLList.add(callbackInfo.getSdcURL());
+          }
+        }
         pipelineStatusMap.put(getNameAndRevString(name, rev),
-          new PipelineAndValidationStatus(name, rev, isRemote, pipelineState.getStatus(), pipelineState.getMessage()));
+          new PipelineAndValidationStatus(name, rev, isRemote, pipelineState.getStatus(), pipelineState.getMessage(),
+            workerURLList));
       }
     }
     setValidationStatus(pipelineStatusMap);

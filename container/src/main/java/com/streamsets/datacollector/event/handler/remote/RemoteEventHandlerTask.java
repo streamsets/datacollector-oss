@@ -212,7 +212,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           PipelineStatusEvent pipelineStatusEvent =
             new PipelineStatusEvent(pipelineAndValidationStatus.getName(), pipelineAndValidationStatus.getRev(),
               pipelineAndValidationStatus.isRemote(), pipelineAndValidationStatus.getPipelineStatus(),
-              pipelineAndValidationStatus.getMessage(), pipelineAndValidationStatus.getValidationStatus(),
+              pipelineAndValidationStatus.getMessage(), pipelineAndValidationStatus.getWorkerURLList(),
+              pipelineAndValidationStatus.getValidationStatus(),
               jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())));
           clientEventList.add(new ClientEvent(UUID.randomUUID().toString(), Arrays.asList(jobEventDestination), false, false,
             EventType.STATUS_PIPELINE, pipelineStatusEvent, null));

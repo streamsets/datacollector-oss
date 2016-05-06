@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.event.dto;
 
+import java.util.Collection;
+
 import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.execution.PipelineStatus;
 
@@ -30,13 +32,14 @@ public class PipelineStatusEvent implements Event {
   private String message;
   private ValidationStatus validationStatus;
   private String issues;
+  private Collection<String> workerURLs;
   private boolean isRemote;
 
   public PipelineStatusEvent() {
   }
 
   public PipelineStatusEvent(String name, String rev, boolean isRemote, PipelineStatus pipelineStatus,
-    String message, ValidationStatus validationStatus, String issues) {
+    String message, Collection<String> workerURLs, ValidationStatus validationStatus, String issues) {
     this.name = name;
     this.rev = rev;
     this.pipelineStatus = pipelineStatus;
@@ -44,6 +47,7 @@ public class PipelineStatusEvent implements Event {
     this.validationStatus = validationStatus;
     this.issues = issues;
     this.isRemote = isRemote;
+    this.workerURLs = workerURLs;
   }
 
   public boolean isRemote() {
@@ -101,6 +105,14 @@ public class PipelineStatusEvent implements Event {
 
   public void setIssues(String issues) {
     this.issues = issues;
+  }
+
+  public void setWorkerURLs(Collection<String> workerURLs) {
+    this.workerURLs = workerURLs;
+  }
+
+  public Collection<String> getWorkerURLs() {
+    return workerURLs;
   }
 
 }

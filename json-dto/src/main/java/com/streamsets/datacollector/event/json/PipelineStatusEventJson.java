@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.event.json;
 
+import java.util.Collection;
+
 import com.streamsets.datacollector.config.json.PipelineStatusJson;
 import com.streamsets.datacollector.config.json.ValidationStatusJson;
 
@@ -31,6 +33,7 @@ public class PipelineStatusEventJson implements EventJson {
   private ValidationStatusJson validationStatus;
   private String issues;
   private boolean isRemote;
+  private Collection<String> workerURLs;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -86,5 +89,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setRev(String rev) {
     this.rev = rev;
+  }
+
+  public Collection<String> getWorkerURLs() {
+    return workerURLs;
+  }
+
+  public void setWorkerURLs(Collection<String> workerURLs) {
+    this.workerURLs = workerURLs;
   }
 }

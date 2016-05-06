@@ -22,13 +22,18 @@ package com.streamsets.datacollector.event.binding;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
+import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.execution.PipelineStatus;
 
 
 public class TestDtoJsonMapper {
@@ -66,5 +71,21 @@ public class TestDtoJsonMapper {
     assertEquals("config", pipelineSaveEvent.getPipelineConfigurationAndRules().getPipelineConfig());
     assertEquals("rules", pipelineSaveEvent.getPipelineConfigurationAndRules().getPipelineRules());
 
+  }
+
+  @Test
+  public void testPipelineStatusEventJson() throws Exception {
+    PipelineStatusEvent pipelineStatusEvent =
+      new PipelineStatusEvent("name", "rev", true, PipelineStatus.RUNNING, "message", Arrays.asList("worker1"), null, null);
+    PipelineStatusEventJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson(pipelineStatusEvent);
+    assertEquals("name", pseJson.getName());
+    assertEquals("rev", pseJson.getRev());
+    assertEquals("worker1", pseJson.getWorkerURLs().iterator().next());
+
+    pseJson.setWorkerURLs(Arrays.asList("worker2"));
+    pipelineStatusEvent = MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pseJson);
+    assertEquals("name", pipelineStatusEvent.getName());
+    assertEquals("rev", pipelineStatusEvent.getRev());
+    assertEquals("worker2", pipelineStatusEvent.getWorkerURLs().iterator().next());
   }
 }
