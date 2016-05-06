@@ -20,14 +20,14 @@
 package com.streamsets.datacollector.dev.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineRunStandalone;
+import com.streamsets.datacollector.base.PipelineRunStandaloneIT;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestDevPipelineRun extends TestPipelineRunStandalone {
+public class DevPipelineRunIT extends PipelineRunStandaloneIT {
 
   @Override
   protected String getPipelineJson() throws Exception {

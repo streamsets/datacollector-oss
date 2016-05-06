@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class TestPipelineRunStandalone {
+public abstract class PipelineRunStandaloneIT {
 
   protected abstract String getPipelineJson() throws Exception;
 

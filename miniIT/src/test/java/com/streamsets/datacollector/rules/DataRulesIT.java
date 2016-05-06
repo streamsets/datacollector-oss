@@ -44,10 +44,10 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 @Ignore
-public class TestDataRules {
+public class DataRulesIT {
 
   private static final String TOPIC = "TestKafkaDestinationSinglePartitionPipelineOperations";
-  private static final Logger LOG = LoggerFactory.getLogger(TestDataRules.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataRulesIT.class);
   private static MiniSDCTestingUtility miniSDCTestingUtility;
   private static URI serverURI;
   private static MiniSDC miniSDC;

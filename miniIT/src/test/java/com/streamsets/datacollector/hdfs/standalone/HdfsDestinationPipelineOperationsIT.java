@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.hdfs.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineOperationsStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -37,7 +37,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestHdfsDestinationPipelineOperations extends TestPipelineOperationsStandalone {
+public class HdfsDestinationPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
   private static MiniDFSCluster miniDFS;
 
@@ -58,7 +58,7 @@ public class TestHdfsDestinationPipelineOperations extends TestPipelineOperation
     UserGroupInformation.createUserForTesting("foo", new String[]{ "all", "supergroup"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
-    TestPipelineOperationsStandalone.beforeClass(getPipelineJson());
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
@@ -67,7 +67,7 @@ public class TestHdfsDestinationPipelineOperations extends TestPipelineOperation
       miniDFS.shutdown();
       miniDFS = null;
     }
-    TestPipelineOperationsStandalone.afterClass();
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
   private static String getPipelineJson() throws Exception {

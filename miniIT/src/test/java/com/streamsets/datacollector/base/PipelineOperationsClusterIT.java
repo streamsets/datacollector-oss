@@ -37,7 +37,7 @@ import java.util.List;
  * kafka origin reads.
  *
  */
-public abstract class TestPipelineOperationsCluster extends TestPipelineOperationsBase {
+public abstract class PipelineOperationsClusterIT extends PipelineOperationsBaseIT {
 
   protected static URI serverURI;
   protected static MiniSDC miniSDC;

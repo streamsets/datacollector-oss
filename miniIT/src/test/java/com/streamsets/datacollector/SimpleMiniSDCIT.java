@@ -34,7 +34,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestSimpleMiniSDC {
+public class SimpleMiniSDCIT {
 
   @Test
   public void testSimpleSDC() throws Exception {

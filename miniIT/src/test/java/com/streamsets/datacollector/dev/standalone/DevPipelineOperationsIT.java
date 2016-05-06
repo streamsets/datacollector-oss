@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.dev.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineOperationsStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,16 +30,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestDevPipelineOperations extends TestPipelineOperationsStandalone {
+public class DevPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
   @BeforeClass
   public static void beforeClass() throws Exception {
-    TestPipelineOperationsStandalone.beforeClass(getPipelineJson());
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
   public static void afterClass() throws Exception {
-    TestPipelineOperationsStandalone.afterClass();
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
   private static String getPipelineJson() throws Exception {

@@ -17,10 +17,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.kafka.cluster;
+package com.streamsets.datacollector.kafka.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineOperationsCluster;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
@@ -36,9 +36,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluster {
+public class KafkaOriginSinglePartitionPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
-  private static final String TOPIC = "TestKafkaOriginSinglePartitionCluster";
+  private static final String TOPIC = "TestKafkaOriginSinglePartitionPipelineOperations";
   private static CountDownLatch startLatch;
   private static ExecutorService executorService;
 
@@ -52,25 +52,22 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
     executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, 1, producer, startLatch, DataType.TEXT, null, -1,
       null));
-
-    TestPipelineOperationsCluster.beforeClass(getPipelineJson(), "TestKafkaOriginSinglePartitionCluster");
-    startLatch.countDown();
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
   public static void afterClass() throws Exception {
     executorService.shutdownNow();
     KafkaTestUtil.shutdown();
-    TestPipelineOperationsCluster.afterClass("TestKafkaOriginSinglePartitionCluster");
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
   private static String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("kafka_origin_pipeline.json").toURI();
+    URI uri = Resources.getResource("kafka_origin_pipeline_standalone.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
     pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
-    pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER_YARN_STREAMING");
     return pipelineJson;
   }
 
@@ -82,6 +79,11 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
   @Override
   protected String getPipelineRev() {
     return "0";
+  }
+
+  @Override
+  protected void postPipelineStart() {
+    startLatch.countDown();
   }
 
 }

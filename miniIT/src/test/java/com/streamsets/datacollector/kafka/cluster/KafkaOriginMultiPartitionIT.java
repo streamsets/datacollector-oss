@@ -17,17 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.kafka.standalone;
+package com.streamsets.datacollector.kafka.cluster;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineOperationsStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsClusterIT;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
 import kafka.javaapi.producer.Producer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -37,41 +38,42 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Ignore
-public class TestKafkaOriginMultiPartitionPipelineOperations extends TestPipelineOperationsStandalone {
-
-  private static final String TOPIC = "TestKafkaOriginMultiPartitionPipelineOperations";
+public class KafkaOriginMultiPartitionIT extends PipelineOperationsClusterIT {
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaOriginMultiPartitionIT.class);
+  private static final String TOPIC = "TestKafkaOriginMultiPartitionCluster";
   private static CountDownLatch startLatch;
   private static ExecutorService executorService;
+
 
   @BeforeClass
   public static void beforeClass() throws Exception {
     KafkaTestUtil.startZookeeper();
     KafkaTestUtil.startKafkaBrokers(5);
     KafkaTestUtil.createTopic(TOPIC, 3, 2);
+    LOG.info("Kafka Broker URIs: " + KafkaTestUtil.getMetadataBrokerURI());
     startLatch = new CountDownLatch(1);
     Producer<String, String> producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
     executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, 3, producer, startLatch, DataType.TEXT, null, -1,
       null));
-    TestPipelineOperationsStandalone.beforeClass(getPipelineJson());
+    PipelineOperationsClusterIT.beforeClass(getPipelineJson(), "TestKafkaOriginMultiPartitionCluster");
+    startLatch.countDown();
   }
 
   @AfterClass
   public static void afterClass() throws Exception {
-    if (executorService != null) {
-      executorService.shutdownNow();
-    }
+    executorService.shutdownNow();
     KafkaTestUtil.shutdown();
-    TestPipelineOperationsStandalone.afterClass();
+    PipelineOperationsClusterIT.afterClass("TestKafkaOriginMultiPartitionCluster");
   }
 
   private static String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("kafka_origin_pipeline_standalone.json").toURI();
+    URI uri = Resources.getResource("kafka_origin_pipeline.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
     pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
+    pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER_YARN_STREAMING");
     return pipelineJson;
   }
 
@@ -83,11 +85,6 @@ public class TestKafkaOriginMultiPartitionPipelineOperations extends TestPipelin
   @Override
   protected String getPipelineRev() {
     return "0";
-  }
-
-  @Override
-  protected void postPipelineStart() {
-    startLatch.countDown();
   }
 
 }

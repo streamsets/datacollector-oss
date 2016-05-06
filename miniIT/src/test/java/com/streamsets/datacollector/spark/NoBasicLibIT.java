@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.flume.cluster;
+package com.streamsets.datacollector.spark;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
@@ -30,8 +30,6 @@ import kafka.producer.KeyedMessage;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
-import org.apache.flume.Event;
-import org.apache.flume.Transaction;
 import org.apache.flume.channel.ChannelProcessor;
 import org.apache.flume.channel.MemoryChannel;
 import org.apache.flume.channel.ReplicatingChannelSelector;
@@ -53,26 +51,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The pipeline and data provider for this test case should make sure that the pipeline runs continuously and the origin
- *  in the pipeline keeps producing records until stopped.
- *
- * Origin has to be Kafka as of now. Make sure that there is continuous supply of data for the pipeline to keep running.
- * For example to test kafka Origin, a background thread could keep writing to the kafka topic from which the
- * kafka origin reads.
- *
- */
-public class TestKafkaToFlume {
+public class NoBasicLibIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TestKafkaToFlume.class);
-  //Kafka messages contain text "Hello Kafka<i>" i in the range [0-29]
+  private static final Logger LOG = LoggerFactory.getLogger(NoBasicLibIT.class);
   private static int RECORDS_PRODUCED = 30;
-  //Based on the expression parser and stream selector target ends up with messages which have even first digit of i.
-  //i.e., Hello Kafka<0,2,4,6,8,20,21,22,23,24,25,26,27,28,29>
-  private static int RECORDS_REACHING_TARGET= 15;
-
-  protected static URI serverURI;
-  protected static MiniSDC miniSDC;
+  private static URI serverURI;
+  private static MiniSDC miniSDC;
   private static final String TOPIC = "KafkaToFlumeOnCluster";
   private static AvroSource source;
   private static Channel ch;
@@ -128,7 +112,7 @@ public class TestKafkaToFlume {
   }
 
   private static String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("cluster_kafka_flume.json").toURI();
+    URI uri = Resources.getResource("cluster_no_basic-lib.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
@@ -146,38 +130,19 @@ public class TestKafkaToFlume {
   }
 
   @Test(timeout=120000)
-  public void testKafkaToFlumeOnCluster() throws Exception {
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, "kafka_origin_pipeline_cluster", "0"));
+  public void testNoBasicLib() throws Exception {
+    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, "cluster_no_basic-lib", "0"));
     List<URI> list = miniSDC.getListOfSlaveSDCURI();
     Assert.assertTrue(list != null && !list.isEmpty());
 
-    Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
+    Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "cluster_no_basic-lib", "0");
     Assert.assertNotNull(countersMap);
+    // only verify that workers have started properly and a stage can consume data
     while (VerifyUtils.getSourceOutputRecords(countersMap) != RECORDS_PRODUCED) {
       LOG.debug("Source output records are not equal to " + RECORDS_PRODUCED + " retrying again");
       Thread.sleep(500);
-      countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
+      countersMap = VerifyUtils.getCounters(list, "cluster_no_basic-lib", "0");
       Assert.assertNotNull(countersMap);
-    }
-    while (VerifyUtils.getTargetInputRecords(countersMap) != RECORDS_REACHING_TARGET) {
-      LOG.debug("Target Input records are not equal to " + RECORDS_REACHING_TARGET + " retrying again");
-      Thread.sleep(500);
-      countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
-      Assert.assertNotNull(countersMap);
-    }
-    //check from flume
-    for(int i = 0; i < RECORDS_REACHING_TARGET; i++) {
-      Transaction transaction = ch.getTransaction();
-      transaction.begin();
-      Event event = ch.take();
-      Assert.assertNotNull(event);
-      String text = new String(event.getBody()).trim();
-      Assert.assertTrue(text.contains("Hello Kafka"));
-      int j = Integer.parseInt(text.substring(11, 12));
-      Assert.assertTrue(j%2 == 0);
-
-      transaction.commit();
-      transaction.close();
     }
   }
 

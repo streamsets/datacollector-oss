@@ -32,7 +32,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TestMultiplePipelinesBase {
+public abstract class MultiplePipelinesBaseIT {
 
   private static MiniSDCTestingUtility miniSDCTestingUtility;
   private static URI serverURI;

@@ -62,9 +62,9 @@ import java.util.Map;
  * kafka origin reads.
  *
  */
-public class TestKafkaToHDFS {
+public class KafkaToHDFSIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TestKafkaToHDFS.class);
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaToHDFSIT.class);
   //Kafka messages contain text "Hello Kafka<i>" i in the range [0-29]
   private static int RECORDS_PRODUCED = 30;
   //Based on the expression parser and stream selector target ends up with messages which have even first digit of i.

@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.multiple;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
+import com.streamsets.datacollector.base.MultiplePipelinesBaseIT;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestMultiplePipelinesDev extends TestMultiplePipelinesBase {
+public class MultiplePipelinesDevIT extends MultiplePipelinesBaseIT {
 
   private static List<String> getPipelineJson() throws URISyntaxException, IOException {
     //random to kafka
@@ -66,12 +66,12 @@ public class TestMultiplePipelinesDev extends TestMultiplePipelinesBase {
    */
   @BeforeClass
   public static void beforeClass() throws Exception {
-    TestMultiplePipelinesBase.beforeClass(getPipelineJson());
+    MultiplePipelinesBaseIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
   public static void afterClass() throws Exception {
-    TestMultiplePipelinesBase.afterClass();
+    MultiplePipelinesBaseIT.afterClass();
   }
 
 }

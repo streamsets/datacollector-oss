@@ -20,13 +20,14 @@
 package com.streamsets.datacollector.kafka.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineOperationsStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
 import kafka.javaapi.producer.Producer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -36,30 +37,33 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TestKafkaOriginSinglePartitionPipelineOperations extends TestPipelineOperationsStandalone {
+@Ignore
+public class KafkaOriginMultiPartitionPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
-  private static final String TOPIC = "TestKafkaOriginSinglePartitionPipelineOperations";
+  private static final String TOPIC = "TestKafkaOriginMultiPartitionPipelineOperations";
   private static CountDownLatch startLatch;
   private static ExecutorService executorService;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
     KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
-    KafkaTestUtil.createTopic(TOPIC, 1, 1);
+    KafkaTestUtil.startKafkaBrokers(5);
+    KafkaTestUtil.createTopic(TOPIC, 3, 2);
     startLatch = new CountDownLatch(1);
     Producer<String, String> producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
     executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable(TOPIC, 1, producer, startLatch, DataType.TEXT, null, -1,
+    executorService.submit(new ProducerRunnable(TOPIC, 3, producer, startLatch, DataType.TEXT, null, -1,
       null));
-    TestPipelineOperationsStandalone.beforeClass(getPipelineJson());
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
   public static void afterClass() throws Exception {
-    executorService.shutdownNow();
+    if (executorService != null) {
+      executorService.shutdownNow();
+    }
     KafkaTestUtil.shutdown();
-    TestPipelineOperationsStandalone.afterClass();
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
   private static String getPipelineJson() throws Exception {

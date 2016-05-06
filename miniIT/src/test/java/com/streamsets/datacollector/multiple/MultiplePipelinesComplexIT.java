@@ -22,7 +22,7 @@ package com.streamsets.datacollector.multiple;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
+import com.streamsets.datacollector.base.MultiplePipelinesBaseIT;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -60,7 +60,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Ignore
-public class TestMultiplePipelinesComplex extends TestMultiplePipelinesBase {
+public class MultiplePipelinesComplexIT extends MultiplePipelinesBaseIT {
 
   private static final String TOPIC1 = "KafkaToFlume";
   private static final String TOPIC2 = "KafkaToHDFS";
@@ -190,7 +190,7 @@ public class TestMultiplePipelinesComplex extends TestMultiplePipelinesBase {
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     miniDFS = new MiniDFSCluster.Builder(conf).build();
 
-    TestMultiplePipelinesBase.beforeClass(getPipelineJson());
+    MultiplePipelinesBaseIT.beforeClass(getPipelineJson());
   }
 
   @AfterClass
@@ -203,6 +203,6 @@ public class TestMultiplePipelinesComplex extends TestMultiplePipelinesBase {
     source.stop();
     ch.stop();
     KafkaTestUtil.shutdown();
-    TestMultiplePipelinesBase.afterClass();
+    MultiplePipelinesBaseIT.afterClass();
   }
 }

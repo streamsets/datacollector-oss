@@ -20,67 +20,56 @@
 package com.streamsets.datacollector.kafka.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineRunStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
-import kafka.javaapi.producer.Producer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Ignore
-public class TestKafkaOriginMultiPartitionPipelineRun extends TestPipelineRunStandalone {
+public class KafkaDestinationMultiPartitionPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
-  private static final String TOPIC = "TestKafkaOriginMultiPartition";
+  private static final String TOPIC = "TestKafkaDestinationMultiPartitionPipelineOperations";
 
-  @Before
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
+  @BeforeClass
+  public static void beforeClass() throws Exception {
     KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(5);
+    KafkaTestUtil.startKafkaBrokers(3);
     KafkaTestUtil.createTopic(TOPIC, 3, 2);
-    Producer<String, String> producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), false);
-    producer.send(KafkaTestUtil.produceStringMessages(TOPIC, 3, 1000));
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
   }
 
-  @After
-  @Override
-  public void tearDown() {
+  @AfterClass
+  public static void afterClass() throws Exception {
     KafkaTestUtil.shutdown();
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
-  @Override
-  protected String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("kafka_origin_pipeline_standalone.json").toURI();
+  private static String getPipelineJson() throws Exception {
+    URI uri = Resources.getResource("kafka_destination_pipeline_operations.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
-    pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
+    pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkServer().connectString());
     return pipelineJson;
   }
 
   @Override
-  protected int getRecordsInOrigin() {
-    return 1000;
-  }
-
-  @Override
-  protected int getRecordsInTarget() {
-    return 1000;
-  }
-
-  @Override
   protected String getPipelineName() {
-    return "kafka_origin_pipeline";
+    return "kafka_destination_pipeline";
   }
 
   @Override
   protected String getPipelineRev() {
     return "0";
   }
+
+  @Override
+  protected void postPipelineStart() {
+
+  }
+
 }

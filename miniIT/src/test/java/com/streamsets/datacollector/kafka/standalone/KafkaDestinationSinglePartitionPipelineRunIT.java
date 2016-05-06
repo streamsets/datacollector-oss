@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.kafka.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineRunStandalone;
+import com.streamsets.datacollector.base.PipelineRunStandaloneIT;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -33,7 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class TestKafkaDestinationSinglePartitionPipelineRun extends TestPipelineRunStandalone {
+public class KafkaDestinationSinglePartitionPipelineRunIT extends PipelineRunStandaloneIT {
 
   private static final String TOPIC = "TestKafkaDestinationSinglePartition";
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams;

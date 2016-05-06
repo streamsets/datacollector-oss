@@ -20,39 +20,37 @@
 package com.streamsets.datacollector.flume.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineRunStandalone;
+import com.streamsets.datacollector.base.PipelineOperationsStandaloneIT;
 
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
-import org.apache.flume.Event;
 import org.apache.flume.Transaction;
 import org.apache.flume.channel.ChannelProcessor;
 import org.apache.flume.channel.MemoryChannel;
 import org.apache.flume.channel.ReplicatingChannelSelector;
 import org.apache.flume.conf.Configurables;
 import org.apache.flume.source.AvroSource;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class TestFlumeDestinationPipelineRun extends TestPipelineRunStandalone {
+public class FlumeDestinationPipelineOperationsIT extends PipelineOperationsStandaloneIT {
 
   private static AvroSource source;
   private static Channel ch;
+  private static ExecutorService executorService;
 
-
-  @Before
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
+  @BeforeClass
+  public static void beforeClass() throws Exception {
     //setup flume to write to
     source = new AvroSource();
     ch = new MemoryChannel();
@@ -70,45 +68,37 @@ public class TestFlumeDestinationPipelineRun extends TestPipelineRunStandalone {
     rcs.setChannels(channels);
     source.setChannelProcessor(new ChannelProcessor(rcs));
     source.start();
+    PipelineOperationsStandaloneIT.beforeClass(getPipelineJson());
+
+    //read from flume memory channel every second, otherwise the channel fills up and there is no more data coming in
+    executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new Runnable() {
+      @Override
+      public void run() {
+        Transaction transaction;
+        while (true) {
+          transaction = ch.getTransaction();
+          transaction.begin();
+          ch.take();
+          transaction.commit();
+          transaction.close();
+        }
+      }
+    });
   }
 
-  @After
-  @Override
-  public void tearDown() {
+  @AfterClass
+  public static void afterClass() throws Exception {
+    executorService.shutdownNow();
     source.stop();
     ch.stop();
+    PipelineOperationsStandaloneIT.afterClass();
   }
 
-  @Override
-  protected String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("flume_destination_pipeline_run.json").toURI();
+  private static String getPipelineJson() throws Exception {
+    URI uri = Resources.getResource("flume_destination_pipeline_operations.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     return pipelineJson;
-  }
-
-  @Override
-  protected int getRecordsInOrigin() {
-    return 100;
-  }
-
-  @Override
-  protected int getRecordsInTarget() throws IOException {
-    int recordsRead = 0;
-
-    Transaction transaction = ch.getTransaction();
-    transaction.begin();
-    Event event = ch.take();
-    while(event != null) {
-      recordsRead++;
-      transaction.commit();
-      transaction.close();
-
-      transaction = ch.getTransaction();
-      transaction.begin();
-      event = ch.take();
-    }
-
-    return recordsRead;
   }
 
   @Override
@@ -120,4 +110,10 @@ public class TestFlumeDestinationPipelineRun extends TestPipelineRunStandalone {
   protected String getPipelineRev() {
     return "0";
   }
+
+  @Override
+  protected void postPipelineStart() {
+
+  }
+
 }

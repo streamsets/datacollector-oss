@@ -52,8 +52,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 @Ignore
-public class TestSparkOnYarn {
-  private static final Logger LOG = LoggerFactory.getLogger(TestSparkOnYarn.class);
+public class SparkOnYarnIT {
+  private static final Logger LOG = LoggerFactory.getLogger(SparkOnYarnIT.class);
   private static MiniYARNCluster miniYarnCluster;
   private Producer<String, String> producer;
   private static final String TEST_NAME = "SparkOnYarnKafkaSource";

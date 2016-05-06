@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 @FixMethodOrder
-public abstract class TestPipelineOperationsBase {
-  private static final Logger LOG = LoggerFactory.getLogger(TestPipelineOperationsBase.class);
+public abstract class PipelineOperationsBaseIT {
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineOperationsBaseIT.class);
 
   protected abstract URI getServerURI();
 

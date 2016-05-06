@@ -26,7 +26,6 @@ import com.streamsets.datacollector.util.VerifyUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -46,7 +45,7 @@ import java.util.Map;
  * kafka origin reads.
  *
  */
-public abstract class TestPipelineOperationsStandalone extends TestPipelineOperationsBase {
+public abstract class PipelineOperationsStandaloneIT extends PipelineOperationsBaseIT {
 
   protected static MiniSDCTestingUtility miniSDCTestingUtility;
   protected static URI serverURI;

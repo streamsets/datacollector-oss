@@ -20,7 +20,7 @@
 package com.streamsets.datacollector.hdfs.standalone;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.base.TestPipelineRunStandalone;
+import com.streamsets.datacollector.base.PipelineRunStandaloneIT;
 
 import com.streamsets.datacollector.util.TestUtil;
 import org.apache.hadoop.conf.Configuration;
@@ -44,7 +44,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestHdfsDestinationPipelineRun extends TestPipelineRunStandalone {
+public class HdfsDestinationPipelineRunIT extends PipelineRunStandaloneIT {
 
   private static MiniDFSCluster miniDFS;
 
