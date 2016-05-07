@@ -42,6 +42,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
@@ -64,6 +66,9 @@ import java.util.UUID;
             @CreateTransport(protocol = "LDAP")
         })
 public class TestLDAPAuthentication extends AbstractLdapTestUnit {
+
+  private static Logger LOG = LoggerFactory.getLogger(TestLDAPAuthentication.class);
+
   private static String createTestDir() {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
@@ -229,7 +234,7 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
         stopServer();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.debug("Ignoring exception", e);
     } finally {
       stopServer();
     }

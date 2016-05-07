@@ -28,6 +28,8 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,6 +37,8 @@ import java.io.OutputStream;
 import java.util.Collections;
 
 public class TestProtobufDataGeneratorFactory {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestProtobufDataGeneratorFactory.class);
 
   private static final String PROTO_FILE = "Employee.desc";
   private static final String MESSAGE_TYPE = "util.Employee";
@@ -70,7 +74,7 @@ public class TestProtobufDataGeneratorFactory {
         .build();
       Assert.fail("Exception expected as the message type does not exist in the descriptor file");
     } catch (RuntimeException e) {
-      e.printStackTrace();
+      LOG.debug("Ignoring exception", e);
     }
   }
 

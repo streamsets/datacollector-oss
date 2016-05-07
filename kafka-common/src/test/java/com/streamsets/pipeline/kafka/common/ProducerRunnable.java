@@ -22,10 +22,14 @@ package com.streamsets.pipeline.kafka.common;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 
 public class ProducerRunnable implements Runnable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ProducerRunnable.class);
 
   private final String topic;
   private final Producer<String, String> producer;
@@ -56,7 +60,7 @@ public class ProducerRunnable implements Runnable {
     try {
       startLatch.await();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOG.debug("Ignoring exception", e);
     }
 
     int i = 0;

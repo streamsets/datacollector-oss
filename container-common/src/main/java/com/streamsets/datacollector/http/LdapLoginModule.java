@@ -54,7 +54,8 @@ import java.util.Properties;
 
 /**
  * This is copy of class org.eclipse.jetty.server.server.plus.jaas.spi.LdapLoginModule
- * Only change is bindingLogin method to use bindDn/bindPassword for fetching roles.
+ * Only change is bindingLogin method to use bindDn/bindPassword for fetching roles and
+ * removing 'debug' argument (we'll use LOG.debug() instead).
  *
  * A LdapLoginModule for use with JAAS setups
  * <p/>
@@ -69,7 +70,6 @@ import java.util.Properties;
  * <pre>
  * ldaploginmodule {
  *    com.streamsets.datacollector.http.LdapLoginModule required
- *    debug="true"
  *    useLdaps="false"
  *    contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
  *    hostname="ldap.example.com"
@@ -174,8 +174,6 @@ public class LdapLoginModule extends AbstractLoginModule
    * the name of the attribute that a role would be stored under
    */
   private String _roleNameAttribute = "roleName";
-
-  private boolean _debug;
 
   /**
    * if the getUserInfo can pull a password off of the user then
@@ -441,18 +439,12 @@ public class LdapLoginModule extends AbstractLoginModule
     }
     catch (IOException e)
     {
-      if (_debug)
-      {
-        e.printStackTrace();
-      }
+      LOG.debug("IO Error performing login", e);
       throw new LoginException("IO Error performing login.");
     }
     catch (Exception e)
     {
-      if (_debug)
-      {
-        e.printStackTrace();
-      }
+      LOG.debug("IO Error performing login", e);
       throw new LoginException("Error obtaining user info.");
     }
   }
@@ -577,7 +569,6 @@ public class LdapLoginModule extends AbstractLoginModule
     _roleObjectClass = getOption(options, "roleObjectClass", _roleObjectClass);
     _roleMemberAttribute = getOption(options, "roleMemberAttribute", _roleMemberAttribute);
     _roleNameAttribute = getOption(options, "roleNameAttribute", _roleNameAttribute);
-    _debug = Boolean.parseBoolean(String.valueOf(getOption(options, "debug", Boolean.toString(_debug))));
 
     if(Configuration.FileRef.isValueMyRef(_bindPassword)) {
       Configuration.FileRef fileRef = new Configuration.FileRef(_bindPassword);

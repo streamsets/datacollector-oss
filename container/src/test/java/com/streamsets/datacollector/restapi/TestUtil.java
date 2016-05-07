@@ -39,6 +39,8 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 
 import org.glassfish.hk2.api.Factory;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 
@@ -52,6 +54,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class TestUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestUtil.class);
 
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
@@ -184,7 +188,7 @@ public class TestUtil {
       try {
         return new URI("URIInjector");
       } catch (URISyntaxException e) {
-        e.printStackTrace();
+        LOG.debug("Ignoring exception", e);
         return null;
       }
     }

@@ -40,6 +40,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
@@ -54,6 +56,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestPipelineStoreResourceForSlaveMode.class);
 
   @BeforeClass
   public static void beforeClass() {
@@ -181,18 +185,18 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
         try {
           Mockito.when(pipelineStore.retrieveRules("myPipeline", "tag")).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
-          e.printStackTrace();
+          LOG.debug("Ignoring exception", e);
         }
         try {
           Mockito.when(pipelineStore.storeRules(
             Matchers.anyString(), Matchers.anyString(), (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any()))
             .thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
-          e.printStackTrace();
+          LOG.debug("Ignoring exception", e);
         }
 
       } catch (PipelineStoreException e) {
-        e.printStackTrace();
+        LOG.debug("Ignoring exception", e);
       }
       return new SlavePipelineStoreTask(pipelineStore);
     }

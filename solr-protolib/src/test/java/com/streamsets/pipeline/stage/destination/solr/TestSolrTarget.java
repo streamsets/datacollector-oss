@@ -34,6 +34,8 @@ import org.apache.solr.common.SolrDocumentList;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -42,6 +44,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestSolrTarget  extends SolrJettyTestBase {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestSolrTarget.class);
 
   @BeforeClass
   public static void beforeTest() throws Exception {
@@ -154,7 +158,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Assert.assertEquals("t", fieldCVal);
 
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.error("Exception while writing records", e);
       throw e;
     }
     finally {

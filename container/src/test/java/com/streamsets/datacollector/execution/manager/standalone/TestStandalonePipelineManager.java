@@ -77,6 +77,8 @@ import static org.junit.Assert.*;
 
 public class TestStandalonePipelineManager {
 
+  private static Logger LOG = LoggerFactory.getLogger(TestStandalonePipelineManager.class);
+
   private PipelineStoreTask pipelineStoreTask;
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
@@ -224,7 +226,7 @@ public class TestStandalonePipelineManager {
       pipelineManager.getRunner("user", "none_existing_pipeline", "0");
       fail("Expected PipelineStoreException but didn't get any");
     } catch (PipelineStoreException ex) {
-      ex.printStackTrace();
+      LOG.debug("Ignoring exception", ex);
     } catch (Exception ex) {
       fail("Expected PipelineStoreException but got " + ex);
     }

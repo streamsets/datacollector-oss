@@ -52,6 +52,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
@@ -68,6 +70,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TestPipelineStoreResource extends JerseyTest {
+
+  private static Logger LOG = LoggerFactory.getLogger(TestPipelineStoreResource.class);
 
   @BeforeClass
   public static void beforeClass() {
@@ -273,21 +277,21 @@ public class TestPipelineStoreResource extends JerseyTest {
           Mockito.when(pipelineStore.retrieveRules("xyz", "1")).thenReturn(rules.getRuleDefinitions());
           Mockito.when(pipelineStore.retrieveRules("newFromImport", "1")).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
-          e.printStackTrace();
+          LOG.debug("Ignoring exception", e);
         }
         try {
           Mockito.when(pipelineStore.storeRules(
             Matchers.anyString(), Matchers.anyString(), (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any()))
             .thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
-          e.printStackTrace();
+          LOG.debug("Ignoring exception", e);
         }
 
         Mockito.when(pipelineStore.create("nobody", "newFromImport", null, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (PipelineStoreException e) {
-        e.printStackTrace();
+        LOG.debug("Ignoring exception", e);
       }
       return pipelineStore;
     }
