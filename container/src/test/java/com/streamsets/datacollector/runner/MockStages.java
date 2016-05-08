@@ -105,6 +105,10 @@ public class MockStages {
     sourceCapture = s;
   }
 
+  public static Source getSourceCapture() {
+    return sourceCapture;
+  }
+
   // it must be called after the pipeline is built
   public static void setProcessorCapture(Processor p) {
     processorCapture = p;

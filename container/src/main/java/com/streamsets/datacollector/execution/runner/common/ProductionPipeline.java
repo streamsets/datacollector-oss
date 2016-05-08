@@ -87,6 +87,7 @@ public class ProductionPipeline {
   public void run() throws StageException, PipelineRuntimeException {
     boolean finishing = false;
     boolean errorWhileRunning = false;
+    boolean isRecoverable = true;
     String runningErrorMsg = "";
     try {
       try {
@@ -117,6 +118,7 @@ public class ProductionPipeline {
               LOG.warn("Error while running: {}", runningErrorMsg, e);
               stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, null);
               errorWhileRunning = true;
+              isRecoverable = isRecoverableThrowable(e);
             }
             throw e;
           }
@@ -145,7 +147,7 @@ public class ProductionPipeline {
             stateChanged(PipelineStatus.FINISHED, null, null);
           } else if (errorWhileRunning) {
             LOG.debug("Stopped due to an error");
-            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave) {
+            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
             } else {
               stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
@@ -160,6 +162,18 @@ public class ProductionPipeline {
     } finally {
       MetricsConfigurator.cleanUpJmxMetrics(name, rev);
     }
+  }
+
+  /**
+   * Does it make sense to re-run the pipeline (if allowed) after
+   * given Throwable was thrown while running the pipeline.
+   */
+  private boolean isRecoverableThrowable(Throwable e) {
+    if(e instanceof Error) {
+      return false;
+    }
+
+    return true;
   }
 
   public PipelineConfiguration getPipelineConf() {

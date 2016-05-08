@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -287,6 +288,49 @@ public class TestProductionPipeline {
     }
   }
 
+  @Test
+  public void testNoRerunOnJVMError() throws Exception {
+    SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        throw new OutOfMemoryError();
+      }
+    };
+    verifyRerunScenario(capture, PipelineStatus.RUN_ERROR);
+  }
+
+  @Test
+  public void testRerunOnNormalException() throws Exception {
+    SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        throw new RuntimeException();
+      }
+    };
+    verifyRerunScenario(capture, PipelineStatus.RETRY);
+  }
+
+  public void verifyRerunScenario(SourceOffsetTrackerCapture capture, PipelineStatus finalStatus) throws Exception {
+    Source originalSource = MockStages.getSourceCapture();
+    try {
+      PersistChangesStateListener listener = new PersistChangesStateListener();
+      MockStages.setSourceCapture(capture);
+      ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, false);
+      pipeline.registerStatusListener(listener);
+
+      try {
+        pipeline.run();
+        Assert.fail("Expected exception thrown by the pipeline");
+      } catch (Throwable e) {
+        // No-op
+      }
+
+      Assert.assertEquals(finalStatus, listener.statuses.get(listener.statuses.size() - 1));
+    } finally {
+      MockStages.setSourceCapture(originalSource);
+    }
+  }
+
   public static class PreviewCheckSource extends BaseSource {
     public boolean isPreview;
 
@@ -469,7 +513,20 @@ public class TestProductionPipeline {
     public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
       throws PipelineRuntimeException {
     }
+  }
 
+  static class PersistChangesStateListener implements StateListener {
+    List<PipelineStatus> statuses;
+
+    public PersistChangesStateListener() {
+      statuses = new LinkedList<>();
+    }
+
+    @Override
+    public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
+      throws PipelineRuntimeException {
+      statuses.add(pipelineStatus);
+    }
   }
 
   private static class TestProducer extends BaseSource {
