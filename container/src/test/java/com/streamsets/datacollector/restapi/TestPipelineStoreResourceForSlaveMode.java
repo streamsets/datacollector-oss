@@ -137,14 +137,14 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
             new com.streamsets.datacollector.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
-                "lastModifier", "1", UUID.randomUUID(), true)));
+                "lastModifier", "1", UUID.randomUUID(), true, null)));
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
             new com.streamsets.datacollector.store.PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true));
+                "xyz lastModifier", "1", UUID.randomUUID(), true, null));
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new com.streamsets.datacollector.store.PipelineInfo("xyz",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true))));
+                "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description", false)).thenReturn(

@@ -85,7 +85,7 @@ public class TestHttpTarget extends JerseyTest {
   public List<Record> createRecords() throws IOException {
     List<Record> list = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
-      Map<String, String> m = new HashMap<>();
+      Map<String, Object> m = new HashMap<>();
       m.put("a", "b");
       Record record = AggregatorUtil.createMetricJsonRecord(String.valueOf(i), m, true, "{}");
       list.add(record);

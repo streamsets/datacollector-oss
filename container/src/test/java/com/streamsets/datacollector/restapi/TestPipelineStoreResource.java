@@ -135,6 +135,13 @@ public class TestPipelineStoreResource extends JerseyTest {
   }
 
   @Test
+  public void testDeleteMultiplePipelines() {
+    Response response = target("/v1/pipelines/delete").request()
+        .post(Entity.json("[\"myPipeline1\", \"myPipeline2\"]"));
+    Assert.assertEquals(200, response.getStatus());
+  }
+
+  @Test
   public void testSave() {
     com.streamsets.datacollector.config.PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
     Response response = target("/v1/pipeline/myPipeline")
@@ -228,14 +235,14 @@ public class TestPipelineStoreResource extends JerseyTest {
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
             new com.streamsets.datacollector.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
-                "lastModifier", "1", UUID.randomUUID(), true)));
+                "lastModifier", "1", UUID.randomUUID(), true, null)));
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
             new com.streamsets.datacollector.store.PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true));
+                "xyz lastModifier", "1", UUID.randomUUID(), true, null));
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new com.streamsets.datacollector.store.PipelineInfo("xyz",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true))));
+                "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description", false)).thenReturn(

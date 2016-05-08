@@ -50,7 +50,7 @@ public class PipelineConfiguration implements Serializable{
   private Issues issues;
   private boolean previewable;
   private MemoryLimitConfiguration memoryLimitConfiguration;
-  private Map<String, String> metadata;
+  private Map<String, Object> metadata;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(
@@ -245,11 +245,11 @@ public class PipelineConfiguration implements Serializable{
     );
   }
 
-  public Map<String, String> getMetadata() {
+  public Map<String, Object> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(Map<String, String> metadata) {
+  public void setMetadata(Map<String, Object> metadata) {
     this.metadata = metadata;
   }
 

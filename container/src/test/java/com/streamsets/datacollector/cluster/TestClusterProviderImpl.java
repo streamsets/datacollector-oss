@@ -128,7 +128,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
-      "aaa", null, null, null, true));
+      "aaa", null, null, null, true, null));
     File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
     File avroJar = new File(tempDir, "avro-1.7.7.jar");
     File avroMapReduceJar = new File(tempDir, "avro-mapred-1.7.7.jar");
@@ -208,7 +208,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
-      "aaa", null, null, null, true));
+      "aaa", null, null, null, true, null));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
@@ -239,7 +239,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
-      "aaa", null, null, null, true));
+      "aaa", null, null, null, true, null));
     ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
@@ -270,7 +270,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
-      "aaa", null, null, null, true));
+      "aaa", null, null, null, true, null));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),

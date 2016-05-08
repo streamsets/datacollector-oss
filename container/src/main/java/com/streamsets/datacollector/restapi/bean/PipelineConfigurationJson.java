@@ -45,7 +45,7 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("stages") List<StageConfigurationJson> stages,
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
     @JsonProperty("info") PipelineInfoJson pipelineInfo,
-    @JsonProperty("metadata") Map<String, String> metadata,
+    @JsonProperty("metadata") Map<String, Object> metadata,
     @JsonProperty("statsAggregatorStage") StageConfigurationJson statsAggregatorStage) {
     version = (version == 0) ? 1 : version;
     this.pipelineConfiguration = new com.streamsets.datacollector.config.PipelineConfiguration(
@@ -120,7 +120,7 @@ public class PipelineConfigurationJson implements Serializable{
     return pipelineConfiguration.getUiInfo();
   }
 
-  public Map<String, String> getMetadata() {
+  public Map<String, Object> getMetadata() {
     return pipelineConfiguration.getMetadata();
   }
 

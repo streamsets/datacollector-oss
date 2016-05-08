@@ -297,7 +297,7 @@ public class AggregatorUtil {
 
   public static Record createMetricJsonRecord(
       String sdcId,
-      Map<String, String> metadata,
+      Map<String, Object> metadata,
       boolean isAggregated,
       String metricsJSONStr
   ) {
@@ -369,11 +369,13 @@ public class AggregatorUtil {
     }
   }
 
-  public static Field getMetadataField(Map<String, String> metadata) {
+  public static Field getMetadataField(Map<String, Object> metadata) {
     if (metadata != null && !metadata.isEmpty()) {
       Map<String, Field> map = new HashMap<>(metadata.size());
-      for (Map.Entry<String, String> e : metadata.entrySet()) {
-        map.put(e.getKey(), Field.create(e.getValue()));
+      for (Map.Entry<String, Object> e : metadata.entrySet()) {
+        if (e.getValue() instanceof String) {
+          map.put(e.getKey(), Field.create((String)e.getValue()));
+        }
       }
       return Field.create(map);
     }

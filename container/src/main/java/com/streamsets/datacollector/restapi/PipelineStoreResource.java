@@ -144,6 +144,27 @@ public class PipelineStoreResource {
       .build();
   }
 
+
+  @Path("/pipelines/delete")
+  @POST
+  @ApiOperation(value = "Deletes all passed Pipeline Configurations", response = PipelineInfoJson.class,
+      responseContainer = "List", authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response deletePipelines(List<String> pipelineNames) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    for(String pipelineName: pipelineNames) {
+      if (store.isRemotePipeline(pipelineName, "0")) {
+        throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_PIPELINE", pipelineName);
+      }
+      store.delete(pipelineName);
+      store.deleteRules(pipelineName);
+    }
+    return Response.ok().build();
+  }
+
   @Path("/pipeline/{pipelineName}")
   @GET
   @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class,

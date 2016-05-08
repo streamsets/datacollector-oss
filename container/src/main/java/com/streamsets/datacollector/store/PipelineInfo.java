@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 public class PipelineInfo implements Serializable {
@@ -36,6 +37,8 @@ public class PipelineInfo implements Serializable {
   private String lastRev;
   private UUID uuid;
   private boolean valid;
+  private Map<String, Object> metadata;
+
 
   @JsonCreator
   public PipelineInfo(
@@ -47,7 +50,9 @@ public class PipelineInfo implements Serializable {
       @JsonProperty("lastModifier") String lastModifier,
       @JsonProperty("lastRev") String lastRev,
       @JsonProperty("uuid") UUID uuid,
-      @JsonProperty("valid") boolean valid) {
+      @JsonProperty("valid") boolean valid,
+      @JsonProperty("metadata") Map<String, Object> metadata
+      ) {
     this.name = name;
     this.description = description;
     this.created = created;
@@ -57,12 +62,20 @@ public class PipelineInfo implements Serializable {
     this.lastRev = lastRev;
     this.uuid = uuid;
     this.valid = valid;
+    this.metadata = metadata;
   }
 
-  public PipelineInfo(PipelineInfo pipelineInfo, String description, Date lastModified, String lastModifier,
-      String lastRev, UUID uuid, boolean valid) {
+  public PipelineInfo(
+      PipelineInfo pipelineInfo,
+      String description,
+      Date lastModified,
+      String lastModifier,
+      String lastRev,
+      UUID uuid, boolean valid,
+      Map<String, Object> metadata
+  ) {
     this(pipelineInfo.getName(), description, pipelineInfo.getCreated(), lastModified,
-         pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid);
+         pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid, metadata);
   }
 
   public String getName() {
@@ -99,5 +112,9 @@ public class PipelineInfo implements Serializable {
 
   public boolean isValid() {
     return valid;
+  }
+
+  public Map<String, Object> getMetadata() {
+    return metadata;
   }
 }

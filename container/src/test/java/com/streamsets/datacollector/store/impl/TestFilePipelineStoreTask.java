@@ -20,11 +20,8 @@
 package com.streamsets.datacollector.store.impl;
 
 
-import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.config.DriftRuleDefinition;
-import static org.junit.Assert.assertEquals;
-
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -42,10 +39,8 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
-
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,12 +48,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestFilePipelineStoreTask {
 
@@ -208,7 +205,9 @@ public class TestFilePipelineStoreTask {
 
   private PipelineConfiguration createPipeline(UUID uuid) {
     PipelineConfiguration pc = MockStages.createPipelineConfigurationSourceTarget();
-    pc.setMetadata(ImmutableMap.of("a", "A"));
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pc.setMetadata(metadata);
     pc.setUuid(uuid);
     return pc;
   }

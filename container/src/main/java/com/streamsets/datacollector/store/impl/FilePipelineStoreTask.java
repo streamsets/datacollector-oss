@@ -169,7 +169,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       Date date = new Date();
       UUID uuid = UUID.randomUUID();
-      PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
+      PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false, null);
       PipelineConfiguration pipeline =
         new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
           .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null, null);
@@ -282,8 +282,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
       }
       UUID uuid = UUID.randomUUID();
-      PipelineInfo info =
-        new PipelineInfo(getInfo(name), pipeline.getDescription(), new Date(), user, REV, uuid, pipeline.isValid());
+      PipelineInfo info = new PipelineInfo(
+          getInfo(name),
+          pipeline.getDescription(),
+          new Date(),
+          user,
+          REV,
+          uuid,
+          pipeline.isValid(),
+          pipeline.getMetadata()
+      );
       try {
         pipeline.setUuid(uuid);
         json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));

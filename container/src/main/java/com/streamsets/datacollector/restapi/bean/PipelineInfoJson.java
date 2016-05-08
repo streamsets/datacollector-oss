@@ -22,9 +22,11 @@ package com.streamsets.datacollector.restapi.bean;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 public class PipelineInfoJson {
@@ -40,9 +42,11 @@ public class PipelineInfoJson {
     @JsonProperty("lastModifier") String lastModifier,
     @JsonProperty("lastRev") String lastRev,
     @JsonProperty("uuid") UUID uuid,
-    @JsonProperty("valid") boolean valid) {
-    this.pipelineInfo = new com.streamsets.datacollector.store.PipelineInfo(name, description, created, lastModified,
-      creator, lastModifier, lastRev, uuid, valid);
+    @JsonProperty("valid") boolean valid,
+    @JsonProperty("metadata") Map<String, Object> metadata
+  ) {
+    this.pipelineInfo = new PipelineInfo(name, description, created, lastModified,
+      creator, lastModifier, lastRev, uuid, valid, metadata);
   }
 
   public PipelineInfoJson(com.streamsets.datacollector.store.PipelineInfo pipelineInfo) {
@@ -84,6 +88,10 @@ public class PipelineInfoJson {
 
   public boolean isValid() {
     return pipelineInfo.isValid();
+  }
+
+  public Map<String, Object> getMetadata() {
+    return pipelineInfo.getMetadata();
   }
 
   @JsonIgnore

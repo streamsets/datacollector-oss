@@ -54,7 +54,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
   private final String appComponentId;
 
   // Metadata obtained from pipeline configuration
-  private Map<String, String> metadata;
+  private Map<String, Object> metadata;
 
   private MetricRegistryJson metricRegistryJson;
   private MetricRegistry metrics;
@@ -102,8 +102,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     if (issues.isEmpty()) {
       dataRuleHandler = new DataRuleHandler(
           getContext(),
-          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
-          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
           pipelineUrl,
           pipelineConfigurationJson,
           metrics,
@@ -112,8 +112,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
       );
       metricRuleHandler = new MetricRuleHandler(
           getContext(),
-          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
-          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
           pipelineUrl,
           metrics,
           metricRegistryJson,
@@ -191,7 +191,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
 
   private Record createMetricJsonRecord(
       String sdcId,
-      Map<String, String> metadata,
+      Map<String, Object> metadata,
       boolean isAggregated,
       String metricJsonString
   ) {
@@ -236,12 +236,12 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     if (targetUrl != null && !targetUrl.isEmpty()) {
       // fetch latest aggregated metrics from dpm time series app and reset state
       AggregatedMetricsFetcher aggregatedMetricsFetcher = new AggregatedMetricsFetcher(
-        getContext(),
-        targetUrl,
-        authToken,
-        appComponentId,
-        metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
-        metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION)
+          getContext(),
+          targetUrl,
+          authToken,
+          appComponentId,
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+          (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION)
       );
       metricRegistryJson = aggregatedMetricsFetcher.fetchLatestAggregatedMetrics(
         pipelineConfigurationJson,

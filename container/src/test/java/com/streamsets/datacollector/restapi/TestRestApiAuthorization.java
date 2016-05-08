@@ -235,6 +235,7 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipeline/foo/alerts", Method.DELETE, AuthzRole.MANAGER, AuthzRole.ADMIN));
 
     list.add(new RestApi("/rest/v1/pipelines", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/pipelines/delete", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.PUT, AuthzRole.CREATOR, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.DELETE, AuthzRole.CREATOR, AuthzRole.ADMIN));

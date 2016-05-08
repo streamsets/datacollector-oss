@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
@@ -944,7 +943,7 @@ public class MockStages {
         "default",
         "statsAggregator",
         1,
-        Collections.<Config>emptyList(), 
+        Collections.<Config>emptyList(),
         null,
         Collections.<String>emptyList(),
         Collections.<String>emptyList()
@@ -980,7 +979,9 @@ public class MockStages {
         getErrorStageConfig(),
         getStatsAggregatorStageConfig()
     );
-    pipelineConfiguration.setMetadata(ImmutableMap.of("a", "A"));
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
     return pipelineConfiguration;
   }
 
