@@ -21,6 +21,24 @@
     </div>
   </div>
 
+  <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
+    <label class="col-lg-3 col-md-4 control-label" translate="global.form.labels">Labels</label>
+    <div class="controls col-lg-7 col-md-8">
+      <ui-select multiple
+                 tagging
+                 tagging-label=" - new label"
+                 ng-disabled="isPipelineReadOnly || isPipelineRunning"
+                 tagging-tokens=",|ENTER"
+                 ng-model="pipelineConfig.metadata.labels">
+        <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+        <ui-select-choices class="ui-select-choices"
+                           repeat="listValue in existingPipelineLabels | filter:$select.search">
+          <div ng-bind-html="listValue | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+
   <!-- General Configuration for Stages-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
     <label class="col-lg-3 col-md-4 control-label" translate="global.form.name">Name</label>

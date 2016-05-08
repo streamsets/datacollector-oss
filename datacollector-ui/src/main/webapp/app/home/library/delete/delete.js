@@ -26,18 +26,33 @@ angular
   .module('dataCollectorApp.home')
   .controller('DeleteModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
     angular.extend($scope, {
-      issues: [],
+      common: {
+        errors: []
+      },
       pipelineInfo: pipelineInfo,
+      isList: _.isArray(pipelineInfo),
 
       yes: function() {
-        api.pipelineAgent.deletePipelineConfig(pipelineInfo.name).
-          success(function() {
-            $modalInstance.close(pipelineInfo);
-          }).
-          error(function(data) {
-            $scope.issues = [data];
-          });
+        if ($scope.isList) {
+          api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'name'))
+            .success(function() {
+              $modalInstance.close(pipelineInfo);
+            })
+            .error(function(res) {
+              $scope.common.errors = [res];
+            });
+
+        } else {
+          api.pipelineAgent.deletePipelineConfig(pipelineInfo.name)
+            .success(function() {
+              $modalInstance.close(pipelineInfo);
+            })
+            .error(function(res) {
+              $scope.common.errors = [res];
+            });
+        }
       },
+
       no: function() {
         $modalInstance.dismiss('cancel');
       }

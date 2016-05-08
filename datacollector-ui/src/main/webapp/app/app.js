@@ -132,7 +132,8 @@ angular.module('dataCollectorApp')
     $rootScope.$storage = $localStorage.$default({
       displayDensity: pipelineConstant.DENSITY_COMFORTABLE,
       helpLocation: pipelineConstant.HOSTED_HELP,
-      readNotifications: []
+      readNotifications: [],
+      pipelineGridView: false
     });
 
     $rootScope.common = $rootScope.common || {

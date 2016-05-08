@@ -42,7 +42,7 @@ exports.config = {
       'ui/logPage.js'
     ],
     single: [
-      'restAPI/jmx.js',
+      'restAPI/createTestPipelines.js'
     ]
   },
 

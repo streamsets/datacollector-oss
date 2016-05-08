@@ -3,18 +3,6 @@
 
   <div class="panel-heading clearfix" ng-show="pipelineConfig">
 
-    <div class="pull-left">
-      <button type="button" class="navbar-toggle collapsed"
-              ng-if="activeConfigStatus.executionMode != pipelineConstant.SLAVE"
-              ng-class="{'selected' : !hideLibraryPanel}"
-              ng-click="toggleLibraryPanel()"
-              title="{{'home.header.toggleLibraryPane' | translate}}">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING' && activeConfigStatus.status !== 'CONNECTING' && activeConfigStatus.status !== 'DISCONNECTING'">
 
       <div class="btn-group" dropdown
@@ -270,11 +258,15 @@
       <div class="panel-title pull-left"
            ng-switch-when="STARTING">
         <h3 class="pull-left" translate="home.header.startingPipeline">Starting Pipeline</h3>
-        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="RUNNING">
+        <h3 class="pull-left all-pipelines-link">
+          <a ng-href="{{common.baseHref}}">Pipelines</a>
+        </h3>
+        <h3 class="pull-left all-pipelines-link"> / </h3>
         <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
         <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
 
@@ -286,49 +278,52 @@
             ng-if="common.pipelineStatusMap[pipelineConfig.info.name].attributes && common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime']"
             am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime'] - common.serverTimeDifference"></h3>
 
-        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="STOPPING">
         <h3 class="pull-left" translate="home.header.stoppingPipeline">Stopping Pipeline</h3>
-        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="FINISHING">
         <h3 class="pull-left" translate="home.header.finishingPipeline">Finishing Pipeline</h3>
-        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="CONNECTING">
         <h3 class="pull-left" translate="home.header.connectingPipeline">Connecting ...</h3>
-        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="DISCONNECTING">
         <h3 class="pull-left" translate="home.header.disconnectingPipeline">Disconnecting ...</h3>
-        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="CONNECT_ERROR">
         <h3 class="pull-left" translate="home.header.connectErrorPipeline">Failed to Connect ...</h3>
-        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-when="RETRY">
         <h3 class="pull-left" translate="home.header.retryPipeline">Retrying to start Pipeline in </h3>
         <h3 class="pull-left">{{retryCountDown | number:0}} seconds ...</h3>
-        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+        <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>
 
       <div class="panel-title pull-left"
            ng-switch-default>
-        <h3 class="pull-left" translate="home.header.definePipeline">Define Pipeline:</h3>
+        <h3 class="pull-left all-pipelines-link">
+          <a ng-href="{{common.baseHref}}">Pipelines</a>
+        </h3>
+        <h3 class="pull-left all-pipelines-link"> / </h3>
         <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}</h3>
       </div>
 

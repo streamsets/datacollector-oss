@@ -1,0 +1,142 @@
+<section class="tile-list" ng-if="header.pipelineGridView">
+
+  <section class="pipeline-container new-pipeline" ng-if="filteredPipelines.length === 0">
+    <div class="centering-container">
+      <span translate="home.noPipelines"></span>
+    </div>
+  </section>
+
+  <section class="pipeline-container single-pipeline"
+           ng-repeat="pipeline in filteredPipelines | orderBy:header.sortColumn:header.sortReverse | limitTo: limit"
+           ng-click="openPipeline(pipeline)">
+    <header>
+      <h2>{{pipeline.name | limitTo: 45}}</h2>
+    </header>
+
+    <section class="project-additional-info"
+             ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+      <span class="time-update" translate="home.updated">Updated</span>
+      <span class="time-update" am-time-ago="pipeline.lastModified"></span>
+      <span class="time-update" translate="home.ago">ago</span>
+    </section>
+
+    <section class="project-additional-info"
+             ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+      <span class="time-update" translate="home.header.uptime">Uptime</span>
+      <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.name].timeStamp"></span>
+    </section>
+
+    <footer >
+      <section class="running-status"
+               ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'"
+               tooltip-placement="bottom"
+               tooltip="{{'home.runningStatus' | translate}}">
+        <i class="fa fa-spinner fa-spin fa-14x"></i>
+      </section>
+
+      <section class="invalid-status"
+               ng-if="!pipeline.valid"
+               tooltip-placement="bottom"
+               tooltip="{{'home.invalidStatus' | translate}}">
+        <i class="fa fa-exclamation-triangle fa-12x"></i>
+      </section>
+
+      <section class="invalid-status"
+               ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'CONNECT_ERROR'"
+               tooltip-placement="bottom"
+               tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.name].status + ': ' + common.pipelineStatusMap[pipeline.name].message}}">
+        <i class="fa fa-exclamation-triangle fa-12x"></i>
+      </section>
+
+      <section class="triggered-alert-status"
+               ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' &&
+                   common.alertsMap[pipeline.name] && common.alertsMap[pipeline.name].length > 0"
+               tooltip-placement="bottom"
+               tooltip-html="getPipelineAlerts(common.alertsMap[pipeline.name])">
+        <i class="fa fa-bell fa-12x"></i>
+        <span ng-bind="common.alertsMap[pipeline.name].length"></span>
+      </section>
+
+      <section class="pipeline-menu" ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+        <span class="split-bar"></span>
+        <div class="action-menu" dropdown>
+              <span class="dropdown-toggle" dropdown-toggle
+                    ng-click="$event.stopPropagation();">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+          <ul class="dropdown-menu" role="menu">
+            <li role="presentation"
+                ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+              <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
+                <i class="fa fa-trash-o"></i>
+                <span>{{'global.form.delete' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+              <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
+                <i class="fa fa-files-o"></i>
+                <span>{{'global.form.duplicate' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+              <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
+                <i class="glyphicon glyphicon-import"></i>
+                <span>{{'global.form.import' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, false, $event)">
+                <i class="glyphicon glyphicon-export"></i>
+                <span>{{'global.form.export' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, true, $event)">
+                <i class="glyphicon glyphicon-export"></i>
+                <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
+              </a>
+            </li>
+
+            <li ng-repeat-end role="presentation" class="divider"
+                ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                ng-show="pipeline.valid"></li>
+
+            <li role="presentation"
+                ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || common.pipelineStatusMap[pipeline.name].status === 'STARTING' || !pipeline.valid">
+              <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
+                <i class="glyphicon glyphicon-play"></i>
+                <span>{{'home.header.start' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation"
+                ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+              <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, $event)">
+                <i class="glyphicon glyphicon-stop"></i>
+                <span>{{'home.header.stop' | translate}}</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+      </section>
+
+    </footer>
+  </section>
+
+  <section class="pipeline-container new-pipeline" ng-if="limit < filteredPipelines.length">
+    <div class="centering-container">
+      <a class="btn btn-link"
+         ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
+    </div>
+  </section>
+
+</section>

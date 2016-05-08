@@ -40,8 +40,7 @@ angular
       });
   }])
   .controller('HomeController', function ($scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api,
-                                          configuration, pipelineConstant, Analytics, $route) {
-
+                                          configuration, pipelineConstant, Analytics, $route, $translate) {
     $location.search('auth_token', null);
     $location.search('auth_user', null);
 
@@ -52,12 +51,80 @@ angular
       $rootScope.common.errors = [];
     }
 
+    var pipelinesLimit = 30;
 
     angular.extend($scope, {
       loaded: false,
       pipelines: [],
-      sortColumn: 'lastModified',
-      sortReverse: true,
+      selectedPipelineLabel: 'All Pipelines',
+      filteredPipelines: [],
+      header: {
+        pipelineGridView: $rootScope.$storage.pipelineGridView,
+        sortColumn: 'lastModified',
+        sortReverse: true,
+        searchInput: ''
+      },
+      selectedPipelineMap: {},
+      selectedPipelineList: [],
+      allSelected: false,
+      showDetails: false,
+      hideLibraryPanel: false,
+      limit: pipelinesLimit,
+
+      toggleLibraryPanel: function () {
+        $scope.hideLibraryPanel = !$scope.hideLibraryPanel;
+      },
+
+      selectPipelineLabel: function(pipelineLabel) {
+        $scope.selectedPipelineLabel = pipelineLabel;
+        $scope.header.searchInput = '';
+        $scope.updateFilteredPipelines();
+        $scope.unSelectAll();
+      },
+
+      updateFilteredPipelines: function() {
+        var regex = new RegExp($scope.header.searchInput, 'i');
+        switch ($scope.selectedPipelineLabel) {
+          case 'All Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              return regex.test(pipelineInfo.name);
+            });
+            break;
+          case 'Running Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
+            });
+            break;
+          case 'Non Running Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+              !_.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
+            });
+            break;
+          case 'Invalid Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              return !pipelineInfo.valid && regex.test(pipelineInfo.name);
+            });
+            break;
+          case 'Error Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+              _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], pipelineStatus.status));
+            });
+            break;
+          default:
+            // User labels
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              return regex.test(pipelineInfo.name) && pipelineInfo.metadata && pipelineInfo.metadata.labels &&
+                _.contains(pipelineInfo.metadata.labels, $scope.selectedPipelineLabel);
+            });
+            break;
+        }
+      },
 
       /**
        * Refresh pipelines
@@ -65,6 +132,7 @@ angular
       refreshPipelines: function() {
         pipelineService.refreshPipelines().then(function(pipelines) {
           $scope.pipelines = pipelines;
+          $scope.updateFilteredPipelines();
         });
       },
 
@@ -89,7 +157,43 @@ angular
         pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
           .then(function(pipelines) {
             $scope.pipelines = pipelines;
+            $scope.updateFilteredPipelines();
           });
+      },
+
+      /**
+       * Delete all selected Pipelines
+       */
+      deleteSelectedPipeline: function() {
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var selectedPipelineInfoList = [];
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+              _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
+              validationIssues.push('Delete operation is not supported for Pipeline "' +
+                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+            }
+            selectedPipelineInfoList.push(pipelineInfo);
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+
+        $rootScope.common.errors = [];
+
+        pipelineService.deletePipelineConfigCommand(selectedPipelineInfoList)
+          .then(function(pipelines) {
+            $scope.pipelines = pipelines;
+            $scope.updateFilteredPipelines();
+            $scope.unSelectAll();
+          });
+
       },
 
       /**
@@ -99,7 +203,25 @@ angular
         pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
           .then(function(pipelines) {
             $scope.pipelines = pipelineService.getPipelines();
+            $scope.updateFilteredPipelines();
           });
+      },
+
+      /**
+       * Duplicate Selected Pipeline
+       */
+      duplicatePipelines: function() {
+        if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
+          var selectedPipeline = _.find($scope.pipelines, function(pipeline) {
+            return $scope.selectedPipelineList[0] === pipeline.name
+          });
+          pipelineService.duplicatePipelineConfigCommand(selectedPipeline)
+            .then(function(pipelines) {
+              $scope.pipelines = pipelineService.getPipelines();
+              $scope.updateFilteredPipelines();
+              $scope.unSelectAll();
+            });
+        }
       },
 
       /**
@@ -109,6 +231,16 @@ angular
         $event.stopPropagation();
         api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
       },
+
+      /**
+       * Export link command handler
+       */
+      exportSelectedPipelines: function(includeDefinitions) {
+        var selectedPipelineList = $scope.selectedPipelineList;
+        api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
+        $scope.unSelectAll();
+      },
+
 
       /**
        * Download Remote Pipeline Configuration
@@ -158,6 +290,52 @@ angular
       },
 
       /**
+       * On Start Pipelines button click.
+       *
+       */
+      startSelectedPipelines: function() {
+        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipelines', 1);
+
+
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+              _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
+              validationIssues.push('Start operation is not supported for Pipeline "' +
+                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+            }
+
+            if (!pipelineInfo.valid) {
+              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
+            }
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+        $rootScope.common.errors = [];
+
+        angular.forEach(selectedPipelineList, function(pipelineName) {
+          api.pipelineAgent.startPipeline(pipelineName, 0)
+            .then(
+              function (res) {
+                $rootScope.common.pipelineStatusMap[pipelineName] = res.data;
+              },
+              function (res) {
+                $rootScope.common.errors.push(res.data);
+              }
+            );
+        });
+
+        $scope.unSelectAll();
+      },
+
+      /**
        * On Stop Pipeline button click.
        *
        */
@@ -193,6 +371,65 @@ angular
         });
       },
 
+
+
+      /**
+       * On Stop Pipelines button click.
+       *
+       */
+      stopSelectedPipelines: function() {
+        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipelines', 1);
+
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var selectedPipelineInfoList = [];
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+              !_.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
+              validationIssues.push('Stop operation is not supported for Pipeline "' +
+                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+            }
+            selectedPipelineInfoList.push(pipelineInfo);
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+        $rootScope.common.errors = [];
+
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
+          controller: 'StopConfirmationModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return selectedPipelineInfoList;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(statusList) {
+          angular.forEach(selectedPipelineList, function(pipelineName) {
+            $rootScope.common.pipelineStatusMap[pipelineName] = statusList[pipelineName];
+            var alerts = $rootScope.common.alertsMap[pipelineName];
+            if(alerts) {
+              delete $rootScope.common.alertsMap[pipelineName];
+              $rootScope.common.alertsTotalCount -= alerts.length;
+            }
+          });
+        }, function () {
+
+        });
+
+        $scope.unSelectAll();
+      },
+
       /**
        * Return pipeline alerts for tooltip
        *
@@ -214,6 +451,68 @@ angular
         }
         alertMsg += '</span>';
         return alertMsg;
+      },
+
+      selectAll: function () {
+        $scope.selectedPipelineList = [];
+        $scope.selectedPipelineMap = {};
+        angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
+          $scope.selectedPipelineList.push(pipelineInfo.name);
+          $scope.selectedPipelineMap[pipelineInfo.name] = true;
+        });
+        $scope.allSelected = true;
+      },
+
+      unSelectAll: function () {
+        $scope.selectedPipelineList = [];
+        $scope.selectedPipelineMap = {};
+        $scope.allSelected = false;
+        $scope.limit = pipelinesLimit;
+      },
+
+      selectPipeline: function(pipeline) {
+        $scope.selectedPipelineMap[pipeline.name] = true;
+        $scope.selectedPipelineList.push(pipeline.name);
+      },
+
+      unSelectPipeline: function(pipeline) {
+        $scope.selectedPipelineMap[pipeline.name] = false;
+        var index = $scope.selectedPipelineList.indexOf(pipeline.name);
+        if (index != -1) {
+          $scope.selectedPipelineList.splice(index, 1);
+        }
+        $scope.allSelected = false;
+      },
+
+      showPipelineDetails: function () {
+        $scope.showDetails = true;
+      },
+
+      hidePipelineDetails: function () {
+        $scope.showDetails = false;
+      },
+
+      onSortColumnHeaderClick: function(columnName) {
+        $scope.header.sortColumn = columnName;
+        $scope.header.sortReverse = !$scope.header.sortReverse;
+      },
+
+      customPipelineSortFunction: function (pipelineInfo) {
+        if ($scope.header.sortColumn === 'status') {
+          var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+          return pipelineStatus.status;
+        }
+        return pipelineInfo[$scope.header.sortColumn];
+      },
+
+      /**
+       * Callback function when Show more link clicked.
+       *
+       * @param $event
+       */
+      onShowMoreClick: function($event) {
+        $event.preventDefault();
+        $scope.limit += pipelinesLimit;
       }
     });
 
@@ -227,6 +526,7 @@ angular
         $scope.loaded = true;
         $rootScope.common.pipelineStatusMap = results[0].data;
         $scope.pipelines = pipelineService.getPipelines();
+        $scope.updateFilteredPipelines();
 
         if($scope.pipelines && $scope.pipelines.length) {
           $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
@@ -236,7 +536,6 @@ angular
         if(configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/');
         }
-
       },
       function (results) {
         $scope.loaded = true;
@@ -249,4 +548,15 @@ angular
         $location.path('/collector/pipeline/' + alert.pipelineName);
       }
     });
+
+    var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
+      $rootScope.$storage.pipelineGridView = $scope.header.pipelineGridView;
+    });
+
+    $scope.$on('$destroy', function() {
+      if (pipelineGridViewWatchListener) {
+        pipelineGridViewWatchListener();
+      }
+    });
+
   });

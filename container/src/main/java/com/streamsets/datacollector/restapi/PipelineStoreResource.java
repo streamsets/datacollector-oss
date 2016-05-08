@@ -147,7 +147,7 @@ public class PipelineStoreResource {
 
   @Path("/pipelines/delete")
   @POST
-  @ApiOperation(value = "Deletes all passed Pipeline Configurations", response = PipelineInfoJson.class,
+  @ApiOperation(value = "Deletes Pipelines", response = PipelineInfoJson.class,
       responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({

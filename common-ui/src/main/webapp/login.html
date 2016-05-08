@@ -50,15 +50,6 @@
   <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
 </head>
 <body>
-  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="header-container">
-      <div class="navbar-header">
-        <a class="logo" href="/">
-          <img src="assets/logo.png" />
-        </a>
-      </div>
-    </div>
-  </div>
 
   <div class="container login-container">
     <div class="row">
@@ -73,7 +64,9 @@
         <form class="form-horizontal clearfix" action="j_security_check"
               autocomplete="off"
               method="POST">
-          <h4>Log In</h4>
+          <div class="img_container">
+            <img src="assets/logo.png" />
+          </div>
           <input style="display:none">
           <input type="password" style="display:none" autocomplete="off">
           <input type="text" id="usernameId" name="j_username" class="form-control" placeholder="username"

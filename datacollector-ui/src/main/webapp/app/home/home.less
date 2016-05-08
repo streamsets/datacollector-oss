@@ -72,6 +72,27 @@
     padding: @smallPadding @smallPadding*3;
     box-shadow: 0 1px 4px rgba(0,0,0,.2);
 
+    .navbar-toggle {
+      display: block;
+      float: left;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      &:hover {
+        background-color: #ddd;
+      }
+
+      .icon-bar {
+        background-color: #888;
+      }
+
+      &.selected {
+        .icon-bar {
+          background-color: #2BB8E9;
+        }
+      }
+    }
+
     .panel-title {
       h3 {
         padding-top: @smallPadding;
@@ -79,40 +100,62 @@
         font-size: 20px;
         padding-right: @defaultPadding;
       }
+    }
 
-      .refresh-btn {
-        margin-left: 0;
-        padding: 2px 0;
+    .list-grid-toggle-toolbar {
+      padding-top: 2px;
+      margin-right: 10px;
+      margin-left: 20px;
+    }
+
+    .sort-by-label {
+      padding-top: 7px;
+      font-size: 14px;
+      display: inline-block;
+    }
+
+    .sort-by-dropdown {
+      .btn {
+        padding-left: 0;
       }
 
-      .sort-by-label {
-        padding-top: 7px;
-        font-size: 14px;
-        display: inline-block;
-      }
-
-      .sort-by-dropdown {
-        .btn {
-          padding-left: 0;
-        }
-
-        .fa {
-          color: #bebebe;
-          font-size: 12px;
-        }
-
-
+      .fa {
+        color: #bebebe;
+        font-size: 12px;
       }
     }
+
+
+    .pipeline-search {
+      margin-right: 50px;
+      width: 250px;
+
+      .search-clear {
+        position: absolute;
+        right: 10px;
+        bottom: 0;
+        height: 16px;
+        margin: auto;
+        font-size: 15px;
+        cursor: pointer;
+        color: #ccc;
+
+        &:hover {
+          color: @streamsets-icon-btn-hover-color;
+        }
+      }
+    }
+    .pipelines-count {
+      padding: @defaultPadding @defaultPadding*2;
+      color: #ACACAC;
+      font-size: 12px;
+    }
+
   }
 
-  .panel-body {
-    background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
-    //background: #e9e9e9;
-    //top: 97px;
-    left: 0;
-    right: 300px;
-    padding: 10px 10px 40px 0;
+  .home-page-body {
+    width: 100%;
+    height: 100%;
     position: absolute;
     transition: opacity .3s;
     overflow: auto;
@@ -122,9 +165,10 @@
     }
 
     .tile-list {
+      padding: 10px 10px 40px 0;
 
       .pipeline-container {
-
+        border: 1px solid #dedede;
         position: relative;
         display: inline-block;
         margin: 0 0 15px 15px;
@@ -252,7 +296,6 @@
 
             a {
               display: block;
-              color: white;
             }
           }
         }
@@ -266,6 +309,149 @@
       }
     }
 
+    .pipeline-list-view {
+
+      .list-content {
+        .list-group-item {
+          border-left: 0;
+          border-right: 0;
+
+          .glyphicon-check,
+          .glyphicon-unchecked {
+            cursor: pointer;
+            color: #777777;
+          }
+
+          &.active-info {
+            color: #31708f;
+            background-color: #d9edf7;
+          }
+
+          &.header-list-group-item {
+            border: 0;
+            color: #333;
+            background-color: #f5f5f5;
+          }
+
+          &:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+
+          .header {
+            display: inline-block;
+            font-weight: bold;
+            a {
+              cursor: pointer;
+              color: black;
+            }
+          }
+
+          &.center-align {
+            text-align: center;
+          }
+
+          .pipeline-name {
+            width: 40%;
+            display: inline-block;
+            word-break: break-all;
+            padding-left: 10px;
+
+            a {
+              cursor: pointer;
+            }
+
+            .pipeline-label {
+              margin-left: 10px;
+              display: inline-block;
+              padding: 2px 8px;
+              word-break: break-all;
+              background: lightgrey;
+              color: #777;
+              border-radius: 5px;
+              font-size: .9em;
+            }
+          }
+
+          .pipeline-update-time {
+            width: 20%;
+            display: inline-block;
+            padding-left: 10px;
+          }
+
+          .pipeline-status-header {
+            width: 150px;
+            display: inline-block;
+          }
+
+          .pipeline-status {
+            display: inline-block;
+            padding: 2px 8px;
+            word-break: break-all;
+            background: grey;
+            color: white;
+            border-radius: 5px;
+            font-size: .9em;
+
+            &.RUNNING,
+            &.STARTING,
+            &.FINISHING,
+            &.CONNECTING {
+              background: @brand-success;
+            }
+
+            &.STOPPING,
+            &.START_ERROR,
+            &.RUNNING_ERROR,
+            &.RETRY,
+            &.DISCONNECTING,
+            &.CONNECT_ERROR {
+              background: @brand-danger;
+            }
+
+          }
+
+          .pipeline-uptime {
+            padding-left: 50px;
+            width: 20%;
+            display: inline-block;
+          }
+
+          .invalid-status {
+            padding-left: 10px;
+            padding-right: 20px;
+            color: @brand-danger;
+          }
+
+          .triggered-alert-status {
+            padding-right: 10px;
+            color: #b6b6b6;
+          }
+
+          .action-menu {
+            cursor: pointer;
+            .dropdown-toggle {
+              display: inline-block;
+              width: 30px;
+              padding: 0 12px;
+              .fa {
+                color: #a2a1a1;
+
+                &:hover {
+                  color: @streamsets-icon-btn-hover-color;
+                }
+              }
+            }
+          }
+
+          .pipeline-details {
+            margin: 10px 20px;
+          }
+        }
+
+      }
+
+    }
   }
 }
 

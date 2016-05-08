@@ -32,77 +32,24 @@
       </ul>
     </div>
 
-    <ul class="list-group">
+    <ul class="list-group predefined-labels">
       <li class="list-group-item pointer clearfix"
-          ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
-          ng-repeat="pipeline in pipelines | orderBy: 'name'"
-          ng-click="onSelect(pipeline)">
-
-        <div class="pipeline-details pull-left">
-          <span class="pipeline-details-name">{{pipeline.name}}</span>
-        </div>
-
-        <div class="action-menu pull-right" dropdown
-             ng-show="pipeline.name === activeConfigInfo.name && isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
-          <span class="dropdown-toggle" dropdown-toggle aria-expanded="true"
-                tooltip-placement="bottom"
-                tooltip="{{'global.form.actions' | translate}}"
-                tooltip-popup-delay="500"
-                tooltip-append-to-body="true"
-                ng-click="$event.stopPropagation();">
-            <i class="fa fa-ellipsis-v"></i>
-          </span>
-          <ul class="dropdown-menu" role="menu">
-            <li role="presentation"
-                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
-              <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
-                <i class="fa fa-trash-o"></i>
-                <span>{{'global.form.delete' | translate}}</span>
-              </a>
-            </li>
-
-            <li role="presentation">
-              <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
-                <i class="fa fa-files-o"></i>
-                <span>{{'global.form.duplicate' | translate}}</span>
-              </a>
-            </li>
-
-            <li role="presentation">
-              <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
-                <i class="glyphicon glyphicon-import"></i>
-                <span>{{'global.form.import' | translate}}</span>
-              </a>
-            </li>
-
-            <li role="presentation">
-              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, false, $event)">
-                <i class="glyphicon glyphicon-export"></i>
-                <span>{{'global.form.export' | translate}}</span>
-              </a>
-            </li>
-
-            <li role="presentation">
-              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, true, $event)">
-                <i class="glyphicon glyphicon-export"></i>
-                <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
-              </a>
-            </li>
-
-          </ul>
-        </div>
-
-        <div class="pull-right running"
-             ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
-          <i class="fa fa-spinner fa-spin fa-14x"></i>
-        </div>
-
+          ng-repeat="pipelineLabel in pipelineLabels"
+          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
+          ng-click="onSelectLabel(pipelineLabel)">
+        <span class="pipeline-details-name">{{pipelineLabel}}</span>
       </li>
 
-      <li class="list-group-item" ng-if="!pipelines || pipelines.length === 0" translate="home.library.emptyPipelineList">
-        No Pipeline to view.
+      <li class="border-list-group-item" ng-if="existingPipelineLabels.length > 0">
+        <span translate="global.form.labels">LABELS</span>
       </li>
 
+      <li class="list-group-item pointer clearfix"
+          ng-repeat="pipelineLabel in existingPipelineLabels"
+          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
+          ng-click="onSelectLabel(pipelineLabel)">
+        <span class="pipeline-details-name">{{pipelineLabel}}</span>
+      </li>
     </ul>
 
   </div>

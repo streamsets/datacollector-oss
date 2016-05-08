@@ -1,0 +1,193 @@
+<div class="panel panel-default page-panel home-page">
+
+  <div class="panel-heading clearfix">
+
+    <div class="panel-title ">
+      <div class="pull-left">
+        <button type="button" class="navbar-toggle collapsed"
+                ng-if="activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+                ng-class="{'selected' : !hideLibraryPanel}"
+                ng-click="toggleLibraryPanel()"
+                title="{{'home.header.toggleLibraryPane' | translate}}">
+          <i class="icon-bar"></i>
+          <i class="icon-bar"></i>
+          <i class="icon-bar"></i>
+        </button>
+      </div>
+      <h3 class="pull-left" translate="home.title">Pipelines</h3>
+    </div>
+
+    <div class="pull-right btn-group list-grid-toggle-toolbar">
+      <label class="btn btn-default btn-sm"
+             tooltip-placement="bottom"
+             tooltip="{{'global.form.listView' | translate}}"
+             tooltip-popup-delay="500"
+             ng-model="header.pipelineGridView"
+             btn-radio="false"><span class="glyphicon glyphicon-th-list"></span></label>
+      <label class="btn btn-default btn-sm"
+             tooltip-placement="bottom"
+             tooltip="{{'global.form.gridView' | translate}}"
+             tooltip-popup-delay="500"
+             ng-model="header.pipelineGridView"
+             btn-radio="true"><span class="glyphicon glyphicon-th"></span></label>
+    </div>
+
+    <div class="pull-right">
+
+      <a class="btn btn-link icon-button"
+         tooltip-placement="bottom"
+         tooltip="{{'global.form.refresh' | translate}}"
+         tooltip-popup-delay="500"
+         ng-click="refreshPipelines()">
+        <span class="fa fa-refresh fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
+         ng-disabled="selectedPipelineList.length === 0"
+         ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true)"
+         tooltip-placement="bottom"
+         tooltip="{{('global.form.export' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
+         tooltip-popup-delay="500">
+        <i class="glyphicon glyphicon-export fa-14x"></i>
+      </a>
+
+      <a ng-disabled="selectedPipelineList.length === 0"
+         ng-click="selectedPipelineList.length === 0 || deleteSelectedPipeline()"
+         tooltip-placement="bottom"
+         tooltip="{{('global.form.delete' | translate) + ' (' + selectedPipelineList.length + ')'}}"
+         tooltip-popup-delay="500"
+         class="btn btn-link icon-button">
+        <i class="fa fa-trash-o fa-14x"></i>
+      </a>
+
+      <a ng-disabled="selectedPipelineList.length !== 1"
+         ng-click="selectedPipelineList.length !== 1 || duplicatePipelines()"
+         tooltip-placement="bottom"
+         tooltip="{{'global.form.duplicate' | translate}}"
+         tooltip-popup-delay="500"
+         class="btn btn-link icon-button">
+        <i class="fa fa-files-o fa-14x"></i>
+      </a>
+
+      <a ng-disabled="selectedPipelineList.length === 0"
+         ng-click="selectedPipelineList.length === 0 || startSelectedPipelines()"
+         tooltip-placement="bottom"
+         tooltip="{{('home.header.start' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
+         tooltip-popup-delay="500"
+         class="btn btn-link icon-button">
+        <i class="glyphicon glyphicon-play fa-14x"></i>
+      </a>
+
+      <a ng-disabled="selectedPipelineList.length === 0"
+         ng-click="selectedPipelineList.length === 0 || stopSelectedPipelines()"
+         tooltip-placement="bottom"
+         tooltip="{{('home.header.stop' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
+         tooltip-popup-delay="500"
+         class="btn btn-link icon-button">
+        <i class="glyphicon glyphicon-stop fa-14x"></i>
+      </a>
+
+    </div>
+
+
+    <div class="pull-right" ng-show="pipelines.length > 1 && header.pipelineGridView">
+
+      <span class="sort-by-label">Sort by:</span>
+      <div class="btn-group pull-right sort-by-dropdown">
+
+        <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
+          <span>{{'home.sortColumn.' + header.sortColumn | translate}}</span>
+          <i ng-show="!header.sortReverse" class="fa fa-arrow-down"></i>
+          <i ng-show="header.sortReverse" class="fa fa-arrow-up"></i>
+        </button>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'name'; header.sortReverse = false">
+              <span translate="home.sortColumn.name">Name</span>
+              <i class="fa fa-arrow-down"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'name'; header.sortReverse = true">
+              <span translate="home.sortColumn.name">Name</span>
+              <i class="fa fa-arrow-up"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'created'; header.sortReverse = false">
+              <span translate="home.sortColumn.created">Date created</span>
+              <i class="fa fa-arrow-down"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'created'; header.sortReverse = true">
+              <span translate="home.sortColumn.created">Date created</span>
+              <i class="fa fa-arrow-up"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'lastModified'; header.sortReverse = false">
+              <span translate="home.sortColumn.lastModified">Date updated</span>
+              <i class="fa fa-arrow-down"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'lastModified'; header.sortReverse = true">
+              <span translate="home.sortColumn.lastModified">Date updated</span>
+              <i class="fa fa-arrow-up"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'status'; header.sortReverse = false">
+              <span translate="home.sortColumn.status">Status</span>
+              <i class="fa fa-arrow-down"></i>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="header.sortColumn = 'status'; header.sortReverse = true">
+              <span translate="home.sortColumn.status">Status</span>
+              <i class="fa fa-arrow-up"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull-right">
+      <div class="btn-group pipeline-search" >
+        <input type="search" class="form-control" placeholder="Type to search"
+               ng-model="header.searchInput"
+               ng-change="updateFilteredPipelines()">
+      <span class="glyphicon glyphicon-remove-circle search-clear"
+            ng-click="header.searchInput = '';updateFilteredPipelines();"></span>
+      </div>
+    </div>
+
+    <div class="pull-right pipelines-count" ng-if="!header.pipelineGridView">
+      <span ng-if="limit >= filteredPipelines.length">{{filteredPipelines.length}} Pipelines</span>
+      <span ng-if="limit < filteredPipelines.length">{{limit}} of {{filteredPipelines.length}} Pipelines</span>
+
+    </div>
+
+
+  </div>
+
+</div>

@@ -25,19 +25,29 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('LibraryController', function ($scope, $rootScope,  $route, $location, $modal, _, api, pipelineService) {
+  .controller('LibraryController', function ($scope, $rootScope,  $route, $location, $modal, _, api,
+                                             pipelineService, $q) {
+
+    var predefinedLabels = [
+      'All Pipelines',
+      'Running Pipelines',
+      'Non Running Pipelines',
+      'Invalid Pipelines',
+      'Error Pipelines'
+    ];
 
     angular.extend($scope, {
+      pipelineLabels: predefinedLabels,
+      existingPipelineLabels: [],
 
       /**
        * Emit 'onPipelineConfigSelect' event when new configuration is selected in library panel.
        *
        * @param pipeline
        */
-      onSelect : function(pipeline) {
-        //$rootScope.$broadcast('onPipelineConfigSelect', pipeline);
-        $scope.reloadingNewPipeline();
-        $location.path('/collector/pipeline/' + pipeline.name);
+      onSelectLabel : function(label) {
+        $scope.selectPipelineLabel(label);
+
       },
 
       /**
@@ -97,4 +107,15 @@ angular
       }
 
     });
+
+
+    $q.all([pipelineService.init(true)])
+      .then(
+        function (results) {
+          $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
+        },
+        function (results) {
+
+        }
+      );
   });

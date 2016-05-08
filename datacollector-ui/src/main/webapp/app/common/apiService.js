@@ -332,17 +332,31 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Delete Pipeline Cofiguration.
+       * Delete Pipeline Configuration.
        *
        * @param name
        * @returns {*}
        */
       deletePipelineConfig: function(name) {
         var url = apiBase + '/pipeline/' + name;
-
         return $http({
           method: 'DELETE',
           url: url
+        });
+      },
+
+      /**
+       * Delete Pipelines.
+       *
+       * @param pipelineNames
+       * @returns {*}
+       */
+      deletePipelines: function(pipelineNames) {
+        var url = apiBase + '/pipelines/delete';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineNames
         });
       },
 
@@ -397,7 +411,6 @@ angular.module('dataCollectorApp.common')
         return deferred.promise;
       },
 
-
       /**
        * Export Pipeline Configuration.
        *
@@ -410,6 +423,18 @@ angular.module('dataCollectorApp.common')
           url += '&includeLibraryDefinitions=true';
         }
         window.open(url, '_blank', '');
+      },
+
+      /**
+       * Export Pipelines.
+       *
+       * @param pipelineNames
+       * @param includeLibraryDefinitions
+       */
+      exportSelectedPipelines: function(pipelineNames, includeLibraryDefinitions) {
+        angular.forEach(pipelineNames, function (name) {
+          api.pipelineAgent.exportPipelineConfig(name, includeLibraryDefinitions);
+        });
       },
 
       /**

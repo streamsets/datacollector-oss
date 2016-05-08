@@ -96,6 +96,7 @@ angular
       maximizeDetailPane: false,
       selectedDetailPaneTabCache: {},
       selectedConfigGroupCache: {},
+      existingPipelineLabels: [],
 
       /**
        * Add New Pipeline Configuration
@@ -734,6 +735,7 @@ angular
 
         //Pipelines
         $scope.pipelines = pipelineService.getPipelines();
+        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
 
         if($scope.pipelines && $scope.pipelines.length) {
           $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
@@ -1052,6 +1054,13 @@ angular
             showFieldType: true,
             rememberMe: false
           }
+        };
+      }
+
+      // Initialize metadata for label support
+      if (!$scope.pipelineConfig.metadata || _.isEmpty($scope.pipelineConfig.metadata)) {
+        $scope.pipelineConfig.metadata = {
+          labels : []
         };
       }
 

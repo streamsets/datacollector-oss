@@ -24,24 +24,45 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
+  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
     angular.extend($scope, {
       common: {
         errors: []
       },
       pipelineInfo: pipelineInfo,
       stopping: false,
+      isList: _.isArray(pipelineInfo),
 
       yes: function() {
         $scope.stopping = true;
-        api.pipelineAgent.stopPipeline(pipelineInfo.name, 0).
-          success(function(res) {
-            $modalInstance.close(res);
-          }).
-          error(function(data) {
-            $scope.stopping = false;
-            $scope.common.errors = [data];
+        if ($scope.isList) {
+          var deferList = [];
+
+          angular.forEach(pipelineInfo, function(pipeline) {
+            deferList.push(api.pipelineAgent.stopPipeline(pipeline.name, 0));
           });
+
+          $q.all(deferList)
+            .then(
+              function(results) {
+                $modalInstance.close(results);
+              },
+              function () {
+                $scope.stopping = false;
+                $scope.common.errors = [data];
+              }
+            );
+
+        } else {
+          api.pipelineAgent.stopPipeline(pipelineInfo.name, 0)
+            .success(function(res) {
+              $modalInstance.close(res);
+            })
+            .error(function(data) {
+              $scope.stopping = false;
+              $scope.common.errors = [data];
+            });
+        }
       },
       no: function() {
         $modalInstance.dismiss('cancel');

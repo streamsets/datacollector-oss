@@ -1,0 +1,36 @@
+<div class="pipeline-empty-container" ng-class="{'show': loaded}" ng-show="pipelines.length == 0">
+  <div class="error-alert-div">
+    <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+    <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+  </div>
+  <div class="create-pipeline-btn-group" ng-if="!common.isSlaveNode">
+    <div class="create-pipeline-btn-group-cell">
+      <h2 translate="home.getStarted">Get Started</h2>
+
+      <div>
+        <button class="btn btn-primary pull-left create-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+                ng-click="addPipelineConfig()">
+          <span class="fa fa-plus"></span>
+          <span translate="home.createPipeline">Create Pipeline</span>
+        </button>
+
+        <button class="btn btn-primary pull-left import-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-click="importPipelineConfig()">
+          <span class="fa fa-arrow-circle-down"></span>
+          <span translate="home.importPipeline">Import Pipeline</span>
+        </button>
+      </div>
+
+      <div ng-if="common.isDPMEnabled">
+        <button class="btn btn-primary download-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-click="downloadRemotePipelineConfig()">
+          <span class="fa fa-cloud-download"></span>
+          <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

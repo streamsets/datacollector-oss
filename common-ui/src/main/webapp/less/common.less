@@ -48,7 +48,9 @@ ng\:form {
 }
 
 body {
-  overflow: hidden;
+  min-width: 1000px;
+  overflow-x: scroll;
+  overflow-y: hidden;
 
   .navbar-fixed-top {
     height: 50px;
@@ -327,10 +329,10 @@ body {
   .login-container {
     background: #29b4e1 url('/assets/logo-watermark-big.png') no-repeat center bottom;
     position: absolute;
-    top: 50px;
+    top: 0px;
     left: 0;
     width: 100%;
-    height: calc(~"100% - 50px");
+    height: 100%;
     overflow: hidden;
 
     .alert-danger {
@@ -350,6 +352,15 @@ body {
         border-bottom-width:1px;
         padding-bottom:10px;
       }
+
+      .img_container {
+        text-align: center;
+        img {
+          width: 220px;
+          margin-bottom: 30px;
+        }
+      }
+
 
       input {
         margin-bottom: @defaultPadding * 2;

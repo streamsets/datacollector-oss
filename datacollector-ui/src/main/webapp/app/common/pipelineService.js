@@ -138,6 +138,7 @@ angular.module('dataCollectorApp.common')
 
             //Pipelines
             self.pipelines = pipelines;
+            self.updatedExistingLabels();
 
             self.initializeDefer.resolve();
           }, function(data) {
@@ -148,6 +149,20 @@ angular.module('dataCollectorApp.common')
       return self.initializeDefer.promise;
     };
 
+
+    this.updatedExistingLabels = function() {
+      // Extract current labels
+      var labelMap = {};
+      angular.forEach(self.pipelines, function (pipelineInfo) {
+        if (pipelineInfo.metadata && pipelineInfo.metadata.labels && pipelineInfo.metadata.labels) {
+          angular.forEach(pipelineInfo.metadata.labels, function (label) {
+            labelMap[label] = 1;
+          });
+        }
+      });
+      self.existingPipelineLabels = _.keys(labelMap).sort();
+    };
+
     /**
      * Refresh pipeline by re fetching from server
      */
@@ -155,6 +170,7 @@ angular.module('dataCollectorApp.common')
       return api.pipelineAgent.getPipelines()
         .then(function (results) {
           self.pipelines = results.data;
+          self.updatedExistingLabels();
           return self.pipelines;
         });
     };
@@ -339,7 +355,14 @@ angular.module('dataCollectorApp.common')
       }
 
       modalInstance.result.then(function (configInfo) {
-        self.removePipeline(configInfo);
+        if (_.isArray(configInfo)) {
+          angular.forEach(configInfo, function(pipelineInfo) {
+            self.removePipeline(pipelineInfo);
+          });
+        } else {
+          self.removePipeline(configInfo);
+        }
+
         defer.resolve(self.pipelines);
       }, function () {
 
