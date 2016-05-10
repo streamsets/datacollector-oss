@@ -305,7 +305,7 @@ public class TestAmazonS3Source2 {
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
     s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.ARCHIVE;
-    s3ConfigBean.errorConfig.archivingOption = S3ArchivingOption.MOVE_TO_DIRECTORY;
+    s3ConfigBean.errorConfig.archivingOption = S3ArchivingOption.MOVE_TO_PREFIX;
     s3ConfigBean.errorConfig.errorPrefix = ERROR_PREFIX;
 
     s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();

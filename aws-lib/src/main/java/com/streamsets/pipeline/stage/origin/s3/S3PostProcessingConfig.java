@@ -44,7 +44,7 @@ public class S3PostProcessingConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "MOVE_TO_DIRECTORY",
+    defaultValue = "MOVE_TO_PREFIX",
     label = "Archiving Option",
     displayPosition = 20,
     group = "#0",

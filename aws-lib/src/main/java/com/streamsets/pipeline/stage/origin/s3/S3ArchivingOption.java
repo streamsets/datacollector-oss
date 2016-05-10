@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum S3ArchivingOption implements Label {
-  MOVE_TO_DIRECTORY("Move into another directory"),
+  MOVE_TO_PREFIX("Move into another prefix"),
   MOVE_TO_BUCKET("Move into another bucket"),
   ;
 

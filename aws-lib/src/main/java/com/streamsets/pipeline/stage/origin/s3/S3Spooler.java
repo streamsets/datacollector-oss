@@ -148,7 +148,7 @@ public class S3Spooler {
                        S3ArchivingOption archivingOption) {
     String destBucket = s3ConfigBean.s3Config.bucket;
     switch (archivingOption) {
-      case MOVE_TO_DIRECTORY:
+      case MOVE_TO_PREFIX:
         //no-op
         break;
       case MOVE_TO_BUCKET:
