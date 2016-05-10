@@ -175,7 +175,7 @@ public class S3ConfigBean {
 
       //In case of move to prefix, bucket is same as the source bucket and prefix must be non-null, non empty and
       //different from source prefix.
-      if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_DIRECTORY) {
+      if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_PREFIX) {
         //same bucket as source bucket
         postProcessBucket = s3Config.bucket;
         validatePostProcessingPrefix(context, postProcessBucket, postProcessFolder, groupName, prefixConfig, issues);
