@@ -35,6 +35,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ import java.util.Map;
 
 import org.testcontainers.containers.GenericContainer;
 
+@Ignore
 public class MongoDBTargetIT {
   private static final String DATABASE_NAME = "testDatabase1";
   private static final String TEST_WRITE_COLLECTION = "testWrite";
