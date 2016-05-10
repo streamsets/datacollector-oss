@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016 StreamSets Inc.
+  Copyright 2015 StreamSets Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,17 +25,16 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-mapr_5_1-lib</artifactId>
+  <artifactId>streamsets-datacollector-maprdb-protolib</artifactId>
   <version>1.4.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector MapR 5.1.0 Lib</description>
-  <name>StreamSets Data Collector MapR 5.1.0 Lib</name>
+  <description>StreamSets Data Collector MapR DB Protolib</description>
+  <name>StreamSets Data Collector MapR DB Protolib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <avro.version>1.7.7</avro.version>
     <!-- Closed source artifacts should be provided dependency -->
     <hadoop.version>2.7.0-mapr-1506</hadoop.version>
-    <zookeeper.version>3.4.5-mapr-1503</zookeeper.version>
+    <hbase.version>0.98.12-mapr-1506-m7-5.0.0</hbase.version>
  </properties>
 
   <repositories>
@@ -78,36 +77,35 @@
       </exclusions>
     </dependency>
 
-    <!-- Avro -->
+    <!-- MapR HBase client -->
     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro-mapred</artifactId>
-      <version>${avro.version}</version>
-      <scope>compile</scope>
-      <classifier>hadoop2</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>${avro.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Zookeper -->
-    <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>${zookeeper.version}</version>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>${hbase.version}</version>
       <scope>provided</scope>
+       <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-common</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
-    <!-- required because we don't inherit from root and root-lib does not define dep spark-bootstrap -->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
-      <scope>provided</scope>
+      <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase-client</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -141,49 +139,24 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Protolibs -->
-
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprfs-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
     </dependency>
 
+    <!-- test dependencies-->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprdb-protolib</artifactId>
+      <artifactId>streamsets-datacollector-commonlib</artifactId>
       <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprstreams-source-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-maprstreams-target-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-09-mapr51</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

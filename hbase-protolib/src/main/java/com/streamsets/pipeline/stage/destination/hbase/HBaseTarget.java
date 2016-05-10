@@ -21,8 +21,8 @@
 package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.protobuf.ServiceException;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
-import com.streamsets.datacollector.security.SecurityUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
@@ -150,13 +150,16 @@ public class HBaseTarget extends BaseTarget {
       LOG.debug("Setting HBase client retries to 3 for preview");
       hbaseConf.set(HConstants.HBASE_CLIENT_RETRIES_NUMBER, "3");
     }
+    if (this.tableName == null || this.tableName.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_05));
+    }
     validateQuorumConfigs(issues);
     validateSecurityConfigs(issues);
     HTableDescriptor hTableDescriptor = null;
     if (issues.isEmpty()) {
-      hbaseConf.set(HConstants.ZOOKEEPER_QUORUM, this.zookeeperQuorum);
+      setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, this.zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, this.clientPort);
-      hbaseConf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, this.zookeeperParentZnode);
+      setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, this.zookeeperParentZnode);
       hTableDescriptor = checkConnectionAndTableExistence(issues, this.tableName);
     }
 
@@ -195,6 +198,12 @@ public class HBaseTarget extends BaseTarget {
     }
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return issues;
+  }
+
+  private void setIfNotNull(Configuration conf, String property, String value) {
+    if(value != null) {
+      conf.set(property, value);
+    }
   }
 
   private Configuration getHBaseConfiguration(List<ConfigIssue> issues) {
@@ -241,7 +250,7 @@ public class HBaseTarget extends BaseTarget {
     return hbaseConf;
   }
 
-  private void validateQuorumConfigs(List<ConfigIssue> issues) {
+  protected void validateQuorumConfigs(List<ConfigIssue> issues) {
     if (this.zookeeperQuorum == null || this.zookeeperQuorum.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "zookeeperQuorum",
         Errors.HBASE_04));
@@ -259,10 +268,6 @@ public class HBaseTarget extends BaseTarget {
     }
     if (this.clientPort == 0) {
       issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "clientPort", Errors.HBASE_13));
-
-    }
-    if (this.tableName == null || this.tableName.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_05));
 
     }
   }
@@ -312,6 +317,9 @@ public class HBaseTarget extends BaseTarget {
     return (hbaseUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hbaseUser, loginUgi);
   }
 
+  protected void checkHBaseAvailable(Configuration conf) throws IOException, ServiceException {
+    HBaseAdmin.checkHBaseAvailable(conf);
+  }
 
   private HTableDescriptor checkConnectionAndTableExistence(final List<ConfigIssue> issues,
       final String tableName) {
@@ -323,7 +331,7 @@ public class HBaseTarget extends BaseTarget {
           HBaseAdmin hbaseAdmin = null;
           HTableDescriptor hTableDescriptor = null;
           try {
-            HBaseAdmin.checkHBaseAvailable(hbaseConf);
+            checkHBaseAvailable(hbaseConf);
             hbaseAdmin = new HBaseAdmin(hbaseConf);
             if (!hbaseAdmin.tableExists(tableName)) {
               issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "tableName", Errors.HBASE_07, tableName));

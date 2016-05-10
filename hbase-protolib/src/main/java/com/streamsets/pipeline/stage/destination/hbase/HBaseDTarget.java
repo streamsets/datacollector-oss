@@ -209,7 +209,6 @@ public class HBaseDTarget extends DTarget {
     return new HBaseTarget(zookeeperQuorum, clientPort, zookeeperParentZnode, tableName, hbaseRowKey,
         rowKeyStorageType, hbaseFieldColumnMapping, kerberosAuth, hbaseConfDir, hbaseConfigs, hbaseUser, implicitFieldMapping,
         ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver);
-
   }
 
 }
