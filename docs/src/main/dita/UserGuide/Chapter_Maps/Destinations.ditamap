@@ -72,6 +72,7 @@
    <topicref href="../Destinations/HBase-FieldMappings.dita"/>
    <topicref href="../Destinations/HBase-Kerberos.dita"/>
    <topicref href="../Destinations/HBase-HBaseUser.dita"/>
+   <topicref href="../Destinations/HBase-TimeBasis.dita"/>
    <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
    <topicref href="../Destinations/HBase-Configuring.dita"/>
   </topicref>
