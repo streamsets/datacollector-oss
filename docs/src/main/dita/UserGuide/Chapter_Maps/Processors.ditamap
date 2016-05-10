@@ -137,6 +137,7 @@
   </topicref>
   <topicref href="../Processors/XMLFlattener.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/XMLFlattener-RecordDelimiter.dita"/>
    <topicref href="../Processors/XMLFlattener-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/XMLParser.dita" chunk="to-content">

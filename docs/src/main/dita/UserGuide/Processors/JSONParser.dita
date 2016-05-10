@@ -17,9 +17,10 @@
  <title>JSON Parser</title>
  <conbody>
   <p><indexterm>JSON Parser
-          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JSON
-          Parser</indexterm></indexterm>The JSON Parser parses a JSON object embedded in a String
-      field and passes the resulting data into the pipeline. Based on the contents of the JSON
-      object, the resulting field is either a string, a map, or an array.</p>
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JSON
+                    Parser</indexterm></indexterm>The JSON Parser parses a JSON object embedded in a
+            string field and passes the parsed data to an output field in the record. Based on the
+            contents of the JSON object, the resulting field is either a string, a map, or an
+            array.</p>
  </conbody>
 </concept>

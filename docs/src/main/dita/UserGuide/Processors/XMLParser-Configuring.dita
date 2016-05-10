@@ -63,6 +63,10 @@
                                     <entry>New Parsed Field</entry>
                                     <entry>
                                         <p>Output field for the parsed XML data. </p>
+                                        <p>You can specify the same field to replace the original
+                                            data with the parsed data. Or you can specify another
+                                            existing field or a new field. If the field does not
+                                            exist, XML Parser creates the field.</p>
                                     </entry>
                                 </row>
                             </tbody>

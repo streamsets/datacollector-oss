@@ -51,7 +51,11 @@
                                 </row>
                                 <row>
                                     <entry>New Parsed Field</entry>
-                                    <entry>Output field for the parsed JSON object.</entry>
+                                    <entry>Output field for the parsed JSON object.<p>You can
+                                            specify the same field to replace the original data with
+                                            the parsed data. Or you can specify another existing
+                                            field or a new field. If the field does not exist, JSON
+                                            Parser creates the field.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
