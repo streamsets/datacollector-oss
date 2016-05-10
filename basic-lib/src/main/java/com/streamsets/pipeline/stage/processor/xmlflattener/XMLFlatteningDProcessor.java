@@ -106,20 +106,9 @@ public class XMLFlatteningDProcessor extends DProcessor {
   )
   public boolean ignoreNamespace;
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Ignore Empty Values",
-      description = "Whether entities with blank values should be ignored.",
-      displayPosition = 80,
-      group = "XML"
-  )
-  public boolean ignoreEmptyValues;
-
   @Override
   protected Processor createProcessor() {
     return new XMLFlatteningProcessor(fromField, recordDelimiter, fieldDelimiter, attrDelimiter,
-        ignoreAttributes, ignoreNamespace, ignoreEmptyValues);
+        ignoreAttributes, ignoreNamespace);
   }
 }

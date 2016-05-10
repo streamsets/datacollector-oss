@@ -53,7 +53,7 @@ public class TestXMLFlatteningProcessor {
   }
 
   private String getXML(String id) {
-    return "<contact type=\"person\"> <name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME" + id + "</name>" +
+    return "<contact type=\"person\"><name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME" + id + "</name>" +
         "<phone>(111)111-1111" + id + "</phone><phone>(222)222-2222" + id + "</phone></contact>";
   }
 
@@ -113,7 +113,7 @@ public class TestXMLFlatteningProcessor {
     Record expected = RecordCreator.create();
     expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", true, true)));
     doTest(xml, "contact", "_", ".", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD,
-        false, false, true);
+        false, false);
   }
 
   @Test
@@ -144,7 +144,7 @@ public class TestXMLFlatteningProcessor {
 
   @Test
   public void testInvalidConfig() throws Exception {
-    processor = new XMLFlatteningProcessor(ORIGINAL, "<contact>", "]", "[", true, true, true);
+    processor = new XMLFlatteningProcessor(ORIGINAL, "contact", "]", "[", true, true);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(OnRecordError.DISCARD).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
@@ -177,7 +177,7 @@ public class TestXMLFlatteningProcessor {
   }
 
   private void doTestInvalidRecord(OnRecordError onRecordError, boolean nonString) throws Exception{
-    processor = new XMLFlatteningProcessor(ORIGINAL, "<contact>", ".", "#", true, true, true);
+    processor = new XMLFlatteningProcessor(ORIGINAL, "<contact>", ".", "#", true, true);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(onRecordError).build();
     runner.runInit();
@@ -201,7 +201,7 @@ public class TestXMLFlatteningProcessor {
 
   private void doTest(String xml, String delimiter, List<Record> expected, List<Record> error, OnRecordError onRecordError,
       boolean ignoreAttrs, boolean ignoreNS) throws Exception {
-    doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS, true);
+    doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS);
   }
 
   private void doTest(
@@ -213,10 +213,9 @@ public class TestXMLFlatteningProcessor {
       List<Record> error,
       OnRecordError onRecordError,
       boolean ignoreAttrs,
-      boolean ignoreNS,
-      boolean ignoreEmpty
+      boolean ignoreNS
   ) throws Exception {
-    processor = new XMLFlatteningProcessor(ORIGINAL, delimiter, fieldDelim, attrDelim, ignoreAttrs, ignoreNS, ignoreEmpty);
+    processor = new XMLFlatteningProcessor(ORIGINAL, delimiter, fieldDelim, attrDelim, ignoreAttrs, ignoreNS);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(onRecordError).build();
     runner.runInit();

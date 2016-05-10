@@ -53,7 +53,6 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final String recordDelimiter;
   private final boolean ignoreAttrs;
   private final boolean ignoreNamespace;
-  private final boolean ignoreEmptyValues;
   private final String fieldDelimiter;
   private final String attrDelimiter;
   private final DocumentBuilderFactory factory;
@@ -64,8 +63,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       String fieldDelimiter,
       String attrDelimiter,
       boolean ignoreAttrs,
-      boolean ignoreNamespace,
-      boolean ignoreEmptyValues
+      boolean ignoreNamespace
   ) {
     super();
     this.fieldPath = fieldPath;
@@ -74,7 +72,6 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
     this.attrDelimiter = attrDelimiter;
     this.ignoreAttrs = ignoreAttrs;
     this.ignoreNamespace = ignoreNamespace;
-    this.ignoreEmptyValues = ignoreEmptyValues;
     factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
   }
@@ -186,10 +183,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       Node next = nodeList.item(i);
       // Text node - add it as a field, if we are currently in a record
       if (currentlyInRecord && next.getNodeType() == Node.TEXT_NODE) {
-        String value = ((Text)next).getWholeText();
-        if (!ignoreEmptyValues || !value.trim().isEmpty()) {
-          record.set("/" + current.prefix, Field.create(value));
-        }
+        record.set("/" + current.prefix, Field.create(((Text) next).getWholeText()));
       } else if (next.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) next;
         String tagName = element.getTagName();
