@@ -38,6 +38,15 @@ public enum Errors implements ErrorCode {
   HIVE_12("Failed to create Hive Endpoint: {}"),
   HIVE_13("Hive Metastore Thrift URL or Hive Configuration Directory is required."),
   HIVE_14("Hive Metastore Thrift URL {} is not a valid URI"),
+  HIVE_15("Hive JDBC Driver {} not present in the class Path"),
+  HIVE_16("Unsupported HMS Cache Type: {}"),
+  HIVE_17("Information {} missing or invalid in the metadata record: {}"),
+  HIVE_18("Error when serializing AVRO schema to HDFS folder location: {}. Reason: {}"),
+  HIVE_19("Unsupported Type: {}"),
+  HIVE_20("Error executing SQL: {}, Reason:{}"),
+  HIVE_21("Type Mismatch, Expected: {}, Actual: {}"),
+  HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}"),
+  HIVE_23("Partition field changes not allowed")
   ;
   private final String msg;
 

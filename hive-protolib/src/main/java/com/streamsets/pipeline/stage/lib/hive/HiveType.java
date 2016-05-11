@@ -1,0 +1,103 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.lib.hive;
+
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.destination.hive.Errors;
+
+/**
+ * Hive Types Supported.
+ */
+public enum HiveType {
+  BOOLEAN,
+  CHAR,
+  SMALLINT,
+  INT,
+  BIGINT,
+  FLOAT,
+  DOUBLE,
+  DECIMAL,
+  DATE,
+  BINARY,
+  STRING
+  ;
+
+  /**
+   * Return the corresponding {@link HiveType} for the {@link com.streamsets.pipeline.api.Field.Type}
+   * @param fieldType Record Field Type
+   * @return {@link HiveType}
+   * @throws StageException if it is an unsupported {@link com.streamsets.pipeline.api.Field.Type} or null
+   */
+  public static HiveType getHiveTypeforFieldType(Field.Type fieldType) throws StageException{
+    switch (fieldType) {
+      case BOOLEAN: return HiveType.BOOLEAN;
+      case CHAR: return HiveType.CHAR;
+      case SHORT: return HiveType.SMALLINT;
+      case INTEGER: return HiveType.INT;
+      case LONG: return HiveType.BIGINT;
+      case FLOAT: return HiveType.FLOAT;
+      case DOUBLE: return HiveType.DOUBLE;
+      case DECIMAL: return HiveType.DECIMAL;
+      case DATE: return HiveType.DATE;
+      case DATETIME: return HiveType.STRING; //No timestamp because of impala bug
+      case STRING: return HiveType.STRING;
+      case BYTE_ARRAY: return HiveType.BINARY;
+      default: throw new StageException(Errors.HIVE_19, fieldType);
+
+    }
+  }
+
+  /**
+   * Returns the corresponding {@link Field.Type} for {@link HiveType}.
+   * No support for timestamp type as impala will consider timestamp as string during table creation/alter.
+   * @param hiveType {@link HiveType}
+   * @return {@link Field.Type}
+   * @throws StageException if it is an unsupported {@link HiveType} or null
+   */
+  public static Field.Type getFieldTypeForHiveType(HiveType hiveType) throws StageException{
+    switch (hiveType) {
+      case BOOLEAN: return Field.Type.BOOLEAN;
+      case CHAR: return Field.Type.CHAR;
+      case SMALLINT: return Field.Type.SHORT;
+      case INT: return Field.Type.INTEGER;
+      case BIGINT: return Field.Type.LONG;
+      case FLOAT: return Field.Type.FLOAT;
+      case DOUBLE: return Field.Type.DOUBLE;
+      case DECIMAL: return Field.Type.DECIMAL;
+      case DATE: return Field.Type.DATE;
+      case BINARY: return Field.Type.BYTE_ARRAY;
+      //Suffice to say don't need timestamp
+      //(Won't be a problem if we are the ones creating the table)
+      case STRING: return Field.Type.STRING;
+      default: throw new StageException(Errors.HIVE_19, hiveType);
+    }
+  }
+
+  /**
+   * Returns the corresponding {@link HiveType} for the string representation.<br>
+   * @param hiveTypeString case insensitive string representation of corresponding {@link HiveType}
+   * @return {@link HiveType}
+   */
+  public static HiveType getHiveTypeFromString(String hiveTypeString) {
+    return HiveType.valueOf(hiveTypeString.toUpperCase());
+  }
+}

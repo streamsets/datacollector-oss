@@ -216,6 +216,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>${hive.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.hive.hcatalog</groupId>
             <artifactId>hive-hcatalog-streaming</artifactId>
             <version>${hive.version}</version>
