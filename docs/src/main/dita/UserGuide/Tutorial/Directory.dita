@@ -64,6 +64,14 @@
                                                 directory>/tutorial/origin</codeph>.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Read Order</entry>
+                                    <entry>This determines the read order when the directory
+                                        includes multiple files. You can read based on the
+                                        last-modified timestamp or file name. Because it's simpler,
+                                        let's use <uicontrol>Last Modified Timestamp</uicontrol>.
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>File Name Pattern</entry>
                                     <entry>The Directory origin processes only the files in the
                                         directory that match the file name pattern. <p>The tutorial
@@ -80,12 +88,11 @@
                                 <row>
                                     <entry>First File to Process</entry>
                                     <entry>When processing a set of files with the same file name
-                                        pattern, Directory normally starts with the first file and
-                                        continues in lexicographically ascending order, e.g.
-                                        nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. <p>If you
-                                            wanted to skip some files, you would enter the file to
-                                            start with. Since we're processing a single file, let's
-                                            leave this empty. </p></entry>
+                                        pattern, Directory uses the specified read order - in this
+                                        case, the last-modified timestamp.  <p>If you wanted to skip
+                                            older files, you would specify the file to start with.
+                                            Since we're processing a single file, we can leave this
+                                            empty. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

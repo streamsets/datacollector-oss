@@ -21,10 +21,11 @@
  <conbody>
   <p><indexterm>Directory
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>When
-            you configure the Directory origin, you define the directory to use, the file name
-            pattern, the first file to process, and the compression format. These properties
-            determine the files that the origin processes. After processing a file, Directory can
-            keep, archive, or delete the file. </p>
+            you configure the Directory origin, you define the directory to use, read order, file
+            name pattern, and first file to process. These properties determine the files that the
+            origin processes. You can also enable reading compressed files or files in a late
+            arriving directory. After processing a file, Directory can keep, archive, or delete the
+            file. </p>
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
             the origin to process all requested files. </p>

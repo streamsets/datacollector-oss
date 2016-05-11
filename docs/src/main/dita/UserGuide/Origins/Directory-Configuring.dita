@@ -96,6 +96,24 @@
                                         empty batch.</entry>
                                 </row>
                                 <row>
+                                    <entry>Read Order <xref
+                                            href="Directory-ReadOrder.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_f2g_d54_xv"
+                                        /></xref></entry>
+                                    <entry>The order to use when reading files:<ul
+                                            id="ul_i3b_k54_xv">
+                                            <li>Last-Modified Timestamp - Reads files in ascending
+                                                order based on the last-modified timestamp. When
+                                                files have matching timestamps, reads files in
+                                                lexicographically ascending order based on file
+                                                names.</li>
+                                            <li>Lexicographically Ascending File Names - Reads files
+                                                in lexicographically ascending order based on file
+                                                name.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>File Name Pattern</entry>
                                     <entry>Regular expression that describes the pattern of the file
                                         names to process.<p>You can use UNIX-style wildcards, such
@@ -103,7 +121,7 @@
                                 </row>
                                 <row>
                                     <entry>First File to Process <xref
-                                        href="Directory_FileProcessing.dita#concept_ltv_r3l_5q">
+                                        href="Directory-FirstFile.dita#concept_ltv_r3l_5q">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
                                                 id="image_tcz_pj2_br"/></xref>
                                     </entry>
