@@ -64,11 +64,14 @@
         <img src="assets/logo.png" />
       </a>
 
-      <span ng-if="common.remoteServerInfo.registrationStatus">
-        <img src="assets/cloud_done.svg" title="{{'global.menu.remotelyControlled' | translate}}"/>
-      </span>
+      <img class="pull-left remote-enabled-icon"
+           ng-if="common.remoteServerInfo.registrationStatus"
+           src="assets/cloud_done.svg"
+           title="{{'global.menu.remotelyControlled' | translate}}"/>
 
-      <span class="navbar-brand" ng-if="common.headerTitle">{{common.headerTitle}}</span>
+      <div class="pull-left">
+        <span class="navbar-brand" ng-if="common.headerTitle">{{common.headerTitle}}</span>
+      </div>
 
     </div>
     <div class="collapse navbar-collapse" id="sdc-header-navbar-collapse">

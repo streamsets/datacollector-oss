@@ -181,9 +181,9 @@
       </div>
     </div>
 
-    <div class="pull-right pipelines-count" ng-if="!header.pipelineGridView">
-      <span ng-if="limit >= filteredPipelines.length">{{filteredPipelines.length}} Pipelines</span>
-      <span ng-if="limit < filteredPipelines.length">{{limit}} of {{filteredPipelines.length}} Pipelines</span>
+    <div class="pull-right pipelines-count">
+      <span ng-if="limit >= filteredPipelines.length">{{filteredPipelines.length}} {{filteredPipelines.length > 1 ? 'Pipelines' : 'Pipeline'}}</span>
+      <span ng-if="limit < filteredPipelines.length">{{limit}} of {{filteredPipelines.length}} {{filteredPipelines.length > 1 ? 'Pipelines' : 'Pipeline'}}</span>
 
     </div>
 
