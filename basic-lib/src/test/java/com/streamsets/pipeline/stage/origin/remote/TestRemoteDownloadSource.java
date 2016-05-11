@@ -41,6 +41,11 @@ import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockftpserver.fake.FakeFtpServer;
+import org.mockftpserver.fake.UserAccount;
+import org.mockftpserver.fake.filesystem.FileEntry;
+import org.mockftpserver.fake.filesystem.FileSystem;
+import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -77,8 +82,12 @@ public class TestRemoteDownloadSource {
 
   @After
   public void resetWorkingDir() throws Exception {
-    System.setProperty("user.dir", oldWorkingDir);
-    sshd.close();
+    if (oldWorkingDir != null) {
+      System.setProperty("user.dir", oldWorkingDir);
+    }
+    if (sshd != null && sshd.isOpen()) {
+      sshd.close();
+    }
   }
 
   // Need to make sure each test uses a different dir.
@@ -106,6 +115,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -153,6 +163,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -201,6 +212,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -227,6 +239,7 @@ public class TestRemoteDownloadSource {
     origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -274,6 +287,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -313,6 +327,7 @@ public class TestRemoteDownloadSource {
     origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -355,6 +370,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -428,6 +444,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -491,6 +508,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -558,6 +576,7 @@ public class TestRemoteDownloadSource {
     RemoteDownloadSource origin =
         new RemoteDownloadSource(
             "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
             "testuser",
             "pass",
             null,
@@ -589,6 +608,55 @@ public class TestRemoteDownloadSource {
     actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
     for (int i = 0; i < 2; i++) {
+      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
+    }
+  }
+
+  @Test
+  public void testFtp() throws Exception {
+    FakeFtpServer fakeFtpServer = new FakeFtpServer();
+    fakeFtpServer.setServerControlPort(0);
+    FileSystem fileSystem = new UnixFakeFileSystem();
+    File file =
+        new File(currentThread().getContextClassLoader().getResource("remote-download-source/parseNoError").getFile())
+            .listFiles()[0];
+    String value = FileUtils.readFileToString(file);
+
+    fileSystem.add(new FileEntry("/testfile", value));
+    fakeFtpServer.setFileSystem(fileSystem);
+
+    UserAccount userAccount = new UserAccount("testuser", "pass", "/");
+    fakeFtpServer.addUserAccount(userAccount);
+    fakeFtpServer.start();
+    int port = fakeFtpServer.getServerControlPort();
+    RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
+    configBean.pollInterval = 30;
+    configBean.dataFormat = DataFormat.JSON;
+    configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(
+            "ftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            true,
+            configBean.dataFormatConfig,
+            configBean.dataFormat,
+            configBean.pollInterval,
+            configBean.errorArchiveDir
+        );
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    List<Record> expected = getExpectedRecords();
+    String offset = "-1";
+    StageRunner.Output op = runner.runProduce(offset, 1000);
+    List<Record> actual = op.getRecords().get("lane");
+    Assert.assertEquals(expected.size(), actual.size());
+    for (int i = 0; i < 2; i++) {
+      System.out.println(actual.get(i));
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
   }

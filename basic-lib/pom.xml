@@ -246,6 +246,11 @@
       <artifactId>jsch</artifactId>
       <version>0.1.53</version>
     </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>3.5</version>
+    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>
@@ -304,9 +309,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-core</artifactId>
-      <version>1.10.59</version>
+      <groupId>org.mockftpserver</groupId>
+      <artifactId>MockFtpServer</artifactId>
+      <version>2.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -29,8 +29,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
     version = 3,
-    label = "SFTP Client",
-    description = "Uses an SFTP client to read records from an URL.",
+    label = "SFTP/FTP Client",
+    description = "Uses an SFTP/FTP client to read records from an URL.",
     icon = "httpclient.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
@@ -47,6 +47,7 @@ public class RemoteDownloadDSource extends DSource{
   protected Source createSource() {
     return new RemoteDownloadSource(
         conf.remoteAddress,
+        conf.userDirIsRoot,
         conf.username,
         conf.password,
         conf.knownHosts,

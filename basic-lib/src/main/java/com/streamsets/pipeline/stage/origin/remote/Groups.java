@@ -24,10 +24,9 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  SFTP("SFTP"),
+  REMOTE("SFTP/FTP"),
   CREDENTIALS("Credentials"),
   ERROR("Error Handling"),
-  PROXY("Proxy"),
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),

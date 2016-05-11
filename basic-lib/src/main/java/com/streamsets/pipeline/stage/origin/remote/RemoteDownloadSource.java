@@ -40,6 +40,7 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,11 +102,13 @@ public class RemoteDownloadSource extends BaseSource {
   private FileObject remoteDir;
   private DataParser parser;
   private FileSystemManager fsManager;
+  private final boolean userDirIsRoot;
   private final FileSystemOptions options = new FileSystemOptions();
   private boolean polled = false;
 
   public RemoteDownloadSource(
       String remoteAddress,
+      boolean userDirIsRoot,
       String username,
       String password,
       String knownHosts,
@@ -116,6 +119,7 @@ public class RemoteDownloadSource extends BaseSource {
       String errorArchive
   ) {
     this.remoteAddress = remoteAddress;
+    this.userDirIsRoot = userDirIsRoot;
     this.username = username;
     this.password = password;
     if (knownHosts != null && !knownHosts.isEmpty()) {
@@ -148,20 +152,20 @@ public class RemoteDownloadSource extends BaseSource {
     dataFormatConfig.init(
         getContext(),
         dataFormat,
-        Groups.SFTP.getLabel(),
+        Groups.REMOTE.getLabel(),
         DATA_FORMAT_CONFIG_PREFIX,
         issues
     );
 
     if (pollInterval <= 0) {
       issues.add(getContext().createConfigIssue(
-          Groups.SFTP.getLabel(), CONF_PREFIX + "pollInterval", Errors.REMOTE_09));
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "pollInterval", Errors.REMOTE_09));
     }
     try {
       this.remoteURI = new URI(remoteAddress);
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.SFTP.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_01, remoteAddress));
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_01, remoteAddress));
     }
     try {
       fsManager = VFS.getManager();
@@ -169,7 +173,12 @@ public class RemoteDownloadSource extends BaseSource {
         StaticUserAuthenticator auth = new StaticUserAuthenticator(remoteURI.getHost(), username, password);
         DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
       }
+      if (remoteURI.getScheme().equals("ftp")) {
+        FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
+        FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, userDirIsRoot);
+      }
       if (remoteURI.getScheme().equals("sftp")) {
+        SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, userDirIsRoot);
         if (!noHostChecking) {
           if (knownHostsFile != null) {
             if (knownHostsFile.exists() && knownHostsFile.isFile() && knownHostsFile.canRead()) {
@@ -188,7 +197,7 @@ public class RemoteDownloadSource extends BaseSource {
       }
     } catch (FileSystemException ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.SFTP.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, remoteAddress));
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, remoteAddress));
     }
 
     return issues;
