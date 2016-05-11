@@ -259,13 +259,15 @@ public class JdbcSource extends BaseSource {
             // Enable MySQL streaming mode.
             fetchSize = Integer.MIN_VALUE;
           }
-          statement.setFetchSize(fetchSize);
           LOG.debug("Using query fetch size: {}", fetchSize);
+          statement.setFetchSize(fetchSize);
 
           if (getContext().isPreview()) {
             statement.setMaxRows(batchSize);
           }
-          resultSet = statement.executeQuery(prepareQuery(query, lastSourceOffset));
+          String preparedQuery = prepareQuery(query, lastSourceOffset);
+          LOG.debug("Executing query: " + preparedQuery);
+          resultSet = statement.executeQuery(preparedQuery);
         }
         // Read Data and track last offset
         int rowCount = 0;
@@ -299,8 +301,9 @@ public class JdbcSource extends BaseSource {
             nextSourceOffset = initialOffset;
           }
           ++rowCount;
-
         }
+        LOG.debug("Processed rows: " + rowCount);
+
         // isAfterLast is not required to be implemented if using FORWARD_ONLY cursor.
         if (resultSet.isAfterLast() || rowCount == 0) {
           // We didn't have any data left in the cursor.
