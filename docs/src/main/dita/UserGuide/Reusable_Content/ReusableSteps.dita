@@ -1664,16 +1664,17 @@
                                     <entry>Indicates whether to create a header line.</entry>
                                 </row>
                                 <row>
-                                    <entry>Remove New Line Characters</entry>
-                                    <entry>Removes new line characters from within a
-                                            record.<p>Recommended when writing data as a single line
+                                    <entry>Replace New Line Characters</entry>
+                                    <entry>Replaces new line characters with the configured
+                                            string.<p>Recommended when writing data as a single line
                                             of text.</p></entry>
                                 </row>
                                 <row>
                                     <entry>New Line Character Replacement</entry>
-                                    <entry>Optional string to replace each new line character that
-                                        is removed from a record. For example, enter a space to
-                                        replace each new line character with a space. </entry>
+                                    <entry>String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p>Leave empty to remove the new line
+                                        characters.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Delimiter Character</entry>
