@@ -190,7 +190,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     type = ConfigDef.Type.MODEL,
     defaultValue = "/",
     label = "Text Field Path",
-    description = "Field to write data to Kafka",
+    description = "String field that will be written to the destination",
     displayPosition = 380,
     group = "TEXT",
     dependsOn = "dataFormat^",
