@@ -107,9 +107,8 @@ public class SpoolDirConfigBean {
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LEXICOGRAPHICAL",
-      label = "Order By",
-      description = "Select files for spooling based on last modified timestamp or by lexicographical order. " +
-          "If timestamp based ordering is used, files with same timestamp will be ordered lexicographically.",
+      label = "Read Order",
+      description = "Read files based on the last-modified timestamp or lexicographically ascending file names. When timestamp ordering is used, files with the same timestamp are ordered based on file names.",
       displayPosition = 35,
       group = "FILES"
   )

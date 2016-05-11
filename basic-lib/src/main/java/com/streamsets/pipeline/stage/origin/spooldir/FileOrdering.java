@@ -22,8 +22,8 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.Label;
 
 public enum  FileOrdering implements Label{
-  TIMESTAMP("Last Modified Timestamp based Ordering"),
-  LEXICOGRAPHICAL("Lexicographical Ordering")
+  TIMESTAMP("Last Modified Timestamp"),
+  LEXICOGRAPHICAL("Lexicographically Ascending File Names")
   ;
 
   private final String label;
