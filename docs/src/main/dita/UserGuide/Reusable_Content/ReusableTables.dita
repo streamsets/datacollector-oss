@@ -208,9 +208,8 @@
        <entry>Common Prefix <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wm3_212_wv"/>
         </xref></entry>
-       <entry>Optional common prefix that describes where the location of the data. When defined,
-        the common prefix acts as a root for the prefix pattern.<p>You can use Ant-style path
-         patterns to read files recursively. </p></entry>
+       <entry>Optional common prefix that describes the location of the data. When defined, the
+        common prefix acts as a root for the prefix pattern.</entry>
       </row>
       <row id="S3ObjectPathDelimiter">
        <entry>Object Path Delimiter</entry>
@@ -223,7 +222,8 @@
         </xref></entry>
        <entry>
         <p>Prefix pattern that describes the files to be processed. </p>
-        <p>You can use Ant-style path patterns to read files recursively. </p>
+        <p>You can include the entire path to the files. You can also use Ant-style path patterns to
+         read files recursively. </p>
        </entry>
       </row>
       <row id="S3BufferLimit">
