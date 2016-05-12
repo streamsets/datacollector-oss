@@ -127,5 +127,7 @@ public class HdfsTargetUpgrader implements StageUpgrader {
     if(!found) {
       configs.add(new Config(propertyName, "-1"));
     }
+
+    configs.add(new Config("hdfsTargetConfigBean.dirPathTemplateInHeader", false));
   }
 }

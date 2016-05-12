@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
@@ -44,6 +45,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -86,6 +88,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -159,6 +162,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -199,6 +203,7 @@ public class TestHdfsTarget {
       new HashMap<String, String>(),
       "foo",
       "UTC",
+      false,
       getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
       HdfsFileType.TEXT,
       "${uuid()}",
@@ -243,6 +248,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${ss()}",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -293,6 +299,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         "nonabsolutedir",   // relative path
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -335,6 +342,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -374,6 +382,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -417,6 +426,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "${TEST}", // output dir contains constant that we don't know
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -461,6 +471,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}-${MM()}/out",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -506,6 +517,7 @@ public class TestHdfsTarget {
       new HashMap<String, String>(),
       "foo",
       "UTC",
+      false,
       getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
       HdfsFileType.TEXT,
       "${uuid()}",
@@ -549,6 +561,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
+        false,
         getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}",
         HdfsFileType.TEXT,
         "${uuid()}",
@@ -614,5 +627,108 @@ public class TestHdfsTarget {
       System.out.print(f.getName());
     }
     Assert.assertEquals(3, list.length);
+  }
+
+  /**
+   * Verifies normal behavior when target directory is in the header.
+   */
+  @Test
+  public void testDirectoryTemplateInHeader() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      "file:///",
+      "foo",
+      false,
+      null,
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      true,
+      null,
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      5,
+      0,
+      "${time:now()}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+      "",
+      DataFormat.JSON,
+      dataGeneratorFormatConfig,
+      "1"
+    );
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.getHeader().setAttribute(HdfsTarget.TARGET_DIRECTORY_HEADER, getTestDir() + "/hdfs/");
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create("x"));
+    record.set(Field.create(map));
+
+    runner.runWrite(ImmutableList.copyOf(new Record[]{record}));
+
+    runner.runDestroy();
+
+    File[] list = new File(getTestDir() + "/hdfs/").listFiles();
+    Assert.assertEquals(1, list.length);
+    Assert.assertEquals("{\"a\":\"x\"}\n", FileUtils.readFileToString(list[0], Charset.defaultCharset()));
+  }
+
+
+  /**
+   * Records without expected header needs to be propagated to error output.
+   */
+  @Test
+  public void testDirectoryTemplateInHeaderMissingHeader() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      "file:///",
+      "foo",
+      false,
+      null,
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      true,
+      null,
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      5,
+      0,
+      "${time:now()}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+      "",
+      DataFormat.JSON,
+      dataGeneratorFormatConfig,
+      "1"
+    );
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create("x"));
+    record.set(Field.create(map));
+
+    runner.runWrite(ImmutableList.copyOf(new Record[]{record}));
+    runner.runDestroy();
+
+    List<Record> errorRecords = runner.getErrorRecords();
+    Assert.assertNotNull(errorRecords);
+    Assert.assertEquals(1, errorRecords.size());
   }
 }

@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
+import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -64,6 +65,7 @@ public class RecordWriterManager {
   private URI hdfsUri;;
   private Configuration hdfsConf;
   private String uniquePrefix;
+  private boolean dirPathTemplateInHeader;
   private String dirPathTemplate;
   private PathResolver pathResolver;
   private TimeZone timeZone;
@@ -80,13 +82,14 @@ public class RecordWriterManager {
   private final LoadingCache<String, Path> dirPathCache;
   private long idleTimeoutSeconds = -1L;
 
-  public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, String dirPathTemplate,
-      TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords, HdfsFileType fileType,
-      CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
+  public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
+      String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
+      HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
       DataGeneratorFactory generatorFactory, Target.Context context, String config) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
+    this.dirPathTemplateInHeader = dirPathTemplateInHeader;
     this.dirPathTemplate = dirPathTemplate;
     this.timeZone = timeZone;
     this.cutOffMillis = preventOverflow(cutOffSecs * 1000);
@@ -136,7 +139,15 @@ public class RecordWriterManager {
     return cutOffRecords;
   }
 
+  /**
+   * Returns directory path for given record and date.
+   */
   String getDirPath(Date date, Record record) throws StageException {
+    if(dirPathTemplateInHeader) {
+      // We're not validating if the header exists as that job is already done
+      return record.getHeader().getAttribute(HdfsTarget.TARGET_DIRECTORY_HEADER);
+    }
+
     return pathResolver.resolvePath(date, record);
   }
 
@@ -176,6 +187,11 @@ public class RecordWriterManager {
   }
 
   long getTimeToLiveMillis(Date now, Date recordDate) {
+    // Getting max date doesn't make sense when path is in record. We're retuning Long.MAX_VALUE which is the same case
+    // as when the target path doesn't contain any date-related information.
+    if(dirPathTemplateInHeader) {
+      return Long.MAX_VALUE;
+    }
     // we up the record date to the greatest one based on the template
     recordDate = pathResolver.getCeilingDate(recordDate);
     if (recordDate != null) {

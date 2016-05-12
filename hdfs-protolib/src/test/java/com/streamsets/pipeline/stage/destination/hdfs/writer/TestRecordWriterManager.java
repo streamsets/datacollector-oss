@@ -149,7 +149,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.NONE;
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
@@ -191,7 +191,7 @@ public class TestRecordWriterManager {
                                                                               : SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType,keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
@@ -221,7 +221,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     FileSystem fs = FileSystem.get(uri, conf);
@@ -270,7 +270,7 @@ public class TestRecordWriterManager {
     HdfsFileType fileType = HdfsFileType.SEQUENCE_FILE;
     String keyEL = "${uuid()}";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     FileSystem fs = FileSystem.get(uri, conf);
@@ -324,7 +324,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
@@ -412,7 +412,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
@@ -448,7 +448,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     Date now = getFixedDate();
@@ -483,7 +483,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
         cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     Date now = getFixedDate();
@@ -518,7 +518,7 @@ public class TestRecordWriterManager {
     SequenceFile.CompressionType compressionType = null;
     String keyEL = null;
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     Date now = getFixedDate();
@@ -551,7 +551,7 @@ public class TestRecordWriterManager {
     DefaultCodec compressionCodec = new DefaultCodec();
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
 
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, dirTemplate, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, dirTemplate, timeZone, cutOffSecs, cutOffSize,
                                    cutOffRecords, fileType, compressionCodec, compressionType, keyEL,
                                    generatorFactory, targetContext, "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));

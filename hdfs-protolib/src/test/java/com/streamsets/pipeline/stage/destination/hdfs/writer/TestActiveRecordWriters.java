@@ -105,7 +105,7 @@ public class TestActiveRecordWriters {
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
       ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
                                              null), "dirPathTemplate");
@@ -170,7 +170,7 @@ public class TestActiveRecordWriters {
     SequenceFile.CompressionType compressionType = SequenceFile.CompressionType.BLOCK;
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
-    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
         cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
         ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
             null), "dirPathTemplate");

@@ -74,6 +74,7 @@ public class TestHdfsTargetAvro {
       new HashMap<String, String>(),
       "foo",
       "UTC",
+      false,
       dirPathTemplate,
       HdfsFileType.TEXT,
       "${uuid()}",

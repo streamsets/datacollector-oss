@@ -46,6 +46,11 @@ import java.util.List;
 public class HdfsTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
 
+  /**
+   * Name of the header that will be searched for directory template (if configured).
+   */
+  public static final String TARGET_DIRECTORY_HEADER = "targetDirectory";
+
   private final HdfsTargetConfigBean hdfsTargetConfigBean;
   private Date batchTime;
 
@@ -117,6 +122,7 @@ public class HdfsTarget extends BaseTarget {
         }
       });
     } catch (Exception ex) {
+      LOG.error("Can't write record", ex);
       throw throwStageException(ex);
     }
   }
@@ -166,6 +172,13 @@ public class HdfsTarget extends BaseTarget {
       if (recordTime == null) {
         throw new StageException(Errors.HADOOPFS_47, hdfsTargetConfigBean.getTimeDriver());
       }
+
+      if(hdfsTargetConfigBean.dirPathTemplateInHeader
+          && !record.getHeader().getAttributeNames().contains(TARGET_DIRECTORY_HEADER)) {
+        getContext().toError(record, Errors.HADOOPFS_50);
+        return;
+      }
+
       boolean write = true;
       while (write) {
         write = false;

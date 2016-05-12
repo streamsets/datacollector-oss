@@ -144,6 +144,17 @@ public class HdfsTargetConfigBean {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Directory Template in header",
+    description = "Directory template is specified in record's header 'directoryTemplate' rather then in the target configuration.",
+    displayPosition = 105,
+    group = "OUTPUT_FILES"
+  )
+  public boolean dirPathTemplateInHeader;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}",
     label = "Directory Template",
@@ -153,7 +164,9 @@ public class HdfsTargetConfigBean {
     displayPosition = 110,
     group = "OUTPUT_FILES",
     elDefs = {RecordEL.class, TimeEL.class, ExtraTimeEL.class},
-    evaluation = ConfigDef.Evaluation.EXPLICIT
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    dependsOn = "dirPathTemplateInHeader",
+    triggeredByValue = "false"
   )
   public String dirPathTemplate;
 
@@ -445,29 +458,34 @@ public class HdfsTargetConfigBean {
       try {
         // Creating RecordWriterManager for dirPathTemplate
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-                dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize * MEGA_BYTE,
-                maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
+                dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
+                maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
         if (idleTimeSecs > 0) {
           mgr.setIdleTimeoutSeconds(idleTimeSecs);
         }
 
-        // validate if the dirPathTemplate can be resolved by Els constants
-        if (mgr.validateDirTemplate(
+        // We're skipping all hdfs-target-directory related validations if we're getting the configuration from header
+        if(dirPathTemplateInHeader) {
+          currentWriters = new ActiveRecordWriters(mgr);
+        } else {
+          // validate if the dirPathTemplate can be resolved by Els constants
+          if (mgr.validateDirTemplate(
             Groups.OUTPUT_FILES.name(),
             "dirPathTemplate",
             HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
             issues
-        )) {
-          String newDirPath = mgr.getDirPath(new Date()).toString();
-          if (validateHadoopDir(       // permission check on the output directory
+          )) {
+            String newDirPath = mgr.getDirPath(new Date()).toString();
+            if (validateHadoopDir(       // permission check on the output directory
               context,
               HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
               Groups.OUTPUT_FILES.name(),
               newDirPath, issues
-          )) {
-            currentWriters = new ActiveRecordWriters(mgr);
+            )) {
+              currentWriters = new ActiveRecordWriters(mgr);
+            }
           }
         }
       }  catch (Exception ex) {
@@ -482,6 +500,7 @@ public class HdfsTargetConfigBean {
                   new URI(hdfsUri),
                   hdfsConfiguration,
                   uniquePrefix,
+                  false, // Late records doesn't support "template directory" to be in header
                   lateRecordsDirPathTemplate,
                   TimeZone.getTimeZone(timeZoneID),
                   lateRecordsLimitSecs,
@@ -559,6 +578,7 @@ public class HdfsTargetConfigBean {
           }
         });
       } catch (Exception ex) {
+        LOG.error("Exception while initializing HDFS bean configuration", ex);
         issues.add(context.createConfigIssue(null, null, Errors.HADOOPFS_23, ex.toString(), ex));
       }
       toHdfsRecordsCounter = context.createCounter("toHdfsRecords");

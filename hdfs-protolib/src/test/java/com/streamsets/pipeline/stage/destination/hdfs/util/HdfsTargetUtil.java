@@ -40,6 +40,7 @@ public class HdfsTargetUtil {
       Map<String, String> hdfsConfigs,
       String uniquePrefix,
       String timeZoneID,
+      boolean dirPathTemplateInHeader,
       String dirPathTemplate,
       HdfsFileType fileType,
       String keyEl,
@@ -63,6 +64,7 @@ public class HdfsTargetUtil {
     hdfsTargetConfigBean.hdfsConfigs = hdfsConfigs;
     hdfsTargetConfigBean.uniquePrefix = uniquePrefix;
     hdfsTargetConfigBean.timeZoneID = timeZoneID;
+    hdfsTargetConfigBean.dirPathTemplateInHeader = dirPathTemplateInHeader;
     hdfsTargetConfigBean.dirPathTemplate = dirPathTemplate;
     hdfsTargetConfigBean.fileType = fileType;
     hdfsTargetConfigBean.keyEl = keyEl;
