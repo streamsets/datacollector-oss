@@ -253,6 +253,21 @@
                                 <entry>Number of recent actions stored so you can undo them.
                                 </entry>
                             </row>
+                            <row>
+                                <entry>config.includes</entry>
+                                <entry>Additional configuration files to include in the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> configuration. The files must be stored in a directory
+                                    relative to the <systemoutput>$SDC_CONF</systemoutput>
+                                        directory.<p>You can enter multiple file names separated by
+                                        commas. The files are loaded into the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> configuration in the listed order. If the same
+                                        configuration property is defined in multiple files, the
+                                        value defined in the last loaded file takes precedence.
+                                        </p><draft-comment author="alisontaylor">Not mentioning dpm
+                                        until they add it.</draft-comment></entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table></p><p>The <ph
