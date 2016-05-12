@@ -39,9 +39,9 @@
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
             ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
-            ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
+            ng-repeat="_fieldName in mapKeys | limitTo: limit"
             record="record"
-            record-value="_recordValue"
+            record-value="recordValue.value[_fieldName]"
             diff-type="diffType"
             diff-record-value="diffRecordValue.value[_fieldName]"
             field-name="_fieldName"
@@ -59,12 +59,12 @@
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
             ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
-            ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
+            ng-repeat="_fieldName in mapKeys | limitTo: limit"
             record="record"
-            record-value="_recordValue"
+            record-value="recordValue.value[_fieldName]"
             diff-type="diffType"
             diff-record-value="diffRecordValue.value[_fieldName]"
-            field-name="getListMapKey(_recordValue)"
+            field-name="getListMapKey(recordValue.value[_fieldName])"
             field-index="$index"
             is-root="false"
             editable="editable"

@@ -34,6 +34,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         updatedField: false,
         limit: mapListLimit,
         listMapKey: undefined,
+        mapKeys: (scope.recordValue && scope.recordValue.value) ? Object.keys(scope.recordValue.value) : [],
 
         onClick: function($event) {
           $event.preventDefault();
