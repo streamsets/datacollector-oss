@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -129,7 +130,7 @@ public class SolrTarget extends BaseTarget {
           if (field == null) {
             throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
           }
-          document.addField(fieldMapping.solrFieldName, field.getValue());
+          document.addField(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
         }
 
         if(ProcessingMode.BATCH.equals(indexingMode)) {

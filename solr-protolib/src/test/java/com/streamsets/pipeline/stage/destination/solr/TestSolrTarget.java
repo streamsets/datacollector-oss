@@ -19,8 +19,14 @@
  */
 package com.streamsets.pipeline.stage.destination.solr;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
@@ -102,6 +108,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     fieldNamesMap.add(new SolrFieldMappingConfig("/a", "name"));
     fieldNamesMap.add(new SolrFieldMappingConfig("/b", "sku"));
     fieldNamesMap.add(new SolrFieldMappingConfig("/c", "manu"));
+    fieldNamesMap.add(new SolrFieldMappingConfig("/titleMultiValued", "title"));
     return new SolrTarget(InstanceTypeOptions.SINGLE_NODE, solrURI, null, ProcessingMode.BATCH, fieldNamesMap, null);
   }
 
@@ -122,12 +129,20 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       List<Record> records = new ArrayList<>();
 
       Record record1 = RecordCreator.create();
-      record1.set(Field.create(ImmutableMap.of("a", Field.create("Hello"),
-        "b", Field.create("i"), "c", Field.create("t"))));
+      record1.set(Field.create(ImmutableMap.of(
+          "a", Field.create("Hello"),
+          "b", Field.create("i"),
+          "c", Field.create("t"),
+          "titleMultiValued", Field.create(ImmutableList.of(Field.create("title1"), Field.create("title2")))
+      )));
 
       Record record2 = RecordCreator.create();
-      record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
-        "b", Field.create("i"), "c", Field.create("t"))));
+      record2.set(Field.create(ImmutableMap.of(
+          "a", Field.create("Bye"),
+          "b", Field.create("i"),
+          "c", Field.create("t"),
+          "titleMultiValued", Field.create(ImmutableList.of(Field.create("title1"), Field.create("title2")))
+      )));
 
       records.add(record1);
       records.add(record2);
@@ -156,6 +171,13 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       String fieldCVal = (String) solrDocument.get("manu");
       Assert.assertNotNull(fieldCVal);
       Assert.assertEquals("t", fieldCVal);
+
+
+      List<String> titleCVal = (List<String>) solrDocument.get("title");
+      Assert.assertNotNull(titleCVal);
+      Assert.assertEquals(2, titleCVal.size());
+      Assert.assertEquals("title1", titleCVal.get(0));
+      Assert.assertEquals("title2", titleCVal.get(1));
 
     } catch (Exception e) {
       LOG.error("Exception while writing records", e);
@@ -236,7 +258,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       records.add(record2);
 
       runner.runWrite(records);
-      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Assert.assertEquals(2, runner.getErrorRecords().size());
       Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get("/nota").getValueAsString());
       Assert.assertTrue(runner.getErrors().isEmpty());
 
