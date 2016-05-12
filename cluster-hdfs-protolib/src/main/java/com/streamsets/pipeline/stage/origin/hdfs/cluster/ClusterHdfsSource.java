@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
@@ -87,7 +87,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import javax.security.auth.Subject;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
 
@@ -540,17 +539,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     StringBuilder logMessage = new StringBuilder();
     try {
-      // forcing UGI to initialize with the security settings from the stage
-      UserGroupInformation.setConfiguration(hadoopConf);
-      Subject subject = Subject.getSubject(AccessController.getContext());
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
-      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
-        subject == null ? "null" : subject.getPrincipals(), loginUgi);
+      loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
       if (conf.hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -612,7 +601,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   private UserGroupInformation getUGI() {
     return (conf.hdfsUser == null || conf.hdfsUser.isEmpty()) ?
-        loginUgi : UserGroupInformation.createProxyUser(conf.hdfsUser, loginUgi);
+        loginUgi : HadoopSecurityUtil.getProxyUser(conf.hdfsUser, loginUgi);
   }
 
   @Override

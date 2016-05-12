@@ -24,6 +24,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
@@ -36,6 +37,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
@@ -56,7 +58,7 @@ import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +66,6 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,18 +229,9 @@ public class HiveTarget extends BaseTarget {
   private void captureLoginUGI(List<ConfigIssue> issues) {
     try {
       // forcing UGI to initialize with the security settings from the stage
-      UserGroupInformation.setConfiguration(hiveConf);
-      Subject subject = Subject.getSubject(AccessController.getContext());
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
-      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
-        subject == null ? "null" : subject.getPrincipals(), loginUgi);
+      loginUgi = HadoopSecurityUtil.getLoginUser(hiveConf);
       // Proxy users are not currently supported due to: https://issues.apache.org/jira/browse/HIVE-11089
-    } catch (IOException e) {
+    } catch (Exception e) {
       issues.add(getContext().createConfigIssue(Groups.HIVE.name(), null, Errors.HIVE_11, e.getMessage()));
     }
   }

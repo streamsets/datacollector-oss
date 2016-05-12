@@ -21,6 +21,8 @@
 package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
+import com.streamsets.datacollector.security.SecurityUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
@@ -60,15 +62,12 @@ import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.Date;
@@ -289,16 +288,7 @@ public class HBaseTarget extends BaseTarget {
         }
       }
 
-      UserGroupInformation.setConfiguration(hbaseConf);
-      Subject subject = Subject.getSubject(AccessController.getContext());
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
-      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
-        subject == null ? "null" : subject.getPrincipals(), loginUgi);
+      loginUgi = HadoopSecurityUtil.getLoginUser(hbaseConf);
       StringBuilder logMessage = new StringBuilder();
       if (kerberosAuth) {
         logMessage.append("Using Kerberos");

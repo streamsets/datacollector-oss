@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -42,7 +43,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import org.apache.commons.lang.StringUtils;
+
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -57,11 +58,9 @@ import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
@@ -671,7 +670,7 @@ public class HdfsTargetConfigBean {
   }
 
   UserGroupInformation getUGI() {
-    return (hdfsUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
+    return (hdfsUser.isEmpty()) ? loginUgi : HadoopSecurityUtil.getProxyUser(hdfsUser, loginUgi);
   }
 
   protected ActiveRecordWriters getCurrentWriters() {
@@ -832,16 +831,7 @@ public class HdfsTargetConfigBean {
     StringBuilder logMessage = new StringBuilder();
     try {
       // forcing UGI to initialize with the security settings from the stage
-      UserGroupInformation.setConfiguration(hdfsConfiguration);
-      Subject subject = Subject.getSubject(AccessController.getContext());
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
-      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
-        subject == null ? "null" : subject.getPrincipals(), loginUgi);
+      loginUgi = HadoopSecurityUtil.getLoginUser(hdfsConfiguration);
       if (hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {

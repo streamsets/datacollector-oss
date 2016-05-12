@@ -75,6 +75,12 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hadoop-common</artifactId>
+      <scope>compile</scope>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
