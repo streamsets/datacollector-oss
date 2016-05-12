@@ -29,5 +29,8 @@
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
             the origin to process all requested files. </p>
+        <p>Directory includes additional header attributes that enable you to include the provenance
+            of a record in the record. For more information, see <xref
+                href="FilePath_Offset.dita#concept_ljn_2h3_yv"/>. </p>
  </conbody>
 </concept>

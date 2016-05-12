@@ -39,5 +39,8 @@
             requested files before continuing to the active file. </p>
         <note>If you use logrotate with the copytruncate option, use the Directory origin to process
             the rolled or archived files. File Tail does not support copytruncate.</note>
+        <p>File Tail includes additional header attributes that enable you to include the provenance
+            of a record in the record. For more information, see <xref
+                href="FilePath_Offset.dita#concept_ljn_2h3_yv"/>. </p>
     </conbody>
 </concept>

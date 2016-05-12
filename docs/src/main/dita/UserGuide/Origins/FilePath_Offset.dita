@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ljn_2h3_yv">
+ <title>File Path and Offset Header Attributes</title>
+    <shortdesc>The Directory and File Tail origins include record header attributes that provide the
+        file path and name, as well as the offset for each record. To track the provenance of each
+        record, you can use a function to include this information in the records.</shortdesc>
+ <conbody>
+  <p><indexterm>file path<indexterm>record header
+                    attribute</indexterm></indexterm><indexterm>offset<indexterm>header
+                    attribute</indexterm></indexterm><indexterm>Directory
+                    origin<indexterm>additional header
+                attributes</indexterm></indexterm><indexterm>File Tail origin<indexterm>additional
+                    header attributes</indexterm></indexterm>The Directory and File Tail origins
+            include the following additional record header attributes:<ul id="ul_ebj_1l3_yv">
+                <li>file - Provides the file path and name. </li>
+                <li>offset - Provides the offset in bytes.</li>
+            </ul></p>
+        <p>To include the file or offset header attributes in a record, you can use the following
+            expressions in the Expression
+            Evaluator:<codeblock>${record:attribute('file')}
+${record:attribute('offset')}</codeblock></p>
+        <p>The following image shows an Expression Editor that adds the file and offset record
+            header attribute information to the record: </p>
+        <p><image href="../Graphics/Origins-EEval-headerattributes.png" id="image_prx_fn3_yv"
+                scale="60"/></p>
+ </conbody>
+</concept>
