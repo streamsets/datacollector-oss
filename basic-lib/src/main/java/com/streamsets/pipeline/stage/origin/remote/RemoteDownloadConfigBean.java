@@ -45,41 +45,85 @@ public class RemoteDownloadConfigBean {
   public String remoteAddress;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
+      label = "Authentication",
+      description = "The authentication method to use to login to remote server",
+      displayPosition = 10,
+      group = "CREDENTIALS"
+  )
+  @ValueChooserModel(AuthenticationChooserValues.class)
+  public Authentication auth = Authentication.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Username",
+      description = "Username to use to login to the remote server",
+      displayPosition = 15,
+      group = "CREDENTIALS",
+      dependsOn = "auth",
+      triggeredByValue = {"PASSWORD", "PRIVATE_KEY"}
+  )
+  public String username;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Password",
+      description = "Password to use to login to the remote server. If private key is specified, that is used.",
+      displayPosition = 20,
+      group = "CREDENTIALS",
+      dependsOn = "auth",
+      triggeredByValue = {"PASSWORD"}
+  )
+  public String password;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Private Key File",
+      description = "Private Key File to use to login to the remote server.",
+      displayPosition = 30,
+      group = "CREDENTIALS",
+      dependsOn = "auth",
+      triggeredByValue = {"PRIVATE_KEY"}
+  )
+  public String privateKey;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Private Key Passphrase",
+      description = "Passphrase to use to open the private key file.",
+      displayPosition = 40,
+      group = "CREDENTIALS",
+      dependsOn = "auth",
+      triggeredByValue = {"PRIVATE_KEY"}
+  )
+  public String privateKeyPassphrase;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Path relative to User Home Directory",
       description = "If checked, the path is resolved relative to the logged in user's home directory",
       displayPosition = 20,
-      group = "REMOTE"
+      group = "REMOTE",
+      dependsOn = "auth",
+      triggeredByValue = {"PASSWORD", "PRIVATE_KEY"}
   )
   public boolean userDirIsRoot = true;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Username",
-      description = "Username to use to login to the remote server",
-      group = "CREDENTIALS"
-  )
-  public String username;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Password",
-      description = "Password to use to login to the remote server",
-      group = "CREDENTIALS"
-  )
-  public String password;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
       label = "Strict Host Checking",
-      description = "If enabled, this client will only connect to the host if the host is in the known hosts file",
+      description = "If enabled, this client will only connect to the host if the host is in the known hosts file.",
+      displayPosition = 50,
       group = "CREDENTIALS"
   )
   public boolean strictHostChecking;
@@ -89,8 +133,9 @@ public class RemoteDownloadConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Known Hosts file",
       description = "Full path to the file that lists the host keys of all known hosts." +
-          "This must be specified if the strict host checking is enabled",
+          "This must be specified if the strict host checking is enabled.",
       group = "CREDENTIALS",
+      displayPosition = 60,
       dependsOn = "strictHostChecking",
       triggeredByValue = "true"
   )
@@ -101,7 +146,8 @@ public class RemoteDownloadConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
-      group = "REMOTE"
+      group = "REMOTE",
+      displayPosition = 30
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
@@ -112,7 +158,8 @@ public class RemoteDownloadConfigBean {
       defaultValue = "60",
       label = "Poll Interval",
       description = "Time (in seconds) between polling the remote service for new files",
-      group = "REMOTE"
+      group = "REMOTE",
+      displayPosition = 40
   )
   public int pollInterval;
 
@@ -122,7 +169,8 @@ public class RemoteDownloadConfigBean {
       defaultValue = "false",
       label = "Archive on error",
       description = "On error, should the file be archive to a local directory",
-      group = "ERROR"
+      group = "ERROR",
+      displayPosition = 10
   )
   public boolean archiveOnError;
 
@@ -133,6 +181,7 @@ public class RemoteDownloadConfigBean {
       label = "Archive Directory",
       description = "Directory to archive files, if an irrecoverable error is encountered",
       group = "ERROR",
+      displayPosition = 20,
       dependsOn = "archiveOnError",
       triggeredByValue = "true"
   )

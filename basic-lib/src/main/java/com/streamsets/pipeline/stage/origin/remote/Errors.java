@@ -32,10 +32,14 @@ public enum Errors implements ErrorCode {
   REMOTE_05("Failed to read data due to: {}"),
 
   REMOTE_06("known_hosts file: {} does not exist or is not accessible"),
-  REMOTE_07("Strict Host Checking is disabled and known_hosts file not specified"),
-  REMOTE_08("Unable to download files from remote host: {}"),
+  REMOTE_07("Strict Host Checking is enabled and known_hosts file not specified"),
+  REMOTE_08("Unable to download files from remote host: {} with given credentials. " +
+      "Please verify if the host is reachable, and the credentials are valid."),
 
-  REMOTE_09("Poll Interval must be positive")
+  REMOTE_09("Poll Interval must be positive"),
+  REMOTE_10("Private Key file: {} does not exist or is not accessible"),
+  REMOTE_11("Private Key authentication is supported only with SFTP"),
+  REMOTE_12("Strict Host Checking is supported only with SFTP")
   ;
 
   private final String msg;

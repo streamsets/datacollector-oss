@@ -27,12 +27,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -52,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.Comparator;
 import java.util.List;
@@ -71,15 +70,9 @@ public class RemoteDownloadSource extends BaseSource {
   private static final String MINUS_ONE = "-1";
   private static final String CONF_PREFIX = "conf.";
 
-  private final String remoteAddress;
-  private final String username;
-  private final String password;
+  private final RemoteDownloadConfigBean conf;
   private final File knownHostsFile;
-  private final boolean noHostChecking;
   private final ScheduledExecutorService queueingExecutor;
-  private final DataParserFormatConfig dataFormatConfig;
-  private final DataFormat dataFormat;
-  private final int pollInterval;
   private final File errorArchive;
   private final byte[] moveBuffer;
 
@@ -102,37 +95,18 @@ public class RemoteDownloadSource extends BaseSource {
   private FileObject remoteDir;
   private DataParser parser;
   private FileSystemManager fsManager;
-  private final boolean userDirIsRoot;
   private final FileSystemOptions options = new FileSystemOptions();
   private boolean polled = false;
 
-  public RemoteDownloadSource(
-      String remoteAddress,
-      boolean userDirIsRoot,
-      String username,
-      String password,
-      String knownHosts,
-      boolean noHostChecking,
-      DataParserFormatConfig dataFormatConfig,
-      DataFormat dataformat,
-      int pollInterval,
-      String errorArchive
-  ) {
-    this.remoteAddress = remoteAddress;
-    this.userDirIsRoot = userDirIsRoot;
-    this.username = username;
-    this.password = password;
-    if (knownHosts != null && !knownHosts.isEmpty()) {
-      this.knownHostsFile = new File(knownHosts);
+  public RemoteDownloadSource(RemoteDownloadConfigBean conf) {
+    this.conf = conf;
+    if (conf.knownHosts != null && !conf.knownHosts.isEmpty()) {
+      this.knownHostsFile = new File(conf.knownHosts);
     } else {
       this.knownHostsFile = null;
     }
-    this.noHostChecking = noHostChecking;
-    this.dataFormatConfig = dataFormatConfig;
-    this.dataFormat = dataformat;
-    this.pollInterval = pollInterval;
-    if (!errorArchive.isEmpty()) {
-      this.errorArchive = new File(errorArchive);
+    if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
+      this.errorArchive = new File(conf.errorArchiveDir);
       this.moveBuffer = new byte[64 * 1024];
     } else {
       this.errorArchive = null;
@@ -149,44 +123,80 @@ public class RemoteDownloadSource extends BaseSource {
   public List<ConfigIssue> init() {
 
     List<ConfigIssue> issues = super.init();
-    dataFormatConfig.init(
+    conf.dataFormatConfig.init(
         getContext(),
-        dataFormat,
+        conf.dataFormat,
         Groups.REMOTE.getLabel(),
         DATA_FORMAT_CONFIG_PREFIX,
         issues
     );
 
-    if (pollInterval <= 0) {
+    if (conf.pollInterval <= 0) {
       issues.add(getContext().createConfigIssue(
           Groups.REMOTE.getLabel(), CONF_PREFIX + "pollInterval", Errors.REMOTE_09));
     }
+
     try {
-      this.remoteURI = new URI(remoteAddress);
+      this.remoteURI = new URI(conf.remoteAddress);
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_01, remoteAddress));
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_01, conf.remoteAddress));
     }
+
     try {
       fsManager = VFS.getManager();
-      if (!username.isEmpty()) {
-        StaticUserAuthenticator auth = new StaticUserAuthenticator(remoteURI.getHost(), username, password);
-        DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
+      // If password is not specified, add the username to the URI
+      switch (conf.auth) {
+        case PRIVATE_KEY:
+          String schemeBase = remoteURI.getScheme() + "://";
+          remoteURI = new URI(schemeBase + conf.username + "@" + remoteURI.toString().substring(schemeBase.length()));
+          File privateKeyFile = new File(conf.privateKey);
+          if (!privateKeyFile.exists() || !privateKeyFile.isFile() || !privateKeyFile.canRead()) {
+            issues.add(getContext().createConfigIssue(
+                Groups.CREDENTIALS.getLabel(), CONF_PREFIX + "privateKey", Errors.REMOTE_10, conf.privateKey));
+          } else {
+            if (!remoteURI.getScheme().equals("sftp")) {
+              issues.add(getContext().createConfigIssue(
+                  Groups.CREDENTIALS.getLabel(), CONF_PREFIX + "privateKey", Errors.REMOTE_11));
+            } else {
+              SftpFileSystemConfigBuilder.getInstance().setIdentities(options, new File[]{privateKeyFile});
+              if (conf.privateKeyPassphrase != null && !conf.privateKeyPassphrase.isEmpty()) {
+                SftpFileSystemConfigBuilder.getInstance()
+                    .setUserInfo(options, new SDCUserInfo(conf.privateKeyPassphrase));
+              }
+            }
+          }
+          break;
+        case PASSWORD:
+          StaticUserAuthenticator auth = new StaticUserAuthenticator(
+              remoteURI.getHost(), conf.username, conf.password);
+          DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
+          break;
+        default:
+          break;
       }
+
       if (remoteURI.getScheme().equals("ftp")) {
         FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
-        FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, userDirIsRoot);
+        FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, conf.userDirIsRoot);
+        if (conf.strictHostChecking) {
+          issues.add(getContext().createConfigIssue(
+              Groups.CREDENTIALS.getLabel(), CONF_PREFIX + "strictHostChecking", Errors.REMOTE_12));
+        }
       }
+
       if (remoteURI.getScheme().equals("sftp")) {
-        SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, userDirIsRoot);
-        if (!noHostChecking) {
+        SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, conf.userDirIsRoot);
+        if (conf.strictHostChecking) {
           if (knownHostsFile != null) {
             if (knownHostsFile.exists() && knownHostsFile.isFile() && knownHostsFile.canRead()) {
               SftpFileSystemConfigBuilder.getInstance().setKnownHosts(options, knownHostsFile);
+              SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(options, "yes");
             } else {
               issues.add(getContext().createConfigIssue(
                   Groups.CREDENTIALS.getLabel(), CONF_PREFIX + "knownHosts", Errors.REMOTE_06, knownHostsFile));
             }
+
           } else {
             issues.add(getContext().createConfigIssue(
                 Groups.CREDENTIALS.getLabel(), CONF_PREFIX +"strictHostChecking", Errors.REMOTE_07));
@@ -195,11 +205,17 @@ public class RemoteDownloadSource extends BaseSource {
           SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(options, "no");
         }
       }
-    } catch (FileSystemException ex) {
-      issues.add(getContext().createConfigIssue(
-          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, remoteAddress));
-    }
 
+      if (issues.isEmpty()) {
+        // To ensure we can connect, else we fail validation.
+        remoteDir = fsManager.resolveFile(remoteURI.toString(), options);
+      }
+
+    } catch (FileSystemException | URISyntaxException ex) {
+      issues.add(getContext().createConfigIssue(
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, conf.remoteAddress));
+      LOG.error("Error trying to login to remote host", ex);
+    }
     return issues;
   }
 
@@ -242,7 +258,7 @@ public class RemoteDownloadSource extends BaseSource {
               currentOffset = new Offset(next.remoteObject.getName().getBaseName(),
                   next.remoteObject.getContent().getLastModifiedTime(), 0L);
             }
-            parser = dataFormatConfig.getParserFactory().getParser(
+            parser = conf.dataFormatConfig.getParserFactory().getParser(
                 currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
           }
         } else {
@@ -317,7 +333,7 @@ public class RemoteDownloadSource extends BaseSource {
             LOG.error("Error while attempting to add files to the download queue.", ex);
           }
         }
-      }, pollInterval, pollInterval, TimeUnit.SECONDS);
+      }, conf.pollInterval, conf.pollInterval, TimeUnit.SECONDS);
     }
   }
 
@@ -472,6 +488,44 @@ public class RemoteDownloadSource extends BaseSource {
 
     private String getOffsetStr() {
       return fileName + OFFSET_DELIMITER + timestamp + OFFSET_DELIMITER + offset;
+    }
+  }
+
+  private static class SDCUserInfo implements com.jcraft.jsch.UserInfo {
+
+    private final String passphrase;
+
+    SDCUserInfo(String passphrase) {
+      this.passphrase = passphrase;
+    }
+
+    @Override
+    public String getPassphrase() {
+      return passphrase;
+    }
+
+    @Override
+    public String getPassword() {
+      return null;
+    }
+
+    @Override
+    public boolean promptPassphrase(String message) {
+      return true;
+    }
+
+    @Override
+    public boolean promptYesNo(String message) {
+      return false;
+    }
+
+    @Override
+    public void showMessage(String message) {
+    }
+
+    @Override
+    public boolean promptPassword(String message) {
+      return false;
     }
   }
 

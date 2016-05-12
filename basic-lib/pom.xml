@@ -314,6 +314,14 @@
       <version>2.6</version>
       <scope>test</scope>
     </dependency>
+    <!-- LGPL - Make sure we do not ship it -->
+    <dependency>
+      <groupId>com.github.fommil</groupId>
+      <artifactId>openssh</artifactId>
+      <version>1.0</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>

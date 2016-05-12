@@ -245,6 +245,8 @@
             <exclude>commonlib/src/test/resources/*.ser</exclude>
             <exclude>commonlib/src/main/resources/*</exclude>
             <exclude>basic-lib/src/test/resources/*.ser</exclude>
+            <exclude>**/id_rsa_test</exclude>
+            <exclude>**/*.pub</exclude>
 
             <!-- TestOverrunStreamingXmlParser relies on this file being small, cannot add license header -->
             <exclude>common/src/test/resources/TestStreamingXmlParser-records.xml</exclude>

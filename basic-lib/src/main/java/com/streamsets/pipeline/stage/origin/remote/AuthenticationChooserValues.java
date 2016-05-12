@@ -19,32 +19,11 @@
  */
 package com.streamsets.pipeline.stage.origin.remote;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@StageDef(
-    version = 1,
-    label = "SFTP/FTP Client",
-    description = "Uses an SFTP/FTP client to read records from an URL.",
-    icon = "httpclient.png",
-    execution = ExecutionMode.STANDALONE,
-    recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
-)
-@GenerateResourceBundle
-@ConfigGroups(Groups.class)
-public class RemoteDownloadDSource extends DSource{
+public class AuthenticationChooserValues extends BaseEnumChooserValues<Authentication> {
 
-  @ConfigDefBean
-  public RemoteDownloadConfigBean conf;
-
-  @Override
-  protected Source createSource() {
-    return new RemoteDownloadSource(conf);
+  public AuthenticationChooserValues() {
+    super(Authentication.NONE, Authentication.PASSWORD, Authentication.PRIVATE_KEY);
   }
 }
