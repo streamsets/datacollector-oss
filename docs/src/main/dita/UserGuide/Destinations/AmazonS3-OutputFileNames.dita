@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lkp_jd3_yv">
+ <title>Output File Names</title>
+ <conbody>
+        <p><indexterm>Amazon S3 destination<indexterm>output file names</indexterm></indexterm>The
+            Amazon S3 destination creates a file for each batch of data written. Output files use
+            the following naming convention:
+            <codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter></codeblock></p>
+        <p>For example: <codeph>sdc-1462405014177-1</codeph>.</p>
+        <p>You can configure the file name prefix. The UTC timestamp is the time when the file is
+            created, to the millisecond. The counter is used when multiple files are created in the
+            same millisecond. </p>
+ </conbody>
+</concept>

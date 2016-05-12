@@ -65,13 +65,13 @@
                                 </row>
                                 <row>
                                     <entry>File Name Prefix <xref
-                                            href="../Destinations/AmazonS3.dita">
+                                            href="AmazonS3-OutputFileNames.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_d34_kf2_wv"/>
                                         </xref></entry>
                                     <entry>Defines a prefix for output file names. By default, file
-                                        names start with "sdc" as follows: sdc-&lt;UTC
-                                        timestamp>-&lt;counter>. </entry>
+                                        names start with "sdc" as follows: <codeph>sdc-&lt;UTC
+                                            timestamp>-&lt;counter></codeph>. </entry>
                                 </row>
                                 <row>
                                     <entry>Data Format <xref

@@ -21,13 +21,9 @@
  <conbody>
         <p><indexterm>Amazon S3
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Amazon
-                    S3</indexterm></indexterm>The destination creates a file for each batch of data
-            written to the Amazon S3. Output files use the following naming convention:
-            <codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter></codeblock></p>
-        <p>For example: <codeph>sdc-1462405014177-1</codeph>.</p>
-        <p>You can configure the file name prefix. The UTC timestamp is the time when the file is
-            created, to the millisecond. The counter is used when multiple files are created in the
-            same millisecond. </p>
-  <p>You can optionally use a proxy user and compress data with gzip when writing to Amazon S3.</p>
+                    S3</indexterm></indexterm>With the Amazon S3 destination, you configure the
+            region, bucket, and common prefix to define where to write the data. You can optionally
+            use a proxy user and compress data with gzip when writing to Amazon S3.</p>
+        <p>The destination creates a file for each batch of data written to Amazon S3. </p>
  </conbody>
 </concept>

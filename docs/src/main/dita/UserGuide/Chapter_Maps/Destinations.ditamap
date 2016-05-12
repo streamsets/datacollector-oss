@@ -26,6 +26,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/AmazonS3-OutputFileNames.dita"/>
    <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
   </topicref>
