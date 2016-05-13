@@ -122,7 +122,7 @@ if [ "$1" = "start" ] ; then
       fi
     fi
   fi
-  nohup /bin/bash $BASEDIR/libexec/_sdc -skipenvsourcing -verbose &>$SDC_LOG/sdc.out </dev/null &
+  nohup /bin/bash $BASEDIR/libexec/_sdc -skipenvsourcing -verbose -exec &>$SDC_LOG/sdc.out </dev/null &
   echo $! > "$SDC_PID"
   for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 # both seq and {k..n} don't always exist
   do
