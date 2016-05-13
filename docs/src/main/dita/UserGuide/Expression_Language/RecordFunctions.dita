@@ -94,18 +94,11 @@
    </dlentry>
    <dlentry>
     <dt>record:valueOrDefault('&lt;field path>' , &lt;default value>)</dt>
-    <dd>Returns the value of the field in the appropriate data type. If the field does not exist,
-     returns the default value. If the field is null, the function returns a null value. </dd>
-    <dd>Use to provide a default value when a field does not exist. </dd>
+    <dd>Returns the value of the field in the appropriate data type. If the field does not exist or
+     if the field is null, returns the default value.</dd>
+    <dd>Use to provide a default value when a field does not exist or when a field is null. </dd>
     <dd>Return type: Variable, based on whether the function returns the field value or default
      value.</dd>
-    <dd>
-     <p>
-      <note outputclass="" othertype="" type="tip">To replace null values, you might add a tertiary
-       operator as
-       follows:<codeblock>record:value('/field path') == null ? '&lt;default value&gt;' : record:value('/field path')</codeblock></note>
-     </p>
-    </dd>
    </dlentry>
   </dl>
  </conbody>

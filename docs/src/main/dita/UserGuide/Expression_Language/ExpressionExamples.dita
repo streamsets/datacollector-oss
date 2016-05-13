@@ -74,8 +74,8 @@
                     <tbody>
                         <row>
                             <entry>${record:valueOrDefault('/Payment', 'unknown')} </entry>
-                            <entry>Replaces missing values in the Payment field with
-                                "unknown".</entry>
+                            <entry>Replaces missing or null values in the Payment field with
+                                "unknown". </entry>
                         </row>
                         <row>
                             <entry>${str:toUpper(record:value('/STATE')}</entry>

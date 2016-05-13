@@ -845,18 +845,16 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <dlentry>
                               <dt>record:valueOrDefault function</dt>
                               <dd>You can use the following expression to use the value of a field
-                                    and the specified default value if the field does not exist:
+                                    and the specified default value if the field does not exist or
+                                    if the field is null:
                                     <codeblock>${record:valueOrDefault("/&lt;field name>", &lt;default value>)}</codeblock></dd>
                               <dd>For example, the following directory template creates a directory
                                     based on the product field every day, and if the product field
-                                    is empty, uses Misc in the directory path:
+                                    is empty or null, uses Misc in the directory path:
                                     <codeblock>/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</codeblock></dd>
                               <dd>This template might create the following
                                     paths:<codeblock>/Shirts/2015-07-31 
 /Misc/2015-07-31</codeblock></dd>
-                              <dd>For a tip on how to replace null values, see <xref
-                                          href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"
-                                    />.</dd>
                         </dlentry>
                   </dl></p>
             <draft-comment author="alisontaylor">Time Basis - used for Hadoop FS, Local FS, and MapR
