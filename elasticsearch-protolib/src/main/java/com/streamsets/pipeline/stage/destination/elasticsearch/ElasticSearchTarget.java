@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -38,6 +39,8 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.http.client.fluent.Request;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
@@ -76,6 +79,7 @@ public class ElasticSearchTarget extends BaseTarget {
   private ELEval typeEval;
   private ELEval docIdEval;
   private DataGeneratorFactory generatorFactory;
+  private ErrorRecordHandler errorRecordHandler;
   private Client elasticClient;
 
   public ElasticSearchTarget(ElasticSearchConfigBean conf) {
@@ -104,6 +108,7 @@ public class ElasticSearchTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     indexEval = getContext().createELEval("indexTemplate");
     typeEval = getContext().createELEval("typeTemplate");
@@ -382,18 +387,15 @@ public class ElasticSearchTarget extends BaseTarget {
           bulkRequest.add(insert);
         }
       } catch (IOException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw new StageException(Errors.ELASTICSEARCH_15, record.getHeader().getSourceId(), ex.toString(), ex);
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                         getContext().getOnErrorRecord(), ex));
-        }
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                Errors.ELASTICSEARCH_15,
+                record.getHeader().getSourceId(),
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
     if (atLeastOne) {

@@ -21,17 +21,17 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +61,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
   private long recordCount;
   private DataParserFactory parserFactory;
+  private ErrorRecordHandler errorRecordHandler;
 
   private BlockingQueue<String> entityQueue;
   private HttpStreamConsumer httpConsumer;
@@ -75,6 +76,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(
@@ -165,12 +167,12 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
         try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
           parseChunk(parser, batchMaker);
         } catch (IOException | DataParserException e) {
-          handleError(Errors.HTTP_00, sourceId, e.toString(), e);
+          errorRecordHandler.onError(Errors.HTTP_00, sourceId, e.toString(), e);
         }
       }
     } else {
       // If http response status != 2xx
-      handleError(Errors.HTTP_01, lastResponseStatus.getStatusCode(), lastResponseStatus.getReasonPhrase());
+      errorRecordHandler.onError(Errors.HTTP_01, lastResponseStatus.getStatusCode(), lastResponseStatus.getReasonPhrase());
     }
 
     return getOffset();
@@ -195,22 +197,6 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
         recordCount++;
         record = parser.parse();
       }
-    }
-  }
-
-  private void handleError(ErrorCode errorCode, Object... context) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().reportError(errorCode, context);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(errorCode, context);
-      default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord())
-        );
     }
   }
 

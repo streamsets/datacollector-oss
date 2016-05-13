@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -33,6 +32,8 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -67,12 +68,14 @@ public class SpoolDirSource extends BaseSource {
 
   private DirectorySpooler spooler;
   private File currentFile;
+  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private DataParser parser;
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     boolean waitForPathToBePresent = !validateDir(
         conf.spoolDir, Groups.FILES.name(),
@@ -482,18 +485,7 @@ public class SpoolDirSource extends BaseSource {
         } catch (ObjectLengthException ex) {
           String exOffset = offset;
           offset = MINUS_ONE;
-          switch (getContext().getOnErrorRecord()) {
-            case DISCARD:
-              break;
-            case TO_ERROR:
-              getContext().reportError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
-              break;
-            case STOP_PIPELINE:
-              throw new StageException(Errors.SPOOLDIR_02, sourceFile, exOffset);
-            default:
-              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                  getContext().getOnErrorRecord(), ex));
-          }
+          errorRecordHandler.onError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
         }
       }
     } catch (IOException|DataParserException ex) {

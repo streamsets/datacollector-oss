@@ -40,6 +40,8 @@ import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.impl.Pair;
 
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.file.FileReader;
@@ -99,6 +101,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private final DataChannel dataChannel;
   private final Producer producer;
   private final Consumer consumer;
+  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private UserGroupInformation loginUgi;
   private long recordsProduced;
@@ -125,6 +128,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     validateHadoopFS(issues);
     // This is for getting no of splits - no of executors
     hadoopConf.set(FileInputFormat.LIST_STATUS_NUM_THREADS, "5"); // Per Hive-on-Spark
@@ -699,7 +704,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         }
       } catch (IOException | DataParserException ex) {
         LOG.debug("Got exception: '{}'", ex, ex);
-        handleException(messageId, ex);
+        errorRecordHandler.onError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
       }
     } else {
       try (DataParser parser = parserFactory.getParser(messageId, String.valueOf(message))) {
@@ -710,7 +715,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         }
       } catch (IOException | DataParserException ex) {
         LOG.debug("Got exception: '{}'", ex, ex);
-        handleException(messageId, ex);
+        errorRecordHandler.onError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
       }
     }
     if (conf.produceSingleRecordPerMessage) {
@@ -770,25 +775,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
     } catch (InterruptedException e) {
       LOG.warn("Thread interrupted while waiting on receving the done flag" + e, e);
-    }
-  }
-
-  private void handleException(String messageId, Exception ex) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().reportError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
-        break;
-      case STOP_PIPELINE:
-        if (ex instanceof StageException) {
-          throw (StageException) ex;
-        } else {
-          throw new StageException(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-          getContext().getOnErrorRecord(), ex));
     }
   }
 

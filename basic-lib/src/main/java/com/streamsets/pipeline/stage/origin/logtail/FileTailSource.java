@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -40,6 +39,8 @@ import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -83,6 +84,7 @@ public class FileTailSource extends BaseSource {
 
   private long maxWaitTimeMillis;
 
+  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private String outputLane;
   private String metadataLane;
@@ -213,6 +215,8 @@ public class FileTailSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
       if (conf.archiveDir == null || conf.archiveDir.isEmpty()) {
         issues.add(
@@ -440,7 +444,7 @@ public class FileTailSource extends BaseSource {
               recordCounter++;
             }
           } catch (IOException | DataParserException ex) {
-            handleException(sourceId, ex);
+            errorRecordHandler.onError(Errors.TAIL_12, sourceId, ex.toString(), ex);
           }
         }
       }
@@ -517,25 +521,6 @@ public class FileTailSource extends BaseSource {
       calibrateMetric(multiDirReader.getPendingFiles(), pendingFilesMetric, PENDING_FILES);
     } catch (IOException ex) {
       LOG.warn("Error while Calculating Pending Files Metric {}", ex.toString(), ex);
-    }
-  }
-
-  private void handleException(String sourceId, Exception ex) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().reportError(Errors.TAIL_12, sourceId, ex.toString(), ex);
-        break;
-      case STOP_PIPELINE:
-        if (ex instanceof StageException) {
-          throw (StageException) ex;
-        } else {
-          throw new StageException(Errors.TAIL_12, sourceId, ex.toString(), ex);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            getContext().getOnErrorRecord(), ex));
     }
   }
 }

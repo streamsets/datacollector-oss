@@ -43,7 +43,6 @@ public enum Errors implements ErrorCode {
   IPC_DEST_15("Could not connect to any SDC RPC destination: {}"),
 
   IPC_DEST_20("Could not transmit: {}"),
-  IPC_DEST_21("Invalid OnErrorRecord setting '{}'"),
 
   ;
 

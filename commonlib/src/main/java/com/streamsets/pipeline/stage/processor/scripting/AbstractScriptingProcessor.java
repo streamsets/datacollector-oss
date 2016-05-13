@@ -22,8 +22,11 @@ package com.streamsets.pipeline.stage.processor.scripting;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 
 import javax.script.Compilable;
@@ -57,13 +60,15 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private final ProcessingMode processingMode;
   private final  String script;
   private final SimpleBindings bindings = new SimpleBindings();
-  private CompiledScript compiledScript;
-  private ScriptObjectFactory scriptObjectFactory;
-  protected ScriptEngine engine;
-  private Err err;
-
   // State obj for use by end-user scripts.
   private final Object state;
+
+  private CompiledScript compiledScript;
+  private ScriptObjectFactory scriptObjectFactory;
+  private ErrorRecordHandler errorRecordHandler;
+  private Err err;
+
+  protected ScriptEngine engine;
 
   public AbstractScriptingProcessor(
       Logger log,
@@ -96,6 +101,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     try {
       engine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName(scriptingEngineName);
       if (engine == null) {
@@ -179,7 +186,14 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     } catch (ScriptException ex) {
       switch (processingMode) {
         case RECORD:
-          handleRecordModeError(records, ex);
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  getScriptObjectFactory().getRecord(records.get(0)),
+                  Errors.SCRIPTING_05,
+                  ex.toString(),
+                  ex
+              )
+          );
           break;
         case BATCH:
           throw new StageException(Errors.SCRIPTING_06, ex.toString(), ex);
@@ -190,27 +204,6 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       }
     }
 
-  }
-
-  private void handleRecordModeError(List<ScriptRecord> records, ScriptException ex) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR: // NOSONAR
-        getContext().toError(
-            getScriptObjectFactory().getRecord(records.get(0)),
-            Errors.SCRIPTING_05,
-            ex.toString(),
-            ex
-        );
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(Errors.SCRIPTING_05, ex.toString(), ex);
-      default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), ex)
-        );
-    }
   }
 
   private void runScript(SimpleBindings bindings) throws ScriptException {

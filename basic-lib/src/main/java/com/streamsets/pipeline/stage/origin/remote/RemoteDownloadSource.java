@@ -31,6 +31,8 @@ import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -97,6 +99,7 @@ public class RemoteDownloadSource extends BaseSource {
   private FileSystemManager fsManager;
   private final FileSystemOptions options = new FileSystemOptions();
   private boolean polled = false;
+  private ErrorRecordHandler errorRecordHandler;
 
   public RemoteDownloadSource(RemoteDownloadConfigBean conf) {
     this.conf = conf;
@@ -123,6 +126,8 @@ public class RemoteDownloadSource extends BaseSource {
   public List<ConfigIssue> init() {
 
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     conf.dataFormatConfig.init(
         getContext(),
         conf.dataFormat,
@@ -286,8 +291,7 @@ public class RemoteDownloadSource extends BaseSource {
     return offset;
   }
 
-  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker)
-      throws IOException, DataParserException, StageException {
+  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker) throws IOException, StageException {
     String offset = MINUS_ONE;
     for (int i = 0; i < maxBatchSize; i++) {
       try {
@@ -303,18 +307,7 @@ public class RemoteDownloadSource extends BaseSource {
           break;
         }
       } catch (ObjectLengthException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().reportError(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
-            break;
-          case STOP_PIPELINE:
-            throw new StageException(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                getContext().getOnErrorRecord(), ex));
-        }
+        errorRecordHandler.onError(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
       }
     }
     return offset;

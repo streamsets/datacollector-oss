@@ -32,8 +32,8 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitCxnManager;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitUtil;
-import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

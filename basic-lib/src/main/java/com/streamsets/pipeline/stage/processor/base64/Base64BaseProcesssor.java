@@ -26,16 +26,27 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.util.CommonError;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 
 import java.util.Iterator;
+import java.util.List;
 
 abstract class Base64BaseProcesssor extends SingleLaneRecordProcessor {
   private final String originFieldPath;
   private final String resultFieldPath;
+  private ErrorRecordHandler errorRecordHandler;
 
   protected Base64BaseProcesssor(String originFieldPath, String resultFieldPath) {
     this.originFieldPath = originFieldPath;
     this.resultFieldPath = resultFieldPath;
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    return issues;
   }
 
   @Override
@@ -59,21 +70,13 @@ abstract class Base64BaseProcesssor extends SingleLaneRecordProcessor {
       }
       batchMaker.addRecord(record);
     } catch (OnRecordErrorException error) {
-      handleErrorRecord(record, error);
-    }
-  }
-
-  private void handleErrorRecord(Record errorRecord, OnRecordErrorException e) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(errorRecord, e);
-        break;
-      case STOP_PIPELINE:
-        throw e;
-      default:
-        throw new IllegalStateException("Unknown OnError: " + getContext().getOnErrorRecord());
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              record,
+              error.getErrorCode(),
+              error.getParams()
+          )
+      );
     }
   }
 

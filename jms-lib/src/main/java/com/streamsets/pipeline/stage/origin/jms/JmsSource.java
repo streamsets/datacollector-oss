@@ -35,7 +35,6 @@ import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 public class JmsSource extends BaseSource implements OffsetCommitter {

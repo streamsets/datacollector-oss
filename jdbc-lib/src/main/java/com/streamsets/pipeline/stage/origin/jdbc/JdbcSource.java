@@ -29,8 +29,8 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -420,9 +420,9 @@ public class JdbcSource extends BaseSource {
         }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
       } catch (SQLException e) {
-        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage());
+        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage(), e);
       } catch (IOException e) {
-        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value);
+        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value, e);
       }
     }
 

@@ -45,7 +45,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +97,7 @@ public class CassandraTarget extends BaseTarget {
 
   private SortedMap<String, String> columnMappings;
   private LoadingCache<SortedSet<String>, PreparedStatement> statementCache;
+  private ErrorRecordHandler errorRecordHandler;
 
   public CassandraTarget(
       final List<String> addresses,
@@ -117,6 +120,7 @@ public class CassandraTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     Target.Context context = getContext();
     if (addresses.isEmpty()) {
@@ -350,19 +354,15 @@ public class CassandraTarget extends BaseTarget {
     } catch (InvalidTypeException | NullPointerException e) {
       // NPE can occur if one of the values is a collection type with a null value inside it. Thus, it's a record
       // error. Note that this runs the risk of mistakenly treating a bug as a record error.
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString(), e);
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
-        default:
-          throw new IllegalStateException(
-              Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
-          );
-      }
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              record,
+              Errors.CASSANDRA_06,
+              record.getHeader().getSourceId(),
+              e.toString(),
+              e
+          )
+      );
     }
     return boundStmt;
   }

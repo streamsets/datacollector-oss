@@ -28,6 +28,8 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 import com.streamsets.pipeline.lib.util.CommonError;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,6 +58,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final String fieldDelimiter;
   private final String attrDelimiter;
   private final DocumentBuilderFactory factory;
+  private ErrorRecordHandler errorRecordHandler;
 
   public XMLFlatteningProcessor(
       String fieldPath,
@@ -79,6 +82,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> init() {
     super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     List<ConfigIssue> issues = new ArrayList<>();
     String invalidCharsRegex = ".*[\\]\\[\\'\\\"\\/]+.*";
@@ -134,24 +138,23 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
           singleLaneBatchMaker.addRecord(result);
         }
       } catch (OnRecordErrorException ex) {
-        handleErrorRecord(record, ex);
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                ex.getErrorCode(),
+                ex.getParams()
+            )
+        );
       } catch (Exception ex) {
-        handleErrorRecord(record, new OnRecordErrorException(DataFormatErrors.DATA_FORMAT_303, xmlData, ex));
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                DataFormatErrors.DATA_FORMAT_303,
+                xmlData,
+                ex
+            )
+        );
       }
-    }
-  }
-
-  private void handleErrorRecord(Record errorRecord, OnRecordErrorException e) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(errorRecord, e);
-        break;
-      case STOP_PIPELINE:
-        throw e;
-      default:
-        throw new IllegalStateException("Unknown OnError: " + getContext().getOnErrorRecord());
     }
   }
 

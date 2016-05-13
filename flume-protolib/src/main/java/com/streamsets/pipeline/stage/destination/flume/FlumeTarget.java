@@ -23,11 +23,14 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.flume.FlumeErrors;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.event.EventBuilder;
@@ -50,6 +53,7 @@ public class FlumeTarget extends BaseTarget {
   private final FlumeConfigBean flumeConfigBean;
 
   private ByteArrayOutputStream baos;
+  private ErrorRecordHandler errorRecordHandler;
 
   public FlumeTarget (FlumeConfigBean flumeConfigBean) {
     this.flumeConfigBean = flumeConfigBean;
@@ -63,6 +67,8 @@ public class FlumeTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     flumeConfigBean.init(getContext(), issues);
 
     if (issues.isEmpty()) {
@@ -100,8 +106,16 @@ public class FlumeTarget extends BaseTarget {
         generator.write(record);
         generator.close();
         events.add(EventBuilder.withBody(baos.toByteArray(), headers));
-      } catch (IOException | StageException ex) {
-        handleException(ex, record);
+      } catch (IOException | DataGeneratorException ex) {
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                FlumeErrors.FLUME_50,
+                record.getHeader().getSourceId(),
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
     writeToFlume(events);
@@ -125,30 +139,19 @@ public class FlumeTarget extends BaseTarget {
       currentRecord = null;
       generator.close();
       events.add(EventBuilder.withBody(baos.toByteArray()));
-    } catch (IOException | StageException ex) {
-      handleException(ex, currentRecord);
+    } catch (IOException | DataGeneratorException ex) {
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              currentRecord,
+              FlumeErrors.FLUME_50,
+              currentRecord.getHeader().getSourceId(),
+              ex.toString(),
+              ex
+          )
+      );
     }
     writeToFlume(events);
     LOG.debug("Wrote {} records in this batch.", count);
-  }
-
-  private void handleException(Exception ex, Record record) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, ex);
-        break;
-      case STOP_PIPELINE:
-        if (ex instanceof StageException) {
-          throw (StageException) ex;
-        } else {
-          throw new StageException(FlumeErrors.FLUME_50, record.getHeader().getSourceId(), ex.toString(), ex);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-          getContext().getOnErrorRecord()));
-    }
   }
 
   private void writeToFlume(List<Event> events) throws StageException {

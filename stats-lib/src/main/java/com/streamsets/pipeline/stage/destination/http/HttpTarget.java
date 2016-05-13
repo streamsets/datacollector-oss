@@ -31,7 +31,10 @@ import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.slf4j.Logger;
@@ -71,12 +74,13 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   private final String pipelineCommitId;
   private final String jobId;
   private final int waitTimeBetweenUpdates;
+  private final Map<String, Record> sdcIdToRecordMap;
 
   private Client client;
   private WebTarget target;
   private boolean commit;
   private Stopwatch stopwatch;
-  private final Map<String, Record> sdcIdToRecordMap;
+  private ErrorRecordHandler errorRecordHandler;
 
   public HttpTarget(
       String targetUrl,
@@ -124,33 +128,13 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     client.register(GZipEncoder.class);
     target = client.target(targetUrl);
     stopwatch = Stopwatch.createStarted();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return Collections.emptyList();
   }
 
   @Override
   public void destroy() {
     client.close();
-  }
-
-  private void handleException(Exception e, Record currentRecord) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(currentRecord, e);
-        break;
-      case STOP_PIPELINE:
-        if (e instanceof StageException) {
-          LOG.error(e.getMessage());
-          throw (StageException) e;
-        } else {
-          LOG.error(Utils.format(Errors.HTTP_01.getMessage(), currentRecord.getHeader().getSourceId(), e.toString(), e));
-          throw new StageException(Errors.HTTP_01, currentRecord.getHeader().getSourceId(), e.toString(), e);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnErrorRecord option '{}'",
-          getContext().getOnErrorRecord()));
-    }
   }
 
   @Override
@@ -168,7 +152,15 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
         sdcMetricsJsonList.add(sdcMetricsJson);
       }
     } catch (IOException e) {
-      handleException(e, tempRecord);
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              tempRecord,
+              Errors.HTTP_01,
+              tempRecord.getHeader().getSourceId(),
+              e.toString(),
+              e
+          )
+      );
     }
     return sdcMetricsJsonList;
   }

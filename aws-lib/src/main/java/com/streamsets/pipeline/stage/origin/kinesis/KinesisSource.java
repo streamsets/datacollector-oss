@@ -27,15 +27,15 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ExtendedSequenceNumber
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
 import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
@@ -68,6 +68,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   private Worker worker;
   private BlockingQueue<RecordsAndCheckpointer> batchQueue;
   private IRecordProcessorCheckpointer checkpointer;
+  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
 
   public KinesisSource(KinesisConsumerConfigBean conf) {
@@ -77,6 +78,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     KinesisUtil.checkStreamExists(conf.region, conf.streamName, conf.awsConfig, issues, getContext());
 
@@ -199,7 +201,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
           }
         }
       } catch (IOException | DataParserException e) {
-        handleErrorRecord(e, Errors.KINESIS_03, lastSourceOffset);
+        errorRecordHandler.onError(Errors.KINESIS_03, lastSourceOffset, e);
       } catch (InterruptedException ignored) {
         // pipeline shutdown request.
       }
@@ -244,26 +246,6 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       }
     } else if(isPreview) {
       LOG.debug("Not checkpointing because this origin is in preview mode.");
-    }
-  }
-
-  private void handleErrorRecord(
-      Throwable e,
-      ErrorCode errorCode,
-      Object... context
-  ) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().reportError(errorCode, context, e);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(errorCode, context);
-      default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
-        );
     }
   }
 }

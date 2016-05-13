@@ -30,6 +30,8 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import org.apache.hadoop.conf.Configuration;
@@ -52,6 +54,7 @@ public class HdfsTarget extends BaseTarget {
   public static final String TARGET_DIRECTORY_HEADER = "targetDirectory";
 
   private final HdfsTargetConfigBean hdfsTargetConfigBean;
+  private ErrorRecordHandler errorRecordHandler;
   private Date batchTime;
 
   public HdfsTarget(HdfsTargetConfigBean hdfsTargetConfigBean) {
@@ -61,6 +64,7 @@ public class HdfsTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     hdfsTargetConfigBean.init(getContext(), issues);
     return issues;
   }
@@ -100,18 +104,13 @@ public class HdfsTarget extends BaseTarget {
               try {
                 write(record);
               } catch (OnRecordErrorException ex) {
-                switch (getContext().getOnErrorRecord()) {
-                  case DISCARD:
-                    break;
-                  case TO_ERROR:
-                    getContext().toError(record, ex);
-                    break;
-                  case STOP_PIPELINE:
-                    throw ex;
-                  default:
-                    throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                                 getContext().getOnErrorRecord(), ex));
-                }
+                errorRecordHandler.onError(
+                    new OnRecordErrorException(
+                        record,
+                        ex.getErrorCode(),
+                        ex.getParams()
+                    )
+                );
               }
             }
             hdfsTargetConfigBean.getCurrentWriters().flushAll();

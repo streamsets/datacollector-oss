@@ -27,6 +27,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -34,6 +36,8 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
@@ -56,12 +60,13 @@ import java.util.concurrent.Future;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 
-public class KinesisTarget extends BaseKinesisTarget {
+public class KinesisTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisTarget.class);
 
   private final KinesisProducerConfigBean conf;
   private final Properties additionalConfigs = new Properties();
 
+  private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
   private KinesisProducer kinesisProducer;
   private Partitioner partitioner;
@@ -77,6 +82,7 @@ public class KinesisTarget extends BaseKinesisTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     createPartitioner(issues);
 
@@ -200,7 +206,15 @@ public class KinesisTarget extends BaseKinesisTarget {
 
       } catch (IOException e) {
         LOG.error(Errors.KINESIS_05.getMessage(), record, e.toString(), e);
-        handleFailedRecord(record, e.toString());
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                Errors.KINESIS_05,
+                record,
+                e.toString(),
+                e
+            )
+        );
       }
     }
 

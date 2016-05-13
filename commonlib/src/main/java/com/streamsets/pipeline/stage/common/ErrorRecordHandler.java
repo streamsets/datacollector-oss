@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,27 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kinesis;
+package com.streamsets.pipeline.stage.common;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.kinesis.Errors;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
-abstract class BaseKinesisTarget extends BaseTarget {
-  protected void handleFailedRecord(Record record, final String cause) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, Errors.KINESIS_05, record, cause);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(Errors.KINESIS_05, record, cause);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            getContext().getOnErrorRecord()));
-    }
-  }
+import java.util.List;
+
+public interface ErrorRecordHandler {
+  void onError(ErrorCode errorCode, Object... params) throws StageException;
+  void onError(OnRecordErrorException error) throws StageException;
+  void onError(List<Record> batch, StageException error) throws StageException;
 }

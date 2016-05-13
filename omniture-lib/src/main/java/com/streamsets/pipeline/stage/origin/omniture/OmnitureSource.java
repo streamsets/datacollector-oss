@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -32,6 +31,8 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,7 @@ public class OmnitureSource extends BaseSource {
 
   private long recordCount;
   private DataParserFactory parserFactory;
+  private ErrorRecordHandler errorRecordHandler;
 
   private BlockingQueue<String> entityQueue;
   private OmniturePollingConsumer httpConsumer;
@@ -105,6 +107,7 @@ public class OmnitureSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> errors = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     // TODO: SDC-552 - Omniture origin should be recoverable
     entityQueue = new ArrayBlockingQueue<>(2 * batchSize);
@@ -179,23 +182,7 @@ public class OmnitureSource extends BaseSource {
           recordCount++;
         }
       } catch (IOException | DataParserException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().reportError(Errors.OMNITURE_00, sourceId, ex.toString(), ex);
-            break;
-          case STOP_PIPELINE:
-            if (ex instanceof StageException) {
-              throw (StageException) ex;
-            } else {
-              throw new StageException(Errors.OMNITURE_00, sourceId, ex.toString(), ex);
-            }
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                getContext().getOnErrorRecord(), ex));
-        }
-
+        errorRecordHandler.onError(Errors.OMNITURE_00, sourceId, ex.toString(), ex);
       }
     }
     return getOffset();

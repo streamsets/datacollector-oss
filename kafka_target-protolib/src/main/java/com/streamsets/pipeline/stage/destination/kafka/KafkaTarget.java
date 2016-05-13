@@ -23,12 +23,14 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +41,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class KafkaTarget extends BaseTarget {
 
@@ -49,6 +50,7 @@ public class KafkaTarget extends BaseTarget {
 
   private long recordCounter = 0;
   private SdcKafkaProducer kafkaProducer;
+  private ErrorRecordHandler errorRecordHandler;
 
   public KafkaTarget(KafkaConfigBean kafkaConfigBean) {
     this.kafkaConfigBean = kafkaConfigBean;
@@ -59,6 +61,7 @@ public class KafkaTarget extends BaseTarget {
     List<ConfigIssue> issues = super.init();
     kafkaConfigBean.init(getContext(), issues);
     kafkaProducer = kafkaConfigBean.kafkaConfig.getKafkaProducer();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return issues;
   }
 
@@ -93,18 +96,13 @@ public class KafkaTarget extends BaseTarget {
         //In this case we fail pipeline.
         throw ex;
       } catch (StageException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw ex;
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-              getContext().getOnErrorRecord()));
-        }
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                ex.getErrorCode(),
+                ex.getParams()
+            )
+        );
       }
       if(!topicError && !partitionError) {
         Map<String, List<Record>> perPartition = perTopic.get(topic);
@@ -142,18 +140,47 @@ public class KafkaTarget extends BaseTarget {
               generator.close();
               byte[] bytes = baos.toByteArray();
               kafkaProducer.enqueueMessage(entryTopic, bytes, partition);
-            } catch (IOException | StageException ex) {
+            } catch (StageException ex) {
+              errorRecordHandler.onError(
+                  list,
+                  new StageException(
+                      ex.getErrorCode(),
+                      ex.getParams()
+                  )
+              );
+            } catch (IOException ex) {
               //clear the message list
               kafkaProducer.clearMessages();
               String sourceId = (currentRecord == null) ? "<NONE>" : currentRecord.getHeader().getSourceId();
-              handleErrorRecords(list, sourceId, batch, partition, ex);
+              errorRecordHandler.onError(
+                  list,
+                  new StageException(
+                      KafkaErrors.KAFKA_60,
+                      sourceId,
+                      batch.getSourceOffset(),
+                      partition,
+                      ex.toString(),
+                      ex
+                  )
+              );
             }
             try {
               kafkaProducer.write();
             } catch (StageException ex) {
               if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
                 List<Exception> failedRecordException = (List<Exception>) ex.getParams()[1];
-                handleErrorRecords(list, "<NONE>", batch, partition, failedRecordException.get(0));
+                Exception error = failedRecordException.get(0);
+                errorRecordHandler.onError(
+                    list,
+                    new StageException(
+                        KafkaErrors.KAFKA_60,
+                        "<NONE>",
+                        batch.getSourceOffset(),
+                        partition,
+                        error.toString(),
+                        error
+                    )
+                );
               } else {
                 throw ex;
               }
@@ -163,26 +190,6 @@ public class KafkaTarget extends BaseTarget {
           }
         }
       }
-    }
-  }
-
-  private void handleErrorRecords(List<Record> list, String sourceId, Batch batch, String partition, Exception ex)
-    throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        LOG.warn("All records from batch '{}' for partition '{}' are " + "discarded, error: {}",
-          batch.getSourceOffset(), partition, ex.toString(), ex);
-        break;
-      case TO_ERROR:
-        for (Record record : list) {
-          getContext().toError(record, KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
-            ex.toString(), ex);
-        }
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(), ex);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord()));
     }
   }
 
@@ -208,8 +215,24 @@ public class KafkaTarget extends BaseTarget {
         // even after retrying with backoff as specified in the retry and backoff config options
         // In this case we fail pipeline.
         throw ex;
-      } catch (IOException | StageException ex) {
-        handleErrorRecords(record, ex);
+      } catch (StageException ex) {
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                ex.getErrorCode(),
+                ex.getParams()
+            )
+        );
+      } catch (IOException ex) {
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                KafkaErrors.KAFKA_51,
+                record.getHeader().getSourceId(),
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
     try {
@@ -219,7 +242,17 @@ public class KafkaTarget extends BaseTarget {
         List<Integer> failedRecordIndices = (List<Integer>) ex.getParams()[0];
         List<Exception> failedRecordExceptions = (List<Exception>) ex.getParams()[1];
         for (int i = 0; i < failedRecordIndices.size(); i++) {
-          handleErrorRecords(recordList.get(failedRecordIndices.get(i)), failedRecordExceptions.get(i));
+          Record record = recordList.get(failedRecordIndices.get(i));
+          Exception error = failedRecordExceptions.get(i);
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  record,
+                  KafkaErrors.KAFKA_51,
+                  record.getHeader().getSourceId(),
+                  error.toString(),
+                  error
+              )
+          );
         }
       } else {
         throw ex;
@@ -227,25 +260,6 @@ public class KafkaTarget extends BaseTarget {
     }
     recordCounter += count;
     LOG.debug("Wrote {} records in this batch.", count);
-  }
-
-  private void handleErrorRecords(Record record, Exception ex) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, ex);
-        break;
-      case STOP_PIPELINE:
-        if (ex instanceof StageException) {
-          throw (StageException) ex;
-        } else {
-          throw new StageException(KafkaErrors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                     getContext().getOnErrorRecord()));
-    }
   }
 
   @Override

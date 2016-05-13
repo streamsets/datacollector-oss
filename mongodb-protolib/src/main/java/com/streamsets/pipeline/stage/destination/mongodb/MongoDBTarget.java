@@ -40,9 +40,9 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
-import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,6 @@ import java.util.List;
 public class MongoDBTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBTarget.class);
-  private ErrorRecordHandler errorRecordHandler;
 
   public static final String OPERATION_KEY = "SDC.MONGODB.OPERATION";
   public static final String INSERT = "INSERT";
@@ -67,6 +66,7 @@ public class MongoDBTarget extends BaseTarget {
 
   private final MongoTargetConfigBean mongoTargetConfigBean;
   private MongoCollection<Document> coll;
+  private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
   private MongoClient mongoClient;
 

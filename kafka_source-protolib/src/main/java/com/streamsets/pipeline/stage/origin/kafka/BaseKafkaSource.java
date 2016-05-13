@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
@@ -37,6 +37,8 @@ import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected final KafkaConfigBean conf;
   protected SdcKafkaConsumer kafkaConsumer;
 
+  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private int originParallelism = 0;
   private SdcKafkaValidationUtil kafkaValidationUtil;
@@ -61,6 +64,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     if (conf.topic == null || conf.topic.isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
@@ -218,7 +223,15 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     } catch (IOException|DataParserException ex) {
       Record record = getContext().createRecord(messageId);
       record.set(Field.create(payload));
-      handleException(messageId, ex, record);
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              record,
+              KafkaErrors.KAFKA_37,
+              messageId,
+              ex.toString(),
+              ex
+          )
+      );
     }
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
@@ -231,25 +244,6 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       records.add(record);
     }
     return records;
-  }
-
-  private void handleException(String messageId, Exception ex, Record record) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
-        break;
-      case STOP_PIPELINE:
-        if (ex instanceof StageException) {
-          throw (StageException) ex;
-        } else {
-          throw new StageException(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-          getContext().getOnErrorRecord(), ex));
-    }
   }
 
 }

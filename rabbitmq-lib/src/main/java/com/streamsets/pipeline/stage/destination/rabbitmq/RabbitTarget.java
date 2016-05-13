@@ -26,15 +26,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
 import com.streamsets.pipeline.lib.rabbitmq.config.RabbitExchangeConfigBean;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitCxnManager;
 import com.streamsets.pipeline.lib.rabbitmq.common.RabbitUtil;
-import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

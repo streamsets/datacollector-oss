@@ -26,11 +26,13 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,7 @@ public class AmazonS3Target extends BaseTarget {
 
   private final S3TargetConfigBean s3TargetConfigBean;
   private final String partitionTemplate;
+  private ErrorRecordHandler errorRecordHandler;
   private ELEval partitionEval;
   private ELVars partitionVars;
   private int fileCount = 0;
@@ -63,6 +66,7 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public List<ConfigIssue> init() {
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
     partitionVars = getContext().createELVars();
 
@@ -130,8 +134,24 @@ public class AmazonS3Target extends BaseTarget {
           try {
             generator.write(currentRecord);
             writtenRecordCount++;
-          } catch (IOException | StageException e) {
-            handleException(e, currentRecord);
+          } catch (StageException e) {
+            errorRecordHandler.onError(
+                new OnRecordErrorException(
+                    currentRecord,
+                    e.getErrorCode(),
+                    e.getParams()
+                )
+            );
+          } catch (IOException e) {
+            errorRecordHandler.onError(
+                new OnRecordErrorException(
+                    currentRecord,
+                    Errors.S3_32,
+                    currentRecord.getHeader().getSourceId(),
+                    e.toString(),
+                    e
+                )
+            );
           }
         }
         generator.close();
@@ -164,26 +184,6 @@ public class AmazonS3Target extends BaseTarget {
       }
     }
   }
-
-  private void handleException(Exception e, Record currentRecord) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(currentRecord, e);
-        break;
-      case STOP_PIPELINE:
-        if (e instanceof StageException) {
-          throw (StageException) e;
-        } else {
-          throw new StageException(Errors.S3_32, currentRecord.getHeader().getSourceId(), e.toString(), e);
-        }
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnErrorRecord option '{}'",
-          getContext().getOnErrorRecord()));
-    }
-  }
-
 
   /**
    * Subclass of ByteArrayOutputStream which exposed the internal buffer to help avoid making a copy of the buffer.

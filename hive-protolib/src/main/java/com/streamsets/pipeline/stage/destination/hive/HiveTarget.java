@@ -26,18 +26,17 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
-
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
@@ -100,6 +99,7 @@ public class HiveTarget extends BaseTarget {
   private Map<String, String> partitionsToFields;
   private HiveConf hiveConf;
   private UserGroupInformation loginUgi;
+  private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory dataGeneratorFactory;
 
   private LoadingCache<HiveEndPoint, StreamingConnection> hiveConnectionPool;
@@ -161,6 +161,7 @@ public class HiveTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     partitionsToFields = new HashMap<>();
     columnsToFields = new HashMap<>();
@@ -446,11 +447,23 @@ public class HiveTarget extends BaseTarget {
           LOG.error("Error processing batch: {}", e.getCause().toString(), e);
           throw new StageException(Errors.HIVE_01, e.getCause().toString(), e);
         } catch (OnRecordErrorException e) {
-          handleError(record, e.getErrorCode(), e.getParams());
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  record,
+                  e.getErrorCode(),
+                  e.getParams()
+              )
+          );
         }
       } else {
         if (missingPartitions.size() != 0) {
-          handleError(record, Errors.HIVE_08, StringUtils.join(",", missingPartitions));
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  record,
+                  Errors.HIVE_08,
+                  StringUtils.join(",", missingPartitions)
+              )
+          );
         }
       }
     }
@@ -502,20 +515,5 @@ public class HiveTarget extends BaseTarget {
       throw new OnRecordErrorException(Errors.HIVE_12, e.toString(), e);
     }
     return endPoint;
-  }
-
-  private void handleError(Record record, ErrorCode errorCode, Object... params) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, errorCode, params);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(errorCode, params);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            getContext().getOnErrorRecord()));
-    }
   }
 }

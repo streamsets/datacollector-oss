@@ -17,18 +17,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.lib;
+package com.streamsets.pipeline.stage.common;
 
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class DefaultErrorRecordHandler implements ErrorRecordHandler {
-  private final Target.Context context;
+import java.util.List;
 
-  public DefaultErrorRecordHandler(Target.Context context) {
+public class DefaultErrorRecordHandler implements ErrorRecordHandler {
+  private final Stage.Context context;
+
+  public DefaultErrorRecordHandler(Stage.Context context) {
     this.context = context;
+  }
+
+  @Override
+  public void onError(ErrorCode errorCode, Object... params) throws StageException {
+    switch (context.getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        context.reportError(errorCode, params);
+        break;
+      case STOP_PIPELINE:
+        throw new StageException(errorCode, params);
+      default:
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
+            context.getOnErrorRecord()));
+    }
   }
 
   @Override
@@ -38,6 +58,27 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
         break;
       case TO_ERROR:
         context.toError(error.getRecord(), error);
+        break;
+      case STOP_PIPELINE:
+        throw error;
+      default:
+        throw new IllegalStateException(
+            Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord(), error)
+        );
+    }
+  }
+
+  @Override
+  public void onError(List<Record> batch, StageException error) throws StageException {
+    switch (context.getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        // Add all the records in batch to error since there is no way to figure out which record in batch
+        // caused exception.
+        for (Record record : batch) {
+          context.toError(record, error);
+        }
         break;
       case STOP_PIPELINE:
         throw error;

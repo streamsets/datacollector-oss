@@ -24,18 +24,14 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcGenericRecordWriter;
@@ -43,7 +39,8 @@ import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MicrosoftJdbcRecordWriter;
-import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -83,6 +80,7 @@ public class JdbcTarget extends BaseTarget {
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
 
+  private ErrorRecordHandler errorRecordHandler;
   private HikariDataSource dataSource = null;
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
@@ -123,6 +121,7 @@ public class JdbcTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     Target.Context context = getContext();
 
@@ -279,24 +278,8 @@ public class JdbcTarget extends BaseTarget {
     for (String tableName : tableNames) {
       List<OnRecordErrorException> errors = recordWriters.getUnchecked(tableName).writeBatch(partitions.get(tableName));
       for (OnRecordErrorException error : errors) {
-        handleErrorRecord(error);
+        errorRecordHandler.onError(error);
       }
-    }
-  }
-
-  private void handleErrorRecord(OnRecordErrorException error) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(error.getRecord(), error);
-        break;
-      case STOP_PIPELINE:
-        throw error;
-      default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), error)
-        );
     }
   }
 }

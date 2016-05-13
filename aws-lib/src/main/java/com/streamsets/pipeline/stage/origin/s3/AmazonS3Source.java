@@ -31,6 +31,8 @@ import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   private final static Logger LOG = LoggerFactory.getLogger(AmazonS3Source.class);
   private static final long DEFAULT_FETCH_SIZE = 1 * 1024 * 1024;
 
+  private ErrorRecordHandler errorRecordHandler;
   private DataParser parser;
   private S3Object object;
 
@@ -52,7 +55,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   @Override
   protected void initChild(List<ConfigIssue> issues) {
-    // nothing required here today
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
   }
 
   @Override
@@ -105,18 +108,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
         } catch (ObjectLengthException ex) {
           String exOffset = offset;
           offset = S3Constants.MINUS_ONE;
-          switch (getContext().getOnErrorRecord()) {
-            case DISCARD:
-              break;
-            case TO_ERROR:
-              getContext().reportError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset, ex);
-              break;
-            case STOP_PIPELINE:
-              throw new StageException(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset);
-            default:
-              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                getContext().getOnErrorRecord(), ex));
-          }
+          errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset, ex);
         }
       }
     } catch (AmazonClientException e) {

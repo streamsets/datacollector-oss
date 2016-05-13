@@ -26,10 +26,12 @@ import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchResult;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import org.slf4j.Logger;
@@ -43,14 +45,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KB;
-import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
-public class FirehoseTarget extends BaseKinesisTarget {
+public class FirehoseTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(FirehoseTarget.class);
   private static final int MAX_RECORDS_PER_REQUEST = 500;
 
   private final FirehoseConfigBean conf;
 
+  private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
   private AmazonKinesisFirehoseClient firehoseClient;
 
@@ -63,6 +65,7 @@ public class FirehoseTarget extends BaseKinesisTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     if (issues.isEmpty()) {
       conf.init(getContext(), issues);
@@ -100,7 +103,15 @@ public class FirehoseTarget extends BaseKinesisTarget {
         }
       } catch (IOException e) {
         LOG.error(Errors.KINESIS_05.getMessage(), record, e.toString(), e);
-        handleFailedRecord(record, e.toString());
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                Errors.KINESIS_05,
+                record,
+                e.toString(),
+                e
+            )
+        );
       }
     }
     flush(records, sdcRecords);
@@ -123,7 +134,14 @@ public class FirehoseTarget extends BaseKinesisTarget {
       for (int i = 0; i < responses.size(); i++) {
         PutRecordBatchResponseEntry response = responses.get(i);
         if (response.getErrorCode() != null) {
-          handleFailedRecord(sdcRecords.get(i), response.getErrorMessage());
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  sdcRecords.get(i),
+                  Errors.KINESIS_05,
+                  sdcRecords.get(i),
+                  response.getErrorMessage()
+              )
+          );
         }
       }
     }

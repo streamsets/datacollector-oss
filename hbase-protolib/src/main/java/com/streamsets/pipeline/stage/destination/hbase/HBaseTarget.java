@@ -38,9 +38,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.util.JsonUtil;
-import com.streamsets.pipeline.stage.destination.lib.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.destination.lib.ErrorRecordHandler;
 
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.Path;

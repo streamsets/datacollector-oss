@@ -26,8 +26,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -55,6 +56,7 @@ public class SolrTarget extends BaseTarget {
   private final ProcessingMode indexingMode;
   private final List<SolrFieldMappingConfig> fieldNamesMap;
 
+  private ErrorRecordHandler errorRecordHandler;
   private SolrServer solrClient;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
@@ -71,6 +73,7 @@ public class SolrTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     boolean solrInstanceInfo = true;
 
@@ -141,18 +144,15 @@ public class SolrTarget extends BaseTarget {
         }
 
       } catch (OnRecordErrorException | SolrServerException | IOException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw new StageException(Errors.SOLR_04, record.getHeader().getSourceId(), ex.toString(), ex);
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-              getContext().getOnErrorRecord(), ex));
-        }
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                Errors.SOLR_04,
+                record.getHeader().getSourceId(),
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
 
@@ -165,30 +165,11 @@ public class SolrTarget extends BaseTarget {
       } catch (SolrException | SolrServerException | IOException ex) {
         try {
           solrClient.rollback();
-          handleException(ex, recordsBackup);
+          errorRecordHandler.onError(recordsBackup, new StageException(Errors.SOLR_05, ex.toString(), ex));
         } catch (SolrServerException | IOException ex2) {
-          handleException(ex2, recordsBackup);
+          errorRecordHandler.onError(recordsBackup, new StageException(Errors.SOLR_05, ex2.toString(), ex2));
         }
       }
-    }
-  }
-
-  private void handleException(Exception ex, List<Record> records) throws StageException{
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        // Add all the records in batch to error since there is no way to figure out which record in batch
-        // caused exception.
-        for(Record record: records) {
-          getContext().toError(record, ex);
-        }
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(Errors.SOLR_05, ex.toString());
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-          getContext().getOnErrorRecord()));
     }
   }
 

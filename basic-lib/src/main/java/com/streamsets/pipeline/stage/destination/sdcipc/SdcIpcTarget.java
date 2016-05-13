@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -26,6 +27,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.iq80.snappy.SnappyFramedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,7 @@ public class SdcIpcTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(SdcIpcTarget.class);
 
   private final Configs config;
+  private ErrorRecordHandler errorRecordHandler;
   final List<String> standByHostPorts;
   final List<String> activeHostPorts;
   int lastActive;
@@ -56,6 +60,7 @@ public class SdcIpcTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     issues.addAll(config.init(getContext()));
     if (issues.isEmpty()) {
       initializeHostPortsLists();
@@ -172,22 +177,13 @@ public class SdcIpcTarget extends BaseTarget {
         throw new StageException(Errors.IPC_DEST_20, errorReason);
       }
 
-      switch (onErrorRecord) {
-        case DISCARD:
-          LOG.debug("Discarding batch '{}' after error", batch.getSourceOffset());
-          break;
-        case TO_ERROR:
-          Iterator<Record> it = batch.getRecords();
-          while (it.hasNext()) {
-            Record record = it.next();
-            getContext().toError(record, Errors.IPC_DEST_20, errorReason);
-          }
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(Errors.IPC_DEST_20, errorReason);
-        default:
-          throw new StageException(Errors.IPC_DEST_21, getContext().getOnErrorRecord());
-      }
+      errorRecordHandler.onError(
+          Lists.newArrayList(batch.getRecords()),
+          new StageException(
+              Errors.IPC_DEST_20,
+              errorReason
+          )
+      );
     }
   }
 
