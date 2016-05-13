@@ -109,11 +109,10 @@ public class RemoteDownloadConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Path relative to User Home Directory",
-      description = "If checked, the path is resolved relative to the logged in user's home directory",
+      description = "If checked, the path is resolved relative to the logged in user's home directory, " +
+          "if a username is entered in the Credentials tab or in the URL.",
       displayPosition = 20,
-      group = "REMOTE",
-      dependsOn = "auth",
-      triggeredByValue = {"PASSWORD", "PRIVATE_KEY"}
+      group = "REMOTE"
   )
   public boolean userDirIsRoot = true;
 
