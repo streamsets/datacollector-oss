@@ -50,16 +50,17 @@
                     at a time. </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
                     <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library
-                            version>/lib/</uicontrol>. <p>$MAPR_HOME is usually /opt/mapr.
-                            </p><p>&lt;MapR library version> is the version of the StreamSets MapR
-                            library to use. </p><p>For example, for the
-                            streamsets-datacollector-mapr_5_1-lib library, the MapR library version
-                            is mapr_5_1-lib. </p><p>So to use MapR version 5.1.0 with <ph
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library>/lib/</uicontrol>.
+                            <p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the
+                            version of the StreamSets MapR library to use. </p><p>The StreamSets
+                            MapR libraries are named as follows:
+                            <codeblock>streamsets-datacollector-mapr_&lt;version>-lib</codeblock>For
+                            example: streamsets-datacollector-mapr_5_1-lib. </p><p>So to use MapR
+                            version 5.1.0 with <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             />, you would create a symlink from $MAPR_HOME/lib/* to
-                            $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/ as
-                            follows:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/</codeblock></p></li>
+                            $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/ as
+                            follows:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/</codeblock></p></li>
                     <li><uicontrol>$MAPR_HOME/lib/maprfs-&lt;version>-mapr.jar</uicontrol> to
                             <uicontrol>$SDC_DIST/root-lib/</uicontrol><p>&lt;version> is the MapR
                             version. </p><p>For example, when using MapR version 5.1.0, you would
