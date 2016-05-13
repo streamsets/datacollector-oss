@@ -239,7 +239,7 @@
                             </row>
                             <row>
                                 <entry>ui.enable.usage.data.collection</entry>
-                                <entry>Allows anonymous Google Analytics information to be sent
+                                <entry>Allows anonymous Google Analytics information to be sent to
                                     StreamSets. <p>Default is true. </p></entry>
                             </row>
                             <row>

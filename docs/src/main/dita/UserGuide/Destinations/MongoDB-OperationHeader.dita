@@ -31,9 +31,10 @@
         <p>For example, the following Expression Evaluator sets the MongoDB operation header
             attribute to UPSERT, so the destination system updates or inserts every record:</p>
         <p><image href="../Graphics/MongoDBDest-EEval.png" id="image_d4b_qs4_4v" scale="70"/></p>
-        <p>Alternatively, the Jython Evaluator in the following pipeline sets the operation header
-            attribute based on the value in the _operator field:</p>
-        <p>
-            <image href="../Graphics/MondoDBDest-Jython.png" id="image_qxt_z2h_qv" scale="70"/></p>
+        <draft-comment author="Loretta">&lt;&lt;this doesn't work yet. hiding. May 13 2016 LC
+                >><p>Alternatively, the Jython Evaluator in the following pipeline sets the
+                operation header attribute based on the value in the _operator field:</p><p>
+                <image href="../Graphics/MondoDBDest-Jython.png" id="image_qxt_z2h_qv" scale="70"
+                /></p></draft-comment>
  </conbody>
 </concept>
