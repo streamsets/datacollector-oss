@@ -60,7 +60,7 @@ public class EmailSender {
     }
     auth = Boolean.parseBoolean(javaMailProps.getProperty("mail." + protocol + ".auth"));
     user = conf.get(EMAIL_SMTP_USER, "");
-    password = conf.get(EMAIL_SMTP_PASS, "");
+    password = conf.get(EMAIL_SMTP_PASS, "").trim();
     from = conf.get(EMAIL_SMTP_FROM, "sdc@localhost");
   }
 

@@ -573,6 +573,9 @@ public class LdapLoginModule extends AbstractLoginModule
     if(Configuration.FileRef.isValueMyRef(_bindPassword)) {
       Configuration.FileRef fileRef = new Configuration.FileRef(_bindPassword);
       _bindPassword = fileRef.getValue();
+      if (_bindPassword != null) {
+        _bindPassword = _bindPassword.trim();
+      }
     }
 
     try

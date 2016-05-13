@@ -469,7 +469,7 @@ public class WebServerTask extends AbstractTask {
       if (!keyStore.exists()) {
         throw new RuntimeException(Utils.format("KeyStore file '{}' does not exist", keyStore.getPath()));
       }
-      String password = conf.get(HTTPS_KEYSTORE_PASSWORD_KEY, HTTPS_KEYSTORE_PASSWORD_DEFAULT);
+      String password = conf.get(HTTPS_KEYSTORE_PASSWORD_KEY, HTTPS_KEYSTORE_PASSWORD_DEFAULT).trim();
 
       //Create a connector for HTTPS
       HttpConfiguration httpsConf = new HttpConfiguration();
