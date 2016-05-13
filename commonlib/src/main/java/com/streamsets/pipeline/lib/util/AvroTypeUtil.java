@@ -56,6 +56,27 @@ public class AvroTypeUtil {
 
   private AvroTypeUtil() {}
 
+  /**
+   * Parse JSON representation of Avro schema to Avro's Schema JAVA object
+   */
+  public static Schema parseSchema(String schema) {
+    return new Schema.Parser()
+      .setValidate(true)
+      .setValidateDefaults(true)
+      .parse(schema);
+  }
+
+  /**
+   * Retrieves avro schema from given header. Throws an exception if the header is missing or is empty.
+   */
+  public static String getAvroSchemaFromHeader(Record record, String headerName) throws DataGeneratorException {
+    String jsonSchema = record.getHeader().getAttribute(headerName);
+    if(jsonSchema == null || jsonSchema.isEmpty()) {
+      throw new DataGeneratorException(Errors.AVRO_GENERATOR_03, record.getHeader().getSourceId());
+    }
+    return jsonSchema;
+  }
+
   public static Field avroToSdcField(Record record, Schema schema, Object value) {
     return avroToSdcField(record, "", schema, value);
   }

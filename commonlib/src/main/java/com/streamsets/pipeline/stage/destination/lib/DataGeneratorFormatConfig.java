@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.avro.BaseAvroDataGenerator;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
@@ -216,14 +217,30 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    // Default value should be "false", we set it to true because of bug in pipeline validation that doesn't compute
+    // "dependsOn" recursively.
+    defaultValue = "true",
+    label = "Avro Schema in header",
+    description = "Retrieve Avro schema from record's header " + BaseAvroDataGenerator.AVRO_SCHEMA_HEADER,
+    displayPosition = 400,
+    group = "AVRO",
+    dependsOn = "dataFormat^",
+    triggeredByValue = {"AVRO"},
+    mode = ConfigDef.Mode.JSON
+  )
+  public boolean avroSchemaInHeader;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
     label = "Avro Schema",
     description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 400,
     group = "AVRO",
-    dependsOn = "dataFormat^",
-    triggeredByValue = {"AVRO"},
+    dependsOn = "avroSchemaInHeader",
+    triggeredByValue = "false",
     mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
@@ -357,22 +374,21 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case AVRO:
         Schema schema = null;
         Map<String, Object> defaultValues = new HashMap<>();
-        try {
-          schema = new Schema.Parser()
-              .setValidate(true)
-              .setValidateDefaults(true)
-              .parse(avroSchema);
-        } catch (Exception e)  {
-          issues.add(
+        if(!avroSchemaInHeader) {
+          try {
+            schema = AvroTypeUtil.parseSchema(avroSchema);
+          } catch (Exception e) {
+            issues.add(
               context.createConfigIssue(
-                  DataFormatGroups.AVRO.name(),
-                  configPrefix + ".avroSchema",
-                  DataFormatErrors.DATA_FORMAT_300,
-                  e.toString(),
-                  e
+                DataFormatGroups.AVRO.name(),
+                configPrefix + ".avroSchema",
+                DataFormatErrors.DATA_FORMAT_300,
+                e.toString(),
+                e
               )
-          );
-          valid &= false;
+            );
+            valid &= false;
+          }
         }
         if(schema != null) {
           try {
@@ -389,10 +405,12 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
             );
             valid &= false;
           }
+
+          builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
+          builder.setConfig(AvroDataGeneratorFactory.DEFAULT_VALUES_KEY, defaultValues);
         }
-        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
+        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_IN_HEADER_KEY, avroSchemaInHeader);
         builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
-        builder.setConfig(AvroDataGeneratorFactory.DEFAULT_VALUES_KEY, defaultValues);
         builder.setConfig(AvroDataGeneratorFactory.COMPRESSION_CODEC_KEY, avroCompression.getCodecName());
         break;
       case BINARY:

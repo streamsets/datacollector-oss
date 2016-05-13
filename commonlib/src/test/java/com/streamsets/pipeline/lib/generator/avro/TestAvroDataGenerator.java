@@ -118,6 +118,7 @@ public class TestAvroDataGenerator {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
       baos,
       AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
@@ -143,6 +144,7 @@ public class TestAvroDataGenerator {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+        false,
         baos,
         codecName,
         SCHEMA,
@@ -184,6 +186,7 @@ public class TestAvroDataGenerator {
   public void testClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
       baos,
       AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
@@ -199,6 +202,7 @@ public class TestAvroDataGenerator {
   public void testWriteAfterClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+        false,
         baos,
         AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
@@ -213,6 +217,7 @@ public class TestAvroDataGenerator {
   public void testFlushAfterClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+        false,
         baos,
         AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
@@ -230,6 +235,7 @@ public class TestAvroDataGenerator {
     Record r = createRecord();
 
     DataGenerator dataGenerator = new AvroDataOutputStreamGenerator(
+        false,
         baos,
         AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
@@ -255,6 +261,7 @@ public class TestAvroDataGenerator {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
+        false,
         baos,
         AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
@@ -369,6 +376,70 @@ public class TestAvroDataGenerator {
     } catch (Exception e) {
       //Expected
     }
+  }
+
+  @Test
+  public void testSchemaInHeader() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      true,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      null,
+      null
+    );
+    Record record = createRecord();
+    record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, AVRO_SCHEMA);
+    gen.write(record);
+    gen.close();
+
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+      new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Assert.assertEquals("hari", readRecord.get("name").toString());
+    Assert.assertEquals(3100, readRecord.get("age"));
+    Assert.assertFalse(dataFileReader.hasNext());
+  }
+
+  @Test(expected = DataGeneratorException.class)
+  public void testSchemaInHeaderMissingHeader() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      true,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      null,
+      null
+    );
+    Record record = createRecord();
+    gen.write(record);
+    gen.close();
+  }
+
+  @Test(expected = DataGeneratorException.class)
+  public void testSchemaInHeaderDifferentSchemaInHeader() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      true,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      null,
+      null
+    );
+    Record record = createRecord();
+
+    // Write first record (initialize all internal structures)
+    record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, AVRO_SCHEMA);
+    gen.write(record);
+
+    // Second record with different schema should throw an exception
+    record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, RECORD_SCHEMA);
+    gen.write(record);
+
+    gen.close();
   }
 
 }

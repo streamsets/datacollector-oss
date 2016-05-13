@@ -35,6 +35,8 @@ import java.util.Set;
 public class AvroDataGeneratorFactory extends DataGeneratorFactory {
 
   static final String KEY_PREFIX = "avro.";
+  public static final String SCHEMA_IN_HEADER_KEY = KEY_PREFIX + "schemaInHeader";
+  static final boolean SCHEMA_IN_HEADER_DEFAULT = false;
   public static final String SCHEMA_KEY = KEY_PREFIX + "schema";
   static final String SCHEMA_DEFAULT = "";
   public static final String INCLUDE_SCHEMA_KEY = KEY_PREFIX + "includeSchema";
@@ -50,6 +52,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   static {
     Map<String, Object> configs = new HashMap<>();
     configs.put(SCHEMA_KEY, SCHEMA_DEFAULT);
+    configs.put(SCHEMA_IN_HEADER_KEY, SCHEMA_IN_HEADER_DEFAULT);
     configs.put(INCLUDE_SCHEMA_KEY, INCLUDE_SCHEMA_DEFAULT);
     configs.put(DEFAULT_VALUES_KEY, DEFAULT_VALUES_DEFAULT);
     configs.put(COMPRESSION_CODEC_KEY, COMPRESSION_CODEC_DEFAULT);
@@ -59,6 +62,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   @SuppressWarnings("unchecked")
   public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of();
 
+  private final boolean schemaInHeader;
   private final Schema schema;
   private final boolean includeSchema;
   private final Map<String, Object> defaultValuesFromSchema;
@@ -67,22 +71,27 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   public AvroDataGeneratorFactory(Settings settings) throws IOException {
     super(settings);
     includeSchema = settings.getConfig(INCLUDE_SCHEMA_KEY);
-    schema = new Schema.Parser()
+    schemaInHeader = settings.getConfig(SCHEMA_IN_HEADER_KEY);
+    if(schemaInHeader) {
+      schema = null;
+    } else {
+      schema = new Schema.Parser()
         .setValidate(true)
         .setValidateDefaults(true)
-        .parse((String)settings.getConfig(SCHEMA_KEY));
+        .parse((String) settings.getConfig(SCHEMA_KEY));
+      Utils.checkNotNull(schema, "Avro Schema");
+    }
     defaultValuesFromSchema = settings.getConfig(DEFAULT_VALUES_KEY);
     compressionCodec = settings.getConfig(COMPRESSION_CODEC_KEY);
-    Utils.checkNotNull(schema, "Avro Schema");
   }
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
     DataGenerator dataGenerator;
     if(includeSchema) {
-      dataGenerator = new AvroDataOutputStreamGenerator(os, compressionCodec, schema, defaultValuesFromSchema);
+      dataGenerator = new AvroDataOutputStreamGenerator(schemaInHeader, os, compressionCodec, schema, defaultValuesFromSchema);
     } else {
-      dataGenerator = new AvroMessageGenerator(os, schema, defaultValuesFromSchema);
+      dataGenerator = new AvroMessageGenerator(schemaInHeader, os, schema, defaultValuesFromSchema);
     }
     return dataGenerator;
   }

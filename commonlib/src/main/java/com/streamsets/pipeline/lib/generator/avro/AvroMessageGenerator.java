@@ -21,7 +21,6 @@ package com.streamsets.pipeline.lib.generator.avro;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
@@ -31,36 +30,40 @@ import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
-public class AvroMessageGenerator implements DataGenerator {
+public class AvroMessageGenerator extends BaseAvroDataGenerator {
 
-  private Schema schema;
-  private boolean closed;
   private DatumWriter<GenericRecord> datumWriter;
   private BinaryEncoder binaryEncoder;
   private final OutputStream outputStream;
-  private final Map<String, Object> defaultValueMap;
 
   public AvroMessageGenerator(
+      boolean schemaInHeader,
       OutputStream outputStream,
       Schema schema,
       Map<String, Object> defaultValueMap
   ) throws IOException {
-    this.schema = schema;
+    super(schemaInHeader, schema, defaultValueMap);
     this.outputStream = outputStream;
-    datumWriter = new GenericDatumWriter<>(schema);
-    binaryEncoder = EncoderFactory.get().binaryEncoder(outputStream, null);
-    this.defaultValueMap = defaultValueMap;
+    this.binaryEncoder = EncoderFactory.get().binaryEncoder(outputStream, null);
+
+    if(!schemaInHeader) {
+      initialize();
+    }
   }
 
   @Override
-  public void write(Record record) throws IOException, DataGeneratorException {
-    if (closed) {
-      throw new IOException("generator has been closed");
-    }
+  protected void initializeWriter() {
+    datumWriter = new GenericDatumWriter<>(schema);
+  }
+
+  @Override
+  public void writeRecord(Record record) throws IOException, DataGeneratorException {
     try {
       datumWriter.write(
           (GenericRecord) AvroTypeUtil.sdcRecordToAvro(record, schema, defaultValueMap),
@@ -72,20 +75,12 @@ public class AvroMessageGenerator implements DataGenerator {
   }
 
   @Override
-  public void flush() throws IOException {
-    if (closed) {
-      throw new IOException("generator has been closed");
-    }
-    binaryEncoder.flush();
+  protected Flushable getFlushable() {
+    return binaryEncoder;
   }
 
   @Override
-  public void close() throws IOException {
-    closed = true;
-    try {
-      binaryEncoder.flush();
-    } finally {
-      outputStream.close();
-    }
+  protected Closeable getCloseable() {
+    return outputStream;
   }
 }
