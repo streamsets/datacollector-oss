@@ -47,9 +47,9 @@ angular
               function(results) {
                 $modalInstance.close(results);
               },
-              function () {
+              function (res) {
                 $scope.stopping = false;
-                $scope.common.errors = [data];
+                $scope.common.errors = [res.data];
               }
             );
 
