@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
 
-  private URI hdfsUri;;
+  private URI hdfsUri;
   private Configuration hdfsConf;
   private String uniquePrefix;
   private boolean dirPathTemplateInHeader;
@@ -81,11 +81,14 @@ public class RecordWriterManager {
   private final Path tempFilePath;
   private final LoadingCache<String, Path> dirPathCache;
   private long idleTimeoutSeconds = -1L;
+  private final boolean rollIfHeader;
+  private final String rollHeaderName;
 
   public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
       String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
       HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      DataGeneratorFactory generatorFactory, Target.Context context, String config) {
+      boolean rollIfHeader, String rollHeaderName, DataGeneratorFactory generatorFactory, Target.Context context,
+      String config) {
     this.hdfsUri = hdfsUri;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -101,6 +104,8 @@ public class RecordWriterManager {
     this.keyEL = keyEL;
     this.generatorFactory = generatorFactory;
     this.context = context;
+    this.rollIfHeader = rollIfHeader;
+    this.rollHeaderName = rollHeaderName;
     pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
 
     // we use/reuse Path as they are expensive to create (it increases the performance by at least 3%)
@@ -280,6 +285,18 @@ public class RecordWriterManager {
       LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
     }
     return path;
+  }
+
+  /**
+   * Return true if this record should be written into a new file regardless whether we have a file for the record
+   * currently opened or not.
+   */
+  public boolean shouldRoll(Record record) {
+    if(rollIfHeader && record.getHeader().getAttribute(rollHeaderName) != null) {
+      return true;
+    }
+
+    return false;
   }
 
   public boolean isOverThresholds(RecordWriter writer) throws IOException {

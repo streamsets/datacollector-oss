@@ -54,7 +54,9 @@ public class HdfsTargetUtil {
       String lateRecordsDirPathTemplate,
       DataFormat dataFormat,
       DataGeneratorFormatConfig dataGeneratorFormatConfig,
-      String idleTimeout
+      String idleTimeout,
+      boolean rollIfHeader,
+      String rollHeaderName
   ) {
     HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
     hdfsTargetConfigBean.hdfsUri = hdfsUri;
@@ -79,6 +81,8 @@ public class HdfsTargetUtil {
     hdfsTargetConfigBean.dataFormat = dataFormat;
     hdfsTargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
     hdfsTargetConfigBean.idleTimeout = idleTimeout;
+    hdfsTargetConfigBean.rollIfHeader = rollIfHeader;
+    hdfsTargetConfigBean.rollHeaderName = rollHeaderName;
     return new HdfsTarget(hdfsTargetConfigBean);
   }
 }

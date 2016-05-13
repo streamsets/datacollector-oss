@@ -76,7 +76,7 @@ public class TestHdfsTargetUpgrader {
     HdfsTargetUpgrader hdfsTargetUpgrader = new HdfsTargetUpgrader();
     hdfsTargetUpgrader.upgrade("a", "b", "c", 1, 3, configs);
 
-    Assert.assertEquals(34, configs.size());
+    Assert.assertEquals(36, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for(Config c : configs) {
@@ -196,8 +196,22 @@ public class TestHdfsTargetUpgrader {
     HdfsTargetUpgrader hdfsTargetUpgrader = new HdfsTargetUpgrader();
     hdfsTargetUpgrader.upgrade("a", "b", "c", 2, 3, configs);
 
-    Assert.assertEquals(2, configs.size());
-    Assert.assertEquals("hdfsTargetConfigBean.idleTimeout", configs.get(0).getName());
-    Assert.assertEquals("10", configs.get(0).getValue());
+    Assert.assertEquals(4, configs.size());
+    HashMap<String, Object> configValues = new HashMap<>();
+    for(Config c : configs) {
+      configValues.put(c.getName(), c.getValue());
+    }
+
+    Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.idleTimeout"));
+    Assert.assertEquals("10", configValues.get("hdfsTargetConfigBean.idleTimeout"));
+
+    Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.dirPathTemplateInHeader"));
+    Assert.assertEquals(false, configValues.get("hdfsTargetConfigBean.dirPathTemplateInHeader"));
+
+    Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.rollIfHeader"));
+    Assert.assertEquals(false, configValues.get("hdfsTargetConfigBean.rollIfHeader"));
+
+    Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.rollHeaderName"));
+    Assert.assertEquals("roll", configValues.get("hdfsTargetConfigBean.rollHeaderName"));
   }
 }

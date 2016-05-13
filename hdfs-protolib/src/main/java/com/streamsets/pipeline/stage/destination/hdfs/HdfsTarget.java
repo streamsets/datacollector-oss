@@ -189,9 +189,9 @@ public class HdfsTarget extends BaseTarget {
             // To avoid double counting, in case of IdleClosedException
             hdfsTargetConfigBean.getToHdfsRecordsCounter().inc();
             hdfsTargetConfigBean.getToHdfsRecordsMeter().mark();
-            hdfsTargetConfigBean.getCurrentWriters().release(writer);
+            hdfsTargetConfigBean.getCurrentWriters().release(writer, false);
           } catch (IdleClosedException ex) {
-            hdfsTargetConfigBean.getCurrentWriters().release(writer);
+            hdfsTargetConfigBean.getCurrentWriters().release(writer, false);
             // Try to write again, this time with a new writer
             write = true;
             // No use printing path, since it is a temp path - the real one is created later.
@@ -210,10 +210,10 @@ public class HdfsTarget extends BaseTarget {
                 lateWriter.write(record);
                 // To avoid double counting, in case of IdleClosedException
                 incrementAndMarkLateRecords();
-                hdfsTargetConfigBean.getLateWriters().release(lateWriter);
+                hdfsTargetConfigBean.getLateWriters().release(lateWriter, false);
               } catch (IdleClosedException ex) {
                 // Try to write again, this time with a new lateWriter
-                hdfsTargetConfigBean.getCurrentWriters().release(lateWriter);
+                hdfsTargetConfigBean.getCurrentWriters().release(lateWriter, false);
                 write = true;
                 // No use printing path, since it is a temp path - the real one is created later.
                 LOG.debug("Writer was idle closed. Retrying.. ");

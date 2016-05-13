@@ -318,6 +318,30 @@ public class HdfsTargetConfigBean {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Roll if header",
+    description = "Close currently opened file and open a new file every time a record with special header occur in the data.",
+    displayPosition = 204,
+    group = "OUTPUT_FILES"
+  )
+  public boolean rollIfHeader;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "roll",
+    label = "Roll header name",
+    description = "Name of the header that will cause current open file to close.",
+    displayPosition = 205,
+    group = "OUTPUT_FILES",
+    dependsOn = "rollIfHeader",
+    triggeredByValue = "true"
+  )
+  public String rollHeaderName;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "SEND_TO_ERROR",
     label = "Late Record Handling",
@@ -459,6 +483,7 @@ public class HdfsTargetConfigBean {
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
                 dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
                 maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
+                rollIfHeader, rollHeaderName,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
         if (idleTimeSecs > 0) {
@@ -509,6 +534,8 @@ public class HdfsTargetConfigBean {
                   compressionCodec,
                   compressionType,
                   keyEl,
+                  false,
+                  null,
                   dataGeneratorFormatConfig.getDataGeneratorFactory(),
                   (Target.Context) context, "lateRecordsDirPathTemplate"
           );
@@ -559,6 +586,16 @@ public class HdfsTargetConfigBean {
               ex.toString(),
               ex
           )
+      );
+    }
+
+    if(rollIfHeader && (rollHeaderName == null || rollHeaderName.isEmpty())) {
+      issues.add(
+        context.createConfigIssue(
+          Groups.OUTPUT_FILES.name(),
+          HDFS_TARGET_CONFIG_BEAN_PREFIX + "rollHeaderName",
+          Errors.HADOOPFS_51
+        )
       );
     }
 

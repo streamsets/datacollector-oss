@@ -428,6 +428,8 @@ public class BaseHdfsTargetIT {
       dir.toString(),
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 
@@ -488,6 +490,8 @@ public class BaseHdfsTargetIT {
       dir.toString(),
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 
@@ -545,6 +549,8 @@ public class BaseHdfsTargetIT {
       dir.toString(),
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 

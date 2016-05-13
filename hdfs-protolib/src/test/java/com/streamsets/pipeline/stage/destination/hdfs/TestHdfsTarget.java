@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -102,6 +103,8 @@ public class TestHdfsTarget {
         "",
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -176,6 +179,8 @@ public class TestHdfsTarget {
         "",
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -217,6 +222,8 @@ public class TestHdfsTarget {
       getTestDir() + "/hdfs/${YYYY()}",
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 
@@ -262,6 +269,8 @@ public class TestHdfsTarget {
         "",
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -313,6 +322,8 @@ public class TestHdfsTarget {
         "",
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -356,6 +367,8 @@ public class TestHdfsTarget {
         "relative_path", // lateRecordsDirPathTemplate is relative path
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -396,6 +409,8 @@ public class TestHdfsTarget {
         getTestDir() + "/late_record/${TEST}", // lateRecordsDirPathTemplate contains constant that we don't know
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -440,6 +455,8 @@ public class TestHdfsTarget {
         "relative/late_record",  // creating this dir should fail
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -485,6 +502,8 @@ public class TestHdfsTarget {
         getTestDir() + "/late_record/${YYYY()}-${MM()}", // lateRecordsDirPathTemplate contains Els
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
+        null,
+        false,
         null
     );
 
@@ -531,6 +550,8 @@ public class TestHdfsTarget {
       "",
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 
@@ -575,7 +596,9 @@ public class TestHdfsTarget {
         "",
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig,
-        "1"
+        "1",
+        false,
+        null
     );
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
@@ -659,7 +682,9 @@ public class TestHdfsTarget {
       "",
       DataFormat.JSON,
       dataGeneratorFormatConfig,
-      "1"
+      "1",
+      false,
+      null
     );
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -712,7 +737,9 @@ public class TestHdfsTarget {
       "",
       DataFormat.JSON,
       dataGeneratorFormatConfig,
-      "1"
+      "1",
+      false,
+      null
     );
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -731,4 +758,107 @@ public class TestHdfsTarget {
     Assert.assertNotNull(errorRecords);
     Assert.assertEquals(1, errorRecords.size());
   }
+
+  @Test
+  public void testForcedRollOutByHeaderWithInvalidHeaderConfiguration() throws Exception {
+    for(String headerValue : Arrays.asList("", null)) {
+      DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+      HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        false,
+        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+        "",
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig,
+        null,
+        true, // Roll by header is true, but name of the header is invalid
+        headerValue
+      );
+
+      TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+      List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+      Assert.assertEquals(1, configIssues.size());
+      Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_51.name()));
+    }
+  }
+
+  @Test
+  public void testForcedRollOutByHeader() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        false,
+        getTestDir() + "/hdfs/",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${time:now()}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+        "",
+        DataFormat.JSON,
+        dataGeneratorFormatConfig,
+        null,
+        true,
+        "roll"
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create("x"));
+    record.set(Field.create(map));
+
+    // First write should open a new file
+    runner.runWrite(ImmutableList.copyOf(new Record[]{record}));
+
+    // Second write should also open a new file (forcibly)
+    record.getHeader().setAttribute("roll", "true");
+    runner.runWrite(ImmutableList.copyOf(new Record[]{record}));
+
+    runner.runDestroy();
+
+    File[] list = new File(getTestDir() + "/hdfs/").listFiles();
+    Assert.assertEquals(2, list.length);
+
+    for(File file : list) {
+      Assert.assertFalse("The file wasn't renamed after close: " + file.getName(), file.getName().contains("_tmp_"));
+      Assert.assertEquals("{\"a\":\"x\"}\n", FileUtils.readFileToString(file, Charset.defaultCharset()));
+    }
+  }
+
 }

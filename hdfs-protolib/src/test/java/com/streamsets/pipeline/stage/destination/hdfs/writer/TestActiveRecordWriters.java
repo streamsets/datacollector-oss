@@ -106,7 +106,7 @@ public class TestActiveRecordWriters {
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
-      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
+      cutOffRecords, fileType, compressionCodec , compressionType, keyEL, false, null, generatorFactory,
       ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
                                              null), "dirPathTemplate");
     Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
@@ -125,13 +125,13 @@ public class TestActiveRecordWriters {
     Assert.assertNotNull(writer);
     Path tempPath = writer.getPath();
     writer.write(record);
-    writers.release(writer);
+    writers.release(writer, false);
     //writer should still be open
     Assert.assertFalse(writer.isClosed());
 
     writer = writers.get(now, recordDate, record);
     writer.write(record);
-    writers.release(writer);
+    writers.release(writer, false);
     //writer should be close because of going over record count threshold
     Assert.assertTrue(writer.isClosed());
 
@@ -171,7 +171,7 @@ public class TestActiveRecordWriters {
     String keyEL = "uuid()";
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, false, template, timeZone, cutOffSecs, cutOffSize,
-        cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
+        cutOffRecords, fileType, compressionCodec , compressionType, keyEL, false, null, generatorFactory,
         ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
             null), "dirPathTemplate");
     mgr.setIdleTimeoutSeconds(1L);

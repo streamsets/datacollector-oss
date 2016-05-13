@@ -221,7 +221,7 @@ public class RecordWriter {
       this.idleClosed = idleClosed;
       // writers can never be null, except in tests
       if (idleClosed && writers != null) {
-        writers.release(this);
+        writers.release(this, false);
       }
     } finally {
       generator = null;

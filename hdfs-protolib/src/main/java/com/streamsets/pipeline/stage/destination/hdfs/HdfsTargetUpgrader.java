@@ -129,5 +129,7 @@ public class HdfsTargetUpgrader implements StageUpgrader {
     }
 
     configs.add(new Config("hdfsTargetConfigBean.dirPathTemplateInHeader", false));
+    configs.add(new Config("hdfsTargetConfigBean.rollIfHeader", false));
+    configs.add(new Config("hdfsTargetConfigBean.rollHeaderName", "roll"));
   }
 }

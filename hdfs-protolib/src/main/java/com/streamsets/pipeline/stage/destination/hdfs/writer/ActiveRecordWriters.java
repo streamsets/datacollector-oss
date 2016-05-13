@@ -109,6 +109,12 @@ public class ActiveRecordWriters {
   public RecordWriter get(Date now, Date recordDate, Record record) throws StageException, IOException {
     String path = manager.getPath(recordDate, record).toString();
     RecordWriter writer = writers.get(path);
+
+    if(writer != null && manager.shouldRoll(record)) {
+      release(writer, true);
+      writer = null;
+    }
+
     if (writer == null) {
       writer = manager.getWriter(now, recordDate, record);
       if (writer != null) {
@@ -133,10 +139,10 @@ public class ActiveRecordWriters {
     return cutOffQueue.size();
   }
 
-  public void release(RecordWriter writer) throws IOException {
+  public void release(RecordWriter writer, boolean roll) throws IOException {
     writer.closeLock();
     try {
-      if (writer.isIdleClosed() || manager.isOverThresholds(writer)) {
+      if (roll || writer.isIdleClosed() || manager.isOverThresholds(writer)) {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Release '{}'", writer.getPath());
         }

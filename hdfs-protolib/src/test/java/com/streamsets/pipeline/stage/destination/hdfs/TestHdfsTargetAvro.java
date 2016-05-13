@@ -88,6 +88,8 @@ public class TestHdfsTargetAvro {
       "",
       DataFormat.AVRO,
       dataGeneratorFormatConfig,
+      null,
+      false,
       null
     );
 
