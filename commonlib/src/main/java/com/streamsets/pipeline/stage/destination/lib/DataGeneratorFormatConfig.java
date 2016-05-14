@@ -358,7 +358,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setMode(csvFileFormat);
         builder.setMode(csvHeader);
         if(csvReplaceNewLines) {
-          builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_KEY, csvReplaceNewLinesString);
+          builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_STRING_KEY, csvReplaceNewLinesString);
         }
         builder.setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter);
         builder.setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape);

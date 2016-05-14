@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -51,6 +53,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -704,6 +707,64 @@ public class TestHdfsTarget {
     File[] list = new File(getTestDir() + "/hdfs/").listFiles();
     Assert.assertEquals(1, list.length);
     Assert.assertEquals("{\"a\":\"x\"}\n", FileUtils.readFileToString(list[0], Charset.defaultCharset()));
+  }
+
+  /**
+   * Verifies normal behavior when target directory is in the header.
+   */
+  @Test
+  public void testHdfsDelimitedDataFormat() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
+    dataGeneratorFormatConfig.csvReplaceNewLines = true;
+    dataGeneratorFormatConfig.csvReplaceNewLinesString = " ";
+    dataGeneratorFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        true,
+        null,
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${time:now()}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+        "",
+        DataFormat.DELIMITED,
+        dataGeneratorFormatConfig,
+        "1",
+        false,
+        null
+    );
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.getHeader().setAttribute(HdfsTarget.TARGET_DIRECTORY_HEADER, getTestDir() + "/hdfs/");
+    LinkedHashMap<String, Field> list = new LinkedHashMap<>();
+    list.put("x", Field.create("x\nz"));
+    list.put("y", Field.create("y"));
+    record.set(Field.createListMap(list));
+
+    runner.runWrite(ImmutableList.copyOf(new Record[]{record}));
+
+    runner.runDestroy();
+
+    File[] fileList = new File(getTestDir() + "/hdfs/").listFiles();
+    Assert.assertEquals(1, fileList.length);
+    Assert.assertEquals("x z,y\r\n", FileUtils.readFileToString(fileList[0], Charset.defaultCharset()));
   }
 
   /**
