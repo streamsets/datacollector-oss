@@ -706,7 +706,6 @@ public class TestHdfsTarget {
     Assert.assertEquals("{\"a\":\"x\"}\n", FileUtils.readFileToString(list[0], Charset.defaultCharset()));
   }
 
-
   /**
    * Records without expected header needs to be propagated to error output.
    */
@@ -737,7 +736,7 @@ public class TestHdfsTarget {
       "",
       DataFormat.JSON,
       dataGeneratorFormatConfig,
-      "1",
+      "-1",
       false,
       null
     );

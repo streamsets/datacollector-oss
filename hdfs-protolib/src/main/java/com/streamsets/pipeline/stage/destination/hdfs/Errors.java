@@ -85,7 +85,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_49("HDFS URI is not set and is also not available through 'fs.defaultFS' config"),
   HADOOPFS_50("Directory template header '" + HdfsTarget.TARGET_DIRECTORY_HEADER + "' missing"),
   HADOOPFS_51("Missing roll header name"),
-
+  HADOOPFS_52("Invalid setting for idle timeout")
   ;
 
   private final String msg;

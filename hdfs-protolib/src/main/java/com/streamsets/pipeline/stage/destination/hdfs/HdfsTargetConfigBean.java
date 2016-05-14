@@ -404,9 +404,11 @@ public class HdfsTargetConfigBean {
     boolean hadoopFSValidated = validateHadoopFS(context, issues);
 
     lateRecordsLimitSecs =
-        initTimeConfigs(context, "lateRecordsLimit", lateRecordsLimit, Groups.LATE_RECORDS, issues);
+        initTimeConfigs(context, "lateRecordsLimit", lateRecordsLimit, Groups.LATE_RECORDS,
+            false, Errors.HADOOPFS_10, issues);
     if (idleTimeout != null && !idleTimeout.isEmpty()) {
-      idleTimeSecs = initTimeConfigs(context, "idleTimeout", idleTimeout, Groups.OUTPUT_FILES, issues);
+      idleTimeSecs = initTimeConfigs(context, "idleTimeout", idleTimeout, Groups.OUTPUT_FILES,
+          true, Errors.HADOOPFS_52, issues);
     }
     if (maxFileSize < 0) {
       issues.add(
@@ -652,6 +654,8 @@ public class HdfsTargetConfigBean {
       String configName,
       String configuredValue,
       Groups configGroup,
+      boolean allowNegOne,
+      Errors errorCode,
       List<Stage.ConfigIssue> issues) {
     long timeInSecs = 0;
     try {
@@ -659,12 +663,12 @@ public class HdfsTargetConfigBean {
       context.parseEL(configuredValue);
       timeInSecs = timeEvaluator.eval(context.createELVars(),
           configuredValue, Long.class);
-      if (timeInSecs <= 0) {
+      if (timeInSecs <= 0 && (!allowNegOne || timeInSecs != -1)) {
         issues.add(
             context.createConfigIssue(
                 configGroup.name(),
                 HDFS_TARGET_CONFIG_BEAN_PREFIX + configName,
-                Errors.HADOOPFS_10
+                errorCode
             )
         );
       }
