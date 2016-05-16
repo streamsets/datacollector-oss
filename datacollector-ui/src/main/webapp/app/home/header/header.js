@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate,
+  .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location,
                                            pipelineService, pipelineConstant, $modal, $q, $route) {
 
 
@@ -284,7 +284,10 @@ angular
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Delete Pipeline', 1);
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event);
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(pipelines) {
+            $location.path('/');
+          });
       },
 
       /**
@@ -292,7 +295,10 @@ angular
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Pipeline', 1);
-        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event);
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
+          .then(function(newPipelineConfig) {
+            $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
+          });
       },
 
       /**
@@ -306,9 +312,9 @@ angular
       /**
        * Export link command handler
        */
-      exportPipelineConfig: function(pipelineInfo, $event) {
+      exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Export Pipeline', 1);
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
       },
 
       publishPipeline: function (pipelineInfo, $event) {

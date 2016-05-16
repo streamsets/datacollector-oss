@@ -26,6 +26,44 @@
           </li>
 
           <li role="presentation"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+              ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+            <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
+              <i class="fa fa-trash-o"></i>
+              <span>{{'global.form.delete' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(activeConfigInfo, $event)">
+              <i class="fa fa-files-o"></i>
+              <span>{{'global.form.duplicate' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <a href="#" dropdown-toggle ng-click="importPipelineConfig(activeConfigInfo, $event)">
+              <i class="glyphicon glyphicon-import"></i>
+              <span>{{'global.form.import' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, false, $event)">
+              <i class="glyphicon glyphicon-export"></i>
+              <span>{{'global.form.export' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+            <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, true, $event)">
+              <i class="glyphicon glyphicon-export"></i>
+              <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
+            </a>
+          </li>
+
+
+          <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING">
             <a href="#" dropdown-toggle ng-click="viewSnapshots()">
               <i class="glyphicon glyphicon-camera"></i> {{'home.header.snapshots' | translate}}
