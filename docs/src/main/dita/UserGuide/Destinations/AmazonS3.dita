@@ -22,8 +22,9 @@
         <p><indexterm>Amazon S3
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Amazon
                     S3</indexterm></indexterm>With the Amazon S3 destination, you configure the
-            region, bucket, and common prefix to define where to write the data. You can optionally
-            use a proxy user and compress data with gzip when writing to Amazon S3.</p>
+            region, bucket, and common prefix to define where to write the data. You can use a
+            partition prefix to specify the S3 partition to write to. You can also use a proxy user
+            and compress data with gzip when writing to Amazon S3.</p>
         <p>The destination creates a file for each batch of data written to Amazon S3. </p>
  </conbody>
 </concept>

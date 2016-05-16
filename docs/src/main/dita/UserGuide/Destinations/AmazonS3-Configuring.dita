@@ -64,6 +64,17 @@
                                     <entry/>
                                 </row>
                                 <row>
+                                    <entry>Partition Prefix <xref
+                                            href="AmazonS3-PartitionPrefix.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v34_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry>Optional partition prefix to specify the partition to
+                                        use. <p>Use a specific partition prefix or define an
+                                            expression that evaluates to a partition prefix.
+                                        </p></entry>
+                                </row>
+                                <row>
                                     <entry>File Name Prefix <xref
                                             href="AmazonS3-OutputFileNames.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
