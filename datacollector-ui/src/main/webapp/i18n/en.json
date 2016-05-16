@@ -49,6 +49,7 @@
       "delete": "Delete",
       "deleteStage": "Delete Stage",
       "deleteStream": "Delete Selected Stream",
+      "deleteOriginConfirmation": "Delete Origin Confirmation",
       "description": "Description",
       "done": "Done",
       "duplicate": "Duplicate",
@@ -133,6 +134,7 @@
     },
     "messages": {
       "info": {
+        "deleteOriginConfirmationMsg": "Deleting origin stage resets the current origin offset. Are you sure you want to delete?",
         "graphErrorBadgeLabel": "Total Error records + Stage errors.",
         "noPipelineExists": "No Pipeline found with name '{{name}}'",
         "noDataAvailable": "No Data Available.",

@@ -1710,6 +1710,10 @@ angular
       updateDetailPane(options);
     });
 
+    $scope.$on('onOriginStageDelete', function () {
+      api.pipelineAgent.resetOffset($scope.activeConfigInfo.name);
+    });
+
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if(configInfo) {
         $scope.activeConfigInfo = configInfo;

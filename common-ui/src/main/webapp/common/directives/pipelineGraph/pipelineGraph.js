@@ -31,7 +31,7 @@ angular.module('pipelineGraphDirectives', [])
       templateUrl: 'common/directives/pipelineGraph/pipelineGraph.tpl.html'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, $location,
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, $location, $modal,
                                                   pipelineConstant, $translate, pipelineService){
 
     var showTransition = false,
@@ -1139,7 +1139,7 @@ angular.module('pipelineGraphDirectives', [])
         nodeStartYPos = ((stageInstance.uiInfo.yPos) * currentScale),
         nodeEndXPos = ((stageInstance.uiInfo.xPos + thisGraph.consts.rectWidth) * currentScale),
         nodeEndYPos = ((stageInstance.uiInfo.yPos + thisGraph.consts.rectHeight) * currentScale);
-      
+
       if(parseInt(svgWidth) > 0 && parseInt(svgHeight) > 0 &&
         (nodeStartXPos < startX || nodeEndXPos > endX || nodeStartYPos < startY || nodeEndYPos > endY)) {
         thisGraph.moveNodeToCenter(stageInstance);
@@ -1367,27 +1367,23 @@ angular.module('pipelineGraphDirectives', [])
           return;
         }
         if (selectedNode) {
-          var nodeIndex = graph.nodes.indexOf(selectedNode);
 
-          if(nodeIndex !== -1) {
-            graph.nodes.splice(nodeIndex, 1);
+          if (selectedNode.uiInfo.stageType == pipelineConstant.SOURCE_STAGE_TYPE ) {
+            var modalInstance = $modal.open({
+                templateUrl: 'common/directives/pipelineGraph/deleteOrigin.tpl.html',
+                controller: 'DeleteOriginModalInstanceController',
+                size: '',
+                backdrop: 'static'
+              });
 
-            //Remove the input lanes in all stages having output lanes of delete node.
-            _.each(graph.edges, function(edge) {
-              if(edge.source === selectedNode) {
-                edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
-                  return !_.contains(edge.source.outputLanes, inputLane);
-                });
-              }
+            modalInstance.result.then(function (configInfo) {
+              deleteSelectedNode(selectedNode);
+              $scope.$emit('onOriginStageDelete', selectedNode);
+            }, function () {
+
             });
-
-            graph.spliceLinksForNode(selectedNode);
-            state.selectedNode = null;
-            $scope.$emit('onRemoveNodeSelection', {
-              selectedObject: undefined,
-              type: pipelineConstant.PIPELINE
-            });
-            graph.updateGraph();
+          } else {
+            deleteSelectedNode(selectedNode);
           }
         } else if (selectedEdge) {
           var edgeIndex = graph.edges.indexOf(selectedEdge);
@@ -1585,4 +1581,40 @@ angular.module('pipelineGraphDirectives', [])
       }
     };
 
+    var deleteSelectedNode = function(selectedNode) {
+      var nodeIndex = graph.nodes.indexOf(selectedNode);
+      var state = $scope.state;
+
+      if(nodeIndex !== -1) {
+        graph.nodes.splice(nodeIndex, 1);
+
+        //Remove the input lanes in all stages having output lanes of delete node.
+        _.each(graph.edges, function(edge) {
+          if(edge.source === selectedNode) {
+            edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
+              return !_.contains(edge.source.outputLanes, inputLane);
+            });
+          }
+        });
+
+        graph.spliceLinksForNode(selectedNode);
+        state.selectedNode = null;
+        $scope.$emit('onRemoveNodeSelection', {
+          selectedObject: undefined,
+          type: pipelineConstant.PIPELINE
+        });
+        graph.updateGraph();
+      }
+    }
+
+  })
+  .controller('DeleteOriginModalInstanceController', function ($scope, $modalInstance) {
+    angular.extend($scope, {
+      yes: function() {
+        $modalInstance.close();
+      },
+      no: function() {
+        $modalInstance.dismiss('cancel');
+      }
+    });
   });
