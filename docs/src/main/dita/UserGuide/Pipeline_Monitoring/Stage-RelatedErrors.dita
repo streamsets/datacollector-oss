@@ -28,10 +28,11 @@
       <p>Displays a sample of error records with related error messages, as well as the count and an
        error histogram.</p>
      </dd>
-     <dd>You can expand and review the data in each error record. The number of error records saved
-      in memory is defined in the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-       configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>.</dd>
+     <dd>You can expand and review the data in each error record. If the error was produced by an
+            exception, you can click <uicontrol>View Stack Trace</uicontrol> to view the full stack
+            trace. The number of error records saved in memory is defined in the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>.</dd>
     </dlentry>
     <dlentry>
      <dt>Stage Errors</dt>
