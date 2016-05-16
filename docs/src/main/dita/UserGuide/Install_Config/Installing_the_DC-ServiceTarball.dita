@@ -40,8 +40,9 @@
                         <filepath>/etc/init.d/</filepath> directory as sdc.</cmd>
             </step>
             <step>
-                <cmd>Edit the sdc file and set the SDC_DIST and SDC_HOME environment variables to
-                    the location where you extracted the tarball.</cmd>
+                <cmd>Edit the sdc file and set the <codeph>$SDC_DIST</codeph> and
+                        <codeph>$SDC_HOME</codeph> environment variables to the location where you
+                    extracted the tarball.</cmd>
             </step>
             <step>
                 <cmd>Use the following command to make the sdc file executable:</cmd>
@@ -56,8 +57,18 @@
                     /> as a service. </info>
             </step>
             <step>
-                <cmd>Create the <codeph>/etc/sdc</codeph> directory and copy all files from etc into this
-                    directory.</cmd>
+                <cmd>Create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory at <codeph>/etc/sdc</codeph> directory, copy all
+                    files from etc into this directory, and change the owner to sdc:sdc.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to set owner only permission on the
+                        <codeph>form-realm.properties</codeph> file in the <codeph>/etc/sdc</codeph>
+                    directory:</cmd>
+                <info>
+                    <codeblock>chmod go-rwx /etc/sdc/form-realm.properties</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>Create the <ph
