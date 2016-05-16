@@ -258,6 +258,26 @@
                             <entry/>
                             <entry/>
                         </row>
+                                                <row>
+                                                  <entry>SFTP/FTP Client</entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_djx_r3r_yv"/></entry>
+                                                  <entry/>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_azy_r3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_zxz_r3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_y1b_s3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_t3c_s3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_qld_s3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_sn2_s3r_yv"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_yqf_s3r_yv"/></entry>
+                                                </row>
                         <row>
                             <entry>UDP Source</entry>
                             <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>

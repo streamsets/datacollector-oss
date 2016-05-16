@@ -14,9 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ic5_bzd_5v">
- <title>SFTP</title>
- <shortdesc>Information forthcoming.</shortdesc>
+ <title>SFTP/FTP Client</title>
+ <shortdesc>The SFTP/FTP Client origin reads files from a server using the Secure File Transfer
+        Protocol (SFTP) or the File Transfer Protocol (FTP). </shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>SFTP/FTP Client
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>SFTP/FTP
+                    Client</indexterm></indexterm>When you configure the SFTP/FTP Client origin, you
+            specify the URL where the files reside on the remote server and other read properties.
+            If the server requires authentication, configure the origin to use login credentials. If
+            using the SFTP protocol, you can also configure the origin for strict host checking. </p>
+        <p>You can configure the origin to download files to an archive directory if the origin
+            encounters errors while reading the files.</p>
  </conbody>
 </concept>

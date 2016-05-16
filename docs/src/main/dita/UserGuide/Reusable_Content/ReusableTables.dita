@@ -182,7 +182,7 @@
    </table>
    <draft-comment author="Loretta">The following rows are used in full for the Amazon S3 origin and
     the Amazon S3 destination reuses individual rows. Data Format and File Compression are also used
-    in Directory.</draft-comment>
+    in Directory and SFTP Client.</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
@@ -250,7 +250,7 @@
        <entry>Data Format <xref href="../Origins/AmazonS3-DataFormat.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_w4w_q3p_ht"/>
         </xref></entry>
-       <entry>Data format for source files. Use one of the following formats:<ul id="ul_y1t_wql_5q">
+       <entry id="entryDataFormats">Data format for source files. Use one of the following formats:<ul id="ul_y1t_wql_5q">
          <li>Avro</li>
          <li>Delimited</li>
          <li>JSON</li>

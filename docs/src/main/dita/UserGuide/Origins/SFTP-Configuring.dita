@@ -14,15 +14,228 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_lfx_fzd_5v">
-    <title>Configuring an SFTP Origin</title>
-    <shortdesc>Information forthcoming.</shortdesc>
+    <title>Configuring an SFTP/FTP Client Origin</title>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>SFTP/FTP Client
+                origin<indexterm>configuring</indexterm></indexterm>Configure an SFTP/FTP Client
+                origin to read files from an SFTP or FTP server.</p>
         </context>
         <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
             <step>
-                <cmd></cmd>
+                <cmd>On the <wintitle>SFTP/FTP</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_utf_vfs_wv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>SFTP/FTP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Resource URL</entry>
+                                    <entry>URL where the files reside on the remote server. <p>For
+                                            the SFTP protocol, use the following format:
+                                            <codeblock>sftp://&lt;host name>:&lt;port number>/&lt;path></codeblock></p><p>For
+                                            the FTP protocol, use the following format:
+                                            <codeblock>ftp://&lt;host name>:&lt;port number>/&lt;path> </codeblock></p><p>You
+                                            can omit the port number from the URL if the server uses
+                                            the standard port number - 22 for SFTP or 21 for
+                                            FTP.</p><p>You can optionally include the user name to
+                                            log in to the SFTP or FTP server in the URL. For
+                                            example, for the FTP protocol, you can use the following
+                                            format:</p><codeblock>ftp://&lt;user name>:&lt;password>@&lt;host name>/&lt;path></codeblock><note>If
+                                            you enter a user name in the resource URL and configure
+                                            password or private key authentication on the
+                                            Credentials tab, the value entered in the URL takes
+                                            precedence.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Path Relative to User Home Directory</entry>
+                                    <entry>Select if the path included in the resource URL is
+                                        relative to the home directory of the user that logs in to
+                                        the remote server.<p>Applicable when you include a user name
+                                            in the URL or when you configure password or private key
+                                            authentication on the Credentials tab.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format
+                                        <xref
+                                            href="SFTPClient-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"/></xref>
+                                    </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entryDataFormats"/>
+                                </row>
+                                <row>
+                                    <entry>Poll Interval</entry>
+                                    <entry>Seconds the origin waits before checking for new files
+                                        from the remote server. </entry>
+                                </row>
+                                <row>
+                                    <entry>Charset</entry>
+                                    <entry>Character encoding of the messages to be
+                                        processed.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size (records)</entry>
+                                    <entry>Maximum number of records to include in a batch and send
+                                        through the pipeline at one time.</entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (ms) <xref
+                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Number of milliseconds to wait before sending a partial
+                                        or empty batch. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Credentials</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gvj_fjs_wv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property
+                                        <xref
+                                            href="SFTP-Credentials.dita#concept_vnj_njp_yv">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_5q6_br" placement="inline"
+                                            /></xref></entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Authentication Method</entry>
+                                    <entry>Authentication method to use to log in to the remote
+                                            server:<ul id="ul_k2d_wsq_yv">
+                                            <li>None - The remote server does not require
+                                                authentication.</li>
+                                            <li>Password - The remote server requires authentication
+                                                using a user name and password. </li>
+                                            <li>Private key - The SFTP server requires
+                                                authentication using a private key file.</li>
+                                        </ul><p>Default is None.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>User name to log in to the remote server. Used for
+                                        password and private key authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password to log in to the remote server. Used for
+                                        password authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Private Key File</entry>
+                                    <entry>Full path to the local private key file used to log in to
+                                        the remote server. Used for private key
+                                        authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Private Key Passphrase</entry>
+                                    <entry>Passphrase used to open the private key file. Used for
+                                        private key authentication if the private key is protected
+                                        with a passphrase.</entry>
+                                </row>
+                                <row>
+                                    <entry>Strict Host Checking</entry>
+                                    <entry>Specifies whether to check that the SFTP server is listed
+                                        in the known hosts file. When enabled, the origin connects
+                                        to the server only if the server is listed in the known
+                                        hosts file. <p>For the SFTP protocol only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Known Hosts File</entry>
+                                    <entry>Full path to the local known hosts file. Required if
+                                        strict host checking is selected.<p>For the SFTP protocol
+                                            only.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Error Handling</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qzq_ljs_wv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Error Handling Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Archive on Error</entry>
+                                    <entry>Specifies whether to download and archive files to a
+                                        local directory if the origin encounters errors while
+                                        reading the file.</entry>
+                                </row>
+                                <row>
+                                    <entry>Archive Directory</entry>
+                                    <entry>Local directory to archive the files.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
+                <cmd/>
             </step>
         </steps>
     </taskbody>
