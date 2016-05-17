@@ -455,8 +455,10 @@
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
-                <source>${basedir}/../kakfa_source-protolib/src/test/java</source>
-                <source>${basedir}/../kakfa_target-protolib/src/test/java</source>
+                <!-- See SDC-2982. We're skipping Kafka tests intentionally.
+                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
+                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
+                -->
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
