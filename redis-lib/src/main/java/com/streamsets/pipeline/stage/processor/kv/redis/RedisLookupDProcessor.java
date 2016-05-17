@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.processor.kv.LookupProcessor;
 @StageDef(
     version = 1,
     label = "Redis Lookup Processor",
-    description = "Performs KV lookups to enrich records.",
+    description = "Performs key-value lookups in Redis.",
     icon = "redis.png",
     onlineHelpRefUrl = "index.html#Processors/RedisLookup.html#task_gpv_npr_pv"
 )

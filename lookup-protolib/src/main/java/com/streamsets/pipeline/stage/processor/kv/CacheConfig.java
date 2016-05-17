@@ -38,10 +38,10 @@ public class CacheConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Maximum Cache Size",
+      label = "Maximum Entries to Cache",
       min = -1,
       defaultValue = "-1",
-      description = "Maximum number of K/V pairs to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
+      description = "Maximum number of key-value pairs to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
       dependsOn = "enabled",
       triggeredByValue = "true",
       displayPosition = 40,
@@ -53,7 +53,7 @@ public class CacheConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Eviction Policy Type",
-      description = "Policy type used to evict key/value pairs from the local cache. " +
+      description = "Policy type used to evict key-value pairs from the local cache. " +
           "Select whether to reset the expiration time after the last write or after the last access of the value.",
       dependsOn = "enabled",
       triggeredByValue = "true",

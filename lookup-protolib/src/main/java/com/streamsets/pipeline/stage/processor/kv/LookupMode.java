@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum LookupMode implements Label {
-  RECORD("Per Record"),
+  RECORD("Per Key in Each Record"),
   BATCH("Per Batch")
   ;
 

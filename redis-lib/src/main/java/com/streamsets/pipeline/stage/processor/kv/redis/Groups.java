@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  LOOKUP("K/V Lookup"),
+  LOOKUP("Lookup"),
   REDIS("Redis"),
   ;
 

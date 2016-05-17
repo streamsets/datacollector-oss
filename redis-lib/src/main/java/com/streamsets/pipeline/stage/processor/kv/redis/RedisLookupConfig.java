@@ -35,7 +35,7 @@ public class RedisLookupConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "URI",
-      description = "Use format redis://[username:password@]host1[:port1][/[database]]",
+      description = "Use format redis://[username:password@]host[:port][/[database]]",
       displayPosition = 10,
       group = "REDIS"
   )
