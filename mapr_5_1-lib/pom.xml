@@ -35,6 +35,7 @@
     <avro.version>1.7.7</avro.version>
     <!-- Closed source artifacts should be provided dependency -->
     <hadoop.version>2.7.0-mapr-1506</hadoop.version>
+    <hive.version>1.2.0-mapr-1508</hive.version>
     <zookeeper.version>3.4.5-mapr-1503</zookeeper.version>
  </properties>
 
@@ -141,6 +142,29 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Hive related -->
+    <dependency>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-streaming</artifactId>
+      <version>${hive.version}</version>
+      <scope>provided</scope>
+      <exclusions>
+        <!-- Excluded because calcite is having non-relocated copy of jackson that
+             is affecting our own code -->
+        <exclusion>
+          <groupId>org.apache.calcite</groupId>
+          <artifactId>calcite-avatica</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-core</artifactId>
+      <version>${hive.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Protolibs -->
 
     <dependency>
@@ -149,14 +173,12 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-maprdb-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-maprstreams-source-protolib</artifactId>
@@ -168,6 +190,26 @@
       <artifactId>streamsets-datacollector-maprstreams-target-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-hive-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hive.hcatalog</groupId>
+          <artifactId>hive-hcatalog-streaming</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hive.hcatalog</groupId>
+          <artifactId>hive-hcatalog-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
