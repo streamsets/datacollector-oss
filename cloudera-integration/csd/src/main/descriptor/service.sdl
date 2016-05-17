@@ -581,10 +581,9 @@
         },
         {
           "name": "xmail.password",
-          "label": "Mail password file",
-          "description": "File that contains the password for the email account. By default, the file name is email-password.txt and expected in the $SDC_CONF directory.",
-          "type": "string",
-          "default": "${file(email-password.txt)}"
+          "label": "Mail password",
+          "description": "Password for the email account to send alert email.",
+          "type": "password"
         },
         {
           "name": "runner.thread.pool.size",
