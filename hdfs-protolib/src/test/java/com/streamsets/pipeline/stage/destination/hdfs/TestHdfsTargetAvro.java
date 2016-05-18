@@ -66,32 +66,11 @@ public class TestHdfsTargetAvro {
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "file:///",
-      "foo",
-      false,
-      null,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      dirPathTemplate,
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      3,
-      0,
-      "${time:now()}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_ERROR,
-      "",
-      DataFormat.AVRO,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(dirPathTemplate)
+      .dataGeneratorFormatConfig(dataGeneratorFormatConfig)
+      .dataForamt(DataFormat.AVRO)
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -137,5 +116,4 @@ public class TestHdfsTargetAvro {
     SdcAvroTestUtil.compare1(genericRecords);
 
   }
-
 }

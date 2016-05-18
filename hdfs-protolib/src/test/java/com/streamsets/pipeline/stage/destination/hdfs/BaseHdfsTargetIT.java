@@ -404,34 +404,13 @@ public class BaseHdfsTargetIT {
       });
     }
 
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      miniDFS.getFileSystem().getUri().toString(),
-      user,
-      false,
-      "",
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      dir.toString(),
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      1,
-      1,
-      "${time:now()}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      dir.toString(),
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .hdfsUri(miniDFS.getFileSystem().getUri().toString())
+      .hdfsUser(user)
+      .dirPathTemplate(dir.toString())
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate(dir.toString())
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -466,34 +445,15 @@ public class BaseHdfsTargetIT {
     final Path dir = new Path("/" + UUID.randomUUID().toString());
       miniDFS.getFileSystem().mkdirs(dir);
 
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      miniDFS.getFileSystem().getUri().toString(),
-      "",
-      false,
-      "",
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      dir.toString() + "/${YY()}${MM()}${DD()}${hh()}${every(10, mm())}",
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      1,
-      1,
-      "${record:value('/')}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      dir.toString(),
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .hdfsUri(miniDFS.getFileSystem().getUri().toString())
+      .hdfsUser("")
+      .dirPathTemplate(dir.toString() + "/${YY()}${MM()}${DD()}${hh()}${every(10, mm())}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate(dir.toString())
+      .timeDriver("${record:value('/')}")
+      .lateRecordsLimit("${30 * MINUTES}")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -525,34 +485,14 @@ public class BaseHdfsTargetIT {
   @Test
   public void testWriteBatch() throws Exception{
     final Path dir = new Path("/" + UUID.randomUUID().toString());
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      miniDFS.getFileSystem().getUri().toString(),
-      "",
-      false,
-      "",
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      dir.toString(),
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      10,
-      100,
-      "${time:now()}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      dir.toString(),
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .hdfsUri(miniDFS.getFileSystem().getUri().toString())
+      .hdfsUser("")
+      .dirPathTemplate(dir.toString())
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate(dir.toString())
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -597,5 +537,4 @@ public class BaseHdfsTargetIT {
 
     target.hdfsTargetConfigBean = hdfsTargetConfigBean;
   }
-
 }

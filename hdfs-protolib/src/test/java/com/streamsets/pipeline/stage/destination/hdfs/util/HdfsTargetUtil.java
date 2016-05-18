@@ -28,61 +28,189 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsTargetConfigBean;
 import com.streamsets.pipeline.stage.destination.hdfs.LateRecordsAction;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HdfsTargetUtil {
 
-  public static HdfsTarget createHdfsTarget(
-      String hdfsUri,
-      String hdfsUser,
-      boolean hdfsKerberos,
-      String hdfsConfDir,
-      Map<String, String> hdfsConfigs,
-      String uniquePrefix,
-      String timeZoneID,
-      boolean dirPathTemplateInHeader,
-      String dirPathTemplate,
-      HdfsFileType fileType,
-      String keyEl,
-      CompressionMode compression,
-      HdfsSequenceFileCompressionType seqFileCompressionType,
-      int maxRecordsPerFile,
-      int maxFileSize,
-      String timeDriver,
-      String lateRecordsLimit,
-      LateRecordsAction lateRecordsAction,
-      String lateRecordsDirPathTemplate,
-      DataFormat dataFormat,
-      DataGeneratorFormatConfig dataGeneratorFormatConfig,
-      String idleTimeout,
-      boolean rollIfHeader,
-      String rollHeaderName
-  ) {
-    HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
-    hdfsTargetConfigBean.hdfsUri = hdfsUri;
-    hdfsTargetConfigBean.hdfsUser = hdfsUser;
-    hdfsTargetConfigBean.hdfsKerberos = hdfsKerberos;
-    hdfsTargetConfigBean.hdfsConfDir = hdfsConfDir;
-    hdfsTargetConfigBean.hdfsConfigs = hdfsConfigs;
-    hdfsTargetConfigBean.uniquePrefix = uniquePrefix;
-    hdfsTargetConfigBean.timeZoneID = timeZoneID;
-    hdfsTargetConfigBean.dirPathTemplateInHeader = dirPathTemplateInHeader;
-    hdfsTargetConfigBean.dirPathTemplate = dirPathTemplate;
-    hdfsTargetConfigBean.fileType = fileType;
-    hdfsTargetConfigBean.keyEl = keyEl;
-    hdfsTargetConfigBean.compression = compression;
-    hdfsTargetConfigBean.seqFileCompressionType = seqFileCompressionType;
-    hdfsTargetConfigBean.maxRecordsPerFile = maxRecordsPerFile;
-    hdfsTargetConfigBean.maxFileSize = maxFileSize;
-    hdfsTargetConfigBean.timeDriver = timeDriver;
-    hdfsTargetConfigBean.lateRecordsLimit = lateRecordsLimit;
-    hdfsTargetConfigBean.lateRecordsAction = lateRecordsAction;
-    hdfsTargetConfigBean.lateRecordsDirPathTemplate = lateRecordsDirPathTemplate;
-    hdfsTargetConfigBean.dataFormat = dataFormat;
-    hdfsTargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
-    hdfsTargetConfigBean.idleTimeout = idleTimeout;
-    hdfsTargetConfigBean.rollIfHeader = rollIfHeader;
-    hdfsTargetConfigBean.rollHeaderName = rollHeaderName;
-    return new HdfsTarget(hdfsTargetConfigBean);
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    String hdfsUri = "file:///";
+    String hdfsUser = "foo";
+    boolean hdfsKerberos = false;
+    String hdfsConfDir = null;
+    Map<String, String> hdfsConfigs = new HashMap<>();
+    String uniquePrefix = "foo";
+    String timeZoneID = "UTC";
+    boolean dirPathTemplateInHeader = false;
+    String dirPathTemplate = "/tmp/output/";
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    String keyEl = "${uuid()}";
+    CompressionMode compression = CompressionMode.NONE;
+    HdfsSequenceFileCompressionType seqFileCompressionType = HdfsSequenceFileCompressionType.BLOCK;
+    int maxRecordsPerFile = 5;
+    int maxFileSize = 0;
+    String timeDriver = "${time:now()}";
+    String lateRecordsLimit = "${1 * SECONDS}";
+    LateRecordsAction lateRecordsAction = LateRecordsAction.SEND_TO_ERROR;
+    String lateRecordsDirPathTemplate = "";
+    DataFormat dataFormat = DataFormat.SDC_JSON;
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    String idleTimeout = null;
+    boolean rollIfHeader = false;
+    String rollHeaderName = null;
+
+    public HdfsTarget build() {
+      HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
+      hdfsTargetConfigBean.hdfsUri = hdfsUri;
+      hdfsTargetConfigBean.hdfsUser = hdfsUser;
+      hdfsTargetConfigBean.hdfsKerberos = hdfsKerberos;
+      hdfsTargetConfigBean.hdfsConfDir = hdfsConfDir;
+      hdfsTargetConfigBean.hdfsConfigs = hdfsConfigs;
+      hdfsTargetConfigBean.uniquePrefix = uniquePrefix;
+      hdfsTargetConfigBean.timeZoneID = timeZoneID;
+      hdfsTargetConfigBean.dirPathTemplateInHeader = dirPathTemplateInHeader;
+      hdfsTargetConfigBean.dirPathTemplate = dirPathTemplate;
+      hdfsTargetConfigBean.fileType = fileType;
+      hdfsTargetConfigBean.keyEl = keyEl;
+      hdfsTargetConfigBean.compression = compression;
+      hdfsTargetConfigBean.seqFileCompressionType = seqFileCompressionType;
+      hdfsTargetConfigBean.maxRecordsPerFile = maxRecordsPerFile;
+      hdfsTargetConfigBean.maxFileSize = maxFileSize;
+      hdfsTargetConfigBean.timeDriver = timeDriver;
+      hdfsTargetConfigBean.lateRecordsLimit = lateRecordsLimit;
+      hdfsTargetConfigBean.lateRecordsAction = lateRecordsAction;
+      hdfsTargetConfigBean.lateRecordsDirPathTemplate = lateRecordsDirPathTemplate;
+      hdfsTargetConfigBean.dataFormat = dataFormat;
+      hdfsTargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
+      hdfsTargetConfigBean.idleTimeout = idleTimeout;
+      hdfsTargetConfigBean.rollIfHeader = rollIfHeader;
+      hdfsTargetConfigBean.rollHeaderName = rollHeaderName;
+      return new HdfsTarget(hdfsTargetConfigBean);
+    }
+
+    public Builder hdfsUri(String hdfsUri) {
+      this.hdfsUri = hdfsUri;
+      return this;
+    }
+
+    public Builder hdfsUser(String hdfsUser) {
+      this.hdfsUser = hdfsUser;
+      return this;
+    }
+
+    public Builder hdfsKerberos(boolean hdfsKerberos) {
+      this.hdfsKerberos = hdfsKerberos;
+      return this;
+    }
+
+    public Builder hdfsConfDir(String dir) {
+      this.hdfsConfDir = dir;
+      return this;
+    }
+
+    public Builder addHdfsConfig(String key, String value) {
+      this.hdfsConfigs.put(key, value);
+      return this;
+    }
+
+    public Builder uniquePrefix(String prefix) {
+      this.uniquePrefix = prefix;
+      return this;
+    }
+
+    public Builder timeZoneId(String timeZoneID) {
+      this.timeZoneID = timeZoneID;
+      return this;
+    }
+
+    public Builder dirPathTemplateInHeader(boolean inHeader) {
+      this.dirPathTemplateInHeader = inHeader;
+      return this;
+    }
+
+    public Builder dirPathTemplate(String template) {
+      this.dirPathTemplate = template;
+      return this;
+    }
+
+    public Builder fileType(HdfsFileType type) {
+      this.fileType = type;
+      return this;
+    }
+
+    public Builder keyEl(String el) {
+      this.keyEl = el;
+      return this;
+    }
+
+    public Builder compression(CompressionMode mode) {
+      this.compression = mode;
+      return this;
+    }
+
+    public Builder seqFileCompressionType(HdfsSequenceFileCompressionType type) {
+      this.seqFileCompressionType = type;
+      return this;
+    }
+
+    public Builder maxRecordsPerFile(int size) {
+      this.maxRecordsPerFile = size;
+      return this;
+    }
+
+    public Builder maxFileSize(int size) {
+      this.maxFileSize = size;
+      return this;
+    }
+
+    public Builder timeDriver(String timeDriver) {
+      this.timeDriver = timeDriver;
+      return this;
+    }
+
+    public Builder lateRecordsLimit(String limit) {
+      this.lateRecordsLimit = limit;
+      return this;
+    }
+
+    public Builder lateRecordsAction(LateRecordsAction action) {
+      this.lateRecordsAction = action;
+      return this;
+    }
+
+    public Builder lateRecordsDirPathTemplate(String template) {
+      this.lateRecordsDirPathTemplate = template;
+      return this;
+    }
+
+    public Builder dataForamt(DataFormat format) {
+      this.dataFormat = format;
+      return this;
+    }
+
+    public Builder dataGeneratorFormatConfig(DataGeneratorFormatConfig config) {
+      this.dataGeneratorFormatConfig = config;
+      return this;
+    }
+
+    public Builder idleTimeout(String idleTimeout) {
+      this.idleTimeout = idleTimeout;
+      return this;
+    }
+
+    public Builder rollIfHeader(boolean rollIfHeader) {
+      this.rollIfHeader = rollIfHeader;
+      return this;
+    }
+
+   public Builder rollHeaderName(String rollHeaderName) {
+     this.rollHeaderName = rollHeaderName;
+      return this;
+    }
+
   }
 }

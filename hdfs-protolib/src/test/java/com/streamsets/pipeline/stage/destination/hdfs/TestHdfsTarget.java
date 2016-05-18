@@ -81,35 +81,12 @@ public class TestHdfsTarget {
 
   @Test
   public void testTarget() throws Exception {
-
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}")
+      .timeDriver("${record:value('/time')}")
+      .lateRecordsLimit("${30 * MINUTES}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -144,15 +121,12 @@ public class TestHdfsTarget {
     records.add(record);
 
     runner.runWrite(records);
-
     runner.runDestroy();
   }
 
   @Test
   public void testOnlyConfDirectory() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    // Create core-site.xml
+    // Create custom core-site.xml
     Configuration configuration = new Configuration();
     configuration.clear();
     configuration.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, "file:///");
@@ -160,32 +134,10 @@ public class TestHdfsTarget {
     configuration.writeXml(configOut);
     configOut.close();
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "",
-        "foo",
-        false,
-        getTestDir() + "/conf-dir/",
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .hdfsUri("")
+      .hdfsConfDir(getTestDir() + "/conf-dir/")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -201,34 +153,12 @@ public class TestHdfsTarget {
 
   @Test
   public void testCutoffLimitUnitConversion() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "file:///",
-      "foo",
-      false,
-      null,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      1,
-      1,
-      "${record:value('/time')}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      getTestDir() + "/hdfs/${YYYY()}",
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .maxFileSize(1)
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}")
+      .lateRecordsDirPathTemplate(getTestDir() + "/hdfs/${YYYY()}")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -248,34 +178,11 @@ public class TestHdfsTarget {
   @Ignore
   @Test
   public void testEmptyBatch() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${ss()}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        1,
-        1,
-        "${time:now()}",
-        "${1 * SECONDS}",
-        LateRecordsAction.SEND_TO_ERROR,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .maxFileSize(1)
+      .maxRecordsPerFile(1)
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -301,34 +208,9 @@ public class TestHdfsTarget {
    */
   @Test
   public void testInvalidDirValidation() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        "nonabsolutedir",   // relative path
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        1,
-        1,
-        "${time:now()}",
-        "${1 * SECONDS}",
-        LateRecordsAction.SEND_TO_ERROR,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate("invalid-directory")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -339,41 +221,17 @@ public class TestHdfsTarget {
     Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_40.name()));
   }
 
-
   /**
     If late record directory is "SEND TO ERROR", we don't do validation on late record directory.
     This test should't raise an config issue.
   */
   @Test
   public void testNoLateRecordsDirValidation() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_ERROR, // action should be SEND_TO_ERROR to skip validation
-        "relative_path", // lateRecordsDirPathTemplate is relative path
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_ERROR)
+      .lateRecordsDirPathTemplate("relative-and-thus-invalid")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -382,40 +240,16 @@ public class TestHdfsTarget {
     Assert.assertTrue(runner.runValidateConfigs().isEmpty());
   }
 
-
   /**
     If late record action is SEND_TO_LATE_RECORDS_FILE, we should do validation on the directory path.
   */
   @Test
   public void testLateRecordsDirValidation() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
-        getTestDir() + "/late_record/${TEST}", // lateRecordsDirPathTemplate contains constant that we don't know
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate(getTestDir() + "/late/${TEST}") // Unknown constant
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -433,35 +267,11 @@ public class TestHdfsTarget {
   */
   @Test
   public void testDirValidationFailure() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "${TEST}", // output dir contains constant that we don't know
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
-        "relative/late_record",  // creating this dir should fail
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "${TEST}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate("relative-and-thus-invalid")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -481,34 +291,11 @@ public class TestHdfsTarget {
   */
   @Test
   public void testDirWithELsValidation() throws Exception {
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}-${MM()}/out",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
-        getTestDir() + "/late_record/${YYYY()}-${MM()}", // lateRecordsDirPathTemplate contains Els
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}-${MM()}/out")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .lateRecordsDirPathTemplate(getTestDir() + "/late_record/${YYYY()}-${MM()}") // lateRecordsDirPathTemplate contains Els
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -528,35 +315,9 @@ public class TestHdfsTarget {
 
   @Test
   public void testClusterModeHadoopConfDirAbsPath() {
-
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "file:///",
-      "foo",
-      false,
-      testDir,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      false,
-      getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      5,
-      0,
-      "${record:value('/time')}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_ERROR,
-      "",
-      DataFormat.SDC_JSON,
-      dataGeneratorFormatConfig,
-      null,
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .hdfsConfDir(testDir)
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -574,35 +335,10 @@ public class TestHdfsTarget {
 
   @Test
   public void testIdleTimeout() throws Exception {
-
-    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        "1",
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}")
+      .idleTimeout("1")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -663,32 +399,13 @@ public class TestHdfsTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "file:///",
-      "foo",
-      false,
-      null,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      true,
-      null,
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      5,
-      0,
-      "${time:now()}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      "",
-      DataFormat.JSON,
-      dataGeneratorFormatConfig,
-      "1",
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dataGeneratorFormatConfig(dataGeneratorFormatConfig)
+      .dirPathTemplateInHeader(true)
+      .dirPathTemplate(null)
+      .dataForamt(DataFormat.JSON)
+      .build();
+
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
@@ -720,32 +437,12 @@ public class TestHdfsTarget {
     dataGeneratorFormatConfig.csvReplaceNewLinesString = " ";
     dataGeneratorFormatConfig.csvHeader = CsvHeader.NO_HEADER;
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        true,
-        null,
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${time:now()}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.DELIMITED,
-        dataGeneratorFormatConfig,
-        "1",
-        false,
-        null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dataGeneratorFormatConfig(dataGeneratorFormatConfig)
+      .dirPathTemplateInHeader(true)
+      .dataForamt(DataFormat.DELIMITED)
+      .build();
+
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
@@ -775,32 +472,13 @@ public class TestHdfsTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-      "file:///",
-      "foo",
-      false,
-      null,
-      new HashMap<String, String>(),
-      "foo",
-      "UTC",
-      true,
-      null,
-      HdfsFileType.TEXT,
-      "${uuid()}",
-      CompressionMode.NONE,
-      HdfsSequenceFileCompressionType.BLOCK,
-      5,
-      0,
-      "${time:now()}",
-      "${30 * MINUTES}",
-      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-      "",
-      DataFormat.JSON,
-      dataGeneratorFormatConfig,
-      "-1",
-      false,
-      null
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dataGeneratorFormatConfig(dataGeneratorFormatConfig)
+      .dirPathTemplateInHeader(true)
+      .dirPathTemplate(null)
+      .dataForamt(DataFormat.JSON)
+      .build();
+
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
@@ -822,33 +500,10 @@ public class TestHdfsTarget {
   @Test
   public void testForcedRollOutByHeaderWithInvalidHeaderConfiguration() throws Exception {
     for(String headerValue : Arrays.asList("", null)) {
-      DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-      HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${record:value('/time')}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.SDC_JSON,
-        dataGeneratorFormatConfig,
-        null,
-        true, // Roll by header is true, but name of the header is invalid
-        headerValue
-      );
+      HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .rollIfHeader(true)
+        .rollHeaderName(headerValue)
+        .build();
 
       TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -865,32 +520,13 @@ public class TestHdfsTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
 
-    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
-        "file:///",
-        "foo",
-        false,
-        null,
-        new HashMap<String, String>(),
-        "foo",
-        "UTC",
-        false,
-        getTestDir() + "/hdfs/",
-        HdfsFileType.TEXT,
-        "${uuid()}",
-        CompressionMode.NONE,
-        HdfsSequenceFileCompressionType.BLOCK,
-        5,
-        0,
-        "${time:now()}",
-        "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
-        "",
-        DataFormat.JSON,
-        dataGeneratorFormatConfig,
-        null,
-        true,
-        "roll"
-    );
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/")
+      .dataGeneratorFormatConfig(dataGeneratorFormatConfig)
+      .dataForamt(DataFormat.JSON)
+      .rollIfHeader(true)
+      .rollHeaderName("roll")
+      .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
