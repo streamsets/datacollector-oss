@@ -359,18 +359,20 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
         //try loading from store, needed in cases like restart
         RuleDefinitions ruleDefinitions = null;
-        File rulesFile = getRulesFile(name);
-        if(rulesFile.exists()) {
-          try (InputStream is = new DataStore(rulesFile).getInputStream()){
-            RuleDefinitionsJson ruleDefinitionsJsonBean =
-              ObjectMapperFactory.get().readValue(is, RuleDefinitionsJson.class);
-            ruleDefinitions = ruleDefinitionsJsonBean.getRuleDefinitions();
-          } catch (IOException ex) {
-            //File does not exist
-            LOG.debug(ContainerError.CONTAINER_0403.getMessage(), name, ex.toString(),
-                      ex);
-            ruleDefinitions = null;
+        DataStore ds = new DataStore(getRulesFile(name));
+        try {
+          if (ds.exists()) {
+            try (InputStream is = ds.getInputStream()) {
+              RuleDefinitionsJson ruleDefinitionsJsonBean =
+                  ObjectMapperFactory.get().readValue(is, RuleDefinitionsJson.class);
+              ruleDefinitions = ruleDefinitionsJsonBean.getRuleDefinitions();
+            }
           }
+        } catch (IOException ex) {
+          //File does not exist
+          LOG.debug(ContainerError.CONTAINER_0403.getMessage(), name, ex.toString(),
+              ex);
+          ruleDefinitions = null;
         }
         if(ruleDefinitions == null) {
           ruleDefinitions = new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),

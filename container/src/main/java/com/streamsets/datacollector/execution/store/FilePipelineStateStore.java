@@ -146,15 +146,20 @@ public class FilePipelineStateStore implements PipelineStateStore {
     String name = nameAndRevArray[0];
     String rev = nameAndRevArray[1];
     LOG.debug("Loading state from file for pipeline: '{}'::'{}'", name, rev);
-    if (getPipelineStateFile(name, rev).exists()) {
-      try (InputStream is = new DataStore(getPipelineStateFile(name, rev)).getInputStream()) {
-        PipelineStateJson pipelineStatusJsonBean = ObjectMapperFactory.get().readValue(is, PipelineStateJson.class);
-        pipelineState = pipelineStatusJsonBean.getPipelineState();
-      } catch (IOException e) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.toString(), e);
+    try {
+      // SDC-2930: We don't check for the existence of the actual state file itself, since the DataStore will take care of
+      // picking up the correct files (the new/tmp files etc).
+      DataStore ds = new DataStore(getPipelineStateFile(name, rev));
+      if (ds.exists()) {
+        try (InputStream is = ds.getInputStream()) {
+          PipelineStateJson pipelineStatusJsonBean = ObjectMapperFactory.get().readValue(is, PipelineStateJson.class);
+          pipelineState = pipelineStatusJsonBean.getPipelineState();
+        }
+      } else {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0209, getPipelineStateFile(name, rev));
       }
-    } else {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0209, getPipelineStateFile(name, rev));
+    } catch (IOException e) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.toString(), e);
     }
     return pipelineState;
   }

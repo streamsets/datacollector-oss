@@ -316,4 +316,13 @@ public class DataStore {
     }
   }
 
+  /**
+   * Check if the DataStore exists and contains data.
+   * This method will check for the presence of the set of files that can be used to read data from the store.
+   */
+  public boolean exists() throws IOException {
+    verifyAndRecover();
+    return Files.exists(file) && Files.size(file) > 0;
+  }
+
 }
