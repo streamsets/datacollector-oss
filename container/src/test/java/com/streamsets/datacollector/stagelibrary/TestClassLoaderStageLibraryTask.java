@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.pipeline.ApplicationPackage;
@@ -36,12 +37,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 
 public class TestClassLoaderStageLibraryTask {
 
@@ -81,10 +84,12 @@ public class TestClassLoaderStageLibraryTask {
 
   @Test
   public void testAutoELs() {
+    File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     ClassLoader cl = new SDCClassLoader("library", "lib", Collections.<URL>emptyList(), getClass().getClassLoader(),
                                         new String[0], new SystemPackage(new String[0]),
                                         new ApplicationPackage(new TreeSet<String>()), false, false);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
 
     ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, new Configuration());

@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -42,7 +42,7 @@ import java.util.Set;
 public class RuntimeEL {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeEL.class);
-  private static final String DPM_PROPERTIES = "dpm.properties";
+  private static final String SDC_PROPERTIES = "sdc.properties";
   private static final String RUNTIME_CONF_LOCATION_KEY = "runtime.conf.location";
   private static final String RUNTIME_CONF_LOCATION_DEFAULT = "embedded";
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
@@ -124,37 +124,39 @@ public class RuntimeEL {
 
      */
 
-    Properties sdcProps = new Properties();
-    try(InputStream is = new FileInputStream(new File(runtimeInfo.getConfigDir(), DPM_PROPERTIES))) {
-      sdcProps.load(is);
-    } catch (IOException e) {
-      LOG.error("Could not read '{}' from classpath: {}", DPM_PROPERTIES, e.toString(), e);
-    }
+    Configuration configuration = new Configuration();
+    File configFile = new File(runtimeInfo.getConfigDir(), SDC_PROPERTIES);
+    if (configFile.exists()) {
+      try(FileReader reader = new FileReader(configFile)) {
+        configuration.load(reader);
+      } catch (IOException ex) {
+        LOG.error("Error loading configuration file {} : {}", configFile, ex.getMessage());
+        throw new RuntimeException(ex);
+      }
 
-    String authTokenFileName = sdcProps.getProperty(DPM_APPLICATION_TOKEN);
-    if (null != authTokenFileName && !authTokenFileName.isEmpty() && Configuration.FileRef.isValueMyRef(authTokenFileName)) {
-      Configuration.FileRef fileRef = new Configuration.FileRef(authTokenFileName);
-      AUTH_TOKEN = fileRef.getValue();
-    }
+      AUTH_TOKEN = configuration.get(DPM_APPLICATION_TOKEN, null);
 
-    RUNTIME_CONF_PROPS = new Properties();
-    String runtimeConfLocation = sdcProps.getProperty(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
-    if(runtimeConfLocation.equals(RUNTIME_CONF_LOCATION_DEFAULT)) {
-      //runtime configuration is embedded in sdc.properties file. Find, trim, cache.
-      for(String confName : sdcProps.stringPropertyNames()) {
-        if(confName.startsWith(RUNTIME_CONF_PREFIX)) {
-          RUNTIME_CONF_PROPS.put(confName.substring(RUNTIME_CONF_PREFIX.length()).trim(),
-            sdcProps.getProperty(confName));
+      RUNTIME_CONF_PROPS = new Properties();
+      String runtimeConfLocation = configuration.get(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
+      if(runtimeConfLocation.equals(RUNTIME_CONF_LOCATION_DEFAULT)) {
+        //runtime configuration is embedded in sdc.properties file. Find, trim, cache.
+        for(String confName : configuration.getNames()) {
+          if(confName.startsWith(RUNTIME_CONF_PREFIX)) {
+            RUNTIME_CONF_PROPS.put(confName.substring(RUNTIME_CONF_PREFIX.length()).trim(),
+              configuration.get(confName, null));
+          }
+        }
+      } else {
+        File runtimeConfFile = new File(runtimeInfo.getConfigDir(), runtimeConfLocation);
+        try (FileInputStream fileInputStream = new FileInputStream(runtimeConfFile)) {
+          RUNTIME_CONF_PROPS.load(fileInputStream);
+        } catch (IOException e) {
+          LOG.error("Could not read '{}': {}", runtimeConfFile.getAbsolutePath(), e.toString(), e);
+          throw e;
         }
       }
     } else {
-      File runtimeConfFile = new File(runtimeInfo.getConfigDir(), runtimeConfLocation);
-      try (FileInputStream fileInputStream = new FileInputStream(runtimeConfFile)) {
-        RUNTIME_CONF_PROPS.load(fileInputStream);
-      } catch (IOException e) {
-        LOG.error("Could not read '{}': {}", runtimeConfFile.getAbsolutePath(), e.toString(), e);
-        throw e;
-      }
+      LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
     }
   }
 
@@ -163,7 +165,6 @@ public class RuntimeEL {
     name = "authToken",
     description = "Returns the auth token of this data collector")
   public static String authToken() {
-
     return AUTH_TOKEN;
   }
 

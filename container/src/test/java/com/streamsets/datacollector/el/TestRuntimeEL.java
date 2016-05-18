@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.util.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -87,7 +88,7 @@ public class TestRuntimeEL {
   public void testRuntimeELExternal() throws IOException {
     File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(configDir.mkdirs());
-    try (OutputStream os = new FileOutputStream(new File(configDir, "dpm.properties"))) {
+    try (OutputStream os = new FileOutputStream(new File(configDir, "sdc.properties"))) {
       Properties props = new Properties();
       props.setProperty("runtime.conf.location", "foo.properties");
       props.store(os, "");
@@ -104,22 +105,11 @@ public class TestRuntimeEL {
   }
 
   private void createSDCFile(String sdcFileName) throws IOException {
-    String sdcFile = new File(runtimeInfo.getConfigDir(), "dpm.properties").getAbsolutePath();
+    String sdcFile = new File(runtimeInfo.getConfigDir(), "sdc.properties").getAbsolutePath();
     OutputStream os = new FileOutputStream(sdcFile);
 
     InputStream is = Thread.currentThread().getContextClassLoader().
       getResourceAsStream(sdcFileName);
-
-    IOUtils.copy(is, os);
-    is.close();
-  }
-
-  private void createRuntimeConfigFile(String runtimeConfigFile) throws IOException {
-    String sdcFile = new File(runtimeInfo.getConfigDir(), runtimeConfigFile).getAbsolutePath();
-    OutputStream os = new FileOutputStream(sdcFile);
-
-    InputStream is = Thread.currentThread().getContextClassLoader().
-      getResourceAsStream(runtimeConfigFile);
 
     IOUtils.copy(is, os);
     is.close();
@@ -165,6 +155,38 @@ public class TestRuntimeEL {
       Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
                                                              PosixFilePermission.OWNER_WRITE));
     }
+  }
+
+  @Test
+  public void testAuthToken() throws IOException {
+    // create application token file with some string
+    File appTokenFile = new File(runtimeInfo.getConfigDir(), "application-token.txt");
+    OutputStream appTokenStream = new FileOutputStream(appTokenFile);
+    IOUtils.write("San Francisco", appTokenStream);
+    appTokenStream.close();
+
+    File domProps = new File(runtimeInfo.getConfigDir(), "dpm.properties");
+    OutputStream dpmPropsStream = new FileOutputStream(domProps);
+    IOUtils.write("dpm.applicationToken=@application-token.txt@", dpmPropsStream);
+    dpmPropsStream.close();
+
+    OutputStream sdcProps = new FileOutputStream(new File(runtimeInfo.getConfigDir(), "sdc.properties"));
+    IOUtils.write("config.includes=dpm.properties", sdcProps);
+      sdcProps.close();
+
+    Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    Assert.assertEquals("San Francisco", RuntimeEL.authToken());
+
+  }
+
+  @Test
+  public void testAuthTokenNoFile() throws IOException {
+    OutputStream sdcProps = new FileOutputStream(new File(runtimeInfo.getConfigDir(), "sdc.properties"));
+    sdcProps.close();
+
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    Assert.assertEquals(null, RuntimeEL.authToken());
   }
 
 }
