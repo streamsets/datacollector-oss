@@ -41,7 +41,7 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
    * @param qualifiedTableName Database name.Table name
    * @return new {@link HMSCacheLoader}
    */
-  CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName);
+  CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, Object... auxiliaryInfo);
 
   /**
    * Creates a new {@link Cache} which represents the underlying cache.

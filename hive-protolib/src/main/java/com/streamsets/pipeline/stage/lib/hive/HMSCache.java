@@ -73,19 +73,19 @@ public class HMSCache {
    * Returns if the {@link HMSCache} has the corresponding {@link HMSCacheSupport.HMSCacheInfo}
    * and qualified table name.<br>
    * If it is not there load it using corresponding {@link HMSCacheSupport.HMSCacheLoader}
-   * @param hmsCacheType {@link HMSCacheType}
-   * @param qualifiedTableName qualified table name
-   * @param jdbcUrl JDBC Url.
    * @param <T> {@link HMSCacheSupport.HMSCacheInfo}
+   * @param hmsCacheType {@link HMSCacheType}
+   * @param jdbcUrl JDBC Url.
+   * @param qualifiedTableName qualified table name
+   * @param auxiliaryInfo Any auxiliary Info for {@link HMSCacheSupport.HMSCacheLoader}
    * @return Corresponding {@link HMSCacheSupport.HMSCacheInfo} for the qualified table name.
    * @throws StageException if the {@link HMSCacheType} is not supported by {@link HMSCache}
    */
   @SuppressWarnings("unchecked")
   public <T extends HMSCacheSupport.HMSCacheInfo> T getOrLoad(
       HMSCacheType hmsCacheType,
-      String qualifiedTableName,
-      String jdbcUrl
-  ) throws StageException{
+      String jdbcUrl, String qualifiedTableName,
+      Object... auxiliaryInfo) throws StageException{
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
@@ -94,7 +94,8 @@ public class HMSCache {
           qualifiedTableName,
           hmsCacheType.getSupport().newHMSCacheLoader(
               jdbcUrl,
-              qualifiedTableName
+              qualifiedTableName,
+              auxiliaryInfo
           )
       )).orNull();
     } catch(ExecutionException e) {

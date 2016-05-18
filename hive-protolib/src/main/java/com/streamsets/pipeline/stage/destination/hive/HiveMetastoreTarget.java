@@ -276,8 +276,7 @@ public class HiveMetastoreTarget extends BaseTarget{
     HMSCacheType cacheType = HMSCacheType.TYPE_INFO;
     TypeInfoCacheSupport.TypeInfo cachedColumnTypeInfo = hmsCache.getOrLoad(
         cacheType,
-        qualifiedTableName,
-        resolvedJDBCUrl
+        resolvedJDBCUrl, qualifiedTableName
     );
     LinkedHashMap<String, HiveType> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
     LinkedHashMap<String, HiveType> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
@@ -328,15 +327,13 @@ public class HiveMetastoreTarget extends BaseTarget{
     //Partition Addition
     TypeInfoCacheSupport.TypeInfo cachedTypeInfo = hmsCache.getOrLoad(
         HMSCacheType.TYPE_INFO,
-        qualifiedTableName,
-        resolvedJDBCUrl
+        resolvedJDBCUrl, qualifiedTableName
     );
 
     HMSCacheType hmsCacheType = HMSCacheType.PARTITION_VALUE_INFO;
     PartitionInfoCacheSupport.PartitionInfo cachedPartitionInfo = hmsCache.getOrLoad(
         hmsCacheType,
-        qualifiedTableName,
-        resolvedJDBCUrl
+        resolvedJDBCUrl, qualifiedTableName
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
     Set<LinkedHashMap <String, String>> partitionInfoDiff =
