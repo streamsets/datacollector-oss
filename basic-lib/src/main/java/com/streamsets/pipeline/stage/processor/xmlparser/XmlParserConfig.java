@@ -88,8 +88,8 @@ public class XmlParserConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
-      label = "New Parsed Field",
-      description="Name of the new field to set the parsed XML data",
+      label = "Target Field",
+      description = "Name of the field to set the parsed XML data to",
       displayPosition = 50,
       group = "XML"
   )

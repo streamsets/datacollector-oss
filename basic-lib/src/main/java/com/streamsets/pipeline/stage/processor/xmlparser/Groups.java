@@ -28,7 +28,7 @@ public enum Groups implements Label {
 
   @Override
   public String getLabel() {
-    return "XML Parse";
+    return "Parse";
   }
 
 }

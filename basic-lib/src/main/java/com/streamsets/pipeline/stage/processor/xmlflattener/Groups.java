@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.config.DataFormat;
 
 public enum Groups implements Label {
-  XML(DataFormat.XML.getLabel());
+  XML("Flatten");
 
   private final String label;
 

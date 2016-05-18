@@ -63,8 +63,8 @@ public class JsonParserDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "New Parsed Field",
-      description="Name of the new field to set the parsed JSON data",
+      label = "Target Field",
+      description="Name of the field to set the parsed JSON data to",
       displayPosition = 30,
       group = "JSON"
   )

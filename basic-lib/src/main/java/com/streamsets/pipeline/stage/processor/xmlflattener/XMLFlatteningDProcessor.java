@@ -43,7 +43,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
-      label = "XML Field",
+      label = "Field to Flatten",
       description = "The field containing XML to flatten.",
       displayPosition = 10,
       group = "XML"
@@ -56,7 +56,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue="",
       label = "Record Delimiter",
-      description = "The tag used to delimit records. If this is not specified, only a single record is generated.",
+      description = "XML element used to delimit records. If this is not specified, only a single record is generated.",
       displayPosition = 30,
       group = "XML"
   )
@@ -89,7 +89,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Ignore Attributes",
-      description = "Whether attributes of tags should be ignored.",
+      description = "Whether attributes of elements should be ignored.",
       displayPosition = 60,
       group = "XML"
   )
