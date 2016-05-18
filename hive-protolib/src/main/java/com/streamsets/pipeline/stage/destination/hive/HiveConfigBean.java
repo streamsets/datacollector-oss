@@ -41,6 +41,17 @@ public class HiveConfigBean {
   public String hiveJDBCUrl;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "org.apache.hive.jdbc.HiveDriver",
+      label = "Hive JDBC Driver Name",
+      description = "The Fully Qualifed Hive JDBC Drive Class Name",
+      displayPosition = 20,
+      group = "HIVE"
+  )
+  public String hiveJDBCDriver;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "/etc/hive/conf",

@@ -27,15 +27,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
-//TODO: Enable stage after some more testing.
-//@StageDef(
-//    version = 1,
-//    label = "Hive Metastore Target",
-//    description = "Performs DDLs for Hive.",
-//    icon = "hive.png",
-//    privateClassLoader = true,
-//    onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv"
-//)
+@StageDef(
+    version = 1,
+    label = "Hive Metastore Target",
+    description = "Performs DDLs for Hive.",
+    icon = "hive.png",
+    privateClassLoader = true,
+    onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv"
+)
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class HiveMetastoreDTarget extends DTarget {

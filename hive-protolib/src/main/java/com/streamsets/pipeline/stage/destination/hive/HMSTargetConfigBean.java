@@ -51,4 +51,32 @@ public class HMSTargetConfigBean {
       group = "ADVANCED"
   )
   public boolean useAsAvro = true;
+
+  //Same as in HDFS origin.
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "HDFS User",
+      description = "If set, the data collector will serialize avro " +
+          "schemas in HDFS with specified hdfs user. The data collector" +
+          " user must be configured as a proxy user in HDFS.",
+      displayPosition = 40,
+      group = "ADVANCED",
+      dependsOn = "useAsAvro",
+      triggeredByValue = "false"
+  )
+  public String hdfsUser;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Kerberos Authentication",
+      defaultValue = "false",
+      description = "",
+      displayPosition = 50,
+      group = "ADVANCED",
+      dependsOn = "useAsAvro",
+      triggeredByValue = "false"
+  )
+  public boolean hdfsKerberos;
 }

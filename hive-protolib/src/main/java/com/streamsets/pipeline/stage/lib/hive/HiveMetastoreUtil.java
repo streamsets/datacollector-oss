@@ -24,13 +24,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.hive.Errors;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,10 +60,12 @@ public final class HiveMetastoreUtil {
   //Partition Rolling Constants
   private static final String PARTITION_VALUE = "value";
 
-  public static final String AVRO_SCHEMA = "avro_schema";
+  private static final String AVRO_SCHEMA = "avro_schema";
+  private static final String HDFS_SCHEMA_FOLDER_NAME = ".schemas";
   public static final String DATABASE_FIELD = "database";
   public static final String SEP = "/";
   public static final String EQUALS = "=";
+  public static final String DEFAULT_DBNAME = "default";
 
 
   private HiveMetastoreUtil() {}
@@ -254,7 +259,8 @@ public final class HiveMetastoreUtil {
    */
   public static String getDatabaseName(Record metadataRecord) throws StageException{
     if (metadataRecord.has(SEP + DATABASE_FIELD)) {
-      return metadataRecord.get(SEP + DATABASE_FIELD).getValueAsString();
+      String dbName = metadataRecord.get(SEP + DATABASE_FIELD).getValueAsString();
+      return dbName.isEmpty()? DEFAULT_DBNAME : dbName;
     }
     throw new StageException(Errors.HIVE_17, DATABASE_FIELD, metadataRecord);
   }
@@ -389,34 +395,42 @@ public final class HiveMetastoreUtil {
    * @return Hdfs Path String.
    */
   public static String serializeSchemaToHDFS(
-      FileSystem fs,
-      String rootTableLocation,
-      String schemaJson
+      UserGroupInformation loginUGI,
+      final FileSystem fs,
+      final String rootTableLocation,
+      final String schemaJson
   ) throws StageException{
-    String folderPath = rootTableLocation + HiveMetastoreUtil.SEP + "."+ HiveMetastoreUtil.AVRO_SCHEMA;
-    Path schemasFolderPath = new Path(folderPath);
-    String path = null;
+    final String folderPath = rootTableLocation + HiveMetastoreUtil.SEP + HiveMetastoreUtil.HDFS_SCHEMA_FOLDER_NAME ;
+    final Path schemasFolderPath = new Path(folderPath);
+    final String path =  folderPath + SEP + HiveMetastoreUtil.AVRO_SCHEMA + DateFormatUtils.format(
+        new Date(System.currentTimeMillis()) ,
+        "yyyy-MM-dd--HH_mm_ss"
+    );
     try {
-      if (!fs.exists(schemasFolderPath)) {
-        fs.mkdirs(schemasFolderPath);
-      }
-      path = folderPath + new Date(System.currentTimeMillis()).toString();
-      Path schemaFilePath = new Path(path);
-
-      //This will never happen unless two HMS targets are writing, we will error out for this
-      //and let user handle this via error record handling.
-      if (!fs.exists(schemaFilePath)) {
-        try (FSDataOutputStream os = fs.create(schemaFilePath)) {
-          os.writeChars(schemaJson);
+      loginUGI.doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception{
+          if (!fs.exists(schemasFolderPath)) {
+            fs.mkdirs(schemasFolderPath);
+          }
+          Path schemaFilePath = new Path(path);
+          //This will never happen unless two HMS targets are writing, we will error out for this
+          //and let user handle this via error record handling.
+          if (!fs.exists(schemaFilePath)) {
+            try (FSDataOutputStream os = fs.create(schemaFilePath)) {
+              os.writeChars(schemaJson);
+            }
+          } else {
+            LOG.error(Utils.format("Already schema file {} exists in HDFS", path));
+            throw new IOException("Already schema file exists");
+          }
+          return null;
         }
-        return path;
-      } else {
-        LOG.error(Utils.format("Already schema file {} exists in HDFS", path));
-        throw new StageException(Errors.HIVE_18, path, "Already schema file exists");
-      }
-    } catch (IOException e) {
-      LOG.error(Utils.format("Error serializing to hdfs schemas folder {}", folderPath), e);
+      });
+    } catch (Exception e) {
+      LOG.error("Error in Writing Schema to HDFS: " + e.toString(), e);
       throw new StageException(Errors.HIVE_18, path, e.getMessage());
     }
+    return path;
   }
 }

@@ -279,7 +279,7 @@ public final class HiveQueryExecutor {
       boolean isInternal
   ) throws StageException {
     Utils.checkArgument(
-        (useAsAvro || schemaLocation == null),
+        (useAsAvro || schemaLocation != null),
         "Invalid configuration for table creation in use As Avro"
     );
 

@@ -20,9 +20,11 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -41,13 +43,17 @@ import com.streamsets.pipeline.stage.lib.hive.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.TypeInfoCacheSupport;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -62,10 +68,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class HiveMetastoreTarget extends BaseTarget{
-  private static final String HIVE_JDBC_DRIVER_NAME = "org.apache.hive.jdbc.HiveDriver";
   private static final String CONF = "conf";
   private static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
   private static final String HIVE_JDBC_URL = "hiveJDBCUrl";
+  private static final String HIVE_JDBC_DRIVER = "hiveJDBCDriver";
+  private static final String HDFS_KERBEROS = "hdfsKerberos";
   private static final String CONF_DIR = "confDir";
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
   private static final Joiner JOINER = Joiner.on(".");
@@ -75,7 +82,10 @@ public class HiveMetastoreTarget extends BaseTarget{
   private ErrorRecordHandler defaultErrorRecordHandler;
   private ELEval elEval;
   private HMSCache hmsCache;
+
+  //Only initialized if useAsAvro is false.
   private FileSystem fs;
+  private UserGroupInformation loginUgi;
 
   public HiveMetastoreTarget(HMSTargetConfigBean conf) {
     this.conf = conf;
@@ -85,14 +95,14 @@ public class HiveMetastoreTarget extends BaseTarget{
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     try {
-      Class.forName(HIVE_JDBC_DRIVER_NAME);
+      Class.forName(conf.hiveConfigBean.hiveJDBCDriver);
     } catch (ClassNotFoundException e) {
       issues.add(
           getContext().createConfigIssue(
               Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
+              JOINER.join(CONF, HIVE_CONFIG_BEAN, HIVE_JDBC_DRIVER),
               Errors.HIVE_15,
-              HIVE_JDBC_DRIVER_NAME
+              conf.hiveConfigBean.hiveJDBCDriver
           )
       );
     }
@@ -143,19 +153,26 @@ public class HiveMetastoreTarget extends BaseTarget{
   @Override
   public void destroy() {
     try {
-      if (fs != null) {
-        fs.close();
-      }
-    } catch (IOException e) {
+      loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception {
+          if (fs != null) {
+            fs.close();
+          }
+          return null;
+        }
+      });
+    }
+    catch (Exception e) {
       LOG.warn("Error when closing hdfs file system:", e);
     }
     super.destroy();
   }
 
-  private void initConfDirAndHDFS(List<ConfigIssue> issues) {
-    String hiveConfDirString  = conf.hiveConfigBean.confDir;
+  private void initConfDirAndHDFS(final List<ConfigIssue> issues) {
+    String hiveConfDirString = conf.hiveConfigBean.confDir;
     File hiveConfDir = new File(hiveConfDirString);
-    Configuration configuration = new Configuration();
+    final Configuration configuration = new Configuration();
 
     if (!hiveConfDir.isAbsolute()) {
       hiveConfDir = new File(getContext().getResourcesDirectory(), conf.hiveConfigBean.confDir).getAbsoluteFile();
@@ -209,21 +226,66 @@ public class HiveMetastoreTarget extends BaseTarget{
       return;
     }
 
-    try {
-      fs = FileSystem.get(configuration);
-    } catch (IOException e) {
-      LOG.error("Error with HDFS File System Configuration.", e);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
-              Errors.HIVE_01,
-              e.getMessage()
-          )
-      );
+    if (!conf.useAsAvro) {
+      try {
+        // forcing UGI to initialize with the security settings from the stage
+        loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
+        if (conf.hdfsKerberos) {
+          LOG.info("HDFS Using Kerberos");
+          if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.ADVANCED.name(),
+                    JOINER.join(CONF, HDFS_KERBEROS),
+                    Errors.HIVE_01,
+                    loginUgi.getAuthenticationMethod(),
+                    UserGroupInformation.AuthenticationMethod.KERBEROS
+                )
+            );
+          }
+        } else {
+          LOG.info("HDFS Using Simple");
+          configuration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+              UserGroupInformation.AuthenticationMethod.SIMPLE.name());
+        }
+      } catch (Exception ex) {
+        LOG.info("Validation Error: " + ex.toString(), ex);
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.ADVANCED.name(),
+                JOINER.join(CONF, HDFS_KERBEROS),
+                Errors.HIVE_01,
+                "Exception in configuring HDFS"
+            )
+        );
+      }
+
+      //use ugi.
+      try {
+        loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() {
+            try {
+              fs = FileSystem.get(configuration);
+            } catch (IOException e) {
+              LOG.error("Error with HDFS File System Configuration.", e);
+
+            }
+            return null;
+          }
+        });
+      } catch (Exception e) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.HIVE.name(),
+                JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
+                Errors.HIVE_01,
+                e.getMessage()
+            )
+        );
+      }
     }
   }
-
   private void validateJDBCUrlWithDummyRecord(String unResolvedJDBCUrl, List<ConfigIssue> issues){
     Record dummyRecord = getContext().createRecord("DummyHiveMetastoreTargetRecord");
     Map<String, Field> databaseFieldValue = new HashMap<>();
@@ -284,8 +346,9 @@ public class HiveMetastoreTarget extends BaseTarget{
     String schemaPath = null;
 
     if (!conf.useAsAvro) {
+      //TODO: RegenerateSchema with the Hive Structure, SDC-2988
       String avroSchema = HiveMetastoreUtil.getAvroSchema(metadataRecord);
-      schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(fs, location, avroSchema);
+      schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(loginUgi, fs, location, avroSchema);
     }
 
     if (cachedColumnTypeInfo == null) {
