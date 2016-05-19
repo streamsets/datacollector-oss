@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
 
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
@@ -109,6 +111,34 @@ public final class HiveMetastoreUtil {
     if (throwException) {
       throw exception;
     }
+  }
+
+  /**
+   * Opposite operation of extractInnerMapFromTheList.
+   * It takes LinkedHashMap and generate a Field that contains the list.
+   * This is to send metadata record to HMS target.
+   * This function is called to for partition type list and partition value list.
+   */
+  private static <T> Field generateInnerFieldFromTheList(
+      LinkedHashMap<String, T> original,
+      String innerPairFirstFieldName,
+      String innerPairSecondFieldName,
+      boolean isSecondFieldHiveType
+  ) throws StageException {
+    List<Field> columnList = new LinkedList<>();
+
+    for(Map.Entry<String,T> pair:  original.entrySet()) {
+      Map<String, Field> entry = new LinkedHashMap<>();
+      entry.put(innerPairFirstFieldName, Field.create(pair.getKey()));
+      if (isSecondFieldHiveType){
+        entry.put(innerPairSecondFieldName, Field.create(
+            HiveType.getFieldTypeForHiveType((HiveType)pair.getValue()), pair.getValue()));
+      } else {
+        entry.put(innerPairSecondFieldName, Field.create(pair.getValue().toString())); //stored value is "INT". need to fix this
+      }
+      columnList.add(Field.create(entry));
+    }
+    return !columnList.isEmpty() ? Field.create(columnList) : null;
   }
 
   /**
@@ -267,6 +297,89 @@ public final class HiveMetastoreUtil {
     }
     throw new StageException(Errors.HIVE_17, AVRO_SCHEMA, metadataRecord);
 
+  }
+
+  /**
+   * Fill in metadata to Record. This is for new partition creation.
+   */
+  public static Field newPartitionMetadataFieldBuilder(
+      String database,
+      String tableName,
+      LinkedHashMap<String, String> partitionList,
+      String location) throws StageException {
+    LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD, Field.create(database));
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.TABLE_FIELD, Field.create(tableName));
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.LOCATION_FIELD, Field.create(location));
+
+    //fill in the partition list here
+    metadata.put(
+        HiveMetastoreUtil.SEP + HiveMetastoreUtil.PARTITION_FIELD,
+        generateInnerFieldFromTheList(
+            partitionList,
+            PARTITION_NAME,
+            PARTITION_VALUE,
+            false
+        )
+    );
+    return Field.create(metadata);
+  }
+
+  /**
+   * Fill in metadata to Record. This is for new schema creation.
+   */
+  public static Field newSchemaMetadataFieldBuilder  (
+      String database,
+      String tableName,
+      LinkedHashMap<String, HiveType> columnList,
+      LinkedHashMap<String, HiveType> partitionTypeList,
+      boolean internal,
+      String location,
+      String avroSchema
+  ) throws StageException  {
+    LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD, Field.create(database));
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.TABLE_FIELD, Field.create(tableName));
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.LOCATION_FIELD, Field.create(location));
+
+    //fill in column type list here
+    metadata.put(
+        HiveMetastoreUtil.SEP + HiveMetastoreUtil.COLUMNS_FIELD,
+        generateInnerFieldFromTheList(
+            columnList,
+            COLUMN_NAME,
+            COLUMN_TYPE,
+            false
+        )
+    );
+    //fill in partition type list here
+    metadata.put(
+        HiveMetastoreUtil.SEP + HiveMetastoreUtil.PARTITION_FIELD,
+        generateInnerFieldFromTheList(
+            partitionTypeList,
+            PARTITION_NAME,
+            PARTITION_TYPE,
+            true
+        )
+    );
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.INTERNAL_FIELD, Field.create(internal));
+    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.AVRO_SCHEMA, Field.create(avroSchema));
+    return Field.create(metadata);
+  }
+
+  /**
+   * Convert a Record to LinkedHashMap. This is for comparing the structure with TypeInfo in cache.
+   * @param record incoming Record
+   * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
+   * @throws StageException
+   */
+  public static LinkedHashMap<String, HiveType> convertRecordToHMSType(Record record) throws StageException {
+    LinkedHashMap<String, HiveType> columns = new LinkedHashMap<>();
+    LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
+    for(Map.Entry<String,Field> pair:  list.entrySet()) {
+      columns.put(pair.getKey(), HiveType.getHiveTypeforFieldType(pair.getValue().getType()));
+    }
+    return columns;
   }
 
   /**

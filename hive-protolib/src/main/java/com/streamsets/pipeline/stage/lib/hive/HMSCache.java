@@ -66,7 +66,8 @@ public class HMSCache {
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
-    return (T) (cacheMap.get(hmsCacheType).getIfPresent(qualifiedTableName)).orNull();
+    Optional<HMSCacheSupport.HMSCacheInfo> ret =cacheMap.get(hmsCacheType).getIfPresent(qualifiedTableName);
+    return ret == null ? null : (T)ret.orNull();
   }
 
   /**
@@ -90,14 +91,16 @@ public class HMSCache {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
     try {
-      return (T) (cacheMap.get(hmsCacheType).get(
-          qualifiedTableName,
-          hmsCacheType.getSupport().newHMSCacheLoader(
-              jdbcUrl,
+      Optional<HMSCacheSupport.HMSCacheInfo> ret =
+          cacheMap.get(hmsCacheType).get(
               qualifiedTableName,
-              auxiliaryInfo
+              hmsCacheType.getSupport().newHMSCacheLoader(
+                  jdbcUrl,
+                  qualifiedTableName,
+                  auxiliaryInfo
           )
-      )).orNull();
+      );
+      return ret == null ? null : (T)ret.orNull();
     } catch(ExecutionException e) {
       throw new StageException(Errors.HIVE_01, e);
     }

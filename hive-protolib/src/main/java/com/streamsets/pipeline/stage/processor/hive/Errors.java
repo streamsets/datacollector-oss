@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,29 +17,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.hive;
+package com.streamsets.pipeline.stage.processor.hive;
 
-/**
- * Represents different type of cache types supported by the instance of {@link HMSCache}
- */
-public enum HMSCacheType {
-  TYPE_INFO(new TypeInfoCacheSupport()),
-  PARTITION_VALUE_INFO(new PartitionInfoCacheSupport()),
-  AVRO_SCHEMA_INFO(new AvroSchemaInfoCacheSupport());
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-  HMSCacheSupport support;
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  HiveMetadata_01("Partition information is required"),
+  HiveMetadata_02("Value Expression for partition value is missing"),
+  HiveMetadata_03("Record is missing necessary data {}"),
+  ;
 
-  HMSCacheType(HMSCacheSupport support) {
-    this.support = support;
+  private final String msg;
+
+  Errors(String msg) {
+    this.msg = msg;
   }
 
-  /**
-   * Get the supporting implementation {@link HMSCacheSupport} for {@link HMSCacheType}
-   * @param <T> Returns {@link HMSCacheSupport}
-   * @return {@link HMSCacheSupport}
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends HMSCacheSupport> T getSupport() {
-    return (T) support;
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }
+
