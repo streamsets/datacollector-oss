@@ -380,6 +380,7 @@
           "label": "LDAP Port",
           "description": "LDAP server port. Typically 389 for LDAP and 636 for LDAPS.",
           "type": "port",
+          "outbound":"true",
           "default": "389"
         },
         {
@@ -535,6 +536,7 @@
           "label": "SMTP Port number",
           "description": "Port of the SMTP server.",
           "type": "port",
+          "outbound":"true",
           "default": 25
         },
         {
@@ -563,6 +565,7 @@
           "label": "SMTPS Port number",
           "description": "Port of the SMTPS server.",
           "type": "port",
+          "outbound":"true",
           "default": 25
         },
         {
