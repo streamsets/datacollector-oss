@@ -24,7 +24,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <uicontrol>XML</uicontrol> tab, configure the following
+                <cmd>On the <uicontrol>Flatten</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_hj1_psr_k5">
@@ -33,18 +33,18 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>XML Property</entry>
+                                    <entry>Flatten Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>XML Field</entry>
-                                    <entry>String field that contains the XML data.</entry>
+                                    <entry>Field to Flatten</entry>
+                                    <entry>String field that contains the XML data to
+                                        flatten.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Delimiter
-                                        <xref
+                                    <entry>Record Delimiter <xref
                                             href="XMLFlattener-RecordDelimiter.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h9p_p3v_yq"/></xref>

@@ -50,7 +50,7 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>New Parsed Field</entry>
+                                    <entry>Target Field</entry>
                                     <entry>Output field for the parsed JSON object.<p>You can
                                             specify the same field to replace the original data with
                                             the parsed data. Or you can specify another existing

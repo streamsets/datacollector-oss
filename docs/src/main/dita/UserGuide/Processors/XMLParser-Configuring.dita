@@ -25,7 +25,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>XML Parse</wintitle> tab, configure the following
+                <cmd>On the <wintitle>Parse</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_hj1_psr_k5">
@@ -34,7 +34,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>XML Parse Property</entry>
+                                    <entry>Parse Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -60,7 +60,7 @@
                                         as a single record, omit this property. </entry>
                                 </row>
                                 <row>
-                                    <entry>New Parsed Field</entry>
+                                    <entry>Target Field</entry>
                                     <entry>
                                         <p>Output field for the parsed XML data. </p>
                                         <p>You can specify the same field to replace the original
