@@ -90,14 +90,6 @@ contact.name#type=maiden</codeblock><p>The
                                         if you do not want to include namespace URIs in the
                                         flattened fields.</entry>
                                 </row>
-                                <row>
-                                    <entry>Ignore Empty Values</entry>
-                                    <entry>Ignores entities that contain empty values. Select if you
-                                        do not want to include elements or attributes with empty
-                                        values in the flattened fields.<draft-comment
-                                            author="alisontaylor">SDC-2891 might remove this
-                                            property</draft-comment></entry>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>

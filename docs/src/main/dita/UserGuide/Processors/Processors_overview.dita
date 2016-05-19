@@ -39,6 +39,7 @@
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>
         <li>Log Parser - Parses log data in a field based on the specified log format.</li>
         <li>Record Deduplicator - Removes duplicate records.</li>
+        <li>Redis Lookup - Performs key-value lookups in Redis.</li>
         <li>Stream Selector - Routes data to different streams based on conditions.</li>
         <li>Value Replacer - Replaces null values or replaces values with nulls.</li>
         <li>XML Flattener - Flattens XML data in a string field.</li>

@@ -15,14 +15,146 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_gpv_npr_pv">
     <title>Configuring a Redis Lookup Processor</title>
-    <shortdesc>Information forthcoming.</shortdesc>
+    <shortdesc>Configure a Redis Lookup processor to perform key-value lookups in
+            Redis.<draft-comment author="alisontaylor"> filed SDC-2986 for some label/tooltip
+            changes. I'm using the suggested changes in the docs.</draft-comment></shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
         <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
             <step>
-                <cmd></cmd>
+                <cmd>On the <wintitle>Lookup</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ns1_p1s_zv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Lookup Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Mode</entry>
+                                    <entry>Mode used to perform the lookups:<ul id="ul_t11_3fs_zv">
+                                            <li>Per Batch - Performs a bulk lookup of all keys in a
+                                                batch. The processor performs a single lookup for
+                                                each batch.</li>
+                                            <li>Per Key in Each Record - Performs individual lookups
+                                                of each key in each record. If you configure
+                                                multiple key expressions, the processor performs
+                                                multiple lookups for each record.</li>
+                                        </ul><p>Default is Per Batch.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Key Expression</entry>
+                                    <entry>Expression that defines the key to look up in Redis.
+                                            <p>For example, enter the following expression to use
+                                            the data in the city field as the lookup
+                                            key:<codeblock>${record:value('/city')}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Output Field</entry>
+                                    <entry>Name of the field to pass the lookup value. You can
+                                        specify an existing field or a new field. If the field does
+                                        not exist, Redis Lookup creates the field. <p>Precede each
+                                            field name with a slash as follows:
+                                        /FieldName.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Type
+                                        <xref
+                                            href="RedisLookup-Datatypes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h6p_p2v_uq"/></xref>
+                                    </entry>
+                                    <entry>Data type of the key in Redis.<p>Default is
+                                        String.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Enable Local Caching
+                                        <xref
+                                            href="RedisLookup-Cache.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h2p_p7v_uh"/></xref>
+                                    </entry>
+                                    <entry>Specifies whether to locally cache the key-value pairs
+                                        returned from Redis.</entry>
+                                </row>
+                                <row>
+                                    <entry>Maximum Entries to Cache</entry>
+                                    <entry>Maximum number of key-value pairs to cache. When the
+                                        maximum number is reached, the processor evicts the oldest
+                                        key-value pairs from the cache. <p>Default is -1, which
+                                            means unlimited.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Eviction Policy Type</entry>
+                                    <entry>Policy used to evict key-value pairs from the local cache
+                                        when the expiration time has passed:<ul id="ul_jql_yns_zv">
+                                            <li>Expire After Last Access - Measures the expiration
+                                                time since the key-value pair was last accessed by a
+                                                read or a write.</li>
+                                            <li>Expire After Last Write - Measures the expiration
+                                                time since the key-value pair was created, or since
+                                                the value was last replaced.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Expiration Time</entry>
+                                    <entry>Amount of time that a key-value pair can remain in the
+                                        local cache without being accessed or written to. <p>Default
+                                            is 1 second.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Time Unit</entry>
+                                    <entry>Unit of time for the expiration time. <p>Default is
+                                            seconds.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Redis</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_i5s_54s_zv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Redis Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>URI</entry>
+                                    <entry>URI of the Redis server. Use the following
+                                            format:<codeblock>redis://&lt;host name>:&lt;port number>/&lt;database></codeblock><p>You
+                                            can omit the port number or database if the server uses
+                                            the default port number or default database.</p><p>You
+                                            can optionally include the user name to log in to the
+                                            Redis server. For
+                                            example:<codeblock>redis://&lt;user name>:&lt;password>@&lt;host name>:&lt;port number>/&lt;database></codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Timeout (sec)</entry>
+                                    <entry>Maximum time in seconds to wait for a
+                                            connection.<p>Default is 60 seconds.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

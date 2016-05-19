@@ -15,8 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ng3_lpr_pv">
  <title>Redis Lookup</title>
- <shortdesc>Information forthcoming.</shortdesc>
+ <shortdesc>The Redis Lookup processor performs key-value lookups in Redis and passes the lookup
+        values to new fields. Use the Redis Lookup to enrich records with additional
+        data.</shortdesc>
  <conbody>
-  <p></p>
- </conbody>
+        <p><indexterm>Redis Lookup
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Redis
+                    Lookup</indexterm></indexterm>For example, you can configure the processor to
+            use a city field as the key to look up zip code values in Redis, and pass the values to
+            a new zip_code output field.</p>
+        <p>When you configure the Redis Lookup processor, you specify whether the processor performs
+            a bulk lookup of all keys in a batch, or performs an individual lookup of each key in a
+            record. You use an expression to define the key to look up in Redis, and specify the
+            output field to write the lookup values to. You also specify the data type of the Redis
+            key.</p>
+        <p>You can configure the processor to locally cache the key-value pairs to improve
+            performance.</p>
+    </conbody>
 </concept>

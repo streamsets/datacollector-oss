@@ -123,6 +123,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Processors/RedisLookup-Datatypes.dita"/>
+   <topicref href="../Processors/RedisLookup-Cache.dita"/>
    <topicref href="../Processors/RedisLookup-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
