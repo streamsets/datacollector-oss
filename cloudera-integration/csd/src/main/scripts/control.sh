@@ -53,6 +53,18 @@ $ldap_configs;
 
 export SDC_CONF=$CONF_DIR
 
+# Propagate system white and black lists
+SDC_PROPERTIES=$SDC_CONF/sdc.properties
+if ! grep -q "system.stagelibs.*list" $SDC_PROPERTIES; then
+  echo "System white nor black list found in configuration"
+  if [ -f $SDC_DIST/etc/sdc.properties ]; then
+    echo "Propagating default white and black list from parcel"
+    grep "system.stagelibs.*list" $SDC_DIST/etc/sdc.properties >> $SDC_PROPERTIES
+  else
+    echo "Parcel doesn't contain default configuration file, skipping white/black list propagation"
+  fi
+fi
+
 case $CMD in
 
   (start)
