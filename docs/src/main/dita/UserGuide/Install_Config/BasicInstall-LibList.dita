@@ -271,7 +271,8 @@
                         <row>
                             <entry>streamsets-datacollector-mapr_5_1-lib</entry>
                             <entry>For MapR version 5.1.<p>Includes the MapR Streams Consumer, MapR
-                                    Streams Producer, and MapR FS.</p></entry>
+                                    Streams Producer, MapR FS, MapR-DB, and Hive Streaming using the
+                                    MapR library.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>

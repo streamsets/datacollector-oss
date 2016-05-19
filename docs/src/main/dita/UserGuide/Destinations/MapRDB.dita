@@ -18,5 +18,6 @@
  <shortdesc></shortdesc>
  <conbody>
   <p></p>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
  </conbody>
 </concept>

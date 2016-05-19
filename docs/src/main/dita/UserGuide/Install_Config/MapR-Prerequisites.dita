@@ -22,13 +22,16 @@
             As a result, you must perform additional steps to enable the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             machine to connect to MapR.</p>
-        <p>To connect to MapR FS or MapR Streams, install <ph
+        <note>The MapR DB destination and the Hive Streaming destination using the MapR library
+            currently only support MapR version 5.1.</note>
+        <p>To connect to a MapR cluster, install <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
             a node in the cluster or on a client machine. </p>
-        <p>To run the Data Collector on a client machine - outside the cluster or on your local
-            machine - the MapR client package must be installed and configured on the machine. To
-            install the MapR client package, you need to download the following files:<ul
-                id="ul_qcz_x1m_gv">
+        <p>To run <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
+            a client machine - outside the cluster or on your local machine - the MapR client
+            package must be installed and configured on the machine. To install the MapR client
+            package, you need to download the following files:<ul id="ul_qcz_x1m_gv">
                 <li>MapR client library - Typically named
                         <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can download the
                         files for your operating system
@@ -40,7 +43,7 @@
             </ul></p>
         <p>Before using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            connect to MapR Streams or MapR FS, perform the following steps:</p>
+            connect to a MapR cluster, perform the following steps:</p>
         <ol id="ol_ghq_zrg_2v">
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -50,24 +53,33 @@
                     at a time. </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
                     <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library>/lib/</uicontrol>.
-                            <p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the
-                            version of the StreamSets MapR library to use. </p><p>The StreamSets
-                            MapR libraries are named as follows:
-                            <codeblock>streamsets-datacollector-mapr_&lt;version>-lib</codeblock>For
-                            example: streamsets-datacollector-mapr_5_1-lib. </p><p>So to use MapR
-                            version 5.1.0 with <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            />, you would create a symlink from $MAPR_HOME/lib/* to
-                            $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/ as
-                            follows:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/</codeblock></p></li>
-                    <li><uicontrol>$MAPR_HOME/lib/maprfs-&lt;version>-mapr.jar</uicontrol> to
-                            <uicontrol>$SDC_DIST/root-lib/</uicontrol><p>&lt;version> is the MapR
-                            version. </p><p>For example, when using MapR version 5.1.0, you would
-                            create a symlink from $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar to
-                            $SDC_DIST/root-lib/ as
-                            follows:<codeblock>ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</codeblock></p></li>
-                </ul></li>
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
+                        library>/lib/</uicontrol></li>
+                    <li><uicontrol>$MAPR_HOME/hbase/hbase-&lt;version>/lib/*</uicontrol> to
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
+                        library>/lib/</uicontrol></li>
+                    <li><uicontrol>$MAPR_HOME/hive/hive-&lt;version>/lib/*</uicontrol> to
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
+                        library>/lib/</uicontrol></li>
+                    <li><uicontrol>$MAPR_HOME/hive/hive-&lt;version>/hcatalog/share/hcatalog/*
+                        </uicontrol> to <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
+                            library>/lib/</uicontrol></li>
+                    <li>
+                        <uicontrol>$MAPR_HOME/lib/maprfs-&lt;version>-mapr.jar</uicontrol> to
+                            <uicontrol>$SDC_DIST/root-lib/</uicontrol></li>
+                </ul><p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the version of
+                    the StreamSets MapR library to use. The StreamSets MapR libraries are named as
+                    follows: streamsets-datacollector-mapr_&lt;version>-lib. For example:
+                    streamsets-datacollector-mapr_5_1-lib. </p><p>&lt;version> is the HBase, Hive,
+                    or MapR version.</p><p>So to use MapR version 5.1, HBase version 1.1.1, and Hive
+                    version 1.2 with <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, you would create the following
+                    symlinks:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hbase/hbase-1.1.1/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hive/hive-1.2/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hive/hive-1.2/hcatalog/share/hcatalog/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</codeblock></p></li>
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> security policy file, <codeph>$SDC_CONF/sdc-security.policy</codeph>, add a new

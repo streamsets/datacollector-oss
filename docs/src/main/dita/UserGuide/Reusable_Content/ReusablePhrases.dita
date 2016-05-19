@@ -782,10 +782,17 @@
                         sure they configure SDC.</draft-comment>
             </p>
             <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
-                  additional steps to enable the <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
+                  additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
                   process MapR data. For more information, see <xref
-                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.
-</p>
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
+            <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive
+                  Streaming destination for MapR library to make sure they configure
+                  SDC.</draft-comment>
+            <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
+                  library in a pipeline, you must perform additional steps to enable <ph
+                        conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For more
+                  information, see <xref
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
             <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
                   and MapR FS destinations</draft-comment>
             <p id="DirectoryTemplate_Intro">You can use a mix of constants, field values, and

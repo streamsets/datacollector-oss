@@ -145,6 +145,12 @@
    <topicref href="../Destinations/LocalFS-IdleTimeout.dita"/>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/MapRDB.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/MapRDB-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/MapRFS.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>

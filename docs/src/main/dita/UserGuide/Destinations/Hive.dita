@@ -16,5 +16,6 @@
    partitions as needed.</p>
   <p>Hive Streaming writes data to the table based on the matching field names. You can defining
    custom field mappings that override the default field mappings. </p>
+  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereqHiveStream"/>
  </conbody>
 </concept>
