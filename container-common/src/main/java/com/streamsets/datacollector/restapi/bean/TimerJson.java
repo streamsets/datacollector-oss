@@ -21,20 +21,20 @@ package com.streamsets.datacollector.restapi.bean;
 
 public class TimerJson {
   long count;
-  long max;
-  long mean;
-  long min;
-  long p50;
-  long p75;
-  long p95;
-  long p98;
-  long p99;
-  long p999;
-  long stddev;
-  long m15_rate;
-  long m1_rate;
-  long m5_rate;
-  long mean_rate;
+  double max;
+  double mean;
+  double min;
+  double p50;
+  double p75;
+  double p95;
+  double p98;
+  double p99;
+  double p999;
+  double stddev;
+  double m15_rate;
+  double m1_rate;
+  double m5_rate;
+  double mean_rate;
   String duration_units;
   String rate_units;
 
@@ -50,115 +50,115 @@ public class TimerJson {
     this.count = count;
   }
 
-  public long getMax() {
+  public double getMax() {
     return max;
   }
 
-  public void setMax(long max) {
+  public void setMax(double max) {
     this.max = max;
   }
 
-  public long getMean() {
+  public double getMean() {
     return mean;
   }
 
-  public void setMean(long mean) {
+  public void setMean(double mean) {
     this.mean = mean;
   }
 
-  public long getMin() {
+  public double getMin() {
     return min;
   }
 
-  public void setMin(long min) {
+  public void setMin(double min) {
     this.min = min;
   }
 
-  public long getP50() {
+  public double getP50() {
     return p50;
   }
 
-  public void setP50(long p50) {
+  public void setP50(double p50) {
     this.p50 = p50;
   }
 
-  public long getP75() {
+  public double getP75() {
     return p75;
   }
 
-  public void setP75(long p75) {
+  public void setP75(double p75) {
     this.p75 = p75;
   }
 
-  public long getP95() {
+  public double getP95() {
     return p95;
   }
 
-  public void setP95(long p95) {
+  public void setP95(double p95) {
     this.p95 = p95;
   }
 
-  public long getP98() {
+  public double getP98() {
     return p98;
   }
 
-  public void setP98(long p98) {
+  public void setP98(double p98) {
     this.p98 = p98;
   }
 
-  public long getP99() {
+  public double getP99() {
     return p99;
   }
 
-  public void setP99(long p99) {
+  public void setP99(double p99) {
     this.p99 = p99;
   }
 
-  public long getP999() {
+  public double getP999() {
     return p999;
   }
 
-  public void setP999(long p999) {
+  public void setP999(double p999) {
     this.p999 = p999;
   }
 
-  public long getStddev() {
+  public double getStddev() {
     return stddev;
   }
 
-  public void setStddev(long stddev) {
+  public void setStddev(double stddev) {
     this.stddev = stddev;
   }
 
-  public long getM15_rate() {
+  public double getM15_rate() {
     return m15_rate;
   }
 
-  public void setM15_rate(long m15_rate) {
+  public void setM15_rate(double m15_rate) {
     this.m15_rate = m15_rate;
   }
 
-  public long getM1_rate() {
+  public double getM1_rate() {
     return m1_rate;
   }
 
-  public void setM1_rate(long m1_rate) {
+  public void setM1_rate(double m1_rate) {
     this.m1_rate = m1_rate;
   }
 
-  public long getM5_rate() {
+  public double getM5_rate() {
     return m5_rate;
   }
 
-  public void setM5_rate(long m5_rate) {
+  public void setM5_rate(double m5_rate) {
     this.m5_rate = m5_rate;
   }
 
-  public long getMean_rate() {
+  public double getMean_rate() {
     return mean_rate;
   }
 
-  public void setMean_rate(long mean_rate) {
+  public void setMean_rate(double mean_rate) {
     this.mean_rate = mean_rate;
   }
 
