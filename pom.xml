@@ -427,7 +427,6 @@
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
-        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
@@ -449,7 +448,6 @@
         <module>cdh_5_4-lib</module>
         <module>hdp_2_2-lib</module>
         <module>mapr_5_0-lib</module>
-        <module>apache-kudu-0_7-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
@@ -488,6 +486,7 @@
         <cdh_5_5-cluster-cdh_kafka_1_3-lib>cdh_5_5-cluster-cdh_kafka_1_3-lib</cdh_5_5-cluster-cdh_kafka_1_3-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
+        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
       </properties>
       <modules>
         <module>cdh_5_5-lib</module>
@@ -502,6 +501,7 @@
         <module>cdh_5_5-cluster-cdh_kafka_1_3-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
+        <module>apache-kudu-0_7-lib</module>
         <module>influxdb_0_9-lib</module>
       </modules>
     </profile>
