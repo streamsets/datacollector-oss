@@ -28,6 +28,7 @@ import javax.security.auth.Subject;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.util.KerberosName;
+import org.apache.zookeeper.server.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,13 @@ public class HadoopSecurityUtil {
       }
     }
     return loginUgi;
+  }
+
+  public static String getDefaultRealm() throws ReflectiveOperationException {
+    AccessControlContext accessContext = AccessController.getContext();
+    synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
+      return KerberosUtil.getDefaultRealm();
+    }
   }
 
   public static UserGroupInformation getProxyUser(String user, UserGroupInformation loginUser) {

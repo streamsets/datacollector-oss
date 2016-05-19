@@ -32,8 +32,6 @@ public class TestHadoopSecurityUtil {
     UserGroupInformation loginUser = UserGroupInformation.getLoginUser();
     UserGroupInformation ugi = HadoopSecurityUtil.getLoginUser(conf);
     Assert.assertEquals(loginUser.getUserName(), ugi.getUserName());
-    Assert.assertNotNull(ugi);
-
   }
 
   @Test

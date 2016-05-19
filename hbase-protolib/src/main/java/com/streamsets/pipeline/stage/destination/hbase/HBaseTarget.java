@@ -58,7 +58,6 @@ import org.apache.hadoop.hbase.regionserver.NoSuchColumnFamilyException;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -277,19 +276,25 @@ public class HBaseTarget extends BaseTarget {
       if (kerberosAuth) {
         hbaseConf.set(User.HBASE_SECURITY_CONF_KEY, UserGroupInformation.AuthenticationMethod.KERBEROS.name());
         hbaseConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION, UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+        String defaultRealm = null;
         if (hbaseConf.get(MASTER_KERBEROS_PRINCIPAL) == null) {
           try {
-            hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + KerberosUtil.getDefaultRealm());
-          } catch (ReflectiveOperationException e) {
+            defaultRealm = HadoopSecurityUtil.getDefaultRealm();
+          } catch (Exception e) {
             issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "masterPrincipal", Errors.HBASE_22));
           }
+          hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + defaultRealm);
+
         }
         if (hbaseConf.get(REGIONSERVER_KERBEROS_PRINCIPAL) == null) {
           try {
-            hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + KerberosUtil.getDefaultRealm());
+            if (defaultRealm == null) {
+              defaultRealm = HadoopSecurityUtil.getDefaultRealm();
+            }
           } catch (Exception e) {
             issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "regionServerPrincipal", Errors.HBASE_23));
           }
+          hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + defaultRealm);
         }
       }
 
