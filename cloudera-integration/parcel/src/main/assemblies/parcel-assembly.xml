@@ -34,6 +34,7 @@
       <outputDirectory>/</outputDirectory>
       <includes>
         <include>bin/**</include>
+        <include>etc/**</include>
         <include>libexec/**</include>
         <include>api-lib/**</include>
         <include>cli-lib/**</include>
@@ -43,10 +44,6 @@
         <include>streamsets-libs/**</include>
         <include>user-libs/**</include>
       </includes>
-      <excludes>
-        <exclude>streamsets-libs/*hdp*/**</exclude>
-        <exclude>streamsets-libs/*mapr*/**</exclude>
-      </excludes>
     </fileSet>
 
     <!-- common-lib dir -->
