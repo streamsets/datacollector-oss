@@ -57,6 +57,7 @@ public class AggregatedMetricsFetcher {
   private final String targetUrl;
   private final String authToken;
   private final String appComponentId;
+  private final String jobId;
   private final String pipelineId;
   private final String pipelineVersion;
 
@@ -68,6 +69,7 @@ public class AggregatedMetricsFetcher {
       String targetUrl,
       String authToken,
       String appComponentId,
+      String jobId,
       String pipelineId,
       String pipelineVersion
   ) {
@@ -75,6 +77,7 @@ public class AggregatedMetricsFetcher {
     this.targetUrl = targetUrl;
     this.authToken = authToken;
     this.appComponentId = appComponentId;
+    this.jobId = jobId;
     this.pipelineId = pipelineId;
     this.pipelineVersion = pipelineVersion;
   }
@@ -93,6 +96,7 @@ public class AggregatedMetricsFetcher {
     target = client.target(targetUrl);
 
     Response response = target
+      .queryParam("jobId", jobId)
       .queryParam("pipelineId", pipelineId)
       .queryParam("pipelineVersion", pipelineVersion)
       .request()

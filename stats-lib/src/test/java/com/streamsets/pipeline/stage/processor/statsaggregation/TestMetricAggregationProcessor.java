@@ -401,7 +401,7 @@ public class TestMetricAggregationProcessor {
       Resources.getResource("testMetricAggregation.json"),
       Charset.defaultCharset()
     );
-    return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null, "myUrl", null, null, null);
+    return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null, "myUrl", null, null, null, "x");
   }
 
   private Record createTestMetricRecord() {

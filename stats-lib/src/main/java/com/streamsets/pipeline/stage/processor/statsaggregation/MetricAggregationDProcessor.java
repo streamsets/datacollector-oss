@@ -104,6 +104,16 @@ public class MetricAggregationDProcessor extends DProcessor {
   )
   public String sdcId;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "${JOB_ID}",
+    label = "Job Id",
+    displayPosition = 70,
+    group = "STATS"
+  )
+  public String jobId;
+
   @Override
   protected Processor createProcessor() {
     return new MetricAggregationProcessor(
@@ -112,7 +122,8 @@ public class MetricAggregationDProcessor extends DProcessor {
         pipelineUrl,
         targetUrl,
         authToken,
-        sdcId
+        sdcId,
+        jobId
     );
   }
 

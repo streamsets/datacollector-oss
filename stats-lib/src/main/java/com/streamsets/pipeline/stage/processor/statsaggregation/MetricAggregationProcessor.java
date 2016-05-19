@@ -52,6 +52,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
   private final String targetUrl;
   private final String authToken;
   private final String appComponentId;
+  private final String jobId;
 
   // Metadata obtained from pipeline configuration
   private Map<String, Object> metadata;
@@ -67,7 +68,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
       String pipelineUrl,
       String targetUrl,
       String authToken,
-      String appComponentId
+      String appComponentId,
+      String jobId
   ) {
     ruleDefinitionMap = new HashMap<>();
     this.pipelineConfigJson = pipelineConfigJson;
@@ -76,6 +78,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     this.targetUrl = targetUrl;
     this.authToken = authToken;
     this.appComponentId = appComponentId;
+    this.jobId = jobId;
   }
 
   @Override
@@ -240,6 +243,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           targetUrl,
           authToken,
           appComponentId,
+          jobId,
           (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
           (String)metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION)
       );
