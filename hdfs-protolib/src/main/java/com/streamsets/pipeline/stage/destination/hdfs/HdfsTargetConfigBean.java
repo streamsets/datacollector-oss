@@ -144,8 +144,8 @@ public class HdfsTargetConfigBean {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Directory Template in header",
-    description = "Directory template is specified in record's header 'directoryTemplate' rather then in the target configuration.",
+    label = "Directory in Header",
+    description = "The directory is defined by the '" + HdfsTarget.TARGET_DIRECTORY_HEADER + "' record header attribute instead of the Directory Template configuration property.",
     displayPosition = 105,
     group = "OUTPUT_FILES"
   )
@@ -217,6 +217,21 @@ public class HdfsTargetConfigBean {
     min = 0
   )
   public long maxFileSize;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${1 * HOURS}",
+      label = "Idle Timeout",
+      description = "Maximum time for a file to remain idle. After no records are written to a file for the" +
+        " specified time, the destination closes the file. Enter a number to specify a value in seconds. You" +
+        " can also use the MINUTES or HOURS constants in an expression. Use -1 to opt out of a timeout.",
+      group = "OUTPUT_FILES",
+      displayPosition = 155,
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String idleTimeout;
 
   @ConfigDef(
     required = true,
@@ -302,25 +317,11 @@ public class HdfsTargetConfigBean {
   public String lateRecordsLimit;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "${1 * HOURS}",
-      label = "Idle Timeout (secs)",
-      description = "Time limit (in seconds) after which a file to which no records are written is closed. " +
-          "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
-          "'${30 * MINUTES}'. Set this to -1 to not close the files on idle.",
-      group = "OUTPUT_FILES",
-      elDefs = {TimeEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT
-  )
-  public String idleTimeout;
-
-  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Roll if header",
-    description = "Close currently opened file and open a new file every time a record with special header occur in the data.",
+    label = "Use Roll Header",
+    description = "Closes the current file and creates a new one when processing a record with the specified custom header.",
     displayPosition = 204,
     group = "OUTPUT_FILES"
   )

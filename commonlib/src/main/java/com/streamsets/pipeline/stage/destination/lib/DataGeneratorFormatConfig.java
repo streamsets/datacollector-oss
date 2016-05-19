@@ -221,8 +221,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     // Default value should be "false", we set it to true because of bug in pipeline validation that doesn't compute
     // "dependsOn" recursively.
     defaultValue = "true",
-    label = "Avro Schema in header",
-    description = "Retrieve Avro schema from record's header " + BaseAvroDataGenerator.AVRO_SCHEMA_HEADER,
+    label = "Load Schema from Header",
+    description = "Uses the Avro schema embedded in the " + BaseAvroDataGenerator.AVRO_SCHEMA_HEADER + " record header attribute.",
     displayPosition = 400,
     group = "AVRO",
     dependsOn = "dataFormat^",
