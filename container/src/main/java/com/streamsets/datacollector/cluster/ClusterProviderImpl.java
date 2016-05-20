@@ -65,6 +65,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.net.ssl.SSLContext;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -260,12 +261,17 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
       sdcProperties.remove(Configuration.CONFIG_INCLUDES);
-      sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
-      sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
       sdcProperties.remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
       if (runtimeInfo != null) {
+        if (runtimeInfo.getSSLContext() != null) {
+          sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "-1");
+          sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "0");
+        } else {
+          sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
+          sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
+        }
         String id = String.valueOf(runtimeInfo.getId());
         sdcProperties.setProperty(Constants.SDC_ID, id);
         sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);

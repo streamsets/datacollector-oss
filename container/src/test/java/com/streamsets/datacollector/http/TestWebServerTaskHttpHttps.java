@@ -67,7 +67,9 @@ import java.util.UUID;
 
 public class TestWebServerTaskHttpHttps {
 
-  private static class PingServlet extends HttpServlet {
+  private RuntimeInfo runtimeInfo;
+
+  static class PingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       resp.setStatus(HttpServletResponse.SC_OK);
@@ -81,7 +83,7 @@ public class TestWebServerTaskHttpHttps {
       final Configuration conf,
       final Set<WebAppProvider> webAppProviders
   ) throws Exception {
-    RuntimeInfo ri = new RuntimeInfo(
+    runtimeInfo = new RuntimeInfo(
         RuntimeModule.SDC_PROPERTY_PREFIX,
         new MetricRegistry(),
         Collections.<ClassLoader>emptyList()
@@ -100,8 +102,12 @@ public class TestWebServerTaskHttpHttps {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new WebServerTask(ri, conf, configurators, webAppProviders);
+    return new WebServerTask(runtimeInfo, conf, configurators, webAppProviders);
   }
+
+
+
+
 
   @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
@@ -202,6 +208,7 @@ public class TestWebServerTaskHttpHttps {
 
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort  + "/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      Assert.assertNull(runtimeInfo.getSSLContext());
     } finally {
       ws.stopTask();
     }
@@ -233,16 +240,19 @@ public class TestWebServerTaskHttpHttps {
   }
 
   //making the url connection to trust a self signed cert on localhost
-  private void configureHttpsUrlConnection(HttpsURLConnection conn) throws Exception {
+  static void configureHttpsUrlConnection(HttpsURLConnection conn) throws Exception {
     SSLContext sc = SSLContext.getInstance("SSL");
     TrustManager[] trustAllCerts = new TrustManager[] {
         new X509TrustManager() {
+          @Override
           public java.security.cert.X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];
           }
+          @Override
           public void checkClientTrusted(
               java.security.cert.X509Certificate[] certs, String authType) {
           }
+          @Override
           public void checkServerTrusted(
               java.security.cert.X509Certificate[] certs, String authType) {
           }
@@ -272,6 +282,7 @@ public class TestWebServerTaskHttpHttps {
     conf.set(WebServerTask.HTTPS_PORT_KEY, httpsPort);
     conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
     conf.set(WebServerTask.HTTPS_KEYSTORE_PASSWORD_KEY, "password");
+    conf.set(WebServerTask.HTTPS_TRUSTSTORE_PATH_KEY, "");
     final WebServerTask ws = createWebServerTask(confDir, conf);
     try {
       ws.initTask();
@@ -286,6 +297,7 @@ public class TestWebServerTaskHttpHttps {
           .openConnection();
       configureHttpsUrlConnection(conn);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      Assert.assertNotNull(runtimeInfo.getSSLContext());
     } finally {
       ws.stopTask();
     }
@@ -320,6 +332,7 @@ public class TestWebServerTaskHttpHttps {
               .openConnection();
       configureHttpsUrlConnection(conn);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      Assert.assertNotNull(runtimeInfo.getSSLContext());
     } finally {
       ws.stopTask();
     }
@@ -357,6 +370,7 @@ public class TestWebServerTaskHttpHttps {
       HttpsURLConnection conns = (HttpsURLConnection) new URL(conn.getHeaderField("Location")).openConnection();
       configureHttpsUrlConnection(conns);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conns.getResponseCode());
+      Assert.assertNotNull(runtimeInfo.getSSLContext());
     } finally {
       ws.stopTask();
     }

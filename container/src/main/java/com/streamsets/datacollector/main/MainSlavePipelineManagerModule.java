@@ -47,17 +47,17 @@ public class MainSlavePipelineManagerModule { //Need better name
   public MainSlavePipelineManagerModule() {
     ObjectGraph objectGraph = ObjectGraph.create(SlavePipelineManagerModule.class);
     Manager m = new SlavePipelineManager(objectGraph);
-    this.objectGraph = objectGraph.plus(new WebServerModule(m), EventHandlerModule.class, PipelineTaskModule.class);
+    this.objectGraph = objectGraph.plus(new WebServerModule(m), EventHandlerModule.class, SlavePipelineTaskModule.class);
   }
 
   @Provides @Singleton
-  public Task providePipelineTask(PipelineTask agent) {
+  public Task providePipelineTask(SlavePipelineTask agent) {
     return agent;
   }
 
   @Provides @Singleton
-  public PipelineTask providePipelineTask() {
-    return objectGraph.get(PipelineTask.class);
+  public SlavePipelineTask providePipelineTask() {
+    return objectGraph.get(SlavePipelineTask.class);
   }
 
   @Provides @Singleton

@@ -104,6 +104,12 @@
               "https.port",
               "https.keystore.path",
               "https.keystore.password",
+              "https.cluster.keystore.path",
+              "https.cluster.keystore.password",
+              "https.truststore.path",
+              "https.truststore.password",
+              "https.cluster.truststore.path",
+              "https.cluster.truststore.password",
               "http.authentication",
               "http.authentication.login.module",
               "http.authentication.ldap.role.mapping",
@@ -302,7 +308,7 @@
         },
         {
           "name": "https.keystore.path",
-          "label": "Java Keystore Path",
+          "label": "Java KeyStore Path",
           "description": "Path to Java keystore file",
           "type": "path",
           "pathType": "serviceSpecific",
@@ -310,8 +316,53 @@
         },
         {
           "name": "https.keystore.password",
-          "label": "Java Keystore Password",
+          "label": "Java KeyStore Password",
           "description": "Password for Java Keystore file",
+          "type": "password",
+          "default": ""
+        },
+        {
+          "name": "https.cluster.keystore.path",
+          "label": "Java KeyStore Path on Worker node",
+          "description": "Path to keystore file on worker node. This should always be an absolute location.",
+          "type": "path",
+          "pathType": "serviceSpecific",
+          "default": "/opt/security/jks/sdc-keystore.jks"
+        },
+        {
+          "name": "https.cluster.keystore.password",
+          "label": "Java KeyStore Password on Worker node",
+          "description": "Password for keystore file on worker.",
+          "type": "password",
+          "default": "${file(\"/opt/security/jks/keystore-password.txt\")}"
+        },
+        {
+          "name": "https.truststore.path",
+          "label": "Java TrustStore Path",
+          "description": "Java truststore file on gateway sdc which stores certificates to trust identity of workers.",
+          "type": "path",
+          "pathType": "serviceSpecific",
+          "default": ""
+        },
+        {
+          "name": "https.truststore.password",
+          "label": "Java TrustStore Password",
+          "description": "Password for truststore file",
+          "type": "password",
+          "default": ""
+        },
+        {
+          "name": "https.cluster.truststore.path",
+          "label": "Java TrustStore Path on Worker node",
+          "description": "Path to truststore file on worker node. This should always be an absolute location.",
+          "type": "path",
+          "pathType": "serviceSpecific",
+          "default": ""
+        },
+        {
+          "name": "https.cluster.truststore.password",
+          "label": "Java TrustStore Password on Worker node",
+          "description": "Password for truststore file on worker.",
           "type": "password",
           "default": ""
         },

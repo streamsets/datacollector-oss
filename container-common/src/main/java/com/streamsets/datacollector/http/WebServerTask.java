@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 package com.streamsets.datacollector.http;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -31,6 +30,7 @@ import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
@@ -44,6 +44,7 @@ import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
+import org.eclipse.jetty.server.ConnectionFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -66,6 +67,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.net.ssl.SSLContext;
 import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,6 +76,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -119,7 +122,11 @@ public class WebServerTask extends AbstractTask {
   public static final String HTTPS_KEYSTORE_PATH_KEY = "https.keystore.path";
   private static final String HTTPS_KEYSTORE_PATH_DEFAULT = "keystore.jks";
   public static final String HTTPS_KEYSTORE_PASSWORD_KEY = "https.keystore.password";
-  private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@keystore-password.txt@";
+  private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "${file(\"keystore-password.txt\")}";
+  static final String HTTPS_TRUSTSTORE_PATH_KEY = "https.truststore.path";
+  private static final String HTTPS_TRUSTSTORE_PATH_DEFAULT = null;
+  private static final String HTTPS_TRUSTSTORE_PASSWORD_KEY = "https.truststore.password";
+  private static final String HTTPS_TRUSTSTORE_PASSWORD_DEFAULT = null;
 
   public static final String HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG = "http.session.max.inactive.interval";
   public static final int HTTP_SESSION_MAX_INACTIVE_INTERVAL_DEFAULT = 86400;  // in seconds = 24 hours
@@ -463,29 +470,74 @@ public class WebServerTask extends AbstractTask {
       return new Server(new InetSocketAddress(hostname, port));
     } else {
       Server server = new Server();
-
-      File keyStore = getHttpsKeystore(conf, runtimeInfo.getConfigDir());
-
-      if (!keyStore.exists()) {
-        throw new RuntimeException(Utils.format("KeyStore file '{}' does not exist", keyStore.getPath()));
-      }
-      String password = conf.get(HTTPS_KEYSTORE_PASSWORD_KEY, HTTPS_KEYSTORE_PASSWORD_DEFAULT).trim();
-
       //Create a connector for HTTPS
       HttpConfiguration httpsConf = new HttpConfiguration();
       httpsConf.addCustomizer(new SecureRequestCustomizer());
-      SslContextFactory sslContextFactory = new SslContextFactory();
-      sslContextFactory.setKeyStorePath(keyStore.getPath());
-      sslContextFactory.setKeyStorePassword(password);
-      sslContextFactory.setKeyManagerPassword(password);
+
+      SslContextFactory sslContextFactory = createSslContextFactory();
       ServerConnector httpsConnector = new ServerConnector(server,
                                                            new SslConnectionFactory(sslContextFactory, "http/1.1"),
                                                            new HttpConnectionFactory(httpsConf));
       httpsConnector.setPort(port);
       httpsConnector.setHost(hostname);
       server.setConnectors(new Connector[]{httpsConnector});
-
       return server;
+    }
+  }
+
+  protected SslContextFactory createSslContextFactory() {
+    SslContextFactory sslContextFactory = new SslContextFactory();
+    File keyStore = getHttpsKeystore(conf, runtimeInfo.getConfigDir());
+    if (!keyStore.exists()) {
+      throw new RuntimeException(Utils.format("KeyStore file '{}' does not exist", keyStore.getPath()));
+    }
+    String password = conf.get(HTTPS_KEYSTORE_PASSWORD_KEY, HTTPS_KEYSTORE_PASSWORD_DEFAULT).trim();
+    sslContextFactory.setKeyStorePath(keyStore.getPath());
+    sslContextFactory.setKeyStorePassword(password);
+    sslContextFactory.setKeyManagerPassword(password);
+    File trustStoreFile = getHttpsTruststore(conf, runtimeInfo.getConfigDir());
+    if (trustStoreFile != null) {
+      if (trustStoreFile.exists()) {
+        sslContextFactory.setTrustStorePath(trustStoreFile.getPath());
+        String trustStorePassword = Utils.checkNotNull(conf.get(HTTPS_TRUSTSTORE_PASSWORD_KEY,
+            HTTPS_TRUSTSTORE_PASSWORD_DEFAULT
+        ), HTTPS_TRUSTSTORE_PASSWORD_KEY);
+        sslContextFactory.setTrustStorePassword(trustStorePassword.trim());
+      } else {
+        throw new IllegalStateException(Utils.format(
+            "Truststore file: '{}' " + "doesn't exist",
+            trustStoreFile.getAbsolutePath()
+        ));
+      }
+    }
+    return sslContextFactory;
+  }
+
+  private void setSSLContext() {
+    for (Connector connector : server.getConnectors()) {
+      for (ConnectionFactory connectionFactory : connector.getConnectionFactories()) {
+        if (connectionFactory instanceof SslConnectionFactory) {
+          runtimeInfo.setSSLContext(((SslConnectionFactory) connectionFactory).getSslContextFactory().getSslContext());
+        }
+      }
+    }
+    if (runtimeInfo.getSSLContext() == null) {
+      throw new IllegalStateException("Unexpected error, SSLContext is not set for https enabled server");
+    }
+  }
+
+  private File getHttpsTruststore(Configuration conf, String configDir) {
+    final String httpsTruststorePath = conf.get(HTTPS_TRUSTSTORE_PATH_KEY, HTTPS_TRUSTSTORE_PATH_DEFAULT);
+    if (httpsTruststorePath == null || httpsTruststorePath.trim().isEmpty()) {
+      LOG.info(Utils.format(
+          "TrustStore config '{}' is not set, will pickup" + " truststore from $JAVA_HOME/jre/lib/security/cacerts",
+          HTTPS_TRUSTSTORE_PATH_KEY
+      ));
+      return null;
+    } else if (Paths.get(httpsTruststorePath).isAbsolute()) {
+      return new File(httpsTruststorePath).getAbsoluteFile();
+    } else {
+      return new File(configDir, httpsTruststorePath).getAbsoluteFile();
     }
   }
 
@@ -577,6 +629,9 @@ public class WebServerTask extends AbstractTask {
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
+    }
+    if (isSSLEnabled()) {
+      setSSLContext();
     }
     postStart();
   }

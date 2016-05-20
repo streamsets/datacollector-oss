@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.net.ssl.SSLContext;
 
 public class RuntimeInfo {
   public static final String SPLITTER = "|";
@@ -58,6 +61,7 @@ public class RuntimeInfo {
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String id;
   private String httpUrl;
+  private SSLContext sslContext;
   private final Map<String, Object> attributes;
   private ShutdownHandler shutdownRunnable;
   private final Map<String, String> authenticationTokens;
@@ -288,5 +292,13 @@ public class RuntimeInfo {
 
   public boolean isRemoteRegistrationSuccessful() {
     return this.remoteRegistrationSuccessful;
+  }
+
+  public void setSSLContext(SSLContext sslContext) {
+    this.sslContext = sslContext;
+  }
+
+  public SSLContext getSSLContext() {
+    return sslContext;
   }
 }

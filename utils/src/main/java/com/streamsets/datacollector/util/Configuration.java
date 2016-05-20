@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -148,7 +149,14 @@ public class Configuration {
     @Override
     public String getValue() {
       StringBuilder sb = new StringBuilder();
-      try (Reader reader = new FileReader(new File(fileRefsBaseDir, getUnresolvedValueWithoutDelimiter()))) {
+      File configFile;
+      String configFileName = getUnresolvedValueWithoutDelimiter();
+      if (Paths.get(configFileName).isAbsolute()) {
+        configFile = new File(configFileName);
+      } else {
+        configFile = new File(fileRefsBaseDir, configFileName);
+      }
+      try (Reader reader = new FileReader(configFile)) {
         int c = reader.read();
         while (c > -1) {
           sb.append((char) c);
