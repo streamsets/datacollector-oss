@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.base.Optional;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -27,7 +28,6 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
-import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ class HttpStreamConsumer implements Runnable {
     this.entityQueue = entityQueue;
 
     ClientConfig clientConfig = new ClientConfig()
-        .connectorProvider(new GrizzlyConnectorProvider());
+        .connectorProvider(new ApacheConnectorProvider());
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
@@ -157,7 +157,12 @@ class HttpStreamConsumer implements Runnable {
         }
       } finally {
         chunkedInput.close();
-        response.close();
+        if (conf.httpMode == HttpClientMode.POLLING) {
+          // close response only in polling mode.
+          // Closing response in streaming mode may fail with ApacheConnectorProvider
+          // We close client in streaming mode which will close associated resources
+          response.close();
+        }
       }
       LOG.debug("HTTP stream consumer closed.");
     } catch (InterruptedException | ExecutionException e) {
@@ -169,7 +174,13 @@ class HttpStreamConsumer implements Runnable {
       error = Optional.of((Exception)e);
       Thread.currentThread().interrupt();
     } finally {
-      if (stop) {
+      // close client in polling mode only on stop since we reuse the client
+      if (conf.httpMode == HttpClientMode.POLLING) {
+        if (stop) {
+          client.close();
+        }
+      } else {
+        // Always close client in streaming mode on completion
         client.close();
       }
     }
