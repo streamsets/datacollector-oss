@@ -50,6 +50,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.Base64;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import java.io.ByteArrayOutputStream;
@@ -219,11 +220,13 @@ public class ElasticSearchTarget extends BaseTarget {
     }
 
     try {
-      String response = Request
-          .Get("http://" + conf.httpUri + "?pretty=false")
-          .execute()
-          .returnContent()
-          .asString();
+      Request request = Request.Get("http://" + conf.httpUri + "?pretty=false");
+      if (conf.useShield) {
+        // credentials is in form of "username:password".
+        byte[] credentials = conf.shieldConfigBean.shieldUser.getBytes();
+        request.addHeader("Authorization", "Basic " + Base64.encodeBytes(credentials));
+      }
+      String response = request.execute().returnContent().asString();
       Matcher matcher = VERSION_NUMBER_PATTERN.matcher(response);
 
       if (!matcher.matches()) {
