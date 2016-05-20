@@ -149,6 +149,11 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/MapRDB-FieldMappings.dita"/>
+   <topicref href="../Destinations/MapRDB-Kerberos.dita"/>
+   <topicref href="../Destinations/MapRDB-HBaseUser.dita"/>
+   <topicref href="../Destinations/MapRDB-TimeBasis.dita"/>
+   <topicref href="../Destinations/MapRDB-HBaseProperties.dita"/>
    <topicref href="../Destinations/MapRDB-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/MapRFS.dita" chunk="to-content"> 

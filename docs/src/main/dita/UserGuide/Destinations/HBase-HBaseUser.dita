@@ -18,9 +18,9 @@
  <shortdesc>You can configure the destination to use an HBase user to write data to HBase. </shortdesc>
  <conbody>
   <p><indexterm>HBase destination<indexterm>using an HBase user to write to
-        HBase</indexterm></indexterm>By default, the <ph
+        HBase</indexterm></indexterm>By default, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      user account who started it to connect to external systems. When using Kerberos, the <ph
+      user account who started it to connect to external systems. When using Kerberos, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
       Kerberos principal. <draft-comment author="Loretta">Very similar to the Hadoop FS User (origin
         &amp; dest) topics. Check all for updates.</draft-comment></p>

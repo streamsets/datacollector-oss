@@ -175,6 +175,11 @@
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_b53_wxc_kv"/></entry>
                         </row>
+                            <row>
+                                    <entry>MapR DB</entry>
+                                    <entry namest="c2" nameend="c9">* * * Not
+                                            Applicable * * *</entry>
+                            </row>
                         <row>
                             <entry>MapR FS</entry>
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"

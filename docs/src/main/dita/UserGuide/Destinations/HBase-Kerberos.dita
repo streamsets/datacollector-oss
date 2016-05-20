@@ -16,7 +16,7 @@
 <concept id="concept_xy5_4tm_vs">
  <title>Kerberos Authentication</title>
  <shortdesc>You can use Kerberos authentication to connect to HBase. When you use Kerberos
-  authentication, the <ph
+  authentication, <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
   Kerberos principal and keytab to connect to HBase. </shortdesc>
  <conbody>

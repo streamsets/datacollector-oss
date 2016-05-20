@@ -15,9 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vxg_w2z_yv">
  <title>MapR DB</title>
- <shortdesc></shortdesc>
+ <shortdesc>The MapR DB destination writes data to MapR DB. The destination can write data to MapR
+        DB as text, binary data, or JSON strings. You can define the data format for each column
+        written to MapR DB.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>MapR DB
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MapR
+                    DB</indexterm></indexterm>When you configure the MapR DB destination, you
+            specify the MapR DB configuration properties, including the table name. You specify the
+            row key for the table, and then map fields from the pipeline to MapR DB columns.</p>
      <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
+        <note>The MapR DB destination currently supports the HBase APIs only.</note>
+        <draft-comment author="alisontaylor">These MapR topics are basically copied from HBase. Make
+            sure changes here go there.</draft-comment>
  </conbody>
 </concept>

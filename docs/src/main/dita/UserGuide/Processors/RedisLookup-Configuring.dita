@@ -15,9 +15,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_gpv_npr_pv">
     <title>Configuring a Redis Lookup Processor</title>
-    <shortdesc>Configure a Redis Lookup processor to perform key-value lookups in
-            Redis.<draft-comment author="alisontaylor"> filed SDC-2986 for some label/tooltip
-            changes. I'm using the suggested changes in the docs.</draft-comment></shortdesc>
+    <shortdesc>Configure a Redis Lookup processor to perform key-value lookups in Redis.</shortdesc>
     <taskbody>
         <steps>
             <step
