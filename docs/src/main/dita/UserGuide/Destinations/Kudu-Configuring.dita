@@ -49,8 +49,19 @@
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Table to use. The table must exist when you start the
-                                        pipeline.</entry>
+                                    <entry>Table to write to. Enter one of the following: <p>
+                                            <ul id="ul_ncv_cm4_1w">
+                                                <li>Name of an existing Kudu table. If the table
+                                                  doesn't exist, the pipeline fails to start.</li>
+                                                <li>Expression that evaluates to the name of an
+                                                  existing Kudu table. For example, if the table
+                                                  name is stored in the "tableName" record
+                                                  attribute, enter the following
+                                                  expression:<codeblock>${record:attribute('tableName')}</codeblock>If
+                                                  the table doesn't exist, the records are treated
+                                                  as error records.</li>
+                                            </ul>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Field to Column Mapping</entry>

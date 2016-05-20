@@ -20,7 +20,7 @@
   <p><indexterm>Kudu
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kudu</indexterm></indexterm>When
             you configure the Kudu destination, you specify the connection information for one or
-            more Kudu masters, state the table to use, and optionally define field mappings. By
+            more Kudu masters, define the table to use, and optionally define field mappings. By
             default, the destination writes field data to columns with matching names.</p>
         <p>You can also configure the external consistency mode and the operation timeout to use. </p>
  </conbody>
