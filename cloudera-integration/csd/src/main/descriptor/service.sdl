@@ -51,9 +51,19 @@
       "logging": {
         "dir": "/var/log/sdc",
         "filename": "sdc.log",
-        "isModifiable": true,
         "configName": "sdc.log4j.dir",
-        "loggingType": "log4j"
+        "loggingType": "log4j",
+        "configFilename" : "sdc-log4j.properties",
+        "additionalConfigs" : [
+          {
+            "key" : "log4j.appender.streamsets.File",
+            "value" : "/var/log/sdc/sdc.log"
+          },
+          {
+            "key" : "log4j.appender.streamsets.layout.ConversionPattern",
+            "value" : "%d{ISO8601} %p %c: %m%n"
+          }
+        ]
       },
       "commands": [
         {

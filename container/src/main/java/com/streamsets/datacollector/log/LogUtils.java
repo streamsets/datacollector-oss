@@ -83,7 +83,7 @@ public class LogUtils {
             logFile = resolveValue(logFile);
           } else {
             throw new IOException(Utils.format("Could not determine the log file, '{}' does not define property '{}'",
-                                               RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR,
+                                               logFile,
                                                LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY));
           }
           if (!logFile.endsWith(".log")) {
