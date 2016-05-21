@@ -133,7 +133,7 @@
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
-      <artifactId>jersey-grizzly-connector</artifactId>
+      <artifactId>jersey-apache-connector</artifactId>
       <version>${jersey.version}</version>
     </dependency>
 

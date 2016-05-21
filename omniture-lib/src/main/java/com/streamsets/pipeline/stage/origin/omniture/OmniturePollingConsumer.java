@@ -22,9 +22,9 @@ package com.streamsets.pipeline.stage.origin.omniture;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.StageException;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +104,7 @@ class OmniturePollingConsumer implements Runnable {
         config.property(ClientProperties.PROXY_PASSWORD, proxySettings.password);
       }
     }
-    config.connectorProvider(new GrizzlyConnectorProvider());
+    config.connectorProvider(new ApacheConnectorProvider());
   }
 
   @Override
