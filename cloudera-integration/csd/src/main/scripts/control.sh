@@ -51,6 +51,25 @@ $ldap_configs;
   echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
 }
 
+# Create symlinks for standard hadoop services to SDC_RESOURCES directory
+function create_config_symlinks {
+  # Hadoop
+  if [ ! -d $SDC_RESOURCES/hadoop-conf ]; then
+    mkdir -p $SDC_RESOURCES/hadoop-conf
+    ln -s /etc/hadoop/conf/*.xml $SDC_RESOURCES/hadoop-conf
+  fi
+  # Hbase
+  if [ ! -d $SDC_RESOURCES/hbase-conf ]; then
+    mkdir -p $SDC_RESOURCES/hbase-conf
+    ln -s /etc/hbase/conf/*.xml $SDC_RESOURCES/hbase-conf
+  fi
+  # Hive
+  if [ ! -d $SDC_RESOURCES/hive-conf ]; then
+    mkdir -p $SDC_RESOURCES/hive-conf
+    ln -s /etc/hive/conf/*.xml $SDC_RESOURCES/hive-conf
+  fi
+}
+
 export SDC_CONF=$CONF_DIR
 
 # Propagate system white and black lists
@@ -74,6 +93,9 @@ case $CMD in
     else
       generate_ldap_configs
     fi
+
+    create_config_symlinks
+
     source "$CONF_DIR"/sdc-env.sh
     exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing -exec
 
