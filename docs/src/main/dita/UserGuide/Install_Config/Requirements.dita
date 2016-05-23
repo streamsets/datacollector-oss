@@ -17,7 +17,8 @@
  <title>Installation Requirements</title>
  <shortdesc>Install <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on a machine
-    with the following minimum requirements: </shortdesc>
+    that meets the following minimum requirements. To run pipelines in cluster execution mode, each
+    node in the cluster must meet the minimum requirements. </shortdesc>
  <conbody>
     <table frame="all" rowsep="1" colsep="1" id="table_hkk_qw4_1r">
       <tgroup cols="2">
@@ -25,19 +26,35 @@
         <colspec colname="c2" colnum="2" colwidth="2.51*"/>
         <thead>
           <row>
-            <entry><indexterm>installation<indexterm>requirements</indexterm></indexterm>Requirement</entry>
-            <entry>Description</entry>
+            <entry><indexterm>installation<indexterm>requirements</indexterm></indexterm>Component</entry>
+            <entry>Minimum Requirement</entry>
           </row>
         </thead>
         <tbody>
           <row>
-            <entry>Operating Systems</entry>
+            <entry>Operating system</entry>
             <entry>Use one of the following operating systems and versions:<ul id="ul_cjh_sw4_1r">
                 <li>Mac OS X</li>
                 <li>CentOS 6 or 7</li>
                 <li>RedHat Enterprise Linux 6 or 7</li>
                 <li>Ubuntu 14.04</li>
               </ul></entry>
+          </row>
+          <row>
+            <entry>Cores</entry>
+            <entry>2</entry>
+          </row>
+          <row>
+            <entry>RAM</entry>
+            <entry>1 GB</entry>
+          </row>
+          <row>
+            <entry>Disk space</entry>
+            <entry>2 GB</entry>
+          </row>
+          <row>
+            <entry>File descriptors</entry>
+            <entry>4096</entry>
           </row>
           <row>
             <entry>Java</entry>
