@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     version = 1,
     label = "Kinesis Firehose",
     description = "Writes data to Amazon Kinesis Firehose",
-    icon = "kinesis.png",
+    icon = "kinesisfirehose.png",
     onlineHelpRefUrl = "index.html#Destinations/KinFirehose.html#task_rpf_qbq_kv"
 )
 @ConfigGroups(value = FirehoseGroups.class)
