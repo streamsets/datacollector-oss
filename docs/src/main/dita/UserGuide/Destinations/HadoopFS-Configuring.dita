@@ -74,8 +74,10 @@
                                             href="HadoopFS-HadoopProperties-dest.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
-                                    <entry>Location of the HDFS configuration files.<p>Use a
-                                            directory or symlink within the <ph
+                                    <entry>Location of the HDFS configuration files.<p>For a
+                                            Cloudera Manager installation, enter
+                                                <codeph>hadoop-conf</codeph>. For all other
+                                            installations, use a directory or symlink within the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory.</p><p>You can use the following
                                             files with the Hadoop FS destination:<ul

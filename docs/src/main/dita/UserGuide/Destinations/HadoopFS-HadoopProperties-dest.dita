@@ -36,7 +36,10 @@
                                 /> resources directory. </li>
                             <li>In the Hadoop FS destination, specify the location of the files.
                             </li>
-                        </ol></dd>
+                        </ol><note> For a Cloudera Manager installation, Data Collector
+                            automatically creates a symlink to the files named
+                                <codeph>hadoop-conf</codeph>. Enter <codeph>hadoop-conf</codeph> for
+                            the location of the files in the Hadoop FS destination.</note></dd>
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>

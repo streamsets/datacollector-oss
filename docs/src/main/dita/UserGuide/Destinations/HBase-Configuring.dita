@@ -165,11 +165,13 @@
                                             href="HBase-HBaseProperties.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
-                                    <entry>Location of the HDFS configuration files. Use a directory
-                                        or symlink within the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory.<p>You can use the following file
-                                            with the HBase destination:<ul
+                                    <entry>Location of the HDFS configuration files. <p>For a
+                                            Cloudera Manager installation, enter
+                                                <codeph>hbase-conf</codeph>. For all other
+                                            installations, use a directory or symlink within the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory.</p><p>You can use the following
+                                            file with the HBase destination:<ul
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
                                                 id="ul_ezj_cvr_bt">
                                                 <li/>

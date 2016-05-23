@@ -34,7 +34,13 @@
                             <li>Store the files or a symlink to the files in the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> resources directory. </li>
-                            <li>In the HBase destination, specify the location of the files. </li>
+                            <li>In the HBase destination, specify the location of the files.
+                                    <note>For a Cloudera Manager installation, <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> automatically creates a symlink to the files named
+                                        <codeph>hbase-conf</codeph>. Enter
+                                        <codeph>hbase-conf</codeph> for the location of the files in
+                                    the HBase destination.</note></li>
                         </ol></dd>
                 </dlentry>
                 <dlentry>

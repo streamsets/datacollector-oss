@@ -34,9 +34,16 @@
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 />.</li>
                             <li>In the Hive Streaming destination, if the files are stored in the
-                                resource directory, specify a relative path to the files. If the
+                                resources directory, specify a relative path to the files. If the
                                 files are stored outside of the resources directory, specify an
-                                absolute path to the files. </li>
+                                absolute path to the files. <note>For a Cloudera Manager
+                                    installation, <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> automatically creates a symlink to the files named
+                                        <codeph>hive-conf</codeph>. Enter <codeph>hive-conf</codeph>
+                                    for the location of the files in the Hive Streaming
+                                    destination.</note></li>
+                        
                         </ol></dd>
                 </dlentry>
                 <dlentry>

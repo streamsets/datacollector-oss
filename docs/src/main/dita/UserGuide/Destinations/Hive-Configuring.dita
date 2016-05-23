@@ -47,7 +47,8 @@
                                                 id="image_wjh_ycl_br"/></xref></entry>
                                     <entry>
                                         <p>Absolute path to the directory containing the Hive and
-                                            Hadoop configuration files.</p>
+                                            Hadoop configuration files. For a Cloudera Manager
+                                            installation, enter <codeph>hive-conf</codeph>. </p>
                                         <p>The destination uses the following configuration
                                                 files:<ul
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveStreamingFiles"
