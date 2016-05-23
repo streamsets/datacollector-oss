@@ -335,6 +335,9 @@ public class LdapLoginModule extends AbstractLoginModule
 
     if (dirContext == null || _roleBaseDn == null || _roleMemberAttribute == null || _roleObjectClass == null)
     {
+      LOG.debug("getUserRolesByDn returns an empty list because at least one of the following is null : " +
+          "[ dirContext, _roleBaseDn, _roleMemberAttribute, _roleObjectClass ]");
+      LOG.debug("dirContext - " + dirContext);
       return roleList;
     }
 
@@ -486,7 +489,7 @@ public class LdapLoginModule extends AbstractLoginModule
     environment.put(Context.SECURITY_CREDENTIALS, password.toString());
 
     new InitialDirContext(environment);
-    List<String> roles = getUserRoles(_rootContext, username);
+    List<String> roles = getUserRolesByDn(_rootContext, userDn);
 
     UserInfo userInfo = new UserInfo(username, null, roles);
     setCurrentUser(new JAASUserInfo(userInfo));
