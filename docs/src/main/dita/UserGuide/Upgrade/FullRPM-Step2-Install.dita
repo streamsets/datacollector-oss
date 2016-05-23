@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_ofc_2zl_5v">
+    <title>Step 2. Install the New Version</title>
+    <shortdesc>Install the new version of the RPM package.</shortdesc>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Use the following URL to download the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> RPM package from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to install the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> RPM package in a different directory than the previous version:</cmd>
+                <info>
+                    <codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>
+                    <p>For example, to install version 1.4.0.0, use the following
+                        command:<codeblock>yum localinstall streamsets-datacollector-1.4.0.0-1.noarch.rpm</codeblock></p>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

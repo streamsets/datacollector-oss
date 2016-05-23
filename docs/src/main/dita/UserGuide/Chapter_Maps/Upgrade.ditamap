@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Upgrade</title>
+ <topicref href="../Upgrade/Upgrade_title.dita">
+  <topicref href="../Upgrade/Upgrade.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Upgrade/FullBasicTarball.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/FullBasicTarball-Step1-VerifyDirs.dita"/>
+   <topicref href="../Upgrade/FullBasicTarball-Step2-Shutdown.dita"/>
+   <topicref href="../Upgrade/FullBasicTarball-Step3-Install.dita">
+    <topicref href="../Upgrade/FullBasic-ManualStart.dita"/>
+    <topicref href="../Upgrade/FullBasic-ServiceStartTarball.dita"/>
+   </topicref>
+   <topicref href="../Upgrade/FullBasicTarball-Step4-EnvConfig.dita"/>
+   <topicref href="../Upgrade/FullBasicTarball-Step5-ConfigFiles.dita"/>
+   <topicref href="../Upgrade/FullBasicTarball-Step6-AdditionalLibraries.dita"/>
+   <topicref href="../Upgrade/FullBasicTarball-Step7-Start.dita"/>
+  </topicref>
+  <topicref href="../Upgrade/FullRPM.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/FullRPM-Step1-Shutdown.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step2-Install.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step3-EnvConfig.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step4-ConfigFiles.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step5-Start.dita"/>
+  </topicref>
+  <topicref href="../Upgrade/CMUpgrade.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/CM-Step1-InstallCSD.dita"/>
+   <topicref href="../Upgrade/CM-Step2-InstallParcel.dita"/>
+   <topicref href="../Upgrade/CM-Step3-ActivateParcel.dita"/>
+  </topicref>
+ </topicref>
+</map>

@@ -36,32 +36,54 @@
                 <cmd>Extract the tarball to the desired location.</cmd>
             </step>
             <step>
-                <cmd>Optionally, in the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file, set the
-                    following environment variables:</cmd>
-                <info>
-                    <ul id="ul_vbv_b44_1r">
-                        <li>SDC_CONF - The <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> configuration directory.</li>
-                        <li>SDC_DATA - The <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> directory for pipeline state and configuration information.</li>
-                        <li>SDC_LOG - The <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> directory for logs.</li>
-                        <li>SDC_RESOURCES - The <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> directory for runtime resource files. </li>
-                    </ul>
-                    <note>If these variables are not set, the directories are created in
-                            <codeph>$SDC_DIST</codeph>, the base <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> runtime directory. If this is the case, make sure the user who starts <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> has write permission for the base <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> runtime directory.</note>
-                </info>
+                <cmd>For a production environment, configure the directories used to store
+                    configuration, data, log, and resource files so that they are outside of
+                        <codeph>$SDC_DIST</codeph>, the base <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> runtime directory. Use directories outside of the runtime directory to enable
+                    use of the directories after <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> upgrades.</cmd>
+                <info>For a development or test environment, you can use the default locations
+                    within the <codeph>$SDC_DIST</codeph> runtime directory. However, StreamSets
+                    recommends that you use directories outside of the runtime directory for all
+                    environments. If you use the default values for a development or test
+                    environment, make sure the user who starts <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> has write permission for the base <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> runtime directory.</info>
+                <substeps id="substeps_ap1_j5p_vv">
+                    <substep>
+                        <cmd>Create directories outside of the <codeph>$SDC_DIST</codeph> runtime
+                            directory for the configuration, data, log, and resource files. </cmd>
+                    </substep>
+                    <substep>
+                        <cmd>In the <codeph>$SDC_DIST/libexec/sdc-env.sh file</codeph>, set the
+                            following environment variables to the newly created directories:</cmd>
+                        <info>
+                            <ul id="ul_vbv_b44_1r">
+                                <li>SDC_CONF - The <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> configuration directory.</li>
+                                <li>SDC_DATA - The <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> directory for pipeline state and configuration
+                                    information.</li>
+                                <li>SDC_LOG - The <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> directory for logs.</li>
+                                <li>SDC_RESOURCES - The <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> directory for runtime resource files. </li>
+                            </ul>
+                        </info>
+                    </substep>
+                    <substep>
+                        <cmd>Copy all files from <codeph>$SDC_DIST/etc</codeph> to the newly created
+                                <codeph>$SDC_CONF</codeph> directory.</cmd>
+                    </substep>
+                </substeps>
             </step>
             <step>
                 <cmd>Use the following command to launch <ph>Data Collector</ph>:</cmd>

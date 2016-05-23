@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_c45_chv_xv">
+ <title>Upgrade an Installation with Cloudera Manager</title>
+ <shortdesc>When you upgrade an installation with Cloudera Manager, the new version uses the same
+        directories to store configuration, data, log, and resource files. As a result, the new
+        version has access to the pipeline, log, and resource files created in the previous
+        version.</shortdesc>
+ <conbody>
+  <p><indexterm>Cloudera Manager<indexterm>upgrading Data
+                    Collector</indexterm></indexterm><indexterm>upgrade<indexterm>through Cloudera
+                    Manager</indexterm></indexterm>To upgrade <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            through Cloudera Manager, perform the following steps:<ol id="ol_dqy_jhv_xv">
+                <li>Install the new StreamSets custom service descriptor (CSD).</li>
+                <li>(Optional.) Manually install the parcel and checksum files. Typically only
+                    needed when the Cloudera Manager Server does not have internet access.</li>
+                <li>Download, distribute, and activate the new StreamSets parcel.</li>
+            </ol></p>
+        <note type="warning">You must perform the steps in this order, or <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            will fail to start.</note>
+ </conbody>
+</concept>

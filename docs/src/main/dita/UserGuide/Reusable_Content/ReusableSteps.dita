@@ -2583,6 +2583,75 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following steps are used in "Step 1.
+                        Install the StreamSets Custom Service Descriptor" in the Installation
+                        chapter and the Upgrade chapter.</draft-comment>
+                </cmd>
+            </step>
+            <step id="CSDInstallDownload">
+                <cmd>Use the following URL to download the CSD from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step id="CSDInstallPath">
+                <cmd>Copy the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> CSD file to the<uicontrol> Local Descriptor Repository Path</uicontrol>. By
+                    default, the path is <codeph>/opt/cloudera/csd</codeph>.</cmd>
+                <info>To verify the path to use, in Cloudera Manager, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. In the navigation panel, select the <uicontrol>Custom Service
+                        Descriptors</uicontrol> category. Place the CSD file in the path configured
+                    for <uicontrol>Local Descriptor Repository Path</uicontrol>. </info>
+            </step>
+            <step id="CSDInstallFileOwnership">
+                <cmd>Set the file ownership to <codeph>cloudera-scm:cloudera-scm</codeph> with
+                    permission <uicontrol>644</uicontrol>. </cmd>
+                <info>For example:
+                    <codeblock>chown cloudera-scm:cloudera-scm /opt/cloudera/csd/STREAMSETS*.jar
+chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
+            </step>
+            <step id="CSDInstallRestart">
+                <cmd>Use one of the following commands to restart Cloudera Manager Server:</cmd>
+                <info><p>For Ubuntu and CentOS 6:
+                        <codeblock>service cloudera-scm-server restart</codeblock></p>For CentOS 7:
+                    <codeblock>systemctl restart cloudera-scm-server</codeblock></info>
+            </step>
+            <step id="CSDInstallRestartService">
+                <cmd>In Cloudera Manager, to restart the Cloudera Management Service, click <menucascade>
+                        <uicontrol>Home</uicontrol>
+                        <uicontrol>Status</uicontrol>
+                    </menucascade>. To the right of Cloudera Management Service, click the
+                        <uicontrol>Menu</uicontrol> icon and select
+                    <uicontrol>Restart</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following steps are used in "Step 2.
+                        Manually Install the Parcel and Checksum Files (Optional)" used in the
+                        Installation and Upgrade chapters.</draft-comment>
+                </cmd>
+            </step><step id="ParcelDownload">
+                <cmd>Download the StreamSets parcel and related checksum file for the Cloudera
+                    Manager Server operating system from the following location:</cmd>
+                <info><xref href="https://archives.streamsets.com/index.html" format="html"
+                        scope="external"/></info>
+            </step>
+            <step id="ParcelRepoPath">
+                <cmd>Copy the StreamSets parcel and checksum files to the <uicontrol>Cloudera
+                        Manager Local Parcel Repository Path</uicontrol>. </cmd>
+                <info>By default, the path is <codeph>/opt/cloudera/parcel-repo</codeph>.</info>
+                <info>To verify the path to use, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. In the navigation panel, select the
+                        <uicontrol>Parcels</uicontrol> category. Place the StreamSets parcel file in
+                    the path configured for <uicontrol>Local Parcel Repository Path</uicontrol>.
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_c5x_hgk_5v">
+    <title>Step 1. Verify the Directories in the Previous Version (Manual Start)</title>
+    <shortdesc>If the previous version of <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> used a
+        manual start, verify that the directories used to store configuration, data, log, and
+        resource files are outside of <codeph>$SDC_DIST</codeph>, the base <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        runtime directory.</shortdesc>
+    <taskbody>
+        <context>
+            <note>If the previous version used a service start, the default values of the
+                directories are absolute paths that are outside of the <codeph>$SDC_DIST</codeph>
+                runtime directory.</note>
+            <p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> environment configuration file, <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph>,
+                includes environment variables that define the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> directories. For a manual start, the default values of the directory variables
+                are relative to the <codeph>$SDC_DIST</codeph> runtime directory. If you did not
+                modify the directory values in the previous version, modify the values before you
+                upgrade so that the new version can use the same working directories.</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Create directories outside of the <codeph>$SDC_DIST</codeph> runtime directory
+                    for the configuration, data, log, and resource files. </cmd>
+            </step>
+            <step>
+                <cmd>In the <codeph>$SDC_DIST/libexec/sdc-env.sh file</codeph>, set the following
+                    environment variables to the newly created directories:</cmd>
+                <info>
+                    <ul id="ul_v2s_1jk_5v">
+                        <li>SDC_CONF - The <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> configuration directory.</li>
+                        <li>SDC_DATA - The <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> directory for pipeline state and configuration information.</li>
+                        <li>SDC_LOG - The <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> directory for logs.</li>
+                        <li>SDC_RESOURCES - The <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> directory for runtime resource files.</li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>Move all files from the previous directories to the newly created
+                    directories.</cmd>
+            </step>
+            <step>
+                <cmd>Restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to enable the changes.</cmd>
+                <info>
+                    <p>Log in to verify that you can use <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> as expected.</p>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
+</task>
