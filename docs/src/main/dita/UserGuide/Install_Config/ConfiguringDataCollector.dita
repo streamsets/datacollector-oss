@@ -268,6 +268,13 @@
                                         </p><draft-comment author="alisontaylor">Not mentioning dpm
                                         until they add it.</draft-comment></entry>
                             </row>
+                            <row>
+                                <entry>runner.thread.pool.size</entry>
+                                <entry>Number of threads in the pool that are available to run
+                                    standalone pipelines. The default value is sufficient to
+                                    concurrently run approximately 20 standalone
+                                        pipelines.<p>Default is 20.</p></entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table></p><p>The <ph

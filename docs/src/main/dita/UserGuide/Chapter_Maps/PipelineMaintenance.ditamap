@@ -21,6 +21,11 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Maintenance/ResettingTheOrigin.dita"/>
+   <topicref href="../Pipeline_Maintenance/StartingMultiplePipelines.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+   </topicref>
   </topicref>
  <topicref href="../Pipeline_Maintenance/StoppingAPipeline.dita">
   <topicmeta>
