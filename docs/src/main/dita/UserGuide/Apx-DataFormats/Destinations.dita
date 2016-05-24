@@ -160,6 +160,11 @@
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_jxg_5xc_kv"/></entry>
                         </row>
+                            <row>
+                                    <entry>Kudu</entry>
+                                    <entry namest="c2" nameend="c9">* * * Not
+                                            Applicable * * *</entry>
+                            </row>
                         <row>
                             <entry>Local FS</entry>
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"

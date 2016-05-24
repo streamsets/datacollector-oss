@@ -99,12 +99,6 @@
    <topicref href="../Processors/Jython-TypeHandling.dita"/>
    <topicref href="../Processors/Jython-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/LocalLookup.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Processors/LocalLookup-Configuring.dita"/>
-  </topicref>
   <topicref href="../Processors/LogParser.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

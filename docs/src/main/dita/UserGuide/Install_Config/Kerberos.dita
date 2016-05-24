@@ -34,6 +34,7 @@
         <li>Kafka Producer, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>
+        <li>MapR DB destination</li>
         <li>MapR FS destination</li>
       </ul></p>
   <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">

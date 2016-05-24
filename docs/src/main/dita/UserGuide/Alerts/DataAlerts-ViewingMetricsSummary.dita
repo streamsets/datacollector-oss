@@ -33,9 +33,9 @@
                 <info>Sample data displays. When enabled for the rule, metrics display on the
                         right.<p>In the following example, a data alert is triggered, and the
                         Monitor panel displays the sample records and metrics graphic for a data
-                        rule between the Directory and Stream Selector stages: <image
+                        rule between the Directory and Stream Selector stages:</p> <image
                             href="../Graphics/DataRule-Metrics%26Sample.png" id="image_ohw_tjn_q5"
-                            scale="40"/></p></info>
+                            scale="40"/></info>
             </step>
         </steps>
     </taskbody>
