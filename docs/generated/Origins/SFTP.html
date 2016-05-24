@@ -1,0 +1,1177 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The SFTP/FTP Client origin reads files from a server using the Secure File Transfer Protocol (SFTP) or the File Transfer Protocol (FTP). When you configure the SFTP/FTP Client origin, you specify the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="SFTP/FTP Client"></meta><meta name="abstract" content="The SFTP/FTP Client origin reads files from a server using the Secure File Transfer Protocol (SFTP) or the File Transfer Protocol (FTP)."></meta><meta name="description" content="The SFTP/FTP Client origin reads files from a server using the Secure File Transfer Protocol (SFTP) or the File Transfer Protocol (FTP)."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ic5_bzd_5v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>SFTP/FTP Client</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ic5_bzd_5v">
+ <h1 class="title topictitle1">SFTP/FTP Client</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The SFTP/FTP Client origin reads files from a server using the Secure File Transfer
+        Protocol (SFTP) or the File Transfer Protocol (FTP). </p>
+
+  <p class="p">When you configure the SFTP/FTP Client origin, you
+            specify the URL where the files reside on the remote server and other read properties.
+            If the server requires authentication, configure the origin to use login credentials. If
+            using the SFTP protocol, you can also configure the origin for strict host checking. </p>
+
+        <p class="p">You can configure the origin to download files to an archive directory if the origin
+            encounters errors while reading the files.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_vnj_njp_yv">
+ <h2 class="title topictitle2">Credentials</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If the remote server requires authentication, configure the authentication method that
+        the origin must use to log in to the remote server.</p>
+
+        <div class="p">Configure one of the
+            following authentication methods:<dl class="dl">
+                
+                    <dt class="dt dlterm">None</dt>
+
+                    <dd class="dd">The SFTP or FTP server does not require authentication.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Password</dt>
+
+                    <dd class="dd">The SFTP or FTP server requires authentication using a user name and
+                        password. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Private key</dt>
+
+                    <dd class="dd">The SFTP server requires authentication using a private key file. Store the
+                        private key file in a local directory. For the SFTP protocol only.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">If using the SFTP protocol, you can also configure the origin to use strict host
+            checking. When enabled, the origin connects to the SFTP server only if the server is
+            listed in the known hosts file stored in a local directory. The known hosts file
+            contains the host keys for the approved SFTP servers.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_jcx_ggs_wv">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">The SFTP/FTP Client
+            origin processes data differently based on the data format. SFTP/FTP Client processes
+            the following types of data:</p>
+
+     <dl class="dl">
+         
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">Generates a record for every record. </dd>
+
+                              <dd class="dd">The origin assumes each file includes an Avro schema definition.
+                                    But you can optionally provide an alternate schema. </dd>
+
+                              <dd class="dd">The origin reads files compressed by Avro-supported compression
+                                    codecs without requiring additional configuration. To enable the
+                                    origin to read files compressed by other codecs, use the
+                                    compression format property in the stage.</dd>
+
+                        
+         
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_jcx_ggs_wv__d9784e388">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                                    optionally including the header information when available. </dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin cannot continue processing data in the file. Records
+                                    already processed from the file are passed to the pipeline. The
+                                    behavior of the origin is then based on the error handling
+                                    configured for the stage:<ul class="ul" id="concept_jcx_ggs_wv__d9784e427">
+                                          <li class="li">Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+
+                                          <li class="li">To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+
+                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">For more information about the root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+                        
+         
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+
+                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                                    origin, the origin cannot continue processing data in the file.
+                                    Records already processed from the file are passed to the
+                                    pipeline. The behavior of the origin is then based on the error
+                                    handling configured for the stage:<ul class="ul" id="concept_jcx_ggs_wv__d9784e467">
+                                          <li class="li">Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+
+                                          <li class="li">To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+
+                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
+
+                                    </ul>
+</dd>
+
+                        
+         
+                              <dt class="dt dlterm">Log</dt>
+
+                              <dd class="dd">Generates a record for every log line. </dd>
+
+                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+
+                              <dd class="dd">You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+
+                              <dd class="dd">You can define the log format or type to be read.</dd>
+
+                        
+         
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Generates a record for every protobuf message. </dd>
+
+                        <dd class="dd">Protobuf messages must match the specified message type and be described
+                              in the descriptor file. </dd>
+
+                        <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot continue
+                              processing data in the file. The origin handles the file based on file
+                              error handling properties and continues reading the next file. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+         
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">Generates a record for every record. Use to process records
+                                    generated by a <span class="ph">Data
+                  Collector</span> pipeline using the SDC Record data format.</dd>
+
+                              <dd class="dd">For error records, the origin provides the original record as read
+                                    from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+
+                              <dd class="dd">When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+
+                        
+         
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">Generates a record for each line of text. </dd>
+
+                              <dd class="dd">When a line exceeds the maximum line length defined for the
+                                    origin, the origin truncates the line. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+
+                        
+         
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">Generates records based on the location of the XML element that
+                                    you define as the record delimiter. If you do not define a
+                                    delimiter element, the origin treats the XML file as a single
+                                    record.</dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin cannot continue processing data in the file. Records
+                                    already processed from the file are passed to the pipeline. The
+                                    behavior of the origin is then based on the error handling
+                                    configured for the stage:<ul class="ul" id="concept_jcx_ggs_wv__d9784e610">
+                                          <li class="li">Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+
+                                          <li class="li">To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+
+                                          <li class="li">Stop Pipeline - The origin stops the pipeline. </li>
+
+                                    </ul>
+</dd>
+
+                        
+     </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_lfx_fzd_5v">
+    <h2 class="title topictitle2">Configuring an SFTP/FTP Client Origin</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an SFTP/FTP Client
+                origin to read files from an SFTP or FTP server.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e333" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d110491e373">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d110491e376">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e373 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e376 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e373 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e376 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e373 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e376 ">Error record handling for the stage: <ul class="ul" id="task_lfx_fzd_5v__d9812e380">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">SFTP/FTP</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__table_utf_vfs_wv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d110491e448">SFTP/FTP Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d110491e451">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Resource URL</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">URL where the files reside on the remote server. <div class="p">For
+                                            the SFTP protocol, use the following format:
+                                            <pre class="pre codeblock">sftp://&lt;host name&gt;:&lt;port number&gt;/&lt;path&gt;</pre>
+</div>
+<div class="p">For
+                                            the FTP protocol, use the following format:
+                                            <pre class="pre codeblock">ftp://&lt;host name&gt;:&lt;port number&gt;/&lt;path&gt; </pre>
+</div>
+<p class="p">You
+                                            can omit the port number from the URL if the server uses
+                                            the standard port number - 22 for SFTP or 21 for
+                                            FTP.</p>
+<p class="p">You can optionally include the user name to
+                                            log in to the SFTP or FTP server in the URL. For
+                                            example, for the FTP protocol, you can use the following
+                                            format:</p>
+<pre class="pre codeblock">ftp://&lt;user name&gt;:&lt;password&gt;@&lt;host name&gt;/&lt;path&gt;</pre>
+<div class="note note"><span class="notetitle">Note:</span> If
+                                            you enter a user name in the resource URL and configure
+                                            password or private key authentication on the
+                                            Credentials tab, the value entered in the URL takes
+                                            precedence.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Path Relative to User Home Directory</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Select if the path included in the resource URL is
+                                        relative to the home directory of the user that logs in to
+                                        the remote server.<p class="p">Applicable when you include a user name
+                                            in the URL or when you configure password or private key
+                                            authentication on the Credentials tab.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Data Format
+                                        <a class="xref" href="SFTP.html#concept_jcx_ggs_wv">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Data format for source files. Use one of the following formats:<ul class="ul" id="task_lfx_fzd_5v__d9825e461">
+         <li class="li">Avro</li>
+
+         <li class="li">Delimited</li>
+
+         <li class="li">JSON</li>
+
+         <li class="li">Log</li>
+
+         <li class="li">Protobuf</li>
+
+         <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+           <img class="image" id="task_lfx_fzd_5v__d9825e483" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+         <li class="li">Text</li>
+
+         <li class="li">XML</li>
+
+        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Poll Interval</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Seconds the origin waits before checking for new files
+                                        from the remote server. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Charset</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Character encoding of the messages to be
+                                        processed.</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_lfx_fzd_5v__d9825e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_lfx_fzd_5v__d9825e430" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">The compression format of the files:<ul class="ul" id="task_lfx_fzd_5v__d9825e434">
+         <li class="li">None - Processes only uncompressed files.</li>
+
+         <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
+
+         <li class="li">Archive - Processes files archived by the supported archive formats.</li>
+
+         <li class="li">Compressed Archive - Processes files archived and compressed by the supported archive
+          and compression formats.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Max Batch Size (records)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Maximum number of records to include in a batch and send
+                                        through the pipeline at one time.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e448 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                            <img class="image" id="task_lfx_fzd_5v__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e451 ">Number of milliseconds to wait before sending a partial
+                                        or empty batch. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__table_gvj_fjs_wv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d110491e665">Credentials Property
+                                        <a class="xref" href="SFTP.html#concept_vnj_njp_yv" title="If the remote server requires authentication, configure the authentication method that the origin must use to log in to the remote server.">
+                                            <img class="image" id="task_lfx_fzd_5v__image_mgp_5q6_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d110491e675">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Authentication Method</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Authentication method to use to log in to the remote
+                                            server:<ul class="ul" id="task_lfx_fzd_5v__ul_k2d_wsq_yv">
+                                            <li class="li">None - The remote server does not require
+                                                authentication.</li>
+
+                                            <li class="li">Password - The remote server requires authentication
+                                                using a user name and password. </li>
+
+                                            <li class="li">Private key - The SFTP server requires
+                                                authentication using a private key file.</li>
+
+                                        </ul>
+<p class="p">Default is None.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Username</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">User name to log in to the remote server. Used for
+                                        password and private key authentication.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Password</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Password to log in to the remote server. Used for
+                                        password authentication.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Private Key File</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Full path to the local private key file used to log in to
+                                        the remote server. Used for private key
+                                        authentication.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Private Key Passphrase</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Passphrase used to open the private key file. Used for
+                                        private key authentication if the private key is protected
+                                        with a passphrase.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Strict Host Checking</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Specifies whether to check that the SFTP server is listed
+                                        in the known hosts file. When enabled, the origin connects
+                                        to the server only if the server is listed in the known
+                                        hosts file. <p class="p">For the SFTP protocol only.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e665 ">Known Hosts File</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e675 ">Full path to the local known hosts file. Required if
+                                        strict host checking is selected.<p class="p">For the SFTP protocol
+                                            only.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Error Handling</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__table_qzq_ljs_wv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d110491e790">Error Handling Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d110491e793">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e790 ">Archive on Error</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e793 ">Specifies whether to download and archive files to a
+                                        local directory if the origin encounters errors while
+                                        reading the file.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d110491e790 ">Archive Directory</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d110491e793 ">Local directory to archive the files.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, optionally configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e610" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e845">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e848">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e845 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e848 ">Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p class="p">When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p>
+<p class="p">You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="ph uicontrol">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e858" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e896">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e899">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Delimiter Format Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Delimiter format type. Use one of the following options:
+                                            <ul class="ul" id="task_lfx_fzd_5v__ul_s5z_b3z_3r">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Indicates whether a file contains a header line, and
+                                        whether to use the header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Max Record Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Maximum length of a record in characters. Longer records
+                                        are not read. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                            character.<p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Escape Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Escape character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_lfx_fzd_5v__d9812e955" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Root field type to use:<ul class="ul" id="task_lfx_fzd_5v__d9812e959">
+                                            <li class="li">List-Map - Generates an indexed list of data.
+                                                Enables you to use standard functions to process
+                                                data. Use for new pipelines.</li>
+
+                                            <li class="li">List - Generates a record with an indexed list with
+                                                a map for header and value. Requires the use of
+                                                delimited data functions to process data. Use only
+                                                to maintain pipelines created before 1.1.0.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e896 ">Lines to Skip</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e899 ">Lines to skip before reading data. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1005" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e1061">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e1064">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_lfx_fzd_5v__d9812e1027" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1061 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1064 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_lfx_fzd_5v__d9812e1036">
+                                                <li class="li">Array of Objects </li>
+
+                                                <li class="li">Multiple Objects</li>
+
+                                            </ul>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr id="task_lfx_fzd_5v__d9812e1047" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1061 ">Maximum Object Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1064 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For log data, on the <span class="keyword wintitle">Log</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1093" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e1129">Log Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e1132">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1129 ">Log Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1132 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_lfx_fzd_5v__d9812e1122">
+                                            <li class="li">Common Log Format</li>
+
+                                            <li class="li">Combined Log Format</li>
+
+                                            <li class="li">Apache Error Log Format</li>
+
+                                            <li class="li">Apache Access Log Custom Format</li>
+
+                                            <li class="li">Regular Expression</li>
+
+                                            <li class="li">Grok Pattern</li>
+
+                                            <li class="li">Log4j</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1129 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1132 ">Maximum length of a log line. The origin truncates longer
+                                        lines. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1129 ">Retain Original Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1132 ">Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p class="p">By default, the original line is
+                                            discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                    <ul class="ul" id="task_lfx_fzd_5v__d9812e1171">
+                        <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
+                            use Apache log format strings to define the <span class="ph uicontrol">Custom Log
+                                Format</span>.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Regular Expression</span>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Grok Pattern</span>, you can use the
+                                <span class="ph uicontrol">Grok Pattern Definition</span> field to define
+                            custom grok patterns. You can define a pattern on each line. <p class="p">In the
+                                    <span class="ph uicontrol">Grok Pattern</span> field, enter the pattern to
+                                use to parse the log. You can use a predefined grok patterns or
+                                create a custom grok pattern using patterns defined in
+                                    <span class="ph uicontrol">Grok Pattern Definition</span>.</p>
+<p class="p">For more
+                                information about defining grok patterns and supported grok
+                                patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
+</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
+                                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1216" class="table" frame="border" border="1" rules="all">
+                                        
+                                        
+                                        <thead class="thead" align="left">
+                                            <tr class="row">
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d110491e1257">Log4j Property</th>
+
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d110491e1260">Description</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody class="tbody">
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e1257 ">On Parse Error</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e1260 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_lfx_fzd_5v__d9812e1245">
+                                                  <li class="li">Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+
+                                                  <li class="li">Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+
+                                                  <li class="li">Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is added
+                                                  to the message field for the last valid log
+                                                  line.</li>
+
+                                                  </ul>
+</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e1257 ">Use Custom Log Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e1260 ">Allows you to define a custom log
+                                                  format.</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d110491e1257 ">Custom Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d110491e1260 ">Use log4j variables to define a custom log
+                                                  format. </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+</div>
+
+                            </div>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Protobuf</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1401" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e1334">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e1337">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1334 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1337 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>. <p class="p">For more information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information
+                                            about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1334 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1337 ">The fully-qualified name for the message type to use when
+                                        reading data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1334 ">Delimited Messages</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1337 ">Indicates if a file might include more than one protobuf
+                                        message.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                    <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1493" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d110491e1448">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d110491e1451">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d110491e1448 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d110491e1451 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+               
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                    properties:</span>      
+            <div class="itemgroup info">
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lfx_fzd_5v__d9812e1551" class="table" frame="border" border="1" rules="all">
+                        
+                        
+                        <thead class="thead" align="left"> <tr class="row">                         
+                            <th class="entry" valign="top" width="30%" id="d110491e1496">XML Property</th>
+
+                            <th class="entry" valign="top" width="70%" id="d110491e1499">Description</th>
+</tr>
+  
+                        </thead>
+
+       <tbody class="tbody">                
+            <tr class="row">
+                <td class="entry" valign="top" width="30%" headers="d110491e1496 ">Delimiter Element</td>
+
+                <td class="entry" valign="top" width="70%" headers="d110491e1499 ">
+                    <p class="p">XML element that acts as a delimiter. Omit a delimiter to
+                        treat the entire XML document as one record.</p>
+
+                </td>
+
+            </tr>
+
+            <tr class="row">
+                <td class="entry" valign="top" width="30%" headers="d110491e1496 ">Max Record Length (chars)</td>
+
+                <td class="entry" valign="top" width="70%" headers="d110491e1499 ">
+                    <p class="p">The maximum number of characters in a record. Longer
+                        records are diverted to the pipeline for error handling.
+                    </p>
+
+                </td>
+         
+            </tr>
+ 
+            </tbody>
+
+            </table>
+</div>
+
+            </div></li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div>
+</body>
+</html>

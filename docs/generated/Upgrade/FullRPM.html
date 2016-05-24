@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade a Full Installation from the RPM Package"></meta><meta name="abstract" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default directories, the new version has access to the pipeline, log, and resource files created in the previous version."></meta><meta name="description" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default directories, the new version has access to the pipeline, log, and resource files created in the previous version."></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ws4_vq5_xv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade a Full Installation from the RPM Package</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ws4_vq5_xv">
+ <h1 class="title topictitle1">Upgrade a Full Installation from the RPM Package</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you upgrade a full installation from the RPM package, the new version uses the
+        default directories to store configuration, data, log, and resource files. If the previous
+        version used the default directories, the new version has access to the pipeline, log, and
+        resource files created in the previous version.</p>
+
+  <p class="p">If the previous version
+            used customized values for the directory environment variables, you must make the same
+            customizations in the new version so that the new version can access the same pipeline,
+            log, and resource files.</p>
+
+        <p class="p">To upgrade a full installation from the RPM package, perform the following steps:</p>
+
+     <ol class="ol" id="concept_ws4_vq5_xv__ol_x5s_qpr_5v">
+         <li class="li">Shut down the previous version.</li>
+
+         <li class="li">Install the new version.</li>
+
+         <li class="li">Manually update the environment configuration file.</li>
+
+         <li class="li">Manually update the configuration files.</li>
+
+         <li class="li">Start the new version of <span class="ph">Data
+                  Collector</span>.</li>
+
+     </ol>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_zk4_tr5_xv">
+    <h2 class="title topictitle2">Step 1. Shut Down the Previous Version</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Shut down the previous version of <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="section context">
+            <p class="p">To use the command line for shutdown, use the <span class="ph">Data
+                  Collector</span> process ID in the following command:</p>
+
+            <pre class="pre codeblock">kill -3 &lt;process ID&gt;</pre>
+
+            <p class="p">To use the <span class="ph">Data
+                  Collector</span> console for shutdown:</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_zk4_tr5_xv__steps_g14_vr5_xv"><li class="li step">
+                <span class="ph cmd">Click <span class="ph uicontrol">Administration </span> &gt; <span class="ph uicontrol">Shut
+                        Down.</span></span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">When a confirmation dialog box appears, click <span class="ph uicontrol">Yes</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_ofc_2zl_5v">
+    <h2 class="title topictitle2">Step 2. Install the New Version</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the new version of the RPM package.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data
+                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to install the <span class="ph">Data
+                  Collector</span> RPM package in a different directory than the previous version:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
+
+                    <div class="p">For example, to install version 1.4.0.0, use the following
+                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-1.4.0.0-1.noarch.rpm</pre>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_krt_sj5_xv">
+    <h2 class="title topictitle2">Step 3. Update the Environment Configuration File</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Each RPM installation uses the same default values as the previous version for all of
+        the directory environment variables. If the previous version used the default values, the
+        new version is configured to use the same working directories.</p>
+
+        <div class="section context">
+            <p class="p">If the previous version used customized values for the directory environment
+                variables, you must make the same customizations in the new version. The new version
+                must use the same data, log, and resource directories as the previous version.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step">
+                <span class="ph cmd">In the new version of <span class="ph">Data
+                  Collector</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Manually update the new environment configuration file with any customized
+                    property values that you defined in the previous version.</span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_lkl_wk5_xv">
+    <h2 class="title topictitle2">Step 4. Update the Configuration Files</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">A new <span class="ph">Data
+                  Collector</span>
+        version can include new properties and configuration files required for <span class="ph">Data
+                  Collector</span> to
+        start or function properly. The configuration files are stored in the
+            <samp class="ph codeph">$SDC_CONF</samp> directory, including the <samp class="ph codeph">sdc.properties</samp> file
+        and the related realm properties files, keystore files, LDAP files, and the logj4 properties
+        file.</p>
+
+        <div class="section context">
+            <p class="p">When you install the new RPM package, the configuration files are written to the same
+                default directory as the previous version, <samp class="ph codeph">/etc/sdc</samp>. The new
+                versions of the configuration files are renamed with the following extension:
+                    <samp class="ph codeph">.rpmnew</samp>. For example, the new version of the <span class="ph">Data
+                  Collector</span> configuration file is renamed to <samp class="ph codeph">sdc.properties.rpmnew</samp>.</p>
+
+            <p class="p">To update the configuration files, you must rename the previous and new versions of
+                the files and then update the new files with any customized property values defined
+                in the previous version.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> If the previous version used a customized value for <samp class="ph codeph">$SDC_CONF</samp>,
+                the new configuration files are written to a different directory than the previous
+                version, and so do not require the <samp class="ph codeph">.rpmnew</samp> file extension. In this
+                case, you do not rename the configuration files, but must update the new files with
+                any customized values defined in the previous version.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step">
+                <span class="ph cmd">In the working <samp class="ph codeph">$SDC_CONF</samp> directory, <samp class="ph codeph">/etc/sdc</samp>
+                    by default, rename all previous configuration files with the following
+                    extension: <samp class="ph codeph">.old</samp>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Remove the following extension from all new configuration files:
+                        <samp class="ph codeph">.rpmnew</samp>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Compare the previous and new versions of the configuration files, and update
+                    the new files as needed with the same customized property values.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_n35_s55_xv">
+ <h2 class="title topictitle2">Step 5. Start the New Version of Data Collector</h2>
+
+ <div class="body conbody">
+        <div class="p">Use the following command to start the new version of <span class="ph">Data
+                  Collector</span>:<pre class="pre codeblock">service sdc start</pre>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div>
+</body>
+</html>

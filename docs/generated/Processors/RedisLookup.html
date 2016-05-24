@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Information forthcoming. Information forthcoming."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Redis Lookup"></meta><meta name="abstract" content="Information forthcoming."></meta><meta name="description" content="Information forthcoming."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ng3_lpr_pv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Redis Lookup</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Redis Lookup processor performs key-value lookups in Redis and passes the lookup values to new fields. Use the Redis Lookup to enrich records with additional data. For example, you can configure ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Redis Lookup"></meta><meta name="abstract" content="The Redis Lookup processor performs key-value lookups in Redis and passes the lookup values to new fields. Use the Redis Lookup to enrich records with additional data."></meta><meta name="description" content="The Redis Lookup processor performs key-value lookups in Redis and passes the lookup values to new fields. Use the Redis Lookup to enrich records with additional data."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ng3_lpr_pv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Redis Lookup</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,27 +35,430 @@
  <h1 class="title topictitle1">Redis Lookup</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Information forthcoming.</p>
+ <div class="body conbody"><p class="shortdesc">The Redis Lookup processor performs key-value lookups in Redis and passes the lookup
+        values to new fields. Use the Redis Lookup to enrich records with additional
+        data.</p>
 
-  <p class="p"></p>
+        <p class="p">For example, you can configure the processor to
+            use a city field as the key to look up zip code values in Redis, and pass the values to
+            a new zip_code output field.</p>
+
+        <p class="p">When you configure the Redis Lookup processor, you specify whether the processor performs
+            a bulk lookup of all keys in a batch, or performs an individual lookup of each key in a
+            record. You use an expression to define the key to look up in Redis, and specify the
+            output field to write the lookup values to. You also specify the data type of the Redis
+            key.</p>
+
+        <p class="p">You can configure the processor to locally cache the key-value pairs to improve
+            performance.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_qs3_zz4_zv">
+ <h2 class="title topictitle2">Data Types</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you define the key to look up in Redis, you specify the data type of the Redis key.
+        The Redis Lookup processor converts the Redis data type to a <span class="ph">Data
+                  Collector</span> data
+        type.</p>
+
+  <div class="p">The following
+            table lists the supported Redis data types and the corresponding <span class="ph">Data
+                  Collector</span>
+            data type:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qs3_zz4_zv__table_yc2_z1p_zv" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d137794e86">Redis Data Type</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d137794e89"><span class="ph">Data
+                  Collector</span> Data Type</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e86 ">String</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e89 ">String</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e86 ">List</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e89 ">List. <p class="p">Converts the data to an indexed list of values, for
+                                    example:</p>
+<pre class="pre codeblock">0: &lt;value&gt;
+1: &lt;value&gt;
+2: &lt;value&gt;</pre>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e86 ">Hash</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e89 ">Map. <p class="p">Converts the data to a map of the Redis field names and
+                                    values, for
+                                example:</p>
+<pre class="pre codeblock">/&lt;first field name&gt;: &lt;value&gt;
+/&lt;second field name&gt;: &lt;value&gt;
+/&lt;third field name&gt;: &lt;value&gt;</pre>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e86 ">Set</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e89 ">List. <p class="p">Converts the data to an indexed list of values, for
+                                    example:</p>
+<pre class="pre codeblock">0: &lt;value&gt;
+1: &lt;value&gt;
+2: &lt;value&gt;</pre>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> The remaining Redis data types are not supported.</div>
 
  </div>
 
-<div class="related-links"></div>
+</div>
+<div class="topic concept nested1" id="concept_zcg_21p_zv">
+ <h2 class="title topictitle2">Lookup Cache</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">To improve pipeline performance, you can configure the Redis Lookup processor to locally
+        cache the key-value pairs returned from Redis.</p>
+
+  <p class="p">The Redis Lookup caches key-value pairs
+            until the cache reaches the maximum size or the expiration time. When the first limit is
+            reached, the processor evicts key-value pairs from the cache.</p>
+
+        <div class="p">You can configure the following ways to evict key-value pairs from the cache:<dl class="dl">
+                
+                    <dt class="dt dlterm">Size-based eviction</dt>
+
+                    <dd class="dd">Configure the maximum number of key-value pairs that the processor caches.
+                        When the maximum number is reached, the processor evicts the oldest
+                        key-value pairs from the cache.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Time-based eviction</dt>
+
+                    <dd class="dd">Configure the amount of time that a key-value pair can remain in the cache
+                        without being written to or accessed. When the expiration time is reached,
+                        the processor evicts the key from the cache. The eviction policy determines
+                        whether the processor measures the expiration time since the last write of
+                        the value or since the last access of the value.</dd>
+
+                    <dd class="dd">For example, you set the eviction policy to expire after the last access and
+                        set the expiration time to 60 seconds. After the processor does not access a
+                        key-value pair for 60 seconds, the processor evicts the key-value pair from
+                        the cache.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">When you stop the pipeline, the Redis Lookup clears the cache.</p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_gpv_npr_pv">
     <h2 class="title topictitle2">Configuring a Redis Lookup Processor</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Information forthcoming.</p>
+    <div class="body taskbody"><p class="shortdesc">Configure a Redis Lookup processor to perform key-value lookups in Redis.</p>
 
-        <div class="section context">
-            <p class="p"></p>
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gpv_npr_pv__d15604e2245" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d137794e244">General Property</th>
 
-        </div>
+                                    <th class="entry" valign="top" width="70%" id="d137794e247">Description</th>
 
-        <div class="li step p">
-                <span class="ph cmd"></span><br xmlns="http://www.w3.org/1999/xhtml" />
-            </div>
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d137794e244 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d137794e247 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d137794e244 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d137794e247 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d137794e244 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_gpv_npr_pv__d15604e2291" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d137794e247 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d137794e244 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_gpv_npr_pv__d15604e2305" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d137794e247 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d137794e244 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d137794e247 ">Error record handling for the stage: <ul class="ul" id="task_gpv_npr_pv__d15604e2321">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Lookup</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gpv_npr_pv__table_ns1_p1s_zv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d137794e356">Lookup Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d137794e359">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Mode</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Mode used to perform the lookups:<ul class="ul" id="task_gpv_npr_pv__ul_t11_3fs_zv">
+                                            <li class="li">Per Batch - Performs a bulk lookup of all keys in a
+                                                batch. The processor performs a single lookup for
+                                                each batch.</li>
+
+                                            <li class="li">Per Key in Each Record - Performs individual lookups
+                                                of each key in each record. If you configure
+                                                multiple key expressions, the processor performs
+                                                multiple lookups for each record.</li>
+
+                                        </ul>
+<p class="p">Default is Per Batch.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Key Expression</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Expression that defines the key to look up in Redis.
+                                            <div class="p">For example, enter the following expression to use
+                                            the data in the city field as the lookup
+                                            key:<pre class="pre codeblock">${record:value('/city')}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Output Field</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Name of the field to pass the lookup value. You can
+                                        specify an existing field or a new field. If the field does
+                                        not exist, Redis Lookup creates the field. <p class="p">Precede each
+                                            field name with a slash as follows:
+                                        /FieldName.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Data Type
+                                        <a class="xref" href="RedisLookup.html#concept_qs3_zz4_zv" title="When you define the key to look up in Redis, you specify the data type of the Redis key. The Redis Lookup processor converts the Redis data type to a Data Collector data type.">
+                                            <img class="image" id="task_gpv_npr_pv__image_h6p_p2v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Data type of the key in Redis.<p class="p">Default is
+                                        String.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Enable Local Caching
+                                        <a class="xref" href="RedisLookup.html#concept_zcg_21p_zv" title="To improve pipeline performance, you can configure the Redis Lookup processor to locally cache the key-value pairs returned from Redis.">
+                                            <img class="image" id="task_gpv_npr_pv__image_h2p_p7v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Specifies whether to locally cache the key-value pairs
+                                        returned from Redis.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Maximum Entries to Cache</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Maximum number of key-value pairs to cache. When the
+                                        maximum number is reached, the processor evicts the oldest
+                                        key-value pairs from the cache. <p class="p">Default is -1, which
+                                            means unlimited.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Eviction Policy Type</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Policy used to evict key-value pairs from the local cache
+                                        when the expiration time has passed:<ul class="ul" id="task_gpv_npr_pv__ul_jql_yns_zv">
+                                            <li class="li">Expire After Last Access - Measures the expiration
+                                                time since the key-value pair was last accessed by a
+                                                read or a write.</li>
+
+                                            <li class="li">Expire After Last Write - Measures the expiration
+                                                time since the key-value pair was created, or since
+                                                the value was last replaced.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Expiration Time</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Amount of time that a key-value pair can remain in the
+                                        local cache without being accessed or written to. <p class="p">Default
+                                            is 1 second.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e356 ">Time Unit</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e359 ">Unit of time for the expiration time. <p class="p">Default is
+                                            seconds.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Redis</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gpv_npr_pv__table_i5s_54s_zv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d137794e526">Redis Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d137794e529">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e526 ">URI</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e529 ">URI of the Redis server. Use the following
+                                            format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+<p class="p">You
+                                            can omit the port number or database if the server uses
+                                            the default port number or default database.</p>
+<div class="p">You
+                                            can optionally include the user name to log in to the
+                                            Redis server. For
+                                            example:<pre class="pre codeblock">redis://&lt;user name&gt;:&lt;password&gt;@&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d137794e526 ">Connection Timeout (sec)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d137794e529 ">Maximum time in seconds to wait for a
+                                            connection.<p class="p">Default is 60 seconds.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
 
     </div>
 

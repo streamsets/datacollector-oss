@@ -42,13 +42,18 @@
                   Collector</span>
             machine to connect to MapR.</p>
 
-        <p class="p">To connect to MapR FS or MapR Streams, install <span class="ph">Data
+        <div class="note note"><span class="notetitle">Note:</span> The MapR DB destination and the Hive Streaming destination using the MapR library
+            currently only support MapR version 5.1.</div>
+
+        <p class="p">To connect to a MapR cluster, install <span class="ph">Data
                   Collector</span> on
             a node in the cluster or on a client machine. </p>
 
-        <div class="p">To run the Data Collector on a client machine - outside the cluster or on your local
-            machine - the MapR client package must be installed and configured on the machine. To
-            install the MapR client package, you need to download the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
+        <div class="p">To run <span class="ph">Data
+                  Collector</span> on
+            a client machine - outside the cluster or on your local machine - the MapR client
+            package must be installed and configured on the machine. To install the MapR client
+            package, you need to download the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
                 <li class="li">MapR client library - Typically named
                         <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can download the
                         files for your operating system
@@ -68,7 +73,7 @@
 
         <p class="p">Before using <span class="ph">Data
                   Collector</span> to
-            connect to MapR Streams or MapR FS, perform the following steps:</p>
+            connect to a MapR cluster, perform the following steps:</p>
 
         <ol class="ol" id="concept_jgs_qpg_2v__ol_ghq_zrg_2v">
             <li class="li">In the <span class="ph">Data
@@ -80,32 +85,42 @@
 
             <li class="li">Create the following symlinks:<ul class="ul" id="concept_jgs_qpg_2v__ul_yhl_bsg_2v">
                     <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/*</span> to
-                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR library
-                            version&gt;/lib/</span>. <p class="p">$MAPR_HOME is usually /opt/mapr.
-                            </p>
-<p class="p">&lt;MapR library version&gt; is the version of the StreamSets MapR
-                            library to use. </p>
-<p class="p">For example, for the
-                            streamsets-datacollector-mapr_5_1-lib library, the MapR library version
-                            is mapr_5_1-lib. </p>
-<div class="p">So to use MapR version 5.1.0 with <span class="ph">Data
-                  Collector</span>, you would create a symlink from $MAPR_HOME/lib/* to
-                            $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/ as
-                            follows:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/</pre>
-</div>
-</li>
+                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
+                        library&gt;/lib/</span></li>
 
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/maprfs-&lt;version&gt;-mapr.jar</span> to
-                            <span class="ph uicontrol">$SDC_DIST/root-lib/</span><p class="p">&lt;version&gt; is the MapR
-                            version. </p>
-<div class="p">For example, when using MapR version 5.1.0, you would
-                            create a symlink from $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar to
-                            $SDC_DIST/root-lib/ as
-                            follows:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</pre>
-</div>
-</li>
+                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hbase/hbase-&lt;version&gt;/lib/*</span> to
+                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
+                        library&gt;/lib/</span></li>
+
+                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hive/hive-&lt;version&gt;/lib/*</span> to
+                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
+                        library&gt;/lib/</span></li>
+
+                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hive/hive-&lt;version&gt;/hcatalog/share/hcatalog/*
+                        </span> to <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
+                            library&gt;/lib/</span></li>
+
+                    <li class="li">
+                        <span class="ph uicontrol">$MAPR_HOME/lib/maprfs-&lt;version&gt;-mapr.jar</span> to
+                            <span class="ph uicontrol">$SDC_DIST/root-lib/</span></li>
 
                 </ul>
+<p class="p">$MAPR_HOME is usually /opt/mapr. </p>
+<p class="p">&lt;MapR library&gt; is the version of
+                    the StreamSets MapR library to use. The StreamSets MapR libraries are named as
+                    follows: streamsets-datacollector-mapr_&lt;version&gt;-lib. For example:
+                    streamsets-datacollector-mapr_5_1-lib. </p>
+<p class="p">&lt;version&gt; is the HBase, Hive,
+                    or MapR version.</p>
+<div class="p">So to use MapR version 5.1, HBase version 1.1.1, and Hive
+                    version 1.2 with <span class="ph">Data
+                  Collector</span>, you would create the following
+                    symlinks:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hbase/hbase-1.1.1/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hive/hive-1.2/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/hive/hive-1.2/hcatalog/share/hcatalog/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
+ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</pre>
+</div>
 </li>
 
             <li class="li">In the <span class="ph">Data

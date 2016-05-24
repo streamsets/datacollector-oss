@@ -85,6 +85,8 @@
 
                 <li class="li">Kinesis Consumer</li>
 
+                <li class="li">MongoDB</li>
+
             </ul>
 <p class="p">For these origins, when you stop the pipeline, the <span class="ph">Data
                   Collector</span> notes where it stopped processing data. When you restart the pipeline, it
@@ -112,6 +114,36 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="keyword wintitle">Reset Origin Confirmation</span> dialog box, click
                         <span class="ph uicontrol">Yes</span> to reset the origin.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_nkc_ydl_bw">
+    <h2 class="title topictitle2">Starting Multiple Concurrent Pipelines</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">By default, <span class="ph">Data
+                  Collector</span> can
+        run approximately 20 standalone pipelines concurrently. If you plan to start a larger number
+        of concurrent pipelines, increase the thread pool size.</p>
+
+        <div class="section context">
+            <p class="p">The <strong class="ph b">runner.thread.pool.size</strong>
+                property in the <span class="ph">Data
+                  Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, determines the
+                number of threads in the pool that are available to run standalone pipelines.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step">
+                <span class="ph cmd">Use a text editor to edit <samp class="ph codeph">sdc.properties</samp> and increase the
+                    value of <strong class="ph b">runner.thread.pool.size</strong>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</span>
             </li>
 </ol>
 

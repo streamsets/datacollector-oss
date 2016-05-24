@@ -1,0 +1,478 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="When you upgrade a full or basic installation from the tarball, you configure the new version to use a new configuration directory outside of the base Data Collector runtime directory. You then ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade a Full or Basic Installation from the Tarball"></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ryn_4fk_5v"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade a Full or Basic Installation from the Tarball</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ryn_4fk_5v">
+ <h1 class="title topictitle1">Upgrade a Full or Basic Installation from the Tarball</h1>
+
+ <div class="body conbody">
+     <p class="p">When you upgrade a full or
+            basic installation from the tarball, you configure the new version to use a new
+            configuration directory outside of the base <span class="ph">Data
+                  Collector</span>
+            runtime directory. You then configure the new version to use the same data, log, and
+            resource directories as the previous version. As a result, the new version has access to
+            the pipeline, log, and resource files created in the previous version.</p>
+
+        <p class="p">To upgrade a full or basic installation from the tarball, perform the following
+            steps:</p>
+
+        <ol class="ol" id="concept_ryn_4fk_5v__ol_x5s_qpr_5v">
+            <li class="li">If the previous version of <span class="ph">Data
+                  Collector</span> used a manual start, verify that directories in the previous version are outside
+                of <samp class="ph codeph">$SDC_DIST</samp>, the base <span class="ph">Data
+                  Collector</span> runtime directory.</li>
+
+            <li class="li">Shut down the previous version.</li>
+
+            <li class="li">Install the new version.</li>
+
+            <li class="li">Manually update the environment configuration file.</li>
+
+            <li class="li">Manually update the configuration files.</li>
+
+            <li class="li">For an upgrade of the basic installation, install additional stage libraries as
+                needed.</li>
+
+            <li class="li">Start the new version of <span class="ph">Data
+                  Collector</span>.</li>
+
+        </ol>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_c5x_hgk_5v">
+    <h2 class="title topictitle2">Step 1. Verify the Directories in the Previous Version (Manual Start)</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If the previous version of <span class="ph">Data
+                  Collector</span> used a
+        manual start, verify that the directories used to store configuration, data, log, and
+        resource files are outside of <samp class="ph codeph">$SDC_DIST</samp>, the base <span class="ph">Data
+                  Collector</span>
+        runtime directory.</p>
+
+        <div class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> If the previous version used a service start, the default values of the
+                directories are absolute paths that are outside of the <samp class="ph codeph">$SDC_DIST</samp>
+                runtime directory.</div>
+
+            <p class="p">The <span class="ph">Data
+                  Collector</span> environment configuration file, <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp>,
+                includes environment variables that define the <span class="ph">Data
+                  Collector</span> directories. For a manual start, the default values of the directory variables
+                are relative to the <samp class="ph codeph">$SDC_DIST</samp> runtime directory. If you did not
+                modify the directory values in the previous version, modify the values before you
+                upgrade so that the new version can use the same working directories.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Create directories outside of the <samp class="ph codeph">$SDC_DIST</samp> runtime directory
+                    for the configuration, data, log, and resource files. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh file</samp>, set the following
+                    environment variables to the newly created directories:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_c5x_hgk_5v__ul_v2s_1jk_5v">
+                        <li class="li">SDC_CONF - The <span class="ph">Data
+                  Collector</span> configuration directory.</li>
+
+                        <li class="li">SDC_DATA - The <span class="ph">Data
+                  Collector</span> directory for pipeline state and configuration information.</li>
+
+                        <li class="li">SDC_LOG - The <span class="ph">Data
+                  Collector</span> directory for logs.</li>
+
+                        <li class="li">SDC_RESOURCES - The <span class="ph">Data
+                  Collector</span> directory for runtime resource files.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Move all files from the previous directories to the newly created
+                    directories.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</span>
+                <div class="itemgroup info">
+                    <p class="p">Log in to verify that you can use <span class="ph">Data
+                  Collector</span> as expected.</p>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_uzq_gwl_5v">
+    <h2 class="title topictitle2">Step 2. Shut Down the Previous Version</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Shut down the previous version of <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="section context">
+            <p class="p">To use the command line for shutdown when <span class="ph">Data
+                  Collector</span> is started as a service, use the following command:</p>
+
+            <pre class="pre codeblock">service sdc stop</pre>
+
+            <p class="p">To use the <span class="ph">Data
+                  Collector</span> console for shutdown:</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step">
+                <span class="ph cmd">Click <span class="ph uicontrol">Administration </span> &gt; <span class="ph uicontrol">Shut
+                        Down.</span></span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">When a confirmation dialog box appears, click <span class="ph uicontrol">Yes</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_bfv_jyl_5v">
+ <h2 class="title topictitle2">Step 3. Install the New Version</h2>
+
+ <p class="shortdesc">The instructions that you use to install the new version depend on whether you start <span class="ph">Data
+                  Collector</span>
+        manually or as a service.</p>
+
+<div class="topic task nested2" id="task_lxz_qyl_5v">
+    <h3 class="title topictitle3">Installing from the Tarball (Manual Start)</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the new version of the tarball.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the full or basic <span class="ph">Data
+                  Collector</span> tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Extract the tarball to a different directory than the previous version.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to set the <samp class="ph codeph">$SDC_DIST</samp> environment
+                    variable to the location where you extracted the tarball:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">export SDC_DIST=&lt;extraction directory&gt;</pre>
+
+                    <div class="p">For
+                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-1.4.0.0</pre>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested2" id="task_hsl_ccm_5v">
+    <h3 class="title topictitle3">Installing from the Tarball (Service Start)</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Install the new version of the tarball.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the full or basic <span class="ph">Data
+                  Collector</span> tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Extract the tarball to a different directory than the previous version.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create a backup of the <samp class="ph codeph">/etc/init.d/_sdcinitd_prototype</samp> file
+                    that was used in the previous version.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Copy the new version of the <span class="ph filepath">initd/_sdcinitd_prototype</span> file
+                    to the <span class="ph filepath">/etc/init.d/</span> directory as sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the sdc file and set the <samp class="ph codeph">$SDC_DIST</samp> and
+                        <samp class="ph codeph">$SDC_HOME</samp> environment variables to the location where you
+                    extracted the tarball.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">sudo chmod 755 /etc/init.d/sdc</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_wzl_hst_xv">
+    <h2 class="title topictitle2">Step 4. Update the Environment Configuration File</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Update the environment configuration file so that the new version of <span class="ph">Data
+                  Collector</span> uses a
+        new configuration directory but the same working data, log, and resource directories as the
+        previous version. </p>
+
+        <div class="section context">
+            <p class="p">For example, let's assume that the previous version of <span class="ph">Data
+                  Collector</span> used the directory <samp class="ph codeph">/var/lib/sdc</samp> to store the data files for
+                pipeline configuration and run details. When you upgrade, you configure the new
+                version of <span class="ph">Data
+                  Collector</span> to use the same working directory <samp class="ph codeph">/var/lib/sdc</samp> for the data
+                files. As a result, the new version has access to the pipelines created in the
+                previous version.</p>
+
+            <p class="p">You also must update the environment configuration file with any other customized
+                property values that you defined in the previous version.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">For the previous version of <span class="ph">Data
+                  Collector</span>, rename the directory defined by the <samp class="ph codeph">$SDC_CONF</samp> environment
+                    variable.</span>
+                <div class="itemgroup info">
+                    <p class="p">For example, if you are upgrading version 1.3.0.2 and if
+                            <samp class="ph codeph">$SDC_CONF</samp> is defined as <samp class="ph codeph">/etc/sdc</samp>,
+                        rename the directory to <samp class="ph codeph">/etc/sdc1302</samp>.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the new version of <span class="ph">Data
+                  Collector</span>, open the appropriate environment configuration file for your
+                    installation:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_wzl_hst_xv__ul_amx_q35_xv">
+                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> - Used when you start <span class="ph">Data
+                  Collector</span> manually from the command line.</li>
+
+                        <li class="li"><samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> - Used when you start <span class="ph">Data
+                  Collector</span> as a service.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Update the directory environment variables to use the following values: </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wzl_hst_xv__table_kcx_v35_xv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d150252e569">Environment Variable</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d150252e572">Value</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d150252e569 ">SDC_CONF</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d150252e572 ">New location outside of the base <span class="ph">Data
+                  Collector</span> runtime directory and unique from the previous renamed
+                                        directory. For example, if you renamed the previous
+                                        configuration directory to <samp class="ph codeph">/etc/sdc1302</samp>,
+                                        use the value <samp class="ph codeph">/etc/sdc</samp>.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d150252e569 ">SDC_DATA</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d150252e572 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d150252e569 ">SDC_LOG</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d150252e572 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d150252e569 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d150252e572 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the <samp class="ph codeph">/etc/sdc</samp> directory and copy all files from
+                        <samp class="ph codeph">$SDC_DIST/etc</samp> into this directory.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To run <span class="ph">Data
+                  Collector</span> as a service, change the owner of the <samp class="ph codeph">/etc/sdc</samp> directory to
+                    the system user and group that starts <span class="ph">Data
+                  Collector</span>. </span>
+                <div class="itemgroup info">By default, <span class="ph">Data
+                  Collector</span> uses a system user and group named <samp class="ph codeph">sdc</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to set owner only permission on the
+                        <samp class="ph codeph">form-realm.properties</samp> file in the <samp class="ph codeph">/etc/sdc</samp>
+                    directory: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">chmod go-rwx /etc/sdc/form-realm.properties</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Manually update the environment configuration file with any other customized
+                    property values that you defined in the previous version.</span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_pb5_qk5_xv">
+ <h2 class="title topictitle2">Step 5. Update the Configuration Files</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A new <span class="ph">Data
+                  Collector</span>
+        version can include new properties and configuration files required for <span class="ph">Data
+                  Collector</span> to
+        start or function properly. The configuration files are stored in the
+            <samp class="ph codeph">$SDC_CONF</samp> directory, including the <samp class="ph codeph">sdc.properties</samp> file
+        and the related realm properties files, keystore files, LDAP files, and the logj4 properties
+        file.</p>
+
+        <p class="p">Compare the previous and new versions of the configuration files, and update the new
+            files as needed with the same customized property values.</p>
+
+  <p class="p">For example, compare the files in the <samp class="ph codeph">/etc/sdc1302</samp> directory with the files in
+            the <samp class="ph codeph">/etc/sdc</samp> directory. Update the new files in the
+                <samp class="ph codeph">/etc/sdc</samp> directory with any customizations made in the previous
+            files in the <samp class="ph codeph">/etc/sdc1302</samp> directory.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_zyd_ngr_5v">
+ <h2 class="title topictitle2">Step 6. Install Additional Libraries for the Basic Installation</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If you upgraded a basic installation of <span class="ph">Data
+                  Collector</span>,
+        install the individual stage libraries that the upgraded pipelines require. Use the
+            <samp class="ph codeph">stagelibs</samp> command to install additional stage libraries.</p>
+
+  <p class="p">For instructions on using the <samp class="ph codeph">stagelibs</samp> command, see <a class="xref" href="../Install_Config/BasicInstall_Overview.html#concept_bnl_n3n_s5">Step 2. Install Additional Libraries</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_uct_wfr_5v">
+    <h2 class="title topictitle2">Step 7. Start the New Version of Data Collector</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">Start the new version of <span class="ph">Data
+                  Collector</span>.</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">To start <span class="ph">Data
+                  Collector</span> manually</dt>
+
+                <dd class="dd">Use the following
+                    command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
+</dd>
+
+                <dd class="dd">Or, use the following command to launch <span class="ph">Data
+                  Collector</span> and run it in the
+                    background:<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">To start <span class="ph">Data
+                  Collector</span> as a service</dt>
+
+                <dd class="dd">Use the following command:<pre class="pre">service sdc start  </pre>
+</dd>
+
+                <dd class="dd">For CentOS, use the following command:<pre class="pre">chkconfig --add sdc</pre>
+</dd>
+
+                <dd class="dd">For Ubuntu, use the following
+                    command:<pre class="pre">update-rc.d sdc defaults 97 03</pre>
+</dd>
+
+            
+        </dl>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div>
+</body>
+</html>

@@ -70,6 +70,23 @@
             number of records that the pipeline can read in a second.</dd>
 
         
+     
+          <dt class="dt dlterm">When I run multiple standalone pipelines concurrently, I receive an error that not
+            enough threads are available.</dt>
+
+          <dd class="dd">By default, <span class="ph">Data
+                  Collector</span> can
+            concurrently run approximately 20 standalone pipelines. If you concurrently run a larger
+            number of standalone pipelines, you might receive the following
+            error:<pre class="pre codeblock">CONTAINER_0166 - Cannot start pipeline '&lt;pipeline name&gt;' as there are not enough threads available</pre>
+</dd>
+
+          <dd class="dd">To resolve this error, increase the value of the <strong class="ph b">runner.thread.pool.size</strong>
+            property in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.</dd>
+
+        
     
      <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 
