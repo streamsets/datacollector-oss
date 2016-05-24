@@ -24,9 +24,10 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  HiveMetadata_01("Partition information is required"),
-  HiveMetadata_02("Value Expression for partition value is missing"),
-  HiveMetadata_03("Record is missing necessary data {}"),
+  HIVE_METADATA_01("Partition information is required"),
+  HIVE_METADATA_02("Value Expression for partition value is missing"),
+  HIVE_METADATA_03("Record is missing necessary data {}"),
+  HIVE_METADATA_04("Failed validation on value {} : Invalid character for Hive {}"),
   ;
 
   private final String msg;

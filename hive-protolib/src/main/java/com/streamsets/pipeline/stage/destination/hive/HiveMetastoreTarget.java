@@ -179,38 +179,17 @@ public class HiveMetastoreTarget extends BaseTarget{
     }
 
     if (hiveConfDir.exists()) {
-      File coreSite = new File(hiveConfDir.getAbsolutePath(), "core-site.xml");
-      File hiveSite = new File(hiveConfDir.getAbsolutePath(), "hive-site.xml");
-      File hdfsSite = new File(hiveConfDir.getAbsolutePath(), "hdfs-site.xml");
+      HiveMetastoreUtil.validateConfigFile("core-site.xml", hiveConfDirString,
+          hiveConfDir, issues, configuration, getContext());
 
-      if (!coreSite.exists()) {
-        issues.add(getContext().createConfigIssue(
-            Groups.HIVE.name(),
-            JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
-            Errors.HIVE_06,
-            coreSite.getName(),
-            hiveConfDirString)
-        );
-      } else {
-        configuration.addResource(new Path(coreSite.getAbsolutePath()));
-      }
+      HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", hiveConfDirString,
+          hiveConfDir, issues, configuration, getContext());
 
-      if (!hdfsSite.exists()) {
-        issues.add(getContext().createConfigIssue(
-            Groups.HIVE.name(),
-            JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
-            Errors.HIVE_06,
-            hdfsSite.getName(),
-            hiveConfDirString)
-        );
-      } else {
-        configuration.addResource(new Path(hdfsSite.getAbsolutePath()));
-      }
     } else {
       issues.add(
           getContext().createConfigIssue(
               Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
+              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HiveMetastoreUtil.CONF_DIR),
               Errors.HIVE_07,
               hiveConfDirString
           )
@@ -299,7 +278,7 @@ public class HiveMetastoreTarget extends BaseTarget{
       issues.add(
           getContext().createConfigIssue(
               Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
+              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
               Errors.HIVE_01,
               e.getMessage()
           )
@@ -312,7 +291,7 @@ public class HiveMetastoreTarget extends BaseTarget{
       issues.add(
           getContext().createConfigIssue(
               Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
+              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
               Errors.HIVE_22,
               jdbcUrl,
               e.getMessage()

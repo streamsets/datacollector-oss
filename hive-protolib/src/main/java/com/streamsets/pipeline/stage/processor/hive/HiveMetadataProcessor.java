@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -26,7 +27,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -40,25 +40,31 @@ import com.streamsets.pipeline.stage.lib.hive.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.HMSCacheType;
 import com.streamsets.pipeline.stage.destination.hive.HiveConfigBean;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.conf.HiveConf;
 
-import java.util.List;
+import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.LinkedHashSet;
-import java.util.Collections;
+import java.util.List;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.Collections;
 
 public class HiveMetadataProcessor extends RecordProcessor {
 
   // mandatory configuration values
   private static final String HIVE_DB_NAME = "dbNameEL";
   private static final String HIVE_TABLE_NAME = "tableNameEL";
-  private static final String HIVE_JDBC_URL = "hiveJDBCUrl";
+  protected static final String HDFS_HEADER_ROLL = "roll";
+  protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
+  protected static final String HDFS_HEADER_TARGET_DIRECTORY = "targetDirectory";
+  public static final String DEFAULT_DB = "default";
   private final String databaseEL;
   private final String tableEL;
-  private final String hiveJDBCUrl;
-  private ELEval ELval;
+  private ELEval elEval;
   private final boolean externalTable;
+  private String internalWarehouseDir;
 
   // Triplet of partition name, type and value expression obtained from configration
   private List<PartitionConfig> partitionConfigList;
@@ -66,23 +72,22 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private LinkedHashMap<String, HiveType> partitionTypeInfo;
 
   // Optional configuration values
-  private String tablePathTemplate = null;
-  private String partitionPathTemplate = null;
-  private String warehouseDirectory = null;
+  private String tablePathTemplate;
+  private String partitionPathTemplate;
 
   private HMSCache cache;
 
-  private String HDFSLane;
-  private String HMSLane;
-  private int maxCacheSize;
-  private ErrorRecordHandler toError;
+  private String hdfsLane;
+  private String hmsLane;
+
+  private HiveConfigBean hiveConfigBean;
+  private ErrorRecordHandler errorRecordHandler;
 
   public HiveMetadataProcessor(
       String databaseEL,
       String tableEL,
       List<PartitionConfig> partition_list,
       boolean externalTable,
-      String warehouseDirectory,
       String tablePathTemplate,
       String partitionPathTemplate,
       HiveConfigBean hiveConfig) {
@@ -90,54 +95,74 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.tableEL = tableEL;
     this.externalTable = externalTable;
     this.partitionConfigList = partition_list;
-    this.maxCacheSize = hiveConfig.maxCacheSize;
-    this.hiveJDBCUrl = hiveConfig.hiveJDBCUrl;
+    this.hiveConfigBean = hiveConfig;
     if (externalTable){
       this.tablePathTemplate = tablePathTemplate;
       this.partitionPathTemplate = partitionPathTemplate;
-    } else {
-      this.warehouseDirectory = warehouseDirectory;
     }
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
+    Configuration conf = new Configuration();
 
-    ELval = getContext().createELEval(HIVE_DB_NAME); //TODO
+    File hiveConfigFile = new File(hiveConfigBean.confDir);
+    // TODO refactor here
+    HiveMetastoreUtil.validateConfigFile("hive-site.xml", hiveConfigBean.confDir,
+        hiveConfigFile, issues, conf, getContext());
+    HiveMetastoreUtil.validateConfigFile("core-site.xml", hiveConfigBean.confDir,
+        hiveConfigFile, issues, conf, getContext());
+    HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", hiveConfigBean.confDir,
+        hiveConfigFile, issues, conf, getContext());
 
-    // TODO add validation and hive-site.xml
+    if (!externalTable) {
+      internalWarehouseDir = HiveConf.getVar(conf, HiveConf.ConfVars.METASTOREWAREHOUSE);
+      if (internalWarehouseDir == null || internalWarehouseDir.isEmpty()){
+        issues.add(getContext().createConfigIssue(
+            Groups.HIVE.name(),
+            "warehouseDirectory",
+            Errors.HIVE_METADATA_01,
+            "Warehouse Directory"));
+      }
+    }
 
     if (partitionConfigList.isEmpty()) {
       issues.add(getContext().createConfigIssue(
           Groups.HIVE.name(),
-          "partition_list",
-          Errors.HiveMetadata_01,
+          "partitionList",
+          Errors.HIVE_METADATA_01,
           "Partition Configuration"));
     }
-    if (!externalTable) {
-      //TODO validation on warehouseDirectory
-    }
 
+    partitionTypeInfo = new LinkedHashMap<>();
     for (PartitionConfig partition: partitionConfigList){
+      // Validation on partition column name
+      if(!HiveMetastoreUtil.validateColumnName(partition.name)){
+        issues.add(getContext().createConfigIssue(
+            Groups.HIVE.name(),
+            "partitionList",
+            Errors.HIVE_METADATA_04,
+            "Partition Configuration"));
+        continue;
+      }
       // Expression for partition value is not automatically checked on Preview
       if (partition.valueEL.isEmpty()){
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
-            "partition_list",
-            Errors.HiveMetadata_02,
+            "partitionList",
+            Errors.HIVE_METADATA_02,
             "Partition Configuration"));
+        continue;
       }
+      partitionTypeInfo.put(partition.name, partition.valueType);
     }
 
     if (issues.isEmpty()) {
-      toError = new DefaultErrorRecordHandler(getContext());
-      partitionTypeInfo = new LinkedHashMap<>();
-      for (PartitionConfig partition: partitionConfigList) {
-        partitionTypeInfo.put(partition.name, partition.valueType);
-      }
-      HMSLane = getContext().getOutputLanes().get(0);
-      HDFSLane = getContext().getOutputLanes().get(1);
+      errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+      hmsLane = getContext().getOutputLanes().get(0);
+      hdfsLane = getContext().getOutputLanes().get(1);
+      elEval = getContext().createELEval(HIVE_DB_NAME);
       // load cache
       cache = HMSCache.newCacheBuilder()
           .addCacheTypeSupport(
@@ -147,7 +172,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
                   HMSCacheType.AVRO_SCHEMA_INFO
               )
           )
-          .maxCacheSize(maxCacheSize)
+          .maxCacheSize(hiveConfigBean.maxCacheSize)
           .build();
     }
     return issues;
@@ -157,42 +182,39 @@ public class HiveMetadataProcessor extends RecordProcessor {
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
     ELVars variables = getContext().createELVars();
     RecordEL.setRecordInContext(variables, record);
-    String dbName = resolveEL(variables, databaseEL);
-    String tableName = resolveEL(variables,tableEL);
-    String warehouseDir = resolveEL(variables, warehouseDirectory);
-    LinkedHashMap<String, HiveType> recordStructure = null;
-    LinkedHashMap<String, String> partitionValMap = null;
+    String dbName = HiveMetastoreUtil.resolveEL(elEval, variables, databaseEL);
+    String tableName = HiveMetastoreUtil.resolveEL(elEval,variables,tableEL);
+    // TODO Handle external table
+    //String tablePath = HiveMetastoreUtil.resolveEL(elEval,variables, tablePathTemplate);
+    //String partitionPath = HiveMetastoreUtil.resolveEL(elEval,variables, partitionPathTemplate);
+    String warehouseDir = externalTable ? "" : internalWarehouseDir; // TODO fill in "" part for external table
+    LinkedHashMap<String, String> partitionValMap = new LinkedHashMap<>();
     String avroSchema = "";
     boolean needToRoll = false;
 
     // First, find out if this record has all necessary data to process
     try {
-      if (dbName.isEmpty() || tableName.isEmpty()) {
-        throw new StageException(Errors.HiveMetadata_03, dbName.isEmpty() ? databaseEL : tableEL);
+      if (dbName.isEmpty()) {
+        dbName = DEFAULT_DB;
       }
-      if (warehouseDir.isEmpty()) {
-        throw new StageException(Errors.HiveMetadata_03, warehouseDirectory);
-      }
+      validateNames(record, dbName, tableName, warehouseDir);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
-
+      // path from warehouse directory to table
+      String targetPath = HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
       // Obtain the record structure from current record
-      recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
-      // Obtain all te partition values from record
-      partitionValMap = getPartitionValuesFromRecord(variables);
+      LinkedHashMap<String, HiveType> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
+      // Obtain all the partition values from record and build a path using partition values
+      String partitionStr = getPartitionValuesFromRecord(record, variables, partitionValMap);
 
       TypeInfoCacheSupport.TypeInfo tableCache
           = (TypeInfoCacheSupport.TypeInfo) getCacheInfo(HMSCacheType.TYPE_INFO, qualifiedName);
 
-      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache
-          = (AvroSchemaInfoCacheSupport.AvroSchemaInfo) getCacheInfo(
-          HMSCacheType.AVRO_SCHEMA_INFO,
-          qualifiedName
-      );
+      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = null; // TODO
 
       // send Schema Change metadata when tableCache is null or schema is changed
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
         needToRoll = true;
-        handleSchemaChange(dbName, tableName, recordStructure, warehouseDir, avroSchema, batchMaker, qualifiedName,
+        handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName,
             tableCache, schemaCache);
       }
       // Send new partition metadata if new partition is detected.
@@ -200,20 +222,39 @@ public class HiveMetadataProcessor extends RecordProcessor {
           = (PartitionInfoCacheSupport.PartitionInfo) getCacheInfo(HMSCacheType.PARTITION_VALUE_INFO, qualifiedName);
       Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
       if (diff != null) {
-        handleNewPartition(partitionValMap, pCache, dbName, tableName, warehouseDir, batchMaker, qualifiedName, diff);
+        handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
       }
-      // TODO: Fill in header to send to HDFS
-      // roll = needToRoll
-      // targetDirectory: resolve directory path
-      // avroSchema = avroSchema
-    } catch (StageException e) {
-        toError.onError(new OnRecordErrorException(record, Errors.HiveMetadata_03, e.getMessage()));
+      // Send record to HDFS target
+      updateRecordForHDFS(record, needToRoll, avroSchema, targetPath, partitionStr);
+      batchMaker.addRecord(record, hdfsLane);
+    } catch (OnRecordErrorException error) {
+      errorRecordHandler.onError(error);
     }
-
   }
 
-  // Get cached data from cache. First call getIfPresent to obtain data from local cache.
-  // If not exist, load from HMS
+  private void validateNames(Record r, String dbName, String tableName, String warehouseDir)
+  throws OnRecordErrorException {
+
+    if (!HiveMetastoreUtil.validateName(dbName)){
+      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_04, "Database name", dbName);
+    }
+    if (tableName.isEmpty()) {
+      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, tableEL);
+    } else if (!HiveMetastoreUtil.validateName(tableName)){
+      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_04, HIVE_TABLE_NAME, tableName);
+    }
+    if (warehouseDir.isEmpty()) {
+      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, warehouseDir);
+    }
+  }
+  /**
+   * Get cached data from cache. First call getIfPresent to obtain data from local cache.
+   * If not exist, load from HMS
+   * @param cacheType Type of caache to load.
+   * @param qualifiedName  Qualified name. E.g. "default.sampleTable"
+   * @return Cache object if successfully loaded. Null if no data is found in cache.
+   * @throws StageException
+   */
   private HMSCacheSupport.HMSCacheInfo getCacheInfo(HMSCacheType cacheType, String qualifiedName)
       throws StageException {
     HMSCacheSupport.HMSCacheInfo cacheInfo = null;
@@ -226,7 +267,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // Try loading by executing HMS query
       cacheInfo = cache.getOrLoad(
           cacheType,
-          hiveJDBCUrl,
+          hiveConfigBean.hiveJDBCUrl,
           qualifiedName
       );
     }
@@ -234,20 +275,21 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   // ------------ Handle New Schema ------------------------//
-
+  @VisibleForTesting
   boolean detectSchemaChange(
       LinkedHashMap<String, HiveType> recordStructure,
-      HMSCacheSupport.HMSCacheInfo cache) throws StageException
+      TypeInfoCacheSupport.TypeInfo cache) throws StageException
   {
     LinkedHashMap<String, HiveType> columnDiff = null;
     // compare the record structure vs cache
     if (cache != null) {
-      columnDiff = ((TypeInfoCacheSupport.TypeInfo)cache).getDiff(recordStructure);
+      columnDiff = cache.getDiff(recordStructure);
     }
-    return columnDiff.isEmpty()? false : true;
+    return !columnDiff.isEmpty();
   }
 
-  private Record generateSchemaChangeRecord(
+  @VisibleForTesting
+  Record generateSchemaChangeRecord(
       String database,
       String tableName,
       LinkedHashMap<String, HiveType> columnList,
@@ -255,8 +297,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String location,
       String avroSchema) throws StageException
   {
-    Record metadataRecord = getContext().createRecord("");
-    Field matadata =HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+    Record metadataRecord = getContext().createRecord("MetadataRecordForSchemaChange");
+
+    Field matadata = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
         database,
         tableName,
         columnList,
@@ -273,16 +316,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String dbName,
       String tableName,
       LinkedHashMap<String, HiveType> recordStructure,
-      String warehouseDir, String avroSchema,
+      String targetDir, String avroSchema,
       BatchMaker batchMaker,
       String qualifiedName,
       TypeInfoCacheSupport.TypeInfo tableCache,
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache)
       throws StageException {
     // TODO: Need to generate avro schema from here based on recordStructure
-
-    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, warehouseDir, avroSchema);
-    batchMaker.addRecord(r, HMSLane);
+    // TODO: handle external directory
+    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
+    batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
     if (tableCache != null) {
       tableCache.updateState(recordStructure);
@@ -303,6 +346,14 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   // -------- Handle New Partitions ------------------//
 
+  /**
+   * Using partition name and value that were obtained from record, compare them
+   * with cached partition.
+   * @param partitionValMap List of partition name and value found in Record
+   * @param pCache  Cache that has existing partitions
+   * @return Diff of partitions if new partition is detected. Otherwise null.
+   * @throws StageException
+   */
   private Set<LinkedHashMap<String, String>> detectNewPartition(
       LinkedHashMap<String, String> partitionValMap,
       PartitionInfoCacheSupport.PartitionInfo pCache) throws StageException{
@@ -313,34 +364,45 @@ public class HiveMetadataProcessor extends RecordProcessor {
         = (pCache != null)? pCache.getDiff(partitionInfoDiff) : partitionInfoDiff;
     if (pCache == null || !partitionInfoDiff.isEmpty()){
       return partitionInfoDiff;
-    } else {
-      return null;
     }
+    return null;
   }
 
-  private LinkedHashMap<String, String> getPartitionValuesFromRecord(ELVars variables)
+  /**
+   * Obtain a list of partition values from record.
+   * @param variables ELvariables
+   * @param values Blank LinkedHashMap. This function fills parition name and value obtained from record.
+   * @return String that represents partitions name=value.
+   *         For example, "dt=2016-01-01/country=US/state=CA"
+   * @throws StageException
+   */
+  @VisibleForTesting
+  String getPartitionValuesFromRecord(Record r, ELVars variables, LinkedHashMap<String, String> values)
       throws StageException
   {
-    LinkedHashMap<String, String> values = new LinkedHashMap<>();
-    for (PartitionConfig pName: partitionConfigList){
-      String ret = resolveEL(variables, pName.valueEL);
-      if (ret == null || ret.isEmpty()){
+    StringBuilder sb = new StringBuilder();
+    for (PartitionConfig pName: partitionConfigList) {
+      String ret = HiveMetastoreUtil.resolveEL(elEval,variables, pName.valueEL);
+      if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
-        throw new StageException(Errors.HiveMetadata_03, pName.valueEL );
-      } else {
+        throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, pName.valueEL);
+      }  else {
         values.put(pName.name, ret);
+        sb.append(pName.name);
+        sb.append("=");
+        sb.append(ret);
       }
-      values.put(pName.name, ret);
     }
-    return values;
+    return sb.toString();
   }
 
-  private Record generateNewPartitionRecord(
+  @VisibleForTesting
+  Record generateNewPartitionRecord(
       String database,
       String tableName,
       LinkedHashMap<String, String> partition_list,
       String location) throws StageException {
-    Record metadataRecord = getContext().createRecord("");
+    Record metadataRecord = getContext().createRecord("MetadataRecordForNewPartition");
     Field metadata = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
         database,
         tableName,
@@ -363,7 +425,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   ) throws StageException{
 
     Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
-    batchMaker.addRecord(r, HMSLane);
+    batchMaker.addRecord(r, hmsLane);
     if (pCache != null) {
       pCache.updateState(diff);
     } else {
@@ -375,9 +437,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
   }
 
-  // Resolve expression from record
-  protected String resolveEL(ELVars variables, String val) throws ELEvalException
-  {
-    return ELval.eval(variables, val, String.class);
+  //Add header information to send to HDFS
+  @VisibleForTesting
+  static void updateRecordForHDFS(Record record, boolean roll,
+                                            String avroSchema, String location,
+                                            String partitionStr){
+    if(roll){
+      record.getHeader().setAttribute(HDFS_HEADER_ROLL, "true");
+    }
+    record.getHeader().setAttribute(HDFS_HEADER_AVROSCHEMA, avroSchema);
+    record.getHeader().setAttribute(HDFS_HEADER_TARGET_DIRECTORY, (location + partitionStr));
   }
 }

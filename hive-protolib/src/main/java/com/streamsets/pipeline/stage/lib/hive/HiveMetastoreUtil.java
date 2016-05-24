@@ -21,7 +21,11 @@ package com.streamsets.pipeline.stage.lib.hive;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.hive.Errors;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -29,9 +33,15 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
+import com.streamsets.pipeline.stage.destination.hive.Groups;
+import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.metastore.MetaStoreUtils;
+import com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
@@ -67,8 +77,37 @@ public final class HiveMetastoreUtil {
   public static final String EQUALS = "=";
   public static final String DEFAULT_DBNAME = "default";
 
+  // Configuration constants
+  public static final String CONF = "conf";
+  public static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
+  public static final String CONF_DIR = "confDir";
+  private static final Joiner JOINER = Joiner.on(".");
 
   private HiveMetastoreUtil() {}
+
+  public static void validateConfigFile(String fileName, String hiveConfDirString,
+                                 File hiveConfDir, List<Stage.ConfigIssue> issues,
+                                 Configuration conf,
+                                 Stage.Context context){
+    File confFile = new File(hiveConfDir.getAbsolutePath(), fileName);
+    if (!confFile.exists()) {
+      issues.add(context.createConfigIssue(
+          Groups.HIVE.name(),
+          JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
+          Errors.HIVE_06,
+          confFile.getName(),
+          hiveConfDirString)
+      );
+    } else {
+      conf.addResource(new Path(confFile.getAbsolutePath()));
+    }
+  }
+
+  // Resolve expression from record
+  public static String resolveEL(ELEval elEval,ELVars variables, String val) throws ELEvalException
+  {
+    return elEval.eval(variables, val, String.class);
+  }
 
   /*
    * Extract information from the list fields of form:
@@ -154,6 +193,24 @@ public final class HiveMetastoreUtil {
    */
   public static String getQualifiedTableName(String dbName, String tableName) {
     return (dbName == null || dbName.isEmpty())? tableName : String.format(DB_DOT_TABLE, dbName, tableName);
+  }
+
+  /**
+   * Get a full path from warehouse directory to table's root directory
+   * The path structure is /<warehouse directory>/<db name>.db/<table name>
+   * @param warehouseDir Directory to HMS warehouse directory
+   * @param dbName Database name
+   * @param tableName Table name
+   * @return
+   */
+  public static String getTargetDirectory(String warehouseDir, String dbName, String tableName) {
+    Utils.checkNotNull(warehouseDir, "warehouseDir");
+    Utils.checkNotNull(dbName, "dbName");
+    Utils.checkNotNull(tableName, "tableName");
+    if (dbName.equals(HiveMetadataProcessor.DEFAULT_DB)) {
+      return String.format("%s/%s", warehouseDir, tableName);
+    } else
+      return String.format("%s/%s.db/%s", warehouseDir, dbName, tableName);
   }
 
   /**
@@ -314,13 +371,13 @@ public final class HiveMetastoreUtil {
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD, Field.create(database));
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.TABLE_FIELD, Field.create(tableName));
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.LOCATION_FIELD, Field.create(location));
+    metadata.put(SEP + DATABASE_FIELD, Field.create(database));
+    metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
+    metadata.put(SEP + LOCATION_FIELD, Field.create(location));
 
     //fill in the partition list here
     metadata.put(
-        HiveMetastoreUtil.SEP + HiveMetastoreUtil.PARTITION_FIELD,
+        SEP + PARTITION_FIELD,
         generateInnerFieldFromTheList(
             partitionList,
             PARTITION_NAME,
@@ -344,13 +401,13 @@ public final class HiveMetastoreUtil {
       String avroSchema
   ) throws StageException  {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD, Field.create(database));
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.TABLE_FIELD, Field.create(tableName));
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.LOCATION_FIELD, Field.create(location));
+    metadata.put(SEP + DATABASE_FIELD, Field.create(database));
+    metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
+    metadata.put(SEP + LOCATION_FIELD, Field.create(location));
 
     //fill in column type list here
     metadata.put(
-        HiveMetastoreUtil.SEP + HiveMetastoreUtil.COLUMNS_FIELD,
+        SEP + COLUMNS_FIELD,
         generateInnerFieldFromTheList(
             columnList,
             COLUMN_NAME,
@@ -360,7 +417,7 @@ public final class HiveMetastoreUtil {
     );
     //fill in partition type list here
     metadata.put(
-        HiveMetastoreUtil.SEP + HiveMetastoreUtil.PARTITION_FIELD,
+        SEP + PARTITION_FIELD,
         generateInnerFieldFromTheList(
             partitionTypeList,
             PARTITION_NAME,
@@ -368,8 +425,8 @@ public final class HiveMetastoreUtil {
             true
         )
     );
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.INTERNAL_FIELD, Field.create(internal));
-    metadata.put(HiveMetastoreUtil.SEP + HiveMetastoreUtil.AVRO_SCHEMA, Field.create(avroSchema));
+    metadata.put(SEP + INTERNAL_FIELD, Field.create(internal));
+    metadata.put(SEP + AVRO_SCHEMA, Field.create(avroSchema));
     return Field.create(metadata);
   }
 
@@ -388,6 +445,13 @@ public final class HiveMetastoreUtil {
     return columns;
   }
 
+  public static boolean validateName(String valName){
+    return MetaStoreUtils.validateName(valName);
+  }
+
+  public static boolean validateColumnName(String colName) {
+    return MetaStoreUtils.validateColumnName(colName);
+  }
   /**
    * Returns the hdfs paths where the avro schema is stored after serializing.
    * Path is appended with current time so as to have an ordering.

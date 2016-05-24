@@ -46,11 +46,11 @@ public class HiveMetadataDProcessor extends DProcessor {
   public HiveConfigBean hiveConfigBean;
 
   @ConfigDef(
-      required = true,
+      required = false,
       label = "Database Expression",
       type = ConfigDef.Type.STRING,
       defaultValue = "${record:attribute('/database')}",
-      description = "Use an expression language to obtain database name from record",
+      description = "Use an expression language to obtain database name from record. If not set, \"default\" will be applied",
       displayPosition = 20,
       group = "HIVE",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -83,7 +83,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       group = "HIVE"
   )
   @ListBeanModel
-  public List<PartitionConfig> partition_list;
+  public List<PartitionConfig> partitionList;
 
   @ConfigDef(
       required = true,
@@ -95,22 +95,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       displayPosition = 20,
       group = "HIVE"
   )
-  public Boolean externalTable;
-
-  @ConfigDef(
-      required = false,
-      label = "Table Path Template",
-      type = ConfigDef.Type.STRING,
-      defaultValue = "/user/hive/warehouse/${record:attribute('/database')}.db/${record:attribute('table_name')}",
-      description = "Expression for table path",
-      displayPosition = 20,
-      group = "HIVE",
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class},
-      dependsOn = "externalTable",
-      triggeredByValue = "false"
-  )
-  public String warehouseDirectory;
+  public boolean externalTable;
 
   /* Only when internal checkbox is set to NO */
   @ConfigDef(
@@ -122,9 +107,9 @@ public class HiveMetadataDProcessor extends DProcessor {
       displayPosition = 20,
       group = "HIVE",
       dependsOn = "externalTable",
+      triggeredByValue = "true",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class},
-      triggeredByValue = "true"
+      elDefs = {RecordEL.class}
   )
   public String tablePathTemplate;
 
@@ -132,23 +117,22 @@ public class HiveMetadataDProcessor extends DProcessor {
       required = false,
       label = "Partition Path Template",
       type = ConfigDef.Type.STRING,
-      defaultValue = "dt=${record:attribute('/date')}",
+      defaultValue = "dt=${record:attribute('/dt')}",
       description = "Expression for partition path",
       displayPosition = 20,
       group = "HIVE",
       dependsOn = "externalTable",
+      triggeredByValue = "true",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class},
-      triggeredByValue = "true"
+      elDefs = {RecordEL.class}
   )
   public String partitionPathTemplate;
 
   @Override
   protected Processor createProcessor() {
     return new HiveMetadataProcessor(
-        dbNameEL, tableNameEL,partition_list,
-        externalTable,warehouseDirectory,
-        tablePathTemplate, partitionPathTemplate, hiveConfigBean);
+        dbNameEL, tableNameEL, partitionList,
+        externalTable, tablePathTemplate, partitionPathTemplate, hiveConfigBean);
   }
 
 }

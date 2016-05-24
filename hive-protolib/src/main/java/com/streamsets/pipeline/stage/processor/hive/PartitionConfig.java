@@ -23,13 +23,13 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveType;
 
-public class PartitionConfig {
+public final class PartitionConfig {
 
   public PartitionConfig(
       final String partitionName,
       final HiveType valueType,
-      final String valueEL)
-  {
+      final String valueEL
+  ) {
     this.name = partitionName;
     this.valueType = valueType;
     this.valueEL = valueEL;
@@ -59,12 +59,12 @@ public class PartitionConfig {
       displayPosition = 20
   )
   @ValueChooserModel(PartitionColumnTypeChooserValues.class)
-  public HiveType valueType;
+  public HiveType valueType = HiveType.STRING;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue="${DATE}",
+      defaultValue="${record:attribute('/dt')}",
       label = "Partition Value Expression",
       description="Expression language to obtain partition value from record",
       evaluation = ConfigDef.Evaluation.EXPLICIT,

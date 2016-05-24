@@ -91,16 +91,14 @@ public class HMSCache {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
     try {
-      Optional<HMSCacheSupport.HMSCacheInfo> ret =
-          cacheMap.get(hmsCacheType).get(
+      return (T) (cacheMap.get(hmsCacheType).get(
               qualifiedTableName,
               hmsCacheType.getSupport().newHMSCacheLoader(
                   jdbcUrl,
                   qualifiedTableName,
                   auxiliaryInfo
           )
-      );
-      return ret == null ? null : (T)ret.orNull();
+      )).orNull();
     } catch(ExecutionException e) {
       throw new StageException(Errors.HIVE_01, e);
     }
