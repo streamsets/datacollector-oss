@@ -42,7 +42,13 @@
                                 <row>
                                     <entry>Port</entry>
                                     <entry>Port to listen to for data. To list additional ports,
-                                        click the<uicontrol> Add</uicontrol> icon.</entry>
+                                        click the<uicontrol> Add</uicontrol> icon.<note>To listen to
+                                            a port below 1024, <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> must be run by a user with root privileges.
+                                            Otherwise, the operating system does not allow <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> to bind to the port.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>
