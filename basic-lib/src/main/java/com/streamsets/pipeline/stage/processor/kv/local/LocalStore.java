@@ -20,14 +20,12 @@
 package com.streamsets.pipeline.stage.processor.kv.local;
 
 import com.google.common.base.Optional;
-import com.streamsets.pipeline.stage.processor.kv.Store;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
-public class LocalStore implements Store {
+public class LocalStore {
 
   private final LocalLookupConfig conf;
 
@@ -35,31 +33,26 @@ public class LocalStore implements Store {
     this.conf = conf;
   }
 
-  @Override
   public Optional<String> get(String key) {
     return Optional.fromNullable(conf.values.get(key));
   }
 
-  @Override
-  public List<Optional<String>> get(Collection<String> keys) {
-    List<Optional<String>> values = new ArrayList<>(keys.size());
+  public Map<String, Optional<String>> get(Collection<String> keys) {
+    Map<String, Optional<String>> values = new HashMap<>();
     for (String key : keys) {
-      values.add(Optional.fromNullable(conf.values.get(key)));
+      values.put(key, Optional.fromNullable(conf.values.get(key)));
     }
     return values;
   }
 
-  @Override
   public void put(String key, String value) {
     conf.values.put(key, value);
   }
 
-  @Override
   public void putAll(Map<String, String> entries) {
     conf.values.putAll(entries);
   }
 
-  @Override
   public void close() throws Exception {
     // no-op
   }

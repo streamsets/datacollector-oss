@@ -20,15 +20,18 @@
 package com.streamsets.pipeline.stage.processor.kv.local;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.processor.kv.Store;
-import com.streamsets.pipeline.stage.processor.kv.LookupProcessorConfig;
+import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.processor.kv.LookupMode;
+import com.streamsets.pipeline.stage.processor.kv.LookupModeChooserValues;
+import com.streamsets.pipeline.stage.processor.kv.LookupParameterConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalLookupConfig extends LookupProcessorConfig {
+public class LocalLookupConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
@@ -38,13 +41,30 @@ public class LocalLookupConfig extends LookupProcessorConfig {
   )
   public Map<String, String> values = new HashMap<>();
 
-  @Override
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    // no-op
-  }
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Mode",
+      description = "Whether to perform a bulk lookup of all keys in the batch, or perform individual lookups per key.",
+      defaultValue = "BATCH",
+      displayPosition = 10,
+      group = "#0"
+  )
+  @ValueChooserModel(LookupModeChooserValues.class)
+  public LookupMode mode;
 
-  @Override
-  public Store createStore() {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Lookup Parameters",
+      displayPosition = 20,
+      group = "LOOKUP"
+  )
+  @ListBeanModel
+  public List<LookupParameterConfig> lookups = new ArrayList<>();
+
+  //@Override
+  public LocalStore createStore() {
     return new LocalStore(this);
   }
 }

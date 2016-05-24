@@ -29,7 +29,6 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import com.streamsets.pipeline.stage.processor.kv.LookupParameterConfig;
-import com.streamsets.pipeline.stage.processor.kv.LookupProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -122,6 +121,6 @@ public class LocalLookupProcessorIT {
     parameters.outputFieldPath = "/output";
     conf.lookups.add(parameters);
     conf.mode = mode;
-    return new LookupProcessor(conf);
+    return new LocalLookupProcessor(conf);
   }
 }

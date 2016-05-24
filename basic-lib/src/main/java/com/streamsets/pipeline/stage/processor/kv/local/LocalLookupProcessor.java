@@ -17,11 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.kv;
+package com.streamsets.pipeline.stage.processor.kv.local;
 
 import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
@@ -36,6 +34,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.processor.kv.Errors;
+import com.streamsets.pipeline.stage.processor.kv.LookupParameterConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,23 +46,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import static com.streamsets.pipeline.stage.processor.kv.LookupMode.BATCH;
 import static com.streamsets.pipeline.stage.processor.kv.LookupMode.RECORD;
 
-public class LookupProcessor extends BaseProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(LookupProcessor.class);
+public class LocalLookupProcessor extends BaseProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(LocalLookupProcessor.class);
 
-  private final LookupProcessorConfig conf;
+  private final LocalLookupConfig conf;
 
   private ErrorRecordHandler error;
   private ELEval keyExprEval;
-  private LoadingCache<String, Optional<String>> cache;
 
-  protected Store store;
+  protected LocalStore store;
 
-  public LookupProcessor(LookupProcessorConfig conf) {
+  public LocalLookupProcessor(LocalLookupConfig conf) {
     this.conf = conf;
   }
 
@@ -70,42 +68,13 @@ public class LookupProcessor extends BaseProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    conf.init(getContext(), issues);
-
     if (issues.isEmpty()) {
       error = new DefaultErrorRecordHandler(getContext());
       keyExprEval = getContext().createELEval("keyExpr");
       store = conf.createStore();
-
-      cache = buildCache();
     }
 
     return issues;
-  }
-
-  private LoadingCache<String, Optional<String>> buildCache() {
-    CacheBuilder build = CacheBuilder.newBuilder();
-    if (!conf.cache.enabled) {
-      return build.maximumSize(0)
-          .build(new StoreCacheLoader(store));
-    }
-
-    // CacheBuilder doesn't support specifying type thus suffers from erasure, so
-    // we build it with this if / else logic.
-    if(conf.cache.maxSize == -1) {
-      conf.cache.maxSize = Long.MAX_VALUE;
-    }
-    build.maximumSize(conf.cache.maxSize);
-    if (conf.cache.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_ACCESS) {
-          build.expireAfterAccess(conf.cache.expirationTime, conf.cache.timeUnit);
-    } else if (conf.cache.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_WRITE) {
-          build.expireAfterWrite(conf.cache.expirationTime, conf.cache.timeUnit);
-    } else {
-      throw new IllegalArgumentException(
-          Utils.format("Unrecognized EvictionPolicyType: '{}'", conf.cache.evictionPolicyType)
-      );
-    }
-    return build.build(new StoreCacheLoader(store));
   }
 
   @Override
@@ -139,7 +108,7 @@ public class LookupProcessor extends BaseProcessor {
     for (LookupParameterConfig parameters : conf.lookups) {
       try {
         final String key = keyExprEval.eval(elVars, parameters.keyExpr, String.class);
-        Optional<String> value = cache.getUnchecked(key);
+        Optional<String> value = store.get(key);
         if (value.isPresent()) {
           record.set(parameters.outputFieldPath, Field.create(value.get()));
         }
@@ -159,7 +128,7 @@ public class LookupProcessor extends BaseProcessor {
     Iterator<Record> records;
 
     try {
-      Map<String, Optional<String>> values = cache.getAll(keys);
+      Map<String, Optional<String>> values = store.get(keys);
 
       records = batch.getRecords();
       Record record = null;
@@ -181,7 +150,7 @@ public class LookupProcessor extends BaseProcessor {
         batchMaker.addRecord(record);
         index++;
       }
-    } catch (ExecutionException e) {
+    } catch (Exception e) {
       LOG.error("Failed to fetch values from cache: {}", e.toString(), e);
       // Send whole batch to error
       records = batch.getRecords();
@@ -218,7 +187,7 @@ public class LookupProcessor extends BaseProcessor {
   }
 
   private Set<String> getKeys(List<Map<String, String>> mapList) {
-    Set<String> keys = new HashSet<String>();
+    Set<String> keys = new HashSet<>();
     for(Map<String, String> map : mapList) {
       keys.addAll(map.values());
     }
@@ -237,3 +206,5 @@ public class LookupProcessor extends BaseProcessor {
     }
   }
 }
+
+

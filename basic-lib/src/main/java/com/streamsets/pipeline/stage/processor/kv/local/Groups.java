@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  LOOKUP("K/V Lookup"),
-  LOCAL("Local Store"),
+  LOOKUP("Lookup"),
+  LOCAL("Static Store"),
   ;
 
   private final String label;
