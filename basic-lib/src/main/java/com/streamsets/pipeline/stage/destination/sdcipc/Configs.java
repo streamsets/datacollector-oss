@@ -23,6 +23,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -41,6 +43,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,6 +51,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Configs {
+  private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
   private static final String CONFIG_PREFIX = "config.";
   private static final String HOST_PORTS = CONFIG_PREFIX + "hostPorts";
   private static final String TRUST_STORE_FILE = CONFIG_PREFIX + "trustStoreFile";
@@ -204,53 +208,74 @@ public class Configs {
   }
 
   boolean validateHostPorts(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    boolean ok = true;
     if (hostPorts.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_00));
-      ok = false;
-    } else {
-      Set<String> uniqueHostPorts = new HashSet<>();
-      for (String hostPort : hostPorts) {
-        if (hostPort == null) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_01));
-          ok = false;
-        } else {
-          hostPort = hostPort.toLowerCase().trim();
-          uniqueHostPorts.add(hostPort);
-          String[] split = hostPort.split(":");
-          if (split.length != 2) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_02,
-                                                 hostPort));
-            ok = false;
-          } else {
-            try {
-              InetAddress.getByName(split[0]);
-            } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_03,
-                                                   split[0], ex.toString()));
-              ok = false;
-            }
-            try {
-              int port = Integer.parseInt(split[1]);
-              if (port < 1 || port > 65535) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_04,
-                                                     hostPort));
-                ok = false;
-              }
-            } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_05,
-                                                   hostPort, ex.toString()));
-              ok = false;
-            }
-          }
-        }
+      return false;
+    }
+    Set<String> uniqueHostPorts = new HashSet<>();
+    for (String rawHostPort : hostPorts) {
+      if (rawHostPort == null) {
+        issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_01));
+        return false;
       }
-      if (ok && uniqueHostPorts.size() != hostPorts.size()) {
-        issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_06));
-        ok = false;
+      final String hostPort = rawHostPort.toLowerCase().trim();
+      uniqueHostPorts.add(hostPort);
+      try {
+        InetAddress.getByName(getHost(hostPort));
+      } catch (UnknownHostException e) {
+        LOG.error(Errors.IPC_DEST_02.getMessage(), hostPort, e.toString(), e);
+        issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_02, hostPort));
+        return false;
+      }
+      try {
+        int port = getPort(hostPort);
+        if (port < 1 || port > 65535) {
+          issues.add(
+              context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_04, hostPort)
+          );
+          return false;
+        }
+      } catch (IllegalArgumentException e) {
+        LOG.error(Errors.IPC_DEST_05.getMessage(), hostPort, e.toString(), e);
+        issues.add(
+            context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_05, hostPort, e.toString())
+        );
+        return false;
       }
     }
-    return ok;
+    if (uniqueHostPorts.size() != hostPorts.size()) {
+      issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_06));
+      return false;
+    }
+    return true;
+  }
+
+  private String getHost(String hostPort) {
+    if (hostPort.contains("[") && hostPort.contains("]")) {
+      return hostPort.substring(hostPort.indexOf('[') + 1, hostPort.indexOf(']'));
+    }
+
+    // If there is more than one ':' and we didn't find [] then this isn't a valid IPv6 hostPort
+    if (hostPort.contains(":") && (hostPort.indexOf(':') == hostPort.lastIndexOf(':'))) {
+      return hostPort.substring(0, hostPort.lastIndexOf(':'));
+    } else {
+      return hostPort;
+    }
+  }
+
+  private int getPort(String hostPort) {
+    if (!hostPort.contains(":")) {
+      throw new IllegalArgumentException("Destination does not include ':' port delimiter");
+    }
+
+    int port;
+    try {
+      port = Integer.parseInt(hostPort.substring(hostPort.lastIndexOf(':') + 1));
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException(e);
+    }
+
+    return port;
   }
 
   boolean validateSecurity(Stage.Context context, List<Stage.ConfigIssue> issues) {

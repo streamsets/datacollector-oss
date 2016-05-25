@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   IPC_DEST_00("host:port list cannot be empty"),
   IPC_DEST_01("host:port cannot be NULL"),
-  IPC_DEST_02("Invalid '<host>:<port>': {}"),
+  IPC_DEST_02("Invalid 'hostname/IPv4:port' or '[IPv6]:port - '{}': {}"),
   IPC_DEST_03("Could not reach host '{}': {}"),
   IPC_DEST_04("Port '{}' out of range, valid range '1-65535'"),
   IPC_DEST_05("Invalid port number in '{}': {}"),
