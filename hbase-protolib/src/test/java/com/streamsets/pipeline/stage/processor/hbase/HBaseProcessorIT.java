@@ -337,7 +337,7 @@ public class HBaseProcessorIT {
 
     config.lookups = new ArrayList<>();
     HBaseLookupParameterConfig parameter = new HBaseLookupParameterConfig();
-    parameter.keyExpr = "${record:value('/keyField')}";
+    parameter.rowExpr = "${record:value('/keyField')}";
     parameter.columnExpr = "${record:value('/columnField')}";
     parameter.outputFieldPath = "/output";
     config.lookups.add(parameter);

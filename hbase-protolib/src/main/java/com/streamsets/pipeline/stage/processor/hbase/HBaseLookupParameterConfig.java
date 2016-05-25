@@ -28,14 +28,14 @@ public class HBaseLookupParameterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Key Expression",
-      description = "An EL expression defining the key to use for a lookup.",
+      label = "Row Expression",
+      description = "An EL expression defining the row to use for a lookup.",
       elDefs = {StringEL.class, RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "#0"
   )
-  public String keyExpr;
+  public String rowExpr;
 
   @ConfigDef(
       required = false,
@@ -57,7 +57,7 @@ public class HBaseLookupParameterConfig {
       description = "An EL expression defining the timestamp to use for a lookup.",
       elDefs = {StringEL.class, RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 10,
+      displayPosition = 15,
       group = "#0"
   )
   public String timestampExpr = "";

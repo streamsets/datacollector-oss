@@ -131,7 +131,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
         HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
-            keyExprEval = getContext().createELEval("keyExpr");
+            keyExprEval = getContext().createELEval("rowExpr");
             store = new HBaseStore(conf, hbaseConf);
             return null;
           }
@@ -220,7 +220,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
       for (HBaseLookupParameterConfig parameter : conf.lookups) {
-        final Pair<String, HBaseColumn> key = getKey(record, elVars,parameter.keyExpr, parameter.columnExpr, parameter.timestampExpr);
+        final Pair<String, HBaseColumn> key = getKey(record, elVars,parameter.rowExpr, parameter.columnExpr, parameter.timestampExpr);
         try {
           if (key != null) {
             Optional<String> value = HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Optional<String>>() {
@@ -258,7 +258,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
         RecordEL.setRecordInContext(elVars, record);
 
         for (HBaseLookupParameterConfig parameter : conf.lookups) {
-          Pair<String, HBaseColumn> key = getKey(record, elVars, parameter.keyExpr, parameter.columnExpr, parameter.timestampExpr);
+          Pair<String, HBaseColumn> key = getKey(record, elVars, parameter.rowExpr, parameter.columnExpr, parameter.timestampExpr);
           Optional<String> value = values.get(key);
           updateRecord(record, parameter, key, value);
         }
@@ -280,7 +280,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       RecordEL.setRecordInContext(elVars, record);
 
       for (HBaseLookupParameterConfig parameters : conf.lookups) {
-        Pair<String, HBaseColumn> key = getKey(record, elVars, parameters.keyExpr, parameters.columnExpr, parameters.timestampExpr);
+        Pair<String, HBaseColumn> key = getKey(record, elVars, parameters.rowExpr, parameters.columnExpr, parameters.timestampExpr);
         if(key != null) {
           keyList.add(key);
         }
@@ -289,22 +289,22 @@ public class HBaseLookupProcessor extends BaseProcessor {
     return keyList;
   }
 
-  private Pair<String, HBaseColumn> getKey(Record record, ELVars elVars, String keyExpr, String columnExpr, String timestampExpr) throws StageException {
-    if (keyExpr.isEmpty()) {
+  private Pair<String, HBaseColumn> getKey(Record record, ELVars elVars, String rowExpr, String columnExpr, String timestampExpr) throws StageException {
+    if (rowExpr.isEmpty()) {
       throw new IllegalArgumentException(Utils.format("Empty lookup Key Expression"));
     }
 
     String rowKey = "";
     HBaseColumn hBaseColumn = null;
     try {
-      rowKey = keyExprEval.eval(elVars, keyExpr, String.class);
+      rowKey = keyExprEval.eval(elVars, rowExpr, String.class);
       hBaseColumn = getHBaseColumn(elVars, columnExpr, timestampExpr);
     } catch (ELEvalException e) {
       errorRecordHandler.onError(
         new OnRecordErrorException(
           record,
           Errors.HBASE_38,
-          keyExpr,
+          rowExpr,
           columnExpr
         )
       );
