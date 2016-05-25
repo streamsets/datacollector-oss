@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -351,21 +352,27 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private void handleFatalException(Exception ex, RemoteFile next) throws StageException {
-
+    if (ex instanceof FileNotFoundException) {
+      LOG.warn("File: " + next.filename + " was found in listing, but is not downloadable", ex);
+    }
     if (ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
       //If the pipeline was stopped, we may get a ClosedByInterruptException while reading avro data.
       //This is because the thread is interrupted when the pipeline is stopped.
       //Instead of sending the file to error, publish batch and move one.
     } else {
       try {
-        parser.close();
+        if (parser != null) {
+          parser.close();
+        }
       } catch (IOException ioe) {
         LOG.error("Error while closing parser", ioe);
       } finally {
         parser = null;
       }
       try {
-        currentStream.close();
+        if (currentStream != null) {
+          currentStream.close();
+        }
       } catch (IOException ioe) {
         LOG.error("Error while closing stream", ioe);
       } finally {
