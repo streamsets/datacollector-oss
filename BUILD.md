@@ -72,12 +72,12 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/tar/streamsets-datacollector-1.4.0.0-SNAPSHOT.tgz`
+`release/target/streamsets-datacollector-all-1.4.0.0-SNAPSHOT.tgz`
 
 Untar the tarball in your prefered location :
 
-`tar xvzf streamsets-datacollector-1.4.0.0-SNAPSHOT.tgz`
+`tar xvzf streamsets-datacollector-all-1.4.0.0-SNAPSHOT.tgz`
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-1.4.0.0-SNAPSHOT/bin/streamsets dc`
+`streamsets-datacollector-all-1.4.0.0-SNAPSHOT/bin/streamsets dc`
