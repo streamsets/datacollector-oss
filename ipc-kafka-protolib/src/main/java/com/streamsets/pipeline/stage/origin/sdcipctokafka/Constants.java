@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,8 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.sdcipc;
+package com.streamsets.pipeline.stage.origin.sdcipctokafka;
 
+// copy of com.streamsets.pipeline.stage.destination.sdcipc.Constants
 public interface Constants {
   String X_SDC_APPLICATION_ID_HEADER = "X-SDC-APPLICATION-ID";
   String X_SDC_PING_HEADER = "X-SDC-PING";

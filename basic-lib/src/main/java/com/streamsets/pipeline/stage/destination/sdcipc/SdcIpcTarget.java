@@ -121,6 +121,7 @@ public class SdcIpcTarget extends BaseTarget {
     HttpURLConnection  conn = config.createConnection(getHostPort(isRetry));
     conn.setRequestMethod("POST");
     conn.setRequestProperty(Constants.CONTENT_TYPE_HEADER, Constants.APPLICATION_BINARY);
+    conn.setRequestProperty(Constants.X_SDC_JSON1_FRAGMENTABLE_HEADER, "true");
     conn.setDefaultUseCaches(false);
     conn.setDoOutput(true);
     conn.setDoInput(true);

@@ -55,6 +55,7 @@ public class JsonRecordWriter implements RecordWriter {
       throw new IOException("writer has been closed");
     }
     generator.writeObject(BeanHelper.wrapRecord(record));
+    generator.writeRaw('\n');
   }
 
   @Override

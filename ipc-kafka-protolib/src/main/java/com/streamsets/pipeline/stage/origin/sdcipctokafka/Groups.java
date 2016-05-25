@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,22 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.sdcipc;
+package com.streamsets.pipeline.stage.origin.sdcipctokafka;
 
-public interface Constants {
-  String X_SDC_APPLICATION_ID_HEADER = "X-SDC-APPLICATION-ID";
-  String X_SDC_PING_HEADER = "X-SDC-PING";
-  String X_SDC_PING_VALUE = "ping";
-  String X_SDC_COMPRESSION_HEADER = "X-SDC-COMPRESSION";
-  String SNAPPY_COMPRESSION = "snappy";
-  String CONTENT_TYPE_HEADER = "Content-Type";
-  String APPLICATION_BINARY = "application/binary";
-  String X_SDC_JSON1_FRAGMENTABLE_HEADER = "X-SDC-JSON1-FRAGMENTABLE";
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-  String SSL_CERTIFICATE = "SunX509";
-  String[] SSL_ENABLED_PROTOCOLS = {"TLSv1"};
+@GenerateResourceBundle
+public enum Groups implements Label {
+  RPC("RPC"),
+  KAFKA("Kafka"),
+  ;
 
-  String PING_PATH = "/ping";
+  private final String label;
 
-  String IPC_PATH = "/ipc/v1";
+  private Groups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }
