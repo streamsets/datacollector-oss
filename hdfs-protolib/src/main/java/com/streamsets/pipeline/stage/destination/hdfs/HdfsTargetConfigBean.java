@@ -320,8 +320,8 @@ public class HdfsTargetConfigBean {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Use Roll Header",
-    description = "Closes the current file and creates a new one when processing a record with the specified custom header.",
+    label = "Use Roll Attribute",
+    description = "Closes the current file and creates a new file when processing a record with the specified roll attribute",
     displayPosition = 204,
     group = "OUTPUT_FILES"
   )
@@ -331,8 +331,8 @@ public class HdfsTargetConfigBean {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "roll",
-    label = "Roll header name",
-    description = "Name of the header that will cause current open file to close.",
+    label = "Roll Attribute Name",
+    description = "Name of the roll attribute",
     displayPosition = 205,
     group = "OUTPUT_FILES",
     dependsOn = "rollIfHeader",
