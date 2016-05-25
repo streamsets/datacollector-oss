@@ -33,6 +33,13 @@ public class HeaderAttributeConstants {
   public static final String FILE = "file";
 
   /**
+   * Filename of the source file.
+   *
+   * Applicable for LogTail, Directory spooling, ...
+   */
+  public static final String FILE_NAME = "filename";
+
+  /**
    * Offset in the source.
    *
    * Can be file offset in directory spooling, log tail or for example partition offset

@@ -129,6 +129,7 @@ public class TestCsvSpoolDirSource {
       Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("B", records.get(0).get("[1]/value").getValueAsString());
       Assert.assertEquals(testFile.getPath(), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE));
+      Assert.assertEquals("test.log", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
       Assert.assertEquals("0", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
       Assert.assertFalse(records.get(0).has("[0]/header"));
       Assert.assertFalse(records.get(0).has("[1]/header"));

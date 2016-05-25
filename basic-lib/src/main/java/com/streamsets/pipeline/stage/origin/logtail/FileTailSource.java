@@ -439,6 +439,7 @@ public class FileTailSource extends BaseSource {
                 record.getHeader().setAttribute("tag", tag);
               }
               record.getHeader().setAttribute(HeaderAttributeConstants.FILE, chunk.getFile().getPath().toString());
+              record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, chunk.getFile().getPath().getFileName().toString());
               record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(line.getFileOffset()));
               batchMaker.addRecord(record, outputLane);
               recordCounter++;

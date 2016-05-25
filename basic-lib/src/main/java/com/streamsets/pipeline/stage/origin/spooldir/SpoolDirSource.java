@@ -473,6 +473,7 @@ public class SpoolDirSource extends BaseSource {
           Record record = parser.parse();
           if (record != null) {
             record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
+            record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
             record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
             batchMaker.addRecord(record);
             offset = parser.getOffset();
