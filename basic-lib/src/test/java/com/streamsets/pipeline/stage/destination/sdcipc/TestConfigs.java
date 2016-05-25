@@ -171,7 +171,7 @@ public class TestConfigs {
     issues.clear();
 
     // invalid host
-    config.hostPorts = Arrays.asList(UUID.randomUUID().toString() + ":10000");
+    config.hostPorts = Collections.singletonList("WO**#&:10000");
     config.validateHostPorts(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();
@@ -182,8 +182,24 @@ public class TestConfigs {
     Assert.assertEquals(1, issues.size());
     issues.clear();
 
+    // invalid ipv6 hostport
+    config.hostPorts = Collections.singletonList("2001:0db8:0000:0000:0000:ff00:0042:8329:10000");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
     // good hostport
     config.hostPorts = Arrays.asList("localhost:10000", "localhost:10001");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(0, issues.size());
+
+    // good ipv6 addresses
+    config.hostPorts = Arrays.asList(
+        "[2001:0db8:0000:0000:0000:ff00:0042:8329]:10000",
+        "[2001:db8:0:0:0:ff00:43:8329]:10001",
+        "[2001:db8::ff00:44:8329]:10002",
+        "[::1]:10003"
+    );
     config.validateHostPorts(getContext(), issues);
     Assert.assertEquals(0, issues.size());
   }
