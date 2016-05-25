@@ -468,5 +468,48 @@ public class TestSdcIpcTarget {
     testHttps(false);
   }
 
+  @Test
+  public void testBackOff() throws Exception {
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    Configs config = new ForTestConfigs(conn);
+    config.appId = "appId";
+    config.hostPorts = ImmutableList.of("localhost:10000");
+    config.retriesPerBatch = 3;
+    config.backOff = 10;
+    config.sslEnabled = false;
+    config.hostVerification = true;
+
+    SdcIpcTarget target = new SdcIpcTarget(config);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
+    Mockito.when(conn.getOutputStream()).thenReturn(baos);
+
+    TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+
+    try {
+      runner.runInit();
+
+      Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_REQUEST);
+      Mockito.when(conn.getOutputStream()).thenThrow(new IOException());
+
+      List<Record> records = ImmutableList.of(RecordCreator.create(), RecordCreator.create());
+      long startTime = System.currentTimeMillis();
+      runner.runWrite(records);
+      long runningTime = System.currentTimeMillis() - startTime;
+
+      // All records
+      Assert.assertEquals(2, runner.getErrorRecords().size());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+      // The backoff is exactly 1100 ms - 10*10*10 (3 retries per bach)
+      Assert.assertTrue(runningTime > 1000);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 
 }

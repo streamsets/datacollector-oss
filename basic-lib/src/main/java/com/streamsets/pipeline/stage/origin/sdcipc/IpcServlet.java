@@ -76,6 +76,8 @@ public class IpcServlet extends HttpServlet {
   protected synchronized void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     inPost = true;
+    LOG.debug("Got connection from '{}'", req.getRemoteAddr());
+
     try {
       if (shuttingDown) {
         LOG.debug("Shutting down, discarding incoming request");

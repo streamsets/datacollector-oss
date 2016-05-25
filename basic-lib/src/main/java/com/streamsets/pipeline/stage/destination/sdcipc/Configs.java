@@ -137,6 +137,19 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Back off period",
+      description = "If set to non-zero, each retry will be spaced exponentially. For value 10, first retry will be" +
+        " done after 10 milliseconds, second retry after additional 100 milliseconds, third retry after additional second, ...",
+      displayPosition = 15,
+      group = "ADVANCED",
+      min=0
+  )
+  public int backOff;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
       label = "Connection Timeout (ms)",
       displayPosition = 20,

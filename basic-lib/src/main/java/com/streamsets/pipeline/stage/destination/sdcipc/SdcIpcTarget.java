@@ -132,10 +132,23 @@ public class SdcIpcTarget extends BaseTarget {
     ContextExtensions ext = (ContextExtensions) getContext();
     boolean ok = false;
     int retryCount = 0;
+    long waitTime = config.backOff;
     String errorReason = null;
     HttpURLConnection conn = null;
+
     while (!ok && retryCount <= config.retriesPerBatch) {
       LOG.debug("Writing out batch '{}' retry '{}'", batch.getSourceOffset(), retryCount);
+
+      if(retryCount > 0 && waitTime > 0) {
+        LOG.debug("Waiting '{}' milliseconds before re-try", waitTime);
+        try {
+          Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+          LOG.info("Backoff waiting was interrupted", e);
+        }
+        waitTime *= config.backOff;
+      }
+
       try {
         conn = createWriteConnection(retryCount > 0);
         if (config.compression) {
