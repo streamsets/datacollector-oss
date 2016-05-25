@@ -271,9 +271,10 @@
                             <row>
                                 <entry>runner.thread.pool.size</entry>
                                 <entry>Number of threads in the pool that are available to run
-                                    standalone pipelines. The default value is sufficient to
-                                    concurrently run approximately 20 standalone
-                                        pipelines.<p>Default is 20.</p></entry>
+                                    standalone pipelines. The default value is sufficient to run
+                                    approximately 20 standalone pipelines at the same
+                                        time.<p>Default is 20. Be sure to uncomment the line if you
+                                        change the value.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>

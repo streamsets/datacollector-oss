@@ -44,17 +44,19 @@
             number of records that the pipeline can read in a second.</dd>
         </dlentry>
      <dlentry>
-          <dt>When I run multiple standalone pipelines concurrently, I receive an error that not
-            enough threads are available.</dt>
+          <dt>When I try to start one or more pipelines, I receive an error that not enough threads
+            are available.</dt>
           <dd>By default, <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-            concurrently run approximately 20 standalone pipelines. If you concurrently run a larger
-            number of standalone pipelines, you might receive the following
+            run approximately 20 standalone pipelines at the same time. If you run a larger number
+            of standalone pipelines at the same time, you might receive the following
             error:<codeblock>CONTAINER_0166 - Cannot start pipeline '&lt;pipeline name>' as there are not enough threads available</codeblock></dd>
           <dd>To resolve this error, increase the value of the <b>runner.thread.pool.size</b>
             property in the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>.</dd>
+          <dd>For more information, see <xref
+              href="../Install_Config/RunningMultiplePipelines.dita#task_nkc_ydl_bw"/>.</dd>
         </dlentry>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
