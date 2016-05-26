@@ -30,8 +30,9 @@
         <p>To run <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
             a client machine - outside the cluster or on your local machine - the MapR client
-            package must be installed and configured on the machine. To install the MapR client
-            package, you need to download the following files:<ul id="ul_qcz_x1m_gv">
+            package must be installed and configured on the machine. If the MapR client package is
+            not installed on the machine, download and install the following files:<ul
+                id="ul_qcz_x1m_gv">
                 <li>MapR client library - Typically named
                         <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can download the
                         files for your operating system
@@ -47,10 +48,16 @@
         <ol id="ol_ghq_zrg_2v">
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file, $SDC_CONF/sdc.properties, remove the MapR stage library that
-                you want to use from the <uicontrol>system.stagelibs.blacklist</uicontrol>
-                    property.<note type="warning">You can use only one version of the MapR library
-                    at a time. </note></li>
+                /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, remove the MapR
+                stage library that you want to use from the
+                    <uicontrol>system.stagelibs.blacklist</uicontrol> property.<p>For example, the
+                        <uicontrol>system.stagelibs.blacklist</uicontrol> property is defined as
+                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib</codeblock></p><p>To
+                    use the MapR version 5.1, remove the version 5.1 stage library from the property
+                    as
+                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib</codeblock></p><note
+                    type="warning">You can use only one version of the MapR library at a time.
+                </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
                     <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
                             <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
@@ -83,10 +90,19 @@ ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</codeblock></p></
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> security policy file, <codeph>$SDC_CONF/sdc-security.policy</codeph>, add a new
-                permissions block for $MAPR_HOME.<p>For example:
+                permissions block for $MAPR_HOME as follows:
+                    <codeblock>// MapR home directory
+grant codebase "file://&lt;MapR home directory>-" {
+    permission java.security.AllPermission;
+};</codeblock><p>For
+                    example:
                     <codeblock>grant codebase "file:///opt/mapr/-" {
   permission java.security.AllPermission;
 };</codeblock></p></li>
+            <li>Restart <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> and verify that you can see the MapR origins and destinations in the stage
+                library.</li>
         </ol>
  </conbody>
 </concept>
