@@ -71,13 +71,13 @@
 
         
      
-          <dt class="dt dlterm">When I run multiple standalone pipelines concurrently, I receive an error that not
-            enough threads are available.</dt>
+          <dt class="dt dlterm">When I try to start one or more pipelines, I receive an error that not enough threads
+            are available.</dt>
 
           <dd class="dd">By default, <span class="ph">Data
                   Collector</span> can
-            concurrently run approximately 20 standalone pipelines. If you concurrently run a larger
-            number of standalone pipelines, you might receive the following
+            run approximately 20 standalone pipelines at the same time. If you run a larger number
+            of standalone pipelines at the same time, you might receive the following
             error:<pre class="pre codeblock">CONTAINER_0166 - Cannot start pipeline '&lt;pipeline name&gt;' as there are not enough threads available</pre>
 </dd>
 
@@ -85,6 +85,8 @@
             property in the <span class="ph">Data
                   Collector</span>
             configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.</dd>
+
+          <dd class="dd">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#task_nkc_ydl_bw" title="By default, Data Collector can run approximately 20 standalone pipelines concurrently. If you plan to run a larger number of pipelines at the same time, increase the thread pool size.">Running Multiple Concurrent Pipelines</a>.</dd>
 
         
     

@@ -131,7 +131,7 @@ This is the default time basis. </dd>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e2245" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e2243" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -161,7 +161,7 @@ This is the default time basis. </dd>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="30%" headers="d26222e184 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_uns_gtv_4r__d1717e2291" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_uns_gtv_4r__d1717e2289" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d26222e187 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
@@ -172,7 +172,7 @@ This is the default time basis. </dd>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="30%" headers="d26222e184 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_uns_gtv_4r__d1717e2305" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_uns_gtv_4r__d1717e2303" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d26222e187 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
@@ -184,7 +184,7 @@ This is the default time basis. </dd>
                                 <tr class="row">
                                     <td class="entry" valign="top" width="30%" headers="d26222e184 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d26222e187 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d1717e2321">
+                                    <td class="entry" valign="top" width="70%" headers="d26222e187 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d1717e2319">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -208,9 +208,9 @@ This is the default time basis. </dd>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, configure the following
                     properties:</span>
-                <div class="itemgroup info" id="task_uns_gtv_4r__d1717e3617">
+                <div class="itemgroup info" id="task_uns_gtv_4r__d1717e3702">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e3619" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e3704" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -305,12 +305,12 @@ Selecting this property is
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="30%" headers="d26222e296 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
-                                            <img class="image" id="task_uns_gtv_4r__d1717e3729" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                            <img class="image" id="task_uns_gtv_4r__d1717e3814" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d26222e299 ">
                                         <div class="p">Time basis to use for writing to time-based indexes. Use
-                                            one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__d1717e3736">
+                                            one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__d1717e3821">
                                                 <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
                                                   processing time as the time basis. The processing
                                                   time is the time associated with the <span class="ph">Data
@@ -388,7 +388,7 @@ Selecting this property is
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="30%" headers="d26222e296 ">Enable Upsert <a class="xref" href="Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify the expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
-                                            <img class="image" id="task_uns_gtv_4r__d1717e3824" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                            <img class="image" id="task_uns_gtv_4r__d1717e3909" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d26222e299 ">Enables upserts to the cluster. When enabled, configure
@@ -406,9 +406,9 @@ Selecting this property is
 <li class="li step stepexpand">
                 <span class="ph cmd">When writing to a Shield-protected cluster, on the <span class="keyword wintitle">Shield</span>
                     tab, configure the following properties:</span>
-                <div class="itemgroup info" id="task_uns_gtv_4r__d1717e3845">
+                <div class="itemgroup info" id="task_uns_gtv_4r__d1717e3929">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e3847" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d1717e3931" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">

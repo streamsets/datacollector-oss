@@ -1,0 +1,251 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Static Lookup processor performs lookups of key-value pairs that are stored in local memory and passes the lookup values to fields. Use the Static Lookup to store String values in memory that the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Static Lookup"></meta><meta name="abstract" content="The Static Lookup processor performs lookups of key-value pairs that are stored in local memory and passes the lookup values to fields. Use the Static Lookup to store String values in memory that the pipeline can look up at runtime to enrich records with additional data."></meta><meta name="description" content="The Static Lookup processor performs lookups of key-value pairs that are stored in local memory and passes the lookup values to fields. Use the Static Lookup to store String values in memory that the pipeline can look up at runtime to enrich records with additional data."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_aqz_t4r_pv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Static Lookup</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_aqz_t4r_pv">
+ <h1 class="title topictitle1">Static Lookup</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Static Lookup processor performs lookups of key-value pairs that are stored in local
+        memory and passes the lookup values to fields. Use the Static Lookup to store String values
+        in memory that the pipeline can look up at runtime to enrich records with additional
+        data.</p>
+
+  <p class="p">When you configure the Static Lookup processor,
+            you specify whether the processor performs a bulk lookup of all keys in a batch, or
+            performs an individual lookup of each key in a record. You use an expression to define
+            the key to look up in local memory, and specify the String output field to write the
+            lookup values to. You also define the key-value pairs to store in local memory. </p>
+
+        <div class="section"><h2 class="title sectiontitle">Example</h2><p class="p">Let's assume that you need to develop a pipeline that reads log files created by multiple hosts.
+                Each log file includes the name of the host. You want to process and write the log
+                data to different local directories, based on the host that created the log file. </p>
+
+            <p class="p">On the Lookup tab for the Static Lookup processor, you enter an expression that
+                defines the hostname field as the key to look up. You specify a new directory field
+                to write the lookup values to, as follows:</p>
+
+            <p class="p"><img class="image" id="concept_aqz_t4r_pv__image_b23_33z_bw" src="../Graphics/StaticLookupParameters.png" height="183" width="717"></img></p>
+
+            <p class="p">On the Static Store tab for the Static Lookup processor, you define each host name
+                and associated directory as the key-value pairs to store in local memory:</p>
+
+            <p class="p"><img class="image" id="concept_aqz_t4r_pv__image_dnm_53z_bw" src="../Graphics/StaticLookupStore.png" height="209" width="713"></img></p>
+
+            <div class="p">In the Local FS destination, you include the value of the directory field in the
+                expression for the directory template as
+                follows:<pre class="pre codeblock">${record:value('/directory')}/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}</pre>
+</div>
+
+            <p class="p">When you run the pipeline, the Static Lookup processor stores the static key-value
+                pairs in memory. The processor looks up the value of the hostname field and passes
+                the corresponding value to the directory output field. When the Local FS destination
+                writes the data to output files, the destination writes the files to the appropriate
+                directory for each host.</p>
+
+        </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_xk1_z4r_pv">
+    <h2 class="title topictitle2">Configuring a Static Lookup Processor</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a Static Lookup processor to perform key-value lookups in
+        memory.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xk1_z4r_pv__d15762e2243" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d141969e104">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d141969e107">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d141969e104 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d141969e107 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d141969e104 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d141969e107 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d141969e104 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_xk1_z4r_pv__d15762e2289" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d141969e107 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d141969e104 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_xk1_z4r_pv__d15762e2303" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d141969e107 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d141969e104 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d141969e107 ">Error record handling for the stage: <ul class="ul" id="task_xk1_z4r_pv__d15762e2319">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Lookup</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xk1_z4r_pv__table_ns1_p1s_zv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d141969e216">Lookup Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d141969e219">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d141969e216 ">Mode</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d141969e219 ">Mode used to perform the lookups:<ul class="ul" id="task_xk1_z4r_pv__d15980e846">
+       <li class="li">Per Batch - Performs a bulk lookup of all keys in a
+        batch. The processor performs a single lookup for
+        each batch.</li>
+
+       <li class="li">Per Key in Each Record - Performs individual lookups
+        of each key in each record. If you configure
+        multiple key expressions, the processor performs
+        multiple lookups for each record.</li>
+
+      </ul>
+<p class="p">Default is Per Batch.</p>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141969e216 ">Key Expression</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141969e219 ">Key to look up in local memory. Enter a key name or enter
+                                        an expression that defines the key.<div class="p">For example, enter the
+                                            following expression to use the data in the hostname
+                                            field as the lookup
+                                            key:<pre class="pre codeblock">${record:value('/hostname')}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141969e216 ">Output Field</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141969e219 ">Name of the String field to pass the lookup value. You
+                                        can specify an existing field or a new field. If the field
+                                        does not exist, Static Lookup creates the field. <p class="p">Precede
+                                            each field name with a slash as follows:
+                                        /FieldName.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Static Store</span> tab, configure the key-value pairs to
+                    store in local memory. The processor stores each value as a String.</span>
+                <div class="itemgroup info">Click <span class="ph uicontrol">Add</span> to create additional key-value pairs to
+                    store.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
+</body>
+</html>

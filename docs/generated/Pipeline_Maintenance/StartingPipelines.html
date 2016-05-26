@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector . For a most origins, when you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Starting a Pipeline"></meta><meta name="abstract" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="description" content="You can start a pipeline when it is valid. When you start a pipeline, the Data Collector runs the pipeline until you stop the pipeline or shut down the Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_wpy_1xr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Starting a Pipeline</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can start pipelines when they are valid. When you start a pipeline, Data Collector runs the pipeline until you stop the pipeline or shut down Data Collector . For most origins, when you restart a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Starting Pipelines"></meta><meta name="abstract" content="You can start pipelines when they are valid. When you start a pipeline, Data Collector runs the pipeline until you stop the pipeline or shut down Data Collector."></meta><meta name="description" content="You can start pipelines when they are valid. When you start a pipeline, Data Collector runs the pipeline until you stop the pipeline or shut down Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_wpy_1xr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Starting Pipelines</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,31 +32,37 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Maintenance/PipelineMaintenance_title.html" title="Pipeline Maintenance">Pipeline Maintenance</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Pipeline_Maintenance/PipelineMaintenance_title.html" title="Pipeline Maintenance"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Maintenance</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="task_wpy_1xr_5q">
-    <h1 class="title topictitle1">Starting a Pipeline</h1>
+    <h1 class="title topictitle1">Starting Pipelines</h1>
 
     
-    <div class="body taskbody"><p class="shortdesc">You can start a pipeline when it is valid. When you start a pipeline, the <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">You can start pipelines when they are valid. When you start a pipeline, <span class="ph">Data
                   Collector</span> runs
-        the pipeline until you stop the pipeline or shut down the <span class="ph">Data
+        the pipeline until you stop the pipeline or shut down <span class="ph">Data
                   Collector</span>.</p>
 
         <div class="section context">
-            <p class="p">For a most origins,
-                when you restart a pipeline, the <span class="ph">Data
+            <p class="p">For most origins, when
+                you restart a pipeline, <span class="ph">Data
                   Collector</span> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>
 
-            <div class="p">A Kafka Consumer origin starts processing data based on the offset passed from the
-                Kafka ZooKeeper. <ol class="ol" id="task_wpy_1xr_5q__ol_xff_cms_zs">
-                    <li class="li">From the <span class="keyword wintitle">Home</span> page, click the
-                            <span class="ph uicontrol">More</span> icon for the pipeline and then click
-                            <span class="ph uicontrol">Start</span>. Or to start a pipeline in the pipeline
-                        canvas, click the <span class="ph uicontrol">Start</span> icon.<p class="p">If the Start icon is
-                            not enabled, the pipeline is not valid.</p>
+            <p class="p">A Kafka Consumer origin starts processing data based on the offset passed from the
+                Kafka ZooKeeper. </p>
+
+            <p class="p">You can start pipelines from the following locations:</p>
+
+            <div class="p">
+                <ul class="ul" id="task_wpy_1xr_5q__ol_xff_cms_zs">
+                    <li class="li">From the <span class="keyword wintitle">Home</span> page, select pipelines in the list and
+                        then click the <span class="ph uicontrol">Start</span> icon. </li>
+
+                    <li class="li">From the pipeline canvas, click the <span class="ph uicontrol">Start</span> icon. <p class="p">If
+                            the Start icon is not enabled, the pipeline is not valid.</p>
 </li>
 
-                </ol>
-</div>
+                </ul>
+
+            </div>
 
         </div>
 
@@ -102,8 +108,8 @@
 
         <ol class="ol steps" id="task_hdg_j1s_5q__steps_hvb_y1s_5q"><li class="li step stepexpand">
                 <span class="ph cmd">Verify that the pipeline that you want to use appears in the pipeline canvas. </span>
-                <div class="itemgroup info">If it does not, select the pipeline from the <span class="keyword wintitle">Pipeline</span>
-                    library or the <span class="keyword wintitle">Home</span> page.</div>
+                <div class="itemgroup info">If it does not, select the pipeline from the <span class="keyword wintitle">Home</span>
+                    page.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To reset the origin, click the <span class="ph uicontrol">More</span> icon.</span>
@@ -114,36 +120,6 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="keyword wintitle">Reset Origin Confirmation</span> dialog box, click
                         <span class="ph uicontrol">Yes</span> to reset the origin.</span>
-            </li>
-</ol>
-
-    </div>
-
-</div>
-<div class="topic task nested1" id="task_nkc_ydl_bw">
-    <h2 class="title topictitle2">Starting Multiple Concurrent Pipelines</h2>
-
-    
-    <div class="body taskbody"><p class="shortdesc">By default, <span class="ph">Data
-                  Collector</span> can
-        run approximately 20 standalone pipelines concurrently. If you plan to start a larger number
-        of concurrent pipelines, increase the thread pool size.</p>
-
-        <div class="section context">
-            <p class="p">The <strong class="ph b">runner.thread.pool.size</strong>
-                property in the <span class="ph">Data
-                  Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, determines the
-                number of threads in the pool that are available to run standalone pipelines.</p>
-
-        </div>
-
-        <ol class="ol steps"><li class="li step">
-                <span class="ph cmd">Use a text editor to edit <samp class="ph codeph">sdc.properties</samp> and increase the
-                    value of <strong class="ph b">runner.thread.pool.size</strong>.</span>
-            </li>
-<li class="li step">
-                <span class="ph cmd">Restart <span class="ph">Data
-                  Collector</span> to enable the changes.</span>
             </li>
 </ol>
 
