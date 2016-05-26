@@ -22,19 +22,23 @@
   <p><indexterm>installation<indexterm>basic with custom libraries</indexterm></indexterm>The basic
             installation includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            development stages, all processors, and the origins and destinations in the basic stage
+            development stages, most processors, and the origins and destinations in the basic stage
             library, such as Directory and Local FS. You can then use the command line interface to
             install additional stage libraries. </p>
         <p>Use the basic installation to install only the stage libraries that you want to use. The
             basic installation also results in smaller downloads for installation files. </p>
-        <p>The basic installation provides all processors, all development stages, and the following
-            origins and destinations in the basic stage library:<draft-comment author="Loretta"
+        <p>The basic installation includes the following origins:<draft-comment author="Loretta"
                 >Check this list with each release</draft-comment><ul id="ul_z3l_k2n_s5">
                 <li>Directory origin</li>
                 <li>File Tail origin</li>
                 <li>HTTP Client origin</li>
                 <li>SDC RPC origin</li>
                 <li>UDP Source origin</li>
+            </ul>The basic installation includes all processors <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicNotProcessor"
+            /></p>
+        
+        <p>The basic installation includes the following destinations:<ul id="ul_lx5_5ph_cw">
                 <li>Local FS destination</li>
                 <li>SDC RPC destination</li>
                 <li>To Error destination</li>

@@ -57,20 +57,16 @@
                         <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
                             <entry>Installs automatically with the basic installation.<p>Includes
-                                    the following origins:<ul id="ul_rfq_yrm_s5">
-                                        <li>Directory</li>
-                                        <li>File Tail</li>
-                                        <li>HTTP Client</li>
-                                        <li>SDC RPC</li>
-                                        <li>SFTP/FTP Client</li>
-                                        <li>UDP Source</li>
-                                    </ul></p><p>Includes all processors except the Jython
-                                    Evaluator.</p><p>Includes the following destinations:<ul
-                                        id="ul_mg5_csm_s5">
-                                        <li>Local FS</li>
-                                        <li>SDC RPC</li>
-                                        <li>To Error</li>
-                                        <li>Trash</li>
+                                    the following origins:<ul
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicOrigins"
+                                        id="ul_kkp_bqh_cw">
+                                        <li/>
+                                    </ul></p><p>Includes all processors <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicNotProcessor"
+                                    /></p><p>Includes the following destinations:<ul
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
+                                        id="ul_bps_cqh_cw">
+                                        <li/>
                                     </ul></p></entry>
                         </row>
                         <row>

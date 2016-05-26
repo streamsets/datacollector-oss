@@ -29,6 +29,37 @@
                   Collector</ph></p>
             <p>DPM long only: <ph id="DPM-LongOnly">Data Performance Manager</ph></p>
             <p>
+                  <draft-comment author="Loretta">List of origins tha are part of the Basic
+                        installation. Used in BasicInstall_Overview and BasicInstall-LibList.
+                  </draft-comment>
+            </p>
+            <p>
+                  <ul id="BasicOrigins">
+                        <li>Directory</li>
+                        <li>File Tail</li>
+                        <li>HTTP Client</li>
+                        <li>SDC RPC</li>
+                        <li>SFTP/FTP Client</li>
+                        <li>UDP Source</li>
+                  </ul>
+            </p>
+            <draft-comment author="Loretta"/>
+            <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
+                        Lookup, Redis Lookup, and Static Lookup.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">List of destinations tha are part of the Basic
+                        installation. Used in BasicInstall_Overview and BasicInstall-LibList.
+                  </draft-comment>
+            </p>
+            <p>
+                  <ul id="BasicDestinations">
+                        <li>Local FS</li>
+                        <li>SDC RPC</li>
+                        <li>To Error</li>
+                        <li>Trash</li>
+                  </ul>
+            </p>
+            <p>
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
             </p>
