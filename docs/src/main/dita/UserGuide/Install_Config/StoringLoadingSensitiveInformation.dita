@@ -18,8 +18,8 @@
  <shortdesc>For increased security you can store sensitive information, such as a password, in
     separate files and reference the files in the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, as follows:
-    @<codeph>&lt;filename></codeph>@.</shortdesc>
+    configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, as follows:
+    ${file("&lt;filename>")}.</shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>storing passwords and other sensitive
           values</indexterm></indexterm><indexterm>passwords<indexterm>storing in
@@ -27,11 +27,11 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> starts, it
       checks the reference files for information. By default, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> expects
-      the email password and keystore file password to be stored in files. </p>
+      the SMTP password and keystore password to be stored in files. </p>
     <p>For example, if you configure xmail.username as follows, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
-      <codeph>email_username.txt</codeph> file for the user
-      name:<codeblock><b>xmail.username</b>=@email_username.txt@</codeblock></p>
+        <codeph>email_username.txt</codeph> file for the user
+      name:<codeblock><b>xmail.username</b>=${file("email_username.txt")}</codeblock></p>
     <p>To store and reference sensitive information: <ol id="ol_vws_tbt_zr">
         <li>Create a text file for each configuration value that you want to safeguard.</li>
         <li>Include only one configuration value in each file. <p>You can store any configuration
@@ -43,8 +43,8 @@
         <li>In the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, set the relevant value to
-          the appropriate file name. Surround the file name with @ symbols as
-          follows:<codeblock>@&lt;filename>@</codeblock></li>
+          the appropriate file name. Use the required syntax as
+          follows:<codeblock>${file("&lt;filename>")}</codeblock></li>
       </ol></p>
  </conbody>
 </concept>

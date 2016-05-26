@@ -16,16 +16,22 @@
 <concept id="concept_gvn_rnr_pt">
  <title>Referencing Environment Variables</title>
  <shortdesc>You can reference an environment variable in the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties file
-  by surrounding the environment variable with dollar signs, as follows: $<codeph>&lt;environment
-   variable></codeph>$. </shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, as follows:
+    ${env("&lt;environment variable name>")}. </shortdesc>
  <conbody>
   <p><indexterm>environment variables<indexterm>references in the Data Collector configuration
           file</indexterm></indexterm><indexterm>Data Collector configuration
-          file<indexterm>referencing environment variables</indexterm></indexterm>For example, to
-      define the runtime.conf.location property as a subdirectory of the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> working
-      directory, you could configure the property as
-      follows:<codeblock>runtime.conf.location=$PWD$/runtime</codeblock></p>
+          file<indexterm>referencing environment variables</indexterm></indexterm>For example, you
+      want to display text in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
+      next to the StreamSets logo indicating whether <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is running
+      in a development, test, or production environment. You create an environment variable named
+      ENVIRONMENT and populate the variable with the appropriate value: development, test, or
+      production.</p>
+    <p>You set the value of the <codeph>ui.header.title</codeph> property in
+        <codeph>sdc.properties</codeph> as
+      follows:<codeblock>ui.header.title=${env("ENVIRONMENT")}</codeblock></p>
  </conbody>
 </concept>
