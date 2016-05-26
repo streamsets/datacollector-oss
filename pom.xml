@@ -436,11 +436,11 @@
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
-        <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
+        <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
+        <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
-        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
@@ -460,11 +460,11 @@
         <module>cdh_5_3-lib</module>
         <module>cdh_5_4-lib</module>
         <module>cdh_5_5-lib</module>
-        <module>hdp_2_4-lib</module>
+        <module>hdp_2_2-lib</module>
+        <module>hdp_2_3-lib</module>
         <module>mapr_5_0-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
-        <module>apache-kafka_0_9-lib</module>
         <module>cdh_kafka_1_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_2-lib</module>
@@ -481,6 +481,7 @@
       </modules>
     </profile>
 
+    <!-- List all the latest versions here. If new version needs to be added, move the older version in all-libs -->
     <profile>
       <id>sample-dev-libs</id>
       <activation>
@@ -489,27 +490,24 @@
         </property>
       </activation>
       <properties>
-        <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
-        <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
+        <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <redis-lib>redis-lib</redis-lib>
-        <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
+        <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
         <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
-        <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
       </properties>
       <modules>
+        <module>hdp_2_4-lib</module>
         <module>cdh_5_7-lib</module>
-        <module>hdp_2_2-lib</module>
-        <module>hdp_2_3-lib</module>
         <module>mapr_5_1-lib</module>
         <module>jython_2_7-lib</module>
         <module>groovy_2_4-lib</module>
@@ -518,7 +516,6 @@
         <module>cdh_kafka_2_0-lib</module>
         <module>mongodb_3-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
-        <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
         <module>apache-kudu-0_7-lib</module>
         <module>influxdb_0_9-lib</module>
