@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lmn_gdc_1w">
+    <title>Stage Attributes</title>
+    <shortdesc>A stage attribute is a record header attribute with information that a stage can use
+        to process records. Hadoop FS can use a stage attribute to determine the directory to write
+        a record to.</shortdesc>
+    <conbody>
+        <p>To pass a stage attribute to Hadoop FS, you configure the destination to use the
+            attribute, and you ensure that the record headers include the stage attribute. Use the
+            Expression Evaluator processor to add stage attributes to record headers. <draft-comment
+                author="Loretta">1. Come back and add the Hive Metadata processor when it's
+                in.</draft-comment></p>
+        <p>You can use the following stage attribute in Hadoop FS:<dl>
+                <dlentry>
+                    <dt>targetDirectory</dt>
+                    <dd>The targetDirectory attribute defines the directory where the record is
+                        written. If the directory does not exist, the destination creates the
+                        directory. The targetDirectory stage attribute replaces the Directory
+                        Template property in the destination.</dd>
+                    <dd>When processing the targetDirectory attribute, Hadoop FS uses the directory
+                        exactly as written in the attribute. Unlike directory templates, the
+                        directory specified in the targetDirectory attribute should not include any
+                        components that require evaluation, such as constants, variables, or runtime
+                        properties. </dd>
+                    <dd>However, when you define the expression that evaluates to a directory, you
+                        can use any valid component, including expressions that evaluate data in the
+                        record. </dd>
+                    <dd>For example, you want to write records to different directories based on the
+                        Data Collector that runs the pipeline, and the region and store ID where the
+                        transaction took place. You can set up a runtime resource named DIR that
+                        defines the base for the directory and define DIR for each Data Collector
+                        that runs the pipeline. Then, you can use the following expression in the
+                        Expression Evaluator to define the targetDirectory
+                        attribute:<codeblock>${runtime:conf('DIR')/transactions/${record.value('/region')}/${record.value('/storeID')}</codeblock></dd>
+                    <dd>When you use targetDirectory to provide the directory, the time basis
+                        configured for the destination is used only for determining whether a record
+                        is late. Time basis is not used to determine the output directories to
+                        create or to write records to directories.</dd>
+                    <dd>To define the directory for a record:<ol id="ol_ahx_gbz_bw">
+                            <li>Use the Expression Evaluator to define a "targetDirectory" header
+                                attribute and configure an expression that returns the directory
+                                that you want to use. </li>
+                            <li>In Hadoop FS, on the <wintitle>Output Files</wintitle> tab, select
+                                    the<uicontrol> Directory in Header</uicontrol> property.</li>
+                        </ol></dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>

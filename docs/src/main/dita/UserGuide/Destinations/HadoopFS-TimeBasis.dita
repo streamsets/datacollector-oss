@@ -15,11 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gkz_smd_br">
  <title>Time Basis</title>
+ <shortdesc>When using directory templates, the time basis helps determine when directories are
+  created. It also determines the directory Hadoop FS uses when writing a record, and whether a
+  record is late.</shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>time basis</indexterm></indexterm><indexterm>time
-     basis<indexterm>Hadoop FS</indexterm></indexterm>The time basis helps determine when
-   directories are created and which directory Hadoop FS uses when writing a record. You can use the
-   following times as the time basis: </p>
+     basis<indexterm>Hadoop FS</indexterm></indexterm>When using the targetDirectory stage attribute
+   to write records, the time basis determines only whether a record is late.</p>
+  <p>You can use the following times as the time basis: </p>
   <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TimeBasis">
    <dlentry>
     <dt/>

@@ -1549,9 +1549,56 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Header</uicontrol> - used by
+                            <u>Hadoop FS</u> only - includes Avro header.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-Header">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tcc_kxg_1w">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema in Header <xref
+                                            href="../Destinations/HadoopFS-StageAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ydt_vvg_1w"/></xref></entry>
+                                    <entry>Indicates that the Avro schema is embedded in the
+                                        avroSchema header attribute. Use only when the avroSchema
+                                        attribute is defined for all records.</entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. The
+                                        destination includes the schema definition in each generated
+                                        file. </entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Compression Codec</entry>
+                                    <entry>The Avro-supported compression type to use. <p>When you
+                                            enable Avro compression, do not enable other compression
+                                            available in the destination. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-File</uicontrol> - used in
-                        Amazon S3, Hadoop FS and any other file-based destinations that write
-                        avro.</draft-comment>
+                        Amazon S3  and  other file-based destinations <u>except for Hadoop FS</u>
+                        that write avro.</draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-File">

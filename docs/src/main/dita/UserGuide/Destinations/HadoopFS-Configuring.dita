@@ -67,7 +67,9 @@
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </p></entry>
+                                            /> configuration file,
+                                                <codeph>$SDC_CONF/sdc.properties</codeph>.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory <xref
@@ -108,6 +110,8 @@
                 <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
                     options:</cmd>
                 <info>
+                    <draft-comment author="Loretta">check order after Jarcec fixes
+                        bug.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_i4x_jh5_sv">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -141,6 +145,16 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FilePrefix">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Directory in Header <xref
+                                            href="HadoopFS-StageAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ydt_vvg_1w"/></xref>
+                                    </entry>
+                                    <entry>Indicates that the target directory is defined in record
+                                        headers. Use only when the targetDirectory stage attribute
+                                        is defined for all records. </entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryTemplate">
                                     <entry/>
@@ -160,6 +174,15 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxFileSize">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Roll Attribute</entry>
+                                    <entry>Checks the record header for the roll attribute and
+                                        closes the current file when the attribute exists. </entry>
+                                </row>
+                                <row>
+                                    <entry>Roll Attribute Name</entry>
+                                    <entry>Name of the roll attribute.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-CCodec">
@@ -185,7 +208,7 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/FS-LateRecords">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Header">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">

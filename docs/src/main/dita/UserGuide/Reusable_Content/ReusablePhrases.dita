@@ -526,13 +526,23 @@
                         <dlentry>
                               <dt/>
                               <dd>
-                                    <draft-comment author="Loretta"><b>AvroFile</b> used by Local
-                                          and Hadoop FS, S3, and other file destinations.
-                                                <b>AvroMess</b> used by Kafka and Kinesis Producer
-                                          and other message destinations. When making changes to
-                                          these, add updates to the Flume data formats topic when
-                                          necessary. </draft-comment>
+                                    <draft-comment author="Loretta"
+                                                ><uicontrol>Avro-Header</uicontrol> used by Hadoop
+                                          FS. <b>AvroFile</b> used by Local and S3, and other file
+                                          destinations. <b>AvroMess</b> used by Kafka and Kinesis
+                                          Producer and other message destinations. When making
+                                          changes to these, add updates to the Flume data formats
+                                          topic when necessary. </draft-comment>
                               </dd>
+                        </dlentry>
+                        <dlentry id="Avro-Header">
+                              <dt>Avro</dt>
+                              <dd>The destination writes records based on the Avro schema in the
+                                    record header or the schema that you provide. The schema
+                                    definition is included in each file.</dd>
+                              <dd>You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
                         </dlentry>
                         <dlentry id="DEST-DF-AvroFILE">
                               <dt>Avro</dt>
@@ -795,11 +805,12 @@
                         href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
             <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
                   and MapR FS destinations</draft-comment>
-            <p id="DirectoryTemplate_Intro">You can use a mix of constants, field values, and
-                  datetime variables in a directory template. You can use the <codeph>every</codeph>
-                  function to create new directories at regular intervals based on seconds or
-                  minutes. You can also use the <codeph>record:valueOrDefault</codeph> function to
-                  use field values or a default in the directory template. </p>
+            <p id="DirectoryTemplate_Intro">When you define a directory template, you can use a mix
+                  of constants, field values, and datetime variables. You can use the
+                        <codeph>every</codeph> function to create new directories at regular
+                  intervals based on seconds or minutes. You can also use the
+                        <codeph>record:valueOrDefault</codeph> function to use field values or a
+                  default in the directory template. </p>
             <p id="DirectoryTemplate_Example">For example, the following directory template creates
                   output directories for event data based on the state and timestamp of a record
                   with hours as the smallest unit of measure, creating a new directory every twelve

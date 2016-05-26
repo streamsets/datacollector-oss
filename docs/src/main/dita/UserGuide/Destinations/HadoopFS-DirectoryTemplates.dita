@@ -17,10 +17,13 @@
  <title>Directory Templates</title>
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>directory
-    templates</indexterm></indexterm><indexterm>directory templates<indexterm>Hadoop
-    FS</indexterm></indexterm>The Hadoop FS destination uses directory templates to create output
-   and late record directories. Hadoop FS writes records to the directories based on the configured
-   time basis.</p>
+        templates</indexterm></indexterm><indexterm>directory templates<indexterm>Hadoop
+          FS</indexterm></indexterm>By default, the Hadoop FS destination uses directory templates
+      to create output and late record directories. Hadoop FS writes records to the directories
+      based on the configured time basis. </p>
+    <p>You can alternatively write records to directories based on the targetDirectory stage
+      attribute. Using the targetDirectory attribute disables the ability to define directory
+      templates.</p>
   <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Intro"/>
   <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Example"/>
   <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_DL"/>
