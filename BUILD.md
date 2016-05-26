@@ -56,11 +56,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-1.4.0.0-SNAPSHOT/streamsets-datacollector-1.4.0.0-SNAPSHOT/bin/streamsets dc`
+`dist/target/streamsets-datacollector-1.4.0.0/streamsets-datacollector-1.4.0.0/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-1.4.0.0-SNAPSHOT/streamsets-datacollector-1.4.0.0-SNAPSHOT/bin/streamsets cli`
+`dist/target/streamsets-datacollector-1.4.0.0/streamsets-datacollector-1.4.0.0/bin/streamsets cli`
 
 To skip the RAT report during the build use the `-DskipRat` option.
 

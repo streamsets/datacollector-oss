@@ -20,7 +20,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector</artifactId>
-  <version>1.4.0.0-SNAPSHOT</version>
+  <version>1.4.0.0</version>
   <description>StreamSets Data Collector</description>
   <name>StreamSets Data Collector</name>
   <packaging>pom</packaging>
@@ -95,7 +95,7 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-api</artifactId>
-        <version>1.3.0.0-SNAPSHOT</version>
+        <version>1.4.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
