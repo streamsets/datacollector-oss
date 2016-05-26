@@ -47,4 +47,18 @@ public class HeaderAttributeConstants {
    */
   public static final String OFFSET = "offset";
 
+  /**
+   * Topic name.
+   *
+   * Applicable for kafka.
+   */
+  public static final String TOPIC = "topic";
+
+  /**
+   * Partition.
+   *
+   * Applicable for kafka.
+   */
+  public static final String PARTITION = "partition";
+
 }

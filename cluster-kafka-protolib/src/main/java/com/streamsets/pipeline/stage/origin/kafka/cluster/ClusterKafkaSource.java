@@ -67,8 +67,9 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     long offset = (Long)offsetAndResult.getOffset();
     String messageId = String.format("kafka::%s::unknown", offset); // don't inc as we have not progressed
     for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
-      messageId = String.format("kafka::%s::%d", conf.topic, offset++);
-      List<Record> records = processKafkaMessage(messageId, (byte[]) messageAndPartition.getValue());
+      messageId = String.format("kafka::%s::%d", conf.topic, offset);
+      List<Record> records = processKafkaMessage(new String((byte[]) messageAndPartition.getKey()), offset, messageId, (byte[]) messageAndPartition.getValue());
+      offset++;
       for (Record record : records) {
         batchMaker.addRecord(record);
       }

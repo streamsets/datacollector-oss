@@ -39,6 +39,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -212,11 +213,15 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     return originParallelism;
   }
 
-  protected List<Record> processKafkaMessage(String messageId, byte[] payload) throws StageException {
+  protected List<Record> processKafkaMessage(String partition, long offset, String messageId, byte[] payload) throws StageException {
     List<Record> records = new ArrayList<>();
     try (DataParser parser = parserFactory.getParser(messageId, payload)) {
       Record record = parser.parse();
       while (record != null) {
+        record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
+        record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
+        record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+
         records.add(record);
         record = parser.parse();
       }

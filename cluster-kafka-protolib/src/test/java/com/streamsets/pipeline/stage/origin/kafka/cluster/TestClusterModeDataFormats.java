@@ -33,6 +33,7 @@ import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
@@ -165,6 +166,10 @@ public class TestClusterModeDataFormats {
         LOG.info("Header " + records.get(i).getHeader().getSourceId());
         Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
         Assert.assertEquals(new String((byte[])list.get(i).getValue()), records.get(i).get("/text").getValueAsString());
+
+        Assert.assertEquals("For record: " + i, TOPIC1, records.get(i).getHeader().getAttribute(HeaderAttributeConstants.TOPIC));
+        Assert.assertEquals("For record: " + i, "" + (i % 2 + 1), records.get(i).getHeader().getAttribute(HeaderAttributeConstants.PARTITION));
+        Assert.assertEquals("For record: " + i, "" + i, records.get(i).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
       }
 
     if (sourceRunner != null) {

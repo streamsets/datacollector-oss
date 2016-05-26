@@ -41,6 +41,7 @@ import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -218,11 +219,22 @@ public class TestKafkaSource {
     shutDownExecutorService(executorService);
     Assert.assertEquals(5, records.size());
 
+    long lastOffset = -1;
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/text"));
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
       Assert.assertEquals(sdcKafkaTestUtil.generateTestData(DataType.TEXT, null),
         records.get(i).get("/text").getValueAsString());
+
+      // Metadata about where the record originated
+      Assert.assertEquals("For record: " + i, TOPIC1, records.get(i).getHeader().getAttribute(HeaderAttributeConstants.TOPIC));
+      Assert.assertEquals("For record: " + i, "0", records.get(i).getHeader().getAttribute(HeaderAttributeConstants.PARTITION));
+
+      if(lastOffset == -1) {
+        lastOffset = Long.parseLong(records.get(i).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
+      } else {
+        Assert.assertEquals("For record: " + i, "" + ++lastOffset, records.get(i).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
+      }
     }
 
     sourceRunner.runDestroy();
