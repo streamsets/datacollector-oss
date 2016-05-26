@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hive;
+package com.streamsets.pipeline.stage.lib.hive;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -45,8 +45,7 @@ public enum Errors implements ErrorCode {
   HIVE_19("Unsupported Type: {}"),
   HIVE_20("Error executing SQL: {}, Reason:{}"),
   HIVE_21("Type Mismatch, Expected: {}, Actual: {}"),
-  HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}"),
-  HIVE_23("Partition field changes not allowed")
+  HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}")
   ;
   private final String msg;
 

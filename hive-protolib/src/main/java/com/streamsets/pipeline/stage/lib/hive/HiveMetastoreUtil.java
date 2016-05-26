@@ -27,13 +27,13 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.destination.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
-import com.streamsets.pipeline.stage.destination.hive.Groups;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.metastore.MetaStoreUtils;
@@ -53,6 +53,7 @@ import java.util.Map;
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
   private static final String DB_DOT_TABLE = "%s.%s";
+  private static final String AVRO_SCHEMA_EXT = ".avsc";
 
   //Common Constants
   private static final String LOCATION_FIELD = "location";
@@ -64,24 +65,37 @@ public final class HiveMetastoreUtil {
   //Schema Change Constants
   private static final String COLUMNS_FIELD = "columns";
   private static final String INTERNAL_FIELD = "internal";
-  private static final String PARTITION_TYPE = "type";
-  private static final String COLUMN_TYPE = "type";
 
   //Partition Rolling Constants
   private static final String PARTITION_VALUE = "value";
 
   private static final String AVRO_SCHEMA = "avro_schema";
   private static final String HDFS_SCHEMA_FOLDER_NAME = ".schemas";
-  public static final String DATABASE_FIELD = "database";
-  public static final String SEP = "/";
-  public static final String EQUALS = "=";
-  public static final String DEFAULT_DBNAME = "default";
 
   // Configuration constants
   public static final String CONF = "conf";
   public static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
   public static final String CONF_DIR = "confDir";
   private static final Joiner JOINER = Joiner.on(".");
+
+  private static final String VERSION = "version";
+  private static final String SCHEMA_CHANGE_METADATA_RECORD_VERSION = "1";
+  private static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "1";
+
+  public static final String COLUMN_TYPE = "%s %s";
+  public static final String DATABASE_FIELD = "database";
+  public static final String SEP = "/";
+  public static final String EQUALS = "=";
+  public static final String DEFAULT_DBNAME = "default";
+  public static final String OPEN_BRACKET = "(";
+  public static final String CLOSE_BRACKET = ")";
+  public static final String COMMA = ",";
+  public static final String SPACE = " ";
+  public static final String SINGLE_QUOTE = "'";
+
+  public static final String TYPE_INFO = "typeInfo";
+  public static final String TYPE = "type";
+  public static final String EXTRA_INFO = "extraInfo";
 
   private HiveMetastoreUtil() {}
 
@@ -112,8 +126,8 @@ public final class HiveMetastoreUtil {
   /*
    * Extract information from the list fields of form:
    *
-   * Column Type Information : [{name:"column1", type:"string"}, {name:"column2", type:"integer"}]
-   * Partition Type Information: [{name:"partition_column1", type:"date"}, {name:"partition_column2", type:"string"}]
+   * Column Type Information : [{name:"column1", typeInfo:{"type": "string", "extraInfo": ""}, {name:"column2", typeInfo:{"type": "int", "extraInfo": ""}]
+   * Partition Type Information: [{name:"partition_column1", typeInfo:{"type": "date", "extraInfo": ""}, {name:"partition_column2", typeInfo:{"type": "string", "extraInfo": ""}]
    * Partition Value Information : [{name:"column1", value:"07-05-2016"}, {name:"column2", value:"production"}]
    *
    * If any other List field path is given which does not conform  to above
@@ -128,7 +142,7 @@ public final class HiveMetastoreUtil {
       String innerPairFirstFieldName,
       String innerPairSecondFieldName,
       boolean isSecondFieldHiveType,
-      LinkedHashMap<String, T> returnVal,
+      LinkedHashMap<String, T> returnValMap,
       StageException exception
   ) throws StageException{
     boolean throwException = false;
@@ -143,10 +157,17 @@ public final class HiveMetastoreUtil {
           }
           LinkedHashMap<String, Field> innerPair = listElementField.getValueAsListMap();
           String innerPairFirstField = innerPair.get(innerPairFirstFieldName).getValueAsString();
-          String innerPairSecondField = innerPair.get(innerPairSecondFieldName).getValueAsString();
-          returnVal.put(
-              innerPairFirstField,
-              isSecondFieldHiveType? (T)HiveType.getHiveTypeFromString(innerPairSecondField) :(T)innerPairSecondField);
+          T retVal;
+          if (isSecondFieldHiveType) {
+            Field hiveTypeInfoField = innerPair.get(innerPairSecondFieldName);
+            HiveType hiveType = HiveType.getHiveTypeFromString(
+                hiveTypeInfoField.getValueAsMap().get(HiveMetastoreUtil.TYPE).getValueAsString()
+            );
+            retVal = (T)(hiveType.getSupport().generateHiveTypeInfoFromMetadataField(hiveTypeInfoField));
+          } else {
+            retVal = (T) innerPair.get(innerPairSecondFieldName).getValueAsString();
+          }
+          returnValMap.put(innerPairFirstField, retVal);
         }
       }
     } else {
@@ -175,8 +196,11 @@ public final class HiveMetastoreUtil {
       Map<String, Field> entry = new LinkedHashMap<>();
       entry.put(innerPairFirstFieldName, Field.create(pair.getKey()));
       if (isSecondFieldHiveType){
-        entry.put(innerPairSecondFieldName, Field.create(
-            HiveType.getFieldTypeForHiveType((HiveType)pair.getValue()), pair.getValue()));
+        HiveTypeInfo hiveTypeInfo = (HiveTypeInfo) pair.getValue();
+        entry.put(
+            innerPairSecondFieldName,
+            hiveTypeInfo.getHiveType().getSupport().generateHiveTypeInfoFieldForMetadataRecord(hiveTypeInfo)
+        );
       } else {
         entry.put(innerPairSecondFieldName, Field.create(pair.getValue().toString())); //stored value is "INT". need to fix this
       }
@@ -217,19 +241,20 @@ public final class HiveMetastoreUtil {
    * Extract column information from the column list in "/columns" field.<br>
    *
    * Column Type Information should exist in this form: <br>
-   *   [{name:"column1", type:"string"}, {name:"column2", type:"integer"}]
+   *   [{name:"column1", typeInfo:{"type": "string", "extraInfo": ""},
+   *   {name:"column2", typeInfo:{"type": "int", "extraInfo": ""}]
    *
    * @param metadataRecord record which contains the {@link #COLUMNS_FIELD} and conform to the above structure.
    * @return Map of column name to column type
    * @throws StageException if no column information exists or the record has invalid fields.
    */
-  public static LinkedHashMap<String, HiveType> getColumnNameType(Record metadataRecord) throws StageException{
-    LinkedHashMap<String, HiveType> columnNameType = new LinkedHashMap<>();
+  public static LinkedHashMap<String, HiveTypeInfo> getColumnNameType(Record metadataRecord) throws StageException{
+    LinkedHashMap<String, HiveTypeInfo> columnNameType = new LinkedHashMap<>();
     extractInnerMapFromTheList(
         metadataRecord,
         COLUMNS_FIELD,
         COLUMN_NAME,
-        COLUMN_TYPE,
+        TYPE_INFO,
         true,
         columnNameType,
         new StageException(Errors.HIVE_17, COLUMNS_FIELD, metadataRecord)
@@ -241,19 +266,20 @@ public final class HiveMetastoreUtil {
    * Extract column information from the Partition list in "/partitions" field.<br>
    *
    * Partition Information should exist in this form:<br>
-   *   [{name:"column1", type:"date"}, {name:"column2", type:"string"}]
+   *   [{name:"partition_column1", typeInfo:{"type": "date", "extraInfo": ""},
+   *   {name:"partition_column2", typeInfo:{"type": "string", "extraInfo": ""}]
    *
    * @param metadataRecord record which contains the {@link #PARTITION_FIELD} and conform to the above structure.
    * @return Map of partition name to partition type
    * @throws StageException if no partition information exists or the record has invalid fields.
    */
-  public static LinkedHashMap<String, HiveType> getPartitionNameType(Record metadataRecord) throws StageException{
-    LinkedHashMap<String, HiveType> partitionNameType = new LinkedHashMap<>();
+  public static LinkedHashMap<String, HiveTypeInfo> getPartitionNameType(Record metadataRecord) throws StageException{
+    LinkedHashMap<String, HiveTypeInfo> partitionNameType = new LinkedHashMap<>();
     extractInnerMapFromTheList(
         metadataRecord,
         PARTITION_FIELD,
         PARTITION_NAME,
-        PARTITION_TYPE,
+        TYPE_INFO,
         true,
         partitionNameType,
         new StageException(Errors.HIVE_17, PARTITION_FIELD, metadataRecord)
@@ -265,7 +291,7 @@ public final class HiveMetastoreUtil {
    * Extract column information from the Partition list in "/partitions" field.<br>
    *
    * Partition Value Information should exist in this form: <br>
-   *   [{name:"column1", value:"07-05-2016"}, {name:"column2", type:"production"}]
+   *   [{name:"column1", value:"07-05-2016"}, {name:"column2", value:"production"}]
    *
    * @param metadataRecord record which contains the {@link #PARTITION_FIELD} and conform to the above structure.
    * @return Map of partition name to partition value
@@ -371,6 +397,7 @@ public final class HiveMetastoreUtil {
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
+    metadata.put(SEP + VERSION, Field.create(PARTITION_ADDITION_METADATA_RECORD_VERSION));
     metadata.put(SEP + DATABASE_FIELD, Field.create(database));
     metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
     metadata.put(SEP + LOCATION_FIELD, Field.create(location));
@@ -394,13 +421,14 @@ public final class HiveMetastoreUtil {
   public static Field newSchemaMetadataFieldBuilder  (
       String database,
       String tableName,
-      LinkedHashMap<String, HiveType> columnList,
-      LinkedHashMap<String, HiveType> partitionTypeList,
+      LinkedHashMap<String, HiveTypeInfo> columnList,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeList,
       boolean internal,
       String location,
       String avroSchema
   ) throws StageException  {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
+    metadata.put(SEP + VERSION, Field.create(SCHEMA_CHANGE_METADATA_RECORD_VERSION));
     metadata.put(SEP + DATABASE_FIELD, Field.create(database));
     metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
     metadata.put(SEP + LOCATION_FIELD, Field.create(location));
@@ -411,7 +439,7 @@ public final class HiveMetastoreUtil {
         generateInnerFieldFromTheList(
             columnList,
             COLUMN_NAME,
-            COLUMN_TYPE,
+            TYPE_INFO,
             false
         )
     );
@@ -421,7 +449,7 @@ public final class HiveMetastoreUtil {
         generateInnerFieldFromTheList(
             partitionTypeList,
             PARTITION_NAME,
-            PARTITION_TYPE,
+            TYPE_INFO,
             true
         )
     );
@@ -436,11 +464,15 @@ public final class HiveMetastoreUtil {
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
    * @throws StageException
    */
-  public static LinkedHashMap<String, HiveType> convertRecordToHMSType(Record record) throws StageException {
-    LinkedHashMap<String, HiveType> columns = new LinkedHashMap<>();
+  public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(Record record) throws StageException {
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
-      columns.put(pair.getKey(), HiveType.getHiveTypeforFieldType(pair.getValue().getType()));
+      HiveType hiveType = HiveType.getHiveTypeforFieldType(pair.getValue().getType());
+      columns.put(
+          pair.getKey(),
+          hiveType.getSupport().generateHiveTypeInfoFromRecordField(pair.getValue())
+      );
     }
     return columns;
   }
@@ -466,10 +498,10 @@ public final class HiveMetastoreUtil {
   ) throws StageException{
     final String folderPath = rootTableLocation + HiveMetastoreUtil.SEP + HiveMetastoreUtil.HDFS_SCHEMA_FOLDER_NAME ;
     final Path schemasFolderPath = new Path(folderPath);
-    final String path =  folderPath + SEP + HiveMetastoreUtil.AVRO_SCHEMA + DateFormatUtils.format(
-        new Date(System.currentTimeMillis()) ,
-        "yyyy-MM-dd--HH_mm_ss"
-    );
+    final String path =  folderPath + SEP
+        + HiveMetastoreUtil.AVRO_SCHEMA
+        + DateFormatUtils.format(new Date(System.currentTimeMillis()), "yyyy-MM-dd--HH_mm_ss")
+        + AVRO_SCHEMA_EXT;
     try {
       loginUGI.doAs(new PrivilegedExceptionAction<Void>() {
         @Override

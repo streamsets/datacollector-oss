@@ -24,7 +24,6 @@ import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -35,18 +34,19 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.lib.hive.HMSCache;
-import com.streamsets.pipeline.stage.lib.hive.HMSCacheType;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
-import com.streamsets.pipeline.stage.lib.hive.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.PartitionInfoCacheSupport;
-import com.streamsets.pipeline.stage.lib.hive.TypeInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,19 +152,20 @@ public class HiveMetastoreTarget extends BaseTarget{
 
   @Override
   public void destroy() {
-    try {
-      loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
-        @Override
-        public Void run() throws Exception {
-          if (fs != null) {
-            fs.close();
+    if (!conf.useAsAvro) {
+      try {
+        loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            if (fs != null) {
+              fs.close();
+            }
+            return null;
           }
-          return null;
-        }
-      });
-    }
-    catch (Exception e) {
-      LOG.warn("Error when closing hdfs file system:", e);
+        });
+      } catch (Exception e) {
+        LOG.warn("Error when closing hdfs file system:", e);
+      }
     }
     super.destroy();
   }
@@ -303,7 +304,7 @@ public class HiveMetastoreTarget extends BaseTarget{
   private String resolveJDBCUrl(String unresolvedJDBCUrl, Record metadataRecord) throws ELEvalException {
     ELVars elVars = elEval.createVariables();
     RecordEL.setRecordInContext(elVars, metadataRecord);
-    return elEval.eval(elVars, unresolvedJDBCUrl, String.class);
+    return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
   }
 
   private void handleSchemaChange(
@@ -319,8 +320,8 @@ public class HiveMetastoreTarget extends BaseTarget{
         cacheType,
         resolvedJDBCUrl, qualifiedTableName
     );
-    LinkedHashMap<String, HiveType> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
-    LinkedHashMap<String, HiveType> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
+    LinkedHashMap<String, HiveTypeInfo> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
+    LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
     boolean isInternal = HiveMetastoreUtil.getInternalField(metadataRecord);
     String schemaPath = null;
 
@@ -348,7 +349,7 @@ public class HiveMetastoreTarget extends BaseTarget{
       );
     } else {
       //Add Columns
-      LinkedHashMap<String, HiveType> columnDiff = cachedColumnTypeInfo.getDiff(newColumnTypeInfo);
+      LinkedHashMap<String, HiveTypeInfo> columnDiff = cachedColumnTypeInfo.getDiff(newColumnTypeInfo);
       if (!columnDiff.isEmpty()) {
         hiveQueryExecutor.executeAlterTableAddColumnsQuery(qualifiedTableName, columnDiff);
         if (!conf.useAsAvro) {

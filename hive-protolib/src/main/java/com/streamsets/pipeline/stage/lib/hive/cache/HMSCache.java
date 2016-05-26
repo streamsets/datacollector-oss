@@ -17,13 +17,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.hive;
+package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.destination.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
 
 import java.util.Collection;
 import java.util.HashMap;

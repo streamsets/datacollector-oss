@@ -17,30 +17,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.hive;
+package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.destination.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
 
 /**
  * Hive Types Supported.
  */
 public enum HiveType {
-  BOOLEAN,
-  CHAR,
-  SMALLINT,
-  INT,
-  BIGINT,
-  FLOAT,
-  DOUBLE,
-  DECIMAL,
-  DATE,
-  BINARY,
-  STRING
+  BOOLEAN(new PrimitiveHiveTypeSupport()),
+  CHAR(new PrimitiveHiveTypeSupport()),
+  SMALLINT(new PrimitiveHiveTypeSupport()),
+  INT(new PrimitiveHiveTypeSupport()),
+  BIGINT(new PrimitiveHiveTypeSupport()),
+  FLOAT(new PrimitiveHiveTypeSupport()),
+  DOUBLE(new PrimitiveHiveTypeSupport()),
+  DECIMAL(new DecimalHiveTypeSupport()),
+  DATE(new PrimitiveHiveTypeSupport()),
+  BINARY(new PrimitiveHiveTypeSupport()),
+  STRING(new PrimitiveHiveTypeSupport())
   ;
 
+  HiveTypeSupport support;
+
+  HiveType(HiveTypeSupport support) {
+    this.support = support;
+  }
+
+  public HiveTypeSupport getSupport() {
+    return support;
+  }
   /**
    * Return the corresponding {@link HiveType} for the {@link com.streamsets.pipeline.api.Field.Type}
    * @param fieldType Record Field Type
@@ -62,7 +70,6 @@ public enum HiveType {
       case STRING: return HiveType.STRING;
       case BYTE_ARRAY: return HiveType.BINARY;
       default: throw new StageException(Errors.HIVE_19, fieldType);
-
     }
   }
 
@@ -99,5 +106,14 @@ public enum HiveType {
    */
   public static HiveType getHiveTypeFromString(String hiveTypeString) {
     return HiveType.valueOf(hiveTypeString.toUpperCase());
+  }
+
+  public static HiveType prefixMatch(String hiveTypeString) throws StageException{
+    for (HiveType hiveType : HiveType.values()) {
+      if (hiveTypeString.toUpperCase().startsWith(hiveType.name().toUpperCase())) {
+        return hiveType;
+      }
+    }
+    throw new StageException(Errors.HIVE_01, "Invalid Hive Type Definition: {} " + hiveTypeString);
   }
 }

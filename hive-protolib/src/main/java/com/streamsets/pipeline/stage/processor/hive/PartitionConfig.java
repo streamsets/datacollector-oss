@@ -19,21 +19,13 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.stage.lib.hive.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 
 public final class PartitionConfig {
-
-  public PartitionConfig(
-      final String partitionName,
-      final HiveType valueType,
-      final String valueEL
-  ) {
-    this.name = partitionName;
-    this.valueType = valueType;
-    this.valueEL = valueEL;
-  }
 
   /**
    * Parameter-less constructor required.
@@ -50,16 +42,8 @@ public final class PartitionConfig {
   )
   public String name;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="STRING",
-      label = "Partition Value Type",
-      description="Partition column's value type",
-      displayPosition = 20
-  )
-  @ValueChooserModel(PartitionColumnTypeChooserValues.class)
-  public HiveType valueType = HiveType.STRING;
+  @ConfigDefBean
+  public HiveTypeConfig typeConfig;
 
   @ConfigDef(
       required = true,
@@ -69,7 +53,7 @@ public final class PartitionConfig {
       description="Expression language to obtain partition value from record",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class},
-      displayPosition = 30
+      displayPosition = 50
   )
   public String valueEL;
 

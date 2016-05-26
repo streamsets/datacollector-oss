@@ -31,8 +31,6 @@ import java.util.Map;
 
 public class TestHiveMetadataProcessor {
 
-
-
   @Test
   public void testRecordHeaderToHDFSRoll() throws Exception {
     Record record = RecordCreator.create();

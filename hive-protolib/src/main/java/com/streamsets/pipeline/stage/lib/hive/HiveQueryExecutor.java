@@ -22,7 +22,8 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.destination.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,16 +59,19 @@ public final class HiveQueryExecutor {
   private static final String TBL_PROPERTIES = "TBLPROPERTIES";
   private static final String AVRO_SCHEMA_URL = "avro.schema.url";
   private static final String STORED_AS_AVRO = "STORED AS AVRO";
+  private static final String OLD_WAY_AVRO_ROW_STORAGE_INPUT_OUPTUT_FORMAT =
+      " ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'" +
+          " STORED AS" +
+          " INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'" +
+          " OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'";
   private static final String LOCATION = "LOCATION";
   private static final String SET = "SET";
   private static final String EXTERNAL = "EXTERNAL";
-  private static final String OPEN_BRACKET = "(";
-  private static final String CLOSE_BRACKET = ")";
-  private static final String COMMA = ",";
-  private static final String SPACE = " ";
-  private static final String SINGLE_QUOTE = "'";
 
-  private String jdbcUrl;
+  private static final String RESULT_SET_COL_NAME = "col_name";
+  private static final String RESULT_SET_DATA_TYPE = "data_type";
+
+  private final String jdbcUrl;
 
   public HiveQueryExecutor(String resolvedJDBCUrl) {
     this.jdbcUrl = resolvedJDBCUrl;
@@ -75,14 +79,20 @@ public final class HiveQueryExecutor {
 
   private static void buildNameTypeFormatWithElements(
       StringBuilder sb,
-      LinkedHashMap<String, HiveType> linkedHashMap
+      LinkedHashMap<String, HiveTypeInfo> linkedHashMap
   ) {
     boolean needComma = false;
-    for (Map.Entry<String, HiveType> keyVal : linkedHashMap.entrySet()) {
+    for (Map.Entry<String, HiveTypeInfo> keyVal : linkedHashMap.entrySet()) {
       if (needComma) {
-        sb.append(COMMA);
+        sb.append(HiveMetastoreUtil.COMMA);
       }
-      sb.append(String.format(COLUMN_TYPE, keyVal.getKey(), keyVal.getValue().name()));
+      String columnName = keyVal.getKey();
+      HiveTypeInfo hiveTypeInfo = keyVal.getValue();
+      sb.append(
+          hiveTypeInfo.getHiveType().getSupport().generateColumnTypeDefinition(
+              hiveTypeInfo, columnName
+          )
+      );
       needComma = true;
     }
   }
@@ -90,14 +100,14 @@ public final class HiveQueryExecutor {
   private static void buildPartitionNameValuePair(
       StringBuilder sb,
       LinkedHashMap<String, String> partitionValueMap,
-      Map<String, HiveType> partitionTypeMap
+      Map<String, HiveTypeInfo> partitionTypeMap
   ) {
     boolean needComma = false;
     for (Map.Entry<String, String> partitionValEntry : partitionValueMap.entrySet()) {
       if (needComma) {
-        sb.append(COMMA);
+        sb.append(HiveMetastoreUtil.COMMA);
       }
-      HiveType partitionType = partitionTypeMap.get(partitionValEntry.getKey());
+      HiveType partitionType = partitionTypeMap.get(partitionValEntry.getKey()).getHiveType();
       String format = (QUOTES_HIVE_TYPES.contains(partitionType))?
           PARTITION_FIELD_EQUALS_QUOTES_VAL: PARTITION_FIELD_EQUALS_NON_QUOTES_VAL;
       sb.append(String.format(format, partitionValEntry.getKey(), partitionValEntry.getValue()));
@@ -108,47 +118,47 @@ public final class HiveQueryExecutor {
 
   private static String buildAvroSchemaTableProperty(String schemaPath) {
     StringBuilder sb = new StringBuilder();
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(AVRO_SCHEMA_URL);
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(HiveMetastoreUtil.EQUALS);
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(schemaPath);
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     return sb.toString();
   }
 
   private static void buildCreateTableQuery(
       StringBuilder sb,
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap,
-      LinkedHashMap<String, HiveType> partitionTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean isInternal
   ) {
     sb.append(String.format(CREATE_TABLE, isInternal? "": EXTERNAL, qualifiedTableName));
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
 
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     buildNameTypeFormatWithElements(sb, columnTypeMap);
-    sb.append(CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
 
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(PARTITIONED_BY);
 
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     buildNameTypeFormatWithElements(sb, partitionTypeMap);
-    sb.append(CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
   }
 
   private static String buildCreateTableQueryNew(
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap,
-      LinkedHashMap<String, HiveType> partitionTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean isInternal
   ) {
     StringBuilder sb = new StringBuilder();
     buildCreateTableQuery(sb, qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal);
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     //Stored as AVRO used for new way of creating a table.
     sb.append(STORED_AS_AVRO);
     return sb.toString();
@@ -156,58 +166,58 @@ public final class HiveQueryExecutor {
 
   private static String buildCreateTableQueryOld(
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap,
-      LinkedHashMap<String, HiveType> partitionTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       String schemaPath,
       boolean isInternal
   ) {
     StringBuilder sb = new StringBuilder();
     buildCreateTableQuery(sb, qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal);
-
-    //TODO: check
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(OLD_WAY_AVRO_ROW_STORAGE_INPUT_OUPTUT_FORMAT);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(TBL_PROPERTIES);
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     sb.append(buildAvroSchemaTableProperty(schemaPath));
-    sb.append(CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
     return sb.toString();
   }
 
   private static String buildAddColumnsQuery(
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap
   ) {
     StringBuilder sb = new StringBuilder();
     sb.append(String.format(ALTER_TABLE, qualifiedTableName));
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(ADD_COLUMNS);
-    sb.append(SPACE);
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     buildNameTypeFormatWithElements(sb, columnTypeMap);
-    sb.append(CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
     return sb.toString();
   }
 
   private static String buildPartitionAdditionQuery(
       String qualifiedTableName,
       LinkedHashMap<String, String> partitionColumnValMap,
-      Map<String, HiveType> partitionTypeMap,
+      Map<String, HiveTypeInfo> partitionTypeMap,
       String partitionPath
   ) {
     StringBuilder sb = new StringBuilder();
     sb.append(String.format(ALTER_TABLE, qualifiedTableName));
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(ADD_PARTITION);
-    sb.append(SPACE);
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     buildPartitionNameValuePair(sb, partitionColumnValMap, partitionTypeMap);
-    sb.append(CLOSE_BRACKET);
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(LOCATION);
-    sb.append(SPACE);
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(partitionPath);
-    sb.append(SINGLE_QUOTE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     return sb.toString();
   }
 
@@ -217,14 +227,14 @@ public final class HiveQueryExecutor {
   ) {
     StringBuilder sb = new StringBuilder();
     sb.append(String.format(ALTER_TABLE, qualifiedTableName));
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(SET);
-    sb.append(SPACE);
+    sb.append(HiveMetastoreUtil.SPACE);
     sb.append(TBL_PROPERTIES);
-    sb.append(SPACE);
-    sb.append(OPEN_BRACKET);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     sb.append(buildAvroSchemaTableProperty(schemaPath));
-    sb.append(CLOSE_BRACKET);
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
     return sb.toString();
   }
 
@@ -272,8 +282,8 @@ public final class HiveQueryExecutor {
 
   public void executeCreateTableQuery(
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap,
-      LinkedHashMap<String, HiveType> partitionTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean useAsAvro,
       String schemaLocation,
       boolean isInternal
@@ -301,7 +311,7 @@ public final class HiveQueryExecutor {
 
   public void executeAlterTableAddColumnsQuery(
       String qualifiedTableName,
-      LinkedHashMap<String, HiveType> columnTypeMap
+      LinkedHashMap<String, HiveTypeInfo> columnTypeMap
   ) throws StageException {
     String sql = buildAddColumnsQuery(qualifiedTableName, columnTypeMap);
     LOG.debug("Executing SQL:", sql);
@@ -320,7 +330,7 @@ public final class HiveQueryExecutor {
   public void executeAlterTableAddPartitionQuery(
       String qualifiedTableName,
       LinkedHashMap<String, String> partitionNameValueMap,
-      Map<String, HiveType> partitionTypeMap,
+      Map<String, HiveTypeInfo> partitionTypeMap,
       String partitionPath
   ) throws StageException {
     String sql = buildPartitionAdditionQuery(qualifiedTableName, partitionNameValueMap, partitionTypeMap, partitionPath);
@@ -394,22 +404,29 @@ public final class HiveQueryExecutor {
     }
   }
 
-  private LinkedHashMap<String, HiveType> extractTypeInfo(ResultSet rs) throws SQLException {
-    LinkedHashMap<String, HiveType> typeInfo = new LinkedHashMap<>();
-    while(rs.next()) {
-      String columnName = rs.getString(1);
-      if (columnName == null ||columnName.isEmpty()) {
-        break;
+  private LinkedHashMap<String, HiveTypeInfo> extractTypeInfo(ResultSet rs) throws StageException {
+    LinkedHashMap<String, HiveTypeInfo> typeInfo = new LinkedHashMap<>();
+    try {
+      while (rs.next()) {
+        String columnName = rs.getString(RESULT_SET_COL_NAME);
+        if (columnName == null || columnName.isEmpty()) {
+          break;
+        }
+        String columnTypeString = rs.getString(RESULT_SET_DATA_TYPE);
+        HiveTypeInfo hiveTypeInfo =
+            HiveType.prefixMatch(columnTypeString).getSupport().generateHiveTypeInfoFromResultSet(columnTypeString);
+        typeInfo.put(columnName, hiveTypeInfo);
       }
-      String columnType = rs.getString(2);
-      typeInfo.put(columnName, HiveType.getHiveTypeFromString(columnType));
+    } catch (SQLException e) {
+      LOG.error("SQL Exception:" + e.getMessage(), e);
+      throw new StageException(Errors.HIVE_20, "", e.getMessage());
     }
     return typeInfo;
   }
 
   private void processDelimiter(ResultSet rs, String delimiter) throws SQLException {
     if (rs.next()) {
-      String columnName = rs.getString(1);
+      String columnName = rs.getString(RESULT_SET_COL_NAME);
       Utils.checkState(
           (columnName.startsWith(delimiter)),
           "Need to be \"#\" or empty after column information determining Partition Information"
@@ -423,7 +440,7 @@ public final class HiveQueryExecutor {
    * @return {@link Pair} of Column Type Info and Partition Type Info.
    * @throws StageException in case of any {@link SQLException}
    */
-  public Pair<LinkedHashMap<String, HiveType>, LinkedHashMap<String, HiveType>> executeDescTableQuery(
+  public Pair<LinkedHashMap<String, HiveTypeInfo>, LinkedHashMap<String, HiveTypeInfo>> executeDescTableQuery(
       String qualifiedTableName
   ) throws StageException {
     String sql = buildDescTableQuery(qualifiedTableName);
@@ -432,11 +449,11 @@ public final class HiveQueryExecutor {
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
       ResultSet rs = statement.executeQuery(sql);
-      LinkedHashMap<String, HiveType> columnTypeInfo  = extractTypeInfo(rs);
+      LinkedHashMap<String, HiveTypeInfo> columnTypeInfo  = extractTypeInfo(rs);
       processDelimiter(rs, "#");
       processDelimiter(rs, "#");
       processDelimiter(rs, "");
-      LinkedHashMap<String, HiveType> partitionTypeInfo = extractTypeInfo(rs);
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = extractTypeInfo(rs);
       //Remove partition columns from the columns map.
       for (String partitionCol : partitionTypeInfo.keySet()) {
         columnTypeInfo.remove(partitionCol);

@@ -31,25 +31,26 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
-import com.streamsets.pipeline.stage.lib.hive.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.AvroSchemaInfoCacheSupport;
-import com.streamsets.pipeline.stage.lib.hive.TypeInfoCacheSupport;
-import com.streamsets.pipeline.stage.lib.hive.PartitionInfoCacheSupport;
-import com.streamsets.pipeline.stage.lib.hive.HMSCacheSupport;
-import com.streamsets.pipeline.stage.lib.hive.HMSCache;
-import com.streamsets.pipeline.stage.lib.hive.HMSCacheType;
 import com.streamsets.pipeline.stage.destination.hive.HiveConfigBean;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
+import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.cache.AvroSchemaInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
+import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.Collections;
 
 public class HiveMetadataProcessor extends RecordProcessor {
 
@@ -69,7 +70,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   // Triplet of partition name, type and value expression obtained from configration
   private List<PartitionConfig> partitionConfigList;
   // List of partition name and value type.
-  private LinkedHashMap<String, HiveType> partitionTypeInfo;
+  private LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo;
 
   // Optional configuration values
   private String tablePathTemplate;
@@ -155,7 +156,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
             "Partition Configuration"));
         continue;
       }
-      partitionTypeInfo.put(partition.name, partition.valueType);
+      partitionTypeInfo.put(
+          partition.name,
+          partition.typeConfig.valueType.getSupport().createTypeInfo(partition.typeConfig)
+      );
     }
 
     if (issues.isEmpty()) {
@@ -202,7 +206,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // path from warehouse directory to table
       String targetPath = HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
       // Obtain the record structure from current record
-      LinkedHashMap<String, HiveType> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
+      LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
       // Obtain all the partition values from record and build a path using partition values
       String partitionStr = getPartitionValuesFromRecord(record, variables, partitionValMap);
 
@@ -277,10 +281,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
   // ------------ Handle New Schema ------------------------//
   @VisibleForTesting
   boolean detectSchemaChange(
-      LinkedHashMap<String, HiveType> recordStructure,
+      LinkedHashMap<String, HiveTypeInfo> recordStructure,
       TypeInfoCacheSupport.TypeInfo cache) throws StageException
   {
-    LinkedHashMap<String, HiveType> columnDiff = null;
+    LinkedHashMap<String, HiveTypeInfo> columnDiff = null;
     // compare the record structure vs cache
     if (cache != null) {
       columnDiff = cache.getDiff(recordStructure);
@@ -292,8 +296,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   Record generateSchemaChangeRecord(
       String database,
       String tableName,
-      LinkedHashMap<String, HiveType> columnList,
-      LinkedHashMap<String, HiveType> partitionTypeList,
+      LinkedHashMap<String, HiveTypeInfo> columnList,
+      LinkedHashMap<String, HiveTypeInfo> partitionTypeList,
       String location,
       String avroSchema) throws StageException
   {
@@ -315,7 +319,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private void handleSchemaChange(
       String dbName,
       String tableName,
-      LinkedHashMap<String, HiveType> recordStructure,
+      LinkedHashMap<String, HiveTypeInfo> recordStructure,
       String targetDir, String avroSchema,
       BatchMaker batchMaker,
       String qualifiedName,

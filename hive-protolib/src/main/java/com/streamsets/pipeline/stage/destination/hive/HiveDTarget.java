@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
 
 import java.util.List;
 import java.util.Map;

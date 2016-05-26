@@ -17,13 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.hive;
+package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.destination.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -47,15 +48,15 @@ public class TypeInfoCacheSupport
     return CacheBuilder.<String, Optional<TypeInfo>>newBuilder().maximumSize(maxCacheSize).build();
   }
 
-  public static class TypeInfo extends HMSCacheSupport.HMSCacheInfo<LinkedHashMap<String, HiveType>>{
+  public static class TypeInfo extends HMSCacheSupport.HMSCacheInfo<LinkedHashMap<String, HiveTypeInfo>>{
 
     /**
      * Well this could be multiplexed, but we may support different partition types in the future
      * so keeping this separate for each table.
      */
-    private LinkedHashMap<String, HiveType> partitionTypeInfo;
+    private LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo;
 
-    public TypeInfo(LinkedHashMap<String, HiveType> columnInfo, LinkedHashMap<String, HiveType> partitionTypeInfo) {
+    public TypeInfo(LinkedHashMap<String, HiveTypeInfo> columnInfo, LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo) {
       super(columnInfo);
       this.partitionTypeInfo = partitionTypeInfo;
     }
@@ -63,26 +64,26 @@ public class TypeInfoCacheSupport
     /*
      * We will not allow modifications.
      */
-    public Map<String, HiveType> getPartitionTypeInfo() {
+    public Map<String, HiveTypeInfo> getPartitionTypeInfo() {
       return Collections.unmodifiableMap(partitionTypeInfo);
     }
 
     @Override
-    public LinkedHashMap<String, HiveType> getDiff(LinkedHashMap<String, HiveType> newState) throws StageException{
-      LinkedHashMap<String, HiveType> columnDiff = new LinkedHashMap<>();
+    public LinkedHashMap<String, HiveTypeInfo> getDiff(LinkedHashMap<String, HiveTypeInfo> newState) throws StageException{
+      LinkedHashMap<String, HiveTypeInfo> columnDiff = new LinkedHashMap<>();
       for (String columnName : newState.keySet()) {
-        HiveType columnType = newState.get(columnName);
+        HiveTypeInfo columnTypeInfo = newState.get(columnName);
         if (!state.containsKey(columnName)) {
-          columnDiff.put(columnName, columnType);
-        } else if (state.get(columnName) != columnType) {
-          throw new StageException(Errors.HIVE_21, state.get(columnName), columnType);
+          columnDiff.put(columnName, columnTypeInfo);
+        } else if (!state.get(columnName).equals(columnTypeInfo)) {
+          throw new StageException(Errors.HIVE_21, state.get(columnName), columnTypeInfo.toString());
         }
       }
       return columnDiff;
     }
 
     @Override
-    public void updateState(LinkedHashMap<String, HiveType> newColumnNameType) {
+    public void updateState(LinkedHashMap<String, HiveTypeInfo> newColumnNameType) {
       state.putAll(newColumnNameType);
     }
   }
@@ -93,7 +94,7 @@ public class TypeInfoCacheSupport
     }
     @Override
     protected TypeInfo loadHMSCacheInfo() throws StageException{
-      Pair<LinkedHashMap<String, HiveType>, LinkedHashMap<String, HiveType>>  typeInfo =
+      Pair<LinkedHashMap<String, HiveTypeInfo>, LinkedHashMap<String, HiveTypeInfo>>  typeInfo =
           executor.executeDescTableQuery(qualifiedTableName);
       return new TypeInfo(typeInfo.getLeft(), typeInfo.getRight());
     }

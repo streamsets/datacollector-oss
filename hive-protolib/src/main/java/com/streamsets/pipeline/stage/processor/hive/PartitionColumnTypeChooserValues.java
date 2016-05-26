@@ -21,7 +21,7 @@
 package com.streamsets.pipeline.stage.processor.hive;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.stage.lib.hive.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 
 public class PartitionColumnTypeChooserValues extends BaseEnumChooserValues<HiveType> {
   public PartitionColumnTypeChooserValues() {

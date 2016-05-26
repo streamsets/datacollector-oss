@@ -1,6 +1,6 @@
 /**
- * Copyright 2015 StreamSets Inc.
- *
+ * Copyright 2016 StreamSets Inc.
+ * <p>
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -8,33 +8,41 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hive;
+package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+public class HiveTypeInfo {
+  HiveType hiveType;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HIVE("Hive"),
-  ADVANCED("Advanced"),
-  ;
+  HiveTypeInfo(HiveType hiveType) {
+    this.hiveType = hiveType;
+  }
 
-  private final String label;
-  Groups(String label) {
-    this.label = label;
+  public HiveType getHiveType() {
+    return hiveType;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    HiveTypeInfo that = (HiveTypeInfo) o;
+
+    return hiveType == that.hiveType;
+
+  }
+
+  @Override
+  public int hashCode() {
+    return hiveType.hashCode();
   }
 }
