@@ -424,5 +424,145 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">HBase, Redis, and Static Lookup processors use rows in the
+   table.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_ns1_p1s_zv">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Lookup Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-Mode">
+      <entry>Mode</entry>
+      <entry>Mode used to perform the lookups:<ul id="ul_t11_3fs_zv">
+       <li>Per Batch - Performs a bulk lookup of all keys in a
+        batch. The processor performs a single lookup for
+        each batch.</li>
+       <li>Per Key in Each Record - Performs individual lookups
+        of each key in each record. If you configure
+        multiple key expressions, the processor performs
+        multiple lookups for each record.</li>
+      </ul><p>Default is Per Batch.</p></entry>
+     </row>
+     <row>
+      <entry>Enable Local Caching </entry>
+      <entry id="entry-LocalCaching">Specifies whether to locally cache the returned key-value
+       pairs.</entry>
+     </row>
+     <row id="row-MaxEntriesCache">
+      <entry>Maximum Entries to Cache</entry>
+      <entry>Maximum number of key-value pairs to cache. When the
+       maximum number is reached, the processor evicts the oldest
+       key-value pairs from the cache. <p>Default is -1, which
+        means unlimited.</p></entry>
+     </row>
+     <row id="row-EvictionPolicy">
+      <entry>Eviction Policy Type</entry>
+      <entry>Policy used to evict key-value pairs from the local cache
+       when the expiration time has passed:<ul id="ul_jql_yns_zv">
+        <li>Expire After Last Access - Measures the expiration
+         time since the key-value pair was last accessed by a
+         read or a write.</li>
+        <li>Expire After Last Write - Measures the expiration
+         time since the key-value pair was created, or since
+         the value was last replaced.</li>
+       </ul></entry>
+     </row>
+     <row id="row-ExpirationTime">
+      <entry>Expiration Time</entry>
+      <entry>Amount of time that a key-value pair can remain in the
+       local cache without being accessed or written to. <p>Default
+        is 1 second.</p></entry>
+     </row>
+     <row id="row-timeUnit">
+      <entry>Time Unit</entry>
+      <entry>Unit of time for the expiration time. <p>Default is
+       seconds.</p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <draft-comment author="alisontaylor">HBase destination and HBase Lookup use rows and entries in
+   this table</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_bgt_kly_bw">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>HBase Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-ZooKeeperQuorum">
+      <entry>ZooKeeper Quorum</entry>
+      <entry>Comma-separated list of servers in the ZooKeeper quorum. Use the following format:
+        <codeblock>&lt;host>.&lt;domain>.com</codeblock><p>To ensure a connection, enter additional
+        broker URIs.</p></entry>
+     </row>
+     <row id="row-ZooKeeperClient">
+      <entry>ZooKeeper Client Port</entry>
+      <entry>Port number clients use to connect to the ZooKeeper servers. </entry>
+     </row>
+     <row id="row-ZooKeeperParent">
+      <entry>ZooKeeper Parent Znode</entry>
+      <entry>Root node that contains all znodes used by the HBase cluster.</entry>
+     </row>
+     <row id="row-TableName">
+      <entry>Table Name</entry>
+      <entry>Name of the HBase table to use. Enter a table name or a namespace and table name as
+       follows: &lt;namespace>.&lt;tablename>. <p>If you do not enter a table name, HBase uses the
+        default namespace. </p></entry>
+     </row>
+     <row>
+      <entry>Kerberos Authentication </entry>
+      <entry id="entry-Kerberos">Uses Kerberos credentials to connect to HBase.<p>When
+       selected, uses the Kerberos principal and keytab defined
+       in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+       /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </p></entry>
+     </row>
+     <row>
+      <entry>HBase User </entry>
+      <entry id="entry-HBaseUser">The HBase user to use to connect to HBase. When using
+       this property, make sure HBase is configured
+       appropriately.<p>By default, the pipeline uses the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+       /> user to connect to HBase.</p></entry>
+     </row>
+     <row>
+      <entry>HBase Configuration Directory</entry>
+      <entry id="entry-HBaseConfigDirectory">Location of the HDFS configuration files. <p>For a
+       Cloudera Manager installation, enter
+       <codeph>hbase-conf</codeph>. For all other
+       installations, use a directory or symlink within the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+       /> resources directory.</p><p>You can use the following
+        file with HBase:<ul
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
+         id="ul_ezj_cvr_bt">
+         <li/>
+        </ul></p><note>Properties in the configuration files are
+         overridden by individual properties defined in the
+         stage.</note></entry>
+     </row>
+     <row>
+      <entry>HBase Configuration</entry>
+      <entry id="entry-HBaseConfig">
+       <p>Additional HBase configuration properties to use. </p>
+       <p>To add properties, click <uicontrol>Add</uicontrol> and
+        define the property name and value. Use the property
+        names and values as expected by HBase. </p>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

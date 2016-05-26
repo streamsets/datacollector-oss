@@ -22,9 +22,10 @@
  <conbody>
   <p><indexterm>HBase destination<indexterm>Kerberos
     authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
-     HBase</indexterm></indexterm>The Kerberos principal and keytab are defined in the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
-   file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos authentication, configure all Kerberos properties in the <ph
+     HBase destination</indexterm></indexterm>The Kerberos principal and keytab are defined in the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos authentication,
+   configure all Kerberos properties in the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
    file. </p>
  </conbody>

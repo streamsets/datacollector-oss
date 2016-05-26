@@ -55,12 +55,11 @@
              <dd>You can configure the destination to use implicit field mappings and then you
                  can override the mappings by defining explicit mappings for specific fields. </dd>
              <dd>For example, a record might contain some field paths that use the
-                 <codeph>&lt;column-family>:&lt;qualifier></codeph> format and other field
-                 paths that don’t use the required format. You can add explicit field mappings
-                 for the field paths that do not use the required format. Or, a field path might
-                 use the required format, but you want to write the data to a different column.
-                 You can add an explicit field mapping to override the column that the data is
-                 written to. </dd>
+                        <codeph>&lt;column-family>:&lt;qualifier></codeph> format and other field
+                    paths that don’t use the required format. You can add explicit field mappings
+                    for the field paths that do not use the required format. Or, you can use
+                    explicit field mappings for fields that use the required format, but need to be
+                    written to a different column. </dd>
          </dlentry>
      </dl>
  </conbody>

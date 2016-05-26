@@ -13,16 +13,16 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_zcg_21p_zv">
+<concept id="concept_xvz_zjy_bw">
  <title>Lookup Cache</title>
  <conbody>
-  <p><indexterm>Redis Lookup
-                    processor<indexterm>cache</indexterm></indexterm><indexterm>cache<indexterm>Redis
+  <p><indexterm>HBase Lookup
+                    processor<indexterm>cache</indexterm></indexterm><indexterm>cache<indexterm>HBase
                     Lookup processor</indexterm></indexterm>To improve pipeline performance, you can
-            configure the Redis Lookup processor to locally cache the key-value pairs returned from
-            Redis.</p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheOverview"/>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheOptions"/>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheSummary"/>
+            configure the HBase Lookup processor to locally cache the key-value pairs returned from
+            HBase.</p>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheOverview"/>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheOptions"/>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/LookupCacheSummary"/>
  </conbody>
 </concept>

@@ -23,7 +23,7 @@
       user account who started it to connect to external systems. When using Kerberos, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
       Kerberos principal. <draft-comment author="Loretta">Very similar to the Hadoop FS User (origin
-        &amp; dest) topics. Check all for updates.</draft-comment></p>
+        &amp; dest) and HBase Lookup topics. Check all for updates.</draft-comment></p>
   <p>To use an HBase user to connect to HBase, perform the following tasks:<ol id="ul_mb1_xpt_ls">
         <li>On HBase, configure the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user

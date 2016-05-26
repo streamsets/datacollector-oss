@@ -37,23 +37,16 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Mode</entry>
-                                    <entry>Mode used to perform the lookups:<ul id="ul_t11_3fs_zv">
-                                            <li>Per Batch - Performs a bulk lookup of all keys in a
-                                                batch. The processor performs a single lookup for
-                                                each batch.</li>
-                                            <li>Per Key in Each Record - Performs individual lookups
-                                                of each key in each record. If you configure
-                                                multiple key expressions, the processor performs
-                                                multiple lookups for each record.</li>
-                                        </ul><p>Default is Per Batch.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-Mode">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Key Expression</entry>
-                                    <entry>Expression that defines the key to look up in Redis.
-                                            <p>For example, enter the following expression to use
-                                            the data in the city field as the lookup
+                                    <entry>Key to look up in Redis. Enter a key name or enter an
+                                        expression that defines the key.<p>For example, enter the
+                                            following expression to use the data in the city field
+                                            as the lookup
                                             key:<codeblock>${record:value('/city')}</codeblock></p></entry>
                                 </row>
                                 <row>
@@ -81,38 +74,23 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p7v_uh"/></xref>
                                     </entry>
-                                    <entry>Specifies whether to locally cache the key-value pairs
-                                        returned from Redis.</entry>
+                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-LocalCaching">></entry>
                                 </row>
-                                <row>
-                                    <entry>Maximum Entries to Cache</entry>
-                                    <entry>Maximum number of key-value pairs to cache. When the
-                                        maximum number is reached, the processor evicts the oldest
-                                        key-value pairs from the cache. <p>Default is -1, which
-                                            means unlimited.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxEntriesCache">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Eviction Policy Type</entry>
-                                    <entry>Policy used to evict key-value pairs from the local cache
-                                        when the expiration time has passed:<ul id="ul_jql_yns_zv">
-                                            <li>Expire After Last Access - Measures the expiration
-                                                time since the key-value pair was last accessed by a
-                                                read or a write.</li>
-                                            <li>Expire After Last Write - Measures the expiration
-                                                time since the key-value pair was created, or since
-                                                the value was last replaced.</li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-EvictionPolicy">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Expiration Time</entry>
-                                    <entry>Amount of time that a key-value pair can remain in the
-                                        local cache without being accessed or written to. <p>Default
-                                            is 1 second.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ExpirationTime">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Time Unit</entry>
-                                    <entry>Unit of time for the expiration time. <p>Default is
-                                            seconds.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-timeUnit">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

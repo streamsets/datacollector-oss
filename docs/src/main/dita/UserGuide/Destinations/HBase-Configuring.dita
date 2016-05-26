@@ -37,31 +37,21 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>ZooKeeper Quorum</entry>
-                                    <entry>Comma-separated list of servers in the ZooKeeper quorum.
-                                        Use the following format:
-                                            <codeblock>&lt;host>.&lt;domain>.com</codeblock><p>To
-                                            ensure a connection, enter additional broker
-                                        URIs.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ZooKeeperQuorum">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>ZooKeeper Client Port</entry>
-                                    <entry>Port number clients use to connect to the ZooKeeper
-                                        servers. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ZooKeeperClient">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>ZooKeeper Parent Znode</entry>
-                                    <entry>Root node that contains all znodes used by the HBase
-                                        cluster.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ZooKeeperParent">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Table Name</entry>
-                                    <entry>Name of the HBase table to use. Enter a table name or a
-                                        namespace and table name as follows:
-                                        &lt;namespace>.&lt;tablename>. <p>If you do not enter a
-                                            table name, HBase uses the default namespace.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TableName">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Row Key</entry>
@@ -69,9 +59,7 @@
                                 </row>
                                 <row>
                                     <entry>Storage Type</entry>
-                                    <entry>Storage type of the row key. Choose
-                                            <uicontrol>Text</uicontrol> or
-                                            <uicontrol>Binary</uicontrol>.</entry>
+                                    <entry>Storage type of the row key.</entry>
                                 </row>
                                 <row>
                                     <entry>Fields
@@ -148,7 +136,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_kr3_fgs_7r"/></xref>
                                     </entry>
-                                    <entry>Time basis to use for the timestamp value added for each
+                                    <entry>Time basis to use for the timestamp value added to each
                                         column written to HBase. Use one of the following
                                             expressions:<ul id="ul_oc5_zb2_wv">
                                             <li><codeph>${time:now()}</codeph> - Uses the <ph
@@ -171,7 +159,7 @@
                                             installations, use a directory or symlink within the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory.</p><p>You can use the following
-                                            file with the HBase destination:<ul
+                                            file with HBase:<ul
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
                                                 id="ul_ezj_cvr_bt">
                                                 <li/>

@@ -54,9 +54,7 @@
                                 </row>
                                 <row>
                                     <entry>Storage Type</entry>
-                                    <entry>Storage type of the row key. Choose
-                                            <uicontrol>Text</uicontrol> or
-                                            <uicontrol>Binary</uicontrol>.</entry>
+                                    <entry>Storage type of the row key.</entry>
                                 </row>
                                 <row>
                                     <entry>Fields <xref href="HBase-FieldMappings.dita">
@@ -129,7 +127,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_kr3_fgs_7r"/></xref>
                                     </entry>
-                                    <entry>Time basis to use for the timestamp value added for each
+                                    <entry>Time basis to use for the timestamp value added to each
                                         column written to MapR DB. Use one of the following
                                             expressions:<ul id="ul_oc5_zb2_wv">
                                             <li><codeph>${time:now()}</codeph> - Uses the <ph

@@ -79,6 +79,17 @@
    <topicref href="../Processors/Groovy-DelimData.dita"/>
    <topicref href="../Processors/Groovy-Configuring.dita"/>
    </topicref>
+  <topicref href="../Processors/HBaseLookup.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/HBaseLookup-Key.dita"/>
+   <topicref href="../Processors/HBaseLookup-Cache.dita"/>
+   <topicref href="../Processors/HBaseLookup-Kerberos.dita"/>
+   <topicref href="../Processors/HBaseLookup-HBaseUser.dita"/>
+   <topicref href="../Processors/HBaseLookup-HBaseProperties.dita"/>
+   <topicref href="../Processors/HBaseLookup-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JavaScript-ProcessingMode.dita"/>
@@ -120,6 +131,12 @@
    <topicref href="../Processors/RedisLookup-Datatypes.dita"/>
    <topicref href="../Processors/RedisLookup-Cache.dita"/>
    <topicref href="../Processors/RedisLookup-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/StaticLookup.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/StaticLookup-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/StreamSelector.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

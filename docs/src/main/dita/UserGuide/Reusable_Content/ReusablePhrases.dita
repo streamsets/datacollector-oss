@@ -967,5 +967,34 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p id="IdleTimeoutSummary">In either situation, configure an idle timeout so that other
                   systems can process the files sooner, instead of waiting for the configured
                   maximum records, maximum file size, or late records conditions to occur. </p>
+            <draft-comment author="alisontaylor">Lookup Cache - used for Redis Lookup and HBase
+                  Lookup processors</draft-comment>
+            <p id="LookupCacheOverview">The processor caches key-value pairs until the cache reaches
+                  the maximum size or the expiration time. When the first limit is reached, the
+                  processor evicts key-value pairs from the cache.</p>
+            <p id="LookupCacheOptions">You can configure the following ways to evict key-value pairs
+                  from the cache:<dl>
+                        <dlentry>
+                              <dt>Size-based eviction</dt>
+                              <dd>Configure the maximum number of key-value pairs that the processor
+                                    caches. When the maximum number is reached, the processor evicts
+                                    the oldest key-value pairs from the cache.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Time-based eviction</dt>
+                              <dd>Configure the amount of time that a key-value pair can remain in
+                                    the cache without being written to or accessed. When the
+                                    expiration time is reached, the processor evicts the key from
+                                    the cache. The eviction policy determines whether the processor
+                                    measures the expiration time since the last write of the value
+                                    or since the last access of the value.</dd>
+                              <dd>For example, you set the eviction policy to expire after the last
+                                    access and set the expiration time to 60 seconds. After the
+                                    processor does not access a key-value pair for 60 seconds, the
+                                    processor evicts the key-value pair from the cache.</dd>
+                        </dlentry>
+                  </dl></p>
+            <p id="LookupCacheSummary">When you stop the pipeline, the processor clears the
+                  cache.</p>
       </conbody>
 </concept>

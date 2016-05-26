@@ -16,8 +16,7 @@
 <concept id="concept_ng3_lpr_pv">
  <title>Redis Lookup</title>
  <shortdesc>The Redis Lookup processor performs key-value lookups in Redis and passes the lookup
-        values to new fields. Use the Redis Lookup to enrich records with additional
-        data.</shortdesc>
+        values to fields. Use the Redis Lookup to enrich records with additional data.</shortdesc>
  <conbody>
         <p><indexterm>Redis Lookup
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Redis
@@ -31,5 +30,7 @@
             key.</p>
         <p>You can configure the processor to locally cache the key-value pairs to improve
             performance.</p>
+        <p>You also specify properties to connect to Redis, including the URI of the Redis
+            server.</p>
     </conbody>
 </concept>

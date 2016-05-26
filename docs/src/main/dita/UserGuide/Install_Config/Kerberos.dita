@@ -31,6 +31,7 @@
           only</li>
         <li>Hadoop FS destination</li>
         <li>HBase destination</li>
+        <li>HBase Lookup processor</li>
         <li>Kafka Producer, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>
