@@ -83,12 +83,13 @@
                             <entry>
                                 <p>For the Cloudera CDH version 5.2.6 distribution of Hadoop. </p>
                                 <p>Includes:</p>
-                                <ul id="ul_l4y_bmm_s5">
+                                <ul id="ul_kqw_ghh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Solr </li>
+                                    <li>Solr destination</li>
                                 </ul>
                             </entry>
                         </row>
@@ -97,12 +98,13 @@
                             <entry>
                                 <p>For the Cloudera CDH version 5.3.8 distribution of Hadoop. </p>
                                 <p>Includes:</p>
-                                <ul id="ul_vxj_kmm_s5">
+                                <ul id="ul_mdq_ghh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Solr </li>
+                                    <li>Solr destination</li>
                                 </ul>
                             </entry>
                         </row>
@@ -111,15 +113,13 @@
                             <entry>
                                 <p>For the Cloudera CDH version 5.4.8 distribution of Hadoop. </p>
                                 <p>Includes:</p>
-                                <ul id="ul_gb2_knm_s5">
-                                    <li>
-                                        <p>Hadoop FS origin for cluster mode pipelines</p>
-                                    </li>
+                                <ul id="ul_xqj_ghh_cw">
+                                    <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr </li>
+                                    <li>Solr destination</li>
                                 </ul>
                             </entry>
                         </row>
@@ -128,13 +128,13 @@
                             <entry>
                                 <p>For the Cloudera CDH version 5.5.0 distribution of Hadoop. </p>
                                 <p>Includes:</p>
-                                <ul id="ul_lqd_pnm_s5">
+                                <ul id="ul_dp2_ghh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr </li>
+                                    <li>Solr destination</li>
                                 </ul>
                             </entry>
                         </row>
@@ -143,13 +143,13 @@
                             <entry>
                                 <p>For the Cloudera CDH version 5.7.0 distribution of Hadoop. </p>
                                 <p>Includes:</p>
-                                <ul id="ul_vjn_bqg_cw">
+                                <ul id="ul_oxh_kfh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Streaming destination</li>
-                                    <li>Solr </li>
+                                    <li>Solr destination</li>
                                 </ul>
                             </entry>
                         </row>
@@ -252,6 +252,7 @@
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
                                         <li>Kafka Consumer</li>
+                                        <li>HBase Lookup processor</li>
                                         <li>Flume destination </li>
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
@@ -262,11 +263,28 @@
                         <row>
                             <entry>streamsets-datacollector-hdp_2_3-lib </entry>
                             <entry>For the Hortonworks version 2.3.x distribution of Apache Hadoop.
-                                        <p>Includes:<ul id="ul_axt_drm_s5">
+                                        <p>Includes:<ul id="ul_nwd_jhh_cw">
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
                                         <li>Kafka Consumer</li>
+                                        <li>HBase Lookup processor</li>
+                                        <li>Flume destination </li>
+                                        <li>Hadoop FS destination </li>
+                                        <li>HBase destination </li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Kafka Producer </li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_4-lib </entry>
+                            <entry>For the Hortonworks version 2.4.x distribution of Apache Hadoop.
+                                        <p>Includes:<ul id="ul_uh3_lhh_cw">
+                                        <li>
+                                            <p>Hadoop FS origin for cluster mode pipelines</p>
+                                        </li>
+                                        <li>Kafka Consumer</li>
+                                        <li>HBase Lookup processor</li>
                                         <li>Flume destination </li>
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
@@ -294,18 +312,28 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_5_0-lib</entry>
-                            <entry>For MapR version 5.0.<p>Includes the MapR Streams Consumer, MapR
-                                    Streams Producer, and MapR FS.</p></entry>
+                            <entry>For MapR version 5.0.<p>Includes: <ul id="ul_ynq_xhh_cw">
+                                        <li>MapR Streams Consumer</li>
+                                        <li>MapR Streams Producer</li>
+                                        <li>MapR FS destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_5_1-lib</entry>
-                            <entry>For MapR version 5.1.<p>Includes the MapR Streams Consumer, MapR
-                                    Streams Producer, MapR FS, MapR-DB, and Hive Streaming using the
-                                    MapR library.</p></entry>
+                            <entry>For MapR version 5.1.<p>Includes:</p><p>
+                                    <ul id="ul_egx_c3h_cw">
+                                        <li>MapR Streams Consumer</li>
+                                        <li>MapR Streams Producer</li>
+                                        <li>MapR DB destination</li>
+                                        <li>MapR FS destination</li>
+                                        <li>Hive Streaming using the MapR library.</li>
+                                    </ul>
+                                </p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>
-                            <entry>For MongoDB 3.0.2. <p>Includes the MongoDB origin.</p></entry>
+                            <entry>For MongoDB 3.0.2. <p>Includes the MongoDB origin and
+                                    destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-omniture-lib </entry>
@@ -314,16 +342,17 @@
                         <row>
                             <entry>streamsets-datacollector-rabbitmq-lib </entry>
                             <entry>For RabbitMQ version 3.5.6.<p>Includes the RabbitMQ Consumer and
-                                    RabbitMQ Producer.</p></entry>
+                                    Producer.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-redis-lib</entry>
-                            <entry>For Redis version 2.8.x and 3.0.x.<p>Includes the Redis Lookup
+                            <entry>For Redis versions 2.8.x and 3.0.x.<p>Includes the Redis Lookup
                                     processor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>
-                            <entry>Includes the Static Lookup processor. </entry>
+                            <entry>Includes the Static Lookup processor. Installs with the basic
+                                installation. </entry>
                         </row>
                     </tbody>
                 </tgroup>
