@@ -25,16 +25,6 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Pattern;
-
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -46,6 +36,15 @@ import io.netty.buffer.ByteBuf;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 public class SyslogParser extends AbstractParser {
 
@@ -95,6 +94,10 @@ public class SyslogParser extends AbstractParser {
     String senderHost = sender.getHostString();
     if (senderHost == null) {
       senderHost = sender.toString();
+    }
+    // ipv6 needs to be enclosed in brackets if port specified.
+    if (senderHost.contains(":")) {
+      senderHost = "[" + senderHost + "]";
     }
     Field senderAddr = Field.create(senderHost + ":" + sender.getPort());
     fields.put(SENDER_ADDR, senderAddr);
@@ -188,6 +191,10 @@ public class SyslogParser extends AbstractParser {
     String receiverHost = recipient.getHostString();
     if (receiverHost == null) {
       receiverHost = recipient.toString();
+    }
+    // ipv6 needs to be enclosed in brackets if port specified.
+    if (receiverHost.contains(":")) {
+      receiverHost = "[" + receiverHost + "]";
     }
     Field receiverAddr = Field.create(receiverHost + ":" + recipient.getPort());
     fields.put(RECEIVER_ADDR, receiverAddr);
