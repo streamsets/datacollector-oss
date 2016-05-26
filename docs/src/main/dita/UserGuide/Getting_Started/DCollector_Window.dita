@@ -22,7 +22,7 @@
   <p><indexterm>Data Collector console<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       includes the following general areas and icons:</p>
-  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scale="90"/></p>
+  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scale="70"/></p>
   <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
       <sthead>
         <stentry>No</stentry>
@@ -45,12 +45,6 @@
             <note
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
           </p></stentry>
-      </strow>
-      <strow>
-        <stentry>3</stentry>
-        <stentry>Pipeline library</stentry>
-        <stentry>Library of pipelines associated with this <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts"/></stentry>
@@ -87,16 +81,12 @@
           use.</stentry>
       </strow>
       <strow>
-        <stentry><image href="../Graphics/icon_OverLibraryToggle.png" id="image_kgq_klq_rq"
-            scale="70"/></stentry>
-        <stentry>Toggle Library Pane icon</stentry>
-        <stentry>Icon to show or hide the pipeline library.</stentry>
-      </strow>
-      <strow>
-        <stentry><image href="../Graphics/icon_OverActions.png" id="image_vd2_jpq_rq" scale="70"
-          /></stentry>
-        <stentry>Actions icon</stentry>
-        <stentry>Allows you to import, export, duplicate, or delete a pipeline.</stentry>
+        <stentry><image href="../Graphics/icon_MonMore.png" id="image_wsc_zvp_1w"/></stentry>
+        <stentry>More icon</stentry>
+        <stentry>
+          <p>Provides additional actions for the pipeline. Use to import, export, duplicate, or
+            delete a pipeline.</p>
+        </stentry>
       </strow>
     </simpletable>
   <p>For information about pipeline configuration options, see <xref
@@ -105,5 +95,8 @@
         href="../Data_Preview/DataCollectorWindow-Preview.dita#concept_l4q_pbl_sq"/>.</p>
   <p>For information about pipeline monitoring options, see <xref
         href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita#concept_t1c_mf4_tq"/>.</p>
+    <p>For information about maintaining pipelines on the Home page, see <xref
+        href="../Pipeline_Maintenance/DataCollectorWindow_AllPipelines.dita#concept_wc5_ysp_1w"
+      />.</p>
  </conbody>
 </concept>

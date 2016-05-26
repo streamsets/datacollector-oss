@@ -19,8 +19,8 @@
         you can start the pipeline. </shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm>A pipeline can
-                include the following stages:<ul id="ul_eyy_b2w_kq">
+            <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm><indexterm>pipelines<indexterm>labels</indexterm></indexterm><indexterm>labels<indexterm>pipelines</indexterm></indexterm>A
+                pipeline can include the following stages:<ul id="ul_eyy_b2w_kq">
                     <li>A single origin stage</li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>
@@ -49,6 +49,14 @@
                                 <row>
                                     <entry>Description</entry>
                                     <entry>Optional description of the pipeline.</entry>
+                                </row>
+                                <row>
+                                    <entry>Labels</entry>
+                                    <entry>Optional labels to assign to the pipeline. Enter new or
+                                        existing label names.<p>Use labels to group similar
+                                            pipelines. For example, you might want to group
+                                            pipelines by database schema or by the test or
+                                            production environment.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Execution Mode <xref href="../Cluster_Mode/ClusterPipelines.dita"

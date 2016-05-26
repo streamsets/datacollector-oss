@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ylb_f1s_5q">
-    <title>Stopping a Pipeline</title>
-    <shortdesc>Stop a pipeline when you want the <ph
+    <title>Stopping Pipelines</title>
+    <shortdesc>Stop pipelines when you want <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        stop processing data for the pipeline.</shortdesc>
+        stop processing data for the pipelines.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>stopping</indexterm></indexterm>When the <ph
+            <p><indexterm>pipelines<indexterm>stopping</indexterm></indexterm>When <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> runs a pipeline, it displays in the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -28,14 +28,13 @@
         </context>
         <steps id="steps_zjh_4bs_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
-                    icon for the pipeline and then click <uicontrol>Stop</uicontrol>. Or to stop a
-                    pipeline in the pipeline canvas, click the <uicontrol>Stop</uicontrol>
-                    icon.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, select the pipelines in the list and
+                    then click the <uicontrol>Stop</uicontrol> icon. Or to stop a pipeline in the
+                    pipeline canvas, click the <uicontrol>Stop</uicontrol> icon.</cmd>
                 <info>The <wintitle>Stop Pipeline Confirmation</wintitle> dialog box appears.</info>
             </step>
             <step>
-                <cmd> To stop the pipeline, click <uicontrol>Yes</uicontrol>.</cmd>
+                <cmd> To stop the pipelines, click <uicontrol>Yes</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -35,10 +35,10 @@
             <step id="CreatePipeline1">
                 <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
                     page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
-                <info>If you are working on another pipeline in the <ph
-                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, use
-                    the <uicontrol>Toggle Library Pane</uicontrol> icon to display the pipeline
-                    library, and click the <uicontrol>Create New Pipeline</uicontrol> icon.</info>
+                <info>
+                    <note type="tip">To get to the <wintitle>Home</wintitle> page, click the Home
+                        icon.</note>
+                </info>
             </step>
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and

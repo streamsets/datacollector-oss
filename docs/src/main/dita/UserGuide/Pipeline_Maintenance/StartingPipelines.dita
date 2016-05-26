@@ -14,27 +14,30 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wpy_1xr_5q">
-    <title>Starting a Pipeline</title>
-    <shortdesc>You can start a pipeline when it is valid. When you start a pipeline, the <ph
+    <title>Starting Pipelines</title>
+    <shortdesc>You can start pipelines when they are valid. When you start a pipeline, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
-        the pipeline until you stop the pipeline or shut down the <ph
+        the pipeline until you stop the pipeline or shut down <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For a most origins,
-                when you restart a pipeline, the <ph
+            <p><indexterm>pipelines<indexterm>starting</indexterm></indexterm>For most origins, when
+                you restart a pipeline, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>
             <p>A Kafka Consumer origin starts processing data based on the offset passed from the
-                Kafka ZooKeeper. <ol id="ol_xff_cms_zs">
-                    <li>From the <wintitle>Home</wintitle> page, click the
-                            <uicontrol>More</uicontrol> icon for the pipeline and then click
-                            <uicontrol>Start</uicontrol>. Or to start a pipeline in the pipeline
-                        canvas, click the <uicontrol>Start</uicontrol> icon.<p>If the Start icon is
-                            not enabled, the pipeline is not valid.</p></li>
-                </ol></p>
+                Kafka ZooKeeper. </p>
+            <p>You can start pipelines from the following locations:</p>
+            <p>
+                <ul id="ol_xff_cms_zs">
+                    <li>From the <wintitle>Home</wintitle> page, select pipelines in the list and
+                        then click the <uicontrol>Start</uicontrol> icon. </li>
+                    <li>From the pipeline canvas, click the <uicontrol>Start</uicontrol> icon. <p>If
+                            the Start icon is not enabled, the pipeline is not valid.</p></li>
+                </ul>
+            </p>
         </context>
     </taskbody>
 </task>

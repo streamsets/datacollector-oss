@@ -25,12 +25,10 @@
         </context>
         <steps id="steps_lgz_fvr_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
-                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
-                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
-            </step>
-            <step>
-                <cmd>Click <uicontrol>Duplicate</uicontrol>.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, select a pipeline in the list view and
+                    then click the <uicontrol>Duplicate</uicontrol> icon. Or to duplicate a pipeline
+                    in the pipeline canvas, click the <uicontrol>More</uicontrol> icon for the
+                    pipeline and then click <uicontrol>Duplicate</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <uicontrol>Duplicate Pipeline Definition</uicontrol> dialog box, enter a

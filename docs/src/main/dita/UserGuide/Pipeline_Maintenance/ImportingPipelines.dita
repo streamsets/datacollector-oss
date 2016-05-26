@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_fdf_hrr_5q">
-    <title>Importing a Pipeline</title>
+    <title>Importing Pipelines</title>
     <taskbody>
-        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import a pipeline
-            to use a pipeline developed on a different <ph
+        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import pipelines to
+            use pipelines developed on a different <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
-            to restore a backup file. Import a pipeline from a pipeline file. Pipeline files are
-            JSON files exported from a <ph
+            to restore backup files. Import pipelines from pipeline files. Pipeline files are JSON
+            files exported from a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             instance.</context>
         <steps id="steps_slv_nrr_5q">

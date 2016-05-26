@@ -14,8 +14,8 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_dtz_4tr_5q">
-    <title>Exporting a Pipeline</title>
-    <shortdesc>Export a pipeline to create a backup or to use the pipeline with another <ph
+    <title>Exporting Pipelines</title>
+    <shortdesc>Export pipelines to create backups or to use the pipelines with another <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
     <taskbody>
         <context>
@@ -27,19 +27,20 @@
         </context>
         <steps id="steps_cns_ztr_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
-                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
-                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, select pipelines in the list and then
+                    click the <uicontrol>Export</uicontrol> icon. </cmd>
             </step>
             <step>
-                <cmd>Click <uicontrol>Export</uicontrol> or <uicontrol>Export with Library
+                <cmd>Or, to export a pipeline in the pipeline canvas, click the
+                        <uicontrol>More</uicontrol> icon for the pipeline and then click
+                        <uicontrol>Export</uicontrol> or <uicontrol>Export with Library
                         Definitions</uicontrol>.</cmd>
                 <info>When you export with library definitions, the generated JSON file includes the
                     definition of each stage library used in the pipeline. You can use either method
                     to export a pipeline.</info>
                 <stepresult>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> console generates the JSON file and saves it to your default downloads
+                    /> console generates the JSON files and saves them to your default downloads
                     directory.</stepresult>
             </step>
         </steps>

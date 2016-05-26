@@ -14,23 +14,21 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_a35_pwr_5q">
-    <title>Deleting a Pipeline</title>
+    <title>Deleting Pipelines</title>
     <taskbody>
-        <context><indexterm>pipelines<indexterm>deleting</indexterm></indexterm>You can delete a
-            pipeline when you no longer need it. Deleting a pipeline is permanent. To keep a back
-            up, export the pipeline before you delete it. </context>
+        <context><indexterm>pipelines<indexterm>deleting</indexterm></indexterm>You can delete
+            pipelines when you no longer need them. Deleting pipelines is permanent. To keep
+            backups, export the pipelines before you delete them. </context>
         <steps id="steps_wdt_twr_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
-                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
-                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
-            </step>
-            <step>
-                <cmd>Click <uicontrol>Delete</uicontrol>.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, select pipelines in the list and then
+                    click the <uicontrol>Delete</uicontrol> icon. Or to delete a pipeline in the
+                    pipeline canvas, click the <uicontrol>More</uicontrol> icon for the pipeline and
+                    then click <uicontrol>Delete</uicontrol>.</cmd>
                 <info>A confirmation window appears.</info>
             </step>
             <step>
-                <cmd>To delete the pipeline, click <uicontrol>Yes</uicontrol>.</cmd>
+                <cmd>To delete the pipelines, click <uicontrol>Yes</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

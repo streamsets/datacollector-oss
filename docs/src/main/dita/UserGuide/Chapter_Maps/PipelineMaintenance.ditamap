@@ -16,23 +16,28 @@
 <map>
  <title>Pipeline Maintenance</title>
  <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita">
-  <topicref href="../Pipeline_Maintenance/StartingAPipeline.dita" chunk="to-content">
+  <topicref href="../Pipeline_Maintenance/DataCollectorWindow_AllPipelines.dita">
+  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+ </topicref>
+  <topicref href="../Pipeline_Maintenance/StartingPipelines.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Maintenance/ResettingTheOrigin.dita"/>
   </topicref>
- <topicref href="../Pipeline_Maintenance/StoppingAPipeline.dita">
+ <topicref href="../Pipeline_Maintenance/StoppingPipelines.dita">
   <topicmeta>
   <shortdesc/>
  </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Maintenance/ImportingAPipeline.dita">
+  <topicref href="../Pipeline_Maintenance/ImportingPipelines.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
- <topicref href="../Pipeline_Maintenance/ExportingAPipeline.dita">
+ <topicref href="../Pipeline_Maintenance/ExportingPipelines.dita">
   <topicmeta>
   <shortdesc/>
  </topicmeta>
