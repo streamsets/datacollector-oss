@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ljn_2h3_yv">
- <title>File Path and Offset Header Attributes</title>
+ <title>File Name, File Path, and Offset Header Attributes</title>
     <shortdesc>The Directory and File Tail origins include record header attributes that provide the
-        file path and name, as well as the offset for each record. To track the provenance of each
+        file name, file path, as well as the offset for each record. To track the provenance of each
         record, you can use a function to include this information in the records.</shortdesc>
  <conbody>
   <p><indexterm>file path<indexterm>record header
@@ -26,12 +26,14 @@
                 attributes</indexterm></indexterm><indexterm>File Tail origin<indexterm>additional
                     header attributes</indexterm></indexterm>The Directory and File Tail origins
             include the following additional record header attributes:<ul id="ul_ebj_1l3_yv">
+                <li>file_name - Provides the file name.</li>
                 <li>file - Provides the file path and name. </li>
                 <li>offset - Provides the offset in bytes.</li>
             </ul></p>
-        <p>To include the file or offset header attributes in a record, you can use the following
-            expressions in the Expression
-            Evaluator:<codeblock>${record:attribute('file')}
+        <p>To include these attributes in a record, you can use the following expressions in the
+            Expression
+            Evaluator:<codeblock>${record:attribute('file_name')}
+${record:attribute('file')}
 ${record:attribute('offset')}</codeblock></p>
         <p>The following image shows an Expression Editor that adds the file and offset record
             header attribute information to the record: </p>
