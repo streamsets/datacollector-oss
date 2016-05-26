@@ -45,6 +45,19 @@
                         </thead>
                         <tbody>
                             <row>
+                                <entry>http.bindHost</entry>
+                                <entry>Host name or IP address that <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> binds to. You might want to configure a specific host or IP
+                                    address when the machine that <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> is installed on has multiple network cards.<p>Default is
+                                        0.0.0.0, which means that <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> can bind to any host or IP address. Be sure to uncomment
+                                        the property if you change the value.</p></entry>
+                            </row>
+                            <row>
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -273,8 +286,8 @@
                                 <entry>Number of threads in the pool that are available to run
                                     standalone pipelines. The default value is sufficient to run
                                     approximately 20 standalone pipelines at the same
-                                        time.<p>Default is 20. Be sure to uncomment the line if you
-                                        change the value.</p></entry>
+                                        time.<p>Default is 20. Be sure to uncomment the property if
+                                        you change the value.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>
