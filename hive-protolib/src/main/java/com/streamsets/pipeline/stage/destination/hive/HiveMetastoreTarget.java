@@ -352,7 +352,7 @@ public class HiveMetastoreTarget extends BaseTarget{
 
     if (!conf.useAsAvro) {
       //TODO: RegenerateSchema with the Hive Structure, SDC-2988
-      String avroSchema = HiveMetastoreUtil.getAvroSchema(metadataRecord);
+      String avroSchema = HiveMetastoreUtil.generateAvroSchema(newColumnTypeInfo, qualifiedTableName);
       schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(loginUgi, fs, location, avroSchema);
     }
 

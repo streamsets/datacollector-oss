@@ -40,7 +40,6 @@ import java.util.List;
 )
 
 @ConfigGroups(Groups.class)
-@HideConfigs(value = {"hiveConfigBean.additionalConfigProperties"})
 public class HiveMetadataDProcessor extends DProcessor {
 
   @ConfigDefBean

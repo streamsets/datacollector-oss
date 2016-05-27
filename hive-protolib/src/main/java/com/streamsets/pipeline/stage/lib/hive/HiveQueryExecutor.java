@@ -54,8 +54,6 @@ public final class HiveQueryExecutor {
   private static final String SHOW_TBLPROPERTIES = "SHOW TBLPROPERTIES %s";
   private static final String PARTITION_FIELD_EQUALS_NON_QUOTES_VAL = "%s=%s";
   private static final String PARTITION_FIELD_EQUALS_QUOTES_VAL = "%s='%s'";
-  private static final Set<HiveType> QUOTES_HIVE_TYPES =
-      ImmutableSet.of(HiveType.CHAR, HiveType.STRING, HiveType.DATE);
   private static final String TBL_PROPERTIES = "TBLPROPERTIES";
   private static final String AVRO_SCHEMA_URL = "avro.schema.url";
   private static final String STORED_AS_AVRO = "STORED AS AVRO";
@@ -110,7 +108,7 @@ public final class HiveQueryExecutor {
         sb.append(HiveMetastoreUtil.COMMA);
       }
       HiveType partitionType = partitionTypeMap.get(partitionValEntry.getKey()).getHiveType();
-      String format = (QUOTES_HIVE_TYPES.contains(partitionType))?
+      String format = (partitionType == HiveType.STRING)?
           PARTITION_FIELD_EQUALS_QUOTES_VAL: PARTITION_FIELD_EQUALS_NON_QUOTES_VAL;
       sb.append(String.format(format, partitionValEntry.getKey(), partitionValEntry.getValue()));
       needComma = true;

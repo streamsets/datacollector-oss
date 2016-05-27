@@ -39,7 +39,7 @@ public class TypeInfoCacheSupport
     TypeInfoCacheSupport.TypeInfoCacheLoader> {
 
   @Override
-  public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, Object... auxiliaryInfo) {
+  public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
     return new TypeInfoCacheLoader(jdbcUrl, qualifiedTableName);
   }
 

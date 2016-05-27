@@ -45,8 +45,7 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
   @Override
   protected String generateAfterColumnTypeDefinition(HiveTypeInfo hiveTypeInfo) {
     //For Char we need to do column char(1)
-    return hiveTypeInfo.getHiveType() == HiveType.CHAR ?
-        HiveMetastoreUtil.OPEN_BRACKET  + "1" + HiveMetastoreUtil.CLOSE_BRACKET : "";
+    return "";
   }
 
   @Override

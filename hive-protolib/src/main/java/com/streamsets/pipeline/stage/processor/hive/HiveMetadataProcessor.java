@@ -75,7 +75,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   // Optional configuration values
   private String tablePathTemplate;
-  private String partitionPathTemplate;
+  private String partitionPathTemplate; //TODO
 
   private HMSCache cache;
 
@@ -190,13 +190,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
     RecordEL.setRecordInContext(variables, record);
     String dbName = HiveMetastoreUtil.resolveEL(elEval, variables, databaseEL);
     String tableName = HiveMetastoreUtil.resolveEL(elEval,variables,tableEL);
-    // TODO Handle external table
-    //String tablePath = HiveMetastoreUtil.resolveEL(elEval,variables, tablePathTemplate);
-    //String partitionPath = HiveMetastoreUtil.resolveEL(elEval,variables, partitionPathTemplate);
-    String warehouseDir = externalTable ? "" : internalWarehouseDir; // TODO fill in "" part for external table
+    String warehouseDir;
+    if (externalTable){
+      warehouseDir = HiveMetastoreUtil.resolveEL(elEval, variables,tablePathTemplate);
+    } else {
+      warehouseDir = internalWarehouseDir;
+    }
     LinkedHashMap<String, String> partitionValMap = new LinkedHashMap<>();
-    String avroSchema = "";
-    boolean needToRoll = false;
+    String avroSchema;
+    boolean schemaChanged = false;
 
     // First, find out if this record has all necessary data to process
     try {
@@ -229,14 +231,24 @@ public class HiveMetadataProcessor extends RecordProcessor {
       TypeInfoCacheSupport.TypeInfo tableCache
           = (TypeInfoCacheSupport.TypeInfo) getCacheInfo(HMSCacheType.TYPE_INFO, qualifiedName);
 
-      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = null; // TODO
+      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache
+          = (AvroSchemaInfoCacheSupport.AvroSchemaInfo) getCacheInfo(HMSCacheType.AVRO_SCHEMA_INFO, qualifiedName);
 
-      // send Schema Change metadata when tableCache is null or schema is changed
+      // Generate schema only if there is no table exist, or schema is changed.
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
-        needToRoll = true;
-        handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName,
-            tableCache, schemaCache);
+        schemaChanged = true;
+        avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
+      } else {
+        avroSchema = schemaCache.getSchema();
       }
+
+      if (schemaChanged) {// Send Schema Change record to HMS target and update cache
+        handleSchemaChange(dbName, tableName, recordStructure, targetPath,
+            avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
+      } else if (schemaCache == null) {
+        updateAvroCache(schemaCache, avroSchema, qualifiedName);
+      }
+
       // Send new partition metadata if new partition is detected.
       PartitionInfoCacheSupport.PartitionInfo pCache
           = (PartitionInfoCacheSupport.PartitionInfo) getCacheInfo(HMSCacheType.PARTITION_VALUE_INFO, qualifiedName);
@@ -245,7 +257,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
       }
       // Send record to HDFS target
-      updateRecordForHDFS(record, needToRoll, avroSchema, targetPath, partitionStr);
+      updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath, partitionStr);
       batchMaker.addRecord(record, hdfsLane);
     } catch (OnRecordErrorException error) {
       errorRecordHandler.onError(error);
@@ -277,7 +289,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
    */
   private HMSCacheSupport.HMSCacheInfo getCacheInfo(HMSCacheType cacheType, String qualifiedName)
       throws StageException {
-    HMSCacheSupport.HMSCacheInfo cacheInfo = null;
+    HMSCacheSupport.HMSCacheInfo cacheInfo;
 
     cacheInfo = cache.getIfPresent(  // Or better to keep this in this class?
         cacheType,
@@ -305,7 +317,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     if (cache != null) {
       columnDiff = cache.getDiff(recordStructure);
     }
-    return !columnDiff.isEmpty();
+    return columnDiff != null && !columnDiff.isEmpty();
   }
 
   @VisibleForTesting
@@ -342,26 +354,20 @@ public class HiveMetadataProcessor extends RecordProcessor {
       TypeInfoCacheSupport.TypeInfo tableCache,
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache)
       throws StageException {
-    // TODO: Need to generate avro schema from here based on recordStructure
-    // TODO: handle external directory
+
     Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
     batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
     if (tableCache != null) {
       tableCache.updateState(recordStructure);
-      schemaCache.updateState(avroSchema);
     } else {
       cache.put(
           HMSCacheType.TYPE_INFO,
           qualifiedName,
           new TypeInfoCacheSupport.TypeInfo(recordStructure, partitionTypeInfo)
       );
-      cache.put(
-          HMSCacheType.AVRO_SCHEMA_INFO,
-          qualifiedName,
-          new AvroSchemaInfoCacheSupport.AvroSchemaInfo(avroSchema)
-      );
     }
+    updateAvroCache(schemaCache, avroSchema, qualifiedName);
   }
 
   // -------- Handle New Partitions ------------------//
@@ -400,6 +406,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   String getPartitionValuesFromRecord(Record r, ELVars variables, LinkedHashMap<String, String> values)
       throws StageException
   {
+    //TODO Handle external table, build partition path based on the config
+
     StringBuilder sb = new StringBuilder();
     for (PartitionConfig pName: partitionConfigList) {
       String ret = HiveMetastoreUtil.resolveEL(elEval,variables, pName.valueEL);
@@ -420,13 +428,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
   Record generateNewPartitionRecord(
       String database,
       String tableName,
-      LinkedHashMap<String, String> partition_list,
+      LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
     Record metadataRecord = getContext().createRecord("MetadataRecordForNewPartition");
     Field metadata = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
         database,
         tableName,
-        partition_list,
+        partitionList,
         location
     );
     metadataRecord.set(metadata);
@@ -453,6 +461,20 @@ public class HiveMetadataProcessor extends RecordProcessor {
           HMSCacheType.PARTITION_VALUE_INFO,
           qualifiedName,
           new PartitionInfoCacheSupport.PartitionInfo(diff)
+      );
+    }
+  }
+
+  private void updateAvroCache(AvroSchemaInfoCacheSupport.AvroSchemaInfo avroCache, String newState, String qualifiedName)
+  throws StageException {
+
+    if (avroCache != null) {
+      avroCache.updateState(newState);
+    } else {
+      cache.put(
+          HMSCacheType.AVRO_SCHEMA_INFO,
+          qualifiedName,
+          new AvroSchemaInfoCacheSupport.AvroSchemaInfo(newState)
       );
     }
   }

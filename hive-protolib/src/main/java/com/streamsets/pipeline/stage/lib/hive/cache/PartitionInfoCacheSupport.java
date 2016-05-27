@@ -36,7 +36,7 @@ public class PartitionInfoCacheSupport
     PartitionInfoCacheSupport.PartitionInfoCacheLoader> {
 
   @Override
-  public PartitionInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, Object... auxiliaryInfo) {
+  public PartitionInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
     return new PartitionInfoCacheLoader(jdbcUrl, qualifiedTableName);
   }
 

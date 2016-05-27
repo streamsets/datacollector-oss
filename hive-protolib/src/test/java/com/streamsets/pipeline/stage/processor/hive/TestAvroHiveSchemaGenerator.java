@@ -1,0 +1,147 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.processor.hive;
+
+import com.streamsets.pipeline.stage.lib.hive.AvroHiveSchemaGenerator;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.*;
+import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class TestAvroHiveSchemaGenerator {
+
+  @Test
+  public void testGenerateSimpleSchema() throws Exception {
+    // Incoming record structure: Map<String, HiveTypeInfo>
+    //  intColumn: Int
+    //  strColumn: String
+    //  boolColumn: Boolean
+    String expected = "{\"type\":\"record\"," +
+        "\"name\":\"test\"," +
+        "\"fields\":[" +
+        "{\"name\":\"intColumn\",\"type\":[\"null\",\"int\"]}," +
+        "{\"name\":\"strColumn\",\"type\":[\"null\",\"string\"]}," +
+        "{\"name\":\"boolColumn\",\"type\":[\"null\",\"boolean\"]}]" +
+        "}";
+
+    Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
+    record.put("intColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)) ;
+    record.put("strColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    record.put("boolColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN));
+
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
+    String result = gen.inferSchema(record);
+    Assert.assertNotNull(result);
+    Assert.assertEquals(result, expected);
+  }
+
+  @Test
+  public void testGenerateSchemaCharSmallInt() throws Exception {
+    // Incoming record structure: Map<String, HiveTypeInfo>
+    //  first: String
+    //  second: String
+    //  third: Integer
+    String expected = "{\"type\":\"record\"," +
+        "\"name\":\"test\"," +
+        "\"fields\":[" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"string\"]}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"string\"]}," +
+        "{\"name\":\"third\",\"type\":[\"null\",\"int\"]}]" +
+        "}";
+    Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
+
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
+    String result = gen.inferSchema(record);
+    Assert.assertEquals(result, expected);
+  }
+
+  @Test
+  public void testGenerateSchemaBigintFloatDouble() throws Exception {
+    // Incoming record structure: Map<String, HiveTypeInfo>
+    //  first: bigint
+    //  second: float
+    //  third: double
+    String expected = "{\"type\":\"record\"," +
+        "\"name\":\"test\"," +
+        "\"fields\":[" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"long\"]}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"float\"]}," +
+        "{\"name\":\"third\",\"type\":[\"null\",\"double\"]}]" +
+        "}";
+    Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.FLOAT));
+    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE));
+
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
+    String result = gen.inferSchema(record);
+    Assert.assertEquals(result, expected);
+  }
+
+  @Test
+  public void testGenerateSchemaDateByte() throws Exception {
+    // Incoming record structure: Map<String, HiveTypeInfo>
+    //  first: date
+    //  second: byte
+
+    String expected = "{\"type\":\"record\"," +
+        "\"name\":\"test\"," +
+        "\"fields\":[" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"string\"]}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"bytes\"]}]" +
+        "}";
+    Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BINARY));
+
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
+    String result = gen.inferSchema(record);
+    Assert.assertEquals(result, expected);
+  }
+
+  @Test
+  public void testGenerateSchemaDecimal() throws Exception {
+    // Incoming record structure: Map<String, HiveTypeInfo>
+    //  first: decimal (precision 2, scale 1)
+    //  second: string
+
+    String expected = "{\"type\":\"record\"," +
+        "\"name\":\"test\"," +
+        "\"fields\":[" +
+        "{\"name\":\"first\"," + "\"type\":" +
+        "[\"null\",{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":2,\"scale\":1}]}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"string\"]}]" +
+        "}";
+    Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
+    record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo(HiveType.DECIMAL, 2, 1)) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
+    String result = gen.inferSchema(record);
+    Assert.assertEquals(result, expected);
+  }
+
+}

@@ -36,8 +36,7 @@ public class TBLPropertiesInfoCacheSupport
   @Override
   public TBLPropertiesInfoCacheLoader newHMSCacheLoader(
       String jdbcUrl,
-      String qualifiedTableName,
-      Object... auxiliaryInfo
+      String qualifiedTableName
   ) {
     return new TBLPropertiesInfoCacheLoader(jdbcUrl, qualifiedTableName);
   }

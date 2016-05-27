@@ -26,18 +26,14 @@ import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 
-import java.util.LinkedHashMap;
 
 public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInfoCacheSupport.AvroSchemaInfo,
     AvroSchemaInfoCacheSupport.AvroSchemaInfoCacheLoader> {
 
-  private static LinkedHashMap<String, AvroSchemaInfo> avroSchemaRepo = new LinkedHashMap<>();
-
   @Override
   public AvroSchemaInfoCacheLoader newHMSCacheLoader(
       String jdbcUrl,
-      String qualifiedTableName,
-      Object... auxiliaryInfo)
+      String qualifiedTableName)
   {
     return new AvroSchemaInfoCacheLoader(jdbcUrl, qualifiedTableName);
   }
@@ -63,6 +59,8 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
     public void updateState(String newSchema) {
       state = newSchema;
     }
+
+    public final String getSchema() { return state; }
   }
 
   public class AvroSchemaInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<AvroSchemaInfo> {
@@ -70,10 +68,11 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
     protected AvroSchemaInfoCacheLoader(String jdbcUrl, String qualifiedTableName) {
       super(jdbcUrl, qualifiedTableName);
     }
+
     @Override
     protected AvroSchemaInfo loadHMSCacheInfo() throws StageException {
-      // here I will put Infer Avro Schema mechanism and return AvroSchemaInfo
-      return null;
+      // we don't perform load on avroSchema. This function should not be called
+      throw new StageException(Errors.HIVE_01,  "Invalid operation");
     }
   }
 

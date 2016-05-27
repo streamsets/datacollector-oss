@@ -27,8 +27,10 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import org.apache.commons.beanutils.converters.CharacterArrayConverter;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -225,7 +227,7 @@ public final class HiveMetastoreUtil {
    * @param warehouseDir Directory to HMS warehouse directory
    * @param dbName Database name
    * @param tableName Table name
-   * @return
+   * @return String that contains full path of target directory
    */
   public static String getTargetDirectory(String warehouseDir, String dbName, String tableName) {
     Utils.checkNotNull(warehouseDir, "warehouseDir");
@@ -385,7 +387,6 @@ public final class HiveMetastoreUtil {
       return metadataRecord.get(SEP + AVRO_SCHEMA).getValueAsString();
     }
     throw new StageException(Errors.HIVE_17, AVRO_SCHEMA, metadataRecord);
-
   }
 
   /**
@@ -459,7 +460,9 @@ public final class HiveMetastoreUtil {
   }
 
   /**
-   * Convert a Record to LinkedHashMap. This is for comparing the structure with TypeInfo in cache.
+   * Convert a Record to LinkedHashMap. This is for comparing the structure of incoming Record with cache.
+   * Since Avro does not support char, short, and date types, it needs to convert the type to corresponding
+   * supported types and change the value in record.
    * @param record incoming Record
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
    * @throws StageException
@@ -468,10 +471,20 @@ public final class HiveMetastoreUtil {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
-      HiveType hiveType = HiveType.getHiveTypeforFieldType(pair.getValue().getType());
+      Field currField = pair.getValue();
+      if (currField.getType() == Field.Type.SHORT) {  // Convert short to integer
+        currField = Field.create(pair.getValue().getValueAsInteger());
+      } else if (currField.getType() == Field.Type.CHAR ||  // Convert Char, Date, Datetime to String
+          currField.getType() == Field.Type.DATE ||
+          currField.getType() == Field.Type.DATETIME ) {
+        currField = Field.create(pair.getValue().getValueAsString());
+      }
+      // Update the Field type and value in Record
+      pair.setValue(currField);
+      HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
       columns.put(
           pair.getKey(),
-          hiveType.getSupport().generateHiveTypeInfoFromRecordField(pair.getValue())
+          hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField)
       );
     }
     return columns;
@@ -484,6 +497,23 @@ public final class HiveMetastoreUtil {
   public static boolean validateColumnName(String colName) {
     return MetaStoreUtils.validateColumnName(colName);
   }
+
+  /**
+   *  Generate avro schema from column name and type information. typeInfo in 1st parameter
+   *  needs to contain precision and scale information in the value(HiveTypeInfo).
+   *  The 2nd parameter qualifiedName will be the name of Avro Schema.
+   * @param typeInfo  Record structure
+   * @param qualifiedName qualified name that will be the name of generated avro schema
+   * @return String avro schema
+   * @throws StageException
+   */
+  public static String generateAvroSchema(Map<String, HiveTypeInfo> typeInfo, String qualifiedName)
+  throws StageException {
+    Utils.checkNotNull(typeInfo, "Error TypeInfo cannot be null");
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator(qualifiedName);
+    return gen.inferSchema(typeInfo);
+  }
+
   /**
    * Returns the hdfs paths where the avro schema is stored after serializing.
    * Path is appended with current time so as to have an ordering.

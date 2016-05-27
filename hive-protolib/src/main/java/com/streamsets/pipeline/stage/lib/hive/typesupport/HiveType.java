@@ -28,14 +28,11 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
  */
 public enum HiveType {
   BOOLEAN(new PrimitiveHiveTypeSupport()),
-  CHAR(new PrimitiveHiveTypeSupport()),
-  SMALLINT(new PrimitiveHiveTypeSupport()),
   INT(new PrimitiveHiveTypeSupport()),
   BIGINT(new PrimitiveHiveTypeSupport()),
   FLOAT(new PrimitiveHiveTypeSupport()),
   DOUBLE(new PrimitiveHiveTypeSupport()),
   DECIMAL(new DecimalHiveTypeSupport()),
-  DATE(new PrimitiveHiveTypeSupport()),
   BINARY(new PrimitiveHiveTypeSupport()),
   STRING(new PrimitiveHiveTypeSupport())
   ;
@@ -58,15 +55,11 @@ public enum HiveType {
   public static HiveType getHiveTypeforFieldType(Field.Type fieldType) throws StageException{
     switch (fieldType) {
       case BOOLEAN: return HiveType.BOOLEAN;
-      case CHAR: return HiveType.CHAR;
-      case SHORT: return HiveType.SMALLINT;
       case INTEGER: return HiveType.INT;
       case LONG: return HiveType.BIGINT;
       case FLOAT: return HiveType.FLOAT;
       case DOUBLE: return HiveType.DOUBLE;
       case DECIMAL: return HiveType.DECIMAL;
-      case DATE: return HiveType.DATE;
-      case DATETIME: return HiveType.STRING; //No timestamp because of impala bug
       case STRING: return HiveType.STRING;
       case BYTE_ARRAY: return HiveType.BINARY;
       default: throw new StageException(Errors.HIVE_19, fieldType);
@@ -83,14 +76,11 @@ public enum HiveType {
   public static Field.Type getFieldTypeForHiveType(HiveType hiveType) throws StageException{
     switch (hiveType) {
       case BOOLEAN: return Field.Type.BOOLEAN;
-      case CHAR: return Field.Type.CHAR;
-      case SMALLINT: return Field.Type.SHORT;
       case INT: return Field.Type.INTEGER;
       case BIGINT: return Field.Type.LONG;
       case FLOAT: return Field.Type.FLOAT;
       case DOUBLE: return Field.Type.DOUBLE;
       case DECIMAL: return Field.Type.DECIMAL;
-      case DATE: return Field.Type.DATE;
       case BINARY: return Field.Type.BYTE_ARRAY;
       //Suffice to say don't need timestamp
       //(Won't be a problem if we are the ones creating the table)
