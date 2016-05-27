@@ -23,7 +23,65 @@
     </div>
   </div>
 
-  <div class="row" ng-if="summaryDataLoaded">
+  <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageMeters">
+    <div class="col-sm-4" ng-repeat="customStageMeter in customStageMeters">
+      <div class="panel panel-default" ng-controller="CustomMeterController">
+        <div class="panel-heading">
+          <span>{{customStageMeter.label}} Meter</span>
+        </div>
+        <div class="panel-body">
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Count:</span>
+              <span class="properties-value">{{count}}</span>
+            </li>
+          </ul>
+          <nvd3 options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageHistograms">
+    <div class="col-sm-4" ng-repeat="customStageHistogram in customStageHistograms">
+      <div class="panel panel-default" ng-controller="CustomHistogramController">
+        <div class="panel-heading">
+          <span>{{customStageHistogram.label}} Histogram</span>
+        </div>
+        <div class="panel-body">
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Count:</span>
+              <span class="properties-value">{{count}}</span>
+            </li>
+          </ul>
+          <nvd3 options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageTimers">
+    <div class="col-sm-4" ng-repeat="customStageTimer in customStageTimers">
+      <div class="panel panel-default" ng-controller="CustomTimerController">
+        <div class="panel-heading">
+          <span>{{customStageTimer.label}} Timer</span>
+        </div>
+        <div class="panel-body">
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Count:</span>
+              <span class="properties-value">{{count}}</span>
+            </li>
+          </ul>
+          <nvd3 options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chartPanels" ng-if="summaryDataLoaded">
     <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList" src="chart.templateId">
     </ng-include>
   </div>
@@ -370,7 +428,7 @@
 
 <script type="text/ng-template" id="summaryAllStageMemoryConsumedBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && 
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
 activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && monitorMemoryEnabled"
        ng-controller="AllStageMemoryConsumedChartController">
     <div class="panel panel-default">
