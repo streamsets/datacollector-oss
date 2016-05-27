@@ -49,18 +49,6 @@ angular
         templateId: 'summaryBatchThroughputBarChartTemplate'
       },
       {
-        label: 'home.detailPane.summaryTab.stageBatchProcessingTimer',
-        templateId: 'summaryAllStageBatchTimerBarChartTemplate'
-      },
-      {
-        label: 'home.detailPane.summaryTab.stageMemoryConsumed',
-        templateId: 'summaryAllStageMemoryConsumedBarChartTemplate'
-      },
-      {
-        label: 'home.detailPane.summaryTab.runtimeStatistics',
-        templateId: 'summaryRuntimeStatisticsTemplate'
-      },
-      {
         label: 'global.form.histogram',
         templateId: 'summaryRecordHistogramTemplate'
       },
@@ -71,6 +59,18 @@ angular
       {
         label: 'home.detailPane.summaryTab.memoryConsumed',
         templateId: 'memoryConsumedLineChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.stageBatchProcessingTimer',
+        templateId: 'summaryAllStageBatchTimerBarChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.stageMemoryConsumed',
+        templateId: 'summaryAllStageMemoryConsumedBarChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.runtimeStatistics',
+        templateId: 'summaryRuntimeStatisticsTemplate'
       }
     ];
 
@@ -98,6 +98,9 @@ angular
         nameToLabelMap[stageInstance.instanceName] = stageInstance.uiInfo.label;
         return nameToLabelMap;
       }, {}),
+      customStageMeters: undefined,
+      customStageTimers: undefined,
+      customStageHistograms: undefined,
 
       getDurationLabel: function(key) {
         switch(key) {
@@ -302,6 +305,61 @@ angular
             errorRecords:
               pipelineMetrics.meters['stage.' + currentSelection.instanceName + '.errorRecords.meter']
           };
+
+          // Custom Meters
+          if ($scope.customStageMeters === undefined) {
+            $scope.customStageMeters = [];
+            angular.forEach(pipelineMetrics.meters, function(meterObj, meterKey) {
+              if (meterKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+                var label = meterKey
+                  .replace('custom.' + currentSelection.instanceName + '.', '')
+                  .replace('.meter', '')
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/^./, function(str){ return str.toUpperCase(); });
+                $scope.customStageMeters.push({
+                  meterKey: meterKey,
+                  label: label
+                });
+              }
+            });
+          }
+
+          // Custom Timers
+          if ($scope.customStageTimers === undefined) {
+            $scope.customStageTimers = [];
+            angular.forEach(pipelineMetrics.timers, function(timerObj, timerKey) {
+              if (timerKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+                var label = timerKey
+                  .replace('custom.' + currentSelection.instanceName + '.', '')
+                  .replace('.timer', '')
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/^./, function(str){ return str.toUpperCase(); });
+                $scope.customStageTimers.push({
+                  timerKey: timerKey,
+                  label: label
+                });
+              }
+            });
+          }
+
+          // Custom Histograms
+          if ($scope.customStageHistograms === undefined) {
+            $scope.customStageHistograms = [];
+            angular.forEach(pipelineMetrics.histograms, function(histogramObj, histogramKey) {
+              if (histogramKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+                var label = histogramKey
+                  .replace('custom.' + currentSelection.instanceName + '.', '')
+                  .replace('.histogram', '')
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/^./, function(str){ return str.toUpperCase(); });
+                $scope.customStageHistograms.push({
+                  histogramKey: histogramKey,
+                  label: label
+                });
+              }
+            });
+          }
+
         } else {
           $scope.summaryMeters = {
             batchCount:
@@ -337,6 +395,9 @@ angular
       if($scope.isPipelineRunning &&
         $rootScope.common.pipelineMetrics &&
         options.type !== pipelineConstant.LINK) {
+        $scope.customStageMeters = undefined;
+        $scope.customStageTimers = undefined;
+        $scope.customStageHistograms = undefined;
         updateSummaryData();
       }
     });

@@ -1,0 +1,1055 @@
+{
+  "pipelineConfig" : {
+    "schemaVersion" : 1,
+    "version" : 5,
+    "uuid" : "8bc25117-b798-4914-87e4-e0a742a840cb",
+    "description" : "",
+    "configuration" : [ {
+      "name" : "executionMode",
+      "value" : "STANDALONE"
+    }, {
+      "name" : "deliveryGuarantee",
+      "value" : "AT_LEAST_ONCE"
+    }, {
+      "name" : "shouldRetry",
+      "value" : true
+    }, {
+      "name" : "retryAttempts",
+      "value" : -1
+    }, {
+      "name" : "memoryLimit",
+      "value" : "${jvm:maxMemoryMB() * 0.65}"
+    }, {
+      "name" : "memoryLimitExceeded",
+      "value" : "STOP_PIPELINE"
+    }, {
+      "name" : "notifyOnStates",
+      "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+    }, {
+      "name" : "emailIDs",
+      "value" : [ ]
+    }, {
+      "name" : "constants",
+      "value" : [ ]
+    }, {
+      "name" : "badRecordsHandling",
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+    }, {
+      "name" : "statsAggregatorStage",
+      "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+    }, {
+      "name" : "clusterSlaveMemory",
+      "value" : 1024
+    }, {
+      "name" : "clusterSlaveJavaOpts",
+      "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+    }, {
+      "name" : "clusterLauncherEnv",
+      "value" : [ ]
+    }, {
+      "name" : "mesosDispatcherURL",
+      "value" : null
+    }, {
+      "name" : "hdfsS3ConfDir",
+      "value" : null
+    }, {
+      "name" : "rateLimit",
+      "value" : 0
+    } ],
+    "uiInfo" : {
+      "previewConfig" : {
+        "previewSource" : "CONFIGURED_SOURCE",
+        "batchSize" : 10,
+        "timeout" : 10000,
+        "writeToDestinations" : false,
+        "showHeader" : false,
+        "showFieldType" : true,
+        "rememberMe" : true
+      }
+    },
+    "stages" : [ {
+      "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomSource_01",
+      "library" : "streamsets-datacollector-dev-lib",
+      "stageName" : "com_streamsets_pipeline_stage_devtest_RandomSource",
+      "stageVersion" : "1",
+      "configuration" : [ {
+        "name" : "fields",
+        "value" : "a,b,c"
+      }, {
+        "name" : "delay",
+        "value" : 1000
+      }, {
+        "name" : "maxRecordsToGenerate",
+        "value" : 922337203685
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      } ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Dev Random Record Source 1",
+        "xPos" : 60,
+        "yPos" : 50,
+        "stageType" : "SOURCE"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource_01OutputLane14642858486380" ]
+    }, {
+      "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor_01",
+      "library" : "streamsets-datacollector-dev-lib",
+      "stageName" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor",
+      "stageVersion" : "2",
+      "configuration" : [ {
+        "name" : "discardSomeRecords",
+        "value" : false
+      }, {
+        "name" : "stageOnRecordError",
+        "value" : "TO_ERROR"
+      }, {
+        "name" : "stageRequiredFields",
+        "value" : [ ]
+      }, {
+        "name" : "stageRecordPreconditions",
+        "value" : [ ]
+      } ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Dev Random Error 1",
+        "xPos" : 280,
+        "yPos" : 50,
+        "stageType" : "PROCESSOR"
+      },
+      "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomSource_01OutputLane14642858486380" ],
+      "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor_01OutputLane14642858520080" ]
+    }, {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget_01",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "stageVersion" : "1",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Trash 1",
+        "xPos" : 500,
+        "yPos" : 50,
+        "stageType" : "TARGET"
+      },
+      "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor_01OutputLane14642858520080" ],
+      "outputLanes" : [ ]
+    } ],
+    "errorStage" : {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget_ErrorStage",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+      "stageVersion" : "1",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Error Records - Discard",
+        "xPos" : 720,
+        "yPos" : 50,
+        "stageType" : "TARGET"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ]
+    },
+    "info" : {
+      "name" : "sample",
+      "description" : "",
+      "created" : 1464284642866,
+      "lastModified" : 1464301104823,
+      "creator" : "admin",
+      "lastModifier" : "madhu@demo",
+      "lastRev" : "0",
+      "uuid" : "8bc25117-b798-4914-87e4-e0a742a840cb",
+      "valid" : true,
+      "metadata" : {
+        "labels" : [ ]
+      }
+    },
+    "metadata" : {
+      "labels" : [ ]
+    },
+    "statsAggregatorStage" : {
+      "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget_StatsAggregatorStage",
+      "library" : "streamsets-datacollector-basic-lib",
+      "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+      "stageVersion" : "1",
+      "configuration" : [ ],
+      "uiInfo" : {
+        "description" : "",
+        "label" : "Stats Aggregator - Discard",
+        "xPos" : 720,
+        "yPos" : 50,
+        "stageType" : "TARGET"
+      },
+      "inputLanes" : [ ],
+      "outputLanes" : [ ]
+    },
+    "issues" : {
+      "pipelineIssues" : [ ],
+      "stageIssues" : { },
+      "issueCount" : 0
+    },
+    "valid" : true,
+    "previewable" : true
+  },
+  "pipelineRules" : {
+    "metricsRuleDefinitions" : [ {
+      "id" : "badRecordsAlertID",
+      "alertText" : "High incidence of Bad Records",
+      "metricId" : "pipeline.batchErrorRecords.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "timestamp" : 1464284642896,
+      "valid" : true
+    }, {
+      "id" : "stageErrorAlertID",
+      "alertText" : "High incidence of Error Messages",
+      "metricId" : "pipeline.batchErrorMessages.meter",
+      "metricType" : "METER",
+      "metricElement" : "METER_COUNT",
+      "condition" : "${value() > 100}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "timestamp" : 1464284642896,
+      "valid" : true
+    }, {
+      "id" : "idleGaugeID",
+      "alertText" : "Pipeline is Idle",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "TIME_OF_LAST_RECEIVED_RECORD",
+      "condition" : "${time:now() - value() > 120000}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "timestamp" : 1464284642896,
+      "valid" : true
+    }, {
+      "id" : "batchTimeAlertID",
+      "alertText" : "Batch taking more time to process",
+      "metricId" : "RuntimeStatsGauge.gauge",
+      "metricType" : "GAUGE",
+      "metricElement" : "CURRENT_BATCH_AGE",
+      "condition" : "${value() > 200}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "timestamp" : 1464284642896,
+      "valid" : true
+    }, {
+      "id" : "memoryLimitAlertID",
+      "alertText" : "Memory limit for pipeline exceeded",
+      "metricId" : "pipeline.memoryConsumed.counter",
+      "metricType" : "COUNTER",
+      "metricElement" : "COUNTER_COUNT",
+      "condition" : "${value() > (jvm:maxMemoryMB() * 0.65)}",
+      "sendEmail" : false,
+      "enabled" : false,
+      "timestamp" : 1464284642896,
+      "valid" : true
+    } ],
+    "dataRuleDefinitions" : [ ],
+    "driftRuleDefinitions" : [ ],
+    "emailIds" : [ ],
+    "uuid" : "b875275c-03bf-4a20-a9ec-5f376c8f27a8",
+    "ruleIssues" : [ ]
+  },
+  "libraryDefinitions" : {
+    "pipeline" : [ {
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : {
+          "com.streamsets.datacollector.config.PipelineGroups" : [ "CONSTANTS", "BAD_RECORDS", "CLUSTER", "STATS" ]
+        },
+        "groupNameToLabelMapList" : [ {
+          "name" : "CONSTANTS",
+          "label" : "Constants"
+        }, {
+          "name" : "BAD_RECORDS",
+          "label" : "Error Records"
+        }, {
+          "name" : "CLUSTER",
+          "label" : "Cluster"
+        }, {
+          "name" : "STATS",
+          "label" : "Statistics"
+        } ]
+      },
+      "configDefinitions" : [ {
+        "name" : "executionMode",
+        "type" : "MODEL",
+        "defaultValue" : "STANDALONE",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "executionMode",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.ExecutionModeChooserValues",
+          "labels" : [ "Standalone", "Cluster Batch", "Cluster Yarn Streaming", "Cluster Mesos Streaming" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 10,
+        "dependsOnMap" : null,
+        "label" : "Execution Mode",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "deliveryGuarantee",
+        "type" : "MODEL",
+        "defaultValue" : "AT_LEAST_ONCE",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "deliveryGuarantee",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "AT_LEAST_ONCE", "AT_MOST_ONCE" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues",
+          "labels" : [ "At Least Once", "At Most Once" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 20,
+        "dependsOnMap" : null,
+        "label" : "Delivery Guarantee",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "shouldRetry",
+        "type" : "BOOLEAN",
+        "defaultValue" : true,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "shouldRetry",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 30,
+        "dependsOnMap" : null,
+        "label" : "Retry Pipeline on Error",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "retryAttempts",
+        "type" : "NUMBER",
+        "defaultValue" : -1,
+        "dependsOn" : "shouldRetry",
+        "triggeredByValues" : [ true ],
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Max no of retries. To retry indefinitely, use -1. The wait time between retries starts at 15 seconds and doubles until reaching 5 minutes.",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "retryAttempts",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 30,
+        "dependsOnMap" : {
+          "shouldRetry" : [ true ]
+        },
+        "label" : "Retry Attempts",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "memoryLimit",
+        "type" : "NUMBER",
+        "defaultValue" : "${jvm:maxMemoryMB() * 0.65}",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : 128,
+        "description" : "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap size. The default is 650 and a value of 0 or less disables the limit.",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "memoryLimit",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 60,
+        "dependsOnMap" : null,
+        "label" : "Max Pipeline Memory (MB)",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "memoryLimitExceeded",
+        "type" : "MODEL",
+        "defaultValue" : "STOP_PIPELINE",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "Behavior when the pipeline exceeds the memory limit. Tip: Configure an alert to indicate when the memory use approaches the limit.",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "memoryLimitExceeded",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "LOG", "ALERT", "STOP_PIPELINE" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.MemoryLimitExceededChooserValues",
+          "labels" : [ "Log", "Log and alert", "Log, alert and stop pipeline" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 70,
+        "dependsOnMap" : null,
+        "label" : "On Memory Exceeded",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "notifyOnStates",
+        "type" : "MODEL",
+        "defaultValue" : [ "RUN_ERROR", "STOPPED", "FINISHED" ],
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Notifies via email when pipeline gets to the specified states",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "notifyOnStates",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "RUNNING", "START_ERROR", "RUN_ERROR", "STOPPED", "FINISHED", "DISCONNECTED", "CONNECTING" ],
+          "configDefinitions" : null,
+          "modelType" : "MULTI_VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.PipelineStateChooserValues",
+          "labels" : [ "Running", "Start Error", "Run Error", "Stopped", "Finished", "Disconnected", "Connecting" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 75,
+        "dependsOnMap" : null,
+        "label" : "Notify on Pipeline State Changes",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "emailIDs",
+        "type" : "LIST",
+        "defaultValue" : [ ],
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Email Addresses",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "emailIDs",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 76,
+        "dependsOnMap" : null,
+        "label" : "Email IDs",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "constants",
+        "type" : "MAP",
+        "defaultValue" : [ ],
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "constants",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 80,
+        "dependsOnMap" : null,
+        "label" : "Constants",
+        "group" : "CONSTANTS",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "badRecordsHandling",
+        "type" : "MODEL",
+        "defaultValue" : null,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "badRecordsHandling",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1", "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_sdcipc_ToErrorSdcIpcDTarget::1", "streamsets-datacollector-elasticsearch_2_3-lib::com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget::3", "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget::1", "streamsets-datacollector-apache-kafka_0_8_2-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2", "streamsets-datacollector-apache-kafka_0_9-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2", "streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2", "streamsets-datacollector-cdh_kafka_1_3-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2", "streamsets-datacollector-hdp_2_2-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2", "streamsets-datacollector-hdp_2_3-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.ErrorHandlingChooserValues",
+          "labels" : [ "Discard (Library: Basic)", "Write to Another Pipeline (Library: Basic)", "Write to Elasticsearch (Library: Elasticsearch 2.3.1)", "Write to File (Library: Basic)", "Write to Kafka (Library: Apache Kafka 0.8.2.1)", "Write to Kafka (Library: Apache Kafka 0.9.0.0)", "Write to Kafka (Library: CDH 5.7.0 Cluster Kafka 2.0.1 Lib)", "Write to Kafka (Library: CDH Kafka 1.3.2 (0.8.2.0))", "Write to Kafka (Library: HDP 2.2.0)", "Write to Kafka (Library: HDP 2.3.0)" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 90,
+        "dependsOnMap" : null,
+        "label" : "Error Records",
+        "group" : "BAD_RECORDS",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "statsAggregatorStage",
+        "type" : "MODEL",
+        "defaultValue" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "statsAggregatorStage",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1", "streamsets-datacollector-aws-lib::com_streamsets_pipeline_stage_destination_kinesis_StatsKinesisDTarget::3", "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_StatsLocalFSDTarget::1", "streamsets-datacollector-apache-kafka_0_8_2-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2", "streamsets-datacollector-apache-kafka_0_9-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2", "streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2", "streamsets-datacollector-cdh_kafka_1_3-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2", "streamsets-datacollector-hdp_2_2-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2", "streamsets-datacollector-hdp_2_3-lib::com_streamsets_pipeline_stage_destination_kafka_StatsKafkaDTarget::2" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.StatsTargetChooserValues",
+          "labels" : [ "Discard (Library: Basic)", "Kinesis Producer (Library: Amazon Web Services 1.10.59)", "Write to File (Library: Basic)", "Write to Kafka (Library: Apache Kafka 0.8.2.1)", "Write to Kafka (Library: Apache Kafka 0.9.0.0)", "Write to Kafka (Library: CDH 5.7.0 Cluster Kafka 2.0.1 Lib)", "Write to Kafka (Library: CDH Kafka 1.3.2 (0.8.2.0))", "Write to Kafka (Library: HDP 2.2.0)", "Write to Kafka (Library: HDP 2.3.0)" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 95,
+        "dependsOnMap" : null,
+        "label" : "Statistics Aggregator",
+        "group" : "STATS",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ ],
+        "elConstantDefinitionsIdx" : [ ]
+      }, {
+        "name" : "clusterSlaveMemory",
+        "type" : "NUMBER",
+        "defaultValue" : 1024,
+        "dependsOn" : "executionMode",
+        "triggeredByValues" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ],
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "clusterSlaveMemory",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 100,
+        "dependsOnMap" : {
+          "executionMode" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ]
+        },
+        "label" : "Worker Memory (MB)",
+        "group" : "CLUSTER",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "clusterSlaveJavaOpts",
+        "type" : "STRING",
+        "defaultValue" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug",
+        "dependsOn" : "executionMode",
+        "triggeredByValues" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ],
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "Add properties as needed. Changes to default settings are not recommended.",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "clusterSlaveJavaOpts",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 110,
+        "dependsOnMap" : {
+          "executionMode" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ]
+        },
+        "label" : "Worker Java Options",
+        "group" : "CLUSTER",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "clusterLauncherEnv",
+        "type" : "MAP",
+        "defaultValue" : [ ],
+        "dependsOn" : "executionMode",
+        "triggeredByValues" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ],
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Sets additional environment variables for the cluster launcher",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "clusterLauncherEnv",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 120,
+        "dependsOnMap" : {
+          "executionMode" : [ "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING" ]
+        },
+        "label" : "Launcher ENV",
+        "group" : "CLUSTER",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "mesosDispatcherURL",
+        "type" : "STRING",
+        "defaultValue" : null,
+        "dependsOn" : "executionMode",
+        "triggeredByValues" : [ "CLUSTER_MESOS_STREAMING" ],
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "URL for service which launches Mesos framework",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "mesosDispatcherURL",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 130,
+        "dependsOnMap" : {
+          "executionMode" : [ "CLUSTER_MESOS_STREAMING" ]
+        },
+        "label" : "Mesos Dispatcher URL",
+        "group" : "CLUSTER",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "hdfsS3ConfDir",
+        "type" : "STRING",
+        "defaultValue" : null,
+        "dependsOn" : "executionMode",
+        "triggeredByValues" : [ "CLUSTER_MESOS_STREAMING" ],
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "An SDC resource directory or symbolic link with HDFS/S3 configuration files core-site.xml and hdfs-site.xml",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "hdfsS3ConfDir",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 150,
+        "dependsOnMap" : {
+          "executionMode" : [ "CLUSTER_MESOS_STREAMING" ]
+        },
+        "label" : "Checkpoint Configuration Directory",
+        "group" : "CLUSTER",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "rateLimit",
+        "type" : "NUMBER",
+        "defaultValue" : 0,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Maximum number of events per second that should be accepted into the pipeline. Rate is not limited if this is not set, or is set to 0",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "rateLimit",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 180,
+        "dependsOnMap" : null,
+        "label" : "Rate Limit (records / sec)",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      } ]
+    } ],
+    "stages" : [ {
+      "name" : "com_streamsets_pipeline_stage_devtest_RandomSource",
+      "type" : "SOURCE",
+      "className" : "com.streamsets.pipeline.stage.devtest.RandomSource",
+      "privateClassLoader" : false,
+      "library" : "streamsets-datacollector-dev-lib",
+      "description" : "Generates records with the specified field names, using Long data. For development only.",
+      "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : { },
+        "groupNameToLabelMapList" : [ ]
+      },
+      "rawSourceDefinition" : null,
+      "errorStage" : false,
+      "statsAggregatorStage" : false,
+      "offsetCommitTrigger" : false,
+      "variableOutputStreams" : false,
+      "outputStreams" : 1,
+      "outputStreamLabels" : null,
+      "executionModes" : [ "STANDALONE" ],
+      "resetOffset" : false,
+      "onlineHelpRefUrl" : "index.html#Pipeline_Design/DevStages.html",
+      "configDefinitions" : [ {
+        "name" : "fields",
+        "type" : "STRING",
+        "defaultValue" : "a,b,c",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "Name of the Long fields to generate. Enter a comma separated list.",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "fields",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 0,
+        "dependsOnMap" : null,
+        "label" : "Fields to Generate",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "delay",
+        "type" : "NUMBER",
+        "defaultValue" : 1000,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : 0,
+        "description" : "Milliseconds to wait before sending the next batch",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "delay",
+        "max" : 2147483647,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 0,
+        "dependsOnMap" : null,
+        "label" : "Delay Between Batches",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "maxRecordsToGenerate",
+        "type" : "NUMBER",
+        "defaultValue" : 922337203685,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : 0,
+        "description" : "",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "maxRecordsToGenerate",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 0,
+        "dependsOnMap" : null,
+        "label" : "Max Records to Generate",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "stageOnRecordError",
+        "type" : "MODEL",
+        "defaultValue" : "TO_ERROR",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "Action to take with records sent to error",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "stageOnRecordError",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "DISCARD", "TO_ERROR", "STOP_PIPELINE" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.OnRecordErrorChooserValues",
+          "labels" : [ "Discard", "Send to Error", "Stop Pipeline" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 30,
+        "dependsOnMap" : null,
+        "label" : "On Record Error",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      } ],
+      "icon" : "dev.png",
+      "version" : "1",
+      "label" : "Dev Random Record Source",
+      "libraryLabel" : "Dev (for development only)",
+      "onRecordError" : true,
+      "preconditions" : false
+    }, {
+      "name" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor",
+      "type" : "PROCESSOR",
+      "className" : "com.streamsets.pipeline.stage.devtest.RandomErrorProcessor",
+      "privateClassLoader" : false,
+      "library" : "streamsets-datacollector-dev-lib",
+      "description" : "Generates error records and silently discards records as specified.",
+      "outputStreamLabelProviderClass" : "com.streamsets.pipeline.api.StageDef$DefaultOutputStreams",
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : { },
+        "groupNameToLabelMapList" : [ ]
+      },
+      "rawSourceDefinition" : null,
+      "errorStage" : false,
+      "statsAggregatorStage" : false,
+      "offsetCommitTrigger" : false,
+      "variableOutputStreams" : false,
+      "outputStreams" : 1,
+      "outputStreamLabels" : null,
+      "executionModes" : [ "STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING" ],
+      "resetOffset" : false,
+      "onlineHelpRefUrl" : "index.html#Pipeline_Design/DevStages.html",
+      "configDefinitions" : [ {
+        "name" : "discardSomeRecords",
+        "type" : "BOOLEAN",
+        "defaultValue" : false,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Silently discard some records ",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "discardSomeRecords",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 0,
+        "dependsOnMap" : null,
+        "label" : "Discard Some Records",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "stageOnRecordError",
+        "type" : "MODEL",
+        "defaultValue" : "TO_ERROR",
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : true,
+        "min" : -9223372036854775808,
+        "description" : "Action to take with records sent to error",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "stageOnRecordError",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : [ "DISCARD", "TO_ERROR", "STOP_PIPELINE" ],
+          "configDefinitions" : null,
+          "modelType" : "VALUE_CHOOSER",
+          "valuesProviderClass" : "com.streamsets.datacollector.config.OnRecordErrorChooserValues",
+          "labels" : [ "Discard", "Send to Error", "Stop Pipeline" ]
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 30,
+        "dependsOnMap" : null,
+        "label" : "On Record Error",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "stageRequiredFields",
+        "type" : "MODEL",
+        "defaultValue" : [ ],
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Records without any of these fields are sent to error",
+        "evaluation" : "IMPLICIT",
+        "fieldName" : "stageRequiredFields",
+        "max" : 9223372036854775807,
+        "model" : {
+          "values" : null,
+          "configDefinitions" : null,
+          "modelType" : "FIELD_SELECTOR_MULTI_VALUE",
+          "valuesProviderClass" : null,
+          "labels" : null
+        },
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 10,
+        "dependsOnMap" : null,
+        "label" : "Required Fields",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+        "elConstantDefinitionsIdx" : [ "19" ]
+      }, {
+        "name" : "stageRecordPreconditions",
+        "type" : "LIST",
+        "defaultValue" : null,
+        "dependsOn" : "",
+        "triggeredByValues" : null,
+        "required" : false,
+        "min" : -9223372036854775808,
+        "description" : "Records that don't satisfy all the preconditions are sent to error",
+        "evaluation" : "EXPLICIT",
+        "fieldName" : "stageRecordPreconditions",
+        "max" : 9223372036854775807,
+        "model" : null,
+        "mode" : "text/plain",
+        "lines" : 0,
+        "displayPosition" : 20,
+        "dependsOnMap" : null,
+        "label" : "Preconditions",
+        "group" : "",
+        "elDefs" : null,
+        "elFunctionDefinitionsIdx" : [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40" ],
+        "elConstantDefinitionsIdx" : [ "19", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56" ]
+      } ],
+      "icon" : "dev.png",
+      "version" : "2",
+      "label" : "Dev Random Error",
+      "libraryLabel" : "Dev (for development only)",
+      "onRecordError" : true,
+      "preconditions" : true
+    }, {
+      "name" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "type" : "TARGET",
+      "className" : "com.streamsets.pipeline.stage.destination.devnull.NullDTarget",
+      "privateClassLoader" : false,
+      "library" : "streamsets-datacollector-basic-lib",
+      "description" : "Discards records",
+      "outputStreamLabelProviderClass" : null,
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : { },
+        "groupNameToLabelMapList" : [ ]
+      },
+      "rawSourceDefinition" : null,
+      "errorStage" : false,
+      "statsAggregatorStage" : false,
+      "offsetCommitTrigger" : false,
+      "variableOutputStreams" : false,
+      "outputStreams" : 0,
+      "outputStreamLabels" : null,
+      "executionModes" : [ "STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING" ],
+      "resetOffset" : false,
+      "onlineHelpRefUrl" : "index.html#Destinations/Trash.html#task_ad4_qyl_zq",
+      "configDefinitions" : [ ],
+      "icon" : "trash.png",
+      "version" : "1",
+      "label" : "Trash",
+      "libraryLabel" : "Basic",
+      "onRecordError" : false,
+      "preconditions" : false
+    }, {
+      "name" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+      "type" : "TARGET",
+      "className" : "com.streamsets.pipeline.stage.destination.devnull.ToErrorNullDTarget",
+      "privateClassLoader" : false,
+      "library" : "streamsets-datacollector-basic-lib",
+      "description" : "Discards records",
+      "outputStreamLabelProviderClass" : null,
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : { },
+        "groupNameToLabelMapList" : [ ]
+      },
+      "rawSourceDefinition" : null,
+      "errorStage" : true,
+      "statsAggregatorStage" : false,
+      "offsetCommitTrigger" : false,
+      "variableOutputStreams" : false,
+      "outputStreams" : 0,
+      "outputStreamLabels" : null,
+      "executionModes" : [ "STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING" ],
+      "resetOffset" : false,
+      "onlineHelpRefUrl" : "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+      "configDefinitions" : [ ],
+      "icon" : "",
+      "version" : "1",
+      "label" : "Discard",
+      "libraryLabel" : "Basic",
+      "onRecordError" : false,
+      "preconditions" : false
+    }, {
+      "name" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+      "type" : "TARGET",
+      "className" : "com.streamsets.pipeline.stage.destination.devnull.StatsNullDTarget",
+      "privateClassLoader" : false,
+      "library" : "streamsets-datacollector-basic-lib",
+      "description" : "Discards Pipeline Statistic Records",
+      "outputStreamLabelProviderClass" : null,
+      "configGroupDefinition" : {
+        "classNameToGroupsMap" : { },
+        "groupNameToLabelMapList" : [ ]
+      },
+      "rawSourceDefinition" : null,
+      "errorStage" : false,
+      "statsAggregatorStage" : true,
+      "offsetCommitTrigger" : false,
+      "variableOutputStreams" : false,
+      "outputStreams" : 0,
+      "outputStreamLabels" : null,
+      "executionModes" : [ "STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING" ],
+      "resetOffset" : false,
+      "onlineHelpRefUrl" : "",
+      "configDefinitions" : [ ],
+      "icon" : "",
+      "version" : "1",
+      "label" : "Discard",
+      "libraryLabel" : "Basic",
+      "onRecordError" : false,
+      "preconditions" : false
+    } ],
+    "elCatalog" : null,
+    "runtimeConfigs" : null,
+    "stageIcons" : {
+      "streamsets-datacollector-dev-lib:com_streamsets_pipeline_stage_devtest_RandomErrorProcessor" : "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADXUlEQVRoQ+2XWchOQRjHf5+lEMqaCxf2ZI/IVoQLkaWI0BclbhBKKLJcKJTIVkJSiCRKFEUiyS4KWSNcIMp2Ye+v52ga55xvcpz01czVe87MPGf+y/M881ZQzUdFNT8/EcD/VjAqEBUoyEC0UEECC2+PChSmsGCAqEBBAgtvjwoUprBggCwFWgBdga9e/FrAc+AO8MOb6wU0DDjPZ+AC0BjoAXyzPTWBl8BNe+4GNHHi6dtXgTfuN7IATAN25RzmMjAJeGhrFOcwMCYAgA7Z0db637gN6OB1gEdAcy/eAmBdCIA+wDJgJHANOGKbBKyNE6AzoI8KwGygOzDd5g8CT4Eazvr5xrIAtAI2AQNsfjdwHthhz7OAtsA8exZpin0rBIDW6AOPgRlOUL0fCBwyds4BQxyr1QauALJga+CTx+BGYKIp8BZoCrwyULKs1HGHGy9tPvcPTTvgPiAmtnqBxcwDe9ffPK3HevZbAMSyDtke6AvsA9Z7AKScbDQVkLpSwR2KLVW0txL47ls0r4zmAVCclWYzWWeLBZZ3L5oCOvg7y5UNQAdgMjAKmAB8sD0jgGOAr6amVwOLgNHA0bT8KgJgrCVuGgAl4mlL8qFAfUcR/xyNgLtmSYGU6hqqaNdtbxez2h8YigAYDyhRxZ6qj8phooAAuCOpPLJU2lBuzPHsOgg4A+y0PPTL9q84/wLAWmCx9QXXQvL9C/PuqhwFdI7ksPcAsf0FSEANB05kAC8EQH7e67HmAkiSeBiwzQ6mdy2B404DS+yi5tYJUGl+Yg0tz3qFFFBtP2s1XA1tf0oSJwBc8g4AgzPUWA6sMCvdsKRWn5ib0vV/xwyx0ExguyehGooaju/ttCrkbvX7gDvXG7gEvLdE7gmoAKgYZI4sALqXqAaL5SVWv9VU1IWXAuMsotsjGlglOQk0s9r/2skzJblA98tQwC8Az+xakZX4uRaaAuzJQw5stjafVB9dtOThqkZeRVoIrLEAUkv2yR1ZCiTNxd8seeV3efmUM6mbou5LujtVNXRJ0y1UsfyRXF/0XpbSteSvAFS1r8z5unYB/BjykfiPLISlMtdEBcpkNyR2VCCEpTLXRAXKZDckdlQghKUy10QFymQ3JHZUIISlMtdEBcpkNyR2tVfgJ7j+uDHAB/IgAAAAAElFTkSuQmCC",
+      "streamsets-datacollector-basic-lib:com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACSUlEQVRoge3YPWsVQRQG4CcaMZpLCJKksLC2sxAstLGz9weIIthaiJUWASuxtdbGwv9grZ02NlYBCQiSaAgkBL8Si9nFzd6P7M6Me0X2heHCcM6ZOfO+Z+fcoUePHj3+FyzgOTZxMGZs4FlhmwWzuQLhKa7hET6NsTmLB5jBrYxrZ8E27jawu4etXIseyxVIkEWTjX3FYq5F20joYjEm4SrmjrC5XPzemWDzthhZsWp8ceYeq7k3X8VDfPwLcd/jSVunmBrYwEqE31FYKWK3QmwCcxhE+E7axxnhDmnt2BblKS3X5r/jZm3uZTGquI1vtblF4YPSGQMMJ7CrGSuDwraKMtZUGdjRPIGd2lwZqxMGtvDLaAbmG/jPG2ZgqfjthIF94TYdxUDTBEYx8ENoR1ohtpXYkL8Gyi62FXInkCKh1vIhbwJNi3ichFoXMNNhYJSElvwDCaQy0KmENuVnoPMaGOBUZa7pV2hUEU+lBvhzARH/FTpdjM4Z4LCMYluJ6DaCvAnsCm328Ql+szjpMAPRbQRpRXxgmIEZQQ7jMF+xLTEVBsq+pc4Ak2VUJlBlYFk4jE4ZYPhTWm5qUiGXydUltC0cSmukJFC/zEpZNGGgLqGo0ydvAikMROmfnoHWDIwq4iQGUl6n60W8h8dYq8y9qvmsFTZ7lbllvEnYRzRuCH8vTyTG+YL7sc4pEloXLq5zCTEWhDeh9dgAMwmLD/BBeCd9IbxUtF37Oi7hPD4n7CUaF/AaP7V/gd7HO1zpfNc9evTokQ2/AbbOuP9A2WXaAAAAAElFTkSuQmCC",
+      "streamsets-datacollector-dev-lib:com_streamsets_pipeline_stage_devtest_RandomSource" : "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADXUlEQVRoQ+2XWchOQRjHf5+lEMqaCxf2ZI/IVoQLkaWI0BclbhBKKLJcKJTIVkJSiCRKFEUiyS4KWSNcIMp2Ye+v52ga55xvcpz01czVe87MPGf+y/M881ZQzUdFNT8/EcD/VjAqEBUoyEC0UEECC2+PChSmsGCAqEBBAgtvjwoUprBggCwFWgBdga9e/FrAc+AO8MOb6wU0DDjPZ+AC0BjoAXyzPTWBl8BNe+4GNHHi6dtXgTfuN7IATAN25RzmMjAJeGhrFOcwMCYAgA7Z0db637gN6OB1gEdAcy/eAmBdCIA+wDJgJHANOGKbBKyNE6AzoI8KwGygOzDd5g8CT4Eazvr5xrIAtAI2AQNsfjdwHthhz7OAtsA8exZpin0rBIDW6AOPgRlOUL0fCBwyds4BQxyr1QauALJga+CTx+BGYKIp8BZoCrwyULKs1HGHGy9tPvcPTTvgPiAmtnqBxcwDe9ffPK3HevZbAMSyDtke6AvsA9Z7AKScbDQVkLpSwR2KLVW0txL47ls0r4zmAVCclWYzWWeLBZZ3L5oCOvg7y5UNQAdgMjAKmAB8sD0jgGOAr6amVwOLgNHA0bT8KgJgrCVuGgAl4mlL8qFAfUcR/xyNgLtmSYGU6hqqaNdtbxez2h8YigAYDyhRxZ6qj8phooAAuCOpPLJU2lBuzPHsOgg4A+y0PPTL9q84/wLAWmCx9QXXQvL9C/PuqhwFdI7ksPcAsf0FSEANB05kAC8EQH7e67HmAkiSeBiwzQ6mdy2B404DS+yi5tYJUGl+Yg0tz3qFFFBtP2s1XA1tf0oSJwBc8g4AgzPUWA6sMCvdsKRWn5ib0vV/xwyx0ExguyehGooaju/ttCrkbvX7gDvXG7gEvLdE7gmoAKgYZI4sALqXqAaL5SVWv9VU1IWXAuMsotsjGlglOQk0s9r/2skzJblA98tQwC8Az+xakZX4uRaaAuzJQw5stjafVB9dtOThqkZeRVoIrLEAUkv2yR1ZCiTNxd8seeV3efmUM6mbou5LujtVNXRJ0y1UsfyRXF/0XpbSteSvAFS1r8z5unYB/BjykfiPLISlMtdEBcpkNyR2VCCEpTLXRAXKZDckdlQghKUy10QFymQ3JHZUIISlMtdEBcpkNyR2tVfgJ7j+uDHAB/IgAAAAAElFTkSuQmCC",
+      "streamsets-datacollector-basic-lib:com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget" : null,
+      "streamsets-datacollector-basic-lib:com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget" : null
+    },
+    "rulesElMetadata" : null
+  }
+}

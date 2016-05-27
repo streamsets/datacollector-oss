@@ -117,7 +117,8 @@
                     'y3Axis',
                     'y4Axis',
                     'interactiveLayer',
-                    'controls'
+                    'controls',
+                    'tooltip'
                   ].indexOf(key) >= 0) {
                   if (options.chart[key] === undefined || options.chart[key] === null) {
                     if (scope._config.extended) {
