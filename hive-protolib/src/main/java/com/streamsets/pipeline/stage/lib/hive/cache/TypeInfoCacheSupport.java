@@ -68,6 +68,10 @@ public class TypeInfoCacheSupport
       return Collections.unmodifiableMap(partitionTypeInfo);
     }
 
+    public LinkedHashMap<String, HiveTypeInfo> getColumnTypeInfo() {
+      return state;
+    }
+
     @Override
     public LinkedHashMap<String, HiveTypeInfo> getDiff(LinkedHashMap<String, HiveTypeInfo> newState) throws StageException{
       LinkedHashMap<String, HiveTypeInfo> columnDiff = new LinkedHashMap<>();

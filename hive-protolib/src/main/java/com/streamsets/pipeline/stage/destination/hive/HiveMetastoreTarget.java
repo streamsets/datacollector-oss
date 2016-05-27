@@ -349,14 +349,16 @@ public class HiveMetastoreTarget extends BaseTarget{
     if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() == isInternal) {
       throw new StageException(Errors.HIVE_23, EXTERNAL, !isInternal, tblPropertiesInfo.isExternal());
     }
-
-    if (!conf.useAsAvro) {
-      //TODO: RegenerateSchema with the Hive Structure, SDC-2988
-      String avroSchema = HiveMetastoreUtil.generateAvroSchema(newColumnTypeInfo, qualifiedTableName);
-      schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(loginUgi, fs, location, avroSchema);
-    }
-
     if (cachedColumnTypeInfo == null) {
+      //Table Does not exist use the schema from the metadata record as is.
+      if (!conf.useAsAvro) {
+        schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
+            loginUgi,
+            fs,
+            location,
+            HiveMetastoreUtil.getAvroSchema(metadataRecord)
+        );
+      }
       //Create Table
       hiveQueryExecutor.executeCreateTableQuery(
           qualifiedTableName,
@@ -373,10 +375,24 @@ public class HiveMetastoreTarget extends BaseTarget{
           new TypeInfoCacheSupport.TypeInfo(newColumnTypeInfo, partitionTypeInfo)
       );
     } else {
-      //Add Columns
+      //Diff to get new columns.
       LinkedHashMap<String, HiveTypeInfo> columnDiff = cachedColumnTypeInfo.getDiff(newColumnTypeInfo);
       if (!columnDiff.isEmpty()) {
+        //Regenerate schema with all the columns. (This will factor for in existing, new and missing columns).
+        if (!conf.useAsAvro) {
+          Map<String, HiveTypeInfo> mergedTypeInfo = new LinkedHashMap<>(cachedColumnTypeInfo.getColumnTypeInfo());
+          mergedTypeInfo.putAll(columnDiff);
+          schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
+              loginUgi,
+              fs,
+              location,
+              HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName)
+          );
+        }
+
+        //Add Columns
         hiveQueryExecutor.executeAlterTableAddColumnsQuery(qualifiedTableName, columnDiff);
+
         if (!conf.useAsAvro) {
           hiveQueryExecutor.executeAlterTableSetTblPropertiesQuery(qualifiedTableName, schemaPath);
         }
