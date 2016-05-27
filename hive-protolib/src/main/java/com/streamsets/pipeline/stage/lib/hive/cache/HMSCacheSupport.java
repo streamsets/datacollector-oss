@@ -75,7 +75,7 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
      * Updates the internal state.
      * @param newState the new State which should be updated/merged/replaced.
      */
-    abstract void updateState(T newState);
+    abstract void updateState(T newState) throws StageException;
 
   }
 

@@ -23,6 +23,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
  * Represents different type of cache types supported by the instance of {@link HMSCache}
  */
 public enum HMSCacheType {
+  TBLPROPERTIES_INFO(new TBLPropertiesInfoCacheSupport()),
   TYPE_INFO(new TypeInfoCacheSupport()),
   PARTITION_VALUE_INFO(new PartitionInfoCacheSupport()),
   AVRO_SCHEMA_INFO(new AvroSchemaInfoCacheSupport());

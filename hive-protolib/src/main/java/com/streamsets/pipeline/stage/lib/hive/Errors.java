@@ -45,7 +45,8 @@ public enum Errors implements ErrorCode {
   HIVE_19("Unsupported Type: {}"),
   HIVE_20("Error executing SQL: {}, Reason:{}"),
   HIVE_21("Type Mismatch, Expected: {}, Actual: {}"),
-  HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}")
+  HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}"),
+  HIVE_23("TBL Properties '{}' Mismatch: Actual: {} , Expected: {}")
   ;
   private final String msg;
 

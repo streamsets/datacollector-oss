@@ -36,12 +36,12 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
-import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
-import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
@@ -76,6 +76,8 @@ public class HiveMetastoreTarget extends BaseTarget{
   private static final String CONF_DIR = "confDir";
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
   private static final Joiner JOINER = Joiner.on(".");
+  private static final String USE_AS_AVRO = "useAsAvro";
+  private static final String EXTERNAL = "External";
 
   private final HMSTargetConfigBean conf;
 
@@ -115,6 +117,7 @@ public class HiveMetastoreTarget extends BaseTarget{
       hmsCache =  HMSCache.newCacheBuilder()
           .addCacheTypeSupport(
               Arrays.asList(
+                  HMSCacheType.TBLPROPERTIES_INFO,
                   HMSCacheType.TYPE_INFO,
                   HMSCacheType.PARTITION_VALUE_INFO
               )
@@ -138,8 +141,25 @@ public class HiveMetastoreTarget extends BaseTarget{
         String resolvedJDBCUrl = resolveJDBCUrl(conf.hiveConfigBean.hiveJDBCUrl, metadataRecord);
         String location = HiveMetastoreUtil.getLocation(metadataRecord);
         HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(resolvedJDBCUrl);
+        TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = hmsCache.getOrLoad(
+            HMSCacheType.TBLPROPERTIES_INFO,
+            resolvedJDBCUrl,
+            qualifiedTableName
+        );
+
+        if (tblPropertiesInfo != null && tblPropertiesInfo.isUseAsAvro() != conf.useAsAvro) {
+          LOG.warn(
+              Utils.format(
+                  Errors.HIVE_23.getMessage(),
+                  USE_AS_AVRO,
+                  conf.useAsAvro,
+                  tblPropertiesInfo.isUseAsAvro()
+              )
+          );
+        }
+
         if (HiveMetastoreUtil.isSchemaChangeRecord(metadataRecord)) {
-          handleSchemaChange(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor);
+          handleSchemaChange(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor, tblPropertiesInfo);
         } else {
           handlePartitionAddition(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor);
         }
@@ -312,7 +332,8 @@ public class HiveMetastoreTarget extends BaseTarget{
       String qualifiedTableName,
       String resolvedJDBCUrl,
       String location,
-      HiveQueryExecutor hiveQueryExecutor
+      HiveQueryExecutor hiveQueryExecutor,
+      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo
   ) throws StageException {
     //Schema Change
     HMSCacheType cacheType = HMSCacheType.TYPE_INFO;
@@ -324,6 +345,10 @@ public class HiveMetastoreTarget extends BaseTarget{
     LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
     boolean isInternal = HiveMetastoreUtil.getInternalField(metadataRecord);
     String schemaPath = null;
+
+    if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() == isInternal) {
+      throw new StageException(Errors.HIVE_23, EXTERNAL, !isInternal, tblPropertiesInfo.isExternal());
+    }
 
     if (!conf.useAsAvro) {
       //TODO: RegenerateSchema with the Hive Structure, SDC-2988

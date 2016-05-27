@@ -39,6 +39,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
@@ -171,6 +172,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       cache = HMSCache.newCacheBuilder()
           .addCacheTypeSupport(
               Arrays.asList(
+                  HMSCacheType.TBLPROPERTIES_INFO,
                   HMSCacheType.TYPE_INFO,
                   HMSCacheType.PARTITION_VALUE_INFO,
                   HMSCacheType.AVRO_SCHEMA_INFO
@@ -209,6 +211,20 @@ public class HiveMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
       // Obtain all the partition values from record and build a path using partition values
       String partitionStr = getPartitionValuesFromRecord(record, variables, partitionValMap);
+
+      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo =
+          (TBLPropertiesInfoCacheSupport.TBLPropertiesInfo) getCacheInfo(
+              HMSCacheType.TBLPROPERTIES_INFO,
+              qualifiedName
+          );
+      if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
+        throw new StageException(
+            com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
+            "EXTERNAL",
+            externalTable,
+            tblPropertiesInfo.isExternal()
+        );
+      }
 
       TypeInfoCacheSupport.TypeInfo tableCache
           = (TypeInfoCacheSupport.TypeInfo) getCacheInfo(HMSCacheType.TYPE_INFO, qualifiedName);

@@ -51,7 +51,7 @@ public final class HiveQueryExecutor {
   private static final String ADD_COLUMNS = "ADD COLUMNS";
   private static final String ADD_PARTITION = "ADD PARTITION";
   private static final String SHOW_PARTITIONS = "SHOW PARTITIONS %s";
-  private static final String COLUMN_TYPE = "%s %s";
+  private static final String SHOW_TBLPROPERTIES = "SHOW TBLPROPERTIES %s";
   private static final String PARTITION_FIELD_EQUALS_NON_QUOTES_VAL = "%s=%s";
   private static final String PARTITION_FIELD_EQUALS_QUOTES_VAL = "%s='%s'";
   private static final Set<HiveType> QUOTES_HIVE_TYPES =
@@ -70,6 +70,8 @@ public final class HiveQueryExecutor {
 
   private static final String RESULT_SET_COL_NAME = "col_name";
   private static final String RESULT_SET_DATA_TYPE = "data_type";
+  private static final String RESULT_SET_PROP_NAME = "prpt_name";
+  private static final String RESULT_SET_PROP_VALUE = "prpt_value";
 
   private final String jdbcUrl;
 
@@ -459,6 +461,41 @@ public final class HiveQueryExecutor {
         columnTypeInfo.remove(partitionCol);
       }
       return Pair.of(columnTypeInfo, partitionTypeInfo);
+    } catch (SQLException e) {
+      LOG.error("SQL Exception happened when adding partition", e);
+      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+    } finally {
+      closeStatement(statement);
+    }
+  }
+
+
+  /**
+   * Returns {@link Pair} of IsExternal and useAsAvro TBLProperties.
+   * @param qualifiedTableName qualified table name.
+   * @return {@link Pair} of IsExternal and useAsAvro.
+   * @throws StageException in case of any {@link SQLException}
+   */
+  public Pair<Boolean, Boolean> executeShowTBLPropertiesQuery(
+      String qualifiedTableName
+  ) throws StageException {
+    String sql = String.format(SHOW_TBLPROPERTIES, qualifiedTableName);
+    LOG.debug("Executing SQL:", sql);
+    Statement statement = null;
+    boolean isExternal = false, useAsAvro = true;
+    try (Connection con = DriverManager.getConnection(jdbcUrl)){
+      statement = con.createStatement();
+      ResultSet rs = statement.executeQuery(sql);
+      while (rs.next()) {
+        String propName = rs.getString(RESULT_SET_PROP_NAME);
+        String propValue = rs.getString(RESULT_SET_PROP_VALUE);
+        if (propName.toUpperCase().equals(EXTERNAL)) {
+          isExternal = Boolean.valueOf(propValue);
+        } else if (propName.equals(AVRO_SCHEMA_URL)) {
+          useAsAvro = false;
+        }
+      }
+      return Pair.of(isExternal, useAsAvro);
     } catch (SQLException e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
