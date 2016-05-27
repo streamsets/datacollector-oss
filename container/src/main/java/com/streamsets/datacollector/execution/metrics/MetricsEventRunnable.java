@@ -144,6 +144,7 @@ public class MetricsEventRunnable implements Runnable {
           AggregatorUtil.enqueStatsRecord(
             AggregatorUtil.createMetricJsonRecord(
                 runtimeInfo.getId(),
+                runtimeInfo.getMasterSDCId(),
                 pipelineConfiguration.getMetadata(),
                 false, // isAggregated - no its not aggregated
                 metricsJSONStr

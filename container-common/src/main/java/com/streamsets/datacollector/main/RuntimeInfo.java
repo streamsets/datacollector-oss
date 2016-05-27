@@ -69,6 +69,7 @@ public class RuntimeInfo {
   private final File baseDir;
   private final UUID randomUUID;
   private boolean remoteRegistrationSuccessful;
+  private String masterSDCId;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
                      List<? extends ClassLoader> stageLibraryClassLoaders) {
@@ -292,6 +293,14 @@ public class RuntimeInfo {
 
   public boolean isRemoteRegistrationSuccessful() {
     return this.remoteRegistrationSuccessful;
+  }
+
+  public void setMasterSDCId(String masterSDCId) {
+    this.masterSDCId = masterSDCId;
+  }
+
+  public String getMasterSDCId() {
+    return this.masterSDCId;
   }
 
   public void setSSLContext(SSLContext sslContext) {

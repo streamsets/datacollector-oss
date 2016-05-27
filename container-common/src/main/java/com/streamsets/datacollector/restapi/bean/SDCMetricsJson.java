@@ -28,6 +28,7 @@ public class SDCMetricsJson {
   private String sdcId;
   private MetricRegistryJson metrics;
   private boolean isAggregated;
+  private String masterSdcId;
 
   public long getTimestamp() {
     return timestamp;
@@ -51,6 +52,14 @@ public class SDCMetricsJson {
 
   public void setSdcId(String sdcId) {
     this.sdcId = sdcId;
+  }
+
+  public void setMasterSdcId(String masterSdcId) {
+    this.masterSdcId = masterSdcId;
+  }
+
+  public String getMasterSdcId() {
+    return masterSdcId;
   }
 
   public MetricRegistryJson getMetrics() {

@@ -185,6 +185,10 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   private SDCMetricsJson createSdcMetricJson(Record currentRecord) throws IOException {
     SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
     sdcMetricsJson.setSdcId(currentRecord.get("/" + AggregatorUtil.SDC_ID).getValueAsString());
+    Field value =  currentRecord.get("/" + AggregatorUtil.MASTER_SDC_ID);
+    if (value != null) {
+      sdcMetricsJson.setMasterSdcId(value.getValueAsString());
+    }
     sdcMetricsJson.setTimestamp(currentRecord.get("/" + AggregatorUtil.TIMESTAMP).getValueAsLong());
     sdcMetricsJson.setAggregated(currentRecord.get("/" + AggregatorUtil.IS_AGGREGATED).getValueAsBoolean());
     Map<String, Field> valueAsListMap = currentRecord.get("/" + AggregatorUtil.METADATA).getValueAsMap();

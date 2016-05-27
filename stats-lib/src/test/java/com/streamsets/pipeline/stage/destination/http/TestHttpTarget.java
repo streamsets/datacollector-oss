@@ -76,6 +76,7 @@ public class TestHttpTarget extends JerseyTest {
       Assert.assertEquals(String.valueOf(i), record.getSdcId());
       Assert.assertEquals("a", record.getMetadata().entrySet().iterator().next().getKey());
       Assert.assertEquals("b", record.getMetadata().entrySet().iterator().next().getValue());
+      Assert.assertEquals("masterSDC", record.getMasterSdcId());
       Assert.assertEquals("x", record.getMetadata().get(HttpTarget.DPM_PIPELINE_COMMIT_ID));
       Assert.assertEquals("y", record.getMetadata().get(HttpTarget.DPM_JOB_ID));
       Assert.assertTrue(record.isAggregated());
@@ -87,7 +88,7 @@ public class TestHttpTarget extends JerseyTest {
     for (int i = 0; i < 20; i++) {
       Map<String, Object> m = new HashMap<>();
       m.put("a", "b");
-      Record record = AggregatorUtil.createMetricJsonRecord(String.valueOf(i), m, true, "{}");
+      Record record = AggregatorUtil.createMetricJsonRecord(String.valueOf(i), "masterSDC", m, true, "{}");
       list.add(record);
     }
     return list;

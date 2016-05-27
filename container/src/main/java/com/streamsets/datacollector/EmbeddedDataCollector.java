@@ -88,7 +88,9 @@ public class EmbeddedDataCollector implements DataCollector {
             is.close();
           }
         }
-
+        String masterSDCId = Utils.checkNotNull(properties.getProperty("sdc.id"), "SDC_ID");
+        LOG.info(Utils.format("Master sdc id is: '{}'", masterSDCId));
+        runtimeInfo.setMasterSDCId(masterSDCId);
         String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
