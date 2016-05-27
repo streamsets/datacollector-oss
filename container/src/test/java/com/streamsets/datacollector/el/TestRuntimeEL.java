@@ -21,6 +21,7 @@ package com.streamsets.datacollector.el;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
@@ -37,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -187,6 +189,24 @@ public class TestRuntimeEL {
 
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
     Assert.assertEquals(null, RuntimeEL.authToken());
+  }
+
+  @Test
+  public void testHostname() throws IOException {
+    // No configuration, fetch hostname dynamically
+    OutputStream sdcProps = new FileOutputStream(new File(runtimeInfo.getConfigDir(), "sdc.properties"));
+    sdcProps.close();
+
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    Assert.assertEquals(InetAddress.getLocalHost().getCanonicalHostName(), RuntimeEL.hostname());
+
+    // Hostname in configuration file
+    sdcProps = new FileOutputStream(new File(runtimeInfo.getConfigDir(), "sdc.properties"));
+    IOUtils.write(WebServerTask.HTTP_BIND_HOST + "=sdc.jarcec.net", sdcProps);
+    sdcProps.close();
+
+    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    Assert.assertEquals("sdc.jarcec.net", RuntimeEL.hostname());
   }
 
 }

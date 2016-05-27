@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ElConstant;
@@ -32,6 +33,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -49,6 +52,7 @@ public class RuntimeEL {
   private static final String DPM_APPLICATION_TOKEN = "dpm.applicationToken";
   private static Properties RUNTIME_CONF_PROPS = null;
   private static String AUTH_TOKEN = null;
+  private static String HOSTNAME = null;
   private static RuntimeInfo runtimeInfo;
 
   @ElConstant(name = "NULL", description = "NULL value")
@@ -135,6 +139,7 @@ public class RuntimeEL {
       }
 
       AUTH_TOKEN = configuration.get(DPM_APPLICATION_TOKEN, null);
+      HOSTNAME = configuration.get(WebServerTask.HTTP_BIND_HOST, InetAddress.getLocalHost().getCanonicalHostName());
 
       RUNTIME_CONF_PROPS = new Properties();
       String runtimeConfLocation = configuration.get(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
@@ -170,6 +175,14 @@ public class RuntimeEL {
 
   public static Set<Object> getRuntimeConfKeys() {
     return (RUNTIME_CONF_PROPS != null) ? RUNTIME_CONF_PROPS.keySet() : Collections.emptySet();
+  }
+
+  @ElFunction(
+    prefix = "sdc",
+    name = "hostname",
+    description = "Return hostname where SDC runs")
+  public static String hostname() throws UnknownHostException {
+    return HOSTNAME;
   }
 
 }
