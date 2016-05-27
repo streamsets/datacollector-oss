@@ -32,16 +32,18 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
+import com.streamsets.pipeline.stage.processor.hbase.HBaseTargetUpgrader;
 
 import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "HBase",
     description = "Writes data to HBase",
     icon = "hbase.png",
     privateClassLoader = true,
+    upgrader = HBaseTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/HBase.html#task_pyq_qx5_vr"
 )
 @ConfigGroups(Groups.class)
