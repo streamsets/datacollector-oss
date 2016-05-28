@@ -394,7 +394,13 @@ angular.module('dataCollectorApp.common')
       }
 
       modalInstance.result.then(function (newPipelineConfig) {
-        self.addPipeline(newPipelineConfig);
+        if (!angular.isArray(newPipelineConfig)) {
+          self.addPipeline(newPipelineConfig);
+        } else {
+          angular.forEach(newPipelineConfig, function(p) {
+            self.addPipeline(p);
+          });
+        }
         defer.resolve(newPipelineConfig);
       }, function () {
 
