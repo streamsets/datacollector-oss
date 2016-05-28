@@ -13,6 +13,7 @@
     <div class="form-group">
       <label class="control-label" translate="global.form.name">Name</label>
       <input type="text" class="form-control" required
+             ng-disabled="operationInProgress"
              pattern="{{$root.common.namePattern}}"
              title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
@@ -23,16 +24,25 @@
     <div class="form-group">
       <label class="control-label" translate="global.form.description">Description</label>
       <textarea class="form-control" rows="2"
+                ng-disabled="operationInProgress"
                 placeholder="{{'home.library.descriptionPlaceholder' | translate}}"
                 ng-model="newConfig.description"></textarea>
     </div>
+
+    <div class="form-group">
+      <label class="control-label" translate="global.form.numberOfCopies">Number of Copies</label>
+      <input type="number" class="form-control"
+             ng-disabled="operationInProgress"
+             required min="1" max="1000" ng-model="newConfig.numberOfCopies">
+    </div>
+
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.cancel">
-      Cancel
-    </button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!newConfig.name" translate="global.form.duplicate">
-      Duplicate
-    </button>
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
+            translate="global.form.cancel">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!newConfig.name" ng-if="!operationInProgress"
+            translate="global.form.duplicate">Duplicate</button>
+    <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+            translate="global.form.duplicating">Duplicating...</button>
   </div>
 </form>

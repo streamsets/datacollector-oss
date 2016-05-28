@@ -297,7 +297,11 @@ angular
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Pipeline', 1);
         pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
           .then(function(newPipelineConfig) {
-            $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
+            if (!angular.isArray(newPipelineConfig)) {
+              $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
+            } else {
+              $location.path('/collector/pipeline/' + newPipelineConfig[0].info.name);
+            }
           });
       },
 

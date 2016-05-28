@@ -31,14 +31,16 @@ angular
       },
       pipelineInfo: pipelineInfo,
       isList: _.isArray(pipelineInfo),
-
+      operationInProgress: false,
       yes: function() {
+        $scope.operationInProgress = true;
         if ($scope.isList) {
           api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'name'))
             .success(function() {
               $modalInstance.close(pipelineInfo);
             })
             .error(function(res) {
+              $scope.operationInProgress = false;
               $scope.common.errors = [res];
             });
 
@@ -48,6 +50,7 @@ angular
               $modalInstance.close(pipelineInfo);
             })
             .error(function(res) {
+              $scope.operationInProgress = false;
               $scope.common.errors = [res];
             });
         }

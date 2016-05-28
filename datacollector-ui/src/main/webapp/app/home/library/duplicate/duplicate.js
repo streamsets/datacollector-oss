@@ -31,16 +31,39 @@ angular
       },
       newConfig : {
         name: pipelineInfo.name + 'copy',
-        description: pipelineInfo.description
+        description: pipelineInfo.description,
+        numberOfCopies: 1
       },
+      operationInProgress: false,
       save : function () {
-        $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
-          pipelineInfo)).
+        if ($scope.newConfig.numberOfCopies === 1) {
+          $scope.operationInProgress = true;
+          $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
+            pipelineInfo)).
           then(function(configObject) {
             $modalInstance.close(configObject);
           },function(res) {
+            $scope.operationInProgress = false;
             $scope.common.errors = [res.data];
           });
+        } else {
+          $scope.operationInProgress = true;
+          var deferList = [];
+          for (var i = 0; i < $scope.newConfig.numberOfCopies; i++) {
+            deferList.push(api.pipelineAgent.duplicatePipelineConfig(
+              $scope.newConfig.name + (i + 1),
+              $scope.newConfig.description,
+              pipelineInfo
+            ));
+          }
+          $q.all(deferList).
+          then(function(configObjects) {
+            $modalInstance.close(configObjects);
+          },function(res) {
+            $scope.operationInProgress = false;
+            $scope.common.errors = [res.data];
+          });
+        }
       },
       cancel : function () {
         $modalInstance.dismiss('cancel');
