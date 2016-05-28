@@ -26,7 +26,7 @@
           </li>
 
           <li role="presentation"
-              ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
               ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
             <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
               <i class="fa fa-trash-o"></i>
@@ -34,14 +34,14 @@
             </a>
           </li>
 
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
             <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(activeConfigInfo, $event)">
               <i class="fa fa-files-o"></i>
               <span>{{'global.form.duplicate' | translate}}</span>
             </a>
           </li>
 
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
             <a href="#" dropdown-toggle ng-click="importPipelineConfig(activeConfigInfo, $event)">
               <i class="glyphicon glyphicon-import"></i>
               <span>{{'global.form.import' | translate}}</span>

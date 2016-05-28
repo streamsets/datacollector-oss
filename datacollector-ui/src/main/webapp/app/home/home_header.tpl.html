@@ -51,7 +51,7 @@
         <i class="glyphicon glyphicon-export fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length === 0"
+      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || deleteSelectedPipeline()"
          tooltip-placement="bottom"
          tooltip="{{('global.form.delete' | translate) + ' (' + selectedPipelineList.length + ')'}}"
@@ -60,7 +60,7 @@
         <i class="fa fa-trash-o fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length !== 1"
+      <a ng-disabled="selectedPipelineList.length !== 1 || common.isSlaveNode"
          ng-click="selectedPipelineList.length !== 1 || duplicatePipelines()"
          tooltip-placement="bottom"
          tooltip="{{'global.form.duplicate' | translate}}"
@@ -69,7 +69,7 @@
         <i class="fa fa-files-o fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length === 0"
+      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || startSelectedPipelines()"
          tooltip-placement="bottom"
          tooltip="{{('home.header.start' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
@@ -78,7 +78,7 @@
         <i class="glyphicon glyphicon-play fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length === 0"
+      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || stopSelectedPipelines()"
          tooltip-placement="bottom"
          tooltip="{{('home.header.stop' | translate)  + ' (' + selectedPipelineList.length + ')'}}"

@@ -16,7 +16,7 @@
         </button>
 
         <button class="btn btn-primary pull-left import-pipeline-btn"
-                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
                 ng-click="importPipelineConfig()">
           <span class="fa fa-arrow-circle-down"></span>
           <span translate="home.importPipeline">Import Pipeline</span>
@@ -25,7 +25,7 @@
 
       <div ng-if="common.isDPMEnabled">
         <button class="btn btn-primary download-pipeline-btn"
-                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
                 ng-click="downloadRemotePipelineConfig()">
           <span class="fa fa-cloud-download"></span>
           <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
