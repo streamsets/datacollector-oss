@@ -6,14 +6,15 @@
 
   <div class="panel-body">
 
-    <div class="btn-group create-pipeline-btn-group">
+    <div class="btn-group create-pipeline-btn-group" ng-if="!common.isSlaveNode">
       <button type="button" class="btn btn-primary btn-sm create-pipeline-btn"
               ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])"
               ng-click="addPipelineConfig()">
         <span class="glyphicon glyphicon-plus"></span>
         <span translate="home.header.createNewPipeline">Create</span>
       </button>
-      <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
         <span class="caret"></span>
         <span class="sr-only">Toggle Dropdown</span>
       </button>

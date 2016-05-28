@@ -66,7 +66,7 @@
               </span>
           <ul class="dropdown-menu" role="menu">
             <li role="presentation"
-                ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+                ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
                 ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                 <i class="fa fa-trash-o"></i>
@@ -74,14 +74,14 @@
               </a>
             </li>
 
-            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
               <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
                 <i class="fa fa-files-o"></i>
                 <span>{{'global.form.duplicate' | translate}}</span>
               </a>
             </li>
 
-            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
               <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
                 <i class="glyphicon glyphicon-import"></i>
                 <span>{{'global.form.import' | translate}}</span>
@@ -107,7 +107,7 @@
                 ng-show="pipeline.valid"></li>
 
             <li role="presentation"
-                ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
                 ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || common.pipelineStatusMap[pipeline.name].status === 'STARTING' || !pipeline.valid">
               <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-play"></i>
@@ -116,7 +116,7 @@
             </li>
 
             <li role="presentation"
-                ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
                 ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-stop"></i>
