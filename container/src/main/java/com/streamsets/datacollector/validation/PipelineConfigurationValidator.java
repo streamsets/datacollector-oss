@@ -250,26 +250,33 @@ public class PipelineConfigurationValidator {
       }
     }
     for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
-      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
-      if (stageDef != null) {
-        for (ConfigDefinition configDef : stageDef.getConfigDefinitions()) {
-          String configName = configDef.getName();
-          Config config = stageConf.getConfig(configName);
-          if (config == null) {
-            Object defaultValue = configDef.getDefaultValue();
-            LOG.warn(
-                "Stage '{}' missing configuration '{}', adding with '{}' as default",
-                stageConf.getInstanceName(),
-                configName,
-                defaultValue
-            );
-            config = new Config(configName, defaultValue);
-            stageConf.addConfig(config);
-          }
+      addMissingConfigsToStage(stageConf);
+    }
+    if(pipelineConfiguration.getErrorStage() != null) {
+      addMissingConfigsToStage(pipelineConfiguration.getErrorStage());
+    }
+    return true;
+  }
+
+  private void addMissingConfigsToStage(StageConfiguration stageConf) {
+    StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
+    if (stageDef != null) {
+      for (ConfigDefinition configDef : stageDef.getConfigDefinitions()) {
+        String configName = configDef.getName();
+        Config config = stageConf.getConfig(configName);
+        if (config == null) {
+          Object defaultValue = configDef.getDefaultValue();
+          LOG.warn(
+              "Stage '{}' missing configuration '{}', adding with '{}' as default",
+              stageConf.getInstanceName(),
+              configName,
+              defaultValue
+          );
+          config = new Config(configName, defaultValue);
+          stageConf.addConfig(config);
         }
       }
     }
-    return true;
   }
 
   private boolean validateStageExecutionMode(

@@ -37,6 +37,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class TestPipelineConfigurationValidator {
@@ -200,6 +201,12 @@ public class TestPipelineConfigurationValidator {
   public void testAddMissingConfigs() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+
+    // Generate error stage and clean up it's configuration
+    StageConfiguration errorStage = MockStages.getErrorStageConfig();
+    errorStage.setConfig(new LinkedList<Config>());
+    conf.setErrorStage(errorStage);
+
     int pipelineConfigs = conf.getConfiguration().size();
     int stageConfigs = conf.getStages().get(2).getConfiguration().size();
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
@@ -210,6 +217,9 @@ public class TestPipelineConfigurationValidator {
 
     Assert.assertTrue(pipelineConfigs < conf.getConfiguration().size());
     Assert.assertTrue(stageConfigs < conf.getStages().get(2).getConfiguration().size());
+
+    // Verify that error stage configs were generated as expected
+    Assert.assertTrue(conf.getErrorStage().getConfiguration().size() > 0);
   }
 
   @Test
