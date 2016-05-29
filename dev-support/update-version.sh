@@ -39,7 +39,7 @@ done
 
 for f in BUILD.md dist/src/main/etc/sdc.properties
 do
-  perl -i -pe 's@(datacollector.)\d+.\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
+  perl -i -pe 's@(datacollector.(all.)?)\d+.\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
 done
 
 ui_version=$(echo $version | perl -pe 's@(\d+.\d+.\d+).(\d+)(-SNAPSHOT)?@${1}${2}${3}@g')
