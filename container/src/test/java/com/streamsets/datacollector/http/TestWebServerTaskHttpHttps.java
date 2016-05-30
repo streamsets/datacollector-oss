@@ -386,6 +386,12 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
         return handler;
       }
+
+      @Override
+      public Configuration getAppConfiguration() {
+        return new Configuration();
+      }
+
       @Override
       public void postStart() {
       }
@@ -415,7 +421,7 @@ public class TestWebServerTaskHttpHttps {
   }
 
   private static class DummySSOService implements SSOService {
-    boolean inited;
+    boolean delegated;
 
     @Override
     public void setDelegateTo(SSOService ssoService) {
@@ -424,7 +430,6 @@ public class TestWebServerTaskHttpHttps {
 
     @Override
     public void setConfiguration(Configuration configuration) {
-      inited = true;
     }
 
     @Override
@@ -484,6 +489,7 @@ public class TestWebServerTaskHttpHttps {
           public void contextInitialized(ServletContextEvent sce) {
             SSOService ssoService = (SSOService) sce.getServletContext().getAttribute(SSOService.SSO_SERVICE_KEY);
             ssoService.setDelegateTo(delegatedTo);
+            delegatedTo.delegated = true;
           }
 
           @Override
@@ -494,6 +500,12 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
         return handler;
       }
+
+      @Override
+      public Configuration getAppConfiguration() {
+        return new Configuration();
+      }
+
       @Override
       public void postStart() {
       }
@@ -513,7 +525,7 @@ public class TestWebServerTaskHttpHttps {
       }.start();
       Thread.sleep(1000);
 
-      Assert.assertTrue(delegatedTo.inited);
+      Assert.assertTrue(delegatedTo.delegated);
     } finally {
       ws.stopTask();
     }
@@ -531,6 +543,12 @@ public class TestWebServerTaskHttpHttps {
         handler.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
         return handler;
       }
+
+      @Override
+      public Configuration getAppConfiguration() {
+        return new Configuration();
+      }
+
       @Override
       public void postStart() {
       }

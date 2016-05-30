@@ -67,7 +67,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.net.ssl.SSLContext;
 import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -200,6 +199,7 @@ public class WebServerTask extends AbstractTask {
     // load web apps
     Set<String> contextPaths = new LinkedHashSet<>();
     for (WebAppProvider appProvider : webAppProviders) {
+      Configuration appConf = appProvider.getAppConfiguration();
       ServletContextHandler appHandler = appProvider.get();
       String contextPath = appHandler.getContextPath();
       if (contextPath.equals("/")) {
@@ -211,13 +211,13 @@ public class WebServerTask extends AbstractTask {
       // all webapps must have a session manager
       appHandler.setSessionHandler(new SessionHandler(hashSessionManager));
 
-      appHandler.setSecurityHandler(createSecurityHandler(server, appHandler, contextPath));
+      appHandler.setSecurityHandler(createSecurityHandler(server, appConf, appHandler, contextPath));
       contextPaths.add(contextPath);
       appHandlers.addHandler(appHandler);
     }
 
     ServletContextHandler appHandler = configureRootContext(new SessionHandler(hashSessionManager));
-    appHandler.setSecurityHandler(createSecurityHandler(server, appHandler, "/"));
+    appHandler.setSecurityHandler(createSecurityHandler(server, conf, appHandler, "/"));
     Handler handler = configureRedirectionRules(appHandler);
     appHandlers.addHandler(handler);
 
@@ -319,12 +319,15 @@ public class WebServerTask extends AbstractTask {
   }
 
 
-  private SecurityHandler createSecurityHandler(Server server, ServletContextHandler appHandler, String appContext) {
+  @VisibleForTesting
+  SecurityHandler createSecurityHandler(
+      Server server, Configuration appConf, ServletContextHandler appHandler, String appContext
+  ) {
     ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     boolean isDPMEnabled = conf.get(DPM_ENABLED, DPM_ENABLED_DEFAULT);
     if (isDPMEnabled) {
-      securityHandler = configureSSO(appHandler, appContext);
+      securityHandler = configureSSO(appConf, appHandler, appContext);
     } else {
       switch (auth) {
         case "none":
@@ -336,9 +339,6 @@ public class WebServerTask extends AbstractTask {
           break;
         case "form":
           securityHandler = configureForm(server, auth);
-          break;
-        case "sso":
-          securityHandler = configureSSO(appHandler, appContext);
           break;
         default:
           throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
@@ -382,26 +382,28 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private ConstraintSecurityHandler configureSSO(ServletContextHandler appHandler, String appContext) {
-    addToPostStart(new Runnable() {
-      @Override
-      public void run() {
-        LOG.debug("Validating Application Token with Remote Service");
-        validateApplicationToken();
-      }
-    });
+  private ConstraintSecurityHandler configureSSO(
+      final Configuration appConf, ServletContextHandler appHandler, String appContext
+  ) {
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    final SSOService ssoService = new ProxySSOService(new RemoteSSOService());
+    SSOService ssoService = null;
+    if (appConf.get(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, null) != null) {
+      LOG.debug("Initializing RemoteSSOService");
+      ssoService = new RemoteSSOService();
+      ssoService.setConfiguration(appConf);
+      // we only need to do this if we have an app token configured
+      addToPostStart(new Runnable() {
+        @Override
+        public void run() {
+          LOG.debug("Validating Application Token with SSO Remote Service");
+          validateApplicationToken();
+        }
+      });
+    }
+    ssoService = new ProxySSOService(ssoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
-    addToPostStart(new Runnable() {
-      @Override
-      public void run() {
-        LOG.debug("Initializing SSO service");
-        ssoService.setConfiguration(conf);
-      }
-    });
-    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, conf));
+    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, appConf));
     return security;
   }
 

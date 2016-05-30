@@ -19,12 +19,15 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.streamsets.datacollector.util.Configuration;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 /**
  * For web-apps
  */
 public interface WebAppProvider {
+
+  Configuration getAppConfiguration();
 
   ServletContextHandler get();
 
