@@ -239,6 +239,10 @@
                     <groupId>com.codahale.metrics</groupId>
                     <artifactId>metrics-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.jettison</groupId>
+                    <artifactId>jettison</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

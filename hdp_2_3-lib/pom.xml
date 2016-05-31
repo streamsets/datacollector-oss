@@ -277,6 +277,12 @@
       <artifactId>hive-hcatalog-core</artifactId>
       <version>${hive.version}</version>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.jettison</groupId>
+          <artifactId>jettison</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- HBase related -->
