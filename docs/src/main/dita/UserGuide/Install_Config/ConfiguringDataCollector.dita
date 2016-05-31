@@ -73,18 +73,76 @@
                             </row>
                             <row>
                                 <entry>https.keystore.path</entry>
-                                <entry>Keystore path and file name. <p>By default, the file name is
-                                            <filepath>sdc-keystore.jks</filepath> and expected in
+                                <entry>Keystore path and file name. Enter an absolute path or a path
+                                    relative to the <codeph>$SDC_CONF</codeph> directory. For
+                                    cluster pipelines, enter the path to the file on the gateway
+                                        node.<p>Default is <filepath>sdc-keystore.jks</filepath> in
                                         the <codeph>$SDC_CONF</codeph> directory.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.password</entry>
-                                <entry>File that contains the password to the keystore file. <p>By
-                                        default, the file name is
-                                            <filepath>keystore-password.txt</filepath> and expected
-                                        in the <codeph>$SDC_CONF</codeph> directory.</p><p>When
-                                        appropriate, you can replace the default file
-                                    name.</p></entry>
+                                <entry>Path and name of the file that contains the password to the
+                                    keystore file. Enter an absolute path or a path relative to the
+                                        <codeph>$SDC_CONF</codeph> directory. For cluster pipelines,
+                                    enter the path to the file on the gateway node.<p>Default is
+                                            <filepath>keystore-password.txt</filepath> in the
+                                            <codeph>$SDC_CONF</codeph> directory.</p></entry>
+                            </row>
+                            <row>
+                                <entry>https.cluster.keystore.path</entry>
+                                <entry>For cluster pipelines, the absolute path and file name of the
+                                    keystore file on worker nodes. The file must be in the same
+                                    location on each worker node.</entry>
+                            </row>
+                            <row>
+                                <entry>https.cluster.keystore.password</entry>
+                                <entry>For cluster pipeines, the absolute path and name of the file
+                                    that contains the password to the keystore file on worker nodes.
+                                    The file must be in the same location on each worker
+                                    node.</entry>
+                            </row>
+                            <row>
+                                <entry>https.truststore.path</entry>
+                                <entry>For cluster pipelines, the path and name of the truststore
+                                    file on the gateway node. Enter an absolute path or a path
+                                    relative to the <codeph>$SDC_CONF</codeph> directory.<p>Default
+                                        is the file from the following directory:
+                                            <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>. Be
+                                        sure to uncomment the property if you change the
+                                    value.</p></entry>
+                            </row>
+                            <row>
+                                <entry>https.truststore.password</entry>
+                                <entry>For cluster pipelines, the path and name of the file that
+                                    contains the password to the truststore file on the gateway
+                                    node. Enter an absolute path or a path relative to the
+                                        <codeph>$SDC_CONF</codeph> directory.<p>Be sure to uncomment
+                                        the property and provide a path to the password file if you
+                                        use a generated truststore file instead of the default file
+                                        from the following directory:
+                                            <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>.
+                                    </p></entry>
+                            </row>
+                            <row>
+                                <entry>https.cluster.truststore.path</entry>
+                                <entry>For cluster pipelines, the absolute path and file name of the
+                                    truststore file on the worker nodes. The file must be in the
+                                    same location on each worker node.<p>Default is the file from
+                                        the following directory:
+                                            <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>. Be
+                                        sure to uncomment the property if you change the
+                                    value.</p></entry>
+                            </row>
+                            <row>
+                                <entry>https.cluster.truststore.password</entry>
+                                <entry>For cluster pipelines, the absolute path and name of the file
+                                    that contains the password to the truststore file on the worker
+                                    nodes. The file must be in the same location on each worker
+                                        node.<p>Be sure to uncomment the property and provide a path
+                                        to the password file if you use a generated truststore file
+                                        instead of the default file from the following directory:
+                                            <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>.
+                                    </p></entry>
                             </row>
                             <row>
                                 <entry>http.session.max.inactive.interval</entry>

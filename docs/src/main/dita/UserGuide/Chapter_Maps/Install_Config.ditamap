@@ -87,7 +87,12 @@
    <topicref href="../Install_Config/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Install_Config/ReferencingEnvVariables.dita"/>
    <topicref href="../Install_Config/RunningMultiplePipelines.dita"/>
-   <topicref href="../Install_Config/HTTP_protocols.dita"/>
+   <topicref href="../Install_Config/HTTP_protocols.dita">
+    <topicref href="../Install_Config/HTTP_protocolsStandalone.dita"/>
+    <topicref href="../Install_Config/HTTP_protocolsCluster.dita"/>
+    <topicref href="../Install_Config/HTTP_protocolsClusterKeystore.dita"/>
+    <topicref href="../Install_Config/HTTP_protocolsClusterTruststore.dita"/>
+   </topicref>
    <topicref href="../Install_Config/BlacklistWhitelist.dita"/>
    <topicref href="../Install_Config/ConfiguringDataCollector.dita"/>
   </topicref>
