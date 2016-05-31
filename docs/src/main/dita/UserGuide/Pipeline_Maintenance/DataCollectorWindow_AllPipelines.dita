@@ -15,15 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wc5_ysp_1w">
  <title>Data Collector Console - All Pipelines on the Home Page</title>
- <shortdesc>You can display all pipelines in the Data Collector console when you click the Home icon
-        or the Pipelines link in the pipeline path when configuring or monitoring a pipeline. View
-        all pipelines on the Home page to perform pipeline maintenance.</shortdesc>
+ <shortdesc>You can display all pipelines in the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        console when you click the Home icon or the Pipelines link in the pipeline path when
+        configuring or monitoring a pipeline. View all pipelines on the Home page to perform
+        pipeline maintenance.</shortdesc>
  <conbody>
   <p><indexterm>Data Collector console<indexterm>pipelines
                 view</indexterm></indexterm><indexterm>Data Collector console<indexterm>Home
                     page</indexterm></indexterm><indexterm>Home page<indexterm>Data Collector
-                    console</indexterm></indexterm>The following image shows the Data Collector
-            console when you display all pipelines on the Home page:</p>
+                    console</indexterm></indexterm>The following image shows the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />console when you display all pipelines on the Home page:</p>
      <image
                 href="../Graphics/DCConsoleAllPipelines.png" scale="75" id="image_a41_tlq_1w"/>
      <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
