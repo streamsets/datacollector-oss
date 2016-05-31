@@ -56,7 +56,7 @@ public class TestHttpClientSourceUpgrader {
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(19, configs.size());
+    Assert.assertEquals(21, configs.size());
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
 
@@ -125,12 +125,12 @@ public class TestHttpClientSourceUpgrader {
     Assert.assertTrue(configValues.containsKey("conf.useProxy"));
     Assert.assertEquals(false, configValues.get("conf.useProxy"));
 
-    Assert.assertTrue(configValues.containsKey("conf.proxy"));
-    HttpProxyConfigBean proxyConfig = (HttpProxyConfigBean) configValues.get("conf.proxy");
-
-    Assert.assertTrue(proxyConfig.uri.isEmpty());
-    Assert.assertTrue(proxyConfig.username.isEmpty());
-    Assert.assertTrue(proxyConfig.password.isEmpty());
+    Assert.assertTrue(configValues.containsKey("conf.proxy.uri"));
+    Assert.assertEquals("", configValues.get("conf.proxy.uri"));
+    Assert.assertTrue(configValues.containsKey("conf.proxy.username"));
+    Assert.assertEquals("", configValues.get("conf.proxy.username"));
+    Assert.assertTrue(configValues.containsKey("conf.proxy.password"));
+    Assert.assertEquals("", configValues.get("conf.proxy.password"));
   }
 
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
