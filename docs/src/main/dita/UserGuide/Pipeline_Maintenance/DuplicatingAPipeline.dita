@@ -21,7 +21,7 @@
     <taskbody>
         <context>
             <p><indexterm>pipelines<indexterm>duplicating</indexterm></indexterm>When you duplicate
-                a pipeline, you can rename the pipeline. </p>
+                a pipeline, you can rename the pipeline and specify the number of copies to make. </p>
         </context>
         <steps id="steps_lgz_fvr_5q">
             <step>
@@ -32,9 +32,17 @@
             </step>
             <step>
                 <cmd>In the <uicontrol>Duplicate Pipeline Definition</uicontrol> dialog box, enter a
-                    name for the duplicate pipeline and click
-                    <uicontrol>Duplicate</uicontrol>.</cmd>
-                <stepresult>The duplicate pipeline displays.</stepresult>
+                    name for the duplicate pipeline and the number of copies to make.</cmd>
+                <info>When you create multiple copies, <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> appends an integer after the pipeline name. For example, if you enter the
+                    name "test" and create two copies of the pipeline, <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> names the duplicate pipelines "test1" and "test2".</info>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Duplicate</uicontrol>.</cmd>
+                <stepresult>The duplicate pipelines display.</stepresult>
             </step>
         </steps>
     </taskbody>
