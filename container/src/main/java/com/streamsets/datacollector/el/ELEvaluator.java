@@ -142,11 +142,17 @@ public class ELEvaluator extends ELEval {
     try {
       return (T) EVALUATOR.evaluate(expression, returnType, variableResolver, functionMapper);
     } catch (ELException e) {
-      LOG.debug("Error valuating EL '{}': {}", expression, e.toString(), e);
+      // Apache evaluator is not using the getCause exception chaining that is available in Java but rather a custom
+      // chaining mechanism. This doesn't work well for us as we're effectively swallowing the cause that is not
+      // available in log, ...
       Throwable t = e;
       if(e.getRootCause() != null) {
         t = e.getRootCause();
+        if(e.getCause() == null) {
+          e.initCause(t);
+        }
       }
+      LOG.debug("Error valuating EL '{}': {}", expression, e.toString(), e);
       throw new ELEvalException(CommonError.CMN_0104, expression, t.toString(), e);
     }
   }
