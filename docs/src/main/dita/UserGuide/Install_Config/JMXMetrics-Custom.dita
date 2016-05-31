@@ -16,11 +16,13 @@
 <concept id="concept_llw_2st_nv">
  <title>Custom Metrics</title>
  <conbody>
-        <draft-comment author="Loretta">Update the lines below after they become available in the
-            UI?</draft-comment>
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
-            custom metrics for some stages. When you view JMX metrics using an external tool and
-            when a pipeline includes the stages below, you can view custom metrics for the stages:<dl>
+            custom metrics for some stages. When a pipeline includes the stages below, you can view
+            custom metrics for the stages in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            console in Monitor mode or when you view JMX metrics using an external tool:</p>
+        <p>
+            <dl>
                 <dlentry>
                     <dt>File Tail origin</dt>
                     <dd>In addition to the standard metrics available for origins, File Tail
@@ -52,6 +54,7 @@ LocalFileSystemDTarget_&lt;library version>.lateRecords.&lt;file path>.\
                                     it is yet. To HDFS records - </draft-comment></li>
                         </ul></dd>
                 </dlentry>
-            </dl></p>
+            </dl>
+        </p>
  </conbody>
 </concept>
