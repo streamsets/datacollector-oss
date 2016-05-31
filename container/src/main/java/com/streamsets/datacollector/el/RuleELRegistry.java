@@ -23,6 +23,7 @@ import com.streamsets.datacollector.rules.AlertInfoEL;
 import com.streamsets.datacollector.rules.DriftRuleEL;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.DataUnitsEL;
+import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -50,6 +51,7 @@ public class RuleELRegistry {
         return new Class[] {
             RecordEL.class,
             StringEL.class,
+            MathEL.class,
             DataUnitsEL.class,
             RuntimeEL.class,
             JvmEL.class,
