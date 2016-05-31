@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   LOOKUP_01("Failed to evaluate expression: '{}'"),
   LOOKUP_02("Failed to fetch values for batch: '{}'"),
+  LOOKUP_03("Empty static store values")
   ;
 
   private final String msg;
