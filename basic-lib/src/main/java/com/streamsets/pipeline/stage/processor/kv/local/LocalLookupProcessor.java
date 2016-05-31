@@ -68,6 +68,14 @@ public class LocalLookupProcessor extends BaseProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
+    if(this.conf.values.isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          Groups.LOCAL.name(),
+          this.conf.values.toString(),
+          Errors.LOOKUP_03
+      ));
+    }
+
     if (issues.isEmpty()) {
       error = new DefaultErrorRecordHandler(getContext());
       keyExprEval = getContext().createELEval("keyExpr");
