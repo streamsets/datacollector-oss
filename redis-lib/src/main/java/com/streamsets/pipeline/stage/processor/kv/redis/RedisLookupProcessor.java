@@ -172,9 +172,9 @@ public class RedisLookupProcessor extends BaseProcessor {
         LOG.error(Errors.LOOKUP_01.getMessage(), parameters.keyExpr, e);
         error.onError(
             new OnRecordErrorException(
+                record,
                 Errors.LOOKUP_01,
-                parameters.keyExpr,
-                record
+                parameters.keyExpr
             )
         );
       } catch (UncheckedExecutionException e) {
@@ -194,14 +194,39 @@ public class RedisLookupProcessor extends BaseProcessor {
   }
 
   private void doBatchLookup(Batch batch, BatchMaker batchMaker) throws StageException {
-    List<Map<String, Pair<String, DataType>>> mapList = getMap(batch);
-    Set<Pair<String, DataType>> keys = getKeys(mapList);
-
     Iterator<Record> records;
-    Map<Pair<String, DataType>, LookupValue> values;
-
     try {
-      values = cache.getAll(keys);
+      List<Map<String, Pair<String, DataType>>> mapList = getMap(batch);
+      Set<Pair<String, DataType>> keys = getKeys(mapList);
+      Map<Pair<String, DataType>, LookupValue> values = cache.getAll(keys);
+
+      records = batch.getRecords();
+      Record record;
+      int index = 0;
+      Map<String, Pair<String, DataType>> map;
+
+      while (records.hasNext()) {
+        record = records.next();
+        map = mapList.get(index);
+        // Now we have to get the key for each key configuration
+        for (RedisLookupParameterConfig parameters : conf.lookups) {
+          Pair<String, DataType> key = map.get(parameters.outputFieldPath);
+          LookupValue value = values.get(key);
+          updateRecord(value, parameters.outputFieldPath, record);
+        }
+
+        batchMaker.addRecord(record);
+        index++;
+      }
+
+    } catch (ELEvalException e) {
+      LOG.error("Failed to fetch values from cache: {}", e.toString(), e);
+      // Send whole batch to error
+      records = batch.getRecords();
+      while (records.hasNext()) {
+        Record record = records.next();
+        error.onError(new OnRecordErrorException(record, Errors.LOOKUP_01, e.toString()));
+      }
     } catch (ExecutionException e) {
       LOG.error("Failed to fetch values from cache: {}", e.toString(), e);
       // Send whole batch to error
@@ -210,26 +235,6 @@ public class RedisLookupProcessor extends BaseProcessor {
         Record record = records.next();
         error.onError(new OnRecordErrorException(record, Errors.LOOKUP_02, e.toString()));
       }
-      return;
-    }
-
-    records = batch.getRecords();
-    Record record;
-    int index = 0;
-    Map<String, Pair<String, DataType>> map;
-
-    while (records.hasNext()) {
-      record = records.next();
-      map = mapList.get(index);
-      // Now we have to get the key for each key configuration
-      for (RedisLookupParameterConfig parameters : conf.lookups) {
-        Pair<String, DataType> key = map.get(parameters.outputFieldPath);
-        LookupValue value = values.get(key);
-        updateRecord(value, parameters.outputFieldPath, record);
-      }
-
-      batchMaker.addRecord(record);
-      index++;
     }
   }
 
@@ -286,7 +291,7 @@ public class RedisLookupProcessor extends BaseProcessor {
     }
   }
 
-  private List<Map<String, Pair<String, DataType>>> getMap(Batch batch) throws StageException {
+  private List<Map<String, Pair<String, DataType>>> getMap(Batch batch) throws ELEvalException {
     List<Map<String, Pair<String, DataType>>> list = new ArrayList<>();
     Iterator<Record> records = batch.getRecords();
 
@@ -297,13 +302,8 @@ public class RedisLookupProcessor extends BaseProcessor {
       Map<String, Pair<String, DataType>> keys = new HashMap<>();
 
       for (RedisLookupParameterConfig parameters : conf.lookups) {
-        try {
-          Pair<String, DataType> pair = Pair.of(keyExprEval.eval(elVars, parameters.keyExpr, String.class), parameters.dataType);
-          keys.put(parameters.outputFieldPath, pair);
-        } catch (ELEvalException e) {
-          LOG.error(Errors.LOOKUP_01.getMessage(), parameters.keyExpr, e);
-          error.onError(new OnRecordErrorException(Errors.LOOKUP_01, parameters.keyExpr, record));
-        }
+        Pair<String, DataType> pair = Pair.of(keyExprEval.eval(elVars, parameters.keyExpr, String.class), parameters.dataType);
+        keys.put(parameters.outputFieldPath, pair);
       }
       list.add(keys);
     }
