@@ -37,7 +37,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_847055481"/>
+               path="Install_Config/CMInstall-Overview.html#unique_843279263"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -78,8 +78,16 @@
                path="Install_Config/DCConfig.html#concept_gvn_rnr_pt"/>
    <appContext helpID="task_nkc_ydl_bw"
                path="Install_Config/DCConfig.html#task_nkc_ydl_bw"/>
+   <appContext helpID="concept_xyp_lt4_cw"
+               path="Install_Config/DCConfig.html#concept_xyp_lt4_cw"/>
    <appContext helpID="concept_ecx_hkq_kr"
                path="Install_Config/DCConfig.html#concept_ecx_hkq_kr"/>
+   <appContext helpID="concept_rdt_h54_cw"
+               path="Install_Config/DCConfig.html#concept_rdt_h54_cw"/>
+   <appContext helpID="concept_ihc_vlr_dw"
+               path="Install_Config/DCConfig.html#concept_ihc_vlr_dw"/>
+   <appContext helpID="concept_xxz_vlr_dw"
+               path="Install_Config/DCConfig.html#concept_xxz_vlr_dw"/>
    <appContext helpID="concept_gfx_rvf_qv"
                path="Install_Config/DCConfig.html#concept_gfx_rvf_qv"/>
    <appContext helpID="task_lxk_kjw_1r"
@@ -749,6 +757,8 @@
                path="Cluster_Mode/ClusterPipelines_title.html"/>
    <appContext helpID="concept_hmh_kfn_1s"
                path="Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s"/>
+   <appContext helpID="concept_rmd_hgp_cw"
+               path="Cluster_Mode/ClusterPipelines.html#concept_rmd_hgp_cw"/>
    <appContext helpID="concept_swq_1bg_xs"
                path="Cluster_Mode/ClusterPipelines.html#concept_swq_1bg_xs"/>
    <appContext helpID="concept_cs4_lcg_j5"
@@ -970,7 +980,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_1414880066"/>
+               path="Troubleshooting/Destinations.html#unique_1022036984"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
