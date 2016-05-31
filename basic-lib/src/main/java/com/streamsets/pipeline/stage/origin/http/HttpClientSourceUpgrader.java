@@ -107,6 +107,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("conf.useProxy", false));
-    configs.add(new Config("conf.proxy", new HttpProxyConfigBean()));
+    configs.add(new Config("conf.proxy.uri", ""));
+    configs.add(new Config("conf.proxy.username", ""));
+    configs.add(new Config("conf.proxy.password", ""));
+
   }
 }
