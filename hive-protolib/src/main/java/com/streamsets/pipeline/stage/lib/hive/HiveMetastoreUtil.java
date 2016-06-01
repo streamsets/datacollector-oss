@@ -176,9 +176,7 @@ public final class HiveMetastoreUtil {
       }
     } catch(Exception e) {
       throwException = true;
-      LOG.error(Utils.format("Can't parse the metadata record: {}", metadataRecord));
-      // Can't call initCause due to bug in StageException that already sets the cause to null
-//     exception.initCause(e);
+      exception.initCause(e);
     }
 
     if (throwException) {
