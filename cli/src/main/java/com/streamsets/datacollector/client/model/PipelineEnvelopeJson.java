@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,22 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.client.cli.command;
+package com.streamsets.datacollector.client.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
-import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
 
-public class PipelineConfigAndRulesJson {
+public class PipelineEnvelopeJson {
   private PipelineConfigurationJson pipelineConfig;
   private RuleDefinitionsJson pipelineRules;
-
-  public PipelineConfigAndRulesJson(
-    @JsonProperty("pipelineConfig") PipelineConfigurationJson pipelineConfig,
-    @JsonProperty("pipelineRules") RuleDefinitionsJson pipelineRules) {
-    this.pipelineConfig = pipelineConfig;
-    this.pipelineRules = pipelineRules;
-  }
+  @JsonIgnore
+  private DefinitionsJson libraryDefinitions;
 
   public PipelineConfigurationJson getPipelineConfig() {
     return pipelineConfig;
@@ -48,5 +43,15 @@ public class PipelineConfigAndRulesJson {
 
   public void setPipelineRules(RuleDefinitionsJson pipelineRules) {
     this.pipelineRules = pipelineRules;
+  }
+
+  @JsonProperty("libraryDefinitions")
+  public DefinitionsJson getLibraryDefinitions() {
+    return libraryDefinitions;
+  }
+
+  @JsonIgnore
+  public void setLibraryDefinitions(DefinitionsJson libraryDefinitions) {
+    this.libraryDefinitions = libraryDefinitions;
   }
 }

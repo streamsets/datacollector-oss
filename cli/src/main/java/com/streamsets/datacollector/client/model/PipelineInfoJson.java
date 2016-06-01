@@ -19,17 +19,21 @@
  */
 package com.streamsets.datacollector.client.model;
 
-import com.streamsets.datacollector.client.StringUtil;
-import java.util.Date;
-
-
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.client.StringUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(
+    value = "class io.swagger.codegen.languages.JavaClientCodegen",
+    date = "2015-09-11T14:51:29.367-07:00"
+)
 public class PipelineInfoJson   {
 
   private String name = null;
@@ -41,7 +45,7 @@ public class PipelineInfoJson   {
   private String lastRev = null;
   private String uuid = null;
   private Boolean valid = null;
-
+  private Map<String, Object> metadata = new HashMap<String, Object>();
 
   /**
    **/
@@ -150,7 +154,16 @@ public class PipelineInfoJson   {
     this.valid = valid;
   }
 
-
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("metadata")
+  public Map<String, Object> getMetadata() {
+    return metadata;
+  }
+  public void setMetadata(Map<String, Object> metadata) {
+    this.metadata = metadata;
+  }
 
   @Override
   public String toString()  {
@@ -166,6 +179,7 @@ public class PipelineInfoJson   {
     sb.append("    lastRev: ").append(StringUtil.toIndentedString(lastRev)).append("\n");
     sb.append("    uuid: ").append(StringUtil.toIndentedString(uuid)).append("\n");
     sb.append("    valid: ").append(StringUtil.toIndentedString(valid)).append("\n");
+    sb.append("    metadata: ").append(StringUtil.toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();
   }
