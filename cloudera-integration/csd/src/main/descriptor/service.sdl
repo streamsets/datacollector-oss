@@ -133,6 +133,7 @@
               "xmail.username",
               "xmail.password",
               "xmail.from.address",
+              "monitor.memory",
               "kerberos.client.enabled",
               "preview.maxBatchSize",
               "preview.maxBatches",
@@ -648,6 +649,13 @@
           "label": "Mail password",
           "description": "Password for the email account to send alert email.",
           "type": "password"
+        },
+        {
+          "name": "monitor.memory",
+          "label": "Stage memory monitoring",
+          "description": "Monitor memory of stages. Should not be disabled under normal circumstances.",
+          "type": "boolean",
+          "default": "true"
         },
         {
           "name": "runner.thread.pool.size",
