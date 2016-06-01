@@ -421,8 +421,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
         throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, pName.valueEL);
       }  else {
         values.put(pName.name, ret);
+        sb.append(HiveMetastoreUtil.SEP);
         sb.append(pName.name);
-        sb.append("=");
+        sb.append(HiveMetastoreUtil.EQUALS);
         sb.append(ret);
       }
     }
