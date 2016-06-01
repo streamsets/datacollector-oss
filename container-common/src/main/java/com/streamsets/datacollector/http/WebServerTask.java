@@ -66,7 +66,6 @@ import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -109,7 +108,7 @@ import java.util.Set;
  * protected means authentication IS required.
  *
  */
-public class WebServerTask extends AbstractTask {
+public abstract class WebServerTask extends AbstractTask {
   public static final String HTTP_BIND_HOST = "http.bindHost";
   private static final String HTTP_BIND_HOST_DEFAULT = "0.0.0.0";
 
@@ -170,7 +169,6 @@ public class WebServerTask extends AbstractTask {
   private HashSessionManager hashSessionManager;
   private Map<String, Set<String>> roleMapping;
 
-  @Inject
   public WebServerTask(
       RuntimeInfo runtimeInfo,
       Configuration conf,
@@ -182,6 +180,14 @@ public class WebServerTask extends AbstractTask {
     this.conf = conf;
     this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
+  }
+
+  protected RuntimeInfo getRuntimeInfo() {
+    return runtimeInfo;
+  }
+
+  protected Configuration getConfiguration() {
+    return conf;
   }
 
   @Override
@@ -383,7 +389,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   private ConstraintSecurityHandler configureSSO(
-      final Configuration appConf, ServletContextHandler appHandler, String appContext
+      final Configuration appConf, ServletContextHandler appHandler, final String appContext
   ) {
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
@@ -397,7 +403,7 @@ public class WebServerTask extends AbstractTask {
         @Override
         public void run() {
           LOG.debug("Validating Application Token with SSO Remote Service");
-          validateApplicationToken();
+          validateApplicationToken(appConf);
         }
       });
     }
@@ -754,31 +760,44 @@ public class WebServerTask extends AbstractTask {
     return roles;
   }
 
-  private void validateApplicationToken() {
-    String applicationToken = conf.get(REMOTE_APPLICATION_TOKEN, REMOTE_APPLICATION_TOKEN_DEFAULT);
+  protected abstract String getAppAuthToken(Configuration appConfiguration);
 
-    if (applicationToken != null && applicationToken.trim().length() > 0 &&
-        conf.hasName(RemoteSSOService.DPM_BASE_URL_CONFIG)) {
+  protected abstract String getComponentId(Configuration appConfiguration);
+
+  private void validateApplicationToken(Configuration appConfiguration) {
+    String applicationToken = getAppAuthToken(appConfiguration).trim();
+    String componentId = getComponentId(appConfiguration).trim();
+
+    if (applicationToken.isEmpty() || componentId.isEmpty()) {
+      if (applicationToken.isEmpty()) {
+        LOG.warn("Skiping component registration to DPM, application auth token is not set");
+      }
+      if (componentId.isEmpty()) {
+        LOG.warn("Skiping component registration to DPM, component ID is not set");
+      }
+      throw new RuntimeException("Registration to DPM not done, missing component ID or app auth token");
+    } else {
+      LOG.debug("Doing component ID '{}' registration with DPM", componentId);
       String dpmBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
           RemoteSSOService.DPM_BASE_URL_DEFAULT));
       String registrationURI = dpmBaseURL + "security/public-rest/v1/components/registration";
 
       Map<String, Object> registrationData = new HashMap<>();
       registrationData.put("authToken", applicationToken);
-      registrationData.put("componentId", this.runtimeInfo.getId());
+      registrationData.put("componentId", componentId);
       registrationData.put("attributes", ImmutableMap.of("baseHttpUrl", this.runtimeInfo.getBaseHttpUrl()));
       Response response = ClientBuilder.newClient()
           .target(registrationURI)
           .register(new CsrfProtectionFilter("CSRF"))
           .request()
           .post(Entity.json(registrationData));
-
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException("Registration to Remote Service failed : " +
-            response.readEntity(String.class));
+      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+        LOG.info("Component ID '{}' registered with DPM", componentId);
+        this.runtimeInfo.setRemoteRegistrationStatus(true);
+      } else {
+        throw new RuntimeException("Registration to DPM failed : " + response.readEntity(String.class));
       }
-
-      this.runtimeInfo.setRemoteRegistrationStatus(true);
     }
   }
+
 }

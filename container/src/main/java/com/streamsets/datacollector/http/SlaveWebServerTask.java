@@ -33,7 +33,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class SlaveWebServerTask extends WebServerTask {
+public class SlaveWebServerTask extends DataCollectorWebServerTask {
 
   private Configuration conf;
   static final String HTTPS_WORKER_KEYSTORE_PATH = "https.worker.keystore.path";

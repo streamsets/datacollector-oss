@@ -102,7 +102,7 @@ public class TestWebServerTaskHttpHttps {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new WebServerTask(runtimeInfo, conf, configurators, webAppProviders);
+    return new DataCollectorWebServerTask(runtimeInfo, conf, configurators, webAppProviders);
   }
 
 

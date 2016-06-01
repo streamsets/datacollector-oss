@@ -24,6 +24,7 @@ import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.http.DataCollectorWebServerTask;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -40,7 +41,7 @@ public class PipelineTask extends CompositeTask {
 
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, Manager manager,
-      WebServerTask webServerTask, EventHandlerTask eventHandlerTask) {
+      DataCollectorWebServerTask webServerTask, EventHandlerTask eventHandlerTask) {
     super("pipelineNode", ImmutableList.of(library, store, manager, webServerTask, eventHandlerTask),
       true);
     this.webServerTask = webServerTask;
