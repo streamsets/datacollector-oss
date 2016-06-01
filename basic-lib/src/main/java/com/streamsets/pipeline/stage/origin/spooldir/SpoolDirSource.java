@@ -359,12 +359,15 @@ public class SpoolDirSource extends BaseSource {
       // and we didn't fully process (not -1) the current file
       return true;
     }
-    if (useLastModified && compareFiles(spoolerFile, new File(spooler.getSpoolDir(), offsetFile))) {
-      return true;
-    }
-    if (spoolerFile.getName().compareTo(offsetFile) > 0) {
-      // file reported by spooler is newer than current offset file
-      return true;
+    if (useLastModified) {
+      if (compareFiles(spoolerFile, new File(spooler.getSpoolDir(), offsetFile))) {
+        return true;
+      }
+    } else {
+      if (spoolerFile.getName().compareTo(offsetFile) > 0) {
+        // file reported by spooler is newer than current offset file
+        return true;
+      }
     }
     return false;
   }
