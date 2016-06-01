@@ -238,15 +238,14 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
         schemaChanged = true;
         avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
-      } else {
-        avroSchema = schemaCache.getSchema();
-      }
-
-      if (schemaChanged) {// Send Schema Change record to HMS target and update cache
         handleSchemaChange(dbName, tableName, recordStructure, targetPath,
             avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
-      } else if (schemaCache == null) {
-        updateAvroCache(schemaCache, avroSchema, qualifiedName);
+      } else {
+        if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
+          avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
+          updateAvroCache(schemaCache, avroSchema, qualifiedName);
+        } else  // No schema change, table already exists in Hive, and we have avro schema in cache.
+          avroSchema = schemaCache.getSchema();
       }
 
       // Send new partition metadata if new partition is detected.
