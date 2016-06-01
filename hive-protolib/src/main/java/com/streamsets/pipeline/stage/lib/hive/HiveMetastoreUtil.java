@@ -27,10 +27,8 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.commons.beanutils.converters.CharacterArrayConverter;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -148,33 +146,41 @@ public final class HiveMetastoreUtil {
       StageException exception
   ) throws StageException{
     boolean throwException = false;
-    if (metadataRecord.has(SEP + listFieldName)) {
-      Field columnField = metadataRecord.get(SEP + listFieldName);
-      List<Field> columnList = columnField.getValueAsList();
-      if (columnList != null) {
-        for (Field listElementField : columnList) {
-          if (listElementField.getType() != Field.Type.MAP && listElementField.getType() != Field.Type.LIST_MAP) {
-            throwException = true;
-            break;
-          }
-          LinkedHashMap<String, Field> innerPair = listElementField.getValueAsListMap();
-          String innerPairFirstField = innerPair.get(innerPairFirstFieldName).getValueAsString();
-          T retVal;
-          if (isSecondFieldHiveType) {
-            Field hiveTypeInfoField = innerPair.get(innerPairSecondFieldName);
-            HiveType hiveType = HiveType.getHiveTypeFromString(
+    try {
+      if (metadataRecord.has(SEP + listFieldName)) {
+        Field columnField = metadataRecord.get(SEP + listFieldName);
+        List<Field> columnList = columnField.getValueAsList();
+        if (columnList != null) {
+          for (Field listElementField : columnList) {
+            if (listElementField.getType() != Field.Type.MAP && listElementField.getType() != Field.Type.LIST_MAP) {
+              throwException = true;
+              break;
+            }
+            LinkedHashMap<String, Field> innerPair = listElementField.getValueAsListMap();
+            String innerPairFirstField = innerPair.get(innerPairFirstFieldName).getValueAsString();
+            T retVal;
+            if (isSecondFieldHiveType) {
+              Field hiveTypeInfoField = innerPair.get(innerPairSecondFieldName);
+              HiveType hiveType = HiveType.getHiveTypeFromString(
                 hiveTypeInfoField.getValueAsMap().get(HiveMetastoreUtil.TYPE).getValueAsString()
-            );
-            retVal = (T)(hiveType.getSupport().generateHiveTypeInfoFromMetadataField(hiveTypeInfoField));
-          } else {
-            retVal = (T) innerPair.get(innerPairSecondFieldName).getValueAsString();
+              );
+              retVal = (T) (hiveType.getSupport().generateHiveTypeInfoFromMetadataField(hiveTypeInfoField));
+            } else {
+              retVal = (T) innerPair.get(innerPairSecondFieldName).getValueAsString();
+            }
+            returnValMap.put(innerPairFirstField, retVal);
           }
-          returnValMap.put(innerPairFirstField, retVal);
         }
+      } else {
+        throwException = true;
       }
-    } else {
+    } catch(Exception e) {
       throwException = true;
+      LOG.error(Utils.format("Can't parse the metadata record: {}", metadataRecord));
+      // Can't call initCause due to bug in StageException that already sets the cause to null
+//     exception.initCause(e);
     }
+
     if (throwException) {
       throw exception;
     }
@@ -429,14 +435,14 @@ public final class HiveMetastoreUtil {
       String avroSchema
   ) throws StageException  {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
-    metadata.put(SEP + VERSION, Field.create(SCHEMA_CHANGE_METADATA_RECORD_VERSION));
-    metadata.put(SEP + DATABASE_FIELD, Field.create(database));
-    metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
-    metadata.put(SEP + LOCATION_FIELD, Field.create(location));
+    metadata.put(VERSION, Field.create(SCHEMA_CHANGE_METADATA_RECORD_VERSION));
+    metadata.put(DATABASE_FIELD, Field.create(database));
+    metadata.put(TABLE_FIELD, Field.create(tableName));
+    metadata.put(LOCATION_FIELD, Field.create(location));
 
     //fill in column type list here
     metadata.put(
-        SEP + COLUMNS_FIELD,
+        COLUMNS_FIELD,
         generateInnerFieldFromTheList(
             columnList,
             COLUMN_NAME,
@@ -446,7 +452,7 @@ public final class HiveMetastoreUtil {
     );
     //fill in partition type list here
     metadata.put(
-        SEP + PARTITION_FIELD,
+        PARTITION_FIELD,
         generateInnerFieldFromTheList(
             partitionTypeList,
             PARTITION_NAME,
@@ -454,8 +460,8 @@ public final class HiveMetastoreUtil {
             true
         )
     );
-    metadata.put(SEP + INTERNAL_FIELD, Field.create(internal));
-    metadata.put(SEP + AVRO_SCHEMA, Field.create(avroSchema));
+    metadata.put(INTERNAL_FIELD, Field.create(internal));
+    metadata.put(AVRO_SCHEMA, Field.create(avroSchema));
     return Field.create(metadata);
   }
 
