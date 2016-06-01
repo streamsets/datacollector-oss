@@ -24,15 +24,11 @@ import com.streamsets.datacollector.client.JSON;
 import com.streamsets.datacollector.client.TypeRef;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
-import com.streamsets.datacollector.client.cli.command.PipelineConfigAndRulesJson;
-import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
-import com.streamsets.datacollector.client.model.PipelineInfoJson;
-import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
+import com.streamsets.datacollector.client.model.PipelineEnvelopeJson;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
 
 import java.io.File;
-import java.util.List;
 
 @Command(name = "import", description = "Import Pipeline Configuration & Rules")
 public class ImportPipelineCommand extends BaseCommand {
@@ -71,44 +67,14 @@ public class ImportPipelineCommand extends BaseCommand {
     try {
       if(fileName != null) {
         JSON json = apiClient.getJson();
-        TypeRef returnType = new TypeRef<PipelineConfigAndRulesJson>() {};
-        PipelineConfigAndRulesJson pipelineConfigAndRulesJson = json.deserialize(new File(fileName), returnType);
-
-        PipelineConfigurationJson pipelineConfigurationJson = pipelineConfigAndRulesJson.getPipelineConfig();
-        RuleDefinitionsJson ruleDefinitionsJson = pipelineConfigAndRulesJson.getPipelineRules();
-
-        // Import Pipeline is 3 steps: Create Pipeline, Update Pipeline & Update Rules
-        PipelineConfigurationJson newPipeline;
-        if(overwrite) {
-          List<PipelineInfoJson> pipelineInfoJsonList = storeApi.getPipelines();
-          boolean pipelineExists = false;
-
-          for(PipelineInfoJson pipelineInfoJson: pipelineInfoJsonList) {
-            if(pipelineInfoJson.getName().equals(pipelineName)) {
-              pipelineExists = true;
-              break;
-            }
-          }
-
-          if(pipelineExists) {
-            newPipeline = storeApi.getPipelineInfo(pipelineName, "0", "pipeline", false);
-          } else {
-            newPipeline = storeApi.createPipeline(pipelineName, pipelineDescription);
-          }
-
-        } else {
-          newPipeline = storeApi.createPipeline(pipelineName, pipelineDescription);
-        }
-
-        RuleDefinitionsJson newPipelineRules = storeApi.getPipelineRules(pipelineName, "0");
-
-
-        pipelineConfigurationJson.setUuid(newPipeline.getUuid());
-        storeApi.savePipeline(pipelineName, pipelineConfigurationJson, "0", pipelineDescription);
-
-        ruleDefinitionsJson.setUuid(newPipelineRules.getUuid());
-        storeApi.savePipelineRules(pipelineName, ruleDefinitionsJson, "0");
-
+        TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};
+        PipelineEnvelopeJson pipelineEnvelopeJson = json.deserialize(new File(fileName), returnType);
+        storeApi.importPipeline(
+            pipelineName,
+            "0",
+            overwrite,
+            pipelineEnvelopeJson
+        );
         System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineName );
       }
     } catch (Exception ex) {

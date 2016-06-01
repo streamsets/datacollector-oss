@@ -23,9 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
-import com.streamsets.datacollector.client.cli.command.PipelineConfigAndRulesJson;
-import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
-import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
+import com.streamsets.datacollector.client.model.PipelineEnvelopeJson;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
 
@@ -48,6 +46,13 @@ public class ExportPipelineCommand extends BaseCommand {
   public String pipelineRev;
 
   @Option(
+      name = {"-i", "--includeLibraryDefinitions"},
+      description = "Include Library Definitions",
+      required = false
+  )
+  public boolean includeLibraryDefinitions;
+
+  @Option(
     name = {"-f", "--file"},
     description = "Export file name",
     required = true
@@ -64,17 +69,12 @@ public class ExportPipelineCommand extends BaseCommand {
     StoreApi storeApi = new StoreApi(apiClient);
     try {
       ObjectMapper mapper = apiClient.getJson().getMapper();
-
-      PipelineConfigurationJson pipelineConfigurationJson = storeApi.getPipelineInfo(pipelineName, pipelineRev,
-        "pipeline", false);
-
-      RuleDefinitionsJson ruleDefinitionsJson = storeApi.getPipelineRules(pipelineName, pipelineRev);
-
-      PipelineConfigAndRulesJson pipelineConfigAndRulesJson = new PipelineConfigAndRulesJson(pipelineConfigurationJson,
-        ruleDefinitionsJson);
-
-      mapper.writeValue(new File(fileName), pipelineConfigAndRulesJson);
-
+      PipelineEnvelopeJson pipelineEnvelopeJson = storeApi.exportPipeline(
+          pipelineName,
+          pipelineRev,
+          false,
+          includeLibraryDefinitions);
+      mapper.writeValue(new File(fileName), pipelineEnvelopeJson);
       System.out.println("Successfully exported pipeline '" + pipelineName + "' to file - " + fileName );
     } catch (Exception ex) {
       if(printStackTrace) {
