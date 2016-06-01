@@ -445,7 +445,7 @@ public final class HiveMetastoreUtil {
             columnList,
             COLUMN_NAME,
             TYPE_INFO,
-            false
+            true
         )
     );
     //fill in partition type list here
