@@ -402,14 +402,14 @@ public final class HiveMetastoreUtil {
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
-    metadata.put(SEP + VERSION, Field.create(PARTITION_ADDITION_METADATA_RECORD_VERSION));
-    metadata.put(SEP + DATABASE_FIELD, Field.create(database));
-    metadata.put(SEP + TABLE_FIELD, Field.create(tableName));
-    metadata.put(SEP + LOCATION_FIELD, Field.create(location));
+    metadata.put(VERSION, Field.create(PARTITION_ADDITION_METADATA_RECORD_VERSION));
+    metadata.put(DATABASE_FIELD, Field.create(database));
+    metadata.put(TABLE_FIELD, Field.create(tableName));
+    metadata.put(LOCATION_FIELD, Field.create(location));
 
     //fill in the partition list here
     metadata.put(
-        SEP + PARTITION_FIELD,
+        PARTITION_FIELD,
         generateInnerFieldFromTheList(
             partitionList,
             PARTITION_NAME,
