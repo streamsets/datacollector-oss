@@ -37,9 +37,9 @@ import java.util.List;
 )
 @HideConfigs(
   value = {
-    "zookeeperQuorum",
-    "clientPort",
-    "zookeeperParentZnode"
+    "hBaseConnectionConfig.zookeeperQuorum",
+    "hBaseConnectionConfig.clientPort",
+    "hBaseConnectionConfig.zookeeperParentZnode"
   }
 )
 @GenerateResourceBundle
