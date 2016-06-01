@@ -21,12 +21,13 @@ package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+
+import java.util.LinkedHashMap;
 
 public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
   @Override
   protected Field generateExtraInfoFieldForMetadataRecord(HiveTypeInfo hiveTypeInfo) {
-    return Field.create("");
+    return Field.create(new LinkedHashMap<String, Field>());
   }
 
   @Override
