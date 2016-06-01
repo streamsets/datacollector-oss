@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.kv.redis;
 
-import com.streamsets.pipeline.lib.redis.DataType;
+package com.streamsets.pipeline.lib.redis;
 
-public class LookupValue{
-  private DataType type;
-  private Object value;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-  public LookupValue(Object value, DataType type) {
-    this.value = value;
-    this.type = type;
-  }
+@GenerateResourceBundle
+public enum DataType implements Label {
+  STRING("String"),
+  LIST("List"),
+  HASH("Hash"),
+  SET("Set");
 
-  public DataType getType() {
-    return type;
-  }
+  private String label;
 
-  public Object getValue() {
-    return value;
+  DataType(String label) {
+    this.label = label;
   }
 
   @Override
-  public boolean equals(Object other) {
-    boolean result = false;
-    if(other instanceof LookupValue) {
-      LookupValue that = (LookupValue)other;
-      result = (this.type.equals(that.getType()) && ((this.value == null && that.getValue() == null) || this.value.equals(that.getValue())));
-    }
-    return result;
+  public String getLabel() {
+    return label;
   }
 }
+

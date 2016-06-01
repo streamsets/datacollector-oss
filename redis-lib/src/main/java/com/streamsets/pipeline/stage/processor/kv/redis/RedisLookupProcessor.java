@@ -35,12 +35,14 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.redis.DataType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.exceptions.JedisException;
@@ -82,7 +84,9 @@ public class RedisLookupProcessor extends BaseProcessor {
 
     try {
       pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
-      pool.getResource().close();
+      Jedis jedis = pool.getResource();
+      jedis.ping();
+      jedis.close();
     } catch (JedisException e) { // NOSONAR
       issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_LOOKUP_01, conf.uri, e.toString()));
     } catch (IllegalArgumentException e) {

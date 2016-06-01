@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,24 +18,33 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.processor.kv.redis;
+package com.streamsets.pipeline.stage.destination.redis;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.config.DataFormat;
 
 @GenerateResourceBundle
-public enum DataType implements Label {
-  STRING("String"), LIST("List"), HASH("Hash"), SET("Set");
+public enum Groups implements Label {
+  REDIS("Redis"),
+  TEXT(DataFormat.TEXT.getLabel()),
+  JSON(DataFormat.JSON.getLabel()),
+  DELIMITED(DataFormat.DELIMITED.getLabel()),
+  XML(DataFormat.XML.getLabel()),
+  LOG(DataFormat.LOG.getLabel()),
+  AVRO(DataFormat.AVRO.getLabel()),
+  BINARY(DataFormat.BINARY.getLabel()),
+  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
+  ;
 
-  private String label;
+  private final String label;
 
-  DataType(String label) {
+  private Groups(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return label;
+    return this.label;
   }
 }
-

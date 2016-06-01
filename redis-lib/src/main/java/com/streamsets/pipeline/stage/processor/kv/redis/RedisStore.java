@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.kv.redis;
 
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.Lists;
+import com.streamsets.pipeline.lib.redis.DataType;
 import org.apache.commons.lang3.tuple.Pair;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
