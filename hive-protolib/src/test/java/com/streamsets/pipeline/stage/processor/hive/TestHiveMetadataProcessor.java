@@ -34,17 +34,16 @@ public class TestHiveMetadataProcessor {
     Record record = RecordCreator.create();
     String sample = "sample record";
     record.set(Field.create(sample));
-    String targetDir = "/user/hive/warehouse/table";
-    String samplePartition = "/dt=2016-05-24/country=US";
+    String targetDir = "/user/hive/warehouse/table/dt=2016-05-24/country=US";
 
-    HiveMetadataProcessor.updateRecordForHDFS(record, true, SdcAvroTestUtil.AVRO_SCHEMA, targetDir, samplePartition);
+    HiveMetadataProcessor.updateRecordForHDFS(record, true, SdcAvroTestUtil.AVRO_SCHEMA, targetDir);
     Assert.assertEquals(record.getHeader().getAttribute(HiveMetadataProcessor.HDFS_HEADER_ROLL), "true");
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_AVROSCHEMA),
         SdcAvroTestUtil.AVRO_SCHEMA);
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_TARGET_DIRECTORY),
-        (targetDir+samplePartition));
+        targetDir);
   }
 
   @Test
@@ -52,18 +51,17 @@ public class TestHiveMetadataProcessor {
     Record record = RecordCreator.create();
     String sample = "sample record";
     record.set(Field.create(sample));
-    String targetDir = "/user/hive/warehouse/table";
-    String samplePartition = "dt=2016/state=CA";
+    String targetDir = "/user/hive/warehouse/table/dt=2016/state=CA";
 
 
-    HiveMetadataProcessor.updateRecordForHDFS(record, false, SdcAvroTestUtil.AVRO_SCHEMA, targetDir, samplePartition);
+    HiveMetadataProcessor.updateRecordForHDFS(record, false, SdcAvroTestUtil.AVRO_SCHEMA, targetDir);
     Assert.assertNull(record.getHeader().getAttribute(HiveMetadataProcessor.HDFS_HEADER_ROLL));
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_AVROSCHEMA),
         SdcAvroTestUtil.AVRO_SCHEMA);
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_TARGET_DIRECTORY),
-        (targetDir+samplePartition));
+        targetDir);
 
   }
 }

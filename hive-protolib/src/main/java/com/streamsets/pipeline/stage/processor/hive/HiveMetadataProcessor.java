@@ -253,11 +253,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
       PartitionInfoCacheSupport.PartitionInfo pCache
           = (PartitionInfoCacheSupport.PartitionInfo) getCacheInfo(HMSCacheType.PARTITION_VALUE_INFO, qualifiedName);
       Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
+
+      // Append partition path to target path as all paths from now should be with the partition info
+      targetPath += partitionStr;
+
       if (diff != null) {
         handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
       }
+
       // Send record to HDFS target
-      updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath, partitionStr);
+      updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
     } catch (OnRecordErrorException error) {
       errorRecordHandler.onError(error);
@@ -482,12 +487,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
   //Add header information to send to HDFS
   @VisibleForTesting
   static void updateRecordForHDFS(Record record, boolean roll,
-                                            String avroSchema, String location,
-                                            String partitionStr){
+                                            String avroSchema,
+                                            String location){
     if(roll){
       record.getHeader().setAttribute(HDFS_HEADER_ROLL, "true");
     }
     record.getHeader().setAttribute(HDFS_HEADER_AVROSCHEMA, avroSchema);
-    record.getHeader().setAttribute(HDFS_HEADER_TARGET_DIRECTORY, (location + partitionStr));
+    record.getHeader().setAttribute(HDFS_HEADER_TARGET_DIRECTORY, location);
   }
 }
