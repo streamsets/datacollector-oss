@@ -79,6 +79,7 @@ public final class HiveMetastoreUtil {
   private static final Joiner JOINER = Joiner.on(".");
 
   private static final String VERSION = "version";
+  private static final String METADATA_RECORD_TYPE = "type";
   private static final String SCHEMA_CHANGE_METADATA_RECORD_VERSION = "1";
   private static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "1";
 
@@ -96,6 +97,19 @@ public final class HiveMetastoreUtil {
   public static final String TYPE_INFO = "typeInfo";
   public static final String TYPE = "type";
   public static final String EXTRA_INFO = "extraInfo";
+
+  public enum MetadataRecordType {
+    /**
+     * Created when completely new table is detected or when
+     * existing table have changed schema (new column, ...).
+     */
+    TABLE,
+
+    /**
+     * Created when a new partition is detected.
+     */
+    PARTITION,
+  }
 
   private HiveMetastoreUtil() {}
 
@@ -318,13 +332,13 @@ public final class HiveMetastoreUtil {
   }
 
   /**
-   * Returns true the the metadataRecord has the INTERNAL FIELD (suffice to say this is schema updateState).
-   * else return false
+   * Returns true if this is a TABLE metadata request (new or changed table).
+   *
    * @param metadataRecord the metadata record
    * @return boolean true or false indicating whether this metadata record is schema change / partition roll record.
    */
   public static boolean isSchemaChangeRecord(Record metadataRecord) {
-    return metadataRecord.has(SEP + INTERNAL_FIELD);
+    return MetadataRecordType.TABLE.name().equals(metadataRecord.get(SEP + METADATA_RECORD_TYPE));
   }
 
   /**
@@ -403,6 +417,7 @@ public final class HiveMetastoreUtil {
       String location) throws StageException {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
     metadata.put(VERSION, Field.create(PARTITION_ADDITION_METADATA_RECORD_VERSION));
+    metadata.put(METADATA_RECORD_TYPE, Field.create(MetadataRecordType.PARTITION.name()));
     metadata.put(DATABASE_FIELD, Field.create(database));
     metadata.put(TABLE_FIELD, Field.create(tableName));
     metadata.put(LOCATION_FIELD, Field.create(location));
@@ -434,6 +449,7 @@ public final class HiveMetastoreUtil {
   ) throws StageException  {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
     metadata.put(VERSION, Field.create(SCHEMA_CHANGE_METADATA_RECORD_VERSION));
+    metadata.put(METADATA_RECORD_TYPE, Field.create(MetadataRecordType.TABLE.name()));
     metadata.put(DATABASE_FIELD, Field.create(database));
     metadata.put(TABLE_FIELD, Field.create(tableName));
     metadata.put(LOCATION_FIELD, Field.create(location));
