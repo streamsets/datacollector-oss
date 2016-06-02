@@ -154,7 +154,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
             Groups.HIVE.name(),
             "partitionList",
             Errors.HIVE_METADATA_02,
-            "Partition Configuration"));
+            "Partition Configuration",
+            partition.name));
         continue;
       }
       partitionTypeInfo.put(

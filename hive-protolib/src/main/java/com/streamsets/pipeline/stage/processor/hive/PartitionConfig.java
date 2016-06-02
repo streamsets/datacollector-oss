@@ -35,7 +35,7 @@ public final class PartitionConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue="/dt",
+      defaultValue="dt",
       label = "Partition Column Name",
       description = "Partition column's name",
       displayPosition = 10

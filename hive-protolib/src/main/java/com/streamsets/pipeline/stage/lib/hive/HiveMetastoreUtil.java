@@ -499,7 +499,7 @@ public final class HiveMetastoreUtil {
   }
 
   public static boolean validateColumnName(String colName) {
-    return MetaStoreUtils.validateColumnName(colName);
+    return MetaStoreUtils.validateName(colName);
   }
 
   /**
