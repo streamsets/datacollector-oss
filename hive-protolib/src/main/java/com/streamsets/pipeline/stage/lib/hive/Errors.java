@@ -47,7 +47,8 @@ public enum Errors implements ErrorCode {
   HIVE_21("Type Mismatch, Expected: {}, Actual: {}"),
   HIVE_22("Cannot make connection with default hive database with URL:{}. Reason:{}"),
   HIVE_23("TBL Properties '{}' Mismatch: Actual: {} , Expected: {}"),
-  HIVE_24("Type conversion from Hive.{} to Avro Type is not supported")
+  HIVE_24("Type conversion from Hive.{} to Avro Type is not supported"),
+  HIVE_25("Trying to create partition for non existing table: {}");
   ;
   private final String msg;
 

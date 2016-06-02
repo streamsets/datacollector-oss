@@ -414,6 +414,10 @@ public class HiveMetastoreTarget extends BaseTarget{
         resolvedJDBCUrl, qualifiedTableName
     );
 
+    if (cachedTypeInfo == null) {
+      throw new StageException(Errors.HIVE_25, qualifiedTableName);
+    }
+
     HMSCacheType hmsCacheType = HMSCacheType.PARTITION_VALUE_INFO;
     PartitionInfoCacheSupport.PartitionInfo cachedPartitionInfo = hmsCache.getOrLoad(
         hmsCacheType,
