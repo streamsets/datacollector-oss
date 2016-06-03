@@ -433,6 +433,7 @@
             <configuration>
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                <source>${basedir}/../hive-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
@@ -449,6 +450,9 @@
             <resources>
                 <resource>
                   <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>

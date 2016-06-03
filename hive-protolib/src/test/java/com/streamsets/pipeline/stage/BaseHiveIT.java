@@ -59,6 +59,8 @@ public abstract class BaseHiveIT {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseHiveIT.class);
 
+  private static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver";
+
   // Mini cluster instances
   private static String confDir;
   private static MiniDFSCluster miniDFS;
@@ -97,6 +99,8 @@ public abstract class BaseHiveIT {
     java.nio.file.Files.setPosixFilePermissions(minidfsDir.toPath(), set);
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     final Configuration conf = new HdfsConfiguration();
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
     miniDFS = new MiniDFSCluster.Builder(conf).build();
     miniDFS.getFileSystem().setPermission(new Path("/"), FsPermission.createImmutable((short)0777));
     writeConfiguration(miniDFS.getConfiguration(0), confDir + "/core-site.xml");
@@ -131,6 +135,7 @@ public abstract class BaseHiveIT {
     NetworkUtils.waitForStartUp(HOSTNAME, HIVE_SERVER_PORT, 5, 1000);
 
     // JDBC Connection to Hive
+    Class.forName(HIVE_JDBC_DRIVER);
     hiveConnection = DriverManager.getConnection(getHiveJdbcUrl());
   }
 

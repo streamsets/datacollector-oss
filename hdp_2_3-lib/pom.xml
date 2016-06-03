@@ -459,6 +459,7 @@
             <configuration>
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                <source>${basedir}/../hive-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <!-- See SDC-2982. We're skipping Kafka tests intentionally.
@@ -479,6 +480,9 @@
               <resources>
                 <resource>
                   <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>

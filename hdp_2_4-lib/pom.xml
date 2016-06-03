@@ -301,6 +301,13 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-jdbc</artifactId>
+      <version>${hive.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- HBase related -->
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -532,6 +539,7 @@
             <configuration>
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                <source>${basedir}/../hive-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
@@ -550,6 +558,9 @@
               <resources>
                 <resource>
                   <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
