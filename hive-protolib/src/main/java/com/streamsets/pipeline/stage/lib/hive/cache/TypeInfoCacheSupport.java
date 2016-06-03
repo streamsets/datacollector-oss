@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -41,11 +38,6 @@ public class TypeInfoCacheSupport
   @Override
   public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
     return new TypeInfoCacheLoader(jdbcUrl, qualifiedTableName);
-  }
-
-  @Override
-  public Cache<String, Optional<TypeInfo>> createCache(int maxCacheSize) {
-    return CacheBuilder.<String, Optional<TypeInfo>>newBuilder().maximumSize(maxCacheSize).build();
   }
 
   public static class TypeInfo extends HMSCacheSupport.HMSCacheInfo<LinkedHashMap<String, HiveTypeInfo>>{

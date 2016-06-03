@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,11 +36,6 @@ public class TBLPropertiesInfoCacheSupport
       String qualifiedTableName
   ) {
     return new TBLPropertiesInfoCacheLoader(jdbcUrl, qualifiedTableName);
-  }
-
-  @Override
-  public Cache<String, Optional<TBLPropertiesInfo>> createCache(int maxCacheSize) {
-    return CacheBuilder.<String, Optional<TBLPropertiesInfo>>newBuilder().maximumSize(maxCacheSize).build();
   }
 
   public static class TBLPropertiesInfo extends HMSCacheSupport.HMSCacheInfo<Pair<Boolean, Boolean>> {

@@ -82,5 +82,5 @@ public class HiveConfigBean {
       displayPosition = 30,
       group = "ADVANCED"
   )
-  public int maxCacheSize = -1;
+  public long maxCacheSize = -1L;
 }

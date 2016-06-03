@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
@@ -126,7 +127,7 @@ public class HMSCache {
    */
   public static final class Builder {
     Set<HMSCacheType> cacheTypes = new HashSet<>();
-    int maxCacheSize = -1;
+    long maxCacheSize = -1;
 
     private Builder() {}
 
@@ -135,8 +136,8 @@ public class HMSCache {
      * @param maxCacheSize cache size
      * @return {@link Builder}
      */
-    public Builder maxCacheSize(int maxCacheSize) {
-      this.maxCacheSize = maxCacheSize > 0? maxCacheSize : Integer.MAX_VALUE;
+    public Builder maxCacheSize(long maxCacheSize) {
+      this.maxCacheSize = maxCacheSize;
       return this;
     }
 
@@ -167,8 +168,14 @@ public class HMSCache {
     public HMSCache build() {
       Utils.checkArgument(!cacheTypes.isEmpty(), "Invalid HMSCache Configuration");
       Map<HMSCacheType, Cache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap = new HashMap<>();
+      CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
+
+      if (maxCacheSize > 0) {
+        cacheBuilder.maximumSize(maxCacheSize);
+      }
+
       for (HMSCacheType type : cacheTypes) {
-        cacheMap.put(type, type.getSupport().createCache(maxCacheSize));
+        cacheMap.put(type, cacheBuilder.build());
       }
       return new HMSCache(cacheMap);
     }

@@ -45,13 +45,6 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
   CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName);
 
   /**
-   * Creates a new {@link Cache} which represents the underlying cache.
-   * @param maxCacheSize the underlying maximum cache size.
-   * @return new {@link Cache} with maximum cache size set
-   */
-  Cache<String, Optional<IN>> createCache(int maxCacheSize);
-
-  /**
    * A Cache information which should be extended for each
    * {@link HMSCacheType}.
    * The internal {@link #state} will represent internal state object maintained by the cache.

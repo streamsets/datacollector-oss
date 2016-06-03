@@ -20,9 +20,6 @@
 
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 
@@ -36,11 +33,6 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
       String qualifiedTableName)
   {
     return new AvroSchemaInfoCacheLoader(jdbcUrl, qualifiedTableName);
-  }
-
-  @Override
-  public Cache<String, Optional<AvroSchemaInfo>> createCache(int maxCacheSize) {
-    return CacheBuilder.<String, Optional<AvroSchemaInfo>>newBuilder().maximumSize(maxCacheSize).build();
   }
 
   public static class AvroSchemaInfo extends HMSCacheSupport.HMSCacheInfo<String> {

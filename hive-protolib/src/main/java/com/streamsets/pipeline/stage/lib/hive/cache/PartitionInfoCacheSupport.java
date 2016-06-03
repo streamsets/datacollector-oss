@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.HashSet;
@@ -38,11 +35,6 @@ public class PartitionInfoCacheSupport
   @Override
   public PartitionInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
     return new PartitionInfoCacheLoader(jdbcUrl, qualifiedTableName);
-  }
-
-  @Override
-  public Cache<String, Optional<PartitionInfo>> createCache(int maxCacheSize) {
-    return CacheBuilder.<String, Optional<PartitionInfo>>newBuilder().maximumSize(maxCacheSize).build();
   }
 
   public static class PartitionInfo extends HMSCacheSupport.HMSCacheInfo<Set<LinkedHashMap<String,String>>>{
