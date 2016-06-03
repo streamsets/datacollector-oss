@@ -45,6 +45,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -208,6 +209,8 @@ public abstract class BaseHiveIT {
   public HiveConfigBean getHiveConfigBean() {
     HiveConfigBean hiveConfigBean = new HiveConfigBean();
     hiveConfigBean.confDir = confDir;
+    hiveConfigBean.hiveJDBCDriver = HIVE_JDBC_DRIVER;
+    hiveConfigBean.additionalConfigProperties = Collections.emptyMap();
     hiveConfigBean.hiveJDBCUrl = getHiveJdbcUrl();
 
     return hiveConfigBean;

@@ -338,7 +338,7 @@ public final class HiveMetastoreUtil {
    * @return boolean true or false indicating whether this metadata record is schema change / partition roll record.
    */
   public static boolean isSchemaChangeRecord(Record metadataRecord) {
-    return MetadataRecordType.TABLE.name().equals(metadataRecord.get(SEP + METADATA_RECORD_TYPE));
+    return MetadataRecordType.TABLE.name().equals(metadataRecord.get(SEP + METADATA_RECORD_TYPE).getValueAsString());
   }
 
   /**
