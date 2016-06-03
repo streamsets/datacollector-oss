@@ -19,13 +19,35 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import org.apache.hadoop.conf.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HiveConfigBean {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class);
+
   @ConfigDef(
       required = true,
       label = "Hive JDBC URL",
@@ -83,4 +105,96 @@ public class HiveConfigBean {
       group = "ADVANCED"
   )
   public long maxCacheSize = -1L;
+
+  private static final Joiner JOINER = Joiner.on(".");
+
+  /**
+   * After init() it will contain merged configuration from all configured sources.
+   */
+  private Configuration configuration;
+  public Configuration getConfiguration() {
+    return configuration;
+  }
+
+  /**
+   * Initialize and validate configuration options.
+   */
+  public void init(Stage.Context context, String prefix, List<Stage.ConfigIssue> issues) {
+    // Load JDBC driver
+    try {
+      Class.forName(hiveJDBCDriver);
+    } catch (ClassNotFoundException e) {
+      issues.add(context.createConfigIssue(
+        Groups.HIVE.name(),
+        JOINER.join(prefix, "hiveJDBCDriver"),
+        Errors.HIVE_15,
+        hiveJDBCDriver
+      ));
+    }
+
+    // Prepare configuration object
+    File hiveConfDir = new File(confDir);
+    if (!hiveConfDir.isAbsolute()) {
+      hiveConfDir = new File(context.getResourcesDirectory(), confDir).getAbsoluteFile();
+    }
+
+    configuration = new Configuration();
+
+    if (hiveConfDir.exists()) {
+      HiveMetastoreUtil.validateConfigFile("core-site.xml", confDir, hiveConfDir, issues, configuration, context);
+      HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", confDir, hiveConfDir, issues, configuration, context);
+      HiveMetastoreUtil.validateConfigFile("hive-site.xml", confDir, hiveConfDir, issues, configuration, context);
+    } else {
+      issues.add(context.createConfigIssue(
+        Groups.HIVE.name(),
+        JOINER.join(prefix, "confDir"),
+        Errors.HIVE_07,
+        confDir
+      ));
+    }
+
+    // Add any additional configuration overrides
+    for (Map.Entry<String, String> entry : additionalConfigProperties.entrySet()) {
+      configuration.set(entry.getKey(), entry.getValue());
+    }
+
+    if(!issues.isEmpty()) {
+      return;
+    }
+
+    // Try to connect to HMS to validate if the URL is valid
+    Record dummyRecord = context.createRecord("DummyHiveMetastoreTargetRecord");
+    Map<String, Field> databaseFieldValue = new HashMap<>();
+    databaseFieldValue.put(HiveMetastoreUtil.DATABASE_FIELD, Field.create("default"));
+    dummyRecord.set(Field.create(databaseFieldValue));
+    String jdbcUrl = null;
+    try {
+      ELEval elEval = context.createELEval("hiveJDBCUrl");
+      ELVars elVars = elEval.createVariables();
+      RecordEL.setRecordInContext(elVars, dummyRecord);
+      jdbcUrl = HiveMetastoreUtil.resolveEL(elEval, elVars, hiveJDBCUrl);
+    } catch (ELEvalException e) {
+      LOG.error("Error evaluating EL:", e);
+      issues.add(context.createConfigIssue(
+        Groups.HIVE.name(),
+        JOINER.join(prefix, "hiveJDBCUrl"),
+        Errors.HIVE_01,
+        e.getMessage()
+      ));
+      return;
+    }
+
+    try (Connection con = DriverManager.getConnection(jdbcUrl)) {}
+    catch (SQLException e) {
+      LOG.error(Utils.format("Error Connecting to Hive Default Database with URL {}", jdbcUrl), e);
+      issues.add(context.createConfigIssue(
+        Groups.HIVE.name(),
+        JOINER.join(prefix, "hiveJDBCUrl"),
+        Errors.HIVE_22,
+        jdbcUrl,
+        e.getMessage()
+      ));
+    }
+  }
+
 }

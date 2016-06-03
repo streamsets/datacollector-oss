@@ -71,7 +71,6 @@ public class HiveMetastoreTarget extends BaseTarget{
   private static final String CONF = "conf";
   private static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
   private static final String HIVE_JDBC_URL = "hiveJDBCUrl";
-  private static final String HIVE_JDBC_DRIVER = "hiveJDBCDriver";
   private static final String HDFS_KERBEROS = "hdfsKerberos";
   private static final String CONF_DIR = "confDir";
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
@@ -96,22 +95,12 @@ public class HiveMetastoreTarget extends BaseTarget{
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    try {
-      Class.forName(conf.hiveConfigBean.hiveJDBCDriver);
-    } catch (ClassNotFoundException e) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.HIVE.name(),
-              JOINER.join(CONF, HIVE_CONFIG_BEAN, HIVE_JDBC_DRIVER),
-              Errors.HIVE_15,
-              conf.hiveConfigBean.hiveJDBCDriver
-          )
-      );
-    }
 
-    initConfDirAndHDFS(issues);
+    conf.hiveConfigBean.init(getContext(), JOINER.join(CONF, HIVE_CONFIG_BEAN), issues);
 
     if (issues.isEmpty()) {
+      initHDFS(issues);
+
       defaultErrorRecordHandler = new DefaultErrorRecordHandler(getContext());
       elEval = getContext().createELEval(HIVE_JDBC_URL);
       hmsCache =  HMSCache.newCacheBuilder()
@@ -124,7 +113,6 @@ public class HiveMetastoreTarget extends BaseTarget{
           )
           .maxCacheSize(conf.hiveConfigBean.maxCacheSize)
           .build();
-      validateJDBCUrlWithDummyRecord(conf.hiveConfigBean.hiveJDBCUrl, issues);
     }
     return issues;
   }
@@ -190,43 +178,10 @@ public class HiveMetastoreTarget extends BaseTarget{
     super.destroy();
   }
 
-  private void initConfDirAndHDFS(final List<ConfigIssue> issues) {
-    String hiveConfDirString = conf.hiveConfigBean.confDir;
-    File hiveConfDir = new File(hiveConfDirString);
-    final Configuration configuration = new Configuration();
-
-    if (!hiveConfDir.isAbsolute()) {
-      hiveConfDir = new File(getContext().getResourcesDirectory(), conf.hiveConfigBean.confDir).getAbsoluteFile();
-    }
-
-    if (hiveConfDir.exists()) {
-      HiveMetastoreUtil.validateConfigFile("core-site.xml", hiveConfDirString,
-          hiveConfDir, issues, configuration, getContext());
-
-      HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", hiveConfDirString,
-          hiveConfDir, issues, configuration, getContext());
-
-    } else {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.HIVE.name(),
-              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HiveMetastoreUtil.CONF_DIR),
-              Errors.HIVE_07,
-              hiveConfDirString
-          )
-      );
-    }
-
-    // Add any additional configuration overrides
-    for (Map.Entry<String, String> entry : conf.hiveConfigBean.additionalConfigProperties.entrySet()) {
-      configuration.set(entry.getKey(), entry.getValue());
-    }
-
-    if (!issues.isEmpty()) {
-      return;
-    }
-
+  private void initHDFS(final List<ConfigIssue> issues) {
     if (!conf.useAsAvro) {
+      final Configuration configuration = conf.hiveConfigBean.getConfiguration();
+
       try {
         // forcing UGI to initialize with the security settings from the stage
         loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
@@ -284,40 +239,6 @@ public class HiveMetastoreTarget extends BaseTarget{
             )
         );
       }
-    }
-  }
-  private void validateJDBCUrlWithDummyRecord(String unResolvedJDBCUrl, List<ConfigIssue> issues){
-    Record dummyRecord = getContext().createRecord("DummyHiveMetastoreTargetRecord");
-    Map<String, Field> databaseFieldValue = new HashMap<>();
-    databaseFieldValue.put(HiveMetastoreUtil.DATABASE_FIELD, Field.create("default"));
-    dummyRecord.set(Field.create(databaseFieldValue));
-    String jdbcUrl = null;
-    try {
-      jdbcUrl = resolveJDBCUrl(unResolvedJDBCUrl, dummyRecord);
-    } catch (ELEvalException e) {
-      LOG.error("Error evaluating EL:", e);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.HIVE.name(),
-              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
-              Errors.HIVE_01,
-              e.getMessage()
-          )
-      );
-      return;
-    }
-    try (Connection con = DriverManager.getConnection(jdbcUrl)) {}
-    catch (SQLException e) {
-      LOG.error(Utils.format("Error Connecting to Hive Default Database with URL {}", jdbcUrl), e);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.HIVE.name(),
-              JOINER.join(HiveMetastoreUtil.CONF, HiveMetastoreUtil.HIVE_CONFIG_BEAN, HIVE_JDBC_URL),
-              Errors.HIVE_22,
-              jdbcUrl,
-              e.getMessage()
-          )
-      );
     }
   }
 

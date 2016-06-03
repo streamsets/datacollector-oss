@@ -107,19 +107,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
-    Configuration conf = new Configuration();
 
-    File hiveConfigFile = new File(hiveConfigBean.confDir);
-    // TODO refactor here
-    HiveMetastoreUtil.validateConfigFile("hive-site.xml", hiveConfigBean.confDir,
-        hiveConfigFile, issues, conf, getContext());
-    HiveMetastoreUtil.validateConfigFile("core-site.xml", hiveConfigBean.confDir,
-        hiveConfigFile, issues, conf, getContext());
-    HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", hiveConfigBean.confDir,
-        hiveConfigFile, issues, conf, getContext());
+    hiveConfigBean.init(getContext(), "hiveConfigBean", issues);
 
     if (!externalTable) {
-      internalWarehouseDir = HiveConf.getVar(conf, HiveConf.ConfVars.METASTOREWAREHOUSE);
+      internalWarehouseDir = HiveConf.getVar(hiveConfigBean.getConfiguration(), HiveConf.ConfVars.METASTOREWAREHOUSE);
       if (internalWarehouseDir == null || internalWarehouseDir.isEmpty()){
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
