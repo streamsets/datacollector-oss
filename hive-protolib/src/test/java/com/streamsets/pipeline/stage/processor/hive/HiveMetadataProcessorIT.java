@@ -39,17 +39,69 @@ import java.util.Map;
 
 public class HiveMetadataProcessorIT extends BaseHiveIT {
 
+  private class HiveMetadataProcessorBuilder {
+    private String database;
+    private String table;
+    private List<PartitionConfig> partitions;
+    private boolean external;
+    private String tablePathTemplate;
+    private String partitionPathTemplate;
+
+    private HiveMetadataProcessorBuilder() {
+      database = "default";
+      table = "tbl";
+      partitions = new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build();
+      external = false;
+      tablePathTemplate = null;
+      partitionPathTemplate = null;
+    }
+
+    public HiveMetadataProcessorBuilder database(String database) {
+      this.database = database;
+      return this;
+    }
+
+    public HiveMetadataProcessorBuilder table(String table) {
+      this.table = table;
+      return this;
+    }
+
+    public HiveMetadataProcessorBuilder partitions(List<PartitionConfig> partitions) {
+      this.partitions = partitions;
+      return this;
+    }
+
+    public HiveMetadataProcessorBuilder external(boolean external) {
+      this.external = external;
+      return this;
+    }
+
+    public HiveMetadataProcessorBuilder tablePathTemplate(String tablePathTemplate) {
+      this.tablePathTemplate = tablePathTemplate;
+      return this;
+    }
+
+    public HiveMetadataProcessorBuilder partitionPathTemplate(String partitionPathTemplate) {
+      this.partitionPathTemplate = partitionPathTemplate;
+      return this;
+    }
+
+    public HiveMetadataProcessor build() {
+      return new HiveMetadataProcessor(
+        database,
+        table,
+        partitions,
+        external,
+        tablePathTemplate,
+        partitionPathTemplate,
+        getHiveConfigBean()
+      );
+    }
+  }
+
   @Test
   public void testInitialization() throws Exception {
-    HiveMetadataProcessor processor = new HiveMetadataProcessor(
-      "default",
-      "tbl",
-      new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build(),
-      false,
-      null,
-      null,
-      getHiveConfigBean()
-    );
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -63,15 +115,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
 
   @Test
   public void testAllOutputsOnCompletelyColdStart() throws Exception {
-    HiveMetadataProcessor processor = new HiveMetadataProcessor(
-      "default",
-      "tbl",
-      new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build(),
-      false,
-      null,
-      null,
-      getHiveConfigBean()
-    );
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -122,15 +166,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
   public void testTableAlreadyExistsInHive() throws Exception {
     executeUpdate("CREATE TABLE `tbl` (name string) PARTITIONED BY (dt string) STORED AS AVRO");
 
-    HiveMetadataProcessor processor = new HiveMetadataProcessor(
-      "default",
-      "tbl",
-      new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build(),
-      false,
-      null,
-      null,
-      getHiveConfigBean()
-    );
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -161,15 +197,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     executeUpdate("CREATE TABLE `tbl` (name string) PARTITIONED BY (dt string) STORED AS AVRO");
     executeUpdate("ALTER TABLE `tbl` ADD PARTITION (dt = 'secret-value')");
 
-    HiveMetadataProcessor processor = new HiveMetadataProcessor(
-      "default",
-      "tbl",
-      new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build(),
-      false,
-      null,
-      null,
-      getHiveConfigBean()
-    );
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
