@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 
-public class BasicAuthConfigBean {
+public class PasswordAuthConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -29,7 +29,7 @@ public class BasicAuthConfigBean {
       displayPosition = 10,
       group = "#0",
       dependsOn = "authType^",
-      triggeredByValue = "BASIC"
+      triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
   public String username;
 
@@ -40,7 +40,7 @@ public class BasicAuthConfigBean {
       displayPosition = 20,
       group = "#0",
       dependsOn = "authType^",
-      triggeredByValue = "BASIC"
+      triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
   public String password;
 }

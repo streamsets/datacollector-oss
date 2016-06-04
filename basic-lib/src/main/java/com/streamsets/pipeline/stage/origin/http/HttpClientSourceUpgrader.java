@@ -31,6 +31,7 @@ import java.util.List;
 public class HttpClientSourceUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
   private static final String BASIC = "basic";
+  private static final String AUTH_TYPE = "authType";
   private static final String OAUTH = "oauth";
   private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
 
@@ -47,6 +48,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        break;
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -110,6 +114,18 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     configs.add(new Config("conf.proxy.uri", ""));
     configs.add(new Config("conf.proxy.username", ""));
     configs.add(new Config("conf.proxy.password", ""));
+  }
 
+  private void upgradeV3ToV4(List<Config> configs) {
+    for (Config config : configs) {
+      if (joiner.join(CONF, AUTH_TYPE)
+          .equals(config.getName()) && AuthenticationType.BASIC.name() == config.getValue()) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(joiner.join(CONF, AUTH_TYPE), AuthenticationType.UNIVERSAL));
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

@@ -38,23 +38,28 @@ import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
 
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Currently tests do not include basic auth because of lack of support in JerseyTest
  * so we trust that the Jersey client we use implements auth correctly.
  */
-public class TestHttpClientSource extends JerseyTest {
+public class HttpClientSourceIT extends JerseyTest {
 
   @Path("/stream")
   @Produces("application/json")
@@ -125,6 +130,52 @@ public class TestHttpClientSource extends JerseyTest {
     }
   }
 
+  @Path("/preemptive")
+  public static class PreemptiveAuthResource {
+
+    @GET
+    public Response get(@Context HttpHeaders h) {
+      // This endpoint will fail if universal is used and expects preemptive auth (basic)
+      String value = h.getRequestHeaders().getFirst("Authorization");
+      assertNotNull(value);
+      return Response.ok(
+          "{\"name\": \"adam\"}\r\n" +
+              "{\"name\": \"joe\"}\r\n" +
+              "{\"name\": \"sally\"}"
+      ).build();
+    }
+  }
+
+  @Path("/auth")
+  @Singleton
+  public static class AuthResource {
+
+    int requestCount = 0;
+
+    @GET
+    public Response get(@Context HttpHeaders h) {
+      // This endpoint supports the "universal" option which tells the client which auth to use on the 2nd request.
+      requestCount++;
+      String value = h.getRequestHeaders().getFirst("Authorization");
+      if (value == null) {
+        assertEquals(1, requestCount);
+        throw new WebApplicationException(
+            Response.status(401)
+            .header("WWW-Authenticate", "Basic realm=\"WallyWorld\"")
+            .build()
+        );
+      } else {
+        assertTrue(requestCount > 1);
+      }
+
+      return Response.ok(
+          "{\"name\": \"adam\"}\r\n" +
+              "{\"name\": \"joe\"}\r\n" +
+              "{\"name\": \"sally\"}"
+      ).build();
+    }
+  }
+
   @Override
   protected Application configure() {
     return new ResourceConfig(
@@ -132,7 +183,9 @@ public class TestHttpClientSource extends JerseyTest {
             StreamResource.class,
             NewlineStreamResource.class,
             TextStreamResource.class,
-            XmlStreamResource.class
+            XmlStreamResource.class,
+            PreemptiveAuthResource.class,
+            AuthResource.class
         )
     );
   }
@@ -151,7 +204,9 @@ public class TestHttpClientSource extends JerseyTest {
                     StreamResource.class,
                     NewlineStreamResource.class,
                     TextStreamResource.class,
-                    XmlStreamResource.class
+                    XmlStreamResource.class,
+                    PreemptiveAuthResource.class,
+                    AuthResource.class
                 )
             )
         )
@@ -448,5 +503,89 @@ public class TestHttpClientSource extends JerseyTest {
     conf.useProxy = false;
 
     return new HttpClientSource(conf);
+  }
+
+  @Test
+  public void testUniversalAuth() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.UNIVERSAL;
+    conf.basicAuth.username = "foo";
+    conf.basicAuth.password = "bar";
+    conf.httpMode = HttpClientMode.POLLING;
+    conf.resourceUrl = "http://localhost:9998/auth";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 10000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(3, parsedRecords.size());
+
+      String[] names = { "adam", "joe", "sally" };
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNoWWWAuthenticate() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.BASIC;
+    conf.basicAuth.username = "foo";
+    conf.basicAuth.password = "bar";
+    conf.httpMode = HttpClientMode.POLLING;
+    conf.resourceUrl = "http://localhost:9998/preemptive";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 10000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(3, parsedRecords.size());
+
+      String[] names = { "adam", "joe", "sally" };
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+      }
+    } finally {
+      runner.runDestroy();
+    }
   }
 }
