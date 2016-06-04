@@ -28,8 +28,7 @@ import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
-import com.streamsets.pipeline.stage.PartitionConfigBuilder;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,66 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 public class HiveMetadataProcessorIT extends BaseHiveIT {
-
-  private class HiveMetadataProcessorBuilder {
-    private String database;
-    private String table;
-    private List<PartitionConfig> partitions;
-    private boolean external;
-    private String tablePathTemplate;
-    private String partitionPathTemplate;
-
-    private HiveMetadataProcessorBuilder() {
-      database = "default";
-      table = "tbl";
-      partitions = new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build();
-      external = false;
-      tablePathTemplate = null;
-      partitionPathTemplate = null;
-    }
-
-    public HiveMetadataProcessorBuilder database(String database) {
-      this.database = database;
-      return this;
-    }
-
-    public HiveMetadataProcessorBuilder table(String table) {
-      this.table = table;
-      return this;
-    }
-
-    public HiveMetadataProcessorBuilder partitions(List<PartitionConfig> partitions) {
-      this.partitions = partitions;
-      return this;
-    }
-
-    public HiveMetadataProcessorBuilder external(boolean external) {
-      this.external = external;
-      return this;
-    }
-
-    public HiveMetadataProcessorBuilder tablePathTemplate(String tablePathTemplate) {
-      this.tablePathTemplate = tablePathTemplate;
-      return this;
-    }
-
-    public HiveMetadataProcessorBuilder partitionPathTemplate(String partitionPathTemplate) {
-      this.partitionPathTemplate = partitionPathTemplate;
-      return this;
-    }
-
-    public HiveMetadataProcessor build() {
-      return new HiveMetadataProcessor(
-        database,
-        table,
-        partitions,
-        external,
-        tablePathTemplate,
-        partitionPathTemplate,
-        getHiveConfigBean()
-      );
-    }
-  }
 
   @Test
   public void testInitialization() throws Exception {

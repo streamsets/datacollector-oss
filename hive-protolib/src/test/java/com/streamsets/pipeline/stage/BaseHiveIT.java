@@ -68,6 +68,9 @@ public abstract class BaseHiveIT {
   private static ExecutorService hiveMetastoreExecutor = Executors.newSingleThreadExecutor();
   private static HiveServer2 hiveServer2;
   private static Connection hiveConnection;
+  public static Connection getHiveConnection() {
+    return hiveConnection;
+  }
 
   // Network configuration
   private static final String HOSTNAME = "localhost";
@@ -174,6 +177,10 @@ public abstract class BaseHiveIT {
     return Utils.format("jdbc:hive2://{}:{}", HOSTNAME, HIVE_SERVER_PORT);
   }
 
+  public static String getDefaultFS() {
+    return Utils.format("hdfs://{}:{}", HOSTNAME, miniDFS.getNameNodePort());
+  }
+
   /**
    * Since we're reusing the same HS2 instance between tests, drop all tables that were created.
    */
@@ -206,7 +213,7 @@ public abstract class BaseHiveIT {
   /**
    * Generates HiveConfigBean with pre-filled values that are connecting to HS2 started by this test case.
    */
-  public HiveConfigBean getHiveConfigBean() {
+  public static HiveConfigBean getHiveConfigBean() {
     HiveConfigBean hiveConfigBean = new HiveConfigBean();
     hiveConfigBean.confDir = confDir;
     hiveConfigBean.hiveJDBCDriver = HIVE_JDBC_DRIVER;

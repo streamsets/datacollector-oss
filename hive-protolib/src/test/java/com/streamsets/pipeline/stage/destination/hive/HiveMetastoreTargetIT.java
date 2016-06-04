@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
+import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
@@ -54,10 +55,7 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
 
   @Test
   public void testInitialization() throws Exception {
-    HMSTargetConfigBean config = new HMSTargetConfigBean();
-    config.hiveConfigBean = getHiveConfigBean();
-
-    HiveMetastoreTarget hiveTarget = new HiveMetastoreTarget(config);
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
     TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -69,10 +67,7 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
 
   @Test
   public void testCreateNonExistingTable() throws Exception {
-     HMSTargetConfigBean config = new HMSTargetConfigBean();
-    config.hiveConfigBean = getHiveConfigBean();
-
-    HiveMetastoreTarget hiveTarget = new HiveMetastoreTarget(config);
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
     TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
