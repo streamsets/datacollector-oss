@@ -79,6 +79,18 @@ class HttpStreamConsumer implements Runnable {
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
+    configureAuth(clientBuilder);
+    configureProxy(clientBuilder);
+
+    client = clientBuilder.build();
+    resource = client.target(conf.resourceUrl);
+
+    for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
+      LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
+    }
+  }
+
+  private void configureAuth(ClientBuilder clientBuilder) {
     if (conf.authType == AuthenticationType.OAUTH) {
       ConsumerCredentials consumerCredentials = new ConsumerCredentials(
           conf.oauth.consumerKey,
@@ -94,16 +106,15 @@ class HttpStreamConsumer implements Runnable {
     }
 
     if (conf.authType == AuthenticationType.BASIC) {
-      clientBuilder.register(HttpAuthenticationFeature.universal(conf.basicAuth.username, conf.basicAuth.password));
+      clientBuilder.register(HttpAuthenticationFeature.basic(conf.basicAuth.username, conf.basicAuth.password));
     }
 
-    configureProxy(clientBuilder);
+    if (conf.authType == AuthenticationType.DIGEST) {
+      clientBuilder.register(HttpAuthenticationFeature.digest(conf.basicAuth.username, conf.basicAuth.password));
+    }
 
-    client = clientBuilder.build();
-    resource = client.target(conf.resourceUrl);
-
-    for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
-      LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
+    if (conf.authType == AuthenticationType.UNIVERSAL) {
+      clientBuilder.register(HttpAuthenticationFeature.universal(conf.basicAuth.username, conf.basicAuth.password));
     }
   }
 

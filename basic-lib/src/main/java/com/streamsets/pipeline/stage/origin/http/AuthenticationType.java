@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.Label;
 public enum AuthenticationType implements Label {
   NONE("None"),
   BASIC("Basic"),
+  DIGEST("Digest"),
+  UNIVERSAL("Universal"),
   OAUTH("OAuth"),
   ;
 

@@ -133,6 +133,19 @@ public class TestHttpClientSourceUpgrader {
     Assert.assertEquals("", configValues.get("conf.proxy.password"));
   }
 
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("conf.authType", "BASIC"));
+
+    HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
+    httpClientSourceUpgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    Assert.assertEquals(AuthenticationType.UNIVERSAL, configValues.get("conf.authType"));
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

@@ -120,7 +120,7 @@ public class HttpClientConfigBean {
   public OAuthConfigBean oauth = new OAuthConfigBean();
 
   @ConfigDefBean(groups = "CREDENTIALS")
-  public BasicAuthConfigBean basicAuth = new BasicAuthConfigBean();
+  public PasswordAuthConfigBean basicAuth = new PasswordAuthConfigBean();
 
   @ConfigDef(
       required = true,
