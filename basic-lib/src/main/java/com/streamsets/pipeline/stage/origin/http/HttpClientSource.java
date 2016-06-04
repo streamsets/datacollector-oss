@@ -52,6 +52,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
+  private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
 
   public static final String BASIC_CONFIG_PREFIX = "conf.basic.";
 

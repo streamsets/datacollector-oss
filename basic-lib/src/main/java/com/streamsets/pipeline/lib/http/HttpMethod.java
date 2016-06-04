@@ -31,7 +31,8 @@ public enum HttpMethod implements Label {
   PUT("PUT"),
   POST("POST"),
   DELETE("DELETE"),
-  HEAD("HEAD")
+  HEAD("HEAD"),
+  EXPRESSION("Expression...")
   ;
 
   private final String label;

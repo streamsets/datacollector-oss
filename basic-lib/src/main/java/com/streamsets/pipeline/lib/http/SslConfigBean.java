@@ -49,7 +49,7 @@ public class SslConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Path to Keystore Store",
+      label = "Path to Key Store",
       displayPosition = 30,
       group = "#0"
   )

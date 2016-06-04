@@ -27,25 +27,20 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
-import org.glassfish.jersey.SslConfigurator;
+import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.oauth1.AccessToken;
-import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -105,78 +100,26 @@ class HttpStreamConsumer implements Runnable {
     headerVars = context.createELVars();
     headerEval = context.createELEval(HEADER_CONFIG_NAME);
 
-    ClientConfig clientConfig = new ClientConfig()
-        .connectorProvider(new ApacheConnectorProvider());
+    ClientConfig clientConfig = new ClientConfig().connectorProvider(new ApacheConnectorProvider());
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
     configureAuth(clientBuilder);
-    configureProxy(clientBuilder);
-    configureSslContext(clientBuilder);
+
+    if (conf.useProxy) {
+      JerseyClientUtil.configureProxy(conf.proxy, clientBuilder);
+    }
+
+    JerseyClientUtil.configureSslContext(conf.sslConfig, clientBuilder);
 
     client = clientBuilder.build();
   }
 
-  private void configureSslContext(ClientBuilder clientBuilder) {
-
-    SslConfigurator sslConfig = SslConfigurator.newInstance();
-
-    if (!conf.sslConfig.trustStorePath.isEmpty() && !conf.sslConfig.trustStorePassword.isEmpty()) {
-      sslConfig.trustStoreFile(conf.sslConfig.trustStorePath).trustStorePassword(conf.sslConfig.trustStorePassword);
-    }
-
-    if (!conf.sslConfig.keyStorePath.isEmpty() && !conf.sslConfig.keyStorePassword.isEmpty()) {
-      sslConfig.keyStoreFile(conf.sslConfig.keyStorePath).keyStorePassword(conf.sslConfig.keyStorePassword);
-    }
-
-    SSLContext sslContext = sslConfig.createSSLContext();
-    clientBuilder.sslContext(sslContext);
-  }
-
   private void configureAuth(ClientBuilder clientBuilder) {
     if (conf.authType == AuthenticationType.OAUTH) {
-      ConsumerCredentials consumerCredentials = new ConsumerCredentials(
-          conf.oauth.consumerKey,
-          conf.oauth.consumerSecret
-      );
-
-      authToken = new AccessToken(conf.oauth.token, conf.oauth.tokenSecret);
-      Feature feature = OAuth1ClientSupport.builder(consumerCredentials)
-          .feature()
-          .accessToken(authToken)
-          .build();
-      clientBuilder.register(feature);
-    }
-
-    if (conf.authType == AuthenticationType.BASIC) {
-      clientBuilder.register(HttpAuthenticationFeature.basic(conf.basicAuth.username, conf.basicAuth.password));
-    }
-
-    if (conf.authType == AuthenticationType.DIGEST) {
-      clientBuilder.register(HttpAuthenticationFeature.digest(conf.basicAuth.username, conf.basicAuth.password));
-    }
-
-    if (conf.authType == AuthenticationType.UNIVERSAL) {
-      clientBuilder.register(HttpAuthenticationFeature.universal(conf.basicAuth.username, conf.basicAuth.password));
-    }
-  }
-
-  private void configureProxy(ClientBuilder clientBuilder) {
-    if (!conf.useProxy) {
-      return;
-    }
-
-    if (!conf.proxy.uri.isEmpty()) {
-      clientBuilder.property(ClientProperties.PROXY_URI, conf.proxy.uri);
-      LOG.debug("Using Proxy: '{}'", conf.proxy.uri);
-    }
-    if (!conf.proxy.username.isEmpty()) {
-      clientBuilder.property(ClientProperties.PROXY_USERNAME, conf.proxy.username);
-      LOG.debug("Using Proxy Username: '{}'", conf.proxy.username);
-    }
-    if (!conf.proxy.password.isEmpty()) {
-      clientBuilder.property(ClientProperties.PROXY_PASSWORD, conf.proxy.password);
-      LOG.debug("Using Proxy Password: '{}'", conf.proxy.password);
+      authToken = JerseyClientUtil.configureOAuth1(conf.oauth, clientBuilder);
+    } else if (conf.authType != AuthenticationType.NONE) {
+      JerseyClientUtil.configurePasswordAuth(conf.authType, conf.basicAuth, clientBuilder);
     }
   }
 
