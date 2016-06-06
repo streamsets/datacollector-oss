@@ -69,7 +69,7 @@ public class IpcToKafkaServlet extends HttpServlet {
     this.errorQueue = errorQueue;
 
     maxRpcRequestSize = configs.maxRpcRequestSize * 1000 * 1000;
-    maxMessageSize = configs.maxMessageSize * 1000 * 1000;
+    maxMessageSize = configs.maxMessageSize * 1000;
 
     invalidRequestMeter = context.createMeter("invalidRequests");
     errorRequestMeter = context.createMeter("errorRequests");

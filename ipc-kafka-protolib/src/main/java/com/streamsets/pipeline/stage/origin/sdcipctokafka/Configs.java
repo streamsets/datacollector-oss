@@ -148,13 +148,13 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "1",
-      label = "Max Message Size (MB)",
+      defaultValue = "1000",
+      label = "Max Message Size (KB)",
       description = "",
       displayPosition = 30,
       group = "KAFKA",
       min = 1,
-      max = 100
+      max = 10000 // 10 MB
   )
   public int maxMessageSize;
 
