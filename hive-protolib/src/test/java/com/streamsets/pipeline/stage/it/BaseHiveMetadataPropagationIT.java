@@ -62,19 +62,22 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
 
-    // Initialization
-    procesorRunner.runInit();
-    hiveTargetRunner.runInit();
-    hdfsTargetRunner.runInit();
+    try {
+      // Initialization
+      procesorRunner.runInit();
+      hiveTargetRunner.runInit();
+      hdfsTargetRunner.runInit();
 
-    // Process incoming records
-    StageRunner.Output output = procesorRunner.runProcess(inputRecords);
-    hiveTargetRunner.runWrite(output.getRecords().get("hive"));
-    hdfsTargetRunner.runWrite(output.getRecords().get("hdfs"));
+      // Process incoming records
+      StageRunner.Output output = procesorRunner.runProcess(inputRecords);
+      hiveTargetRunner.runWrite(output.getRecords().get("hive"));
+      hdfsTargetRunner.runWrite(output.getRecords().get("hdfs"));
+    } finally {
+      procesorRunner.runDestroy();
+      hiveTargetRunner.runDestroy();
+      hdfsTargetRunner.runDestroy();
+    }
 
-    procesorRunner.runDestroy();
-    hiveTargetRunner.runDestroy();
-    hdfsTargetRunner.runDestroy();
   }
 
   public HdfsTarget createHdfsTarget() {

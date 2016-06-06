@@ -266,7 +266,7 @@ public final class HiveQueryExecutor {
 
   public boolean executeShowTableQuery(String qualifiedTableName) throws StageException{
     String sql = buildShowTableQuery(qualifiedTableName);
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
@@ -296,7 +296,7 @@ public final class HiveQueryExecutor {
     String sql = useAsAvro? buildCreateTableQueryNew(qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal)
         : buildCreateTableQueryOld(qualifiedTableName, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
 
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
@@ -314,7 +314,7 @@ public final class HiveQueryExecutor {
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap
   ) throws StageException {
     String sql = buildAddColumnsQuery(qualifiedTableName, columnTypeMap);
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
@@ -334,7 +334,7 @@ public final class HiveQueryExecutor {
       String partitionPath
   ) throws StageException {
     String sql = buildPartitionAdditionQuery(qualifiedTableName, partitionNameValueMap, partitionTypeMap, partitionPath);
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
@@ -358,7 +358,7 @@ public final class HiveQueryExecutor {
       String partitionPath
   ) throws StageException {
     String sql = buildSetTablePropertiesQuery(qualifiedTableName, partitionPath);
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();
@@ -380,7 +380,7 @@ public final class HiveQueryExecutor {
   public Set<LinkedHashMap<String, String>> executeShowPartitionsQuery(String qualifiedTableName) throws StageException {
     String sql = buildShowPartitionsQuery(qualifiedTableName);
     Set<LinkedHashMap<String, String>> partitionInfoSet = new HashSet<>();
-    LOG.debug("Executing SQL:", sql);
+    LOG.debug("Executing SQL: {}", sql);
     Statement statement = null;
     try (Connection con = DriverManager.getConnection(jdbcUrl)){
       statement = con.createStatement();

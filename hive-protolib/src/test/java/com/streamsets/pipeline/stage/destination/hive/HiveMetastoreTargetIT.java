@@ -29,29 +29,21 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
-import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class HiveMetastoreTargetIT extends BaseHiveIT {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseHiveIT.class);
-
-  HiveQueryExecutor hiveQueryExecutor;
-
-  @Before
-  public void setUpHiveQueryExecutor() {
-    hiveQueryExecutor = new HiveQueryExecutor(getHiveJdbcUrl());
-  }
 
   @Test
   public void testInitialization() throws Exception {
@@ -97,18 +89,10 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     runner.runWrite(ImmutableList.of(record));
     runner.runDestroy();
 
-    Assert.assertTrue(hiveQueryExecutor.executeShowTableQuery("default.tbl"));
-    Pair<LinkedHashMap<String, HiveTypeInfo>, LinkedHashMap<String, HiveTypeInfo>> tableStructure = hiveQueryExecutor.executeDescTableQuery("default.tbl");
-    LinkedHashMap<String, HiveTypeInfo> retrievedColumns = tableStructure.getLeft();
-    LinkedHashMap<String, HiveTypeInfo> retrievedPartitions = tableStructure.getRight();
-
-    Assert.assertEquals(1, retrievedColumns.size());
-    Assert.assertTrue(retrievedColumns.containsKey("name"));
-    Assert.assertEquals(HiveType.STRING, retrievedColumns.get("name").getHiveType());
-
-    Assert.assertEquals(1, retrievedPartitions.size());
-    Assert.assertTrue(retrievedPartitions.containsKey("dt"));
-    Assert.assertEquals(HiveType.STRING, retrievedPartitions.get("dt").getHiveType());
+    assertTableStructure("default.tbl",
+      new ImmutablePair("tbl.name", Types.VARCHAR),
+      new ImmutablePair("tbl.dt", Types.VARCHAR)
+    );
   }
 }
 

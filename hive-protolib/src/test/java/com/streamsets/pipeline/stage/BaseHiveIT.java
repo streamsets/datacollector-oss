@@ -21,6 +21,8 @@ package com.streamsets.pipeline.stage;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.hive.HiveConfigBean;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -44,6 +46,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashSet;
@@ -62,6 +65,9 @@ public abstract class BaseHiveIT {
 
   private static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver";
 
+  private static int MINICLUSTER_BOOT_RETRY = Integer.getInteger("basehiveit.boot.retry", 5);
+  private static int MINICLUSTER_BOOT_SLEEP = Integer.getInteger("basehiveit.boot.sleep", 1000);
+
   // Mini cluster instances
   private static String confDir;
   private static MiniDFSCluster miniDFS;
@@ -79,6 +85,11 @@ public abstract class BaseHiveIT {
   static {
     METASTORE_PORT = NetworkUtils.findAvailablePort();
     HIVE_SERVER_PORT = NetworkUtils.findAvailablePort();
+  }
+
+  private static HiveQueryExecutor hiveQueryExecutor;
+  public HiveQueryExecutor getHiveQueryExecutor() {
+    return hiveQueryExecutor;
   }
 
   /**
@@ -129,18 +140,19 @@ public abstract class BaseHiveIT {
       }
     };
     hiveMetastoreExecutor.submit(metastoreService);
-    NetworkUtils.waitForStartUp(HOSTNAME, METASTORE_PORT, 5, 1000);
+    NetworkUtils.waitForStartUp(HOSTNAME, METASTORE_PORT, MINICLUSTER_BOOT_RETRY, MINICLUSTER_BOOT_SLEEP);
 
     // HiveServer 2
     hiveServer2 = new HiveServer2();
     hiveServer2.init(hiveConf);
     hiveServer2.start();
     writeConfiguration(hiveServer2.getHiveConf(), confDir + "/hive-site.xml");
-    NetworkUtils.waitForStartUp(HOSTNAME, HIVE_SERVER_PORT, 5, 1000);
+    NetworkUtils.waitForStartUp(HOSTNAME, HIVE_SERVER_PORT, MINICLUSTER_BOOT_RETRY, MINICLUSTER_BOOT_SLEEP);
 
     // JDBC Connection to Hive
     Class.forName(HIVE_JDBC_DRIVER);
     hiveConnection = DriverManager.getConnection(getHiveJdbcUrl());
+    hiveQueryExecutor = new HiveQueryExecutor(getHiveJdbcUrl());
   }
 
   /**
@@ -174,7 +186,7 @@ public abstract class BaseHiveIT {
    * Returns HS2 JDBC URL for server started by this test case.
    */
   public static String getHiveJdbcUrl() {
-    return Utils.format("jdbc:hive2://{}:{}", HOSTNAME, HIVE_SERVER_PORT);
+    return Utils.format("jdbc:hive2://{}:{}/default;user={}", HOSTNAME, HIVE_SERVER_PORT, System.getProperty("user.name"));
   }
 
   public static String getDefaultFS() {
@@ -186,6 +198,7 @@ public abstract class BaseHiveIT {
    */
   @Before
   public void cleanUpHiveTables() throws Exception {
+    // Metadata clean up
     try (
       Statement queryStatement = hiveConnection.createStatement();
       Statement dropStatement = hiveConnection.createStatement();
@@ -197,6 +210,9 @@ public abstract class BaseHiveIT {
       }
       rs.close();
     }
+
+    // Filesystem clean up
+    miniDFS.getFileSystem().delete(new Path("/user/hive/warehouse"), true);
   }
 
   /**
@@ -221,5 +237,55 @@ public abstract class BaseHiveIT {
     hiveConfigBean.hiveJDBCUrl = getHiveJdbcUrl();
 
     return hiveConfigBean;
+  }
+
+  /**
+   * Validate that table of given name exists in HMS
+   */
+  public static void assertTableExists(String name) throws Exception {
+    Assert.assertTrue(Utils.format("Table {} doesn't exists.", name), hiveQueryExecutor.executeShowTableQuery(name));
+  }
+
+  public static abstract class QueryValidator {
+    abstract public void validateResultSet(ResultSet rs) throws Exception;
+  }
+
+  /**
+   * Simple query result validation assertion.
+   */
+  public static void assertQueryResult(String query, QueryValidator validator) throws Exception {
+    try(
+      Statement statement = getHiveConnection().createStatement();
+      ResultSet rs = statement.executeQuery(query);
+    ) {
+      validator.validateResultSet(rs);
+    }
+  }
+
+  /**
+   * Validate structure of the result set (column names and types).
+   */
+  public static void assertResultSetStructure(ResultSet rs, Pair<String, Integer>... columns) throws Exception {
+    ResultSetMetaData metaData = rs.getMetaData();
+    Assert.assertEquals(Utils.format("Unexpected number of columns"), columns.length, metaData.getColumnCount());
+    int i = 1;
+    for(Pair<String, Integer> column : columns) {
+      Assert.assertEquals(Utils.format("Unexpected name for column {}", i), column.getLeft(), metaData.getColumnName(i));
+      Assert.assertEquals(Utils.format("Unexpected type for column {}", i), (int)column.getRight(), metaData.getColumnType(i));
+      i++;
+    }
+  }
+
+  /**
+   * Assert structure of given Hive table.
+   */
+  public static void assertTableStructure(String table, final Pair<String, Integer>... columns) throws Exception {
+    assertTableExists(table);
+    assertQueryResult(Utils.format("select * from {}", table), new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs, columns);
+      }
+    });
   }
 }

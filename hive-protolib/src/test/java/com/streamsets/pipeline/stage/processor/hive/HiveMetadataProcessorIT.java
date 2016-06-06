@@ -29,6 +29,8 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
+import com.streamsets.pipeline.stage.PartitionConfigBuilder;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,13 +80,13 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     Assert.assertNotNull(newTableRecord);
     Assert.assertEquals(1, newTableRecord.get("/version").getValueAsInteger());
     Assert.assertEquals("tbl", newTableRecord.get("/table").getValueAsString());
-    // TODO(Detect type)
+    Assert.assertEquals("TABLE", newTableRecord.get("/type").getValueAsString());
 
     Record newPartitionRecord = output.getRecords().get("hive").get(1);
     Assert.assertNotNull(newPartitionRecord);
     Assert.assertEquals(1, newPartitionRecord.get("/version").getValueAsInteger());
-    Assert.assertEquals("tbl", newTableRecord.get("/table").getValueAsString());
-    // TODO(Detect type)
+    Assert.assertEquals("tbl", newPartitionRecord.get("/table").getValueAsString());
+    Assert.assertEquals("PARTITION", newPartitionRecord.get("/type").getValueAsString());
 
     // HDFS record
 
@@ -160,4 +162,42 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     Assert.assertEquals(0, output.getRecords().get("hive").size());
     Assert.assertEquals(1, output.getRecords().get("hdfs").size());
   }
+
+  @Test
+  public void testSubpartitions() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .partitions(new PartitionConfigBuilder()
+        .addPartition("year", HiveType.STRING, "2016")
+        .addPartition("month", HiveType.STRING, "06")
+        .addPartition("day", HiveType.STRING, "05")
+        .build()
+      )
+      .build();
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .addOutputLane("hive")
+      .addOutputLane("hdfs")
+      .build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "Junko"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    // HDFS record
+
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertNotNull(hdfsRecord);
+    // The record should have "roll" set to true
+    Assert.assertNotNull(hdfsRecord.getHeader().getAttribute("roll"));
+    // Target directory with correct path
+    Assert.assertEquals("/user/hive/warehouse/tbl/year=2016/month=06/day=05", hdfsRecord.getHeader().getAttribute("targetDirectory"));
+  }
+
 }
