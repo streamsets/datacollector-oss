@@ -54,28 +54,18 @@ public class ProxySSOService implements SSOService {
   }
 
   @Override
-  public SSOUserPrincipal validateUserToken(String authToken) {
+  public SSOPrincipal validateUserToken(String authToken) {
     return ssoService.validateUserToken(authToken);
   }
 
   @Override
-  public SSOUserPrincipal validateAppToken(String authToken, String componentId) {
+  public SSOPrincipal validateAppToken(String authToken, String componentId) {
     return ssoService.validateAppToken(authToken, componentId);
   }
 
   @Override
   public boolean invalidateAppToken(String authToken) {
     return ssoService.invalidateAppToken(authToken);
-  }
-
-  @Override
-  public void refresh() {
-    ssoService.refresh();
-  }
-
-  @Override
-  public boolean isAppAuthenticationEnabled() {
-    return ssoService.isAppAuthenticationEnabled();
   }
 
 }

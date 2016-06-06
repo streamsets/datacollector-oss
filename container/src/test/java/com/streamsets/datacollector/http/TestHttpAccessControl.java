@@ -28,6 +28,7 @@ import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CORSConstants;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import dagger.ObjectGraph;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -105,6 +106,8 @@ public class TestHttpAccessControl {
     Configuration conf = new Configuration();
     conf.set(WebServerTask.HTTP_PORT_KEY, port);
     conf.set(WebServerTask.AUTHENTICATION_KEY, authenticationType);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "token");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "token");
     conf.set(WebServerTask.DPM_ENABLED, dpmEnabled);
 
     Writer writer = writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +

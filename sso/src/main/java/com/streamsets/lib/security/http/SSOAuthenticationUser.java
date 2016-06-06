@@ -29,12 +29,12 @@ import java.security.Principal;
 import java.util.Collections;
 
 public class SSOAuthenticationUser implements Authentication.User {
-  private final SSOUserPrincipal principal;
+  private final SSOPrincipal principal;
   private final String id;
   private volatile boolean valid;
   private long validationTime;
 
-  public SSOAuthenticationUser(final SSOUserPrincipal principal) {
+  public SSOAuthenticationUser(final SSOPrincipal principal) {
     Utils.checkNotNull(principal, "principal");
     this.principal = principal;
     this.id = Utils.checkNotNull(principal.getTokenStr(), "principal.tokenStr");
@@ -77,7 +77,7 @@ public class SSOAuthenticationUser implements Authentication.User {
     valid = false;
   }
 
-  public SSOUserPrincipal getSSOUserPrincipal() {
+  public SSOPrincipal getSSOUserPrincipal() {
     return principal;
   }
 

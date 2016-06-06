@@ -253,8 +253,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     if (!mandatory) {
       ret = Authentication.NOT_CHECKED;
     } else {
-      getSsoService().refresh();
-      SSOUserPrincipal principal = null;
+      SSOPrincipal principal = null;
       if (authToken != null) {
         principal = getSsoService().validateUserToken(authToken);
       }

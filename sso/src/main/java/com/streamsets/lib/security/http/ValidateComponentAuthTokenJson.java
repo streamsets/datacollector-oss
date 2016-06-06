@@ -19,10 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class ComponentAuthJson {
+public class ValidateComponentAuthTokenJson {
   private String authToken;
   private String componentId;
 

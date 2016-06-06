@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("squid:S1845")
-public class SSOUserPrincipalJson implements SSOUserPrincipal {
+public class SSOPrincipalJson implements SSOPrincipal {
   private String tokenStr;
   private String issuerUrl;
   private long expires;
@@ -169,8 +169,8 @@ public class SSOUserPrincipalJson implements SSOUserPrincipal {
     if (o == null) {
       return false;
     }
-    if (o instanceof SSOUserPrincipalJson) {
-      SSOUserPrincipalJson that = (SSOUserPrincipalJson) o;
+    if (o instanceof SSOPrincipalJson) {
+      SSOPrincipalJson that = (SSOPrincipalJson) o;
       return getName().equals(that.getName());
     } else {
       return false;

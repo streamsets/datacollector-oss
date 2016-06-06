@@ -51,20 +51,18 @@ public class SSOAuthenticator extends AbstractSSOAuthenticator {
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
       throws ServerAuthException {
     Authenticator auth = userAuthenticator;
-    if (getSsoService().isAppAuthenticationEnabled()) {
-      HttpServletRequest httpReq = (HttpServletRequest) request;
-      boolean isRestCall = httpReq.getHeader(SSOConstants.X_REST_CALL) != null;
-      boolean isAppCall = httpReq.getHeader(SSOConstants.X_APP_AUTH_TOKEN) != null ||
-          httpReq.getHeader(SSOConstants.X_APP_COMPONENT_ID) != null;
-      if (isAppCall && isRestCall) {
-        auth = appAuthenticator;
-        if (getLog().isTraceEnabled()) {
-          getLog().trace("App request '{}'", getRequestInfoForLogging(httpReq, "?"));
-        }
-      } else {
-        if (getLog().isTraceEnabled()) {
-          getLog().trace("User request '{}'", getRequestInfoForLogging(httpReq, "?"));
-        }
+    HttpServletRequest httpReq = (HttpServletRequest) request;
+    boolean isRestCall = httpReq.getHeader(SSOConstants.X_REST_CALL) != null;
+    boolean isAppCall = httpReq.getHeader(SSOConstants.X_APP_AUTH_TOKEN) != null ||
+        httpReq.getHeader(SSOConstants.X_APP_COMPONENT_ID) != null;
+    if (isAppCall && isRestCall) {
+      auth = appAuthenticator;
+      if (getLog().isTraceEnabled()) {
+        getLog().trace("App request '{}'", getRequestInfoForLogging(httpReq, "?"));
+      }
+    } else {
+      if (getLog().isTraceEnabled()) {
+        getLog().trace("User request '{}'", getRequestInfoForLogging(httpReq, "?"));
       }
     }
     return auth.validateRequest(request, response, mandatory);

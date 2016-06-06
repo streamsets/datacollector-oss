@@ -69,20 +69,11 @@ public interface  SSOConstants {
    */
   String REQUESTED_URL_PARAM = "ss-requestedUrl";
 
-  /**
-   * Token parts separator.
-   */
-  String TOKEN_PART_SEPARATOR = ":";
-
   String REPEATED_REDIRECT_PARAM = "ss-repeated-redirect";
 
   // for-client-services
 
-  String TOKEN_VERIFICATION_TYPE = "token.verification";
-
-  String TOKEN_VERIFICATION_DATA = "token.verification.data";
-
-  String INVALIDATE_USER_AUTH_TOKENS = "invalidate.user.auth.tokens";
+  String INVALIDATE_AUTH_TOKENS = "invalidate.auth.tokens";
 
   String FETCH_INFO_FREQUENCY = "fetch.info.frequency.secs";
 

@@ -19,15 +19,32 @@
  */
 package com.streamsets.lib.security.http;
 
+import java.security.Principal;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.IOException;
+public interface SSOPrincipal extends Principal {
 
-public interface SSOTokenParser {
+  String getTokenStr();
 
-  String getType();
+  String getIssuerUrl();
 
-  void setVerificationData(String data);
+  long getExpires();
 
-  SSOUserPrincipal parse(String tokenStr) throws IOException;
+  // synonyms of getName(), to avoid confusion we should use this value when referring to the uid
+  String getPrincipalId();
 
+  String getPrincipalName();
+
+  String getOrganizationId();
+
+  String getOrganizationName();
+
+  String getEmail();
+
+  Set<String> getRoles();
+
+  Map<String, String> getAttributes();
+
+  boolean isApp();
 }

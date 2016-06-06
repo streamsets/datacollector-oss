@@ -26,7 +26,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.lib.security.http.SSOService;
-import com.streamsets.lib.security.http.SSOUserPrincipal;
+import com.streamsets.lib.security.http.SSOPrincipal;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -444,7 +444,7 @@ public class TestWebServerTaskHttpHttps {
 
 
     @Override
-    public SSOUserPrincipal validateUserToken(String authToken) {
+    public SSOPrincipal validateUserToken(String authToken) {
       return null;
     }
 
@@ -453,14 +453,9 @@ public class TestWebServerTaskHttpHttps {
       return false;
     }
 
-    @Override
-    public boolean isAppAuthenticationEnabled() {
-      return false;
-    }
-
 
     @Override
-    public SSOUserPrincipal validateAppToken(
+    public SSOPrincipal validateAppToken(
         String authToken, String componentId
     ) {
       return null;
@@ -471,10 +466,6 @@ public class TestWebServerTaskHttpHttps {
       return false;
     }
 
-    @Override
-    public void refresh() {
-
-    }
   }
   @Test
   public void testWebAppSSOServiceDelegation() throws Exception {

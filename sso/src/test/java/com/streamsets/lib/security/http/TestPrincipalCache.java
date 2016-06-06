@@ -28,7 +28,7 @@ public class TestPrincipalCache {
   @Test
   public void testCache() throws Exception {
     PrincipalCache cache = new PrincipalCache(50, 100);
-    SSOUserPrincipal principal = Mockito.mock(SSOUserPrincipal.class);
+    SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
 
     // not present
 

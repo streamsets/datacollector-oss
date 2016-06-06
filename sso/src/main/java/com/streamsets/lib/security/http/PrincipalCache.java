@@ -27,12 +27,11 @@ import java.util.concurrent.TimeUnit;
 public class PrincipalCache {
   private static final Object DUMMY = new Object();
 
-  private final Cache<String, SSOUserPrincipal> principalsCache;
+  private final Cache<String, SSOPrincipal> principalsCache;
   private final Cache<String, Object> invalidatedTokens;
 
-
-  public PrincipalCache() {
-    this(TimeUnit.MINUTES.toMillis(30), TimeUnit.HOURS.toMillis(24));
+  public PrincipalCache(long principalCacheExpirationMillis) {
+    this(principalCacheExpirationMillis, TimeUnit.HOURS.toMillis(1));
   }
 
   public PrincipalCache(long principalCacheExpirationMillis, long invalidatedTokensCacheExpirationMillis) {
@@ -44,7 +43,7 @@ public class PrincipalCache {
         .build();
   }
 
-  public SSOUserPrincipal get(String autToken) {
+  public SSOPrincipal get(String autToken) {
     return principalsCache.getIfPresent(autToken);
   }
 
@@ -52,7 +51,7 @@ public class PrincipalCache {
     return invalidatedTokens.getIfPresent(authToken) != null;
   }
 
-  public synchronized boolean put(String authToken, SSOUserPrincipal principal) {
+  public synchronized boolean put(String authToken, SSOPrincipal principal) {
     boolean cached = false;
     if (invalidatedTokens.getIfPresent(authToken) == null && principalsCache.getIfPresent(authToken) == null) {
       principalsCache.put(authToken, principal);

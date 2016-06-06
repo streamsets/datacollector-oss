@@ -138,7 +138,7 @@ public class TestSSOAppAuthenticator {
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_APP_COMPONENT_ID))).thenReturn("componentId");
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("foo");
     Mockito.when(ssoService.validateAppToken(Mockito.eq("token"), Mockito.eq("componentId"))).thenReturn(null);
-    SSOUserPrincipal principal = Mockito.mock(SSOUserPrincipal.class);
+    SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
     Mockito.when(principal.getTokenStr()).thenReturn("token");
     Mockito.when(principal.getExpires()).thenReturn(1L);
     Mockito.doReturn(principal).when(ssoService).validateAppToken(Mockito.eq("token"), Mockito.eq("componentId"));

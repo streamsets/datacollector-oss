@@ -71,8 +71,7 @@ public class SSOAppAuthenticator extends AbstractSSOAuthenticator {
         } else if (componentId == null) {
           ret = returnForbidden(httpReq, httpRes, null, "Missing App ID: {}");
         } else {
-          getSsoService().refresh();
-          SSOUserPrincipal principal = getSsoService().validateAppToken(authToken, componentId);
+          SSOPrincipal principal = getSsoService().validateAppToken(authToken, componentId);
           if (principal != null) {
             ret = new SSOAuthenticationUser(principal);
           } else {

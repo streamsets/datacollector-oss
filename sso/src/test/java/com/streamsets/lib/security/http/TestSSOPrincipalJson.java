@@ -24,14 +24,14 @@ import com.google.common.collect.ImmutableSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestSSOUserPrincipalJson {
+public class TestSSOPrincipalJson {
 
-  public static SSOUserPrincipal createPrincipal() {
+  public static SSOPrincipal createPrincipal() {
     return createPrincipal(System.currentTimeMillis() + 1000);
   }
 
-  public static SSOUserPrincipal createPrincipal(long expires) {
-    SSOUserPrincipalJson p = new SSOUserPrincipalJson();
+  public static SSOPrincipal createPrincipal(long expires) {
+    SSOPrincipalJson p = new SSOPrincipalJson();
     p.setTokenStr("tokenStr");
     p.setExpires(expires);
     p.setIssuerUrl("issuerUrl");
@@ -47,7 +47,7 @@ public class TestSSOUserPrincipalJson {
 
   @Test
   public void testValid() {
-    SSOUserPrincipal principal =  createPrincipal(1);
+    SSOPrincipal principal =  createPrincipal(1);
     Assert.assertEquals("tokenStr", principal.getTokenStr());
     Assert.assertEquals(1L, principal.getExpires());
     Assert.assertEquals("issuerUrl", principal.getIssuerUrl());
@@ -63,7 +63,7 @@ public class TestSSOUserPrincipalJson {
 
   @Test(expected = IllegalStateException.class)
   public void testLock() {
-    SSOUserPrincipalJson p = new SSOUserPrincipalJson();
+    SSOPrincipalJson p = new SSOPrincipalJson();
     p.setPrincipalId("id");
     p.lock();
     p.setPrincipalId("id1");

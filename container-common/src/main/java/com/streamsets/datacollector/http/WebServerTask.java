@@ -388,7 +388,7 @@ public class WebServerTask extends AbstractTask {
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     SSOService ssoService = null;
-    if (appConf.get(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, null) != null) {
+    if (appConf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null) != null) {
       LOG.debug("Initializing RemoteSSOService");
       ssoService = new RemoteSSOService();
       ssoService.setConfiguration(appConf);

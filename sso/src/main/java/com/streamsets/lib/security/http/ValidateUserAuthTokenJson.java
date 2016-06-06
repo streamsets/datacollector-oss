@@ -17,15 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.lib.security.http;
 
-public interface SSOTokenGenerator {
+public class ValidateUserAuthTokenJson {
+  private String authToken;
 
-  String getType();
+  public String getAuthToken() {
+    return authToken;
+  }
 
-  String getVerificationData();
-
-  String generate(SSOUserPrincipal principal);
+  public void setAuthToken(String authToken) {
+    this.authToken = authToken;
+  }
 
 }

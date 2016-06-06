@@ -40,16 +40,12 @@ public interface SSOService {
 
   String getLogoutUrl();
 
-  boolean isAppAuthenticationEnabled();
-
-  SSOUserPrincipal validateUserToken(String authToken);
+  SSOPrincipal validateUserToken(String authToken);
 
   boolean invalidateUserToken(String authToken);
 
-  SSOUserPrincipal validateAppToken(String authToken, String componentId);
+  SSOPrincipal validateAppToken(String authToken, String componentId);
 
   boolean invalidateAppToken(String authToken);
-
-  void refresh();
 
 }
