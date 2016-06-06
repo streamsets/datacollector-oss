@@ -30,6 +30,9 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import dagger.ObjectGraph;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
@@ -37,11 +40,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.URL;
@@ -64,6 +72,15 @@ public class TestHttpAccessControl {
     return port;
   }
 
+  private static class MockRegistrationServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      resp.setStatus(HttpServletResponse.SC_OK);
+    }
+  }
+
+  private static Server mockRegistrationServer;
+  private static int registrationPort;
   private static String baseDir;
   private static Task server;
   private static String baseURL;
@@ -71,6 +88,18 @@ public class TestHttpAccessControl {
 
   @Before
   public void setup() throws Exception {
+    registrationPort = getRandomPort();
+    mockRegistrationServer = new Server(registrationPort);
+    ServletContextHandler contextHandler = new ServletContextHandler();
+    contextHandler.addServlet(
+        new ServletHolder(new MockRegistrationServlet()),
+        "/security/public-rest/v1/components/registration"
+    );
+    contextHandler.setContextPath("/");
+    mockRegistrationServer.setHandler(contextHandler);
+    mockRegistrationServer.start();
+
+
     server = null;
     baseDir = createTestDir();
     Assert.assertTrue(new File(baseDir, "etc").mkdir());
@@ -92,12 +121,15 @@ public class TestHttpAccessControl {
   }
 
   @After
-  public void cleanup() {
+  public void cleanup() throws Exception {
     stopServer();
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
+    if (mockRegistrationServer != null) {
+      mockRegistrationServer.stop();
+    }
   }
 
   private static String startServer(String authenticationType, boolean dpmEnabled) throws  Exception {
@@ -109,6 +141,7 @@ public class TestHttpAccessControl {
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "token");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "token");
     conf.set(WebServerTask.DPM_ENABLED, dpmEnabled);
+    conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://localhost:" + registrationPort);
 
     Writer writer = writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
       RuntimeInfo.CONFIG_DIR), "sdc.properties"));

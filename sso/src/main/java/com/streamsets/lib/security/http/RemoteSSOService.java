@@ -73,17 +73,15 @@ public class RemoteSSOService extends AbstractSSOService {
     userAuthUrl = baseUrl + "/rest/v1/validateAuthToken/user";
     appAuthUrl = baseUrl + "/rest/v1/validateAuthToken/component";
     appToken = conf.get(SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null);
-    if (appToken == null) {
-      throw new IllegalArgumentException(Utils.format("The '{}' property is not set",
-          SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG
-      ));
-    }
-    appToken = appToken.trim();
-    componentId = conf.get(SECURITY_SERVICE_COMPONENT_ID_CONFIG, null);
-    if (componentId == null) {
-      throw new IllegalArgumentException(Utils.format("The '{}' property is not set",
-          SECURITY_SERVICE_COMPONENT_ID_CONFIG));
-    }
+  }
+
+  public void setComponentId(String componentId) {
+    Utils.checkArgument(componentId != null && !componentId.trim().isEmpty(), "Component ID cannot be NULL or empty");
+    this.componentId = componentId.trim();
+  }
+
+  public void setApplicationAuthToken(String appToken) {
+    this.appToken = (appToken != null) ? appToken.trim() : null;
   }
 
   HttpURLConnection createAuthConnection(String url) throws IOException {
@@ -139,7 +137,7 @@ public class RemoteSSOService extends AbstractSSOService {
     if (principal != null) {
       principal.setTokenStr(authToken);
       principal.lock();
-      LOG.debug("Validated use auth token for '{}'", principal.getPrincipalId());
+      LOG.debug("Validated user auth token for '{}'", principal.getPrincipalId());
     } else {
       LOG.warn("Failed to validate user token '{}'", authToken);
     }

@@ -72,6 +72,8 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
+    service.setApplicationAuthToken("serviceToken");
+    service.setComponentId("serviceComponentId");
 
     Assert.assertEquals("http://foo", service.createAuthConnection("http://foo").getURL().toExternalForm());
 
@@ -95,6 +97,12 @@ public class TestRemoteSSOService {
     Mockito.verify(conn).setReadTimeout(Mockito.eq(5000));
     Mockito.verify(conn).setRequestProperty(Mockito.eq(SSOConstants.X_REST_CALL), Mockito.eq("-"));
     Mockito.verify(conn).setRequestProperty(Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN), Mockito.eq("serviceToken"));
+    Mockito
+        .verify(conn)
+        .setRequestProperty(Mockito.eq(RemoteSSOService.CONTENT_TYPE), Mockito.eq(RemoteSSOService.APPLICATION_JSON));
+    Mockito
+        .verify(conn)
+        .setRequestProperty(Mockito.eq(RemoteSSOService.ACCEPT), Mockito.eq(RemoteSSOService.APPLICATION_JSON));
     Mockito
         .verify(conn)
         .setRequestProperty(Mockito.eq(SSOConstants.X_APP_COMPONENT_ID), Mockito.eq("serviceComponentId"));

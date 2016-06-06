@@ -388,6 +388,12 @@ public abstract class WebServerTask extends AbstractTask {
     }
   }
 
+  RemoteSSOService createRemoteSSOService(Configuration appConf) {
+    RemoteSSOService remoteSsoService = new RemoteSSOService();
+    remoteSsoService.setConfiguration(appConf);
+    return remoteSsoService;
+  }
+
   private ConstraintSecurityHandler configureSSO(
       final Configuration appConf, ServletContextHandler appHandler, final String appContext
   ) {
@@ -396,14 +402,21 @@ public abstract class WebServerTask extends AbstractTask {
     SSOService ssoService = null;
     if (appConf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null) != null) {
       LOG.debug("Initializing RemoteSSOService");
-      ssoService = new RemoteSSOService();
-      ssoService.setConfiguration(appConf);
+      RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
+
+      final String componentId = getComponentId(appConf);
+      final String appToken = getAppAuthToken(appConf);
+      remoteSsoService.setComponentId(componentId);
+      remoteSsoService.setApplicationAuthToken(appToken);
+      String appTokenForLogging = (appToken != null) ? (appToken + "..........").substring(0, 10) + "..." : null;
+      LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, appTokenForLogging);
+      ssoService = remoteSsoService;
       // we only need to do this if we have an app token configured
       addToPostStart(new Runnable() {
         @Override
         public void run() {
           LOG.debug("Validating Application Token with SSO Remote Service");
-          validateApplicationToken(appConf);
+          validateApplicationToken(componentId, appToken);
         }
       });
     }
@@ -764,10 +777,7 @@ public abstract class WebServerTask extends AbstractTask {
 
   protected abstract String getComponentId(Configuration appConfiguration);
 
-  private void validateApplicationToken(Configuration appConfiguration) {
-    String applicationToken = getAppAuthToken(appConfiguration).trim();
-    String componentId = getComponentId(appConfiguration).trim();
-
+  private void validateApplicationToken(String componentId, String applicationToken) {
     if (applicationToken.isEmpty() || componentId.isEmpty()) {
       if (applicationToken.isEmpty()) {
         LOG.warn("Skiping component registration to DPM, application auth token is not set");
