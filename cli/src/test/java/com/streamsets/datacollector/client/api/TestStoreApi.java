@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.client.api;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.model.MetricsRuleDefinitionJson;
@@ -28,29 +29,43 @@ import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Collection;
 import java.util.List;
 
+import static org.junit.runners.Parameterized.Parameters;
+
+@RunWith(Parameterized.class)
 public class TestStoreApi {
   private String baseURL;
-  private String[] authenticationTypes = {"none", "basic", "form", "digest"};
+
+  @Parameters(name = "authType:{0}")
+  public static Collection<String> authTypes() {
+    return ImmutableList.of("none", "basic", "form", "digest");
+  }
+
+  private String authType;
+
+  public TestStoreApi(String authType) {
+    this.authType = authType;
+  }
 
   @Test
   public void testForDifferentAuthenticationTypes() {
     Task server = null;
     try {
-      for(String authType: authenticationTypes) {
-        int port = TestUtil.getRandomPort();
-        server = TestUtil.startServer(port, authType);
-        baseURL = "http://127.0.0.1:" + port;
-        ApiClient apiClient = getApiClient(authType);
-        StoreApi storeApi = new StoreApi(apiClient);
+      int port = TestUtil.getRandomPort();
+      server = TestUtil.startServer(port, authType);
+      baseURL = "http://127.0.0.1:" + port;
+      ApiClient apiClient = getApiClient(authType);
+      StoreApi storeApi = new StoreApi(apiClient);
 
-        testStoreAPI(storeApi);
-        testStoreAPINegativeCases(storeApi);
+      testStoreAPI(storeApi);
+      testStoreAPINegativeCases(storeApi);
 
-        TestUtil.stopServer(server);
-      }
+      TestUtil.stopServer(server);
     } catch (Exception e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());

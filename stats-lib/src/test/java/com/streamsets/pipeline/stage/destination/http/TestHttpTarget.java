@@ -29,6 +29,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.ServletDeploymentContext;
+import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
@@ -48,8 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TestHttpTarget extends JerseyTest {
-
-  private static final String URL = "http://localhost:9998/send/records";
   private static List<SDCMetricsJson> records = new ArrayList<>();
 
   @Path("/send/records")
@@ -65,7 +64,7 @@ public class TestHttpTarget extends JerseyTest {
 
   @Test
   public void testHttpTarget() throws StageException, IOException {
-    HttpTarget httpTarget = new HttpTarget(URL, "token", "sdc", "x", "y", 0);
+    HttpTarget httpTarget = new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0);
     TargetRunner targetRunner = new TargetRunner.Builder(HttpTarget.class, httpTarget)
       .build();
     targetRunner.runInit();
@@ -96,6 +95,7 @@ public class TestHttpTarget extends JerseyTest {
 
   @Override
   protected Application configure() {
+    forceSet(TestProperties.CONTAINER_PORT, "0");
     return new ResourceConfig(MockServer.class);
   }
 

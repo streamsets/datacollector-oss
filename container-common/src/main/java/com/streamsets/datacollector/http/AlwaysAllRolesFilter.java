@@ -19,6 +19,9 @@
  */
 package com.streamsets.datacollector.http;
 
+import org.eclipse.jetty.security.MappedLoginService;
+import org.eclipse.jetty.util.security.Password;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,6 +31,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
+import java.security.Principal;
 
 class AlwaysAllRolesFilter implements Filter {
   @Override
@@ -38,10 +42,17 @@ class AlwaysAllRolesFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws
       IOException,
       ServletException {
-    request = new HttpServletRequestWrapper((HttpServletRequest)request) {
+    request = new HttpServletRequestWrapper((HttpServletRequest) request) {
       @Override
       public boolean isUserInRole(String role) {
         return true;
+      }
+
+      // Newer Jersey versions check if there is a principal when the roles permitted list is non-empty.
+      // See https://java.net/jira/browse/JERSEY-2908
+      @Override
+      public Principal getUserPrincipal() {
+        return new MappedLoginService.KnownUser("admin", new Password("admin"));
       }
     };
     chain.doFilter(request, response);
