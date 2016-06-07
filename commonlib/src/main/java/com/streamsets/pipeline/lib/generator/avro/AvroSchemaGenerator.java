@@ -56,7 +56,8 @@ public abstract class AvroSchemaGenerator<E> {
       recordFields.add(new Schema.Field(
           entry.getKey(), entry.getValue(),
           null,   // Avro's Schema.Field constructor requires doc.
-          null)); // default value
+          entry.getValue().getJsonProp("default"))
+      );
     }
 
     Schema recordSchema;

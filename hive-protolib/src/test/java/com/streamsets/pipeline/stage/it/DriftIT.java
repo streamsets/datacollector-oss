@@ -96,7 +96,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     });
   }
 
-//  @Test SDC-3127
+  @Test
   public void testRemovedColumn() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .build();

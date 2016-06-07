@@ -27,6 +27,7 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport
 import com.google.common.collect.ImmutableList;
 import org.apache.avro.Schema;
 import org.codehaus.jackson.node.IntNode;
+import org.codehaus.jackson.node.NullNode;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   }
 
   /**
-   * It takes a record sturcture in <String, HiveTypeInfo> format.
+   * It takes a record structure in <String, HiveTypeInfo> format.
    * Generate a schema and return in String.
    * @param record : record structure
    * @return String representation of Avro schema.
@@ -55,7 +56,10 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   {
     Map<String, Schema> fields = new LinkedHashMap();
     for(Map.Entry<String, HiveTypeInfo> pair:  record.entrySet()) {
-      fields.put(pair.getKey(), Schema.createUnion(ImmutableList.of(Schema.create(Schema.Type.NULL), traverse(pair))));
+      Schema columnSchema = Schema.createUnion(ImmutableList.of(Schema.create(Schema.Type.NULL), traverse(pair)));
+      // We always set default value to null
+      columnSchema.addProp("default", NullNode.getInstance());
+      fields.put(pair.getKey(), columnSchema);
     }
     Schema schema =  buildSchema(fields);
     return schema.toString();

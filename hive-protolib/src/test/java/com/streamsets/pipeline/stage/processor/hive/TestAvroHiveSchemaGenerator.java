@@ -39,9 +39,9 @@ public class TestAvroHiveSchemaGenerator {
     String expected = "{\"type\":\"record\"," +
         "\"name\":\"test\"," +
         "\"fields\":[" +
-        "{\"name\":\"intColumn\",\"type\":[\"null\",\"int\"]}," +
-        "{\"name\":\"strColumn\",\"type\":[\"null\",\"string\"]}," +
-        "{\"name\":\"boolColumn\",\"type\":[\"null\",\"boolean\"]}]" +
+        "{\"name\":\"intColumn\",\"type\":[\"null\",\"int\"],\"default\":null}," +
+        "{\"name\":\"strColumn\",\"type\":[\"null\",\"string\"],\"default\":null}," +
+        "{\"name\":\"boolColumn\",\"type\":[\"null\",\"boolean\"],\"default\":null}]" +
         "}";
 
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
@@ -64,9 +64,9 @@ public class TestAvroHiveSchemaGenerator {
     String expected = "{\"type\":\"record\"," +
         "\"name\":\"test\"," +
         "\"fields\":[" +
-        "{\"name\":\"first\",\"type\":[\"null\",\"string\"]}," +
-        "{\"name\":\"second\",\"type\":[\"null\",\"string\"]}," +
-        "{\"name\":\"third\",\"type\":[\"null\",\"int\"]}]" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"string\"],\"default\":null}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"string\"],\"default\":null}," +
+        "{\"name\":\"third\",\"type\":[\"null\",\"int\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
     record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
@@ -87,9 +87,9 @@ public class TestAvroHiveSchemaGenerator {
     String expected = "{\"type\":\"record\"," +
         "\"name\":\"test\"," +
         "\"fields\":[" +
-        "{\"name\":\"first\",\"type\":[\"null\",\"long\"]}," +
-        "{\"name\":\"second\",\"type\":[\"null\",\"float\"]}," +
-        "{\"name\":\"third\",\"type\":[\"null\",\"double\"]}]" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"long\"],\"default\":null}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"float\"],\"default\":null}," +
+        "{\"name\":\"third\",\"type\":[\"null\",\"double\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
     record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)) ;
@@ -110,8 +110,8 @@ public class TestAvroHiveSchemaGenerator {
     String expected = "{\"type\":\"record\"," +
         "\"name\":\"test\"," +
         "\"fields\":[" +
-        "{\"name\":\"first\",\"type\":[\"null\",\"string\"]}," +
-        "{\"name\":\"second\",\"type\":[\"null\",\"bytes\"]}]" +
+        "{\"name\":\"first\",\"type\":[\"null\",\"string\"],\"default\":null}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"bytes\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
     record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
@@ -132,8 +132,8 @@ public class TestAvroHiveSchemaGenerator {
         "\"name\":\"test\"," +
         "\"fields\":[" +
         "{\"name\":\"first\"," + "\"type\":" +
-        "[\"null\",{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":2,\"scale\":1}]}," +
-        "{\"name\":\"second\",\"type\":[\"null\",\"string\"]}]" +
+        "[\"null\",{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":2,\"scale\":1}],\"default\":null}," +
+        "{\"name\":\"second\",\"type\":[\"null\",\"string\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
     record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo(HiveType.DECIMAL, 2, 1)) ;
