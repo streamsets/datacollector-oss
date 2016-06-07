@@ -28,6 +28,7 @@ public enum Groups implements Label {
   HTTP("HTTP"),
   CREDENTIALS("Credentials"),
   PROXY("Proxy"),
+  SSL("SSL/TLS"),
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),

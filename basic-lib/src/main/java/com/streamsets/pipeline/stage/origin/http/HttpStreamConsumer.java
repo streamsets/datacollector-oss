@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
+import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;
@@ -37,6 +38,7 @@ import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -98,6 +100,7 @@ class HttpStreamConsumer implements Runnable {
 
     configureAuth(clientBuilder);
     configureProxy(clientBuilder);
+    configureSslContext(clientBuilder);
 
     client = clientBuilder.build();
     resource = client.target(conf.resourceUrl);
@@ -105,6 +108,22 @@ class HttpStreamConsumer implements Runnable {
     for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
       LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
     }
+  }
+
+  private void configureSslContext(ClientBuilder clientBuilder) {
+
+    SslConfigurator sslConfig = SslConfigurator.newInstance();
+
+    if (!conf.sslConfig.trustStorePath.isEmpty() && !conf.sslConfig.trustStorePassword.isEmpty()) {
+      sslConfig.trustStoreFile(conf.sslConfig.trustStorePath).trustStorePassword(conf.sslConfig.trustStorePassword);
+    }
+
+    if (!conf.sslConfig.keyStorePath.isEmpty() && !conf.sslConfig.keyStorePassword.isEmpty()) {
+      sslConfig.keyStoreFile(conf.sslConfig.keyStorePath).keyStorePassword(conf.sslConfig.keyStorePassword);
+    }
+
+    SSLContext sslContext = sslConfig.createSSLContext();
+    clientBuilder.sslContext(sslContext);
   }
 
   private void configureAuth(ClientBuilder clientBuilder) {
@@ -142,15 +161,15 @@ class HttpStreamConsumer implements Runnable {
 
     if (!conf.proxy.uri.isEmpty()) {
       clientBuilder.property(ClientProperties.PROXY_URI, conf.proxy.uri);
-      LOG.info("Using Proxy: '{}'", conf.proxy.uri);
+      LOG.debug("Using Proxy: '{}'", conf.proxy.uri);
     }
     if (!conf.proxy.username.isEmpty()) {
       clientBuilder.property(ClientProperties.PROXY_USERNAME, conf.proxy.username);
-      LOG.info("Using Proxy Username: '{}'", conf.proxy.username);
+      LOG.debug("Using Proxy Username: '{}'", conf.proxy.username);
     }
     if (!conf.proxy.password.isEmpty()) {
       clientBuilder.property(ClientProperties.PROXY_PASSWORD, conf.proxy.password);
-      LOG.info("Using Proxy Password: '{}'", conf.proxy.password);
+      LOG.debug("Using Proxy Password: '{}'", conf.proxy.password);
     }
   }
 

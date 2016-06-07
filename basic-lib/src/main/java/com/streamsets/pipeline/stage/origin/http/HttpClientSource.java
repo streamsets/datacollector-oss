@@ -88,6 +88,13 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
         issues
     );
 
+    conf.sslConfig.init(
+        getContext(),
+        Groups.SSL.name(),
+        "conf.sslConfig.",
+        issues
+    );
+
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case
     // that the pipeline is restarted we'll resume with any entities still enqueued.

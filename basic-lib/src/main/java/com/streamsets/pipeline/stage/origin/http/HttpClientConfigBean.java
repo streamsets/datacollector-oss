@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
 import com.streamsets.pipeline.lib.http.OAuthConfigBean;
 import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
+import com.streamsets.pipeline.lib.http.SslConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -177,4 +178,7 @@ public class HttpClientConfigBean {
 
   @ConfigDefBean(groups = "PROXY")
   public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
+
+  @ConfigDefBean(groups = "SSL")
+  public SslConfigBean sslConfig = new SslConfigBean();
 }
