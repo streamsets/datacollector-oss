@@ -1,0 +1,138 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.it;
+
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
+import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Run all various data types that are available in SDC to validate that they behave in expected way.
+ */
+@RunWith(Parameterized.class)
+public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
+
+  private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
+
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+  private static Date date = new Date();
+
+  @Parameterized.Parameters(name = "type({0})")
+  public static Collection<Object[]> data() throws Exception {
+    return Arrays.asList(new Object[][]{
+      {Field.create(Field.Type.BOOLEAN, true), true, Types.BOOLEAN, true},
+      {Field.create(Field.Type.CHAR, 'A'), true, Types.VARCHAR, "A"},
+      {Field.create(Field.Type.BYTE, (byte)0x00), false, 0, null},
+      {Field.create(Field.Type.SHORT, 10), true, Types.INTEGER, 10},
+      {Field.create(Field.Type.INTEGER, 10), true, Types.INTEGER, 10},
+      {Field.create(Field.Type.LONG, 10), true, Types.BIGINT, 10L},
+      {Field.create(Field.Type.FLOAT, 1.5), true, Types.FLOAT, 1.5},
+      {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
+      {Field.create(Field.Type.DATE, date), true, Types.VARCHAR, dateFormat.format(date)},
+      {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
+//      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), true, Types.DECIMAL, BigDecimal.valueOf(1.5)},
+      {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},
+//      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, 0, null},
+      {Field.create(Field.Type.MAP, Collections.emptyMap()), false, 0, null},
+      {Field.create(Field.Type.LIST, Collections.emptyList()), false, 0, null},
+      {Field.create(Field.Type.LIST_MAP, new LinkedHashMap<>()), false, 0, null},
+    });
+  }
+
+  private Field field;
+  private boolean supported;
+  private int hiveType;
+  private Object hiveValue;
+  public AllSdcTypesIT(Field field, boolean supported, int hiveType, Object hiveValue) {
+    this.field = field;
+    this.supported = supported;
+    this.hiveType = hiveType;
+    this.hiveValue = hiveValue;
+  }
+
+  @Test
+  public void testType() throws  Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+      .build();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("col", field);
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    try {
+      processRecords(processor, hiveTarget, ImmutableList.of(record));
+      if(!supported) {
+        Assert.fail("Type is not supported, but yet no exception was thrown");
+      }
+    } catch(StageException se) {
+      if(supported) {
+        Assert.fail("Processing testing record unexpectedly failed: " + se.getMessage());
+        throw se;
+      } else {
+        Assert.assertEquals(Errors.HIVE_19, se.getErrorCode());
+        // No additional verification necessary
+        return;
+      }
+    }
+
+    assertTableExists("default.tbl");
+    assertQueryResult("select * from tbl", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+          new ImmutablePair("tbl.col", hiveType),
+          new ImmutablePair("tbl.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(hiveValue, rs.getObject(1));
+        Assert.assertFalse("Table tbl contains more then one row", rs.next());
+      }
+    });
+  }
+}
