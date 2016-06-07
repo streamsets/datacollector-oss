@@ -194,21 +194,31 @@ public abstract class BaseHiveIT {
   }
 
   /**
-   * Since we're reusing the same HS2 instance between tests, drop all tables that were created.
+   * Since we're reusing the same HS2 instance between tests, drop all databases and tables that were created.
    */
   @Before
   public void cleanUpHiveTables() throws Exception {
     // Metadata clean up
     try (
-      Statement queryStatement = hiveConnection.createStatement();
+      Statement showDatabases = hiveConnection.createStatement();
+      Statement showTables = hiveConnection.createStatement();
       Statement dropStatement = hiveConnection.createStatement();
+      ResultSet databases = showDatabases.executeQuery("show databases");
+      ResultSet tables = showTables.executeQuery("show tables");
     ){
-      ResultSet rs = queryStatement.executeQuery("show tables");
-      while(rs.next()) {
-        String table = rs.getString(1);
-        dropStatement.executeUpdate(Utils.format("drop table `{}`", table));
+      // Drop all databases except of "default" that can't be dropped
+      while(databases.next()) {
+        String db = databases.getString(1);
+        if(!"default".equalsIgnoreCase(db)) {
+          dropStatement.executeUpdate(Utils.format("drop database `{}` cascade", db));
+        }
       }
-      rs.close();
+
+      // Tables from default have to be dropped separately
+      while(tables.next()) {
+        String table = tables.getString(1);
+        dropStatement.executeUpdate(Utils.format("drop table default.`{}`", table));
+      }
     }
 
     // Filesystem clean up

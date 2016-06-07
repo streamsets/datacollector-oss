@@ -38,10 +38,10 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import com.streamsets.pipeline.stage.ParametrizedUtils;
 
 /**
  * Run all combination of old/new way of creating tables with internal/external for case when the table in HMS
@@ -52,28 +52,31 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
 
-  @Parameterized.Parameters
+  @Parameterized.Parameters(name = "db({0}),useAsAvro({1}),external({2})")
   public static Collection<Object[]> data() {
-    return Arrays.asList(new Object[][]{
-      {true, true},
-      {true, false},
-      {false, true},
-      {false, false}
-    });
+    return ParametrizedUtils.crossProduct(
+      new String[] {"default", "custom"},
+      new Boolean[] {true, false},
+      new Boolean[] {true, false}
+    );
   }
 
+  private String database;
   private boolean useAsAvro;
   private boolean external;
-  public ColdStartIT(boolean useAsAvro, boolean external) {
+  public ColdStartIT(String database, boolean useAsAvro, boolean external) {
+    this.database = database;
     this.useAsAvro = useAsAvro;
     this.external = external;
   }
 
   @Test
   public void testColdStart() throws  Exception {
-    LOG.info(Utils.format("Starting cold start with useAsAvro({}) and external({})", useAsAvro, external));
+    LOG.info(Utils.format("Starting cold start with database({}), useAsAvro({}) and external({})", database, useAsAvro, external));
+    executeUpdate(Utils.format("create database if not exists {}", database));
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .database(database)
       .tablePathTemplate("/user/hive/warehouse")
       .partitionPathTemplate("dt=super-secret")
       .external(external)
@@ -89,8 +92,8 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
     processRecords(processor, hiveTarget, ImmutableList.of(record));
 
-    assertTableExists("default.tbl");
-    assertQueryResult("select * from tbl", new QueryValidator() {
+    assertTableExists(Utils.format("{}.tbl", database));
+    assertQueryResult(Utils.format("select * from {}.tbl", database), new QueryValidator() {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
