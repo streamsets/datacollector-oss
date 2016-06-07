@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HttpClientSourceUpgrader implements StageUpgrader {
@@ -51,6 +52,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         break;
       case 3:
         upgradeV3ToV4(configs);
+        break;
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -127,5 +131,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config("conf.headers", new HashMap<String, String>()));
   }
 }

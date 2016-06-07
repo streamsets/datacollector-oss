@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",

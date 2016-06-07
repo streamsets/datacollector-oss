@@ -33,6 +33,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.ServletDeploymentContext;
+import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
@@ -130,6 +131,21 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/headers")
+  public static class HeaderRequired {
+    @GET
+    public Response getWithHeader(@Context HttpHeaders h) {
+      // This endpoint will fail if a magic header isnt included
+      String headerValue = h.getRequestHeaders().getFirst("abcdef");
+      assertNotNull(headerValue);
+      return Response.ok(
+          "{\"name\": \"adam\"}\r\n" +
+              "{\"name\": \"joe\"}\r\n" +
+              "{\"name\": \"sally\"}"
+      ).build();
+    }
+  }
+
   @Path("/preemptive")
   public static class PreemptiveAuthResource {
 
@@ -178,6 +194,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
   @Override
   protected Application configure() {
+    forceSet(TestProperties.CONTAINER_PORT, "0");
     return new ResourceConfig(
         Sets.newHashSet(
             StreamResource.class,
@@ -206,7 +223,8 @@ public class HttpClientSourceIT extends JerseyTest {
                     TextStreamResource.class,
                     XmlStreamResource.class,
                     PreemptiveAuthResource.class,
-                    AuthResource.class
+                    AuthResource.class,
+                    HeaderRequired.class
                 )
             )
         )
@@ -218,7 +236,7 @@ public class HttpClientSourceIT extends JerseyTest {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "http://localhost:9998/stream";
+    conf.resourceUrl = getBaseUri() + "stream";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -258,7 +276,7 @@ public class HttpClientSourceIT extends JerseyTest {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "http://localhost:9998/stream";
+    conf.resourceUrl = getBaseUri() + "stream";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -300,7 +318,7 @@ public class HttpClientSourceIT extends JerseyTest {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "http://localhost:9998/nlstream";
+    conf.resourceUrl = getBaseUri() + "nlstream";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\n";
     conf.basic.maxBatchSize = 100;
@@ -341,7 +359,7 @@ public class HttpClientSourceIT extends JerseyTest {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "http://localhost:9998/xmlstream";
+    conf.resourceUrl = getBaseUri() + "xmlstream";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -380,7 +398,7 @@ public class HttpClientSourceIT extends JerseyTest {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "http://localhost:9998/textstream";
+    conf.resourceUrl = getBaseUri() + "textstream";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -512,7 +530,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basicAuth.username = "foo";
     conf.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
-    conf.resourceUrl = "http://localhost:9998/auth";
+    conf.resourceUrl = getBaseUri() + "auth";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -554,12 +572,53 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basicAuth.username = "foo";
     conf.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
-    conf.resourceUrl = "http://localhost:9998/preemptive";
+    conf.resourceUrl = getBaseUri() + "preemptive";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 10000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(3, parsedRecords.size());
+
+      String[] names = { "adam", "joe", "sally" };
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStreamingHttpWithHeader() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.headers.put("abcdef", "ghijkl");
+    conf.resourceUrl = getBaseUri() + "headers";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;

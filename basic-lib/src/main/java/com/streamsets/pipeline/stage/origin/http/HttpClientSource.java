@@ -94,7 +94,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
     parserFactory = conf.dataFormatConfig.getParserFactory();
 
-    httpConsumer = new HttpStreamConsumer(conf, entityQueue);
+    httpConsumer = new HttpStreamConsumer(conf, getContext(), entityQueue);
 
     switch (conf.httpMode) {
       case STREAMING:

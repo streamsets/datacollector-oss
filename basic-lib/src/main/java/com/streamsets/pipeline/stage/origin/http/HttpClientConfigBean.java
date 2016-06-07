@@ -23,8 +23,12 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpClientConfigBean {
 
@@ -40,10 +44,21 @@ public class HttpClientConfigBean {
       label = "Resource URL",
       defaultValue = "https://stream.twitter.com/1.1/statuses/sample.json",
       description = "Specify the streaming HTTP resource URL",
+      elDefs = RecordEL.class,
       displayPosition = 10,
       group = "HTTP"
   )
-  public String resourceUrl;
+  public String resourceUrl = "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Headers",
+      description = "Headers to include in the request",
+      displayPosition = 11,
+      group = "HTTP"
+  )
+  public Map<String, String> headers = new HashMap<>();
 
   @ConfigDef(
       required = true,
@@ -51,7 +66,7 @@ public class HttpClientConfigBean {
       label = "HTTP Method",
       defaultValue = "GET",
       description = "HTTP method to send",
-      displayPosition = 11,
+      displayPosition = 12,
       group = "HTTP"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -62,7 +77,7 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.TEXT,
       label = "Request Data",
       description = "Data that should be included as a part of the request",
-      displayPosition = 12,
+      displayPosition = 13,
       lines = 2,
       dependsOn = "httpMethod",
       triggeredByValue = { "POST", "PUT", "DELETE" },

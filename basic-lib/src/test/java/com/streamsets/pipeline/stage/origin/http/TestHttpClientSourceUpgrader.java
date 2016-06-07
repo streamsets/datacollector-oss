@@ -146,6 +146,17 @@ public class TestHttpClientSourceUpgrader {
     Assert.assertEquals(AuthenticationType.UNIVERSAL, configValues.get("conf.authType"));
   }
 
+  @Test
+  public void testV4ToV5() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
+    httpClientSourceUpgrader.upgrade("a", "b", "c", 4, 5, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    Assert.assertTrue(configValues.containsKey("conf.headers"));
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

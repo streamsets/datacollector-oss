@@ -20,6 +20,10 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.base.Optional;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;
@@ -38,7 +42,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -52,11 +60,15 @@ import java.util.concurrent.TimeoutException;
  */
 class HttpStreamConsumer implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
+  private static final String HEADER_CONFIG_NAME = "conf.headers";
 
   private final HttpClientConfigBean conf;
   private final Client client;
   private final WebTarget resource;
   private final BlockingQueue<String> entityQueue;
+
+  private ELVars headerVars;
+  private ELEval headerEval;
 
   private AccessToken authToken;
   private Response.StatusType lastResponseStatus;
@@ -70,9 +82,12 @@ class HttpStreamConsumer implements Runnable {
    * @param conf        The config bean containing all necessary configuration for consuming data.
    * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
    */
-  public HttpStreamConsumer(HttpClientConfigBean conf, BlockingQueue<String> entityQueue) {
+  public HttpStreamConsumer(HttpClientConfigBean conf, Source.Context context, BlockingQueue<String> entityQueue) {
     this.conf = conf;
     this.entityQueue = entityQueue;
+
+    headerVars = context.createELVars();
+    headerEval = context.createELEval(HEADER_CONFIG_NAME);
 
     ClientConfig clientConfig = new ClientConfig()
         .connectorProvider(new ApacheConnectorProvider());
@@ -141,6 +156,7 @@ class HttpStreamConsumer implements Runnable {
   public void run() {
     final AsyncInvoker asyncInvoker = resource.request()
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
+        .headers(resolveHeaders())
         .async();
     final Future<Response> responseFuture;
     if (conf.requestData != null && !conf.requestData.isEmpty() && conf.httpMethod != HttpMethod.GET) {
@@ -207,5 +223,22 @@ class HttpStreamConsumer implements Runnable {
 
   public Optional<Exception> getError() {
     return error;
+  }
+
+  private MultivaluedMap<String, Object> resolveHeaders() {
+    MultivaluedMap<String, Object> requestHeaders = new MultivaluedHashMap<>();
+    for (Map.Entry<String, String> entry : conf.headers.entrySet()) {
+      List<Object> header = new ArrayList<>(1);
+      try {
+        Object resolvedValue = headerEval.eval(headerVars, entry.getValue(), String.class);
+        header.add(resolvedValue);
+        requestHeaders.put(entry.getKey(), header);
+      } catch (StageException e) {
+        LOG.error("Failed to evaluate '{}' in header. {}", entry.getValue(), e.toString(), e);
+        error = Optional.of((Exception)e);
+      }
+    }
+
+    return requestHeaders;
   }
 }
