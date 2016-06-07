@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.lib.http.Groups;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(

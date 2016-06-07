@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.HttpMethod;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ChunkedInput;
 import org.glassfish.jersey.client.ClientConfig;

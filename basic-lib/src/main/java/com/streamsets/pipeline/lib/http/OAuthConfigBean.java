@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,41 +17,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.http;
+package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 
-public class HttpProxyConfigBean {
+public class OAuthConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Proxy URI",
-      dependsOn = "useProxy^",
-      triggeredByValue = "true",
+      label = "Consumer Key",
+      description = "OAuth Consumer Key",
       displayPosition = 10,
-      group = "#0"
+      group = "#0",
+      dependsOn = "authType^",
+      triggeredByValue = "OAUTH"
   )
-  public String uri = "";
+  public String consumerKey;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
-      label = "Username",
-      dependsOn = "useProxy^",
-      triggeredByValue = "true",
+      label = "Consumer Secret",
+      description = "OAuth Consumer Secret",
       displayPosition = 20,
-      group = "#0"
+      group = "#0",
+      dependsOn = "authType^",
+      triggeredByValue = "OAUTH"
   )
-  public String username = "";
+  public String consumerSecret;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
-      label = "Password",
-      dependsOn = "useProxy^",
-      triggeredByValue = "true",
+      label = "Token",
+      description = "OAuth Consumer Token",
       displayPosition = 30,
-      group = "#0"
+      group = "#0",
+      dependsOn = "authType^",
+      triggeredByValue = "OAUTH"
   )
-  public String password = ""; // NOSONAR
+  public String token;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Token Secret",
+      description = "OAuth Token Secret",
+      displayPosition = 40,
+      group = "#0",
+      dependsOn = "authType^",
+      triggeredByValue = "OAUTH"
+  )
+  public String tokenSecret;
 }

@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,56 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.http;
+package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 
-public class OAuthConfigBean {
+public class PasswordAuthConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Consumer Key",
-      description = "OAuth Consumer Key",
+      label = "Username",
       displayPosition = 10,
       group = "#0",
       dependsOn = "authType^",
-      triggeredByValue = "OAUTH"
+      triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
-  public String consumerKey;
+  public String username;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Consumer Secret",
-      description = "OAuth Consumer Secret",
+      label = "Password",
       displayPosition = 20,
       group = "#0",
       dependsOn = "authType^",
-      triggeredByValue = "OAUTH"
+      triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
   )
-  public String consumerSecret;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Token",
-      description = "OAuth Consumer Token",
-      displayPosition = 30,
-      group = "#0",
-      dependsOn = "authType^",
-      triggeredByValue = "OAUTH"
-  )
-  public String token;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Token Secret",
-      description = "OAuth Token Secret",
-      displayPosition = 40,
-      group = "#0",
-      dependsOn = "authType^",
-      triggeredByValue = "OAUTH"
-  )
-  public String tokenSecret;
+  public String password;
 }

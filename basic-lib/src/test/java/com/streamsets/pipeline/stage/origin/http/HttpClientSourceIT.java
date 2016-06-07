@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.glassfish.jersey.server.ResourceConfig;

@@ -24,6 +24,12 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
+import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
+import com.streamsets.pipeline.lib.http.OAuthConfigBean;
+import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 

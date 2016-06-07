@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.HttpMethod;
 import org.junit.Assert;
 import org.junit.Test;
 

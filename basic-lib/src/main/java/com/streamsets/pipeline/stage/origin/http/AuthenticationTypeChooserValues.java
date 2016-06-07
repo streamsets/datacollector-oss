@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
 
 public class AuthenticationTypeChooserValues extends BaseEnumChooserValues<AuthenticationType> {
   public AuthenticationTypeChooserValues() {
