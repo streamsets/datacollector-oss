@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.it;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -35,10 +36,14 @@ import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataDProcessor;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
+  private static Logger LOG = LoggerFactory.getLogger(BaseHiveMetadataPropagationIT.class);
+
 
   /**
    * Run all given records through end-to-end pipeline consisting of:
@@ -51,33 +56,30 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
 
     // Runners
     ProcessorRunner procesorRunner = new ProcessorRunner.Builder(HiveMetadataDProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hive")
+        .addOutputLane("hdfs")
+        .build();
     TargetRunner hiveTargetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, hiveTarget)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
     TargetRunner hdfsTargetRunner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
 
-    try {
-      // Initialization
-      procesorRunner.runInit();
-      hiveTargetRunner.runInit();
-      hdfsTargetRunner.runInit();
+    // Initialization
+    procesorRunner.runInit();
+    StageRunner.Output output = procesorRunner.runProcess(inputRecords);
 
-      // Process incoming records
-      StageRunner.Output output = procesorRunner.runProcess(inputRecords);
-      hiveTargetRunner.runWrite(output.getRecords().get("hive"));
-      hdfsTargetRunner.runWrite(output.getRecords().get("hdfs"));
-    } finally {
-      procesorRunner.runDestroy();
-      hiveTargetRunner.runDestroy();
-      hdfsTargetRunner.runDestroy();
-    }
+    hiveTargetRunner.runInit();
+    hiveTargetRunner.runWrite(output.getRecords().get("hive"));
 
+    hdfsTargetRunner.runInit();
+    hdfsTargetRunner.runWrite(output.getRecords().get("hdfs"));
+
+    procesorRunner.runDestroy();
+    hiveTargetRunner.runDestroy();
+    hdfsTargetRunner.runDestroy();
   }
 
   public HdfsTarget createHdfsTarget() {
@@ -86,14 +88,14 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
     formatConfig.avroSchemaInHeader = true;
 
     return HdfsTargetUtil.newBuilder()
-      .hdfsUri(BaseHiveIT.getDefaultFS())
-      .hdfsUser(System.getProperty("user.name"))
-      .dirPathTemplateInHeader(true)
-      .dataForamt(DataFormat.AVRO)
-      .rollIfHeader(true)
-      .rollHeaderName("roll")
-      .dataGeneratorFormatConfig(formatConfig)
-      .build();
+        .hdfsUri(BaseHiveIT.getDefaultFS())
+        .hdfsUser(System.getProperty("user.name"))
+        .dirPathTemplateInHeader(true)
+        .dataForamt(DataFormat.AVRO)
+        .rollIfHeader(true)
+        .rollHeaderName("roll")
+        .dataGeneratorFormatConfig(formatConfig)
+        .build();
   }
 
 }

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -32,21 +33,23 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HiveConfigBean {
-
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class);
+  private static final String KERBEROS_JDBC_REGEX = "jdbc:.*;principal=.*@.*";
+  private  static final String HIVE_JDBC_URL = "hiveJDBCUrl";
 
   @ConfigDef(
       required = true,
@@ -80,7 +83,7 @@ public class HiveConfigBean {
       label = "Configuration Directory",
       description = "An absolute path or a directory under SDC resources directory to load core-site.xml, hdfs-site.xml and" +
           " hive-site.xml files to configure the Hive Metastore.",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "HIVE"
   )
   public String confDir;
@@ -90,7 +93,7 @@ public class HiveConfigBean {
       type = ConfigDef.Type.MAP,
       label = "Additional Hadoop Configuration",
       description = "Additional configuration properties. Values here override values loaded from config files.",
-      displayPosition = 90,
+      displayPosition = 40,
       group = "ADVANCED"
   )
   public Map<String, String> additionalConfigProperties;
@@ -101,7 +104,7 @@ public class HiveConfigBean {
       defaultValue = "-1",
       label = "Hive Metastore Cache Size",
       description = "Cache Size",
-      displayPosition = 30,
+      displayPosition = 60,
       group = "ADVANCED"
   )
   public long maxCacheSize = -1L;
@@ -112,8 +115,19 @@ public class HiveConfigBean {
    * After init() it will contain merged configuration from all configured sources.
    */
   private Configuration configuration;
+  private UserGroupInformation loginUgi;
+  private ELEval elEval;
+
   public Configuration getConfiguration() {
     return configuration;
+  }
+
+  public UserGroupInformation getUgi() {
+    return loginUgi;
+  }
+
+  public ELEval getElEval() {
+    return elEval;
   }
 
   /**
@@ -125,10 +139,10 @@ public class HiveConfigBean {
       Class.forName(hiveJDBCDriver);
     } catch (ClassNotFoundException e) {
       issues.add(context.createConfigIssue(
-        Groups.HIVE.name(),
-        JOINER.join(prefix, "hiveJDBCDriver"),
-        Errors.HIVE_15,
-        hiveJDBCDriver
+          Groups.HIVE.name(),
+          JOINER.join(prefix, "hiveJDBCDriver"),
+          Errors.HIVE_15,
+          hiveJDBCDriver
       ));
     }
 
@@ -146,10 +160,10 @@ public class HiveConfigBean {
       HiveMetastoreUtil.validateConfigFile("hive-site.xml", confDir, hiveConfDir, issues, configuration, context);
     } else {
       issues.add(context.createConfigIssue(
-        Groups.HIVE.name(),
-        JOINER.join(prefix, "confDir"),
-        Errors.HIVE_07,
-        confDir
+          Groups.HIVE.name(),
+          JOINER.join(prefix, "confDir"),
+          Errors.HIVE_07,
+          confDir
       ));
     }
 
@@ -162,39 +176,83 @@ public class HiveConfigBean {
       return;
     }
 
+    elEval = context.createELEval(HIVE_JDBC_URL);
+
     // Try to connect to HMS to validate if the URL is valid
     Record dummyRecord = context.createRecord("DummyHiveMetastoreTargetRecord");
     Map<String, Field> databaseFieldValue = new HashMap<>();
     databaseFieldValue.put(HiveMetastoreUtil.DATABASE_FIELD, Field.create("default"));
     dummyRecord.set(Field.create(databaseFieldValue));
-    String jdbcUrl = null;
+    String jdbcUrl;
     try {
-      ELEval elEval = context.createELEval("hiveJDBCUrl");
-      ELVars elVars = elEval.createVariables();
-      RecordEL.setRecordInContext(elVars, dummyRecord);
-      jdbcUrl = HiveMetastoreUtil.resolveEL(elEval, elVars, hiveJDBCUrl);
+      jdbcUrl = HiveMetastoreUtil.resolveJDBCUrl(elEval, hiveJDBCUrl, dummyRecord);
     } catch (ELEvalException e) {
       LOG.error("Error evaluating EL:", e);
       issues.add(context.createConfigIssue(
-        Groups.HIVE.name(),
-        JOINER.join(prefix, "hiveJDBCUrl"),
-        Errors.HIVE_01,
-        e.getMessage()
+          Groups.HIVE.name(),
+          JOINER.join(prefix, HIVE_JDBC_URL),
+          Errors.HIVE_01,
+          e.getMessage()
       ));
       return;
     }
+    try {
+      loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
+    } catch (Exception e) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.HIVE.name(),
+              JOINER.join(prefix, HIVE_JDBC_URL),
+              Errors.HIVE_22,
+              jdbcUrl,
+              e.getMessage()
+          )
+      );
+      return;
+    }
+    try {
+      if (jdbcUrl.matches(KERBEROS_JDBC_REGEX)) {
+        LOG.info("Authentication: Kerberos");
+        if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.ADVANCED.name(),
+                  JOINER.join(prefix, HIVE_JDBC_URL),
+                  Errors.HIVE_01,
+                  loginUgi.getAuthenticationMethod(),
+                  UserGroupInformation.AuthenticationMethod.KERBEROS
+              )
+          );
+        }
+      } else {
+        LOG.info("Authentication: Simple");
+        configuration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+            UserGroupInformation.AuthenticationMethod.SIMPLE.name());
+      }
+    } catch (Exception ex) {
+      LOG.info("Validation Error: " + ex.toString(), ex);
+      issues.add(
+          context.createConfigIssue(
+              Groups.ADVANCED.name(),
+              JOINER.join(prefix, HIVE_JDBC_URL),
+              Errors.HIVE_01,
+              "Exception in configuring HDFS"
+          )
+      );
+      return;
+    }
 
-    try (Connection con = DriverManager.getConnection(jdbcUrl)) {}
-    catch (SQLException e) {
+    HiveQueryExecutor executor = new HiveQueryExecutor(jdbcUrl, loginUgi);
+
+    try (Connection con = executor.getConnection()) {} catch (Exception e) {
       LOG.error(Utils.format("Error Connecting to Hive Default Database with URL {}", jdbcUrl), e);
       issues.add(context.createConfigIssue(
-        Groups.HIVE.name(),
-        JOINER.join(prefix, "hiveJDBCUrl"),
-        Errors.HIVE_22,
-        jdbcUrl,
-        e.getMessage()
+          Groups.HIVE.name(),
+          JOINER.join(prefix, HIVE_JDBC_URL),
+          Errors.HIVE_22,
+          jdbcUrl,
+          e.getMessage()
       ));
     }
   }
-
 }

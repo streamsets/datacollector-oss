@@ -26,10 +26,12 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,9 +58,9 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   @Parameterized.Parameters(name = "db({0}),useAsAvro({1}),external({2})")
   public static Collection<Object[]> data() {
     return ParametrizedUtils.crossProduct(
-      new String[] {"default", "custom"},
-      new Boolean[] {true, false},
-      new Boolean[] {true, false}
+        new String[] {"default", "custom"},
+        new Boolean[] {true, false},
+        new Boolean[] {true, false}
     );
   }
 
@@ -70,6 +73,7 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
     this.external = external;
   }
 
+
   @Test
   public void testColdStart() throws  Exception {
     LOG.info(Utils.format("Starting cold start with database({}), useAsAvro({}) and external({})", database, useAsAvro, external));
@@ -81,9 +85,10 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
       .partitionPathTemplate("dt=super-secret")
       .external(external)
       .build();
+
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .useAsAvro(useAsAvro)
-      .build();
+        .useAsAvro(useAsAvro)
+        .build();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("name", Field.create(Field.Type.STRING, "StreamSets"));
@@ -97,8 +102,8 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("tbl.name", Types.VARCHAR),
-          new ImmutablePair("tbl.dt", Types.VARCHAR)
+            new ImmutablePair("tbl.name", Types.VARCHAR),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

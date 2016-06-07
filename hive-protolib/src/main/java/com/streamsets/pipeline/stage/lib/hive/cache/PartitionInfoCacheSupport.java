@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -33,8 +34,12 @@ public class PartitionInfoCacheSupport
     PartitionInfoCacheSupport.PartitionInfoCacheLoader> {
 
   @Override
-  public PartitionInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
-    return new PartitionInfoCacheLoader(jdbcUrl, qualifiedTableName);
+  public PartitionInfoCacheLoader newHMSCacheLoader(
+      String jdbcUrl,
+      String qualifiedTableName,
+      UserGroupInformation ugi
+  ) {
+    return new PartitionInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
   }
 
   public static class PartitionInfo extends HMSCacheSupport.HMSCacheInfo<Set<LinkedHashMap<String,String>>>{
@@ -56,8 +61,8 @@ public class PartitionInfoCacheSupport
   }
 
   public class PartitionInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<PartitionInfo> {
-    protected PartitionInfoCacheLoader(String jdbcUrl, String qualifiedTableName) {
-      super(jdbcUrl, qualifiedTableName);
+    protected PartitionInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
+      super(jdbcUrl, qualifiedTableName, ugi);
     }
     @Override
     protected PartitionInfo loadHMSCacheInfo() throws StageException{

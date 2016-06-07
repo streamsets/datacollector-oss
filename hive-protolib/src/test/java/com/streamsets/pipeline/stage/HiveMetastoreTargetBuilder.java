@@ -26,7 +26,6 @@ public class HiveMetastoreTargetBuilder {
 
   private boolean useAsAvro;
   private String hdfsUser;
-  private boolean hdfsKerberos;
 
   public HiveMetastoreTargetBuilder() {
     this.useAsAvro = true;
@@ -42,18 +41,11 @@ public class HiveMetastoreTargetBuilder {
     return this;
   }
 
-  public HiveMetastoreTargetBuilder hdfsKerberos(boolean kerberos) {
-    this.hdfsKerberos = kerberos;
-    return this;
-  }
-
   public HiveMetastoreTarget build() {
     HMSTargetConfigBean config = new HMSTargetConfigBean();
     config.useAsAvro = useAsAvro;
     config.hdfsUser = hdfsUser;
-    config.hdfsKerberos = hdfsKerberos;
     config.hiveConfigBean = BaseHiveIT.getHiveConfigBean();
-
     return new HiveMetastoreTarget(config);
   }
 

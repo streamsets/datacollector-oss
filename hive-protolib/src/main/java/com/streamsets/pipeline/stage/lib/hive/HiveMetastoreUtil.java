@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -114,9 +115,9 @@ public final class HiveMetastoreUtil {
   private HiveMetastoreUtil() {}
 
   public static void validateConfigFile(String fileName, String hiveConfDirString,
-                                 File hiveConfDir, List<Stage.ConfigIssue> issues,
-                                 Configuration conf,
-                                 Stage.Context context){
+                                        File hiveConfDir, List<Stage.ConfigIssue> issues,
+                                        Configuration conf,
+                                        Stage.Context context){
     File confFile = new File(hiveConfDir.getAbsolutePath(), fileName);
     if (!confFile.exists()) {
       issues.add(context.createConfigIssue(
@@ -131,9 +132,22 @@ public final class HiveMetastoreUtil {
     }
   }
 
+  /**
+   * Resolve JDBCUrl
+   * @param elEval
+   * @param unresolvedJDBCUrl
+   * @param metadataRecord
+   * @return Resolved JDBC URL
+   * @throws ELEvalException if it is an invalid EL
+   */
+  public static String resolveJDBCUrl(ELEval elEval, String unresolvedJDBCUrl, Record metadataRecord) throws ELEvalException {
+    ELVars elVars = elEval.createVariables();
+    RecordEL.setRecordInContext(elVars, metadataRecord);
+    return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
+  }
+
   // Resolve expression from record
-  public static String resolveEL(ELEval elEval,ELVars variables, String val) throws ELEvalException
-  {
+  public static String resolveEL(ELEval elEval,ELVars variables, String val) throws ELEvalException {
     return elEval.eval(variables, val, String.class);
   }
 
@@ -176,7 +190,7 @@ public final class HiveMetastoreUtil {
             if (isSecondFieldHiveType) {
               Field hiveTypeInfoField = innerPair.get(innerPairSecondFieldName);
               HiveType hiveType = HiveType.getHiveTypeFromString(
-                hiveTypeInfoField.getValueAsMap().get(HiveMetastoreUtil.TYPE).getValueAsString()
+                  hiveTypeInfoField.getValueAsMap().get(HiveMetastoreUtil.TYPE).getValueAsString()
               );
               retVal = (T) (hiveType.getSupport().generateHiveTypeInfoFromMetadataField(hiveTypeInfoField));
             } else {
@@ -528,7 +542,7 @@ public final class HiveMetastoreUtil {
    * @throws StageException
    */
   public static String generateAvroSchema(Map<String, HiveTypeInfo> typeInfo, String qualifiedName)
-  throws StageException {
+      throws StageException {
     Utils.checkNotNull(typeInfo, "Error TypeInfo cannot be null");
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator(qualifiedName);
     return gen.inferSchema(typeInfo);

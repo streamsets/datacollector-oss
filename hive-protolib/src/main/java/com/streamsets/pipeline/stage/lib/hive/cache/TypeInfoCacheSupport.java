@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -36,8 +37,8 @@ public class TypeInfoCacheSupport
     TypeInfoCacheSupport.TypeInfoCacheLoader> {
 
   @Override
-  public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
-    return new TypeInfoCacheLoader(jdbcUrl, qualifiedTableName);
+  public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
+    return new TypeInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
   }
 
   public static class TypeInfo extends HMSCacheSupport.HMSCacheInfo<LinkedHashMap<String, HiveTypeInfo>>{
@@ -72,7 +73,7 @@ public class TypeInfoCacheSupport
         if (!state.containsKey(columnName)) {
           columnDiff.put(columnName, columnTypeInfo);
         } else if (!state.get(columnName).equals(columnTypeInfo)) {
-          throw new StageException(Errors.HIVE_21, state.get(columnName), columnTypeInfo.toString());
+          throw new StageException(Errors.HIVE_21, state.get(columnName).getHiveType().name(), columnTypeInfo.getHiveType().name());
         }
       }
       return columnDiff;
@@ -85,8 +86,8 @@ public class TypeInfoCacheSupport
   }
 
   public class TypeInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<TypeInfo> {
-    protected TypeInfoCacheLoader(String jdbcUrl, String qualifiedTableName) {
-      super(jdbcUrl, qualifiedTableName);
+    protected TypeInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
+      super(jdbcUrl, qualifiedTableName, ugi);
     }
     @Override
     protected TypeInfo loadHMSCacheInfo() throws StageException{

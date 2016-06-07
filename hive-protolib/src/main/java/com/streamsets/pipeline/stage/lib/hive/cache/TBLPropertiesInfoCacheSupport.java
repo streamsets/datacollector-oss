@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * Cache Support for TBLProperties Information.
@@ -33,9 +34,10 @@ public class TBLPropertiesInfoCacheSupport
   @Override
   public TBLPropertiesInfoCacheLoader newHMSCacheLoader(
       String jdbcUrl,
-      String qualifiedTableName
+      String qualifiedTableName,
+      UserGroupInformation ugi
   ) {
-    return new TBLPropertiesInfoCacheLoader(jdbcUrl, qualifiedTableName);
+    return new TBLPropertiesInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
   }
 
   public static class TBLPropertiesInfo extends HMSCacheSupport.HMSCacheInfo<Pair<Boolean, Boolean>> {
@@ -67,8 +69,8 @@ public class TBLPropertiesInfoCacheSupport
   }
 
   public class TBLPropertiesInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<TBLPropertiesInfo> {
-    protected TBLPropertiesInfoCacheLoader(String jdbcUrl, String qualifiedTableName) {
-      super(jdbcUrl, qualifiedTableName);
+    protected TBLPropertiesInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
+      super(jdbcUrl, qualifiedTableName, ugi);
     }
 
     @Override

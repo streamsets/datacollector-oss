@@ -297,7 +297,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       cacheInfo = cache.getOrLoad(
           cacheType,
           hiveConfigBean.hiveJDBCUrl,
-          qualifiedName
+          qualifiedName,
+          hiveConfigBean.getUgi()
       );
     }
     return cacheInfo;

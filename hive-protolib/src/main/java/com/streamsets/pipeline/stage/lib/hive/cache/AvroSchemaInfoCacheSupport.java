@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import org.apache.hadoop.security.UserGroupInformation;
 
 
 public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInfoCacheSupport.AvroSchemaInfo,
@@ -30,9 +31,10 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
   @Override
   public AvroSchemaInfoCacheLoader newHMSCacheLoader(
       String jdbcUrl,
-      String qualifiedTableName)
+      String qualifiedTableName, UserGroupInformation ugi
+  )
   {
-    return new AvroSchemaInfoCacheLoader(jdbcUrl, qualifiedTableName);
+    return new AvroSchemaInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
   }
 
   public static class AvroSchemaInfo extends HMSCacheSupport.HMSCacheInfo<String> {
@@ -57,8 +59,8 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
 
   public class AvroSchemaInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<AvroSchemaInfo> {
 
-    protected AvroSchemaInfoCacheLoader(String jdbcUrl, String qualifiedTableName) {
-      super(jdbcUrl, qualifiedTableName);
+    protected AvroSchemaInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
+      super(jdbcUrl, qualifiedTableName, ugi);
     }
 
     @Override

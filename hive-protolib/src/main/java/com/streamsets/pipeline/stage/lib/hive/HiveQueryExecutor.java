@@ -19,15 +19,16 @@
  */
 package com.streamsets.pipeline.stage.lib.hive;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -72,9 +73,11 @@ public final class HiveQueryExecutor {
   private static final String RESULT_SET_PROP_VALUE = "prpt_value";
 
   private final String jdbcUrl;
+  private final UserGroupInformation loginUgi;
 
-  public HiveQueryExecutor(String resolvedJDBCUrl) {
+  public HiveQueryExecutor(String resolvedJDBCUrl, UserGroupInformation loginUgi) {
     this.jdbcUrl = resolvedJDBCUrl;
+    this.loginUgi = loginUgi;
   }
 
   private static void buildNameTypeFormatWithElements(
@@ -253,30 +256,19 @@ public final class HiveQueryExecutor {
     return String.format(SHOW_TABLES, db, table);
   }
 
-  private void closeStatement(Statement statement) {
-    if (statement != null) {
-      try {
-        statement.close();
-      } catch(SQLException e) {
-        //It is ok.
-        LOG.warn("Error happened when closing statement:", e);
-      }
-    }
-  }
 
   public boolean executeShowTableQuery(String qualifiedTableName) throws StageException{
     String sql = buildShowTableQuery(qualifiedTableName);
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       ResultSet rs = statement.executeQuery(sql);
       return rs.next();
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when creating table", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -296,16 +288,15 @@ public final class HiveQueryExecutor {
     String sql = useAsAvro? buildCreateTableQueryNew(qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal)
         : buildCreateTableQueryOld(qualifiedTableName, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
 
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       statement.execute(sql);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when creating table", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -314,16 +305,15 @@ public final class HiveQueryExecutor {
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap
   ) throws StageException {
     String sql = buildAddColumnsQuery(qualifiedTableName, columnTypeMap);
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       statement.execute(sql);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding columns", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -334,16 +324,15 @@ public final class HiveQueryExecutor {
       String partitionPath
   ) throws StageException {
     String sql = buildPartitionAdditionQuery(qualifiedTableName, partitionNameValueMap, partitionTypeMap, partitionPath);
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       statement.execute(sql);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -358,16 +347,15 @@ public final class HiveQueryExecutor {
       String partitionPath
   ) throws StageException {
     String sql = buildSetTablePropertiesQuery(qualifiedTableName, partitionPath);
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       statement.execute(sql);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -380,10 +368,11 @@ public final class HiveQueryExecutor {
   public Set<LinkedHashMap<String, String>> executeShowPartitionsQuery(String qualifiedTableName) throws StageException {
     String sql = buildShowPartitionsQuery(qualifiedTableName);
     Set<LinkedHashMap<String, String>> partitionInfoSet = new HashSet<>();
-    LOG.debug("Executing SQL: {}", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    LOG.debug("Executing SQL:", sql);
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       ResultSet rs = statement.executeQuery(sql);
       while(rs.next()) {
         String partitionInfoString = rs.getString(1);
@@ -396,11 +385,9 @@ public final class HiveQueryExecutor {
         partitionInfoSet.add(vals);
       }
       return partitionInfoSet;
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
 
@@ -445,9 +432,10 @@ public final class HiveQueryExecutor {
   ) throws StageException {
     String sql = buildDescTableQuery(qualifiedTableName);
     LOG.debug("Executing SQL:", sql);
-    Statement statement = null;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement();
+    ){
       ResultSet rs = statement.executeQuery(sql);
       LinkedHashMap<String, HiveTypeInfo> columnTypeInfo  = extractTypeInfo(rs);
       processDelimiter(rs, "#");
@@ -459,14 +447,11 @@ public final class HiveQueryExecutor {
         columnTypeInfo.remove(partitionCol);
       }
       return Pair.of(columnTypeInfo, partitionTypeInfo);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
   }
-
 
   /**
    * Returns {@link Pair} of IsExternal and useAsAvro TBLProperties.
@@ -479,10 +464,11 @@ public final class HiveQueryExecutor {
   ) throws StageException {
     String sql = String.format(SHOW_TBLPROPERTIES, qualifiedTableName);
     LOG.debug("Executing SQL:", sql);
-    Statement statement = null;
     boolean isExternal = false, useAsAvro = true;
-    try (Connection con = DriverManager.getConnection(jdbcUrl)){
-      statement = con.createStatement();
+    try (
+        Connection con = getConnection();
+        Statement statement = con.createStatement()
+    ){
       ResultSet rs = statement.executeQuery(sql);
       while (rs.next()) {
         String propName = rs.getString(RESULT_SET_PROP_NAME);
@@ -494,11 +480,18 @@ public final class HiveQueryExecutor {
         }
       }
       return Pair.of(isExternal, useAsAvro);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
-    } finally {
-      closeStatement(statement);
     }
+  }
+
+  public Connection getConnection() throws Exception {
+    return loginUgi.doAs(new PrivilegedExceptionAction<Connection>() {
+      @Override
+      public Connection run() throws SQLException {
+        return DriverManager.getConnection(jdbcUrl);
+      }
+    });
   }
 }

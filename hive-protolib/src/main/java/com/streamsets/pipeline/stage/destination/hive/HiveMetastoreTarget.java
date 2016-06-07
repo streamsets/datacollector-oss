@@ -19,23 +19,16 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
-import com.google.common.base.Joiner;
-import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
-import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
@@ -44,22 +37,12 @@ import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.PrivilegedExceptionAction;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -68,13 +51,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class HiveMetastoreTarget extends BaseTarget{
-  private static final String CONF = "conf";
-  private static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
-  private static final String HIVE_JDBC_URL = "hiveJDBCUrl";
-  private static final String HDFS_KERBEROS = "hdfsKerberos";
-  private static final String CONF_DIR = "confDir";
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
-  private static final Joiner JOINER = Joiner.on(".");
+  private static final String CONF = "conf";
   private static final String USE_AS_AVRO = "useAsAvro";
   private static final String EXTERNAL = "External";
 
@@ -84,10 +62,6 @@ public class HiveMetastoreTarget extends BaseTarget{
   private ELEval elEval;
   private HMSCache hmsCache;
 
-  //Only initialized if useAsAvro is false.
-  private FileSystem fs;
-  private UserGroupInformation loginUgi;
-
   public HiveMetastoreTarget(HMSTargetConfigBean conf) {
     this.conf = conf;
   }
@@ -95,14 +69,9 @@ public class HiveMetastoreTarget extends BaseTarget{
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
-    conf.hiveConfigBean.init(getContext(), JOINER.join(CONF, HIVE_CONFIG_BEAN), issues);
-
+    conf.init(getContext(), CONF, issues);
     if (issues.isEmpty()) {
-      initHDFS(issues);
-
       defaultErrorRecordHandler = new DefaultErrorRecordHandler(getContext());
-      elEval = getContext().createELEval(HIVE_JDBC_URL);
       hmsCache =  HMSCache.newCacheBuilder()
           .addCacheTypeSupport(
               Arrays.asList(
@@ -126,13 +95,18 @@ public class HiveMetastoreTarget extends BaseTarget{
         String tableName = HiveMetastoreUtil.getTableName(metadataRecord);
         String databaseName = HiveMetastoreUtil.getDatabaseName(metadataRecord);
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
-        String resolvedJDBCUrl = resolveJDBCUrl(conf.hiveConfigBean.hiveJDBCUrl, metadataRecord);
+        String resolvedJDBCUrl = HiveMetastoreUtil.resolveJDBCUrl(
+            conf.hiveConfigBean.getElEval(),
+            conf.hiveConfigBean.hiveJDBCUrl,
+            metadataRecord
+        );
         String location = HiveMetastoreUtil.getLocation(metadataRecord);
-        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(resolvedJDBCUrl);
+        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(resolvedJDBCUrl, conf.hiveConfigBean.getUgi());
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = hmsCache.getOrLoad(
             HMSCacheType.TBLPROPERTIES_INFO,
             resolvedJDBCUrl,
-            qualifiedTableName
+            qualifiedTableName,
+            conf.hiveConfigBean.getUgi()
         );
 
         if (tblPropertiesInfo != null && tblPropertiesInfo.isUseAsAvro() != conf.useAsAvro) {
@@ -160,92 +134,8 @@ public class HiveMetastoreTarget extends BaseTarget{
 
   @Override
   public void destroy() {
-    if (!conf.useAsAvro) {
-      try {
-        loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            if (fs != null) {
-              fs.close();
-            }
-            return null;
-          }
-        });
-      } catch (Exception e) {
-        LOG.warn("Error when closing hdfs file system:", e);
-      }
-    }
+    conf.destroy();
     super.destroy();
-  }
-
-  private void initHDFS(final List<ConfigIssue> issues) {
-    if (!conf.useAsAvro) {
-      final Configuration configuration = conf.hiveConfigBean.getConfiguration();
-
-      try {
-        // forcing UGI to initialize with the security settings from the stage
-        loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
-        if (conf.hdfsKerberos) {
-          LOG.info("HDFS Using Kerberos");
-          if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.ADVANCED.name(),
-                    JOINER.join(CONF, HDFS_KERBEROS),
-                    Errors.HIVE_01,
-                    loginUgi.getAuthenticationMethod(),
-                    UserGroupInformation.AuthenticationMethod.KERBEROS
-                )
-            );
-          }
-        } else {
-          LOG.info("HDFS Using Simple");
-          configuration.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-              UserGroupInformation.AuthenticationMethod.SIMPLE.name());
-        }
-      } catch (Exception ex) {
-        LOG.info("Validation Error: " + ex.toString(), ex);
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.ADVANCED.name(),
-                JOINER.join(CONF, HDFS_KERBEROS),
-                Errors.HIVE_01,
-                "Exception in configuring HDFS"
-            )
-        );
-      }
-
-      //use ugi.
-      try {
-        loginUgi.doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() {
-            try {
-              fs = FileSystem.get(configuration);
-            } catch (IOException e) {
-              LOG.error("Error with HDFS File System Configuration.", e);
-
-            }
-            return null;
-          }
-        });
-      } catch (Exception e) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.HIVE.name(),
-                JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
-                Errors.HIVE_01,
-                e.getMessage()
-            )
-        );
-      }
-    }
-  }
-
-  private String resolveJDBCUrl(String unresolvedJDBCUrl, Record metadataRecord) throws ELEvalException {
-    ELVars elVars = elEval.createVariables();
-    RecordEL.setRecordInContext(elVars, metadataRecord);
-    return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
   }
 
   private void handleSchemaChange(
@@ -260,7 +150,9 @@ public class HiveMetastoreTarget extends BaseTarget{
     HMSCacheType cacheType = HMSCacheType.TYPE_INFO;
     TypeInfoCacheSupport.TypeInfo cachedColumnTypeInfo = hmsCache.getOrLoad(
         cacheType,
-        resolvedJDBCUrl, qualifiedTableName
+        resolvedJDBCUrl,
+        qualifiedTableName,
+        conf.hiveConfigBean.getUgi()
     );
     LinkedHashMap<String, HiveTypeInfo> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
     LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
@@ -270,12 +162,13 @@ public class HiveMetastoreTarget extends BaseTarget{
     if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() == isInternal) {
       throw new StageException(Errors.HIVE_23, EXTERNAL, !isInternal, tblPropertiesInfo.isExternal());
     }
+
     if (cachedColumnTypeInfo == null) {
       //Table Does not exist use the schema from the metadata record as is.
       if (!conf.useAsAvro) {
         schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
-            loginUgi,
-            fs,
+            conf.getHDFSUgi(),
+            conf.getFileSystem(),
             location,
             HiveMetastoreUtil.getAvroSchema(metadataRecord)
         );
@@ -304,8 +197,8 @@ public class HiveMetastoreTarget extends BaseTarget{
           Map<String, HiveTypeInfo> mergedTypeInfo = new LinkedHashMap<>(cachedColumnTypeInfo.getColumnTypeInfo());
           mergedTypeInfo.putAll(columnDiff);
           schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
-              loginUgi,
-              fs,
+              conf.getHDFSUgi(),
+              conf.getFileSystem(),
               location,
               HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName)
           );
@@ -332,7 +225,9 @@ public class HiveMetastoreTarget extends BaseTarget{
     //Partition Addition
     TypeInfoCacheSupport.TypeInfo cachedTypeInfo = hmsCache.getOrLoad(
         HMSCacheType.TYPE_INFO,
-        resolvedJDBCUrl, qualifiedTableName
+        resolvedJDBCUrl,
+        qualifiedTableName,
+        conf.hiveConfigBean.getUgi()
     );
 
     if (cachedTypeInfo == null) {
@@ -342,7 +237,9 @@ public class HiveMetastoreTarget extends BaseTarget{
     HMSCacheType hmsCacheType = HMSCacheType.PARTITION_VALUE_INFO;
     PartitionInfoCacheSupport.PartitionInfo cachedPartitionInfo = hmsCache.getOrLoad(
         hmsCacheType,
-        resolvedJDBCUrl, qualifiedTableName
+        resolvedJDBCUrl,
+        qualifiedTableName,
+        conf.hiveConfigBean.getUgi()
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
     Set<LinkedHashMap <String, String>> partitionInfoDiff =

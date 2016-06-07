@@ -19,12 +19,29 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
+import com.google.common.base.Joiner;
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.security.PrivilegedExceptionAction;
+import java.util.List;
 
 public class HMSTargetConfigBean {
+  private static final Logger LOG = LoggerFactory.getLogger(HMSTargetConfigBean.class.getCanonicalName());
+  private static final Joiner JOINER = Joiner.on(".");
+  private static final String HIVE_CONFIG_BEAN = "hiveConfigBean";
+  private static final String CONF_DIR = "confDir";
+
 
   @ConfigDefBean
   public HiveConfigBean hiveConfigBean;
@@ -67,16 +84,59 @@ public class HMSTargetConfigBean {
   )
   public String hdfsUser;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Kerberos Authentication",
-      defaultValue = "false",
-      description = "",
-      displayPosition = 50,
-      group = "ADVANCED",
-      dependsOn = "useAsAvro",
-      triggeredByValue = "false"
-  )
-  public boolean hdfsKerberos;
+  private FileSystem fs;
+
+  public FileSystem getFileSystem() {
+    return fs;
+  }
+
+  public UserGroupInformation getHDFSUgi() {
+    return (hdfsUser == null || hdfsUser.isEmpty())?
+        hiveConfigBean.getUgi() : HadoopSecurityUtil.getProxyUser(hdfsUser, hiveConfigBean.getUgi());
+  }
+
+  public void destroy() {
+    if (useAsAvro) {
+      return;
+    }
+    try {
+      getHDFSUgi().doAs(new PrivilegedExceptionAction<Void>() {
+        @Override
+        public Void run() throws Exception {
+          if (fs != null) {
+            fs.close();
+          }
+          return null;
+        }
+      });
+    } catch (Exception e) {
+      LOG.warn("Error when closing hdfs file system:", e);
+    }
+  }
+
+  public void init(final Stage.Context context, final String prefix, final List<Stage.ConfigIssue> issues) {
+    hiveConfigBean.init(context, JOINER.join(prefix, HIVE_CONFIG_BEAN), issues);
+    if (useAsAvro) {
+      return;
+    }
+    //use ugi.
+    try {
+      fs = getHDFSUgi().doAs(new PrivilegedExceptionAction<FileSystem>() {
+        @Override
+        public FileSystem run() throws Exception{
+          return FileSystem.get(hiveConfigBean.getConfiguration());
+        }
+      });
+    } catch (Exception e) {
+      LOG.error("Error accessing HDFS", e);
+      issues.add(
+          context.createConfigIssue(
+              Groups.HIVE.name(),
+              JOINER.join(prefix, HIVE_CONFIG_BEAN, CONF_DIR),
+              Errors.HIVE_01,
+              e.getMessage()
+          )
+      );
+    }
+  }
 }

@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.concurrent.Callable;
 
@@ -40,9 +41,10 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
    * Creates a new {@link HMSCacheLoader}
    * @param jdbcUrl JDBC URL
    * @param qualifiedTableName Database name.Table name
+   * @param ugi {@link UserGroupInformation}
    * @return new {@link HMSCacheLoader}
    */
-  CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName);
+  CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi);
 
   /**
    * A Cache information which should be extended for each
@@ -80,9 +82,9 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
     protected final String qualifiedTableName;
     protected final HiveQueryExecutor executor;
 
-    protected HMSCacheLoader(String jdbcUrl, String qualifiedTableName) {
+    protected HMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
       this.qualifiedTableName = qualifiedTableName;
-      executor = new HiveQueryExecutor(jdbcUrl);
+      executor = new HiveQueryExecutor(jdbcUrl, ugi);
     }
 
     /**

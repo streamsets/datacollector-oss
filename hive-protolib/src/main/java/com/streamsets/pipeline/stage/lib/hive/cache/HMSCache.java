@@ -25,6 +25,7 @@ import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -85,7 +86,10 @@ public class HMSCache {
   @SuppressWarnings("unchecked")
   public <T extends HMSCacheSupport.HMSCacheInfo> T getOrLoad(
       HMSCacheType hmsCacheType,
-      String jdbcUrl, String qualifiedTableName) throws StageException{
+      String jdbcUrl,
+      String qualifiedTableName,
+      UserGroupInformation ugi
+  ) throws StageException{
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
@@ -94,7 +98,8 @@ public class HMSCache {
               qualifiedTableName,
               hmsCacheType.getSupport().newHMSCacheLoader(
                   jdbcUrl,
-                  qualifiedTableName
+                  qualifiedTableName,
+                  ugi
               )
       )).orNull();
     } catch(ExecutionException e) {

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage;
 
+import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.destination.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
@@ -47,6 +48,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashSet;
@@ -87,6 +89,7 @@ public abstract class BaseHiveIT {
     HIVE_SERVER_PORT = NetworkUtils.findAvailablePort();
   }
 
+  //TODO: SDC-2988, expose this better.
   private static HiveQueryExecutor hiveQueryExecutor;
   public HiveQueryExecutor getHiveQueryExecutor() {
     return hiveQueryExecutor;
@@ -151,8 +154,9 @@ public abstract class BaseHiveIT {
 
     // JDBC Connection to Hive
     Class.forName(HIVE_JDBC_DRIVER);
-    hiveConnection = DriverManager.getConnection(getHiveJdbcUrl());
-    hiveQueryExecutor = new HiveQueryExecutor(getHiveJdbcUrl());
+    hiveQueryExecutor = new HiveQueryExecutor(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
+    hiveConnection = hiveQueryExecutor.getConnection();
+
   }
 
   /**
@@ -170,6 +174,11 @@ public abstract class BaseHiveIT {
    */
   @AfterClass
   public static void cleanUpClass() throws IOException {
+    try {
+      hiveConnection.close();
+    } catch (SQLException e) {
+      LOG.warn("Error while closing connection", e);
+    }
     if (hiveServer2 != null) {
       hiveServer2.stop();
     }
@@ -200,11 +209,11 @@ public abstract class BaseHiveIT {
   public void cleanUpHiveTables() throws Exception {
     // Metadata clean up
     try (
-      Statement showDatabases = hiveConnection.createStatement();
-      Statement showTables = hiveConnection.createStatement();
-      Statement dropStatement = hiveConnection.createStatement();
-      ResultSet databases = showDatabases.executeQuery("show databases");
-      ResultSet tables = showTables.executeQuery("show tables");
+        Statement showDatabases = hiveConnection.createStatement();
+        Statement showTables = hiveConnection.createStatement();
+        Statement dropStatement = hiveConnection.createStatement();
+        ResultSet databases = showDatabases.executeQuery("show databases");
+        ResultSet tables = showTables.executeQuery("show tables");
     ){
       // Drop all databases except of "default" that can't be dropped
       while(databases.next()) {
@@ -231,8 +240,8 @@ public abstract class BaseHiveIT {
    * Suitable for creating tables, partitions, ...
    */
   public void executeUpdate(String query) throws Exception {
-     try (Statement statement = hiveConnection.createStatement()) {
-       statement.executeUpdate(query);
+    try (Statement statement = hiveConnection.createStatement()) {
+      statement.executeUpdate(query);
     }
   }
 
@@ -245,7 +254,6 @@ public abstract class BaseHiveIT {
     hiveConfigBean.hiveJDBCDriver = HIVE_JDBC_DRIVER;
     hiveConfigBean.additionalConfigProperties = Collections.emptyMap();
     hiveConfigBean.hiveJDBCUrl = getHiveJdbcUrl();
-
     return hiveConfigBean;
   }
 
@@ -265,8 +273,8 @@ public abstract class BaseHiveIT {
    */
   public static void assertQueryResult(String query, QueryValidator validator) throws Exception {
     try(
-      Statement statement = getHiveConnection().createStatement();
-      ResultSet rs = statement.executeQuery(query);
+        Statement statement = getHiveConnection().createStatement();
+        ResultSet rs = statement.executeQuery(query);
     ) {
       validator.validateResultSet(rs);
     }
