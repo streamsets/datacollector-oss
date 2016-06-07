@@ -142,7 +142,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     });
   }
 
-//  @Test SDC-3126
+  @Test
   public void testChangedColumnType() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .build();
@@ -169,21 +169,6 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     } catch (StageException e) {
       Assert.assertEquals(Errors.HIVE_21, e.getErrorCode());
     }
-
-    assertQueryResult("select * from tbl order by id", new QueryValidator() {
-      @Override
-      public void validateResultSet(ResultSet rs) throws Exception {
-        assertResultSetStructure(rs,
-          new ImmutablePair("tbl.id", Types.INTEGER),
-          new ImmutablePair("tbl.dt", Types.VARCHAR)
-        );
-
-        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
-        Assert.assertEquals(1, rs.getLong(1));
-
-        Assert.assertFalse("Unexpected number of rows", rs.next());
-      }
-    });
   }
 
 }
