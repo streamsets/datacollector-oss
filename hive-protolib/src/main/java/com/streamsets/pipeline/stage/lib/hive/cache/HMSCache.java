@@ -127,6 +127,16 @@ public class HMSCache {
     cacheMap.get(cacheType).put(qualifiedTableName, Optional.of((HMSCacheSupport.HMSCacheInfo)hmsCacheInfo));
   }
 
+  public <T extends HMSCacheSupport.HMSCacheInfo> void invalidate(
+      HMSCacheType cacheType,
+      String qualifiedTableName
+  ) throws StageException {
+    if (!cacheMap.containsKey(cacheType)) {
+      throw new StageException(Errors.HIVE_16, cacheType);
+    }
+    cacheMap.get(cacheType).invalidate(qualifiedTableName);
+  }
+
   /**
    * A builder for building {@link HMSCache}
    */

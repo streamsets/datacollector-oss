@@ -57,21 +57,21 @@ public final class HiveMetastoreUtil {
   private static final String AVRO_SCHEMA_EXT = ".avsc";
 
   //Common Constants
-  private static final String LOCATION_FIELD = "location";
-  private static final String TABLE_FIELD = "table";
-  private static final String PARTITION_FIELD = "partitions";
-  private static final String PARTITION_NAME = "name";
-  private static final String COLUMN_NAME = "name";
+  public static final String LOCATION_FIELD = "location";
+  public static final String TABLE_FIELD = "table";
+  public static final String PARTITION_FIELD = "partitions";
+  public static final String PARTITION_NAME = "name";
+  public static final String COLUMN_NAME = "name";
 
   //Schema Change Constants
-  private static final String COLUMNS_FIELD = "columns";
-  private static final String INTERNAL_FIELD = "internal";
+  public static final String COLUMNS_FIELD = "columns";
+  public static final String INTERNAL_FIELD = "internal";
 
   //Partition Rolling Constants
-  private static final String PARTITION_VALUE = "value";
+  public static final String PARTITION_VALUE = "value";
 
-  private static final String AVRO_SCHEMA = "avro_schema";
-  private static final String HDFS_SCHEMA_FOLDER_NAME = ".schemas";
+  public static final String AVRO_SCHEMA = "avro_schema";
+  public static final String HDFS_SCHEMA_FOLDER_NAME = ".schemas";
 
   // Configuration constants
   public static final String CONF = "conf";
@@ -79,10 +79,10 @@ public final class HiveMetastoreUtil {
   public static final String CONF_DIR = "confDir";
   private static final Joiner JOINER = Joiner.on(".");
 
-  private static final String VERSION = "version";
-  private static final String METADATA_RECORD_TYPE = "type";
-  private static final String SCHEMA_CHANGE_METADATA_RECORD_VERSION = "1";
-  private static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "1";
+  public static final String VERSION = "version";
+  public static final String METADATA_RECORD_TYPE = "type";
+  public static final String SCHEMA_CHANGE_METADATA_RECORD_VERSION = "1";
+  public static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "1";
 
   public static final String COLUMN_TYPE = "%s %s";
   public static final String DATABASE_FIELD = "database";
@@ -354,6 +354,15 @@ public final class HiveMetastoreUtil {
    */
   public static boolean isSchemaChangeRecord(Record metadataRecord) {
     return MetadataRecordType.TABLE.name().equals(metadataRecord.get(SEP + METADATA_RECORD_TYPE).getValueAsString());
+  }
+
+  public static void validateMetadataRecordForRecordTypeAndVersion(Record metadataRecord) throws StageException{
+    if (!metadataRecord.has(SEP + METADATA_RECORD_TYPE)) {
+      throw new StageException(Errors.HIVE_17, METADATA_RECORD_TYPE, metadataRecord);
+    }
+    if(!metadataRecord.has(SEP + VERSION)) {
+      throw new StageException(Errors.HIVE_17, VERSION, metadataRecord);
+    }
   }
 
   /**

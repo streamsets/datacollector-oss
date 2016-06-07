@@ -32,9 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
-
-  private static Logger LOG = LoggerFactory.getLogger(DecimalHiveTypeSupport.class);
-
   private static final String SCALE = "scale";
   private static final String PRECISION = "precision";
 
@@ -59,18 +56,6 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     int scale = extraInfo.get(SCALE).getValueAsInteger();
     int precision = extraInfo.get(PRECISION).getValueAsInteger();
     return new DecimalTypeInfo(scale, precision);
-  }
-
-  @Override
-  protected String generateAfterColumnTypeDefinition(HiveTypeInfo hiveTypeInfo) {
-    Utils.checkArgument(
-        hiveTypeInfo instanceof DecimalTypeInfo,
-        "Invalid argument type: "+ hiveTypeInfo.getClass().getCanonicalName()
-    );
-    DecimalTypeInfo decimalTypeInfo = (DecimalTypeInfo) hiveTypeInfo;
-    return HiveMetastoreUtil.OPEN_BRACKET  + decimalTypeInfo.getPrecision()
-        + HiveMetastoreUtil.COMMA + HiveMetastoreUtil.SPACE
-        + decimalTypeInfo.getScale() + HiveMetastoreUtil.CLOSE_BRACKET;
   }
 
   @Override
@@ -138,6 +123,12 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
       result = 31 * result + scale;
       result = 31 * result + precision;
       return result;
+    }
+
+    @Override
+    public String toString() {
+      return hiveType.name() + HiveMetastoreUtil.OPEN_BRACKET +
+          precision + HiveMetastoreUtil.COMMA + scale + HiveMetastoreUtil.CLOSE_BRACKET;
     }
   }
 }

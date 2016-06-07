@@ -136,7 +136,7 @@ public class TestAvroHiveSchemaGenerator {
         "{\"name\":\"second\",\"type\":[\"null\",\"string\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo(HiveType.DECIMAL, 2, 1)) ;
+    record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo(2, 1)) ;
     record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");

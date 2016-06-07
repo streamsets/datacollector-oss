@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -37,7 +36,6 @@ import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.hadoop.fs.FileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class HiveMetastoreTarget extends BaseTarget{
+public class HiveMetastoreTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
   private static final String CONF = "conf";
   private static final String USE_AS_AVRO = "useAsAvro";
@@ -59,7 +57,6 @@ public class HiveMetastoreTarget extends BaseTarget{
   private final HMSTargetConfigBean conf;
 
   private ErrorRecordHandler defaultErrorRecordHandler;
-  private ELEval elEval;
   private HMSCache hmsCache;
 
   public HiveMetastoreTarget(HMSTargetConfigBean conf) {
@@ -92,6 +89,7 @@ public class HiveMetastoreTarget extends BaseTarget{
     while (recordIterator.hasNext()) {
       Record metadataRecord = recordIterator.next();
       try {
+        HiveMetastoreUtil.validateMetadataRecordForRecordTypeAndVersion(metadataRecord);
         String tableName = HiveMetastoreUtil.getTableName(metadataRecord);
         String databaseName = HiveMetastoreUtil.getDatabaseName(metadataRecord);
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);

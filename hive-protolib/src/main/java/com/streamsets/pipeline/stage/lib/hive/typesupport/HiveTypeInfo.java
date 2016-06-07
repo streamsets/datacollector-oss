@@ -45,4 +45,9 @@ public class HiveTypeInfo {
   public int hashCode() {
     return hiveType.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return hiveType.name();
+  }
 }

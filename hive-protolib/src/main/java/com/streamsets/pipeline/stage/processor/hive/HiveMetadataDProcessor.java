@@ -24,9 +24,8 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.stage.destination.hive.HiveConfigBean;
+import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
-import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 
 import java.util.List;
 

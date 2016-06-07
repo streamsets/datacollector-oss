@@ -47,6 +47,10 @@ public class PartitionInfoCacheSupport
       super(partitionInfo);
     }
 
+    public Set<LinkedHashMap<String, String>> getPartitions() {
+      return state;
+    }
+
     @Override
     public Set<LinkedHashMap<String,String>> getDiff(Set<LinkedHashMap<String,String>> newState) throws StageException{
       Set<LinkedHashMap<String,String>> diff = new HashSet<>(newState);

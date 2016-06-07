@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -45,13 +44,12 @@ public class TestHiveMetastoreUtil {
   }
 
   // Utility function to generate HiveTypeInfo from HiveType.
-  public static HiveTypeInfo generateDecimalTypeInfo(HiveType type, int precision, int scale){
+  public static HiveTypeInfo generateDecimalTypeInfo(int precision, int scale){
     HiveTypeConfig config = new HiveTypeConfig();
-    config.valueType = type;
+    config.valueType = HiveType.DECIMAL;
     config.precision = precision;
     config.scale = scale;
-    type.getSupport().createTypeInfo(config);
-    return type.getSupport().createTypeInfo(config);
+    return HiveType.DECIMAL.getSupport().createTypeInfo(config);
   }
 
   @Test

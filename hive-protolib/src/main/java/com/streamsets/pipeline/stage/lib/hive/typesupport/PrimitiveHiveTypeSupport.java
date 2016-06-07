@@ -44,12 +44,6 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
   }
 
   @Override
-  protected String generateAfterColumnTypeDefinition(HiveTypeInfo hiveTypeInfo) {
-    //For Char we need to do column char(1)
-    return "";
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
   public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field) throws StageException{
     return new PrimitiveHiveTypeInfo(HiveType.getHiveTypeforFieldType(field.getType()));

@@ -78,8 +78,7 @@ public abstract class HiveTypeSupport {
     return String.format(
         HiveMetastoreUtil.COLUMN_TYPE,
         columnName,
-        hiveTypeInfo.getHiveType().name()
-            + generateAfterColumnTypeDefinition(hiveTypeInfo)
+        hiveTypeInfo.toString()
     );
   }
 
@@ -102,14 +101,6 @@ public abstract class HiveTypeSupport {
    * @return {@link Field} of Extra Info for the hive type inside the metadata record
    */
   protected abstract <T extends HiveTypeInfo> Field generateExtraInfoFieldForMetadataRecord(T hiveTypeInfo);
-
-  /**
-   * Generate Column definition after type definition.
-   * @param hiveTypeInfo {@link HiveTypeInfo}
-   * @param <T> {@link HiveTypeInfo}
-   * @return Column Definition String after Column Type.
-   */
-  protected abstract <T extends HiveTypeInfo> String generateAfterColumnTypeDefinition(T hiveTypeInfo);
 
   /**
    * Returns the {@link HiveTypeInfo} from the information in the result set of desc query.
