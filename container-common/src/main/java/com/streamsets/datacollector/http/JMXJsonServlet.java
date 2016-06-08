@@ -143,10 +143,10 @@ public class JMXJsonServlet extends HttpServlet {
         }
       }
     } catch (IOException e) {
-      
+
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } catch (MalformedObjectNameException e) {
-      
+
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
   }
@@ -155,7 +155,7 @@ public class JMXJsonServlet extends HttpServlet {
   private void listBeans(JsonGenerator jg, ObjectName qry, String attribute,
       HttpServletResponse response)
       throws IOException {
-    
+
     Set<ObjectName> names = null;
     names = mBeanServer.queryNames(qry, null);
 
@@ -182,9 +182,9 @@ public class JMXJsonServlet extends HttpServlet {
         } catch (AttributeNotFoundException e) {
           // If the modelerType attribute was not found, the class name is used
           // instead.
-          
+
         } catch (MBeanException e) {
-          // The code inside the attribute getter threw an exception so 
+          // The code inside the attribute getter threw an exception so
           // and fall back on the class name
 
         } catch (RuntimeException e) {
@@ -194,7 +194,7 @@ public class JMXJsonServlet extends HttpServlet {
 
         } catch ( ReflectionException e ) {
           // This happens when the code inside the JMX bean (setter?? from the
-          // java docs) threw an exception, so 
+          // java docs) threw an exception, so
           // class name
 
         }
@@ -203,13 +203,13 @@ public class JMXJsonServlet extends HttpServlet {
         continue;
       } catch ( IntrospectionException e ) {
         // This is an internal error, something odd happened with reflection so
-        // 
-        
+        //
+
         continue;
       } catch ( ReflectionException e ) {
         // This happens when the code inside the JMX bean threw an exception, so
-        // 
-        
+        //
+
         continue;
       }
 
@@ -258,17 +258,17 @@ public class JMXJsonServlet extends HttpServlet {
       value = mBeanServer.getAttribute(oname, attName);
     } catch (RuntimeMBeanException e) {
       // UnsupportedOperationExceptions happen in the normal course of business,
-      // so no need to 
+      // so no need to
       if (e.getCause() instanceof UnsupportedOperationException) {
-        
+
       } else {
-        
+
       }
       return;
     } catch (RuntimeErrorException e) {
       // RuntimeErrorException happens when an unexpected failure occurs in getAttribute
       // for example https://issues.apache.org/jira/browse/DAEMON-120
-      
+
       return;
     } catch (AttributeNotFoundException e) {
       //Ignored the attribute was not found, which should never happen because the bean
@@ -276,19 +276,19 @@ public class JMXJsonServlet extends HttpServlet {
       //the attribute.
       return;
     } catch (MBeanException e) {
-      //The code inside the attribute getter threw an exception so 
+      //The code inside the attribute getter threw an exception so
       // skip outputting the attribute
-      
+
       return;
     } catch (RuntimeException e) {
       //For some reason even with an MBeanException available to them Runtime exceptions
       //can still find their way through, so treat them the same as MBeanException
-      
+
       return;
     } catch (ReflectionException e) {
       //This happens when the code inside the JMX bean (setter?? from the java docs)
-      //threw an exception, so 
-      
+      //threw an exception, so
+
       return;
     } catch (InstanceNotFoundException e) {
       //Ignored the mbean itself was not found, which should never happen because we
@@ -320,7 +320,12 @@ public class JMXJsonServlet extends HttpServlet {
         jg.writeEndArray();
       } else if(value instanceof Number) {
         Number n = (Number)value;
-        jg.writeNumber(n.toString());
+        if (value instanceof Double && ((Double)value == Double.POSITIVE_INFINITY ||
+            (Double)value == Double.NEGATIVE_INFINITY || (Double)value == Double.NaN)) {
+          jg.writeString(n.toString());
+        } else {
+          jg.writeNumber(n.toString());
+        }
       } else if(value instanceof Boolean) {
         Boolean b = (Boolean)value;
         jg.writeBoolean(b);
