@@ -23,6 +23,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.producer.KinesisProducer;
 import com.amazonaws.services.kinesis.producer.UserRecordResult;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -40,9 +42,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -133,6 +137,47 @@ public class TestKinesisTarget {
     // The last invocation has no effect as no records should be pending.
     verify(producer, times(4)).flushSync();
 
+    targetRunner.runDestroy();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testRecordTooLarge() throws Exception {
+    KinesisProducerConfigBean config = getKinesisTargetConfig();
+
+    KinesisTarget target = new KinesisTarget(config);
+    TargetRunner targetRunner = new TargetRunner.Builder(
+        KinesisDTarget.class,
+        target
+    ).setOnRecordError(OnRecordError.TO_ERROR).build();
+
+    KinesisTestUtil.mockKinesisUtil(1);
+
+    KinesisProducer producer = mock(KinesisProducer.class);
+    Whitebox.setInternalState(target, "kinesisProducer", producer);
+
+    targetRunner.runInit();
+
+    ListenableFuture<UserRecordResult> future = mock(ListenableFuture.class);
+
+    UserRecordResult result = mock(UserRecordResult.class);
+
+    when(result.isSuccessful()).thenReturn(true);
+
+    when(future.get()).thenReturn(result);
+
+    when(producer.addUserRecord(any(String.class), any(String.class), any(ByteBuffer.class)))
+        .thenReturn(future);
+
+    List<Record> records = new ArrayList<>(4);
+    records.add(KinesisTestUtil.getTooLargeRecord());
+    records.addAll(KinesisTestUtil.getProducerTestRecords(3));
+    targetRunner.runWrite(records);
+
+    // Verify we added 3 good records at the end of the batch but not the bad one
+    verify(producer, times(3)).addUserRecord(eq(STREAM_NAME), any(String.class), any(ByteBuffer.class));
+
+    assertEquals(1, targetRunner.getErrorRecords().size());
     targetRunner.runDestroy();
   }
 
