@@ -54,7 +54,7 @@ public abstract class HiveTypeSupport {
    * @throws StageException If the record has invalid
    */
   @SuppressWarnings("unchecked")
-  public HiveTypeInfo generateHiveTypeInfoFromMetadataField(Field hiveTypeInfoField) throws StageException{
+  public HiveTypeInfo generateHiveTypeInfoFromMetadataField(Field hiveTypeInfoField) throws StageException {
     if (hiveTypeInfoField.getType() == Field.Type.MAP) {
       Map<String, Field> fields = (Map<String, Field>) hiveTypeInfoField.getValue();
       if (!fields.containsKey(HiveMetastoreUtil.TYPE)
@@ -93,7 +93,7 @@ public abstract class HiveTypeSupport {
   protected abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromMetadataField(
       HiveType type,
       Field hiveTypeField
-  );
+  ) throws StageException;
 
   /**
    * Generate Metdata Record Extra Info Field from {@link HiveTypeInfo}.

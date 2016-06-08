@@ -32,7 +32,7 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
 
   @Override
   @SuppressWarnings("unchecked")
-  protected PrimitiveHiveTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) {
+  protected PrimitiveHiveTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) throws StageException {
     return new PrimitiveHiveTypeInfo(type);
   }
 

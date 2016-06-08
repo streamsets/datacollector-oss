@@ -203,6 +203,7 @@ public final class HiveMetastoreUtil {
         throwException = true;
       }
     } catch(Exception e) {
+      LOG.error("Can't parse metadata record", e);
       throwException = true;
       exception.initCause(e);
     }

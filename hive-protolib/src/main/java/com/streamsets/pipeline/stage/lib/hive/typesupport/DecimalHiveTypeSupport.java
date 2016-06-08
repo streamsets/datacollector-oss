@@ -24,12 +24,17 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
+
+  private static Logger LOG = LoggerFactory.getLogger(DecimalHiveTypeSupport.class);
+
   private static final String SCALE = "scale";
   private static final String PRECISION = "precision";
 
@@ -43,10 +48,16 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   }
 
   @Override
-  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) {
+  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) throws StageException {
     Map<String, Field> extraInfo = hiveTypeField.getValueAsMap();
-    int scale = extraInfo.get(HiveMetastoreUtil.SEP + SCALE).getValueAsInteger();
-    int precision = extraInfo.get(HiveMetastoreUtil.SEP + PRECISION).getValueAsInteger();
+    if(!extraInfo.containsKey(SCALE)) {
+      throw new StageException(Errors.HIVE_01, Utils.format("Missing {} in field {}", SCALE, hiveTypeField));
+    }
+    if(!extraInfo.containsKey(PRECISION)) {
+      throw new StageException(Errors.HIVE_01, Utils.format("Missing {} in field {}", PRECISION, hiveTypeField));
+    }
+    int scale = extraInfo.get(SCALE).getValueAsInteger();
+    int precision = extraInfo.get(PRECISION).getValueAsInteger();
     return new DecimalTypeInfo(scale, precision);
   }
 
@@ -57,9 +68,9 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
         "Invalid argument type: "+ hiveTypeInfo.getClass().getCanonicalName()
     );
     DecimalTypeInfo decimalTypeInfo = (DecimalTypeInfo) hiveTypeInfo;
-    return HiveMetastoreUtil.OPEN_BRACKET  + decimalTypeInfo.getScale()
+    return HiveMetastoreUtil.OPEN_BRACKET  + decimalTypeInfo.getPrecision()
         + HiveMetastoreUtil.COMMA + HiveMetastoreUtil.SPACE
-        + decimalTypeInfo.getPrecision() + HiveMetastoreUtil.CLOSE_BRACKET;
+        + decimalTypeInfo.getScale() + HiveMetastoreUtil.CLOSE_BRACKET;
   }
 
   @Override
