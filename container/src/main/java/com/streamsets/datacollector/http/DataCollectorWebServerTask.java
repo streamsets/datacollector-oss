@@ -40,7 +40,7 @@ public class DataCollectorWebServerTask extends WebServerTask {
 
   @Override
   protected String getAppAuthToken(Configuration appConfiguration) {
-    return getConfiguration().get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+    return getRuntimeInfo().getAppAuthToken();
   }
 
   @Override

@@ -22,6 +22,7 @@ package com.streamsets.datacollector.el;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -49,7 +50,6 @@ public class RuntimeEL {
   private static final String RUNTIME_CONF_LOCATION_KEY = "runtime.conf.location";
   private static final String RUNTIME_CONF_LOCATION_DEFAULT = "embedded";
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
-  private static final String DPM_APPLICATION_TOKEN = "dpm.applicationToken";
   private static Properties RUNTIME_CONF_PROPS = null;
   private static String AUTH_TOKEN = null;
   private static String HOSTNAME = null;
@@ -138,7 +138,7 @@ public class RuntimeEL {
         throw new RuntimeException(ex);
       }
 
-      AUTH_TOKEN = configuration.get(DPM_APPLICATION_TOKEN, null);
+      AUTH_TOKEN = runtimeInfo.getAppAuthToken();
       HOSTNAME = configuration.get(WebServerTask.HTTP_BIND_HOST, InetAddress.getLocalHost().getCanonicalHostName());
 
       RUNTIME_CONF_PROPS = new Properties();

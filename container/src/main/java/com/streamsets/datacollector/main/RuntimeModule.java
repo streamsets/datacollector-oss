@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.ExecutionMode;
 import dagger.Module;
 import dagger.Provides;
@@ -71,8 +72,8 @@ public class RuntimeModule {
       try(FileReader reader = new FileReader(configFile)) {
         conf.load(reader);
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
-        // Remove this config;
-        String executionMode = conf.get(PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name());
+        String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+        runtimeInfo.setAppAuthToken(appAuthToken);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

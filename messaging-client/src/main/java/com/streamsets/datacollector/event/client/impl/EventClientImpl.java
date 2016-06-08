@@ -67,7 +67,7 @@ public class EventClientImpl implements EventClient {
     WebTarget target = client.target(targetURL + path);
 
     for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-      target.queryParam(entry.getKey(), entry.getValue());
+      target = target.queryParam(entry.getKey(), entry.getValue());
     }
 
     Invocation.Builder builder = target.request();

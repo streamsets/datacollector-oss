@@ -62,6 +62,7 @@ public class RuntimeInfo {
   private String id;
   private String httpUrl;
   private SSLContext sslContext;
+  private String appAuthToken;
   private final Map<String, Object> attributes;
   private ShutdownHandler shutdownRunnable;
   private final Map<String, String> authenticationTokens;
@@ -309,5 +310,13 @@ public class RuntimeInfo {
 
   public SSLContext getSSLContext() {
     return sslContext;
+  }
+
+  void setAppAuthToken(String appAuthToken) {
+    this.appAuthToken = appAuthToken;
+  }
+
+  public String getAppAuthToken() {
+    return appAuthToken;
   }
 }

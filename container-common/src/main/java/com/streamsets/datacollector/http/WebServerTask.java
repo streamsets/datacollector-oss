@@ -144,10 +144,6 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
   private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
 
-
-  public static final String REMOTE_APPLICATION_TOKEN = "dpm.applicationToken";
-  public static final String REMOTE_APPLICATION_TOKEN_DEFAULT = "";
-
   public static final String DPM_ENABLED = "dpm.enabled";
   public static final boolean DPM_ENABLED_DEFAULT = false;
 

@@ -56,8 +56,7 @@ public class EventHandlerModule {
   ) {
     EventHandlerTask eventHandlerTask;
     boolean isDPMEnabled = conf.get(WebServerTask.DPM_ENABLED, WebServerTask.DPM_ENABLED_DEFAULT);
-    String applicationToken = conf.get(WebServerTask.REMOTE_APPLICATION_TOKEN,
-        WebServerTask.REMOTE_APPLICATION_TOKEN_DEFAULT);
+    String applicationToken = runtimeInfo.getAppAuthToken();
     if (isDPMEnabled && applicationToken != null && applicationToken.trim().length() > 0) {
       String remoteBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
           RemoteSSOService.DPM_BASE_URL_DEFAULT));

@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
+import com.streamsets.lib.security.http.RemoteSSOService;
 import dagger.ObjectGraph;
 
 import org.junit.After;
@@ -118,6 +119,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
     props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
     Writer writer = new FileWriter(new File(dir, "sdc.properties"));
     props.store(writer, "");
     writer.close();
@@ -125,6 +127,7 @@ public class TestRuntimeInfo {
     og.get(Configuration.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
     Assert.assertEquals("HTTP", info.getBaseHttpUrl());
+    Assert.assertEquals("AUTH_TOKEN", info.getAppAuthToken());
   }
 
   @Test

@@ -25,6 +25,8 @@ import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
+import dagger.ObjectGraph;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -35,9 +37,11 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -161,25 +165,19 @@ public class TestRuntimeEL {
 
   @Test
   public void testAuthToken() throws IOException {
-    // create application token file with some string
-    File appTokenFile = new File(runtimeInfo.getConfigDir(), "application-token.txt");
-    OutputStream appTokenStream = new FileOutputStream(appTokenFile);
-    IOUtils.write("San Francisco", appTokenStream);
-    appTokenStream.close();
-
-    File domProps = new File(runtimeInfo.getConfigDir(), "dpm.properties");
-    OutputStream dpmPropsStream = new FileOutputStream(domProps);
-    IOUtils.write("dpm.applicationToken=@application-token.txt@", dpmPropsStream);
-    dpmPropsStream.close();
-
-    OutputStream sdcProps = new FileOutputStream(new File(runtimeInfo.getConfigDir(), "sdc.properties"));
-    IOUtils.write("config.includes=dpm.properties", sdcProps);
-      sdcProps.close();
-
-    Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
-    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-    Assert.assertEquals("San Francisco", RuntimeEL.authToken());
-
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
+    Properties props = new Properties();
+    props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
+    Writer writer = new FileWriter(new File(dir, "sdc.properties"));
+    props.store(writer, "");
+    writer.close();
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    og.get(Configuration.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    RuntimeEL.loadRuntimeConfiguration(info);
+    Assert.assertEquals("AUTH_TOKEN", RuntimeEL.authToken());
   }
 
   @Test
