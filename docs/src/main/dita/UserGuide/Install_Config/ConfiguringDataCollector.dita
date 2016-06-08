@@ -279,6 +279,13 @@
                                 <entry>Maximum number of WebSocket calls allowed. </entry>
                             </row>
                             <row>
+                                <entry>monitor.memory</entry>
+                                <entry>Displays the Stage Heap Memory Usage and the Heap Memory
+                                    Usage statistics in Monitor mode for the pipeline or for a
+                                    stage. <p>Generally, you should not need to change this
+                                        value.</p></entry>
+                            </row>
+                            <row>
                                 <entry>ui.header.title</entry>
                                 <entry>Optional text to display in the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

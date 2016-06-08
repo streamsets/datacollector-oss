@@ -18,10 +18,14 @@
  <shortdesc>The counter metric type provides alerts based on the memory usage for the pipeline or
         for a stage in the pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>metric rules and
+        <p><indexterm>metric rules and
                     alerts<indexterm>counter</indexterm></indexterm><indexterm>counter<indexterm>metric
-                    rules and alerts</indexterm></indexterm>The counter metric type includes the
-            following metric IDs:<ul id="ul_lqs_4wf_qv">
+                    rules and alerts</indexterm></indexterm>The counter metric type provides alerts
+            about the Stage Heap Memory Usage statistics displayed in Monitor mode for the pipeline
+            or the Heap Memory Usage statistics displayed in Monitor mode for the pipeline or for a
+            stage:</p>
+        <image href="../Graphics/MetricCounter.png" scale="50" id="image_zqq_np3_fw"/>
+        <p>The counter metric type includes the following metric IDs:<ul id="ul_lqs_4wf_qv">
                 <li>Pipeline Memory Consumption Counter (MB) - Amount of memory being consumed by
                     the pipeline.</li>
                 <li>&lt;stage_name> Heap Memory Usage Counter (MB) - Amount of memory being consumed
@@ -33,5 +37,5 @@
             uses 65% of the Java heap size allocated to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
- </conbody>
+    </conbody>
 </concept>
