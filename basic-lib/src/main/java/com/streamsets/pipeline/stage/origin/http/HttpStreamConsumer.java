@@ -64,7 +64,7 @@ import java.util.concurrent.TimeoutException;
  */
 class HttpStreamConsumer implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
-  private static final String HEADER_CONFIG_NAME = "conf.headers";
+  private static final String HEADER_CONFIG_NAME = "headers";
 
   private final HttpClientConfigBean conf;
   private final Client client;
