@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.Base64EL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.lang.annotation.Annotation;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
 
 public abstract class
     ELDefinitionExtractor {
-  static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class};
+  static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class, Base64EL.class};
 
   private static final ELDefinitionExtractor EXTRACTOR = new ELDefinitionExtractor() {};
 
