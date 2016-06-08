@@ -220,7 +220,13 @@ public class ElasticSearchTarget extends BaseTarget {
     }
 
     try {
-      Request request = Request.Get("http://" + conf.httpUri + "?pretty=false");
+      String httpUri;
+      if (!conf.httpUri.startsWith("http://") && !conf.httpUri.startsWith("https://")) {
+        httpUri = "http://" + conf.httpUri;
+      } else {
+        httpUri = conf.httpUri;
+      }
+      Request request = Request.Get(httpUri + "?pretty=false");
       if (conf.useShield) {
         // credentials is in form of "username:password".
         byte[] credentials = conf.shieldConfigBean.shieldUser.getBytes();
@@ -440,7 +446,7 @@ public class ElasticSearchTarget extends BaseTarget {
 
   private void validateUri(String uri, List<ConfigIssue> issues, String configName) {
     Matcher matcher = URI_PATTERN.matcher(uri);
-    if (uri.startsWith("http://") || uri.startsWith("https://") || !matcher.matches()) {
+    if (!matcher.matches()) {
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
