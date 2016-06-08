@@ -32,7 +32,8 @@ public enum Errors implements ErrorCode {
   KINESIS_04("Failed to extract subSequenceNumber from offset: '{}'"),
   KINESIS_05("Failed to serialize record: '{}' - {}"),
   KINESIS_06("Error evaluating the partition expression '{}' for record '{}': {}"),
-  KINESIS_07("Error JSON Content - JSON array of objects not supported for Firehose Target")
+  KINESIS_07("Error JSON Content - JSON array of objects not supported for Firehose Target"),
+  KINESIS_08("Serialized record is {} bytes, which is larger than the allowed 1MB"),
   ;
   private final String msg;
 

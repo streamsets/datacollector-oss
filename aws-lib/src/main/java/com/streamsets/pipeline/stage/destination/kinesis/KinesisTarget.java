@@ -177,6 +177,16 @@ public class KinesisTarget extends BaseTarget {
         generator.write(record);
         generator.close();
 
+        if (bytes.size() > ONE_MB) {
+          errorRecordHandler.onError(
+              new OnRecordErrorException(
+                  record,
+                  Errors.KINESIS_08,
+                  bytes.size()
+              )
+          );
+          continue;
+        }
         ByteBuffer data = ByteBuffer.wrap(bytes.toByteArray());
 
         String partitionerKey = null;

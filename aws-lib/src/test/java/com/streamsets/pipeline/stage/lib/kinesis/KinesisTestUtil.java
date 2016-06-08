@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +55,16 @@ public class KinesisTestUtil {
     }
 
     return records;
+  }
+
+  public static Record getTooLargeRecord() {
+    StringBuilder largeString = new StringBuilder();
+    for (int i = 0; i < ONE_MB + 10; i++) {
+      largeString.append("a");
+    }
+    Record record = RecordCreator.create();
+    record.set(Field.create(largeString.toString()));
+    return record;
   }
 
   public static List<com.amazonaws.services.kinesis.model.Record> getConsumerTestRecords(int i) {
