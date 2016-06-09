@@ -36,8 +36,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -83,6 +87,7 @@ public class JdbcSource extends BaseSource {
   private final JdbcRecordType recordType;
   private final int maxBatchSize;
   private final int maxClobSize;
+  private final int maxBlobSize;
   private final HikariPoolConfigBean hikariConfigBean;
   private final boolean createJDBCNsHeaders;
   private final String jdbcNsHeaderPrefix;
@@ -109,9 +114,10 @@ public class JdbcSource extends BaseSource {
       JdbcRecordType jdbcRecordType,
       int maxBatchSize,
       int maxClobSize,
-      HikariPoolConfigBean hikariConfigBean,
+      int maxBlobSize,
       boolean createJDBCNsHeaders,
-      String jdbcNsHeaderPrefix
+      String jdbcNsHeaderPrefix,
+      HikariPoolConfigBean hikariConfigBean
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.query = query;
@@ -124,6 +130,7 @@ public class JdbcSource extends BaseSource {
     this.recordType = jdbcRecordType;
     this.maxBatchSize = maxBatchSize;
     this.maxClobSize = maxClobSize;
+    this.maxBlobSize = maxBlobSize;
     this.hikariConfigBean = hikariConfigBean;
     this.createJDBCNsHeaders = createJDBCNsHeaders;
     this.jdbcNsHeaderPrefix = jdbcNsHeaderPrefix;
@@ -415,6 +422,31 @@ public class JdbcSource extends BaseSource {
     return sb.toString();
   }
 
+  private byte[] getBlobBytes(Blob data) throws IOException, SQLException {
+    if (data == null) {
+      return new byte[0];
+    }
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    int bufLen = 1024;
+    byte[] buf = new byte[bufLen];
+
+    // Read up to max blob length
+    long maxRemaining = maxBlobSize;
+    int count;
+    InputStream is = data.getBinaryStream();
+    while ((count = is.read(buf)) > -1 && maxRemaining > 0) {
+      // If count is more then the remaining bytes we want to read, read only as many are available
+      if (count > maxRemaining) {
+        count = (int) maxRemaining;
+      }
+      os.write(buf, 0, count);
+      // decrement available according to the number of bytes we've read
+      maxRemaining -= count;
+    }
+    return os.toByteArray();
+  }
+
   private Record processRow(ResultSet resultSet) throws SQLException, StageException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
@@ -488,6 +520,9 @@ public class JdbcSource extends BaseSource {
           case Types.NCLOB:
             field = Field.create(Field.Type.STRING, getClobString(rs.getClob(i)));
             break;
+          case Types.BLOB:
+            field = Field.create(Field.Type.BYTE_ARRAY, getBlobBytes(rs.getBlob(i)));
+            break;
           case Types.DATE:
             field = Field.create(Field.Type.DATE, rs.getDate(i));
             break;
@@ -520,7 +555,6 @@ public class JdbcSource extends BaseSource {
             field = Field.create(Field.Type.DATETIME, rs.getObject(i));
             break;
           case Types.ARRAY:
-          case Types.BLOB:
           case Types.DATALINK:
           case Types.DISTINCT:
           case Types.JAVA_OBJECT:

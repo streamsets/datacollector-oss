@@ -137,6 +137,16 @@ public class JdbcDSource extends DSource {
   public int maxClobSize;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Blob Size (Bytes)",
+      displayPosition = 151,
+      group = "JDBC"
+  )
+  public int maxBlobSize;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Transaction ID Column Name",
@@ -198,9 +208,10 @@ public class JdbcDSource extends DSource {
         jdbcRecordType,
         maxBatchSize,
         maxClobSize,
-        hikariConfigBean,
+        maxBlobSize,
         createJDBCNsHeaders,
-        jdbcNsHeaderPrefix
+        jdbcNsHeaderPrefix,
+        hikariConfigBean
       );
   }
 }
