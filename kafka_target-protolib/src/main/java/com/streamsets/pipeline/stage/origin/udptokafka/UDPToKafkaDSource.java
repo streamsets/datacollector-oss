@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
   version = 1,
@@ -42,34 +42,41 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 @GenerateResourceBundle
 @HideConfigs(
   value = {
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvFileFormat",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvHeader",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLinesString",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomEscape",
-    "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote",
-    "kafkaConfigBean.dataGeneratorFormatConfig.jsonMode",
-    "kafkaConfigBean.dataGeneratorFormatConfig.textFieldPath",
-    "kafkaConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull",
-    "kafkaConfigBean.dataGeneratorFormatConfig.avroSchemaInHeader",
-    "kafkaConfigBean.dataGeneratorFormatConfig.avroSchema",
-    "kafkaConfigBean.dataGeneratorFormatConfig.includeSchema",
-    "kafkaConfigBean.dataGeneratorFormatConfig.avroCompression",
-    "kafkaConfigBean.dataGeneratorFormatConfig.binaryFieldPath",
-    "kafkaConfigBean.dataGeneratorFormatConfig.protoDescriptorFile",
-    "kafkaConfigBean.dataGeneratorFormatConfig.messageType",
-    "kafkaConfigBean.dataGeneratorFormatConfig.fileNameEL",
-    "kafkaConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
-    "kafkaConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents",
-    "kafkaConfigBean.dataGeneratorFormatConfig.checksumAlgorithm",
-    "kafkaConfigBean.dataFormat",
-    "kafkaConfigBean.kafkaConfig.runtimeTopicResolution",
-    "kafkaConfigBean.kafkaConfig.partitionStrategy",
-    "kafkaConfigBean.kafkaConfig.partition",
-    "kafkaConfigBean.kafkaConfig.singleMessagePerBatch",
-    "kafkaConfigBean.kafkaConfig.topicExpression",
-    "kafkaConfigBean.kafkaConfig.topicWhiteList"
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvFileFormat",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvHeader",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvReplaceNewLines",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvReplaceNewLinesString",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvCustomDelimiter",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvCustomEscape",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.csvCustomQuote",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.jsonMode",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.textFieldPath",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.textEmptyLineIfNull",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.avroSchemaSource",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.avroSchema",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.schemaRegistryUrls",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.schemaLookupMode",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.subject",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.subjectToRegister",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.registerSchema",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.schemaId",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.includeSchema",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.avroCompression",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.binaryFieldPath",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.protoDescriptorFile",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.messageType",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.fileNameEL",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.wholeFileExistsAction",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+      "kafkaTargetConfig.dataGeneratorFormatConfig.checksumAlgorithm",
+      "kafkaTargetConfig.dataFormat",
+      "kafkaTargetConfig.runtimeTopicResolution",
+      "kafkaTargetConfig.partitionStrategy",
+      "kafkaTargetConfig.partition",
+      "kafkaTargetConfig.singleMessagePerBatch",
+      "kafkaTargetConfig.topicExpression",
+      "kafkaTargetConfig.topicWhiteList"
   }
 )
 public class UDPToKafkaDSource extends DSourceOffsetCommitter {
@@ -78,7 +85,7 @@ public class UDPToKafkaDSource extends DSourceOffsetCommitter {
   public UDPConfigBean udpConfigs;
 
   @ConfigDefBean()
-  public KafkaConfigBean kafkaConfigBean;
+  public KafkaTargetConfig kafkaTargetConfig;
 
   // The "topic" config from KafkaConfigBean depends on "runtimeTopicResolution" config which is hidden because
   // it does not make sense in this origin. As a result "topic" config will also not be shown to the user.
@@ -96,7 +103,7 @@ public class UDPToKafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    kafkaConfigBean.kafkaConfig.topic = topic;
-    return new UDPToKafkaSource(udpConfigs, kafkaConfigBean.kafkaConfig);
+    kafkaTargetConfig.topic = topic;
+    return new UDPToKafkaSource(udpConfigs, kafkaTargetConfig);
   }
 }

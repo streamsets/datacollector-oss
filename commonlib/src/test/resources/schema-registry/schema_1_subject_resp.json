@@ -1,0 +1,1 @@
+{"subject":"topic1-value","version":1,"id":1,"schema":"{\"type\":\"record\",\"name\":\"TestRecord\",\"fields\":[{\"name\":\"a\",\"type\":\"string\",\"default\":\"\"},{\"name\":\"b\",\"type\":\"long\",\"default\":0},{\"name\":\"c\",\"type\":\"boolean\",\"default\":false}]}"}

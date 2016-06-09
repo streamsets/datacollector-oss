@@ -33,6 +33,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.server.KafkaConfig;
@@ -40,6 +41,8 @@ import kafka.server.KafkaServer;
 import kafka.utils.SystemTime$;
 import kafka.utils.TestUtils;
 import kafka.zk.EmbeddedZookeeper;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -107,6 +110,8 @@ public abstract class SecureKafkaBase {
     consumerConfig.put("auto.commit.interval.ms", "1000");
     consumerConfig.put("auto.offset.reset", "earliest");
     consumerConfig.put("session.timeout.ms", "30000");
+    consumerConfig.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    consumerConfig.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
     addClientSecurityConfig(consumerConfig);
     ConsumerFactorySettings consumerFactorySettings = new ConsumerFactorySettings(
       zkConnect,

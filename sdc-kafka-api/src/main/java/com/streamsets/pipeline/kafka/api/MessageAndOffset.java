@@ -21,17 +21,17 @@ package com.streamsets.pipeline.kafka.api;
 
 public class MessageAndOffset {
 
-  private final byte[] payload;
+  private final Object payload;
   private final long offset;
   private final int partition;
 
-  public MessageAndOffset(byte[] payload, long offset, int partition) {
+  public MessageAndOffset(Object payload, long offset, int partition) {
     this.payload = payload;
     this.offset = offset;
     this.partition = partition;
   }
 
-  public byte[] getPayload() {
+  public Object getPayload() {
     return payload;
   }
 

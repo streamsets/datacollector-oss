@@ -28,21 +28,21 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
     icon = "",
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
     upgrader = KafkaTargetUpgrader.class)
 @ErrorStage
-@HideConfigs(preconditions = true, onErrorRecord = true, value = {"kafkaConfigBean.dataFormat"})
+@HideConfigs(preconditions = true, onErrorRecord = true, value = {"conf.dataFormat"})
 @GenerateResourceBundle
 public class ToErrorKafkaDTarget extends KafkaDTarget {
 
   @Override
   protected Target createTarget() {
-    kafkaConfigBean.dataFormat = DataFormat.SDC_JSON;
-    return new KafkaTarget(kafkaConfigBean);
+    conf.dataFormat = DataFormat.SDC_JSON;
+    return new KafkaTarget(conf);
   }
 
 }

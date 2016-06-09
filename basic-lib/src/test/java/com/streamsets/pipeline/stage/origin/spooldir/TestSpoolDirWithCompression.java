@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
+
 public class TestSpoolDirWithCompression {
 
   private static File testDir;
@@ -229,6 +231,7 @@ public class TestSpoolDirWithCompression {
   private SpoolDirSource createTarGzipAvroSource() {
     SpoolDirConfigBean conf = new SpoolDirConfigBean();
     conf.dataFormat = DataFormat.AVRO;
+    conf.dataFormatConfig.avroSchemaSource = SOURCE;
     conf.spoolDir = testDir.getAbsolutePath();
     conf.batchSize = 1000;
     conf.overrunLimit = 65;

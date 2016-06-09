@@ -21,11 +21,18 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
 
 public class KafkaConfigBean {
 
@@ -36,8 +43,8 @@ public class KafkaConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      description = "Format of data in the files",
-      displayPosition = 0,
+      description = "Format of data in the topic",
+      displayPosition = 10,
       group = "KAFKA"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -49,7 +56,7 @@ public class KafkaConfigBean {
       defaultValue = "localhost:9092",
       label = "Broker URI",
       description = "Comma-separated list of Kafka brokers. Use format <HOST>:<PORT>",
-      displayPosition = 5,
+      displayPosition = 20,
       group = "KAFKA"
   )
   public String metadataBrokerList;
@@ -60,7 +67,7 @@ public class KafkaConfigBean {
       defaultValue = "localhost:2181",
       label = "ZooKeeper URI",
       description = "Comma-separated list of ZooKeepers followed by optional chroot path. Use format: <HOST1>:<PORT1>,<HOST2>:<PORT2>,<HOST3>:<PORT3>/<ital><CHROOT_PATH></ital>",
-      displayPosition = 10,
+      displayPosition = 30,
       group = "KAFKA"
   )
   public String zookeeperConnect;
@@ -70,7 +77,7 @@ public class KafkaConfigBean {
       type = ConfigDef.Type.STRING,
       defaultValue = "streamsetsDataCollector",
       label = "Consumer Group",
-      displayPosition = 20,
+      displayPosition = 40,
       group = "KAFKA"
   )
   public String consumerGroup;
@@ -80,7 +87,7 @@ public class KafkaConfigBean {
       type = ConfigDef.Type.STRING,
       defaultValue = "topicName",
       label = "Topic",
-      displayPosition = 30,
+      displayPosition = 50,
       group = "KAFKA"
   )
   public String topic;
@@ -91,7 +98,7 @@ public class KafkaConfigBean {
       defaultValue = "false",
       label = "Produce Single Record",
       description = "Generates a single record for multiple objects within a message",
-      displayPosition = 45,
+      displayPosition = 60,
       group = "KAFKA"
   )
   public boolean produceSingleRecordPerMessage;
@@ -102,7 +109,7 @@ public class KafkaConfigBean {
       defaultValue = "1000",
       label = "Max Batch Size (records)",
       description = "Max number of records per batch",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "KAFKA",
       min = 1,
       max = Integer.MAX_VALUE
@@ -115,7 +122,7 @@ public class KafkaConfigBean {
       defaultValue = "2000",
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a partial or empty batch",
-      displayPosition = 60,
+      displayPosition = 80,
       group = "KAFKA",
       min = 1,
       max = Integer.MAX_VALUE
@@ -123,14 +130,66 @@ public class KafkaConfigBean {
   public int maxWaitTime;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Deserializer",
+      description = "Deserializer of message keys",
+      defaultValue = "STRING",
+      dependsOn = "dataFormat",
+      triggeredByValue = "AVRO",
+      displayPosition = 90,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KeyDeserializerChooserValues.class)
+  public Deserializer keyDeserializer = Deserializer.STRING;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Value Deserializer",
+      description = "Deserializer of message payloads",
+      defaultValue = "DEFAULT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "AVRO",
+      displayPosition = 100,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(ValueDeserializerChooserValues.class)
+  public Deserializer valueDeserializer = Deserializer.DEFAULT;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
       label = "Kafka Configuration",
       description = "Additional Kafka properties to pass to the underlying Kafka consumer",
-      displayPosition = 70,
+      displayPosition = 120,
       group = "KAFKA"
   )
-  public Map<String, String> kafkaConsumerConfigs;
+  public Map<String, String> kafkaConsumerConfigs = new HashMap<>();
 
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    if (keyDeserializer == Deserializer.CONFLUENT || valueDeserializer == Deserializer.CONFLUENT) {
+      try {
+        getClass().getClassLoader().loadClass(Deserializer.CONFLUENT.getKeyClass());
+      } catch (ClassNotFoundException ignored) { // NOSONAR
+        issues.add(
+            context.createConfigIssue(
+                KafkaOriginGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "keyDeserializer",
+                KafkaErrors.KAFKA_44
+            )
+        );
+      }
+      if (dataFormatConfig.schemaRegistryUrls == null || dataFormatConfig.schemaRegistryUrls.isEmpty()) {
+        issues.add(
+            context.createConfigIssue(
+                KafkaOriginGroups.AVRO.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.schemaRegistryUrls",
+                KafkaErrors.KAFKA_43
+            )
+        );
+      }
+    }
+  }
 }

@@ -632,6 +632,10 @@
       </snapshots>
     </repository>
     <repository>
+      <id>confluent</id>
+      <url>http://packages.confluent.io/maven/</url>
+    </repository>
+    <repository>
       <id>elasticsearch-releases</id>
       <url>http://maven.elasticsearch.org/releases</url>
       <releases>

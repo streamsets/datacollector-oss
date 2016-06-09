@@ -27,11 +27,11 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
-import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
@@ -50,6 +50,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class DataFormatParser {
   public static final String DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
@@ -161,8 +168,7 @@ public class DataFormatParser {
         logDataFormatValidator.validateLogFormatConfig(context, DATA_FORMAT_CONFIG_PREFIX, issues);
         break;
       case AVRO:
-        if(!dataFormatConfig.schemaInMessage
-            && (dataFormatConfig.avroSchema == null || dataFormatConfig.avroSchema.isEmpty())) {
+        if(dataFormatConfig.avroSchemaSource == OriginAvroSchemaSource.INLINE && isEmpty(dataFormatConfig.avroSchema)) {
           issues.add(
               context.createConfigIssue(
                   DataFormat.AVRO.name(),
@@ -281,9 +287,13 @@ public class DataFormatParser {
         logDataFormatValidator.populateBuilder(builder);
         break;
       case AVRO:
-        builder.setMaxDataLen(Integer.MAX_VALUE)
-          .setConfig(AvroDataParserFactory.SCHEMA_KEY, dataFormatConfig.avroSchema)
-          .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, dataFormatConfig.schemaInMessage);
+        builder
+            .setMaxDataLen(Integer.MAX_VALUE)
+            .setConfig(SCHEMA_KEY, dataFormatConfig.avroSchema)
+            .setConfig(SUBJECT_KEY, dataFormatConfig.subject)
+            .setConfig(SCHEMA_ID_KEY, dataFormatConfig.schemaId)
+            .setConfig(SCHEMA_SOURCE_KEY, dataFormatConfig.avroSchemaSource)
+            .setConfig(SCHEMA_REPO_URLS_KEY, dataFormatConfig.schemaRegistryUrls);
         break;
       case PROTOBUF:
         builder

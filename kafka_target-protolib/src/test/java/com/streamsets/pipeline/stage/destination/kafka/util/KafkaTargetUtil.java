@@ -21,10 +21,9 @@ package com.streamsets.pipeline.stage.destination.kafka.util;
 
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 import java.util.Map;
 
@@ -47,18 +46,17 @@ public class KafkaTargetUtil {
     kafkaConfig.metadataBrokerList = metadataBrokerList;
     kafkaConfig.topic = topic;
     kafkaConfig.partition = partition;
-    kafkaConfig.kafkaProducerConfigs = kafkaProducerConfigs;
+    if (kafkaProducerConfigs != null) {
+      kafkaConfig.kafkaProducerConfigs = kafkaProducerConfigs;
+    }
     kafkaConfig.singleMessagePerBatch = singleMessagePerBatch;
     kafkaConfig.partitionStrategy = partitionStrategy;
     kafkaConfig.runtimeTopicResolution = runtimeTopicResolution;
     kafkaConfig.topicExpression = topicExpression;
     kafkaConfig.topicWhiteList = topicWhiteList;
+    kafkaConfig.dataFormat = dataFormat;
+    kafkaConfig.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 
-    KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
-    kafkaConfigBean.dataFormat = dataFormat;
-    kafkaConfigBean.kafkaConfig = kafkaConfig;
-    kafkaConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
-
-    return new KafkaTarget(kafkaConfigBean);
+    return new KafkaTarget(kafkaConfig);
   }
 }

@@ -39,7 +39,7 @@ import com.streamsets.pipeline.config.DataFormat;
 @HideConfigs(
     preconditions = true,
     onErrorRecord = true,
-    value = {"kafkaConfigBean.dataFormat", "kafkaConfigBean.kafkaConfig.singleMessagePerBatch"}
+    value = {"conf.dataFormat", "conf.singleMessagePerBatch"}
 )
 @GenerateResourceBundle
 public class StatsKafkaDTarget extends KafkaDTarget {
@@ -57,8 +57,8 @@ public class StatsKafkaDTarget extends KafkaDTarget {
 
   @Override
   protected Target createTarget() {
-    kafkaConfigBean.dataFormat = DataFormat.SDC_JSON;
-    return new KafkaTarget(kafkaConfigBean);
+    conf.dataFormat = DataFormat.SDC_JSON;
+    return new KafkaTarget(conf);
   }
 
 }

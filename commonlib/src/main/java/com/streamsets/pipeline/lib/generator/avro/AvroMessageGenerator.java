@@ -25,7 +25,6 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
@@ -38,7 +37,7 @@ import java.util.Map;
 
 public class AvroMessageGenerator extends BaseAvroDataGenerator {
 
-  private DatumWriter<GenericRecord> datumWriter;
+  private DatumWriter<Object> datumWriter;
   private BinaryEncoder binaryEncoder;
   private final OutputStream outputStream;
 
@@ -66,7 +65,7 @@ public class AvroMessageGenerator extends BaseAvroDataGenerator {
   public void writeRecord(Record record) throws IOException, DataGeneratorException {
     try {
       datumWriter.write(
-          (GenericRecord) AvroTypeUtil.sdcRecordToAvro(record, schema, defaultValueMap),
+          AvroTypeUtil.sdcRecordToAvro(record, schema, defaultValueMap),
           binaryEncoder
       );
     } catch (StageException e) {

@@ -33,6 +33,7 @@
 
   <properties>
     <kafka.version>0.9.0.1</kafka.version>
+    <confluent.version>2.0.1</confluent.version>
     <tec.version>0.7</tec.version>
     <scala.version>2.11.7</scala.version>
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
@@ -142,6 +143,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${confluent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
       <version>${bouncycastle.version}</version>
@@ -223,5 +229,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

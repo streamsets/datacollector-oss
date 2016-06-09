@@ -53,6 +53,8 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_40("Messages with XML data cannot have multiple XML documents in a single message"),
   KAFKA_41("Could not get partition count for topic '{}' : {}"),
   KAFKA_42("Could not get partition count for topic '{}'"),
+  KAFKA_43("Schema Registry URLs must be configured to use Confluent Deserializer"),
+  KAFKA_44("Confluent Avro Deserializer not supported by this version of Kafka."),
 
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),
@@ -72,7 +74,11 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_66("Kafka Producer configuration '{}' must be specified a valid {} value greater than or equal to 0"),
   KAFKA_67("Error connecting to Kafka Brokers '{}'"),
   KAFKA_68("Error getting metadata for topic '{}' from broker '{}' due to error: {}"),
-  KAFKA_69("Message is larger than the maximum allowed size configured in Kafka Broker")
+  KAFKA_69("Message is larger than the maximum allowed size configured in Kafka Broker"),
+  KAFKA_70("Include Schema cannot be used in conjunction with Confluent Serializer"),
+  KAFKA_71("Schema Registry URLs must be configured to use Confluent Serializer"),
+  KAFKA_72("Subject or Schema ID must be defined to use Confluent Serializer"),
+  KAFKA_73("Confluent Avro Serializer not supported by this version of Kafka."),
   ;
 
   private final String msg;

@@ -23,9 +23,12 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +39,6 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaProducer09.class);
 
-  public static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringSerializer";
-  public static final String VALUE_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArraySerializer";
   public static final String ACKS_DEFAULT = "1";
   public static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RandomPartitioner";
   public static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
@@ -63,12 +64,11 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
     Properties props = new Properties();
     // bootstrap servers
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, metadataBrokerList);
-    // key and value serializers
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);
     // request.required.acks
     props.put(ProducerConfig.ACKS_CONFIG, ACKS_DEFAULT);
     // partitioner.class
+    props.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    props.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
     configurePartitionStrategy(props, partitionStrategy);
     addUserConfiguredProperties(kafkaProducerConfigs, props);
     return new KafkaProducer<>(props);
@@ -99,8 +99,6 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
     //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
       kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
-      kafkaClientConfigs.remove(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG);
-      kafkaClientConfigs.remove(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());

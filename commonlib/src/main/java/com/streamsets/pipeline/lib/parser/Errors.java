@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   DATA_PARSER_00("Cannot open file '{}'"),
   DATA_PARSER_01("Error creating parser : '{}'"),
   DATA_PARSER_02("Parser error: '{}'"),
-
+  DATA_PARSER_03("Failed to parse/load schema from registry: {}"),
   ;
 
   private final String msg;

@@ -72,12 +72,7 @@ public class SpoolDirSource extends BaseSource {
   public static final String SPOOLDIR_DATAFORMAT_CONFIG_PREFIX = SPOOLDIR_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
   private boolean useLastModified;
 
-
   private final SpoolDirConfigBean conf;
-
-  public SpoolDirSource(SpoolDirConfigBean conf) {
-    this.conf = conf;
-  }
 
   private DirectorySpooler spooler;
   private File currentFile;
@@ -85,9 +80,21 @@ public class SpoolDirSource extends BaseSource {
   private DataParserFactory parserFactory;
   private DataParser parser;
 
+  public SpoolDirSource(SpoolDirConfigBean conf) {
+    this.conf = conf;
+  }
+
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    conf.dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
+        conf.dataFormat,
+        "conf.dataFormat",
+        getContext(),
+        issues
+    );
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     boolean waitForPathToBePresent = !validateDir(

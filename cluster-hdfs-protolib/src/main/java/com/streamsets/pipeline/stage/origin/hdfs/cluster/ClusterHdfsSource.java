@@ -19,27 +19,28 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorListener;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.ClusterSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.impl.Pair;
-
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.avro.file.DataFileReader;
@@ -72,22 +73,19 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.impl.OffsetAndResult;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.impl.ClusterSource;
-import com.streamsets.pipeline.api.ErrorListener;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OffsetCommitter;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static com.streamsets.pipeline.Utils.CLUSTER_HDFS_CONFIG_BEAN_PREFIX;
 
@@ -131,6 +129,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    conf.dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
+        conf.dataFormat,
+        "conf.dataFormatConfig",
+        getContext(),
+        issues
+    );
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     hadoopConf = getHadoopConfiguration(issues);

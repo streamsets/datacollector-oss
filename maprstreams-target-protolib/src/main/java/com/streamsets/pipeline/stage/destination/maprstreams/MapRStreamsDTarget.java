@@ -25,12 +25,11 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 1,
+  version = 2,
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
   icon = "mapr.png",
@@ -48,9 +47,9 @@ public class MapRStreamsDTarget extends DTarget {
     return new KafkaTarget(convertToKafkaConfigBean(maprStreamsTargetConfigBean));
   }
 
-  protected KafkaConfigBean convertToKafkaConfigBean(MapRStreamsTargetConfigBean maprStreamsTargetConfigBean) {
+  protected KafkaTargetConfig convertToKafkaConfigBean(MapRStreamsTargetConfigBean maprStreamsTargetConfigBean) {
 
-    KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
+    KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();
     kafkaConfigBean.dataFormat = maprStreamsTargetConfigBean.dataFormat;
     kafkaConfigBean.dataGeneratorFormatConfig = maprStreamsTargetConfigBean.dataGeneratorFormatConfig;
 
@@ -63,7 +62,6 @@ public class MapRStreamsDTarget extends DTarget {
     kafkaTargetConfig.topic = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topic;
     kafkaTargetConfig.topicExpression = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicExpression;
     kafkaTargetConfig.topicWhiteList = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicWhiteList;
-    kafkaConfigBean.kafkaConfig = kafkaTargetConfig;
 
     return kafkaConfigBean;
   }

@@ -20,11 +20,14 @@
 package com.streamsets.pipeline.stage.destination.lib;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.AvroCompressionChooserValues;
+import com.streamsets.pipeline.config.AvroSchemaLookupMode;
+import com.streamsets.pipeline.config.DestinationAvroSchemaLookupModeChooserValues;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithmChooserValues;
@@ -33,6 +36,8 @@ import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
+import com.streamsets.pipeline.config.DestinationAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
@@ -40,17 +45,12 @@ import com.streamsets.pipeline.config.WholeFileExistsActionChooserValues;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
-import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.avro.BaseAvroDataGenerator;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.wholefile.WholeFileDataGeneratorFactory;
-import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -64,14 +64,25 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class DataGeneratorFormatConfig implements DataFormatConfig{
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.HEADER;
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.INCLUDE_SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
-  private static final String CHARSET_UTF8 = "UTF-8";
+public class DataGeneratorFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
     required = true,
@@ -86,7 +97,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
 
-  /********  For DELIMITED Content  ***********/
+  /** For DELIMITED Content **/
 
   @ConfigDef(
     required = false,
@@ -178,7 +189,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public char csvCustomQuote;
 
-  /********  For JSON *******/
+  /** For JSON **/
 
   @ConfigDef(
     required = true,
@@ -194,7 +205,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonMode;
 
-  /********  For TEXT Content  ***********/
+  /** For TEXT Content **/
 
   @ConfigDef(
     required = true,
@@ -223,48 +234,156 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public boolean textEmptyLineIfNull;
 
-  /********  For AVRO Content  ***********/
+  /** For AVRO Content **/
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    // Default value should be "false", we set it to true because of bug in pipeline validation that doesn't compute
-    // "dependsOn" recursively.
-    defaultValue = "true",
-    label = "Load Schema from Header",
-    description = "Uses the Avro schema embedded in the " + BaseAvroDataGenerator.AVRO_SCHEMA_HEADER + " record header attribute.",
-    displayPosition = 400,
-    group = "AVRO",
-    dependsOn = "dataFormat^",
-    triggeredByValue = {"AVRO"},
-    mode = ConfigDef.Mode.JSON
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Avro Schema Location",
+      description = "Where to load the Avro Schema from.",
+      displayPosition = 400,
+      dependsOn = "dataFormat^",
+      triggeredByValue = "AVRO",
+      group = "AVRO"
   )
-  public boolean avroSchemaInHeader;
+  @ValueChooserModel(DestinationAvroSchemaSourceChooserValues.class)
+  public DestinationAvroSchemaSource avroSchemaSource;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.TEXT,
-    defaultValue = "",
-    label = "Avro Schema",
-    description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
-    displayPosition = 400,
-    group = "AVRO",
-    dependsOn = "avroSchemaInHeader",
-    triggeredByValue = "false",
-    mode = ConfigDef.Mode.JSON
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Avro Schema",
+      description = "Overrides the schema included in the data (if any). Optionally use the " +
+          "runtime:loadResource function to use a schema stored in a file",
+      displayPosition = 410,
+      group = "AVRO",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "INLINE")
+      },
+      mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Include Schema",
-    description = "Includes the Avro schema in the event",
-    displayPosition = 410,
-    group = "AVRO",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "AVRO"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Register Schema",
+      description = "Register the Avro schema in the Confluent Schema Registry",
+      defaultValue = "false",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"}),
+      },
+      displayPosition = 420,
+      group = "AVRO"
+  )
+  public boolean registerSchema;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Schema Registry URLs",
+      description = "List of Confluent Schema Registry URLs",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "registerSchema", triggeredByValues = "true")
+      },
+      displayPosition = 430,
+      group = "AVRO"
+
+  )
+  // This config property is duplicated for when registering schemas specified inline.
+  // We can't do an AND+OR relationship with dependencies so this is a workaround.
+  // See JIRA for API-55
+  public List<String> schemaRegistryUrlsForRegistration = new ArrayList<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Schema Registry URLs",
+      description = "List of Confluent Schema Registry URLs",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
+      },
+      displayPosition = 431,
+      group = "AVRO"
+
+  )
+  public List<String> schemaRegistryUrls = new ArrayList<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Lookup Schema By",
+      description = "Whether to look up the Avro Schema by ID or fetch the latest schema for a Subject.",
+      defaultValue = "SUBJECT",
+      dependsOn = "avroSchemaSource",
+      triggeredByValue = "REGISTRY",
+      displayPosition = 440,
+      group = "AVRO"
+  )
+  @ValueChooserModel(DestinationAvroSchemaLookupModeChooserValues.class)
+  public AvroSchemaLookupMode schemaLookupMode = AvroSchemaLookupMode.SUBJECT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Subject",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY"),
+          @Dependency(configName = "schemaLookupMode", triggeredByValues = "SUBJECT")
+      },
+      displayPosition = 450,
+      group = "AVRO"
+  )
+  public String subject;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Subject",
+      description = "If this and Schema Registry URLs are non-empty, will register the supplied schema.",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "registerSchema", triggeredByValues = "true")
+      },
+      displayPosition = 451,
+      group = "AVRO"
+  )
+  // This config property is duplicated for when registering schemas specified inline.
+  // We can't do an AND+OR relationship with dependencies so this is a workaround.
+  // See JIRA for API-55
+  public String subjectToRegister;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Schema ID",
+      min = 1,
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "schemaLookupMode", triggeredByValues = "ID")
+      },
+      displayPosition = 460,
+      group = "AVRO"
+  )
+  public int schemaId;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Include Schema",
+      description = "Includes the Avro schema in the output",
+      displayPosition = 470,
+      group = "AVRO",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"})
+      }
   )
   public boolean includeSchema = true;
 
@@ -273,8 +392,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       type = ConfigDef.Type.MODEL,
       defaultValue = "NULL",
       label = "Avro Compression Codec",
-      description = "",
-      displayPosition = 415,
+      displayPosition = 480,
       group = "AVRO",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO"
@@ -282,7 +400,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(AvroCompressionChooserValues.class)
   public AvroCompression avroCompression = AvroCompression.NULL;
 
-  /********  For Binary Content  ***********/
+  /** For Binary Content **/
 
   @ConfigDef(
     required = true,
@@ -297,9 +415,9 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     elDefs = {StringEL.class}
   )
   @FieldSelectorModel(singleValued = true)
-  public String binaryFieldPath;
+  public String binaryFieldPath = "/";
 
-  /********  For Protobuf Content  ***********/
+  /** For Protobuf Content **/
 
   @ConfigDef(
     required = true,
@@ -327,7 +445,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public String messageType;
 
-  /********  For Whole File Content  ***********/
+  /** For Whole File Content **/
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -384,6 +502,52 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(ChecksumAlgorithmChooserValues.class)
   public ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.MD5;
 
+/** End Config Defs **/
+
+  private DataGeneratorFactory dataGeneratorFactory;
+
+  public DataGeneratorFactory getDataGeneratorFactory() {
+    return dataGeneratorFactory;
+  }
+
+  @Override
+  public boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String groupName,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
+    boolean valid = true;
+    switch (dataFormat) {
+      case TEXT:
+        valid = validateTextFormat(context, configPrefix, issues);
+        break;
+      case BINARY:
+        valid = validateBinaryFormat(context, configPrefix, issues);
+        break;
+      case JSON:
+      case DELIMITED:
+      case SDC_JSON:
+      case AVRO:
+        // no-op
+        break;
+      case PROTOBUF:
+        valid = validateProtobufFormat(context, configPrefix, issues);
+        break;
+      case WHOLE_FILE:
+        valid = validateWholeFileFormat(context, configPrefix, issues);
+        break;
+      default:
+        issues.add(context.createConfigIssue(groupName, configPrefix, DataFormatErrors.DATA_FORMAT_04, dataFormat));
+        valid = false;
+    }
+
+    valid &= validateDataGenerator(context, dataFormat, groupName, configPrefix, issues);
+
+    return valid;
+  }
+
   private boolean validateDataGenerator (
       Stage.Context context,
       DataFormat dataFormat,
@@ -396,7 +560,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(context,
       dataFormat.getGeneratorFormat());
     if(charset == null || charset.trim().isEmpty()) {
-      charset = CHARSET_UTF8;
+      charset = StandardCharsets.UTF_8.name();
     }
 
     Charset cSet;
@@ -412,23 +576,14 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
               DataFormatErrors.DATA_FORMAT_05, charset
           )
       );
-      valid &= false;
+      valid = false;
     }
 
     builder.setCharset(cSet);
 
     switch (dataFormat) {
-      case SDC_JSON:
-        break;
       case DELIMITED:
-        builder.setMode(csvFileFormat);
-        builder.setMode(csvHeader);
-        if(csvReplaceNewLines) {
-          builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_STRING_KEY, csvReplaceNewLinesString);
-        }
-        builder.setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter);
-        builder.setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape);
-        builder.setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
+        configureDelimitedDataGenerator(builder);
         break;
       case TEXT:
         builder.setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
@@ -438,46 +593,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setMode(jsonMode);
         break;
       case AVRO:
-        Schema schema = null;
-        Map<String, Object> defaultValues = new HashMap<>();
-        if(!avroSchemaInHeader) {
-          try {
-            schema = AvroTypeUtil.parseSchema(avroSchema);
-          } catch (Exception e) {
-            issues.add(
-              context.createConfigIssue(
-                DataFormatGroups.AVRO.name(),
-                configPrefix + ".avroSchema",
-                DataFormatErrors.DATA_FORMAT_300,
-                e.toString(),
-                e
-              )
-            );
-            valid &= false;
-          }
-        }
-        if(schema != null) {
-          try {
-            defaultValues.putAll(AvroTypeUtil.getDefaultValuesFromSchema(schema, new HashSet<String>()));
-          } catch (IOException e) {
-            issues.add(
-                context.createConfigIssue(
-                    DataFormatGroups.AVRO.name(),
-                    configPrefix + ".avroSchema",
-                    DataFormatErrors.DATA_FORMAT_301,
-                    e.toString(),
-                    e
-                )
-            );
-            valid &= false;
-          }
-
-          builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
-          builder.setConfig(AvroDataGeneratorFactory.DEFAULT_VALUES_KEY, defaultValues);
-        }
-        builder.setConfig(AvroDataGeneratorFactory.SCHEMA_IN_HEADER_KEY, avroSchemaInHeader);
-        builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
-        builder.setConfig(AvroDataGeneratorFactory.COMPRESSION_CODEC_KEY, avroCompression.getCodecName());
+        valid &= configureAvroDataGenerator(context, configPrefix, issues, builder);
         break;
       case BINARY:
         builder.setConfig(BinaryDataGeneratorFactory.FIELD_PATH_KEY, binaryFieldPath);
@@ -490,6 +606,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setConfig(WholeFileDataGeneratorFactory.INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, includeChecksumInTheEvents);
         builder.setConfig(WholeFileDataGeneratorFactory.CHECKSUM_ALGO_KEY, checksumAlgorithm);
         break;
+      case SDC_JSON:
       default:
         // no action needed
         break;
@@ -499,113 +616,164 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         dataGeneratorFactory = builder.build();
       } catch (Exception ex) {
         issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_201, ex.toString(), ex));
-        valid &= false;
+        valid = false;
       }
     }
     return valid;
   }
 
-  public boolean init(
+  private void configureDelimitedDataGenerator(DataGeneratorFactoryBuilder builder) {
+    builder.setMode(csvFileFormat);
+    builder.setMode(csvHeader);
+    if(csvReplaceNewLines) {
+      builder.setConfig(DelimitedDataGeneratorFactory.REPLACE_NEWLINES_STRING_KEY, csvReplaceNewLinesString);
+    }
+    builder.setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter);
+    builder.setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape);
+    builder.setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
+  }
+
+  private boolean configureAvroDataGenerator(
       Stage.Context context,
-      DataFormat dataFormat,
-      String groupName,
       String configPrefix,
-      List<Stage.ConfigIssue> issues
+      List<Stage.ConfigIssue> issues,
+      DataGeneratorFactoryBuilder builder
   ) {
     boolean valid = true;
-    switch (dataFormat) {
-      case TEXT:
-        //required field configuration to be set and it is "/" by default
-        if (textFieldPath == null || textFieldPath.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.TEXT.name(),
-                  configPrefix + ".textFieldPath",
-                  DataFormatErrors.DATA_FORMAT_200
-              )
-          );
-          valid = false;
-        }
-        break;
-      case BINARY:
-        //required field configuration to be set and it is "/" by default
-        if (binaryFieldPath == null || binaryFieldPath.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.BINARY.name(),
-                  configPrefix + ".binaryFieldPath",
-                  DataFormatErrors.DATA_FORMAT_200
-              )
-          );
-          valid = false;
-        }
-        break;
-      case JSON:
-      case DELIMITED:
-      case SDC_JSON:
-      case AVRO:
-        //no-op
-        break;
-      case PROTOBUF:
-        if(protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
-          issues.add(
-            context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
-              configPrefix + ".protoDescriptorFile",
-              DataFormatErrors.DATA_FORMAT_07
-            )
-          );
-          valid = false;
-        } else {
-          File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
-          if(!file.exists()) {
-            issues.add(
-                context.createConfigIssue(
-                    DataFormatGroups.PROTOBUF.name(),
-                    configPrefix + ".protoDescriptorFile",
-                    DataFormatErrors.DATA_FORMAT_09,
-                    file.getAbsolutePath()
-                )
-            );
-            valid = false;
-          }
-          if(messageType == null || messageType.isEmpty()) {
-            issues.add(
-                context.createConfigIssue(
-                    DataFormatGroups.PROTOBUF.name(),
-                    configPrefix + ".messageType",
-                    DataFormatErrors.DATA_FORMAT_08
-                )
-            );
-            valid = false;
-          }
-        }
-        break;
-      case WHOLE_FILE:
-        if (fileNameEL == null || fileNameEL.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.WHOLE_FILE.name(),
-                  configPrefix + ".fileNameEL",
-                  DataFormatErrors.DATA_FORMAT_200
-              )
-          );
-          valid = false;
-        }
-        break;
-      default:
-        issues.add(context.createConfigIssue(groupName, configPrefix, DataFormatErrors.DATA_FORMAT_04, dataFormat));
+    Schema schema = null;
+    Map<String, Object> defaultValues = new HashMap<>();
+    if(avroSchemaSource == INLINE) {
+      try {
+        schema = AvroTypeUtil.parseSchema(avroSchema);
+      } catch (Exception e) {
+        issues.add(
+          context.createConfigIssue(
+            DataFormatGroups.AVRO.name(),
+            configPrefix + ".avroSchema",
+            DataFormatErrors.DATA_FORMAT_300,
+            e.toString(),
+            e
+          )
+        );
         valid = false;
+      }
+    }
+    if(schema != null) {
+      try {
+        defaultValues.putAll(AvroTypeUtil.getDefaultValuesFromSchema(schema, new HashSet<String>()));
+      } catch (IOException e) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.AVRO.name(),
+                configPrefix + ".avroSchema",
+                DataFormatErrors.DATA_FORMAT_301,
+                e.toString(),
+                e
+            )
+        );
+        valid = false;
+      }
+
+      builder.setConfig(SCHEMA_KEY, avroSchema);
+      builder.setConfig(DEFAULT_VALUES_KEY, defaultValues);
     }
 
-    valid &= validateDataGenerator(context, dataFormat, groupName, configPrefix, issues);
+    builder.setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource);
+    builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls);
+
+    if (avroSchemaSource == INLINE || avroSchemaSource == HEADER && registerSchema) {
+      // Subject used for registering schema
+      builder.setConfig(SUBJECT_KEY, subjectToRegister);
+      builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrlsForRegistration);
+    } else if (schemaLookupMode == AvroSchemaLookupMode.SUBJECT) {
+      // Subject used for looking up schema
+      builder.setConfig(SUBJECT_KEY, subject);
+    } else {
+      // Schema ID used for looking up schema
+      builder.setConfig(SCHEMA_ID_KEY, schemaId);
+    }
+    builder.setConfig(INCLUDE_SCHEMA_KEY, includeSchema);
+    builder.setConfig(COMPRESSION_CODEC_KEY, avroCompression.getCodecName());
 
     return valid;
   }
 
-  private DataGeneratorFactory dataGeneratorFactory;
+  private boolean validateProtobufFormat(
+      Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues
+  ) {
+    boolean valid = true;
+    if (isEmpty(protoDescriptorFile)) {
+      issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+          configPrefix + ".protoDescriptorFile",
+          DataFormatErrors.DATA_FORMAT_07
+      ));
+      valid = false;
+    } else {
+      File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+      if (!file.exists()) {
+        issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+            configPrefix + ".protoDescriptorFile",
+            DataFormatErrors.DATA_FORMAT_09,
+            file.getAbsolutePath()
+        ));
+        valid = false;
+      }
+      if (isEmpty(messageType)) {
+        issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+            configPrefix + ".messageType",
+            DataFormatErrors.DATA_FORMAT_08
+        ));
+        valid = false;
+      }
+    }
+    return valid;
+  }
 
-  public DataGeneratorFactory getDataGeneratorFactory() {
-    return dataGeneratorFactory;
+  private boolean validateBinaryFormat(
+      Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues
+  ) {
+    // required field configuration to be set and it is "/" by default
+    boolean valid = true;
+    if (isEmpty(binaryFieldPath)) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.BINARY.name(),
+              configPrefix + ".binaryFieldPath",
+              DataFormatErrors.DATA_FORMAT_200
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateTextFormat(
+      Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues
+  ) {
+    // required field configuration to be set and it is "/" by default
+    boolean valid = true;
+    if (isEmpty(textFieldPath)) {
+      issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(),
+          configPrefix + ".textFieldPath",
+          DataFormatErrors.DATA_FORMAT_200
+      ));
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateWholeFileFormat(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (isEmpty(fileNameEL)) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.WHOLE_FILE.name(),
+              configPrefix + ".fileNameEL",
+              DataFormatErrors.DATA_FORMAT_200
+          )
+      );
+      valid = false;
+    }
+    return valid;
   }
 }

@@ -30,9 +30,11 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
@@ -45,7 +47,6 @@ import com.streamsets.pipeline.lib.util.UDPTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -231,7 +232,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -291,7 +291,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -339,7 +338,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = true;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -382,7 +380,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -424,7 +421,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = true;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -468,7 +464,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -510,7 +505,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -548,7 +542,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = true;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -577,7 +570,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.DELIMITED;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -622,7 +614,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.LOG;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -694,7 +685,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.LOG;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -745,7 +735,8 @@ public class TestKafkaSource {
       Assert.assertEquals("ExceptionToHttpErrorProvider", record.get("/" + Constants.CATEGORY).getValueAsString());
 
       Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals(sdcKafkaTestUtil.ERROR_MSG_WITH_STACK_TRACE,
+      Assert.assertEquals(
+          SdcKafkaTestUtil.ERROR_MSG_WITH_STACK_TRACE,
         record.get("/" + Constants.MESSAGE).getValueAsString());
     }
 
@@ -770,7 +761,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 100;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.LOG;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -881,7 +871,7 @@ public class TestKafkaSource {
     conf.dataFormat = DataFormat.AVRO;
     conf.dataFormatConfig.charset = "UTF-8";
     conf.dataFormatConfig.removeCtrlChars = false;
-    conf.dataFormatConfig.schemaInMessage = true;
+    conf.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
     conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
 
     SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
@@ -904,19 +894,19 @@ public class TestKafkaSource {
     Assert.assertTrue(e3Record.has("/age"));
     Assert.assertEquals(50, e3Record.get("/age").getValueAsInteger());
     Assert.assertTrue(e3Record.has("/emails"));
-    Assert.assertTrue(e3Record.get("/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e3Record.get("/emails").getValueAsList() != null);
     List<Field> emails = e3Record.get("/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("c@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("c2@company.com", emails.get(1).getValueAsString());
     Assert.assertTrue(e3Record.has("/boss"));
-    Assert.assertTrue(e3Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e3Record.get("/boss").getValueAsMap() != null);
     Assert.assertTrue(e3Record.has("/boss/name"));
     Assert.assertEquals("boss", e3Record.get("/boss/name").getValueAsString());
     Assert.assertTrue(e3Record.has("/boss/age"));
     Assert.assertEquals(60, e3Record.get("/boss/age").getValueAsInteger());
     Assert.assertTrue(e3Record.has("/boss/emails"));
-    Assert.assertTrue(e3Record.get("/boss/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e3Record.get("/boss/emails").getValueAsList() != null);
     emails = e3Record.get("/boss/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
@@ -928,19 +918,19 @@ public class TestKafkaSource {
     Assert.assertTrue(e2Record.has("/age"));
     Assert.assertEquals(40, e2Record.get("/age").getValueAsInteger());
     Assert.assertTrue(e2Record.has("/emails"));
-    Assert.assertTrue(e2Record.get("/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e2Record.get("/emails").getValueAsList() != null);
     emails = e2Record.get("/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("b@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("b2@company.com", emails.get(1).getValueAsString());
     Assert.assertTrue(e2Record.has("/boss"));
-    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() != null);
     Assert.assertTrue(e2Record.has("/boss/name"));
     Assert.assertEquals("boss", e2Record.get("/boss/name").getValueAsString());
     Assert.assertTrue(e2Record.has("/boss/age"));
     Assert.assertEquals(60, e2Record.get("/boss/age").getValueAsInteger());
     Assert.assertTrue(e2Record.has("/boss/emails"));
-    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() != null);
     emails = e2Record.get("/boss/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
@@ -952,19 +942,19 @@ public class TestKafkaSource {
     Assert.assertTrue(e1Record.has("/age"));
     Assert.assertEquals(30, e1Record.get("/age").getValueAsInteger());
     Assert.assertTrue(e1Record.has("/emails"));
-    Assert.assertTrue(e1Record.get("/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e1Record.get("/emails").getValueAsList() != null);
     emails = e1Record.get("/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("a@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("a2@company.com", emails.get(1).getValueAsString());
     Assert.assertTrue(e1Record.has("/boss"));
-    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() != null);
     Assert.assertTrue(e1Record.has("/boss/name"));
     Assert.assertEquals("boss", e1Record.get("/boss/name").getValueAsString());
     Assert.assertTrue(e1Record.has("/boss/age"));
     Assert.assertEquals(60, e1Record.get("/boss/age").getValueAsInteger());
     Assert.assertTrue(e1Record.has("/boss/emails"));
-    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() != null);
     emails = e1Record.get("/boss/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
@@ -1037,7 +1027,7 @@ public class TestKafkaSource {
     conf.dataFormat = DataFormat.AVRO;
     conf.dataFormatConfig.charset = "UTF-8";
     conf.dataFormatConfig.removeCtrlChars = false;
-    conf.dataFormatConfig.schemaInMessage = false;
+    conf.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.INLINE;
     conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
 
     SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
@@ -1084,19 +1074,19 @@ public class TestKafkaSource {
     Assert.assertTrue(e2Record.has("/age"));
     Assert.assertEquals(40, e2Record.get("/age").getValueAsInteger());
     Assert.assertTrue(e2Record.has("/emails"));
-    Assert.assertTrue(e2Record.get("/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e2Record.get("/emails").getValueAsList() != null);
     emails = e2Record.get("/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("b@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("b2@company.com", emails.get(1).getValueAsString());
     Assert.assertTrue(e2Record.has("/boss"));
-    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e2Record.get("/boss").getValueAsMap() != null);
     Assert.assertTrue(e2Record.has("/boss/name"));
     Assert.assertEquals("boss", e2Record.get("/boss/name").getValueAsString());
     Assert.assertTrue(e2Record.has("/boss/age"));
     Assert.assertEquals(60, e2Record.get("/boss/age").getValueAsInteger());
     Assert.assertTrue(e2Record.has("/boss/emails"));
-    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e2Record.get("/boss/emails").getValueAsList() != null);
     emails = e2Record.get("/boss/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
@@ -1108,19 +1098,19 @@ public class TestKafkaSource {
     Assert.assertTrue(e1Record.has("/age"));
     Assert.assertEquals(30, e1Record.get("/age").getValueAsInteger());
     Assert.assertTrue(e1Record.has("/emails"));
-    Assert.assertTrue(e1Record.get("/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e1Record.get("/emails").getValueAsList() != null);
     emails = e1Record.get("/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("a@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("a2@company.com", emails.get(1).getValueAsString());
     Assert.assertTrue(e1Record.has("/boss"));
-    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() instanceof Map);
+    Assert.assertTrue(e1Record.get("/boss").getValueAsMap() != null);
     Assert.assertTrue(e1Record.has("/boss/name"));
     Assert.assertEquals("boss", e1Record.get("/boss/name").getValueAsString());
     Assert.assertTrue(e1Record.has("/boss/age"));
     Assert.assertEquals(60, e1Record.get("/boss/age").getValueAsInteger());
     Assert.assertTrue(e1Record.has("/boss/emails"));
-    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() instanceof List);
+    Assert.assertTrue(e1Record.get("/boss/emails").getValueAsList() != null);
     emails = e1Record.get("/boss/emails").getValueAsList();
     Assert.assertEquals(2, emails.size());
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
@@ -1144,7 +1134,6 @@ public class TestKafkaSource {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 9;
     conf.maxWaitTime = 5000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.BINARY;
     conf.dataFormatConfig.charset = "UTF-8";

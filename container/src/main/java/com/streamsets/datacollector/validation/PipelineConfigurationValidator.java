@@ -52,8 +52,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import io.swagger.models.auth.In;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1282,10 +1280,10 @@ public class PipelineConfigurationValidator {
         IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
         issues.add(
           issueCreator.create(
-            ValidationError.VALIDATION_0006,
-            stageConf.getLibrary(),
-            stageConf.getStageName(),
-            stageConf.getStageVersion()
+              ValidationError.VALIDATION_0006,
+              stageConf.getLibrary(),
+              stageConf.getStageName(),
+              stageConf.getStageVersion()
           )
         );
       }

@@ -40,6 +40,12 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall-through to next version
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -96,5 +102,29 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    // Step 1: Rename kafkaConfigBean to conf
+    // Step 2: Move kafkaConfigBean.kafkaConfig.* to conf.
+    for (Config config : configs) {
+      if (config.getName().startsWith("kafkaConfigBean")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(
+            config.getName().replace("kafkaConfigBean", "conf").replace("kafkaConfig.", ""),
+            config.getValue()
+        ));
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+
+    // New configs are already initialized
+
+    // TODO complete in subsequent patch
   }
 }

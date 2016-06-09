@@ -89,6 +89,12 @@ public class S3ConfigBean {
   public boolean enableMetaData = false;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
+        dataFormat,
+        S3_DATA_FORMAT_CONFIG_PREFIX,
+        context,
+        issues
+    );
 
     s3FileConfig.init(context, issues);
     dataFormatConfig.init(

@@ -139,6 +139,13 @@ public class RemoteDownloadSource extends BaseSource {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
+    conf.dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
+        conf.dataFormat,
+        "conf.dataFormatConfig",
+        getContext(),
+        issues
+    );
+
     conf.dataFormatConfig.init(
         getContext(),
         conf.dataFormat,

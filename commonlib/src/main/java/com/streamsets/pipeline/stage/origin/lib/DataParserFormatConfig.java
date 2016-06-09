@@ -19,12 +19,15 @@
  */
 package com.streamsets.pipeline.stage.origin.lib;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.common.DataFormatConstants;
+import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CompressionChooserValues;
@@ -35,23 +38,24 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.config.DatagramModeChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
-import com.streamsets.pipeline.config.DatagramMode;
-import com.streamsets.pipeline.config.DatagramModeChooserValues;
+import com.streamsets.pipeline.config.OriginAvroSchemaLookupModeChooserValues;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
+import com.streamsets.pipeline.config.OriginAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
-import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
-import com.streamsets.pipeline.lib.parser.wholefile.WholeFileDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -68,6 +72,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
+import static com.streamsets.pipeline.stage.common.DataFormatErrors.DATA_FORMAT_11;
+
 /**
  * Instances of this object must be called 'dataFormatConfig' exactly for error
  * messages to be placed in the correct location on the UI.
@@ -78,6 +89,9 @@ public class DataParserFormatConfig implements DataFormatConfig{
   private static final String DEFAULT_APACHE_CUSTOM_LOG_FORMAT = "%h %l %u %t \"%r\" %>s %b";
   private static final String DEFAULT_GROK_PATTERN = "%{COMMONAPACHELOG}";
   private static final String DEFAULT_LOG4J_CUSTOM_FORMAT = "%r [%t] %-5p %c %x - %m%n";
+
+  private LogDataFormatValidator logDataFormatValidator;
+  private DataParserFactory parserFactory;
 
   @ConfigDef(
       required = true,
@@ -553,30 +567,90 @@ public class DataParserFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Message includes Schema",
-      description = "The message includes an Avro schema",
-      displayPosition = 580,
-      group = "AVRO",
-      dependsOn = "dataFormat^",
-      triggeredByValue = "AVRO"
-  )
-  public boolean schemaInMessage = true;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.TEXT,
-      defaultValue = "",
-      label = "Avro Schema",
-      description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
-      displayPosition = 590,
-      group = "AVRO",
+      type = ConfigDef.Type.MODEL,
+      label = "Avro Schema Location",
+      description = "Where to load the Avro Schema from.",
+      displayPosition = 400,
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO",
+      group = "AVRO"
+  )
+  @ValueChooserModel(OriginAvroSchemaSourceChooserValues.class)
+  public OriginAvroSchemaSource avroSchemaSource;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      label = "Avro Schema",
+      description = "Overrides the schema included in the data (if any). Optionally use the runtime:loadResource " +
+          "function to use a schema stored in a file.",
+      displayPosition = 410,
+      group = "AVRO",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "INLINE")
+      },
       mode = ConfigDef.Mode.JSON
   )
-  public String avroSchema = "";
+  public String avroSchema;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Schema Registry URLs",
+      description = "List of Confluent Schema Registry URLs",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
+      },
+      displayPosition = 420,
+      group = "AVRO"
+
+  )
+  public List<String> schemaRegistryUrls = new ArrayList<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Lookup Schema By...",
+      description = "Whether to look up the Avro Schema by ID or fetch the latest schema for a Subject.",
+      defaultValue = "SUBJECT",
+      dependsOn = "avroSchemaSource",
+      triggeredByValue = "REGISTRY",
+      displayPosition = 430,
+      group = "AVRO"
+  )
+  @ValueChooserModel(OriginAvroSchemaLookupModeChooserValues.class)
+  public AvroSchemaLookupMode schemaLookupMode = AvroSchemaLookupMode.AUTO;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Subject",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY"),
+          @Dependency(configName = "schemaLookupMode", triggeredByValues = "SUBJECT"),
+      },
+      displayPosition = 440,
+      group = "AVRO"
+  )
+  public String subject;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Schema ID",
+      min = 1,
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
+          @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY"),
+          @Dependency(configName = "schemaLookupMode", triggeredByValues = "ID"),
+      },
+      displayPosition = 450,
+      group = "AVRO"
+  )
+  public int schemaId;
 
   // PROTOBUF
 
@@ -732,6 +806,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
   )
   public boolean verifyChecksum = false;
 
+  @Override
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,
@@ -800,157 +875,42 @@ public class DataParserFormatConfig implements DataFormatConfig{
     boolean valid = true;
     switch (dataFormat) {
       case JSON:
-        if (jsonMaxObjectLen < 1) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.JSON.name(),
-                  configPrefix + "jsonMaxObjectLen",
-                  DataFormatErrors.DATA_FORMAT_01
-              )
-          );
-          valid = false;
-        }
+        valid = validateJson(context, configPrefix, issues);
         break;
       case TEXT:
-        if (textMaxLineLen < 1) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.TEXT.name(),
-                  configPrefix + "textMaxLineLen",
-                  DataFormatErrors.DATA_FORMAT_01
-              )
-          );
-          valid = false;
-        }
-        if (useCustomDelimiter && customDelimiter.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.TEXT.name(),
-                  configPrefix + "customDelimiter",
-                  DataFormatErrors.DATA_FORMAT_200
-              )
-          );
-          valid = false;
-        }
+        valid = validateText(context, configPrefix, issues);
         break;
       case DELIMITED:
-        if (csvMaxObjectLen < 1) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.DELIMITED.name(),
-                  configPrefix + "csvMaxObjectLen",
-                  DataFormatErrors.DATA_FORMAT_01
-              )
-          );
-          valid = false;
-        }
+        valid = validateDelimited(context, configPrefix, issues);
         break;
       case XML:
-        if (xmlMaxObjectLen < 1) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.XML.name(),
-                  configPrefix + "xmlMaxObjectLen",
-                  DataFormatErrors.DATA_FORMAT_01
-              )
-          );
-          valid = false;
-        }
-        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(
-              context.createConfigIssue(DataFormatGroups.XML.name(),
-                  configPrefix + "xmlRecordElement",
-                  DataFormatErrors.DATA_FORMAT_03,
-                  xmlRecordElement
-              )
-          );
-          valid = false;
-        }
-        break;
-      case SDC_JSON:
-      case BINARY:
-        break;
-      case AVRO:
+        valid = validateXml(context, configPrefix, issues);
         break;
       case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(
-            logMode,
-            logMaxObjectLen,
-            retainOriginalLine,
-            customLogFormat,
-            regex,
-            grokPatternDefinition,
-            grokPattern,
-            enableLog4jCustomLogFormat,
-            log4jCustomLogFormat,
-            onParseError,
-            maxStackTraceLines,
-            DataFormatGroups.LOG.name(),
-            getFieldPathToGroupMap(fieldPathsToGroupName)
-        );
-        logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
+        validateLogFormat(context, configPrefix, issues);
         break;
       case PROTOBUF:
-        if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.PROTOBUF.name(),
-                  configPrefix + "protoDescriptorFile",
-                  DataFormatErrors.DATA_FORMAT_07
-              )
-          );
-        } else {
-          File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
-          if (!file.exists()) {
-            issues.add(
-                context.createConfigIssue(
-                    DataFormatGroups.PROTOBUF.name(),
-                    configPrefix + "protoDescriptorFile",
-                    DataFormatErrors.DATA_FORMAT_09,
-                    file.getAbsolutePath()
-                )
-            );
-          }
-          if (messageType == null || messageType.isEmpty()) {
-            issues.add(
-                context.createConfigIssue(
-                    DataFormatGroups.PROTOBUF.name(),
-                    configPrefix + "messageType",
-                    DataFormatErrors.DATA_FORMAT_08
-                )
-            );
-          }
-        }
+        validateProtobuf(context, configPrefix, issues);
         break;
       case DATAGRAM:
-        switch (datagramMode) {
-          case COLLECTD:
-            checkCollectdParserConfigs(context, configPrefix, issues);
-            break;
-          default:
+        if (datagramMode == DatagramMode.COLLECTD) {
+          checkCollectdParserConfigs(context, configPrefix, issues);
         }
         break;
       case WHOLE_FILE:
-        if (wholeFileMaxObjectLen < 1) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.WHOLE_FILE.name(),
-                  configPrefix + "wholeFileMaxObjectLen",
-                  DataFormatErrors.DATA_FORMAT_01
-              )
-          );
-          valid = false;
-        }
+        valid = validateWholeFile(context, configPrefix, issues);
+        break;
+      case SDC_JSON:
+      case BINARY:
+      case AVRO:
         break;
       default:
-        issues.add(
-            context.createConfigIssue(
-                stageGroup,
-                configPrefix + "dataFormat",
-                DataFormatErrors.DATA_FORMAT_04,
-                dataFormat
-            )
-        );
+        issues.add(context.createConfigIssue(
+            stageGroup,
+            configPrefix + "dataFormat",
+            DataFormatErrors.DATA_FORMAT_04,
+            dataFormat
+        ));
         valid = false;
         break;
     }
@@ -966,6 +926,154 @@ public class DataParserFormatConfig implements DataFormatConfig{
     );
 
     return valid;
+  }
+
+  private boolean validateJson(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (jsonMaxObjectLen < 1) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.JSON.name(),
+              configPrefix + "jsonMaxObjectLen",
+              DataFormatErrors.DATA_FORMAT_01
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateText(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (textMaxLineLen < 1) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.TEXT.name(),
+              configPrefix + "textMaxLineLen",
+              DataFormatErrors.DATA_FORMAT_01
+          )
+      );
+      valid = false;
+    }
+    if (useCustomDelimiter && customDelimiter.isEmpty()) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.TEXT.name(),
+              configPrefix + "customDelimiter",
+              DataFormatErrors.DATA_FORMAT_200
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateDelimited(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (csvMaxObjectLen < 1) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.DELIMITED.name(),
+              configPrefix + "csvMaxObjectLen",
+              DataFormatErrors.DATA_FORMAT_01
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateXml(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (xmlMaxObjectLen < 1) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.XML.name(),
+              configPrefix + "xmlMaxObjectLen",
+              DataFormatErrors.DATA_FORMAT_01
+          )
+      );
+      valid = false;
+    }
+    if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
+      issues.add(
+          context.createConfigIssue(DataFormatGroups.XML.name(),
+              configPrefix + "xmlRecordElement",
+              DataFormatErrors.DATA_FORMAT_03,
+              xmlRecordElement
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private boolean validateWholeFile(
+      Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    boolean valid = true;
+    if (wholeFileMaxObjectLen < 1) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.WHOLE_FILE.name(),
+              configPrefix + "wholeFileMaxObjectLen",
+              DataFormatErrors.DATA_FORMAT_01
+          )
+      );
+      valid = false;
+    }
+    return valid;
+  }
+
+  private void validateProtobuf(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
+      issues.add(
+          context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              configPrefix + "protoDescriptorFile",
+              DataFormatErrors.DATA_FORMAT_07
+          )
+      );
+    } else {
+      File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+      if (!file.exists()) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.PROTOBUF.name(),
+                configPrefix + "protoDescriptorFile",
+                DataFormatErrors.DATA_FORMAT_09,
+                file.getAbsolutePath()
+            )
+        );
+      }
+      if (messageType == null || messageType.isEmpty()) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.PROTOBUF.name(),
+                configPrefix + "messageType",
+                DataFormatErrors.DATA_FORMAT_08
+            )
+        );
+      }
+    }
+  }
+
+  private void validateLogFormat(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    logDataFormatValidator = new LogDataFormatValidator(
+        logMode,
+        logMaxObjectLen,
+        retainOriginalLine,
+        customLogFormat,
+        regex,
+        grokPatternDefinition,
+        grokPattern,
+        enableLog4jCustomLogFormat,
+        log4jCustomLogFormat,
+        onParseError,
+        maxStackTraceLines,
+        DataFormatGroups.LOG.name(),
+        getFieldPathToGroupMap(fieldPathsToGroupName)
+    );
+    logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
   }
 
   private void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
@@ -1010,7 +1118,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
 
     try {
       fileCharset = Charset.forName(charset);
-    } catch (UnsupportedCharsetException ex) {
+    } catch (UnsupportedCharsetException ignored) { // NOSONAR
       // setting it to a valid one so the parser factory can be configured and tested for more errors
       fileCharset = StandardCharsets.UTF_8;
       issues.add(
@@ -1042,16 +1150,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder
-            .setMaxDataLen(csvMaxObjectLen)
-            .setMode(csvFileFormat).setMode(csvHeader)
-            .setMode(csvRecordType)
-            .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
-            .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
-            .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
-            .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote)
-            .setConfig(DelimitedDataConstants.PARSE_NULL, parseNull)
-            .setConfig(DelimitedDataConstants.NULL_CONSTANT, nullConstant);
+        buildDelimitedParser(builder);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
@@ -1067,26 +1166,13 @@ public class DataParserFormatConfig implements DataFormatConfig{
         logDataFormatValidator.populateBuilder(builder);
         break;
       case AVRO:
-        builder
-            .setMaxDataLen(-1)
-            .setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema)
-            .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, schemaInMessage);
+        buildAvroParser(builder);
         break;
       case PROTOBUF:
-        builder
-            .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
-            .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
-            .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
-            .setMaxDataLen(-1);
+        buildProtobufParser(builder);
         break;
       case DATAGRAM:
-        builder
-          .setConfig(DatagramParserFactory.CONVERT_TIME_KEY, convertTime)
-          .setConfig(DatagramParserFactory.EXCLUDE_INTERVAL_KEY, excludeInterval)
-          .setConfig(DatagramParserFactory.AUTH_FILE_PATH_KEY, authFilePath)
-          .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
-          .setMode(datagramMode)
-          .setMaxDataLen(-1);
+        buildDatagramParser(builder);
         break;
       case WHOLE_FILE:
         builder.setMaxDataLen(wholeFileMaxObjectLen);
@@ -1103,6 +1189,52 @@ public class DataParserFormatConfig implements DataFormatConfig{
     return valid;
   }
 
+  private void buildAvroParser(DataParserFactoryBuilder builder) {
+    builder
+        .setMaxDataLen(-1)
+        .setConfig(SCHEMA_KEY, avroSchema)
+        .setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource)
+        .setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls);
+    if (schemaLookupMode == AvroSchemaLookupMode.SUBJECT) {
+      // Subject used for looking up schema
+      builder.setConfig(SUBJECT_KEY, subject);
+    } else {
+      // Schema ID used for looking up schema
+      builder.setConfig(SCHEMA_ID_KEY, schemaId);
+    }
+  }
+
+  private void buildDelimitedParser(DataParserFactoryBuilder builder) {
+    builder
+        .setMaxDataLen(csvMaxObjectLen)
+        .setMode(csvFileFormat).setMode(csvHeader)
+        .setMode(csvRecordType)
+        .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
+        .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
+        .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+        .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote)
+        .setConfig(DelimitedDataConstants.PARSE_NULL, parseNull)
+        .setConfig(DelimitedDataConstants.NULL_CONSTANT, nullConstant);
+  }
+
+  private void buildProtobufParser(DataParserFactoryBuilder builder) {
+    builder
+        .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+        .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+        .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
+        .setMaxDataLen(-1);
+  }
+
+  private void buildDatagramParser(DataParserFactoryBuilder builder) {
+    builder
+      .setConfig(DatagramParserFactory.CONVERT_TIME_KEY, convertTime)
+      .setConfig(DatagramParserFactory.EXCLUDE_INTERVAL_KEY, excludeInterval)
+      .setConfig(DatagramParserFactory.AUTH_FILE_PATH_KEY, authFilePath)
+      .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
+      .setMode(datagramMode)
+      .setMaxDataLen(-1);
+  }
+
   /**
    * Returns the DataParserFactory instance.
    *
@@ -1116,10 +1248,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
     return parserFactory;
   }
 
-  private LogDataFormatValidator logDataFormatValidator;
-  private DataParserFactory parserFactory;
-
-  private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
+  private static Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
     if (fieldPathsToGroupName == null) {
       return new HashMap<>();
     }
@@ -1128,5 +1257,34 @@ public class DataParserFormatConfig implements DataFormatConfig{
       fieldPathToGroup.put(r.fieldPath, r.group);
     }
     return fieldPathToGroup;
+  }
+
+  /**
+   * This is used to make sure AUTO schema lookup mode is not used for
+   * stages that do not support it (e.g. file based ones).
+   * This includes HDFS, Directory, S3, SFTP
+   * @param dataFormat DataFormat selected in the config
+   * @param configBeanPrefix prefix for the config bean so the validation errors are shown in the correct place
+   * @param context stage context
+   * @param issues list of issues to add any validation errors to.
+   */
+  public void checkForInvalidAvroSchemaLookupMode(
+      DataFormat dataFormat,
+      String configBeanPrefix,
+      Stage.Context context,
+      List<Stage.ConfigIssue> issues
+  ) {
+    if (dataFormat != DataFormat.AVRO) {
+      return;
+    }
+
+    if (avroSchemaSource == OriginAvroSchemaSource.REGISTRY &&
+        schemaLookupMode == AvroSchemaLookupMode.AUTO) {
+      issues.add(context.createConfigIssue(
+          "AVRO",
+          Joiner.on(".").join(configBeanPrefix, "schemaLookupMode"),
+          DATA_FORMAT_11
+      ));
+    }
   }
 }

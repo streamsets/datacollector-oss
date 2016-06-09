@@ -37,8 +37,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private static final boolean AUTO_COMMIT_ENABLED_DEFAULT = false;
   private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
   private static final String AUTO_OFFSET_RESET_PREVIEW = "earliest";
-  private static final String KEY_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringDeserializer";
-  private static final String VALUE_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArrayDeserializer";
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer09.class);
 
@@ -66,8 +64,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, AUTO_COMMIT_ENABLED_DEFAULT);
-    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KEY_DESERIALIZER_DEFAULT);
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_DEFAULT);
     if (this.context.isPreview()) {
       props.put(AUTO_OFFSET_RESET_KEY, AUTO_OFFSET_RESET_PREVIEW);
     }
@@ -95,8 +91,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
-      kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
-      kafkaConsumerConfigs.remove(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());

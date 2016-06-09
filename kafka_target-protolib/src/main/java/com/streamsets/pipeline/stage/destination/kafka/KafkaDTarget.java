@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png",
@@ -40,10 +40,10 @@ import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 public class KafkaDTarget extends DTarget {
 
   @ConfigDefBean()
-  public KafkaConfigBean kafkaConfigBean;
+  public KafkaTargetConfig conf;
 
   @Override
   protected Target createTarget() {
-    return new KafkaTarget(kafkaConfigBean);
+    return new KafkaTarget(conf);
   }
 }

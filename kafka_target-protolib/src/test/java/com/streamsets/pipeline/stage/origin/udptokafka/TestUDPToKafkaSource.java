@@ -90,69 +90,67 @@ import java.util.List;
     clientSocket.close();
   }
 
-  @Test
-  public void testProcess() throws Exception {
-    int udpPort = NetworkUtils.getRandomPort();
+    @Test
+    public void testProcess() throws Exception {
+      int udpPort = NetworkUtils.getRandomPort();
 
-    UDPConfigBean udpConfigBean = new UDPConfigBean();
-    udpConfigBean.ports = ImmutableList.of("" + udpPort);
-    udpConfigBean.dataFormat = UDPDataFormat.NETFLOW;
-    udpConfigBean.acceptThreads = 1;
-    udpConfigBean.concurrency = 10;
-    KafkaTargetConfig kafkaTargetConfig = new KafkaTargetConfig();
-    kafkaTargetConfig.kafkaProducerConfigs = new HashMap<>();
-    kafkaTargetConfig.topic = TOPIC1;
-    kafkaTargetConfig.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
-
-
-    final UDPToKafkaSource source = new UDPToKafkaSource(udpConfigBean, kafkaTargetConfig);
-
-    // create source runner
-    final SourceRunner sourceRunner = new SourceRunner.Builder(UDPToKafkaDSource.class, source)
-        .addOutputLane("lane")
-        .build();
+      UDPConfigBean udpConfigBean = new UDPConfigBean();
+      udpConfigBean.ports = ImmutableList.of("" + udpPort);
+      udpConfigBean.dataFormat = UDPDataFormat.NETFLOW;
+      udpConfigBean.acceptThreads = 1;
+      udpConfigBean.concurrency = 10;
+      KafkaTargetConfig kafkaTargetConfig = new KafkaTargetConfig();
+      kafkaTargetConfig.kafkaProducerConfigs = new HashMap<>();
+      kafkaTargetConfig.topic = TOPIC1;
+      kafkaTargetConfig.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
 
 
-    try {
-      sourceRunner.runInit();
+      final UDPToKafkaSource source = new UDPToKafkaSource(udpConfigBean, kafkaTargetConfig);
 
-      sendDatagram(createData(1000), udpPort);
-      sendDatagram(createData(1000), udpPort);
+      // create source runner
+      final SourceRunner sourceRunner = new SourceRunner.Builder(UDPToKafkaDSource.class, source).addOutputLane("lane")
+          .build();
 
-      while (source.udpConsumer.kafkaMessagesMeter.getCount() + source.udpConsumer.errorPackagesMeter.getCount() < 2) {
-        Thread.sleep(10);
-      }
 
-      Assert.assertEquals(2, source.udpConsumer.kafkaMessagesMeter.getCount());
+      try {
+        sourceRunner.runInit();
 
-      StageRunner.Output output = sourceRunner.runProduce(null, 1);
-      Assert.assertEquals(0, output.getRecords().get("lane").size());
-      Assert.assertTrue(sourceRunner.getErrorRecords().isEmpty());
-      System.out.println(sourceRunner.getErrors());
-      Assert.assertEquals(0, sourceRunner.getErrors().size());
+        sendDatagram(createData(1000), udpPort);
+        sendDatagram(createData(1000), udpPort);
 
-      // check if kafka has received a message
-      List<byte[]> messages = new ArrayList<>();
-      Assert.assertTrue(kafkaStreams1.size() == PARTITIONS);
-
-      for (KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams1) {
-        ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
-        try {
-          while (it.hasNext()) {
-            messages.add(it.next().message());
-          }
-        } catch (kafka.consumer.ConsumerTimeoutException e) {
-          //no-op
+        while (source.udpConsumer.kafkaMessagesMeter.getCount() + source.udpConsumer.errorPackagesMeter.getCount() <
+            2) {
+          Thread.sleep(10);
         }
+
+        Assert.assertEquals(2, source.udpConsumer.kafkaMessagesMeter.getCount());
+
+        StageRunner.Output output = sourceRunner.runProduce(null, 1);
+        Assert.assertEquals(0, output.getRecords().get("lane").size());
+        Assert.assertTrue(sourceRunner.getErrorRecords().isEmpty());
+        System.out.println(sourceRunner.getErrors());
+        Assert.assertEquals(0, sourceRunner.getErrors().size());
+
+        // check if kafka has received a message
+        List<byte[]> messages = new ArrayList<>();
+        Assert.assertTrue(kafkaStreams1.size() == PARTITIONS);
+
+        for (KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams1) {
+          ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
+          try {
+            while (it.hasNext()) {
+              messages.add(it.next().message());
+            }
+          } catch (kafka.consumer.ConsumerTimeoutException e) {
+            //no-op
+          }
+        }
+
+        // there should be 2 messages
+        Assert.assertEquals(2, messages.size());
+
+      } finally {
+        sourceRunner.runDestroy();
       }
-
-      // there should be 2 messages
-      Assert.assertEquals(2, messages.size());
-
-    } finally {
-      sourceRunner.runDestroy();
     }
-    }
-
-
 }

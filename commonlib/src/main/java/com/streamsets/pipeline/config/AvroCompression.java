@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum AvroCompression implements Label {
-  NULL("Null", "null"),
+  NULL("None", "null"),
   SNAPPY("Snappy", "snappy"),
   BZIP2("Bzip2", "bzip2"),
   DEFLATE("Deflate", "deflate"),

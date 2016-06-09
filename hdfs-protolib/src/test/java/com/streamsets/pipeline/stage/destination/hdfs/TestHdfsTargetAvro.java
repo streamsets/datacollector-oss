@@ -39,9 +39,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
 
 public class TestHdfsTargetAvro {
 
@@ -65,6 +66,7 @@ public class TestHdfsTargetAvro {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
+    dataGeneratorFormatConfig.avroSchemaSource = INLINE;
 
     HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
       .dirPathTemplate(dirPathTemplate)

@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.parser.avro;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
@@ -40,7 +41,7 @@ import java.io.IOException;
 
 public class AvroMessageParser extends AbstractDataParser {
 
-  private Schema avroSchema;
+  private final OriginAvroSchemaSource schemaSource;
   private DatumReader<GenericRecord> datumReader;
   private DataFileReader<GenericRecord> dataFileReader;
   private BinaryDecoder decoder;
@@ -48,24 +49,24 @@ public class AvroMessageParser extends AbstractDataParser {
   private boolean eof;
   private final Stage.Context context;
   private final String messageId;
-  private final boolean messageHasSchema;
 
-  public AvroMessageParser(Stage.Context context, String schema, byte[] message, String messageId,
-                           boolean messageHasSchema) throws IOException {
+  public AvroMessageParser(
+      Stage.Context context,
+      final Schema schema,
+      final byte[] message,
+      final String messageId,
+      final OriginAvroSchemaSource schemaSource
+  ) throws IOException {
     this.context = context;
     this.messageId = messageId;
-    this.messageHasSchema = messageHasSchema;
-    if(messageHasSchema) {
-      if(schema != null && !schema.isEmpty()) {
-        avroSchema = new Schema.Parser().setValidate(true).parse(schema);
-      }
-      datumReader = new GenericDatumReader<>(avroSchema); //Reader schema argument is optional
+    this.schemaSource = schemaSource;
+
+    datumReader = new GenericDatumReader<>(schema); //Reader schema argument is optional
+    if(schemaSource == OriginAvroSchemaSource.SOURCE) {
       dataFileReader = new DataFileReader<>(new SeekableByteArrayInput(message), datumReader);
     } else {
-      avroSchema = new Schema.Parser().setValidate(true).parse(schema);
-      datumReader = new GenericDatumReader<>(avroSchema); //Reader schema argument is optional
       decoder = DecoderFactory.get().binaryDecoder(new ByteArrayInputStream(message), null);
-      avroRecord = new GenericData.Record(avroSchema);
+      avroRecord = new GenericData.Record(schema);
     }
   }
 
@@ -73,7 +74,7 @@ public class AvroMessageParser extends AbstractDataParser {
   public Record parse() throws IOException, DataParserException {
     GenericRecord genericRecord;
     Record record = null;
-    if(messageHasSchema) {
+    if(schemaSource == OriginAvroSchemaSource.SOURCE) {
       genericRecord = parseMessageWithSchema();
     } else {
       genericRecord = parseMessageWithoutSchema();

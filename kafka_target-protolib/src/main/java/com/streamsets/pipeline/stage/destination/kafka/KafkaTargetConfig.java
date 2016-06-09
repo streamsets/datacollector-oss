@@ -19,8 +19,10 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -30,6 +32,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
@@ -38,16 +41,23 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.streamsets.pipeline.config.AvroSchemaLookupMode.ID;
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.REGISTRY;
+import static com.streamsets.pipeline.stage.destination.kafka.Serializer.CONFLUENT;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class KafkaTargetConfig {
 
@@ -58,7 +68,22 @@ public class KafkaTargetConfig {
   private static final String RETRY_BACKOFF_MS_KEY = "retry.backoff.ms";
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
-  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SDC_JSON",
+      label = "Data Format",
+      description = "",
+      displayPosition = 60,
+      group = "KAFKA"
+  )
+  @ValueChooserModel(ProducerDataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
+  @ConfigDefBean
+  public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
   @ConfigDef(
     required = true,
@@ -167,6 +192,34 @@ public class KafkaTargetConfig {
   public boolean singleMessagePerBatch;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Key Serializer",
+      description = "Key Serializer",
+      defaultValue = "STRING",
+      displayPosition = 440,
+      dependsOn = "dataFormat",
+      triggeredByValue = "AVRO",
+      group = "KAFKA"
+  )
+  @ValueChooserModel(KeySerializerChooserValues.class)
+  public Serializer keySerializer = Serializer.STRING;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Value Serializer",
+      description = "Value Serializer",
+      defaultValue = "DEFAULT",
+      displayPosition = 450,
+      dependsOn = "dataFormat",
+      triggeredByValue = "AVRO",
+      group = "KAFKA"
+  )
+  @ValueChooserModel(ValueSerializerChooserValues.class)
+  public Serializer valueSerializer = Serializer.DEFAULT;
+
+  @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
     defaultValue = "",
@@ -175,7 +228,7 @@ public class KafkaTargetConfig {
     displayPosition = 60,
     group = "#0"
   )
-  public Map<String, String> kafkaProducerConfigs;
+  public Map<String, String> kafkaProducerConfigs = new HashMap<>();
 
 
   // Private members
@@ -198,11 +251,39 @@ public class KafkaTargetConfig {
   // holds the value of 'retry.backoff.ms' supplied by the user or the default value
   private long retryBackoffMs;
 
-  public void init(
-      Stage.Context context,
-      DataFormat dataFormat,
-      List<Stage.ConfigIssue> issues
-  ) {
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    init(context, this.dataFormat, issues);
+  }
+
+  public void init(Stage.Context context, DataFormat dataFormat, List<Stage.ConfigIssue> issues) {
+    dataGeneratorFormatConfig.init(
+        context,
+        dataFormat,
+        KafkaDestinationGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.",
+        issues
+    );
+
+    if (valueSerializer == CONFLUENT || keySerializer == CONFLUENT) {
+      validateConfluentSerializerConfigs(context, issues);
+    }
+
+    // Configure serializers.
+    kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, keySerializer.getKeyClass());
+    kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
+
+    List<String> schemaRegistryUrls = new ArrayList<>();
+    if (!dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty()) {
+      schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrls;
+    } else if (!dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
+      schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration;
+    }
+
+    kafkaProducerConfigs.put(
+        KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
+        Joiner.on(",").join(schemaRegistryUrls)
+    );
+
     this.topicPartitionMap = new HashMap<>();
     this.allowedTopics = new HashSet<>();
     this.invalidTopicMap = new HashMap<>();
@@ -274,9 +355,7 @@ public class KafkaTargetConfig {
 
     if (issues.isEmpty()) {
       ProducerFactorySettings settings = new ProducerFactorySettings(
-          kafkaProducerConfigs == null ?
-              Collections.<String, Object>emptyMap() :
-              new HashMap<String, Object>(kafkaProducerConfigs),
+          new HashMap<String, Object>(kafkaProducerConfigs),
           partitionStrategy,
           metadataBrokerList,
           dataFormat
@@ -287,6 +366,55 @@ public class KafkaTargetConfig {
       } catch (StageException ex) {
         issues.add(context.createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
       }
+    }
+  }
+
+  private void validateConfluentSerializerConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    try {
+      getClass().getClassLoader().loadClass(Serializer.CONFLUENT.getKeyClass());
+    } catch (ClassNotFoundException ignored) { // NOSONAR
+      issues.add(
+          context.createConfigIssue(
+              KafkaOriginGroups.KAFKA.name(),
+              KAFKA_CONFIG_BEAN_PREFIX + "keyDeserializer",
+              KafkaErrors.KAFKA_73
+          )
+      );
+    }
+
+    // If using Confluent Kafka Avro Serializer, user shouldn't check includeSchema.
+    if (dataGeneratorFormatConfig.includeSchema) {
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+          "conf.dataGeneratorFormatConfig.includeSchema",
+          KafkaErrors.KAFKA_70
+      ));
+    }
+
+    if (dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty() &&
+        dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+          "conf.dataGeneratorFormatConfig.schemaRegistryUrls",
+          KafkaErrors.KAFKA_71
+      ));
+    }
+
+    if (dataGeneratorFormatConfig.avroSchemaSource == REGISTRY) {
+      if (dataGeneratorFormatConfig.schemaLookupMode == ID && dataGeneratorFormatConfig.schemaId < 1) {
+        issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+            "conf.dataGeneratorFormatConfig.schemaId",
+            KafkaErrors.KAFKA_72
+        ));
+      } else if (isEmpty(dataGeneratorFormatConfig.subject)) {
+        issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+            "conf.dataGeneratorFormatConfig.subject",
+            KafkaErrors.KAFKA_72
+        ));
+      }
+    } else if (isEmpty(dataGeneratorFormatConfig.subjectToRegister)) {
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+          "conf.dataGeneratorFormatConfig.subjectToRegister",
+          KafkaErrors.KAFKA_72
+      ));
     }
   }
 
@@ -338,26 +466,22 @@ public class KafkaTargetConfig {
   ) {
 
     boolean valid = kafkaValidationUtil.validateTopicExistence(
-      context,
-      KafkaDestinationGroups.KAFKA.name(),
-      KAFKA_CONFIG_BEAN_PREFIX + "topic",
-      kafkaBrokers,
-      metadataBrokerList,
-      topic,
-      kafkaProducerConfigs == null ?
-          Collections.<String, Object>emptyMap() :
-          new HashMap<String, Object>(kafkaProducerConfigs),
-      issues,
-      true
+        context,
+        KafkaDestinationGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + "topic",
+        kafkaBrokers,
+        metadataBrokerList,
+        topic,
+        new HashMap<String, Object>(kafkaProducerConfigs),
+        issues,
+        true
     );
     if(valid) {
       try {
         int partitionCount = kafkaValidationUtil.getPartitionCount(
             metadataBrokerList,
             topic,
-            kafkaProducerConfigs == null ?
-                Collections.<String, Object>emptyMap() :
-                new HashMap<String, Object>(kafkaProducerConfigs),
+            new HashMap<String, Object>(kafkaProducerConfigs),
             messageSendMaxRetries,
             retryBackoffMs
         );
@@ -387,7 +511,7 @@ public class KafkaTargetConfig {
       List<HostAndPort> kafkaBrokers
   ) {
     //if runtimeTopicResolution then topic white list cannot be empty
-    if(topicWhiteList == null || topicWhiteList.isEmpty()) {
+    if(isEmpty(topicWhiteList)) {
       issues.add(
           context.createConfigIssue(
               KafkaDestinationGroups.KAFKA.name(),
@@ -395,7 +519,7 @@ public class KafkaTargetConfig {
               KafkaErrors.KAFKA_64
           )
       );
-    } else if (topicWhiteList.equals("*")) {
+    } else if ("*".equals(topicWhiteList)) {
       allowAllTopics = true;
     } else {
       //Must be comma separated list of topic names
@@ -411,75 +535,73 @@ public class KafkaTargetConfig {
   }
 
   private void validateKafkaProducerConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    if(kafkaProducerConfigs != null) {
-      if(kafkaProducerConfigs.containsKey(MESSAGE_SEND_MAX_RETRIES_KEY)) {
-        try {
-          messageSendMaxRetries = Integer.parseInt(
-              kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).toString().trim()
-          );
-        } catch (NullPointerException | NumberFormatException e) {
-          issues.add(
-              context.createConfigIssue(
-                  KafkaDestinationGroups.KAFKA.name(),
-                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
-                  KafkaErrors.KAFKA_66,
-                  MESSAGE_SEND_MAX_RETRIES_KEY,
-                  "integer",
-                  e.toString(),
-                  e
-              )
-          );
-        }
-        if(messageSendMaxRetries < 0) {
-          issues.add(
-              context.createConfigIssue(
-                  KafkaDestinationGroups.KAFKA.name(),
-                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
-                  KafkaErrors.KAFKA_66,
-                  MESSAGE_SEND_MAX_RETRIES_KEY,
-                  "integer"
-              )
-          );
-        }
-      } else {
-        messageSendMaxRetries = MESSAGE_SEND_MAX_RETRIES_DEFAULT;
+    if(kafkaProducerConfigs.containsKey(MESSAGE_SEND_MAX_RETRIES_KEY)) {
+      try {
+        messageSendMaxRetries = Integer.parseInt(
+            kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).trim()
+        );
+      } catch (NullPointerException | NumberFormatException e) {
+        issues.add(
+            context.createConfigIssue(
+                KafkaDestinationGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                KafkaErrors.KAFKA_66,
+                MESSAGE_SEND_MAX_RETRIES_KEY,
+                "integer",
+                e.toString(),
+                e
+            )
+        );
       }
+      if(messageSendMaxRetries < 0) {
+        issues.add(
+            context.createConfigIssue(
+                KafkaDestinationGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                KafkaErrors.KAFKA_66,
+                MESSAGE_SEND_MAX_RETRIES_KEY,
+                "integer"
+            )
+        );
+      }
+    } else {
+      messageSendMaxRetries = MESSAGE_SEND_MAX_RETRIES_DEFAULT;
+    }
 
-      if(kafkaProducerConfigs.containsKey(RETRY_BACKOFF_MS_KEY)) {
-        try {
-          retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).toString().trim());
-        } catch (NullPointerException | NumberFormatException e) {
-          issues.add(
-              context.createConfigIssue(
-                  KafkaDestinationGroups.KAFKA.name(),
-                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
-                  KafkaErrors.KAFKA_66,
-                  RETRY_BACKOFF_MS_KEY,
-                  "long",
-                  e.toString(),
-                  e
-              )
-          );
-        }
-        if(retryBackoffMs < 0) {
-          issues.add(
-              context.createConfigIssue(
-                  KafkaDestinationGroups.KAFKA.name(),
-                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
-                  KafkaErrors.KAFKA_66,
-                  RETRY_BACKOFF_MS_KEY,
-                  "long"
-              )
-          );
-        }
-      } else {
-        retryBackoffMs = RETRY_BACKOFF_MS_DEFAULT;
+    if(kafkaProducerConfigs.containsKey(RETRY_BACKOFF_MS_KEY)) {
+      try {
+        retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).trim());
+      } catch (NullPointerException | NumberFormatException e) {
+        issues.add(
+            context.createConfigIssue(
+                KafkaDestinationGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                KafkaErrors.KAFKA_66,
+                RETRY_BACKOFF_MS_KEY,
+                "long",
+                e.toString(),
+                e
+            )
+        );
       }
+      if(retryBackoffMs < 0) {
+        issues.add(
+            context.createConfigIssue(
+                KafkaDestinationGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                KafkaErrors.KAFKA_66,
+                RETRY_BACKOFF_MS_KEY,
+                "long"
+            )
+        );
+      }
+    } else {
+      retryBackoffMs = RETRY_BACKOFF_MS_DEFAULT;
     }
   }
 
 
-  String getPartitionKey(Record record, String topic) throws StageException {
+  Object getPartitionKey(Record record, String topic) throws StageException {
     String partitionKey = "";
     if(partitionStrategy == PartitionStrategy.EXPRESSION) {
       RecordEL.setRecordInContext(partitionVars, record);
@@ -531,7 +653,7 @@ public class KafkaTargetConfig {
       RecordEL.setRecordInContext(topicVars, record);
       try {
         result = topicEval.eval(topicVars, topicExpression, String.class);
-        if (result == null || result.isEmpty()) {
+        if (isEmpty(result)) {
           throw new StageException(KafkaErrors.KAFKA_62, topicExpression, record.getHeader().getSourceId());
         }
         if (!allowedTopics.contains(result) && !allowAllTopics) {
@@ -550,9 +672,7 @@ public class KafkaTargetConfig {
             int partitionCount = kafkaValidationUtil.getPartitionCount(
                 metadataBrokerList,
                 result,
-                kafkaProducerConfigs == null ?
-                    Collections.<String, Object>emptyMap() :
-                    new HashMap<String, Object>(kafkaProducerConfigs),
+                new HashMap<String, Object>(kafkaProducerConfigs),
                 messageSendMaxRetries,
                 retryBackoffMs
             );

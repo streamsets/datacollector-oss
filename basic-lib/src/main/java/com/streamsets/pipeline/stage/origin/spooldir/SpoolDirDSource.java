@@ -27,11 +27,14 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRawSourcePreviewer;
 import com.streamsets.pipeline.configurablestage.DSource;
 
+import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
+
 @StageDef(
-    version = 7,
+    version = 8,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
@@ -43,10 +46,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
-@HideConfigs(value = {
-  "conf.dataFormatConfig.schemaInMessage",
-  "conf.dataFormatConfig.verifyChecksum"
-})
+@HideConfigs(value = "conf.dataFormatConfig.verifyChecksum")
 @GenerateResourceBundle
 public class SpoolDirDSource extends DSource {
 
@@ -55,6 +55,9 @@ public class SpoolDirDSource extends DSource {
 
   @Override
   protected Source createSource() {
+    if (conf.dataFormat == DataFormat.AVRO) {
+      conf.dataFormatConfig.avroSchemaSource = SOURCE;
+    }
     return new SpoolDirSource(conf);
   }
 

@@ -25,10 +25,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
-import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-
+import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -46,28 +45,28 @@ public class KafkaTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTarget.class);
 
-  private final KafkaConfigBean kafkaConfigBean;
+  private final KafkaTargetConfig conf;
 
   private long recordCounter = 0;
   private SdcKafkaProducer kafkaProducer;
   private ErrorRecordHandler errorRecordHandler;
 
-  public KafkaTarget(KafkaConfigBean kafkaConfigBean) {
-    this.kafkaConfigBean = kafkaConfigBean;
+  public KafkaTarget(KafkaTargetConfig conf) {
+    this.conf = conf;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    kafkaConfigBean.init(getContext(), issues);
-    kafkaProducer = kafkaConfigBean.kafkaConfig.getKafkaProducer();
+    conf.init(getContext(), issues);
+    kafkaProducer = conf.getKafkaProducer();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return issues;
   }
 
   @Override
   public void write(Batch batch) throws StageException {
-    if (kafkaConfigBean.kafkaConfig.singleMessagePerBatch) {
+    if (conf.singleMessagePerBatch) {
       writeOneMessagePerBatch(batch);
     } else {
       writeOneMessagePerRecord(batch);
@@ -77,18 +76,18 @@ public class KafkaTarget extends BaseTarget {
   private void writeOneMessagePerBatch(Batch batch) throws StageException {
     int count = 0;
     //Map of topic->(partition->Records)
-    Map<String, Map<String, List<Record>>> perTopic = new HashMap<>();
+    Map<String, Map<Object, List<Record>>> perTopic = new HashMap<>();
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       boolean topicError = true;
       boolean partitionError = true;
       Record record = records.next();
       String topic = null;
-      String partitionKey = null;
+      Object partitionKey = null;
       try {
-        topic = kafkaConfigBean.kafkaConfig.getTopic(record);
+        topic = conf.getTopic(record);
         topicError = false;
-        partitionKey = kafkaConfigBean.kafkaConfig.getPartitionKey(record, topic);
+        partitionKey = conf.getPartitionKey(record, topic);
         partitionError = false;
       } catch (KafkaConnectionException ex) {
         //Kafka connection exception is thrown when the client cannot connect to the list of brokers
@@ -105,7 +104,7 @@ public class KafkaTarget extends BaseTarget {
         );
       }
       if(!topicError && !partitionError) {
-        Map<String, List<Record>> perPartition = perTopic.get(topic);
+        Map<Object, List<Record>> perPartition = perTopic.get(topic);
         if (perPartition == null) {
           perPartition = new HashMap<>();
           perTopic.put(topic, perPartition);
@@ -119,17 +118,17 @@ public class KafkaTarget extends BaseTarget {
       }
     }
     if (!perTopic.isEmpty()) {
-      for( Map.Entry<String, Map<String, List<Record>>> topicEntry : perTopic.entrySet()) {
+      for( Map.Entry<String, Map<Object, List<Record>>> topicEntry : perTopic.entrySet()) {
         String entryTopic = topicEntry.getKey();
-        Map<String, List<Record>> perPartition = topicEntry.getValue();
+        Map<Object, List<Record>> perPartition = topicEntry.getValue();
         if(perPartition != null) {
-          for (Map.Entry<String, List<Record>> entry : perPartition.entrySet()) {
-            String partition = entry.getKey();
+          for (Map.Entry<Object, List<Record>> entry : perPartition.entrySet()) {
+            Object partition = entry.getKey();
             List<Record> list = entry.getValue();
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * list.size());
             Record currentRecord = null;
             try {
-              DataGenerator generator = kafkaConfigBean.dataGeneratorFormatConfig.getDataGeneratorFactory()
+              DataGenerator generator = conf.dataGeneratorFormatConfig.getDataGeneratorFactory()
                 .getGenerator(baos);
               for (Record record : list) {
                 currentRecord = record;
@@ -193,6 +192,7 @@ public class KafkaTarget extends BaseTarget {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void writeOneMessagePerRecord(Batch batch) throws StageException {
     long count = 0;
     Iterator<Record> records = batch.getRecords();
@@ -201,14 +201,9 @@ public class KafkaTarget extends BaseTarget {
       Record record = records.next();
       recordList.add(record);
       try {
-        String topic = kafkaConfigBean.kafkaConfig.getTopic(record);
-        String partitionKey = kafkaConfigBean.kafkaConfig.getPartitionKey(record, topic);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        DataGenerator generator = kafkaConfigBean.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(baos);
-        generator.write(record);
-        generator.close();
-        byte[] bytes = baos.toByteArray();
-        kafkaProducer.enqueueMessage(topic, bytes, partitionKey);
+        String topic = conf.getTopic(record);
+        Object partitionKey = conf.getPartitionKey(record, topic);
+        kafkaProducer.enqueueMessage(topic, serializeRecord(record), partitionKey);
         count++;
       } catch (KafkaConnectionException ex) {
         // Kafka connection exception is thrown when the client cannot connect to the list of brokers
@@ -262,9 +257,17 @@ public class KafkaTarget extends BaseTarget {
     LOG.debug("Wrote {} records in this batch.", count);
   }
 
+  private Object serializeRecord(Record record) throws StageException, IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+    DataGenerator generator = conf.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(baos);
+    generator.write(record);
+    generator.close();
+    return baos.toByteArray();
+  }
+
   @Override
   public void destroy() {
     LOG.info("Wrote {} number of records to Kafka Broker", recordCounter);
-    kafkaConfigBean.destroy();
+    conf.destroy();
   }
 }

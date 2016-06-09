@@ -48,6 +48,9 @@ public class KafkaSourceUpgrader implements StageUpgrader {
       case 3:
         upgradeV3ToV4(configs);
         break;
+      case 4:
+        upgradeV4ToV5(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -121,5 +124,12 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "valueDeserializer"), "DEFAULT"));
+    configs.add(new Config(joiner.join(CONF, "schemaRegistryUrls"), ""));
+
+    // TODO complete in subsequent patch
   }
 }

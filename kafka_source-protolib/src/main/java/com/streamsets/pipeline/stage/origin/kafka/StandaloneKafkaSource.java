@@ -66,7 +66,12 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
       MessageAndOffset message = kafkaConsumer.read();
       if (message != null) {
         String messageId = getMessageID(message);
-        List<Record> records = processKafkaMessage(String.valueOf(message.getPartition()), message.getOffset(), messageId, message.getPayload());
+        List<Record> records;
+        records = processKafkaMessageDefault(String.valueOf(message.getPartition()),
+            message.getOffset(),
+            messageId,
+            (byte[]) message.getPayload()
+        );
         // If we are in preview mode, make sure we don't send a huge number of messages.
         if (getContext().isPreview() && recordCounter + records.size() > batchSize) {
           records = records.subList(0, batchSize - recordCounter);

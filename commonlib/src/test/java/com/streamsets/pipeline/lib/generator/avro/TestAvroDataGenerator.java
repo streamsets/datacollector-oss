@@ -57,6 +57,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_DEFAULT;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
+
 public class TestAvroDataGenerator {
 
   private static final String AVRO_SCHEMA = "{\n"
@@ -122,7 +126,7 @@ public class TestAvroDataGenerator {
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.AVRO)
-      .setCharset(Charset.forName("UTF-16")).setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, AVRO_SCHEMA).build();
+      .setCharset(Charset.forName("UTF-16")).setConfig(SCHEMA_KEY, AVRO_SCHEMA).build();
     Assert.assertTrue(dataFactory instanceof AvroDataGeneratorFactory);
     AvroDataGeneratorFactory factory = (AvroDataGeneratorFactory) dataFactory;
     AvroDataOutputStreamGenerator generator = (AvroDataOutputStreamGenerator) factory.getGenerator(new ByteArrayOutputStream());
@@ -141,7 +145,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -209,7 +213,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -225,7 +229,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
         false,
         baos,
-        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
         new HashMap<String, Object>()
     );
@@ -240,7 +244,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
         false,
         baos,
-        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
         new HashMap<String, Object>()
     );
@@ -258,7 +262,7 @@ public class TestAvroDataGenerator {
     DataGenerator dataGenerator = new AvroDataOutputStreamGenerator(
         false,
         baos,
-        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
         AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -284,7 +288,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
         false,
         baos,
-        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
         new HashMap<String, Object>()
     );
@@ -322,9 +326,9 @@ public class TestAvroDataGenerator {
 
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.AVRO)
       .setCharset(Charset.forName("UTF-16"))
-      .setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, RECORD_SCHEMA)
+      .setConfig(SCHEMA_KEY, RECORD_SCHEMA)
       .setConfig(
-          AvroDataGeneratorFactory.DEFAULT_VALUES_KEY,
+          DEFAULT_VALUES_KEY,
           AvroTypeUtil.getDefaultValuesFromSchema(new Schema.Parser().parse(RECORD_SCHEMA), new HashSet<String>())
       )
       .build();
@@ -375,7 +379,7 @@ public class TestAvroDataGenerator {
     try {
       new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.AVRO)
         .setCharset(Charset.forName("UTF-16"))
-        .setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, INVALID_SCHEMA)
+        .setConfig(SCHEMA_KEY, INVALID_SCHEMA)
         .build();
       Assert.fail("Exception expected as schema is invalid");
     } catch (Exception e) {
@@ -391,7 +395,7 @@ public class TestAvroDataGenerator {
     try {
       new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.AVRO)
         .setCharset(Charset.forName("UTF-16"))
-        .setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, INVALID_SCHEMA_DEFAULTS)
+        .setConfig(SCHEMA_KEY, INVALID_SCHEMA_DEFAULTS)
         .build();
       Assert.fail("Exception expected as schema is invalid");
     } catch (Exception e) {
@@ -405,7 +409,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       true,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       null,
       null
     );
@@ -431,7 +435,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       true,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       null,
       null
     );
@@ -446,7 +450,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       true,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       null,
       null
     );
@@ -474,7 +478,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       DECIMAL_SCHEMA,
       new HashMap<String, Object>()
     );
@@ -503,7 +507,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       DATE_SCHEMA,
       new HashMap<String, Object>()
     );
@@ -540,7 +544,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       new HashMap<String, Object>()
     );
@@ -579,7 +583,7 @@ public class TestAvroDataGenerator {
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       false,
       baos,
-      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       new HashMap<String, Object>()
     );

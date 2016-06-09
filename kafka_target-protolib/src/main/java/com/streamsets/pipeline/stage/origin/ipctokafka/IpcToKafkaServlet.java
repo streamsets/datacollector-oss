@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.pipeline.stage.kafkautils.SdcKafkaProducerPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -51,7 +51,7 @@ public class IpcToKafkaServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(IpcToKafkaServlet.class);
 
   private final RpcConfigs configs;
-  private final KafkaConfigBean kafkaConfigBean;
+  private final KafkaTargetConfig kafkaTargetConfig;
   private final BlockingQueue<Exception> errorQueue;
   private final int maxRpcRequestSize;
   private final int maxMessageSize;
@@ -69,12 +69,12 @@ public class IpcToKafkaServlet extends HttpServlet {
   public IpcToKafkaServlet(
       Stage.Context context,
       RpcConfigs configs,
-      KafkaConfigBean kafkaConfigBean,
+      KafkaTargetConfig kafkaTargetConfig,
       int kafkaMaxMessageSize,
       BlockingQueue<Exception> errorQueue
   ) {
     this.configs = configs;
-    this.kafkaConfigBean = kafkaConfigBean;
+    this.kafkaTargetConfig = kafkaTargetConfig;
     this.errorQueue = errorQueue;
     maxRpcRequestSize = configs.maxRpcRequestSize * 1000 * 1000;
     maxMessageSize = kafkaMaxMessageSize * 1000;
@@ -107,7 +107,7 @@ public class IpcToKafkaServlet extends HttpServlet {
     poolConfig.setMaxIdle(maxIdle);
     LOG.debug("Creating Kafka producer pool with max '{}' minIdle '{}' maxIdle '{}'", max, minIdle, maxIdle);
     kafkaProducerPool = new GenericObjectPool<>(
-        new SdcKafkaProducerPooledObjectFactory(kafkaConfigBean.kafkaConfig, DataFormat.SDC_JSON),
+        new SdcKafkaProducerPooledObjectFactory(kafkaTargetConfig, DataFormat.SDC_JSON),
         poolConfig
     );
   }
@@ -191,7 +191,7 @@ public class IpcToKafkaServlet extends HttpServlet {
               for (byte[] message : messages) {
                 // we are using round robing partition strategy, partition key is ignored
                 kStart = System.currentTimeMillis();
-                producer.enqueueMessage(kafkaConfigBean.kafkaConfig.topic, message, "");
+                producer.enqueueMessage(kafkaTargetConfig.topic, message, "");
                 kafkaTime += System.currentTimeMillis() - kStart;
               }
               kStart = System.currentTimeMillis();

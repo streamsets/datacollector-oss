@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
@@ -33,6 +34,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -43,12 +45,12 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.streamsets.pipeline.Utils.KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX;
 import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
+import static com.streamsets.pipeline.Utils.KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX;
 
 public abstract class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
@@ -90,6 +92,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       );
     }
 
+    conf.init(getContext(), issues);
+
     conf.dataFormatConfig.init(
         getContext(),
         conf.dataFormat,
@@ -122,8 +126,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       int partitionCount = kafkaValidationUtil.getPartitionCount(
           conf.metadataBrokerList,
           conf.topic,
-          conf.kafkaConsumerConfigs == null ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>
-              (conf.kafkaConsumerConfigs),
+          new HashMap<String, Object>(conf.kafkaConsumerConfigs),
           3,
           1000
       );
@@ -159,26 +162,31 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     //consumerGroup
     if (conf.consumerGroup == null || conf.consumerGroup.isEmpty()) {
       issues.add(
-        getContext().createConfigIssue(
-          KafkaOriginGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
-          KafkaErrors.KAFKA_33
-        )
+          getContext().createConfigIssue(
+              KafkaOriginGroups.KAFKA.name(),
+              KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
+              KafkaErrors.KAFKA_33
+          )
       );
     }
 
     //validate connecting to kafka
     if (issues.isEmpty()) {
+      Map<String, Object> kafkaConsumerConfigs = new HashMap<>();
+      kafkaConsumerConfigs.putAll(conf.kafkaConsumerConfigs);
+      kafkaConsumerConfigs.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, conf.keyDeserializer.getKeyClass());
+      kafkaConsumerConfigs.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, conf.valueDeserializer.getValueClass());
+      kafkaConsumerConfigs.put(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
+          conf.dataFormatConfig.schemaRegistryUrls
+      );
       ConsumerFactorySettings settings = new ConsumerFactorySettings(
           conf.zookeeperConnect,
           conf.metadataBrokerList,
           conf.topic,
           conf.maxWaitTime,
           getContext(),
-          conf.kafkaConsumerConfigs == null ?
-              Collections.<String, Object>emptyMap() :
-              new HashMap<String, Object>(conf.kafkaConsumerConfigs),
-              conf.consumerGroup
+          kafkaConsumerConfigs,
+          conf.consumerGroup
       );
       kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
       kafkaConsumer.validate(issues, getContext());
@@ -194,9 +202,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       originParallelism = kafkaValidationUtil.getPartitionCount(
           conf.metadataBrokerList,
           conf.topic,
-          conf.kafkaConsumerConfigs == null ?
-              Collections.<String, Object>emptyMap() :
-              new HashMap<String, Object>(conf.kafkaConsumerConfigs),
+          new HashMap<String, Object>(conf.kafkaConsumerConfigs),
           3,
           1000
       );
@@ -207,9 +213,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     return originParallelism;
   }
 
-  protected List<Record> processKafkaMessage(String partition, long offset, String messageId, byte[] payload) throws StageException {
+  protected List<Record> processKafkaMessageDefault(String partition, long offset, String messageId, byte[] payload)
+    throws StageException {
     List<Record> records = new ArrayList<>();
-    try (DataParser parser = parserFactory.getParser(messageId, payload)) {
+    try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
       Record record = parser.parse();
       while (record != null) {
         record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);

@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
-import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -61,8 +61,8 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   private final Map<String, Object> kafkaProducerConfigs;
   private final DataFormat producerPayloadType;
   private final PartitionStrategy partitionStrategy;
-  private List<KeyedMessage<String, byte[]>> messageList;
-  private Producer<String, byte[]> producer;
+  private List<KeyedMessage> messageList;
+  private Producer producer;
 
   public KafkaProducer08(String metadataBrokerList, DataFormat producerPayloadType,
                          PartitionStrategy partitionStrategy, Map<String, Object> kafkaProducerConfigs) {
@@ -108,7 +108,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   }
 
   @Override
-  public void enqueueMessage(String topic, byte[] message, String partitionKey) {
+  public void enqueueMessage(String topic, Object message, Object partitionKey) {
     //Topic could be a record EL string. This is not a good place to evaluate expression
     //Hence get topic as parameter
     messageList.add(new KeyedMessage<>(topic, partitionKey, message));

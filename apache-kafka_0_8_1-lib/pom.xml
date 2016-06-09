@@ -51,6 +51,11 @@
           <groupId>com.101tec</groupId>
           <artifactId>zkclient</artifactId>
         </exclusion>
+        <!-- Not supported in 0.8.1 -->
+        <exclusion>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-avro-serializer</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

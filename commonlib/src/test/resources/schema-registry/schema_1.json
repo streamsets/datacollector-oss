@@ -1,0 +1,21 @@
+{
+  "type": "record",
+  "name": "TestRecord",
+  "fields": [
+    {
+      "name": "a",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "b",
+      "type": "long",
+      "default": 0
+    },
+    {
+      "name": "c",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}

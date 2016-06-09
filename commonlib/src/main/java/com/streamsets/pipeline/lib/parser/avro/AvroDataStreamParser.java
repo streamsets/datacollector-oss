@@ -46,15 +46,11 @@ public class AvroDataStreamParser extends AbstractDataParser {
   private boolean eof;
   private Stage.Context context;
 
-  public AvroDataStreamParser(Stage.Context context, String schema, String streamName, InputStream inputStream,
+  public AvroDataStreamParser(Stage.Context context, Schema schema, String streamName, InputStream inputStream,
                               long recordCount, int maxObjectLength)
     throws IOException {
     this.context = context;
-    if(schema != null && !schema.isEmpty()) {
-      avroSchema = new Schema.Parser().setValidate(true).parse(schema);
-    } else {
-      avroSchema = null;
-    }
+    avroSchema = schema;
     this.streamName = streamName;
     this.recordCount = recordCount;
     datumReader = new GenericDatumReader<>(avroSchema, avroSchema, GenericData.get()); //Reader schema argument is optional

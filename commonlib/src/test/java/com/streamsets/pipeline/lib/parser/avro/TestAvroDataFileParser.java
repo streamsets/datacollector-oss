@@ -43,6 +43,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_SOURCE_KEY;
+
 public class TestAvroDataFileParser {
 
   @Test
@@ -127,9 +131,10 @@ public class TestAvroDataFileParser {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
       DataParserFormat.AVRO);
     DataParserFactory factory = dataParserFactoryBuilder
-      .setMaxDataLen(1024 * 1024)
-      .setOverRunLimit(1000 * 1000)
-      .build();
+        .setMaxDataLen(1024 * 1024)
+        .setOverRunLimit(1000 * 1000)
+        .setConfig(SCHEMA_SOURCE_KEY, SOURCE)
+        .build();
     DataParser dataParser = factory.getParser(avroDataFile, null);
     Map<String, Record> records = new HashMap<>();
     Record record;
@@ -154,7 +159,7 @@ public class TestAvroDataFileParser {
       DataParserFormat.AVRO);
     DataParserFactory factory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
-      .setConfig(AvroDataParserFactory.SCHEMA_KEY, SdcAvroTestUtil.AVRO_SCHEMA)
+      .setConfig(SCHEMA_KEY, SdcAvroTestUtil.AVRO_SCHEMA)
       .setOverRunLimit(1000)
       .build();
     return factory.getParser(file, readerOffset);

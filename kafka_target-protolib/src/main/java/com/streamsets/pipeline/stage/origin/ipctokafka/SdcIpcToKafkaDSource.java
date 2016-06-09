@@ -28,49 +28,57 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 1,
+  version = 2,
   label = "SDC RPC to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination and " +
     "writes them to Kafka",
   icon="sdcipctokafka.png",
-  onlineHelpRefUrl = "index.html#Origins/SDCRPCtoKafka.html#task_il5_gtl_pw"
+  onlineHelpRefUrl = "index.html#Origins/SDCRPCtoKafka.html#task_il5_gtl_pw",
+    upgrader = SdcIpcToKafkaUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 @HideConfigs(
     value = {
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvFileFormat",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvHeader",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLinesString",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomEscape",
-      "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote",
-      "kafkaConfigBean.dataGeneratorFormatConfig.jsonMode",
-      "kafkaConfigBean.dataGeneratorFormatConfig.textFieldPath",
-      "kafkaConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull",
-      "kafkaConfigBean.dataGeneratorFormatConfig.avroSchemaInHeader",
-      "kafkaConfigBean.dataGeneratorFormatConfig.avroSchema",
-      "kafkaConfigBean.dataGeneratorFormatConfig.includeSchema",
-      "kafkaConfigBean.dataGeneratorFormatConfig.avroCompression",
-      "kafkaConfigBean.dataGeneratorFormatConfig.binaryFieldPath",
-      "kafkaConfigBean.dataGeneratorFormatConfig.protoDescriptorFile",
-      "kafkaConfigBean.dataGeneratorFormatConfig.messageType",
-      "kafkaConfigBean.dataGeneratorFormatConfig.fileNameEL",
-      "kafkaConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
-      "kafkaConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents",
-      "kafkaConfigBean.dataGeneratorFormatConfig.checksumAlgorithm",
-      "kafkaConfigBean.dataFormat",
-      "kafkaConfigBean.kafkaConfig.runtimeTopicResolution",
-      "kafkaConfigBean.kafkaConfig.partitionStrategy",
-      "kafkaConfigBean.kafkaConfig.partition",
-      "kafkaConfigBean.kafkaConfig.singleMessagePerBatch",
-      "kafkaConfigBean.kafkaConfig.topicExpression",
-      "kafkaConfigBean.kafkaConfig.topicWhiteList"
+        "conf.dataGeneratorFormatConfig.csvFileFormat",
+        "conf.dataGeneratorFormatConfig.csvHeader",
+        "conf.dataGeneratorFormatConfig.csvReplaceNewLines",
+        "conf.dataGeneratorFormatConfig.csvReplaceNewLinesString",
+        "conf.dataGeneratorFormatConfig.csvCustomDelimiter",
+        "conf.dataGeneratorFormatConfig.csvCustomEscape",
+        "conf.dataGeneratorFormatConfig.csvCustomQuote",
+        "conf.dataGeneratorFormatConfig.jsonMode",
+        "conf.dataGeneratorFormatConfig.textFieldPath",
+        "conf.dataGeneratorFormatConfig.textEmptyLineIfNull",
+        "conf.dataGeneratorFormatConfig.avroSchemaSource",
+        "conf.dataGeneratorFormatConfig.avroSchema",
+        "conf.dataGeneratorFormatConfig.schemaRegistryUrls",
+        "conf.dataGeneratorFormatConfig.schemaLookupMode",
+        "conf.dataGeneratorFormatConfig.subject",
+        "conf.dataGeneratorFormatConfig.subjectToRegister",
+        "conf.dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration",
+        "conf.dataGeneratorFormatConfig.registerSchema",
+        "conf.dataGeneratorFormatConfig.schemaId",
+        "conf.dataGeneratorFormatConfig.includeSchema",
+        "conf.dataGeneratorFormatConfig.avroCompression",
+        "conf.dataGeneratorFormatConfig.binaryFieldPath",
+        "conf.dataGeneratorFormatConfig.protoDescriptorFile",
+        "conf.dataGeneratorFormatConfig.messageType",
+        "conf.dataGeneratorFormatConfig.fileNameEL",
+        "conf.dataGeneratorFormatConfig.wholeFileExistsAction",
+        "conf.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+        "conf.dataGeneratorFormatConfig.checksumAlgorithm",
+        "conf.dataFormat",
+        "conf.runtimeTopicResolution",
+        "conf.partitionStrategy",
+        "conf.partition",
+        "conf.singleMessagePerBatch",
+        "conf.topicExpression",
+        "conf.topicWhiteList"
     }
 )
 public class SdcIpcToKafkaDSource extends DSourceOffsetCommitter {
@@ -79,7 +87,7 @@ public class SdcIpcToKafkaDSource extends DSourceOffsetCommitter {
   public RpcConfigs configs;
 
   @ConfigDefBean()
-  public KafkaConfigBean kafkaConfigBean;
+  public KafkaTargetConfig conf;
 
   @ConfigDef(
     required = true,
@@ -110,7 +118,7 @@ public class SdcIpcToKafkaDSource extends DSourceOffsetCommitter {
 
   @Override
   protected Source createSource() {
-    kafkaConfigBean.kafkaConfig.topic = topic;
-    return new SdcIpcToKafkaSource(configs, kafkaConfigBean, kafkaMaxMessageSize);
+    conf.topic = topic;
+    return new SdcIpcToKafkaSource(configs, conf, kafkaMaxMessageSize);
   }
 }

@@ -46,30 +46,23 @@ public class AvroDataFileParser extends AbstractDataParser {
 
   private static final String OFFSET_SEPARATOR = "::";
 
-  private final Schema avroSchema;
   private final File file;
   private final SeekableOverrunFileInputStream sin;
   private long previousSync;
   private long recordCount;
-  private final DatumReader<GenericRecord> datumReader;
   private final DataFileReader<GenericRecord> dataFileReader;
   private boolean eof;
   private Stage.Context context;
 
-  public AvroDataFileParser(Stage.Context context, String schema, File file, String readerOffset, int maxObjectLength)
+  public AvroDataFileParser(Stage.Context context, Schema schema, File file, String readerOffset, int maxObjectLength)
     throws IOException {
     this.context = context;
-    if(schema != null && !schema.isEmpty()) {
-      avroSchema = new Schema.Parser().setValidate(true).parse(schema);
-    } else {
-      avroSchema = null;
-    }
     this.file = file;
-    datumReader = new GenericDatumReader<>(avroSchema, avroSchema, GenericData.get()); //Reader schema argument is optional
+    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema, schema, GenericData.get());
     sin = new SeekableOverrunFileInputStream(
       new FileInputStream(file), maxObjectLength, true);
     dataFileReader = new DataFileReader<>(sin, datumReader);
-    if(readerOffset != null && !readerOffset.isEmpty() && !readerOffset.equals("0")) {
+    if(readerOffset != null && !readerOffset.isEmpty() && !"0".equals(readerOffset)) {
       String[] split = readerOffset.split(OFFSET_SEPARATOR);
       if(split.length == 3) {
         //split[0] is the file name

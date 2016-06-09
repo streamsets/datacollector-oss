@@ -33,6 +33,8 @@
 
   <properties>
     <kafka.version>0.8.1.1</kafka.version>
+    <!-- Schema Registry integration is only compatible with Kafka 0.8.2.1+ -->
+    <confluent.version>1.0.1</confluent.version>
     <tec.version>0.3</tec.version>
     <scala.version>2.10.4</scala.version>
     <guava.version>18.0</guava.version>
@@ -117,6 +119,11 @@
       <version>${kafka.version}</version>
       <classifier>test</classifier>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${confluent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>

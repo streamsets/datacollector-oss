@@ -19,20 +19,19 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
+import com.streamsets.pipeline.impl.OffsetAndResult;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,12 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     String messageId = String.format("kafka::%s::unknown", offset); // don't inc as we have not progressed
     for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
       messageId = String.format("kafka::%s::%d", conf.topic, offset);
-      List<Record> records = processKafkaMessage(new String((byte[]) messageAndPartition.getKey()), offset, messageId, (byte[]) messageAndPartition.getValue());
+      List<Record> records = processKafkaMessageDefault(
+          new String((byte[]) messageAndPartition.getKey()),
+          offset,
+          messageId,
+          (byte[]) messageAndPartition.getValue()
+      );
       offset++;
       for (Record record : records) {
         batchMaker.addRecord(record);

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
@@ -36,6 +37,9 @@ import kafka.zk.EmbeddedZookeeper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.security.JaasUtils;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -82,6 +86,8 @@ public class KafkaConsumer09IT {
     props.put("auto.commit.interval.ms", "1000");
     props.put("auto.offset.reset", "earliest");
     props.put("session.timeout.ms", "30000");
+    props.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    props.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
     SdcKafkaConsumer sdcKafkaConsumer = createSdcKafkaConsumer(
         "localhost:" + port,
         topic,
@@ -120,7 +126,7 @@ public class KafkaConsumer09IT {
 
   private void verify(List<MessageAndOffset> read, String message) {
     for(int i = 0; i < read.size(); i++) {
-      Assert.assertEquals(message+i, new String(read.get(i).getPayload()));
+      Assert.assertEquals(message+i, new String((byte[])read.get(i).getPayload()));
     }
   }
 
@@ -132,8 +138,8 @@ public class KafkaConsumer09IT {
     props.put("batch.size", 16384);
     props.put("linger.ms", 1);
     props.put("buffer.memory", 33554432);
-    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    props.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    props.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
     KafkaProducer<String, String> producer = new KafkaProducer<>(props);
     for(int i = 0; i < 10; i++)

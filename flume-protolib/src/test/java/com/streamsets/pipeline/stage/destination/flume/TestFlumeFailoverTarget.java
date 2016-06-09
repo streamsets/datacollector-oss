@@ -66,6 +66,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
+
 public class TestFlumeFailoverTarget {
 
   private AvroSource source;
@@ -374,6 +376,7 @@ public class TestFlumeFailoverTarget {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.avroSchemaSource = INLINE;
     dataGeneratorFormatConfig.includeSchema = true;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
 
@@ -415,6 +418,7 @@ public class TestFlumeFailoverTarget {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.avroSchemaSource = INLINE;
     dataGeneratorFormatConfig.includeSchema = true;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
@@ -458,6 +462,7 @@ public class TestFlumeFailoverTarget {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.avroSchemaSource = INLINE;
     dataGeneratorFormatConfig.includeSchema = false;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
@@ -497,6 +502,7 @@ public class TestFlumeFailoverTarget {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.avroSchemaSource = INLINE;
     dataGeneratorFormatConfig.includeSchema = false;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(

@@ -30,7 +30,6 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.testing.NetworkUtils;
 import com.streamsets.testing.SingleForkNoReuseTest;
@@ -133,10 +132,9 @@ public class TestSdcIpcToKafka {
     configs.keyStorePassword = "keystore";
     configs.port = randomPort;
 
-    KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
-    kafkaConfigBean.kafkaConfig = new KafkaTargetConfig();
-    kafkaConfigBean.kafkaConfig.topic = TOPIC1;
-    kafkaConfigBean.kafkaConfig.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();
+    kafkaConfigBean.topic = TOPIC1;
+    kafkaConfigBean.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
 
     final SdcIpcToKafkaSource source = new SdcIpcToKafkaSource(configs, kafkaConfigBean, 1000);
 

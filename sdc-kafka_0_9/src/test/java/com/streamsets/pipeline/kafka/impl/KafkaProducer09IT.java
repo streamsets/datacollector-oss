@@ -26,6 +26,7 @@ import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.admin.AdminUtils;
@@ -38,6 +39,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.security.JaasUtils;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -46,6 +50,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +139,8 @@ public class KafkaProducer09IT {
     kafkaProducerConfigs.put("retries", 0);
     kafkaProducerConfigs.put("batch.size", 100);
     kafkaProducerConfigs.put("linger.ms", 0);
+    kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
     // Set the message size to 510 as "message.max.bytes" is set to 500
     final String message = StringUtils.leftPad("a", 510, "b");
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
@@ -158,7 +165,8 @@ public class KafkaProducer09IT {
     kafkaProducerConfigs.put("retries", 0);
     kafkaProducerConfigs.put("batch.size", 100);
     kafkaProducerConfigs.put("linger.ms", 0);
-
+    kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
     SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
     sdcKafkaProducer.init();
     String topic = getNextTopic();
@@ -193,10 +201,10 @@ public class KafkaProducer09IT {
     props.put("auto.commit.interval.ms", "1000");
     props.put("auto.offset.reset", "earliest");
     props.put("session.timeout.ms", "30000");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    props.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-    consumer.subscribe(Arrays.asList(topic));
+    consumer.subscribe(Collections.singletonList(topic));
     List<ConsumerRecord<String, String>> buffer = new ArrayList<>();
     while (buffer.size() < 1) {
       ConsumerRecords<String, String> records = consumer.poll(1000);

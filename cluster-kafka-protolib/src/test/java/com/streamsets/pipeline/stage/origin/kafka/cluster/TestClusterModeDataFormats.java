@@ -110,7 +110,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -148,9 +147,8 @@ public class TestClusterModeDataFormats {
         Assert.assertEquals("For record: " + i, "" + i, records.get(i).getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
       }
 
-    if (sourceRunner != null) {
       sourceRunner.runDestroy();
-    }}
+    }
     finally {
       if (th != null) {
         th.interrupt();
@@ -167,7 +165,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -212,7 +209,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -265,7 +261,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = true;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -317,7 +312,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -369,7 +363,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.charset = "UTF-8";
@@ -420,7 +413,6 @@ public class TestClusterModeDataFormats {
     conf.zookeeperConnect = zkConnect;
     conf.maxBatchSize = 1000;
     conf.maxWaitTime = 10000;
-    conf.kafkaConsumerConfigs = null;
     conf.produceSingleRecordPerMessage = true;
     conf.dataFormat = DataFormat.DELIMITED;
     conf.dataFormatConfig.charset = "UTF-8";

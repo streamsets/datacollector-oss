@@ -115,12 +115,11 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
       List<MessageAndOffset> messages = kafkaConsumer.read(kafkaConsumer.getOffsetToRead(true));
       ByteArrayOutputStream bOut = new ByteArrayOutputStream(maxLength);
       for(MessageAndOffset m : messages) {
-        bOut.write(m.getPayload());
+        bOut.write((byte[])m.getPayload());
       }
       bOut.flush();
       bOut.close();
-      ByteArrayInputStream bIn = new ByteArrayInputStream(bOut.toByteArray());
-      return bIn;
+      return new ByteArrayInputStream(bOut.toByteArray());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

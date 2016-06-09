@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 
 @GenerateResourceBundle
 public enum DataFormatErrors implements ErrorCode {
@@ -34,6 +35,7 @@ public enum DataFormatErrors implements ErrorCode {
   DATA_FORMAT_08("Message type must be specified"),
   DATA_FORMAT_09("Protobuf Descriptor File '{}' does not exist"),
   DATA_FORMAT_10("Error getting descriptor for message '{}' using protobuf descriptor file '{}', reason: {}"),
+  DATA_FORMAT_11(AvroSchemaLookupMode.AUTO.getLabel() + " is not supported for this stage"),
 
   DATA_FORMAT_200("Field cannot be empty"),
   DATA_FORMAT_201("Cannot create the parser factory: {}"),

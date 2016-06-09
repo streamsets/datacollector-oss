@@ -27,7 +27,7 @@ public interface SdcKafkaProducer {
 
   public void destroy();
 
-  public void enqueueMessage(String topic, byte[] message, String partitionKey);
+  public void enqueueMessage(String topic, Object message, Object partitionKey);
 
   public void write() throws StageException;
 

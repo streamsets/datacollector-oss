@@ -34,36 +34,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertFalse;
+
 public class TestKafkaTargetUpgrader {
 
   @Test
-  public void testKafkaTargetUpgrader() throws StageException {
+  public void testUpgradeV1toV2() throws StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap<>();
-    kafkaProducerConfig.put("request.required.acks", "-1");
-    kafkaProducerConfig.put("request.timeout.ms", "2000");
-
-    List<Config> configs = new ArrayList<>();
-    configs.add(new Config("metadataBrokerList", "localhost:9001,localhost:9002,localhost:9003"));
-    configs.add(new Config("runtimeTopicResolution", true));
-    configs.add(new Config("topicExpression", "${record:value('/topic')}"));
-    configs.add(new Config("topicWhiteList", "*"));
-    configs.add(new Config("topic", null));
-    configs.add(new Config("partitionStrategy", PartitionStrategy.EXPRESSION));
-    configs.add(new Config("partition", "${record:value('/partition') % 5}"));
-    configs.add(new Config("singleMessagePerBatch", true));
-    configs.add(new Config("kafkaProducerConfigs", kafkaProducerConfig));
-    configs.add(new Config("charset", "UTF-8"));
-    configs.add(new Config("dataFormat", DataFormat.TEXT));
-    configs.add(new Config("csvFileFormat", CsvMode.EXCEL));
-    configs.add(new Config("csvHeader", CsvHeader.WITH_HEADER));
-    configs.add(new Config("csvReplaceNewLines", false));
-    configs.add(new Config("jsonMode", JsonMode.ARRAY_OBJECTS));
-    configs.add(new Config("textFieldPath", "/myField"));
-    configs.add(new Config("textEmptyLineIfNull", true));
-    configs.add(new Config("avroSchema", "hello!!"));
-    configs.add(new Config("includeSchema", true));
-    configs.add(new Config("binaryFieldPath", "/binaryField"));
+    Map<String, String> kafkaProducerConfig = generateV1ProducerConfigs();
+    List<Config> configs = generateV1Configs(kafkaProducerConfig);
 
     KafkaTargetUpgrader kafkaTargetUpgrader = new KafkaTargetUpgrader();
     kafkaTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
@@ -148,5 +127,50 @@ public class TestKafkaTargetUpgrader {
 
     Assert.assertEquals("NULL", configValues.get("kafkaConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
+  }
+
+  @Test
+  public void testUpgradeV2toV3() throws Exception {
+    Map<String, String> kafkaProducerConfig = generateV1ProducerConfigs();
+    List<Config> configs = generateV1Configs(kafkaProducerConfig);
+
+    KafkaTargetUpgrader kafkaTargetUpgrader = new KafkaTargetUpgrader();
+    kafkaTargetUpgrader.upgrade("a", "b", "c", 1, 3, configs);
+
+    for (Config config : configs) {
+      assertFalse(config.getName().contains("kafkaConfig"));
+    }
+  }
+
+  private Map<String, String> generateV1ProducerConfigs() {
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+    return kafkaProducerConfig;
+  }
+
+  private List<Config> generateV1Configs(Map<String, String> kafkaProducerConfig) {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("metadataBrokerList", "localhost:9001,localhost:9002,localhost:9003"));
+    configs.add(new Config("runtimeTopicResolution", true));
+    configs.add(new Config("topicExpression", "${record:value('/topic')}"));
+    configs.add(new Config("topicWhiteList", "*"));
+    configs.add(new Config("topic", null));
+    configs.add(new Config("partitionStrategy", PartitionStrategy.EXPRESSION));
+    configs.add(new Config("partition", "${record:value('/partition') % 5}"));
+    configs.add(new Config("singleMessagePerBatch", true));
+    configs.add(new Config("kafkaProducerConfigs", kafkaProducerConfig));
+    configs.add(new Config("charset", "UTF-8"));
+    configs.add(new Config("dataFormat", DataFormat.TEXT));
+    configs.add(new Config("csvFileFormat", CsvMode.EXCEL));
+    configs.add(new Config("csvHeader", CsvHeader.WITH_HEADER));
+    configs.add(new Config("csvReplaceNewLines", false));
+    configs.add(new Config("jsonMode", JsonMode.ARRAY_OBJECTS));
+    configs.add(new Config("textFieldPath", "/myField"));
+    configs.add(new Config("textEmptyLineIfNull", true));
+    configs.add(new Config("avroSchema", "hello!!"));
+    configs.add(new Config("includeSchema", true));
+    configs.add(new Config("binaryFieldPath", "/binaryField"));
+    return configs;
   }
 }

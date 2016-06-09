@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.stage.origin.ipctokafka;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -44,7 +44,7 @@ public class IpcToKafkaServer {
 
   private final Stage.Context context;
   private final RpcConfigs configs;
-  private final KafkaConfigBean kafkaConfigBean;
+  private final KafkaTargetConfig KafkaTargetConfig;
   private final int kafkaMaxMessageSize;
   private final BlockingQueue<Exception> errorQueue;
   private Server httpServer;
@@ -53,13 +53,13 @@ public class IpcToKafkaServer {
   public IpcToKafkaServer(
       Stage.Context context,
       RpcConfigs configs,
-      KafkaConfigBean kafkaConfigBean,
+      KafkaTargetConfig KafkaTargetConfig,
       int kafkaMaxMessageSize,
       BlockingQueue<Exception> errorQueue
   ) {
     this.context = context;
     this.configs = configs;
-    this.kafkaConfigBean = kafkaConfigBean;
+    this.KafkaTargetConfig = KafkaTargetConfig;
     this.kafkaMaxMessageSize = kafkaMaxMessageSize;
     this.errorQueue = errorQueue;
   }
@@ -100,7 +100,7 @@ public class IpcToKafkaServer {
     connector.setPort(configs.port);
     server.setConnectors(new Connector[]{connector});
 
-    servlet = new IpcToKafkaServlet(context, configs, kafkaConfigBean, kafkaMaxMessageSize, errorQueue);
+    servlet = new IpcToKafkaServlet(context, configs, KafkaTargetConfig, kafkaMaxMessageSize, errorQueue);
     ServletContextHandler contextHandler = new ServletContextHandler();
     contextHandler.addServlet(new ServletHolder(servlet), Constants.IPC_PATH);
     contextHandler.setContextPath("/");

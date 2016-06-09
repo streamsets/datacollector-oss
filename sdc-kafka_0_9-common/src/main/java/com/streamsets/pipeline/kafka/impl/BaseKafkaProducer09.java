@@ -23,7 +23,6 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
-
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -37,7 +36,7 @@ import java.util.concurrent.Future;
 
 public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
 
-  private KafkaProducer<String, byte[]> producer;
+  private KafkaProducer producer;
   private final List<Future<RecordMetadata>> futureList;
 
   public BaseKafkaProducer09() {
@@ -56,9 +55,10 @@ public abstract class BaseKafkaProducer09 implements SdcKafkaProducer {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void enqueueMessage(String topic, byte[] message, String partitionKey) {
-    ProducerRecord<String, byte[]> e = new ProducerRecord<>(topic, partitionKey, message);
+  public void enqueueMessage(String topic, Object message, Object partitionKey) {
+    ProducerRecord e = new ProducerRecord<>(topic, partitionKey, message);
     // send will place this record in the buffer to be batched later
     futureList.add(producer.send(e));
   }

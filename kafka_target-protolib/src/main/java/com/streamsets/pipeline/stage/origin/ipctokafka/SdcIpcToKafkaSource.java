@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,22 +38,22 @@ public class SdcIpcToKafkaSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(SdcIpcToKafkaSource.class);
 
   private final RpcConfigs configs;
-  private final KafkaConfigBean kafkaConfigBean;
+  private final KafkaTargetConfig KafkaTargetConfig;
   private final int kafkaMaxMessageSize;
   private IpcToKafkaServer ipcToKafkaServer;
   private long counter;
   private BlockingQueue<Exception> errorQueue;
   private List<Exception> errorList;
 
-  public SdcIpcToKafkaSource(RpcConfigs configs, KafkaConfigBean kafkaConfigBean, int kafkaMaxMessageSize) {
+  public SdcIpcToKafkaSource(RpcConfigs configs, KafkaTargetConfig KafkaTargetConfig, int kafkaMaxMessageSize) {
     this.configs = configs;
-    this.kafkaConfigBean = kafkaConfigBean;
+    this.KafkaTargetConfig = KafkaTargetConfig;
     this.kafkaMaxMessageSize = kafkaMaxMessageSize;
 
     // Although the following is not used it helps validate Kafka connection
     // set the data format to SDC_JSON
-    kafkaConfigBean.dataFormat = DataFormat.SDC_JSON;
-    kafkaConfigBean.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    KafkaTargetConfig.dataFormat = DataFormat.SDC_JSON;
+    KafkaTargetConfig.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
   }
 
   @Override
@@ -61,11 +61,11 @@ public class SdcIpcToKafkaSource extends BaseSource implements OffsetCommitter {
     List<ConfigIssue> issues = super.init();
     issues.addAll(configs.init(getContext()));
     // init and validate kafka configs
-    kafkaConfigBean.init(getContext(), issues);
+    KafkaTargetConfig.init(getContext(), issues);
     if (issues.isEmpty()) {
       errorQueue = new ArrayBlockingQueue<>(100);
       errorList = new ArrayList<>(100);
-      ipcToKafkaServer = new IpcToKafkaServer(getContext(), configs, kafkaConfigBean, kafkaMaxMessageSize, errorQueue);
+      ipcToKafkaServer = new IpcToKafkaServer(getContext(), configs, KafkaTargetConfig, kafkaMaxMessageSize, errorQueue);
       try {
         ipcToKafkaServer.start();
       } catch (Exception ex) {
