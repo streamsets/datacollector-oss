@@ -24,15 +24,15 @@ import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 
 public class HiveMetastoreTargetBuilder {
 
-  private boolean useAsAvro;
+  private boolean storedAsAvro;
   private String hdfsUser;
 
   public HiveMetastoreTargetBuilder() {
-    this.useAsAvro = true;
+    this.storedAsAvro = true;
   }
 
-  public HiveMetastoreTargetBuilder useAsAvro(boolean useAsAvro) {
-    this.useAsAvro = useAsAvro;
+  public HiveMetastoreTargetBuilder useAsAvro(boolean storedAsAvro) {
+    this.storedAsAvro = storedAsAvro;
     return this;
   }
 
@@ -43,7 +43,7 @@ public class HiveMetastoreTargetBuilder {
 
   public HiveMetastoreTarget build() {
     HMSTargetConfigBean config = new HMSTargetConfigBean();
-    config.useAsAvro = useAsAvro;
+    config.storedAsAvro = storedAsAvro;
     config.hdfsUser = hdfsUser;
     config.hiveConfigBean = BaseHiveIT.getHiveConfigBean();
     return new HiveMetastoreTarget(config);

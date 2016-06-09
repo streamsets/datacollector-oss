@@ -51,7 +51,7 @@ import java.util.Set;
 public class HiveMetastoreTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
   private static final String CONF = "conf";
-  private static final String USE_AS_AVRO = "useAsAvro";
+  private static final String STORED_AS_AVRO = "storedAsAvro";
   private static final String EXTERNAL = "External";
 
   private final HMSTargetConfigBean conf;
@@ -107,13 +107,13 @@ public class HiveMetastoreTarget extends BaseTarget {
             conf.hiveConfigBean.getUgi()
         );
 
-        if (tblPropertiesInfo != null && tblPropertiesInfo.isUseAsAvro() != conf.useAsAvro) {
+        if (tblPropertiesInfo != null && tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
           LOG.warn(
               Utils.format(
                   Errors.HIVE_23.getMessage(),
-                  USE_AS_AVRO,
-                  conf.useAsAvro,
-                  tblPropertiesInfo.isUseAsAvro()
+                  STORED_AS_AVRO,
+                  conf.storedAsAvro,
+                  tblPropertiesInfo.isStoredAsAvro()
               )
           );
         }
@@ -163,7 +163,7 @@ public class HiveMetastoreTarget extends BaseTarget {
 
     if (cachedColumnTypeInfo == null) {
       //Table Does not exist use the schema from the metadata record as is.
-      if (!conf.useAsAvro) {
+      if (!conf.storedAsAvro) {
         schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
             conf.getHDFSUgi(),
             conf.getFileSystem(),
@@ -176,7 +176,7 @@ public class HiveMetastoreTarget extends BaseTarget {
           qualifiedTableName,
           newColumnTypeInfo,
           partitionTypeInfo,
-          conf.useAsAvro,
+          conf.storedAsAvro,
           schemaPath,
           isInternal
       );
@@ -191,7 +191,7 @@ public class HiveMetastoreTarget extends BaseTarget {
       LinkedHashMap<String, HiveTypeInfo> columnDiff = cachedColumnTypeInfo.getDiff(newColumnTypeInfo);
       if (!columnDiff.isEmpty()) {
         //Regenerate schema with all the columns. (This will factor for in existing, new and missing columns).
-        if (!conf.useAsAvro) {
+        if (!conf.storedAsAvro) {
           Map<String, HiveTypeInfo> mergedTypeInfo = new LinkedHashMap<>(cachedColumnTypeInfo.getColumnTypeInfo());
           mergedTypeInfo.putAll(columnDiff);
           schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
@@ -205,7 +205,7 @@ public class HiveMetastoreTarget extends BaseTarget {
         //Add Columns
         hiveQueryExecutor.executeAlterTableAddColumnsQuery(qualifiedTableName, columnDiff);
 
-        if (!conf.useAsAvro) {
+        if (!conf.storedAsAvro) {
           hiveQueryExecutor.executeAlterTableSetTblPropertiesQuery(qualifiedTableName, schemaPath);
         }
         cachedColumnTypeInfo.updateState(columnDiff);

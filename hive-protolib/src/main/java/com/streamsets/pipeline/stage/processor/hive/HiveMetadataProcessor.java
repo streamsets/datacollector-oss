@@ -156,8 +156,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     if (issues.isEmpty()) {
       errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-      hmsLane = getContext().getOutputLanes().get(0);
-      hdfsLane = getContext().getOutputLanes().get(1);
+      hdfsLane = getContext().getOutputLanes().get(0);
+      hmsLane = getContext().getOutputLanes().get(1);
       elEval = getContext().createELEval(HIVE_DB_NAME);
       // load cache
       cache = HMSCache.newCacheBuilder()

@@ -45,10 +45,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hdfs")
+        .addOutputLane("hive")
+        .build();
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(0, issues.size());
@@ -59,10 +59,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hdfs")
+        .addOutputLane("hive")
+        .build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
@@ -95,7 +95,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     // The record should have "roll" set to true
     Assert.assertNotNull(hdfsRecord.getHeader().getAttribute("roll"));
     // Target directory with correct path
-    Assert.assertEquals("/user/hive/warehouse/tbl/dt=secret-value", hdfsRecord.getHeader().getAttribute("targetDirectory"));
+    Assert.assertEquals(
+        "/user/hive/warehouse/tbl/dt=secret-value",
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
 
     // Sending the same record second time should not generate any metadata outputs
     output = runner.runProcess(ImmutableList.of(record));
@@ -110,10 +113,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hdfs")
+        .addOutputLane("hive")
+        .build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
@@ -141,10 +144,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hdfs")
+        .addOutputLane("hive")
+        .build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
@@ -166,19 +169,19 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
   @Test
   public void testSubpartitions() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .partitions(new PartitionConfigBuilder()
-        .addPartition("year", HiveType.STRING, "2016")
-        .addPartition("month", HiveType.STRING, "06")
-        .addPartition("day", HiveType.STRING, "05")
-        .build()
-      )
-      .build();
+        .partitions(new PartitionConfigBuilder()
+            .addPartition("year", HiveType.STRING, "2016")
+            .addPartition("month", HiveType.STRING, "06")
+            .addPartition("day", HiveType.STRING, "05")
+            .build()
+        )
+        .build();
 
     ProcessorRunner runner = new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addOutputLane("hive")
-      .addOutputLane("hdfs")
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("hdfs")
+        .addOutputLane("hive")
+        .build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
@@ -197,7 +200,10 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     // The record should have "roll" set to true
     Assert.assertNotNull(hdfsRecord.getHeader().getAttribute("roll"));
     // Target directory with correct path
-    Assert.assertEquals("/user/hive/warehouse/tbl/year=2016/month=06/day=05", hdfsRecord.getHeader().getAttribute("targetDirectory"));
+    Assert.assertEquals(
+        "/user/hive/warehouse/tbl/year=2016/month=06/day=05",
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
   }
 
 }

@@ -31,11 +31,11 @@ import java.util.List;
 
 @StageDef(
     version=1,
-    label="Hive Metadata Processor",
-    description = "Extract Hive Metadata, update the schema if record structure changed, and send data to HDFS",
+    label="Hive Metadata",
+    description = "Generates Hive metadata and write information for HDFS",
     icon="metadata.png",
     outputStreams = HiveMetadataOutputStreams.class,
-    onlineHelpRefUrl = "index.html#Processors/HiveMetadataProcessor.html#" // TODO: add URL here
+    onlineHelpRefUrl = "index.html#Processors/HiveMetadata.html#task_hpg_pft_zv"
 )
 
 @ConfigGroups(Groups.class)

@@ -60,15 +60,16 @@ public class HMSTargetConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use as Avro",
-      description = "Specifies Whether the table properties should not contain the schema url",
+      label = "Stored as Avro",
+      description = "Use to include the Stored as Avro clause in the table creation SQL." +
+          " When selected, the Avro schema URL will not be included in the query.",
       defaultValue = "true",
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
       displayPosition = 30,
       group = "ADVANCED"
   )
-  public boolean useAsAvro = true;
+  public boolean storedAsAvro = true;
 
   //Same as in HDFS origin.
   @ConfigDef(
@@ -80,7 +81,7 @@ public class HMSTargetConfigBean {
           " user must be configured as a proxy user in HDFS.",
       displayPosition = 40,
       group = "ADVANCED",
-      dependsOn = "useAsAvro",
+      dependsOn = "storedAsAvro",
       triggeredByValue = "false"
   )
   public String hdfsUser;
@@ -97,7 +98,7 @@ public class HMSTargetConfigBean {
   }
 
   public void destroy() {
-    if (useAsAvro) {
+    if (storedAsAvro) {
       return;
     }
     try {
@@ -117,7 +118,7 @@ public class HMSTargetConfigBean {
 
   public void init(final Stage.Context context, final String prefix, final List<Stage.ConfigIssue> issues) {
     hiveConfigBean.init(context, JOINER.join(prefix, HIVE_CONFIG_BEAN), issues);
-    if (useAsAvro) {
+    if (storedAsAvro) {
       return;
     }
     //use ugi.

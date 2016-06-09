@@ -57,8 +57,8 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
     // Runners
     ProcessorRunner procesorRunner = new ProcessorRunner.Builder(HiveMetadataDProcessor.class, processor)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .addOutputLane("hive")
         .addOutputLane("hdfs")
+        .addOutputLane("hive")
         .build();
     TargetRunner hiveTargetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, hiveTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)

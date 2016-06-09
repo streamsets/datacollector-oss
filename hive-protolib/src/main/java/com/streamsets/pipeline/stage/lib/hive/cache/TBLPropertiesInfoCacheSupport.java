@@ -53,7 +53,7 @@ public class TBLPropertiesInfoCacheSupport
       return state.getLeft();
     }
 
-    public boolean isUseAsAvro() {
+    public boolean isStoredAsAvro() {
       return state.getRight();
     }
 

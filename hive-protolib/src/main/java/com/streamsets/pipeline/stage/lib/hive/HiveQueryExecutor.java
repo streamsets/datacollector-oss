@@ -454,9 +454,9 @@ public final class HiveQueryExecutor {
   }
 
   /**
-   * Returns {@link Pair} of IsExternal and useAsAvro TBLProperties.
+   * Returns {@link Pair} of IsExternal and storedAsAvro TBLProperties.
    * @param qualifiedTableName qualified table name.
-   * @return {@link Pair} of IsExternal and useAsAvro.
+   * @return {@link Pair} of IsExternal and storedAsAvro.
    * @throws StageException in case of any {@link SQLException}
    */
   public Pair<Boolean, Boolean> executeShowTBLPropertiesQuery(

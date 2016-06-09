@@ -30,8 +30,8 @@ import com.streamsets.pipeline.stage.lib.hive.Groups;
 
 @StageDef(
     version = 1,
-    label = "Hive Metastore Target",
-    description = "Performs DDLs for Hive.",
+    label = "Hive Metastore",
+    description = "Updates the Hive Metastore.",
     icon = "hive.png",
     privateClassLoader = true,
     onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv"

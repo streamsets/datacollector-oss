@@ -49,9 +49,10 @@ public class HiveConfigBean {
 
   @ConfigDef(
       required = true,
-      label = "Hive JDBC URL",
+      label = "JDBC URL",
       type = ConfigDef.Type.STRING,
-      description = "Hive JDBC URL",
+      description = "JDBC URL used to connect to Hive." +
+          "Use a valid JDBC URL format, such as: jdbc:hive2://<host>:<port>/<dbname>.",
       defaultValue = "jdbc:hive2://<host>:<port>/" +
           "${record:value('"+ HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD+"')}",
       displayPosition= 10,
@@ -65,8 +66,8 @@ public class HiveConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "org.apache.hive.jdbc.HiveDriver",
-      label = "Hive JDBC Driver Name",
-      description = "The Fully Qualifed Hive JDBC Drive Class Name",
+      label = "JDBC Driver Name",
+      description = "The fully-qualified JDBC driver class name",
       displayPosition = 20,
       group = "HIVE"
   )
@@ -76,9 +77,9 @@ public class HiveConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "/etc/hive/conf",
-      label = "Configuration Directory",
-      description = "An absolute path or a directory under SDC resources directory to load core-site.xml, hdfs-site.xml and" +
-          " hive-site.xml files to configure the Hive Metastore.",
+      label = "Hadoop Configuration Directory",
+      description = "An absolute path or a directory under SDC resources directory to load core-site.xml," +
+          " hdfs-site.xml and hive-site.xml files.",
       displayPosition = 30,
       group = "HIVE"
   )
@@ -90,7 +91,7 @@ public class HiveConfigBean {
       label = "Additional Hadoop Configuration",
       description = "Additional configuration properties. Values here override values loaded from config files.",
       displayPosition = 40,
-      group = "ADVANCED"
+      group = "HIVE"
   )
   public Map<String, String> additionalConfigProperties;
 
@@ -98,8 +99,9 @@ public class HiveConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
-      label = "Hive Metastore Cache Size",
-      description = "Cache Size",
+      label = "Max Cache Size (entries)",
+      description = "Configures the cache size for storing table related information." +
+          " Use -1 for unlimited number of table entries in the cache.",
       displayPosition = 60,
       group = "ADVANCED"
   )

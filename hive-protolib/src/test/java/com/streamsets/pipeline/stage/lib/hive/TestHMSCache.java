@@ -191,7 +191,7 @@ public class TestHMSCache {
         hmsCache.getIfPresent(cacheType, qualifiedTableName)
     );
     Assert.assertFalse("External Mismatch", tblPropertiesInfo.isExternal());
-    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo.isUseAsAvro());
+    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo.isStoredAsAvro());
 
     hmsCache.invalidate(cacheType, qualifiedTableName);
 
@@ -214,7 +214,7 @@ public class TestHMSCache {
 
     //Check cache loading - returns
     Assert.assertTrue("External Mismatch", tblPropertiesInfo.isExternal());
-    Assert.assertTrue("As Avro Mismatch", tblPropertiesInfo.isUseAsAvro());
+    Assert.assertTrue("As Avro Mismatch", tblPropertiesInfo.isStoredAsAvro());
 
     //Finally given that we built the cache with max size 1, we are going to put another tblProperties
     //for table 1 and table2
@@ -237,7 +237,7 @@ public class TestHMSCache {
     tblPropertiesInfo1 = hmsCache.getIfPresent(cacheType, table1);
     Assert.assertNotNull(tblPropertiesInfo1);
     Assert.assertFalse("External Mismatch", tblPropertiesInfo1.isExternal());
-    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isUseAsAvro());
+    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isStoredAsAvro());
     Assert.assertNull(hmsCache.getIfPresent(cacheType, table2));
 
     //Table 2 added.
@@ -250,7 +250,7 @@ public class TestHMSCache {
     //Table1 should have been evicted and should not be present in the cache.
     Assert.assertNotNull(tblPropertiesInfo2);
     Assert.assertTrue("External Mismatch", tblPropertiesInfo2.isExternal());
-    Assert.assertTrue("As Avro Mismatch", tblPropertiesInfo2.isUseAsAvro());
+    Assert.assertTrue("As Avro Mismatch", tblPropertiesInfo2.isStoredAsAvro());
     Assert.assertNull(tblPropertiesInfo1);
 
     //Now set the cache loader to return true false
@@ -259,7 +259,7 @@ public class TestHMSCache {
     tblPropertiesInfo1 = hmsCache.getOrLoad(cacheType, "", table1, null);
     //This means cache is loaded and returns value from the mock.
     Assert.assertTrue("External Mismatch", tblPropertiesInfo1.isExternal());
-    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isUseAsAvro());
+    Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isStoredAsAvro());
   }
 
   private LinkedHashMap<String, HiveTypeInfo> getDefaultColumnTypeInfo() {

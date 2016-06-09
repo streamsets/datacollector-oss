@@ -26,12 +26,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
-import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -40,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,7 +52,7 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
 
-  @Parameterized.Parameters(name = "db({0}),useAsAvro({1}),external({2})")
+  @Parameterized.Parameters(name = "db({0}),storedAsAvro({1}),external({2})")
   public static Collection<Object[]> data() {
     return ParametrizedUtils.crossProduct(
         new String[] {"default", "custom"},
@@ -65,18 +62,18 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   }
 
   private String database;
-  private boolean useAsAvro;
+  private boolean storedAsAvro;
   private boolean external;
-  public ColdStartIT(String database, boolean useAsAvro, boolean external) {
+  public ColdStartIT(String database, boolean storedAsAvro, boolean external) {
     this.database = database;
-    this.useAsAvro = useAsAvro;
+    this.storedAsAvro = storedAsAvro;
     this.external = external;
   }
 
 
   @Test
   public void testColdStart() throws  Exception {
-    LOG.info(Utils.format("Starting cold start with database({}), useAsAvro({}) and external({})", database, useAsAvro, external));
+    LOG.info(Utils.format("Starting cold start with database({}), storedAsAvro({}) and external({})", database, storedAsAvro, external));
     executeUpdate(Utils.format("create database if not exists {}", database));
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
@@ -87,7 +84,7 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
       .build();
 
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-        .useAsAvro(useAsAvro)
+        .useAsAvro(storedAsAvro)
         .build();
 
     Map<String, Field> map = new LinkedHashMap<>();

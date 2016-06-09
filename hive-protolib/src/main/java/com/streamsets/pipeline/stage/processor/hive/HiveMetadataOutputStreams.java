@@ -19,12 +19,11 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 public enum HiveMetadataOutputStreams implements Label{
-  HiveMetastore("Hive Metastore"),
-  HDFS("HDFS");
+  DATA("Data"),
+  METADATA("Metadata");
 
   private final String label;
 
