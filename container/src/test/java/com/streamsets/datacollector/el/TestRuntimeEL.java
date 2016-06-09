@@ -59,22 +59,29 @@ public class TestRuntimeEL {
   private static final String REMOTE_SDC_HOME_VALUE = "../sdc-remote";
 
   private static File resourcesDir;
+  private static File dataDir;
+  private static File configDir;
   private static RuntimeInfo runtimeInfo;
 
   @BeforeClass
   public static void beforeClass() throws IOException {
-    File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(configDir.mkdirs());
     resourcesDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(resourcesDir.mkdirs());
+    dataDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dataDir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, configDir.getPath());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, resourcesDir.getPath());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, dataDir.getPath());
+
   }
 
   @AfterClass
   public static void afterClass() throws IOException {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR);
+    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
   @Before()
@@ -165,12 +172,9 @@ public class TestRuntimeEL {
 
   @Test
   public void testAuthToken() throws IOException {
-    File dir = new File("target", UUID.randomUUID().toString());
-    Assert.assertTrue(dir.mkdirs());
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
-    Writer writer = new FileWriter(new File(dir, "sdc.properties"));
+    Writer writer = new FileWriter(new File(configDir, "sdc.properties"));
     props.store(writer, "");
     writer.close();
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
