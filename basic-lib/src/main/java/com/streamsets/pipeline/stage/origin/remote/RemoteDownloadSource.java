@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -57,12 +56,9 @@ import java.net.URISyntaxException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static com.streamsets.pipeline.stage.origin.lib.DataFormatParser.DATA_FORMAT_CONFIG_PREFIX;
 
@@ -75,11 +71,10 @@ public class RemoteDownloadSource extends BaseSource {
 
   private final RemoteDownloadConfigBean conf;
   private final File knownHostsFile;
-  private final ScheduledExecutorService queueingExecutor;
   private final File errorArchive;
   private final byte[] moveBuffer;
 
-  private final SortedSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
+  private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
     @Override
     public int compare(RemoteFile f1, RemoteFile f2) {
       if (f1.lastModified < f2.lastModified) {
@@ -97,9 +92,7 @@ public class RemoteDownloadSource extends BaseSource {
   private InputStream currentStream = null;
   private FileObject remoteDir;
   private DataParser parser;
-  private FileSystemManager fsManager;
   private final FileSystemOptions options = new FileSystemOptions();
-  private boolean polled = false;
   private ErrorRecordHandler errorRecordHandler;
 
   public RemoteDownloadSource(RemoteDownloadConfigBean conf) {
@@ -116,11 +109,6 @@ public class RemoteDownloadSource extends BaseSource {
       this.errorArchive = null;
       this.moveBuffer = null;
     }
-    this.queueingExecutor = Executors.newSingleThreadScheduledExecutor(
-        new ThreadFactoryBuilder()
-            .setNameFormat("Remote Download Source Download Thread")
-            .build()
-    );
   }
 
   @Override
@@ -137,11 +125,6 @@ public class RemoteDownloadSource extends BaseSource {
         issues
     );
 
-    if (conf.pollInterval <= 0) {
-      issues.add(getContext().createConfigIssue(
-          Groups.REMOTE.getLabel(), CONF_PREFIX + "pollInterval", Errors.REMOTE_09));
-    }
-
     try {
       this.remoteURI = new URI(conf.remoteAddress);
     } catch (Exception ex) {
@@ -150,7 +133,7 @@ public class RemoteDownloadSource extends BaseSource {
     }
 
     try {
-      fsManager = VFS.getManager();
+      FileSystemManager fsManager = VFS.getManager();
       // If password is not specified, add the username to the URI
       switch (conf.auth) {
         case PRIVATE_KEY:
@@ -230,43 +213,31 @@ public class RemoteDownloadSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Just started up, currentOffset has not yet been set.
     // This method returns MINUS_ONE when only no events have ever been read
-    synchronized (this) {
-      if (currentOffset == null
-          && lastSourceOffset != null
-          && !lastSourceOffset.isEmpty()
-          && !lastSourceOffset.equals(MINUS_ONE)) {
-        currentOffset = new Offset(lastSourceOffset);
-      }
-    }
-    try {
-      startQueuingFiles();
-    } catch (Exception ex) {
-      LOG.info("Error while trying to poll files from remote server", ex);
-      return MINUS_ONE;
+    if (currentOffset == null
+        && lastSourceOffset != null
+        && !lastSourceOffset.isEmpty()
+        && !lastSourceOffset.equals(MINUS_ONE)) {
+      currentOffset = new Offset(lastSourceOffset);
     }
     String offset = MINUS_ONE;
     RemoteFile next = null;
     try {
       // Time to read the next file
       if (currentStream == null) {
-        // At this point, we have just started up for the first time
         Optional<RemoteFile> nextOpt = getNextFile();
-
         if (nextOpt.isPresent()) {
           next = nextOpt.get();
           LOG.info("Started reading file: " + next.filename);
           currentStream = next.remoteObject.getContent().getInputStream();
-          synchronized (this) {
-            // When starting up, reset to offset 0 of the file picked up for read only if:
-            // -- we are starting up for the very first time, hence current offset is null
-            // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
-            if (currentOffset == null || !currentOffset.fileName.equals(next.filename)) {
-              currentOffset = new Offset(next.remoteObject.getName().getBaseName(),
-                  next.remoteObject.getContent().getLastModifiedTime(), 0L);
-            }
-            parser = conf.dataFormatConfig.getParserFactory().getParser(
-                currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
+          // When starting up, reset to offset 0 of the file picked up for read only if:
+          // -- we are starting up for the very first time, hence current offset is null
+          // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
+          if (currentOffset == null || !currentOffset.fileName.equals(next.filename)) {
+            currentOffset = new Offset(next.remoteObject.getName().getBaseName(),
+                next.remoteObject.getContent().getLastModifiedTime(), 0L);
           }
+          parser = conf.dataFormatConfig.getParserFactory().getParser(
+              currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
         } else {
           if (currentOffset == null) {
             return offset;
@@ -279,11 +250,8 @@ public class RemoteDownloadSource extends BaseSource {
     } catch (IOException | DataParserException ex) {
       handleFatalException(ex, next);
     } finally {
-      // This file cannot be recovered, so skip the rest of the file and move on.
-      synchronized (this) {
-        if (!MINUS_ONE.equals(offset) && currentOffset != null) {
-          currentOffset.setOffset(Long.parseLong(offset));
-        }
+      if (!MINUS_ONE.equals(offset) && currentOffset != null) {
+        currentOffset.setOffset(Long.parseLong(offset));
       }
     }
     if (currentOffset != null) {
@@ -312,23 +280,6 @@ public class RemoteDownloadSource extends BaseSource {
       }
     }
     return offset;
-  }
-
-  private void startQueuingFiles() throws Exception {
-    if (!polled) {
-      this.queueFiles();
-      polled = true;
-      this.queueingExecutor.scheduleWithFixedDelay(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            queueFiles();
-          } catch (Exception ex) {
-            LOG.error("Error while attempting to add files to the download queue.", ex);
-          }
-        }
-      }, conf.pollInterval, conf.pollInterval, TimeUnit.SECONDS);
-    }
   }
 
   private void moveFileToError(RemoteFile fileToMove) {
@@ -408,18 +359,15 @@ public class RemoteDownloadSource extends BaseSource {
     }
   }
 
-  private synchronized Optional<RemoteFile> getNextFile() {
-    if (!fileQueue.isEmpty()) {
-      RemoteFile next = fileQueue.first();
-      fileQueue.remove(next);
-      return Optional.of(next);
-    } else {
-      return Optional.absent();
+  private Optional<RemoteFile> getNextFile() throws FileSystemException {
+    if (fileQueue.isEmpty()) {
+      queueFiles();
     }
+    return Optional.fromNullable(fileQueue.pollFirst());
   }
 
-  private synchronized void queueFiles() throws FileSystemException {
-    remoteDir = fsManager.resolveFile(remoteURI.toString(), options);
+  private void queueFiles() throws FileSystemException {
+    remoteDir.refresh();
     for (FileObject remoteFile : remoteDir.getChildren()) {
       long lastModified = remoteFile.getContent().getLastModifiedTime();
       RemoteFile tempFile = new RemoteFile(remoteFile.getName().getBaseName(), lastModified, remoteFile);
@@ -434,15 +382,16 @@ public class RemoteDownloadSource extends BaseSource {
   private boolean shouldQueue(RemoteFile remoteFile) throws FileSystemException {
     // Case 1: We started up for the first time, so anything we see must be queued
     return currentOffset == null ||
-        // Any following condition only applies if we don't currently have it in queue.
-        !fileQueue.contains(remoteFile) && (
-            // Case 2: The file is newer than the last one we read/are reading
-            ((remoteFile.lastModified > currentOffset.timestamp) ||
-                // Case 3: The file has the same timestamp as the last one we read, but is lexicographically higher, and we have not queued it before.
-                (remoteFile.lastModified == currentOffset.timestamp && remoteFile.filename.compareTo(currentOffset.fileName) > 0) ||
-                // Case 4: It is the same file as we were reading, but we have not read the whole thing, so queue it again - recovering from a shutdown.
-                remoteFile.filename.equals(currentOffset.fileName) && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset)
-        );
+        // We poll for new files only when fileQueue is empty, so we don't need to check if this file is in the queue.
+        // The file can be in the fileQueue only if the file was already queued in this iteration -
+        // which is not possible, since we are iterating through the children,
+        // so this is the first time we are seeing the file.
+        // Case 2: The file is newer than the last one we read/are reading
+        ((remoteFile.lastModified > currentOffset.timestamp) ||
+            // Case 3: The file has the same timestamp as the last one we read, but is lexicographically higher, and we have not queued it before.
+            (remoteFile.lastModified == currentOffset.timestamp && remoteFile.filename.compareTo(currentOffset.fileName) > 0) ||
+            // Case 4: It is the same file as we were reading, but we have not read the whole thing, so queue it again - recovering from a shutdown.
+            remoteFile.filename.equals(currentOffset.fileName) && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset);
   }
 
 

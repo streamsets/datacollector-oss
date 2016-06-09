@@ -28,12 +28,13 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "SFTP/FTP Client",
     description = "Uses an SFTP/FTP client to read records from an URL.",
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    upgrader = RemoteDownloadSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
 )
 @GenerateResourceBundle

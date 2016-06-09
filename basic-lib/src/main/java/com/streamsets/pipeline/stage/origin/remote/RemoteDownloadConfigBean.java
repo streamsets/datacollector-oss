@@ -153,17 +153,6 @@ public class RemoteDownloadConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "60",
-      label = "Poll Interval",
-      description = "Time (in seconds) between polling the remote service for new files",
-      group = "REMOTE",
-      displayPosition = 40
-  )
-  public int pollInterval;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Archive on error",

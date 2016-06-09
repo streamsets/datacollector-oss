@@ -131,7 +131,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -162,7 +161,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -196,7 +194,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -230,7 +227,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -255,7 +251,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -280,7 +275,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -317,7 +311,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -363,7 +356,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -391,7 +383,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -436,7 +427,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -477,7 +467,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -517,7 +506,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             archiveDir.toString()
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -588,7 +576,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             archiveDir.toString()
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -649,7 +636,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -714,7 +700,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            30,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -733,7 +718,6 @@ public class TestRemoteDownloadSource {
     File eventualFile = new File(tempDir, "z" + originDirFile.getName() + "-1");
     Files.copy(originDirFile, eventualFile);
     eventualFile.setLastModified(lastModified);
-    Thread.sleep(35000);
     op = runner.runProduce(offset, 1000);
     expected = getExpectedRecords();
     actual = op.getRecords().get("lane");
@@ -771,7 +755,6 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            60,
             null
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -799,7 +782,6 @@ public class TestRemoteDownloadSource {
       String knownHostsFile,
       boolean noHostChecking,
       DataFormat dataFormat,
-      int pollInterval,
       String errorArchive
   ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
@@ -812,7 +794,6 @@ public class TestRemoteDownloadSource {
     configBean.knownHosts = knownHostsFile;
     configBean.strictHostChecking = !noHostChecking;
     configBean.dataFormat = dataFormat;
-    configBean.pollInterval = pollInterval;
     configBean.errorArchiveDir = errorArchive;
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     if (password != null) {
