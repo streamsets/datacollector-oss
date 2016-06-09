@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   HTTP_03("Error fetching resource. Reason: {}"),
   HTTP_04("The file '{}' does not exist or is inaccessible."),
   HTTP_05("Password is required for Key Store/Trust Store."),
+  HTTP_06("Error evaluating expression: {}"),
   ;
 
   private final String msg;

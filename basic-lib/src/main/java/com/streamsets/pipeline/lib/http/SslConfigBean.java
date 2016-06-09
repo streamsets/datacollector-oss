@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.origin.http.Errors;
 
@@ -65,38 +64,31 @@ public class SslConfigBean {
   )
   public String keyStorePassword = "";
 
-  public void init(Source.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
-    if (!keyStorePath.isEmpty() && Files.notExists(Paths.get(keyStorePath))) {
-      issues.add(context.createConfigIssue(
-          groupName,
-          prefix + keyStorePath,
-          Errors.HTTP_04,
-          keyStorePath
-      ));
+  /**
+   * Validates the parameters for this config bean.
+   * @param context Stage Context
+   * @param groupName Group name this bean is used in
+   * @param prefix Prefix to the parameter names (e.g. parent beans)
+   * @param issues List of issues to augment
+   */
+  public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
+    if (!trustStorePath.isEmpty()) {
+      if (Files.notExists(Paths.get(trustStorePath))) {
+        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePath", Errors.HTTP_04, trustStorePath));
+      }
 
-      if (keyStorePassword.isEmpty()) {
-        issues.add(context.createConfigIssue(
-            groupName,
-            prefix + keyStorePassword,
-            Errors.HTTP_04
-        ));
+      if (trustStorePassword.isEmpty()) {
+        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePassword", Errors.HTTP_05));
       }
     }
 
-    if (!trustStorePath.isEmpty() && Files.notExists(Paths.get(trustStorePath))) {
-      issues.add(context.createConfigIssue(
-          groupName,
-          prefix + trustStorePath,
-          Errors.HTTP_05,
-          trustStorePath
-      ));
+    if (!keyStorePath.isEmpty()) {
+      if (Files.notExists(Paths.get(keyStorePath))) {
+        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePath", Errors.HTTP_04, keyStorePath));
+      }
 
-      if (trustStorePassword.isEmpty()) {
-        issues.add(context.createConfigIssue(
-            groupName,
-            "conf.sslConfig.trustStorePassword",
-            Errors.HTTP_05
-        ));
+      if (keyStorePassword.isEmpty()) {
+        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePassword", Errors.HTTP_05));
       }
     }
   }

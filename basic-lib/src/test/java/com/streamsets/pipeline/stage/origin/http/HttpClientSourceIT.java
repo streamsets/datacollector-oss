@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -648,5 +649,59 @@ public class HttpClientSourceIT extends JerseyTest {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testInvalidELs() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.POLLING;
+    conf.headers.put("abcdef", "${invalid:el()}");
+    conf.resourceUrl = getBaseUri() + "${invalid:el()}";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.POST;
+    conf.requestData = "${invalid:el()}";
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(3, issues.size());
+  }
+
+  @Test
+  public void testValidELs() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.POLLING;
+    conf.headers.put("abcdef", "${str:trim('abcdef ')}");
+    conf.resourceUrl = getBaseUri() + "${str:trim('abcdef ')}";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.POST;
+    conf.requestData = "${str:trim('abcdef ')}";
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(3, issues.size());
   }
 }

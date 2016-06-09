@@ -23,6 +23,7 @@ import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
@@ -64,14 +65,19 @@ import java.util.concurrent.TimeoutException;
  */
 class HttpStreamConsumer implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
+  private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
+  private static final String REQUEST_BODY_CONFIG_NAME = "requestData";
   private static final String HEADER_CONFIG_NAME = "headers";
 
   private final HttpClientConfigBean conf;
   private final Client client;
-  private final WebTarget resource;
   private final BlockingQueue<String> entityQueue;
 
+  private ELVars resourceVars;
+  private ELVars bodyVars;
   private ELVars headerVars;
+  private ELEval resourceEval;
+  private ELEval bodyEval;
   private ELEval headerEval;
 
   private AccessToken authToken;
@@ -90,6 +96,12 @@ class HttpStreamConsumer implements Runnable {
     this.conf = conf;
     this.entityQueue = entityQueue;
 
+    resourceVars = context.createELVars();
+    resourceEval = context.createELEval(RESOURCE_CONFIG_NAME);
+
+    bodyVars = context.createELVars();
+    bodyEval = context.createELEval(REQUEST_BODY_CONFIG_NAME);
+
     headerVars = context.createELVars();
     headerEval = context.createELEval(HEADER_CONFIG_NAME);
 
@@ -103,11 +115,6 @@ class HttpStreamConsumer implements Runnable {
     configureSslContext(clientBuilder);
 
     client = clientBuilder.build();
-    resource = client.target(conf.resourceUrl);
-
-    for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
-      LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
-    }
   }
 
   private void configureSslContext(ClientBuilder clientBuilder) {
@@ -175,25 +182,31 @@ class HttpStreamConsumer implements Runnable {
 
   @Override
   public void run() {
-    final AsyncInvoker asyncInvoker = resource.request()
-        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
-        .headers(resolveHeaders())
-        .async();
-    final Future<Response> responseFuture;
-    if (conf.requestData != null && !conf.requestData.isEmpty() && conf.httpMethod != HttpMethod.GET) {
-      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(conf.requestData));
-    } else {
-      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
-    }
-    Response response;
     try {
-      response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+      String resolvedUrl = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
+
+      WebTarget resource = client.target(resolvedUrl);
+
+      for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
+        LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
+      }
+
+      final AsyncInvoker asyncInvoker = resource.request()
+          .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
+          .headers(resolveHeaders())
+          .async();
+      Future<Response> responseFuture;
+      if (conf.requestData != null && !conf.requestData.isEmpty() && conf.httpMethod != HttpMethod.GET) {
+        final String requestBody = bodyEval.eval(bodyVars, conf.requestData, String.class);
+        responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
+      } else {
+        responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
+      }
+      Response response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
       lastResponseStatus = response.getStatusInfo();
 
-      final ChunkedInput<String> chunkedInput = response.readEntity(
-          new GenericType<ChunkedInput<String>>() {
-          }
-      );
+      final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {
+      });
       chunkedInput.setParser(ChunkedInput.createParser(conf.entityDelimiter));
       String chunk;
       try {
@@ -213,6 +226,9 @@ class HttpStreamConsumer implements Runnable {
         }
       }
       LOG.debug("HTTP stream consumer closed.");
+    } catch (ELEvalException e) {
+      LOG.error(Errors.HTTP_06.getMessage(), e.toString(), e);
+      error = Optional.of((Exception) new StageException(Errors.HTTP_06, e.toString(), e));
     } catch (InterruptedException | ExecutionException e) {
       LOG.warn(Errors.HTTP_01.getMessage(), e.toString(), e);
       error = Optional.of((Exception)e);

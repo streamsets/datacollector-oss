@@ -80,20 +80,9 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
-    conf.dataFormatConfig.init(
-        getContext(),
-        conf.dataFormat,
-        Groups.HTTP.name(),
-        DATA_FORMAT_CONFIG_PREFIX,
-        issues
-    );
-
-    conf.sslConfig.init(
-        getContext(),
-        Groups.SSL.name(),
-        "conf.sslConfig.",
-        issues
-    );
+    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
+    conf.init(getContext(), Groups.HTTP.name(), "conf.", issues);
+    conf.sslConfig.init(getContext(), Groups.SSL.name(), "conf.sslConfig.", issues);
 
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case
@@ -157,7 +146,11 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     // Check for an error and propagate to the user
     if (httpConsumer.getError().isPresent()) {
       Exception e = httpConsumer.getError().get();
-      throw new StageException(Errors.HTTP_03, e.getMessage(), e);
+      if (e instanceof StageException) {
+        throw (StageException) e;
+      } else {
+        throw new StageException(Errors.HTTP_03, e.getMessage(), e);
+      }
     }
 
     List<String> chunks = new ArrayList<>(chunksToFetch);

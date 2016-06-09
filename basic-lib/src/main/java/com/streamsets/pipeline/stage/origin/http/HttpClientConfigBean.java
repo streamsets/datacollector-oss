@@ -19,11 +19,16 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.http.HttpMethod;
@@ -33,11 +38,15 @@ import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
 import com.streamsets.pipeline.lib.http.SslConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HttpClientConfigBean {
+  private static final Logger LOG = LoggerFactory.getLogger(HttpClientConfigBean.class);
 
   @ConfigDefBean(groups = "HTTP")
   public BasicConfig basic = new BasicConfig();
@@ -51,7 +60,7 @@ public class HttpClientConfigBean {
       label = "Resource URL",
       defaultValue = "https://stream.twitter.com/1.1/statuses/sample.json",
       description = "Specify the streaming HTTP resource URL",
-      elDefs = RecordEL.class,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "HTTP"
   )
@@ -62,6 +71,7 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.MAP,
       label = "Headers",
       description = "Headers to include in the request",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 11,
       group = "HTTP"
   )
@@ -84,6 +94,7 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.TEXT,
       label = "Request Data",
       description = "Data that should be included as a part of the request",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 13,
       lines = 2,
       dependsOn = "httpMethod",
@@ -181,4 +192,26 @@ public class HttpClientConfigBean {
 
   @ConfigDefBean(groups = "SSL")
   public SslConfigBean sslConfig = new SslConfigBean();
+
+  /**
+   * Validates the parameters for this config bean.
+   * @param context Stage Context
+   * @param groupName Group name this bean is used in
+   * @param prefix Prefix to the parameter names (e.g. parent beans)
+   * @param issues List of issues to augment
+   */
+  public void init(Source.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
+
+    List<String> elConfigs = ImmutableList.of("resourceUrl", "headers", "requestData");
+    for (String configName : elConfigs) {
+      ELVars vars = context.createELVars();
+      ELEval eval = context.createELEval(configName);
+      try {
+        eval.eval(vars, resourceUrl, String.class);
+      } catch (ELEvalException e) {
+        LOG.error(Errors.HTTP_06.getMessage(), e.toString(), e);
+        issues.add(context.createConfigIssue(groupName, prefix + "resourceUrl", Errors.HTTP_06, e.toString()));
+      }
+    }
+  }
 }
