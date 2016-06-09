@@ -70,7 +70,7 @@ public abstract class BaseHiveIT {
   private static int MINICLUSTER_BOOT_SLEEP = Integer.getInteger("basehiveit.boot.sleep", 1000);
 
   // Mini cluster instances
-  private static String confDir;
+  private static String confDir = "target/" + UUID.randomUUID().toString();
   private static MiniDFSCluster miniDFS;
   private static ExecutorService hiveMetastoreExecutor = Executors.newSingleThreadExecutor();
   private static HiveServer2 hiveServer2;
@@ -100,7 +100,6 @@ public abstract class BaseHiveIT {
   @BeforeClass
   public static void setUpClass() throws Exception {
     // Conf dir
-    confDir = "target/" + UUID.randomUUID().toString();
     new File(confDir).mkdirs();
 
     // HDFS

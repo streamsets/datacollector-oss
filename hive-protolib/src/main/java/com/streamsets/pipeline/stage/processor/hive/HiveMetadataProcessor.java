@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -66,7 +67,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final boolean externalTable;
   private String internalWarehouseDir;
 
-  // Triplet of partition name, type and value expression obtained from configration
+  // Triplet of partition name, type and value expression obtained from configuration
   private List<PartitionConfig> partitionConfigList;
   // List of partition name and value type.
   private LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo;
@@ -156,9 +157,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     if (issues.isEmpty()) {
       errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+      elEval = getContext().createELEval(HIVE_DB_NAME);
       hdfsLane = getContext().getOutputLanes().get(0);
       hmsLane = getContext().getOutputLanes().get(1);
-      elEval = getContext().createELEval(HIVE_DB_NAME);
       // load cache
       cache = HMSCache.newCacheBuilder()
           .addCacheTypeSupport(
@@ -254,8 +255,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // Send record to HDFS target
       updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
-    } catch (OnRecordErrorException error) {
-      errorRecordHandler.onError(error);
+    } catch (OnRecordErrorException | ELEvalException error) {
+      errorRecordHandler.onError(error.getErrorCode(), error.getMessage(), error);
     }
   }
 
@@ -404,11 +405,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
   String getPartitionValuesFromRecord(Record r, ELVars variables, LinkedHashMap<String, String> values)
       throws StageException
   {
-    //TODO Handle external table, build partition path based on the config
-
     StringBuilder sb = new StringBuilder();
     for (PartitionConfig pName: partitionConfigList) {
-      String ret = HiveMetastoreUtil.resolveEL(elEval,variables, pName.valueEL);
+      String ret = HiveMetastoreUtil.resolveEL(elEval, variables, pName.valueEL);
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
         throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, pName.valueEL);
@@ -423,6 +422,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
     return sb.toString();
   }
 
+  /**
+   * Generate a record for new partition. It creates a new Record
+   * and fill in metadata.
+   * @param database database name
+   * @param tableName table name
+   * @param partitionList New partition to be created
+   * @param location Direcotry path
+   * @return New metadata record
+   * @throws StageException
+   */
   @VisibleForTesting
   Record generateNewPartitionRecord(
       Record record,

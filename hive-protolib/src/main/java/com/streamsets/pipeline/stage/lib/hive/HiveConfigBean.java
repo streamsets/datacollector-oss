@@ -120,6 +120,13 @@ public class HiveConfigBean {
     return configuration;
   }
 
+  /**
+   * This is for testing purpose
+   * @param config: Configuration to set
+   */
+  public void setConfiguration(Configuration config) {
+    configuration = config;
+  }
   public UserGroupInformation getUgi() {
     return loginUgi;
   }

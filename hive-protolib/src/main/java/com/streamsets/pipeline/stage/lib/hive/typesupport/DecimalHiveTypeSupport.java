@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
-  private static final String SCALE = "scale";
-  private static final String PRECISION = "precision";
+  public static final String SCALE = "scale";
+  public static final String PRECISION = "precision";
 
   @Override
   protected Field generateExtraInfoFieldForMetadataRecord(HiveTypeInfo hiveTypeInfo) {
