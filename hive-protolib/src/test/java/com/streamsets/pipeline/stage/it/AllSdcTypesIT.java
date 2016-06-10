@@ -72,9 +72,9 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
       {Field.create(Field.Type.DATE, date), true, Types.VARCHAR, dateFormat.format(date)},
       {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
-//      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), true, Types.DECIMAL, BigDecimal.valueOf(1.5)},
+      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), true, Types.DECIMAL, BigDecimal.valueOf(1.5)},
       {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},
-//      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, 0, null},
+      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, Types.BINARY, new byte [] {(byte)0x00}},
       {Field.create(Field.Type.MAP, Collections.emptyMap()), false, 0, null},
       {Field.create(Field.Type.LIST, Collections.emptyList()), false, 0, null},
       {Field.create(Field.Type.LIST_MAP, new LinkedHashMap<>()), false, 0, null},
@@ -111,6 +111,7 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       }
     } catch(StageException se) {
       if(supported) {
+        LOG.error("Processing exception", se);
         Assert.fail("Processing testing record unexpectedly failed: " + se.getMessage());
         throw se;
       } else {
@@ -130,7 +131,11 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
-        Assert.assertEquals(hiveValue, rs.getObject(1));
+        if(hiveValue.getClass().isArray()) { // Only supported array is a byte array
+          Assert.assertArrayEquals((byte [])hiveValue, (byte [])rs.getObject(1));
+        } else {
+          Assert.assertEquals(hiveValue, rs.getObject(1));
+        }
         Assert.assertFalse("Table tbl contains more then one row", rs.next());
       }
     });

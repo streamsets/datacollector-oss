@@ -46,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +68,15 @@ public class TestAvroDataGenerator {
     +"]}";
 
   private static final Schema SCHEMA = new Schema.Parser().parse(AVRO_SCHEMA);
+
+  private static final String DECIMAL_AVRO_SCHEMA = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"WithDecimal\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"decimal\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}"
+    +"]}";
+  private static final Schema DECIMAL_SCHEMA = new Schema.Parser().parse(DECIMAL_AVRO_SCHEMA);
+
 
   private static final String INVALID_SCHEMA = "{\n"
     +"\"type\": \"record\",\n"
@@ -440,6 +451,35 @@ public class TestAvroDataGenerator {
     gen.write(record);
 
     gen.close();
+  }
+
+  @Test
+  public void testAvroGeneratorDecimalType() throws Exception {
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("decimal", Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      DECIMAL_SCHEMA,
+      new HashMap<String, Object>()
+    );
+    gen.write(record);
+    gen.close();
+
+    //reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Assert.assertArrayEquals(new byte[] {0x0F}, ((ByteBuffer)readRecord.get("decimal")).array());
+    Assert.assertFalse(dataFileReader.hasNext());
   }
 
 }

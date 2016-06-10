@@ -35,6 +35,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -199,6 +200,21 @@ public class TestAvroTypeUtil {
     record.set(field);
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, schema, new HashMap<String, Object>());
     Assert.assertNull(avroObject);
+  }
+
+  @Test
+  public void testCreateDecimalField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, BigDecimal.valueOf(1.5));
+    Assert.assertEquals(Field.Type.DECIMAL, field.getType());
+    Assert.assertEquals(BigDecimal.valueOf(1.5), field.getValueAsDecimal());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
+    Assert.assertTrue(avroObject instanceof ByteBuffer);
+    Assert.assertArrayEquals(new byte[] {0x0F}, ((ByteBuffer)avroObject).array());
   }
 
   @Test

@@ -36,6 +36,7 @@ import org.apache.avro.util.Utf8;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,9 @@ import java.util.Set;
 public class AvroTypeUtil {
 
   public static final String SCHEMA_PATH_SEPARATOR = ".";
+
+  private static final String LOGICAL_TYPE = "logicalType";
+  private static final String LOGICAL_TYPE_DECIMAL = "decimal";
 
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
@@ -91,6 +95,20 @@ public class AvroTypeUtil {
       return Field.create(getFieldType(schema.getType()), null);
     }
     Field f = null;
+
+    // Logical types
+    String logicalType = schema.getProp(LOGICAL_TYPE);
+    if(logicalType != null && !logicalType.isEmpty()) {
+      switch (logicalType) {
+        case LOGICAL_TYPE_DECIMAL:
+          if(schema.getType() != Schema.Type.BYTES) {
+            throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
+          }
+          return Field.create(Field.Type.DECIMAL, value);
+      }
+    }
+
+    // Primitive types
     switch(schema.getType()) {
       case ARRAY:
         List<?> objectList = (List<?>) value;
@@ -202,6 +220,12 @@ public class AvroTypeUtil {
         //Record does not have the avro union type index which means this record was not created from avro data.
         //try our best to resolve the union type.
         Object object = JsonUtil.fieldToJsonObject(record, field);
+
+        // Avro GenericData expects certain encoding for some types
+        if(field.getType() == Field.Type.DECIMAL || field.getType() ==  Field.Type.BYTE_ARRAY) {
+          object = ByteBuffer.wrap(new byte[]{});
+        }
+
         try {
           int typeIndex = GenericData.get().resolveUnion(schema, object);
           schema = schema.getTypes().get(typeIndex);
@@ -218,6 +242,19 @@ public class AvroTypeUtil {
         }
       }
     }
+
+    // Logical types
+    String logicalType = schema.getProp(LOGICAL_TYPE);
+    if(logicalType != null && !logicalType.isEmpty()) {
+      switch (logicalType) {
+        case LOGICAL_TYPE_DECIMAL:
+          if(schema.getType() != Schema.Type.BYTES) {
+            throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
+          }
+          return ByteBuffer.wrap(field.getValueAsDecimal().unscaledValue().toByteArray());
+      }
+    }
+
     switch(schema.getType()) {
       case ARRAY:
         List<Field> valueAsList = field.getValueAsList();
@@ -292,13 +329,19 @@ public class AvroTypeUtil {
           // If no default value was specified for the field and record does not contain it, then throw exception.
           // Its an error record.
           if (valueAsMap.containsKey(f.name())) {
+            // There is bug in avro where the f.schema() doesn't return the schema properly - all the props are missing.
+            Schema fieldSchema = f.schema();
+            for(Map.Entry<String, JsonNode> entry : f.getJsonProps().entrySet()) {
+              fieldSchema.addProp(entry.getKey(), entry.getValue());
+            }
+
             genericRecord.put(
                 f.name(),
                 sdcRecordToAvro(
                     record,
                     valueAsMap.get(f.name()),
                     avroFieldPath + FORWARD_SLASH + f.name(),
-                    f.schema(),
+                    fieldSchema,
                     defaultValueMap
                 )
             );
