@@ -39,15 +39,26 @@ public class MetricsObserverRunner {
   private final AlertManager alertManager;
   private final String name;
   private final String rev;
+  private final boolean statsAggregationEnabled;
 
-  public MetricsObserverRunner(String name, String rev, MetricRegistry metrics, AlertManager alertManager) {
+  public MetricsObserverRunner(
+      String name,
+      String rev,
+      boolean statsAggregationEnabled,
+      MetricRegistry metrics,
+      AlertManager alertManager
+  ) {
     this.metrics = metrics;
     this.alertManager = alertManager;
     this.name = name;
     this.rev = rev;
+    this.statsAggregationEnabled = statsAggregationEnabled;
   }
 
   public void evaluate() {
+    if (statsAggregationEnabled) {
+      return;
+    }
 
     //check for changes in metric rules
     RulesConfigurationChangeRequest tempNewChangeRequest = newChangeRequest;

@@ -50,7 +50,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class TestMetricObserverRunner {
+public class
+TestMetricObserverRunner {
 
   private static final String LANE = "lane";
   private static final String ID = "myId";
@@ -64,7 +65,7 @@ public class TestMetricObserverRunner {
   public void setUp() {
     runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
-    metricObserverRunner = new MetricsObserverRunner(PIPELINE_NAME, REVISION, metrics,
+    metricObserverRunner = new MetricsObserverRunner(PIPELINE_NAME, REVISION, false, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()));
   }
 

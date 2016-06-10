@@ -37,6 +37,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JvmEL;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -624,7 +625,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
             Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
 
         BlockingQueue<Record> statsQueue = null;
-        if (isStatsAggregationEnabled(pipelineConfiguration)) {
+        boolean statsAggregationEnabled = isStatsAggregationEnabled(pipelineConfiguration);
+        if (statsAggregationEnabled) {
           statsQueue = new ArrayBlockingQueue<>(
               configuration.get(
                   Constants.STATS_AGGREGATOR_QUEUE_SIZE_KEY,
@@ -639,7 +641,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         //scope of a pipeline.
         //So if a pipeline is started again for the second time, the object graph recreates the production pipeline
         //with fresh instances of MetricRegistry, alert manager, observer etc etc..
-        ObjectGraph objectGraph = this.objectGraph.plus(new PipelineProviderModule(name, rev));
+        ObjectGraph objectGraph = this.objectGraph.plus(new PipelineProviderModule(name, rev, statsAggregationEnabled));
 
         threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);
         observerRunnable = objectGraph.get(DataObserverRunnable.class);
@@ -735,7 +737,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   }
 
-  private boolean isStatsAggregationEnabled(PipelineConfiguration pipelineConfiguration) {
+  private boolean isStatsAggregationEnabled(PipelineConfiguration pipelineConfiguration) throws PipelineStoreException {
     boolean isEnabled = false;
     StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
     if (statsAggregatorStage != null &&
@@ -743,7 +745,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         pipelineConfiguration.getMetadata() != null) {
       isEnabled = true;
     }
-    return isEnabled;
+    return isEnabled && this.isRemotePipeline();
+  }
+
+  public boolean isRemotePipeline() throws PipelineStoreException {
+    Object isRemote = getState().getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
+    // remote attribute will be null for pipelines with version earlier than 1.3
+    return isRemote != null && (boolean) isRemote;
   }
 
   private void stopPipeline(boolean sdcShutting) throws PipelineException {

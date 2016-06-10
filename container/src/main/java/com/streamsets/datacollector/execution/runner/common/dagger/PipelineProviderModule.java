@@ -62,10 +62,12 @@ public class PipelineProviderModule {
 
   private final String name;
   private final String rev;
+  private final boolean statsAggregationEnabled;
 
-  public PipelineProviderModule(String name, String rev) {
+  public PipelineProviderModule(String name, String rev, boolean statsAggregationEnabled) {
     this.name = name;
     this.rev = rev;
+    this.statsAggregationEnabled = statsAggregationEnabled;
   }
 
   @Provides @Named("name")
@@ -92,7 +94,7 @@ public class PipelineProviderModule {
 
   @Provides @Singleton
   public MetricsObserverRunner provideMetricsObserverRunner(MetricRegistry metricRegistry, AlertManager alertManager) {
-    return new MetricsObserverRunner(name, rev, metricRegistry, alertManager);
+    return new MetricsObserverRunner(name, rev, statsAggregationEnabled, metricRegistry, alertManager);
   }
 
   @Provides @Singleton
