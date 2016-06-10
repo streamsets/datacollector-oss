@@ -252,7 +252,8 @@ public final class HiveQueryExecutor {
   private static String buildShowTableQuery(String qualifiedTableName) {
     String[] dbTable = qualifiedTableName.split("\\.");
     String db = dbTable[0];
-    String table = dbTable[1];
+    // The table name will be used inside string constant rather then as object name and hence we need to de-escape it
+    String table = dbTable[1].replace("`", "");
     return String.format(SHOW_TABLES, db, table);
   }
 

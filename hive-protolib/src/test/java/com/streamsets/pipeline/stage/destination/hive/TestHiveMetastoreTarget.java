@@ -471,15 +471,17 @@ public class TestHiveMetastoreTarget {
 
     HMSCache hmsCache = (HMSCache) Whitebox.getInternalState(target, "hmsCache");
     TypeInfoCacheSupport.TypeInfo typeInfo =
-        hmsCache.getIfPresent(HMSCacheType.TYPE_INFO, "default.sample");
+        hmsCache.getIfPresent(HMSCacheType.TYPE_INFO, "`default`.`sample`");
     PartitionInfoCacheSupport.PartitionInfo partitionInfo =
-        hmsCache.getIfPresent(HMSCacheType.PARTITION_VALUE_INFO, "default.sample");
+        hmsCache.getIfPresent(HMSCacheType.PARTITION_VALUE_INFO, "`default`.`sample`");
 
     LinkedHashMap<String, HiveTypeInfo> expectedColumnTypeInfo = generateColumnTypeInfo();
     LinkedHashMap<String, HiveTypeInfo> expectedPartitionTypeInfo = generatePartitionTypeInfo();
     Set<LinkedHashMap<String, String>> expectedPartitionValueInfo = new HashSet<>();
     expectedPartitionValueInfo.add(generatePartitionValueInfo("12-25-2015"));
 
+    Assert.assertNotNull(typeInfo);
+    Assert.assertNotNull(partitionInfo);
     Assert.assertEquals(expectedColumnTypeInfo, typeInfo.getColumnTypeInfo());
     Assert.assertEquals(expectedPartitionTypeInfo, typeInfo.getPartitionTypeInfo());
     Assert.assertEquals(expectedPartitionValueInfo, partitionInfo.getPartitions());

@@ -53,7 +53,6 @@ import java.util.Map;
 
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
-  private static final String DB_DOT_TABLE = "%s.%s";
   private static final String AVRO_SCHEMA_EXT = ".avsc";
 
   //Common Constants
@@ -83,7 +82,8 @@ public final class HiveMetastoreUtil {
   public static final String SCHEMA_CHANGE_METADATA_RECORD_VERSION = "1";
   public static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "1";
 
-  public static final String COLUMN_TYPE = "%s %s";
+  public static final String HIVE_OBJECT_ESCAPE =  "`";
+  public static final String COLUMN_TYPE = HIVE_OBJECT_ESCAPE + "%s" + HIVE_OBJECT_ESCAPE + " %s";
   public static final String DATABASE_FIELD = "database";
   public static final String SEP = "/";
   public static final String EQUALS = "=";
@@ -251,7 +251,17 @@ public final class HiveMetastoreUtil {
    * @return the qualified table name.
    */
   public static String getQualifiedTableName(String dbName, String tableName) {
-    return (dbName == null || dbName.isEmpty())? tableName : String.format(DB_DOT_TABLE, dbName, tableName);
+    return (dbName == null || dbName.isEmpty())?
+      escapeHiveObjectName(tableName) :
+      JOINER.join(escapeHiveObjectName(dbName), escapeHiveObjectName(tableName))
+      ;
+  }
+
+  /**
+   * Escape given Hive object name (Table, databse, column) to be safe to used inside SQL queries.
+   */
+  public static String escapeHiveObjectName(String name) {
+    return HIVE_OBJECT_ESCAPE + name + HIVE_OBJECT_ESCAPE;
   }
 
   /**
@@ -554,7 +564,8 @@ public final class HiveMetastoreUtil {
   public static String generateAvroSchema(Map<String, HiveTypeInfo> typeInfo, String qualifiedName)
       throws StageException {
     Utils.checkNotNull(typeInfo, "Error TypeInfo cannot be null");
-    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator(qualifiedName);
+    // Avro doesn't allow "`" in names, so we're dropping those from qualified name
+    AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator(qualifiedName.replace("`", ""));
     return gen.inferSchema(typeInfo);
   }
 
