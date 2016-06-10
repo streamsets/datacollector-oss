@@ -185,8 +185,7 @@ public class MiniSDCTestingUtility {
   public MiniSDC createMiniSDC(ExecutionMode executionMode)
     throws Exception {
     Properties miniITProps = new Properties();
-    File miniITProperties = new File(Resources.getResource("miniIT.properties").toURI());
-    InputStream sdcInStream = new FileInputStream(miniITProperties);
+    InputStream sdcInStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("miniIT.properties");
     miniITProps.load(sdcInStream);
     String sdcDistRoot = (String) miniITProps.get(SDC_DIST_DIR);
     File sdcDistFile = new File(sdcDistRoot);
