@@ -359,6 +359,7 @@ public class TestHiveMetadataProcessor {
     runner.runInit();
 
     Record record = processor.generateSchemaChangeRecord(
+        RecordCreator.create(),
         dbName,
         tableName,
         SAMPLE_RECORD1,
@@ -381,6 +382,7 @@ public class TestHiveMetadataProcessor {
     runner.runInit();
 
     Record record = processor.generateSchemaChangeRecord(
+        RecordCreator.create(),
         dbName,
         tableName,
         DECIMAL_RECORD1,
@@ -410,6 +412,7 @@ public class TestHiveMetadataProcessor {
 
     try {
       record = processor.generateNewPartitionRecord(
+          RecordCreator.create(),
           dbName,
           tableName,
           sampleValues,
