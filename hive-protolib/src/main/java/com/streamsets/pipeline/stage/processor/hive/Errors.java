@@ -28,6 +28,7 @@ public enum Errors implements ErrorCode {
   HIVE_METADATA_02("Value Expression for partition value is missing"),
   HIVE_METADATA_03("Record is missing necessary data {}"),
   HIVE_METADATA_04("Failed validation on value {} : Invalid character for Hive {}"),
+  HIVE_METADATA_05("Invalid time basis expression '{}': {}")
   ;
 
   private final String msg;

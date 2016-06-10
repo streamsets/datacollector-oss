@@ -20,8 +20,12 @@
 package com.streamsets.pipeline.stage.processor.hive;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 
@@ -52,7 +56,7 @@ public final class PartitionConfig {
       label = "Partition Value Expression",
       description="Expression language to obtain partition value from record",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class},
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       displayPosition = 50
   )
   public String valueEL;

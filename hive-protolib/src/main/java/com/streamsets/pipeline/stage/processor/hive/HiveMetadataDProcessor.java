@@ -20,13 +20,20 @@
 package com.streamsets.pipeline.stage.processor.hive;
 
 import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
+import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 
+import java.util.Date;
 import java.util.List;
 
 @StageDef(
@@ -123,15 +130,36 @@ public class HiveMetadataDProcessor extends DProcessor {
       dependsOn = "externalTable",
       triggeredByValue = "true",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class}
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class}
   )
   public String partitionPathTemplate;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${time:now()}",
+      label = "Time Basis",
+      description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
+          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
+      displayPosition = 130,
+      group = "ADVANCED",
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String timeDriver;
 
   @Override
   protected Processor createProcessor() {
     return new HiveMetadataProcessor(
-        dbNameEL, tableNameEL, partitionList,
-        externalTable, tablePathTemplate, partitionPathTemplate, hiveConfigBean);
+        dbNameEL,
+        tableNameEL,
+        partitionList,
+        externalTable,
+        tablePathTemplate,
+        partitionPathTemplate,
+        hiveConfigBean,
+        timeDriver
+    );
   }
 
 }

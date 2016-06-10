@@ -23,6 +23,10 @@ package com.streamsets.pipeline.stage.processor.hive;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
@@ -37,6 +41,7 @@ import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.cache.*;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
@@ -66,56 +71,56 @@ public class TestHiveMetadataProcessor {
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD1
       = new LinkedHashMap<>(ImmutableMap.of(
-          "column1",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
-          "column2",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
-      )
+      "column1",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      "column2",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
+  )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD2
-     = new LinkedHashMap<>(ImmutableMap.of(
-         "column1",
-         TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN),
-         "column2",
-         TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE)
-     )
+      = new LinkedHashMap<>(ImmutableMap.of(
+      "column1",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN),
+      "column2",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE)
+  )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD3
-     = new LinkedHashMap<>(ImmutableMap.of(
-         "first",
-         TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
-         "second",
-         TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
-     )
+      = new LinkedHashMap<>(ImmutableMap.of(
+      "first",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      "second",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
+  )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> DECIMAL_RECORD1
       = new LinkedHashMap<>(ImmutableMap.of(
-          "decimal_val",
-          TestHiveMetastoreUtil.generateDecimalTypeInfo(5, 10),
-          "long_val",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
-      )
+      "decimal_val",
+      TestHiveMetastoreUtil.generateDecimalTypeInfo(5, 10),
+      "long_val",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
+  )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> DECIMAL_RECORD2
       = new LinkedHashMap<>(ImmutableMap.of(
-          "decimal_val",
-          TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 12),
-          "long_value",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
-      )
+      "decimal_val",
+      TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 12),
+      "long_value",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
+  )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_PARTITION
       = new LinkedHashMap<>(ImmutableMap.of(
-          "dt",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
-          "state",
-          TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)
-      )
+      "dt",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      "state",
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)
+  )
   );
 
   @Before
@@ -272,7 +277,7 @@ public class TestHiveMetadataProcessor {
    * @return Generated ProcessRunner
    */
   ProcessorRunner getProcessRunner(Processor processor) {
-    return new ProcessorRunner.Builder(HiveMetadataProcessor.class, processor)
+    return new ProcessorRunner.Builder(HiveMetadataDProcessor.class, processor)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addOutputLane("hive")
         .addOutputLane("hdfs")
@@ -445,9 +450,9 @@ public class TestHiveMetadataProcessor {
   public void testGetPartitionValueFromRecord() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .partitions(new PartitionConfigBuilder()
-            .addPartition("year", HiveType.STRING, "2016")
-            .addPartition("month", HiveType.STRING, "06")
-            .addPartition("day", HiveType.STRING, "05")
+            .addPartition("year", HiveType.STRING, "${YYYY()}")
+            .addPartition("month", HiveType.STRING, "${MM()}")
+            .addPartition("day", HiveType.STRING, "${DD()}")
             .build()
         )
         .build();
@@ -458,6 +463,17 @@ public class TestHiveMetadataProcessor {
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
     ELVars elVars = runner.getContext().createELVars();
+    RecordEL.setRecordInContext(elVars, record);
+
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date(System.currentTimeMillis()));
+    String year = String.valueOf(cal.get(Calendar.YEAR));
+    String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
+    String day =  String.valueOf(Utils.intToPaddedString(cal.get(Calendar.DAY_OF_MONTH), 2));
+
+    TimeEL.setCalendarInContext(elVars, cal);
+    TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
+
     LinkedHashMap<String, String> values = new LinkedHashMap<>();
     String result = null;
     try {
@@ -465,7 +481,9 @@ public class TestHiveMetadataProcessor {
     } catch (StageException e) {
       Assert.fail("getPartitionValuesFromRecord should not raise StageException");
     }
-    Assert.assertNotNull("year=2016/month=06/day=05", result);
+
+
+    Assert.assertEquals(Utils.format("/year={}/month={}/day={}", year, month, day), result);
     Assert.assertEquals(
         "Number of partition name-value pair is wrong",
         3,

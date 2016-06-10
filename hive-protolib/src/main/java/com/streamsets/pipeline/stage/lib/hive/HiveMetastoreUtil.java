@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -144,6 +145,19 @@ public final class HiveMetastoreUtil {
     ELVars elVars = elEval.createVariables();
     RecordEL.setRecordInContext(elVars, metadataRecord);
     return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
+  }
+
+  public static Date getTimeBasis(
+      Stage.Context context,
+      Record record,
+      String timeDriver,
+      ELEval timeDriverElEval
+  ) throws ELEvalException{
+    ELVars elVars = context.createELVars();
+    TimeNowEL.setTimeNowInContext(elVars, new Date());
+    RecordEL.setRecordInContext(elVars, record);
+    context.parseEL(timeDriver);
+    return timeDriverElEval.eval(elVars, timeDriver, Date.class);
   }
 
   // Resolve expression from record

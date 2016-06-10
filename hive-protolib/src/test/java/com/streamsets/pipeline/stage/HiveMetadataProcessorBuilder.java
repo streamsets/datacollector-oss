@@ -32,10 +32,12 @@ public class HiveMetadataProcessorBuilder {
   private boolean external;
   private String tablePathTemplate;
   private String partitionPathTemplate;
+  private String timeDriver;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
     table = "tbl";
+    timeDriver = "${time:now()}";
     partitions = new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build();
     external = false;
     tablePathTemplate = null;
@@ -72,15 +74,21 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder timeDriver(String timeDriver) {
+    this.timeDriver = timeDriver;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
-      database,
-      table,
-      partitions,
-      external,
-      tablePathTemplate,
-      partitionPathTemplate,
-      BaseHiveIT.getHiveConfigBean()
+        database,
+        table,
+        partitions,
+        external,
+        tablePathTemplate,
+        partitionPathTemplate,
+        BaseHiveIT.getHiveConfigBean(),
+        timeDriver
     );
   }
 }

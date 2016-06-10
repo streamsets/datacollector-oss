@@ -23,6 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -30,6 +31,8 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
@@ -46,7 +49,9 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -57,15 +62,20 @@ public class HiveMetadataProcessor extends RecordProcessor {
   // mandatory configuration values
   private static final String HIVE_DB_NAME = "dbNameEL";
   private static final String HIVE_TABLE_NAME = "tableNameEL";
+  private static final String HIVE_PARTITION_CONFIG_VALUE_EL = "valueEL";
+  private static final String TABLE_PATH_TEMPLATE = "tablePathTemplate";
+  private static final String PARTITION_PATH_TEMPLATE = "partitionPathTemplate";
+  private static final String TIME_DRIVER = "timeDriver";
+
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
   protected static final String HDFS_HEADER_TARGET_DIRECTORY = "targetDirectory";
   public static final String DEFAULT_DB = "default";
   private final String databaseEL;
   private final String tableEL;
-  private ELEval elEval;
   private final boolean externalTable;
   private String internalWarehouseDir;
+  private final String timeDriver;
 
   // Triplet of partition name, type and value expression obtained from configuration
   private List<PartitionConfig> partitionConfigList;
@@ -83,6 +93,26 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   private HiveConfigBean hiveConfigBean;
   private ErrorRecordHandler errorRecordHandler;
+  private HiveMetadataProcessorELEvals elEvals = new HiveMetadataProcessorELEvals();
+  ;
+
+  private static class HiveMetadataProcessorELEvals {
+    private ELEval dbNameELEval;
+    private ELEval tableNameELEval;
+    private ELEval partitionValueELEval;
+    private ELEval tablePathTemplateELEval;
+    private ELEval timeDriverElEval;
+    private ELEval partitionPathTemplateELEval;
+
+    public void init(Stage.Context context) {
+      dbNameELEval = context.createELEval(HIVE_DB_NAME);
+      tableNameELEval = context.createELEval(HIVE_TABLE_NAME);
+      partitionValueELEval = context.createELEval(HIVE_PARTITION_CONFIG_VALUE_EL);
+      tablePathTemplateELEval = context.createELEval(TABLE_PATH_TEMPLATE);
+      partitionPathTemplateELEval = context.createELEval(PARTITION_PATH_TEMPLATE);
+      timeDriverElEval = context.createELEval(TIME_DRIVER);
+    }
+  }
 
   public HiveMetadataProcessor(
       String databaseEL,
@@ -91,7 +121,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       boolean externalTable,
       String tablePathTemplate,
       String partitionPathTemplate,
-      HiveConfigBean hiveConfig) {
+      HiveConfigBean hiveConfig,
+      String timeDriver
+  ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
     this.externalTable = externalTable;
@@ -101,6 +133,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       this.tablePathTemplate = tablePathTemplate;
       this.partitionPathTemplate = partitionPathTemplate;
     }
+    this.timeDriver = timeDriver;
   }
 
   @Override
@@ -157,7 +190,25 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     if (issues.isEmpty()) {
       errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-      elEval = getContext().createELEval(HIVE_DB_NAME);
+      elEvals.init(getContext());
+      try {
+        HiveMetastoreUtil.getTimeBasis(
+            getContext(),
+            getContext().createRecord("validationConfigs"),
+            timeDriver,
+            elEvals.timeDriverElEval
+        );
+      } catch (ELEvalException ex) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.ADVANCED.name(),
+                "conf.timeDriver",
+                Errors.HIVE_METADATA_05,
+                ex.toString(),
+                ex
+            )
+        );
+      }
       hdfsLane = getContext().getOutputLanes().get(0);
       hmsLane = getContext().getOutputLanes().get(1);
       // load cache
@@ -180,11 +231,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
     ELVars variables = getContext().createELVars();
     RecordEL.setRecordInContext(variables, record);
-    String dbName = HiveMetastoreUtil.resolveEL(elEval, variables, databaseEL);
-    String tableName = HiveMetastoreUtil.resolveEL(elEval,variables,tableEL);
+    TimeEL.setCalendarInContext(variables, Calendar.getInstance());
+
+    String dbName = HiveMetastoreUtil.resolveEL(elEvals.dbNameELEval, variables, databaseEL);
+    String tableName = HiveMetastoreUtil.resolveEL(elEvals.tableNameELEval,variables,tableEL);
     String warehouseDir;
     if (externalTable){
-      warehouseDir = HiveMetastoreUtil.resolveEL(elEval, variables,tablePathTemplate);
+      warehouseDir = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables,tablePathTemplate);
     } else {
       warehouseDir = internalWarehouseDir;
     }
@@ -261,7 +314,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   private void validateNames(Record r, String dbName, String tableName, String warehouseDir)
-  throws OnRecordErrorException {
+      throws OnRecordErrorException {
 
     if (!HiveMetastoreUtil.validateName(dbName)){
       throw new OnRecordErrorException(r, Errors.HIVE_METADATA_04, "Database name", dbName);
@@ -393,6 +446,17 @@ public class HiveMetadataProcessor extends RecordProcessor {
     return null;
   }
 
+  String getPartitionValue(Date date, Record record, String partitionValueEL) throws ELEvalException {
+    ELVars vars = getContext().createELVars();
+    RecordEL.setRecordInContext(vars, record);
+    if (date != null) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date);
+      TimeEL.setCalendarInContext(vars, calendar);
+    }
+    return HiveMetastoreUtil.resolveEL(elEvals.partitionValueELEval, vars, partitionValueEL);
+  }
+
   /**
    * Obtain a list of partition values from record.
    * @param variables ELvariables
@@ -406,8 +470,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       throws StageException
   {
     StringBuilder sb = new StringBuilder();
+    Date timeBasis = HiveMetastoreUtil.getTimeBasis(getContext(), r, timeDriver, elEvals.timeDriverElEval);
     for (PartitionConfig pName: partitionConfigList) {
-      String ret = HiveMetastoreUtil.resolveEL(elEval, variables, pName.valueEL);
+      String ret = getPartitionValue(timeBasis, r, pName.valueEL);
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
         throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, pName.valueEL);
@@ -477,7 +542,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   private void updateAvroCache(AvroSchemaInfoCacheSupport.AvroSchemaInfo avroCache, String newState, String qualifiedName)
-  throws StageException {
+      throws StageException {
 
     if (avroCache != null) {
       avroCache.updateState(newState);
@@ -493,8 +558,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   //Add header information to send to HDFS
   @VisibleForTesting
   static void updateRecordForHDFS(Record record, boolean roll,
-                                            String avroSchema,
-                                            String location){
+                                  String avroSchema,
+                                  String location){
     if(roll){
       record.getHeader().setAttribute(HDFS_HEADER_ROLL, "true");
     }
