@@ -50,8 +50,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
     TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(0, issues.size());
@@ -62,8 +62,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
     TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
     runner.runInit();
 
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
@@ -73,13 +73,13 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     partitions.put("dt", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
 
     Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
-      "default",
-      "tbl",
-      columns,
-      partitions,
-      true,
-      "/user/hive/warehouse/tbl",
-      HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        "default",
+        "tbl",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
     );
 
     Record record = RecordCreator.create();
@@ -90,8 +90,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     runner.runDestroy();
 
     assertTableStructure("default.tbl",
-      new ImmutablePair("tbl.name", Types.VARCHAR),
-      new ImmutablePair("tbl.dt", Types.VARCHAR)
+        new ImmutablePair("tbl.name", Types.VARCHAR),
+        new ImmutablePair("tbl.dt", Types.VARCHAR)
     );
   }
 }

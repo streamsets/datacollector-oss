@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -78,13 +79,13 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database(database)
-      .tablePathTemplate("/user/hive/warehouse")
+      .tablePathTemplate(getDefaultWareHouseDir())
       .partitionPathTemplate("dt=super-secret")
       .external(external)
       .build();
 
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-        .useAsAvro(storedAsAvro)
+        .storedAsAvro(storedAsAvro)
         .build();
 
     Map<String, Field> map = new LinkedHashMap<>();

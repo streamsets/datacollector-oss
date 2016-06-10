@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
@@ -139,7 +140,7 @@ public class TestHiveMetastoreTarget {
         generateColumnTypeInfo(),
         generatePartitionTypeInfo(),
         true,
-        "/user/hive/warehouse/sample",
+        BaseHiveIT.getDefaultWareHouseDir() +"/sample",
         ""
     );
     Map<String, Field> fieldMap = f.getValueAsMap();

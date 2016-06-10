@@ -93,12 +93,12 @@ public class HiveMetastoreTarget extends BaseTarget {
         String tableName = HiveMetastoreUtil.getTableName(metadataRecord);
         String databaseName = HiveMetastoreUtil.getDatabaseName(metadataRecord);
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
+        String location = HiveMetastoreUtil.getLocation(metadataRecord);
         String resolvedJDBCUrl = HiveMetastoreUtil.resolveJDBCUrl(
             conf.hiveConfigBean.getElEval(),
             conf.hiveConfigBean.hiveJDBCUrl,
             metadataRecord
         );
-        String location = HiveMetastoreUtil.getLocation(metadataRecord);
         HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(resolvedJDBCUrl, conf.hiveConfigBean.getUgi());
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = hmsCache.getOrLoad(
             HMSCacheType.TBLPROPERTIES_INFO,
@@ -119,7 +119,7 @@ public class HiveMetastoreTarget extends BaseTarget {
         }
 
         if (HiveMetastoreUtil.isSchemaChangeRecord(metadataRecord)) {
-          handleSchemaChange(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor, tblPropertiesInfo);
+          handleSchemaChange(metadataRecord, location, databaseName, tableName, resolvedJDBCUrl, hiveQueryExecutor, tblPropertiesInfo);
         } else {
           handlePartitionAddition(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor);
         }
@@ -138,13 +138,15 @@ public class HiveMetastoreTarget extends BaseTarget {
 
   private void handleSchemaChange(
       Record metadataRecord,
-      String qualifiedTableName,
-      String resolvedJDBCUrl,
       String location,
+      String databaseName,
+      String tableName,
+      String resolvedJDBCUrl,
       HiveQueryExecutor hiveQueryExecutor,
       TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo
   ) throws StageException {
     //Schema Change
+    String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
     HMSCacheType cacheType = HMSCacheType.TYPE_INFO;
     TypeInfoCacheSupport.TypeInfo cachedColumnTypeInfo = hmsCache.getOrLoad(
         cacheType,
@@ -168,6 +170,9 @@ public class HiveMetastoreTarget extends BaseTarget {
             conf.getHDFSUgi(),
             conf.getFileSystem(),
             location,
+            conf.getSchemaFolderLocation(metadataRecord),
+            databaseName,
+            tableName,
             HiveMetastoreUtil.getAvroSchema(metadataRecord)
         );
       }
@@ -198,6 +203,9 @@ public class HiveMetastoreTarget extends BaseTarget {
               conf.getHDFSUgi(),
               conf.getFileSystem(),
               location,
+              conf.getSchemaFolderLocation(metadataRecord),
+              databaseName,
+              tableName,
               HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName)
           );
         }

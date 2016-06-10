@@ -25,6 +25,7 @@ import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -83,6 +84,7 @@ public abstract class BaseHiveIT {
   private static final String HOSTNAME = "localhost";
   private static final int METASTORE_PORT;
   private static final int HIVE_SERVER_PORT;
+  private static final String WAREHOUSE_DIR = "/user/hive/warehouse";
   static {
     METASTORE_PORT = NetworkUtils.findAvailablePort();
     HIVE_SERVER_PORT = NetworkUtils.findAvailablePort();
@@ -196,8 +198,16 @@ public abstract class BaseHiveIT {
     return Utils.format("jdbc:hive2://{}:{}/default;user={}", HOSTNAME, HIVE_SERVER_PORT, System.getProperty("user.name"));
   }
 
-  public static String getDefaultFS() {
+  public static String getDefaultFsUri() {
     return Utils.format("hdfs://{}:{}", HOSTNAME, miniDFS.getNameNodePort());
+  }
+
+  public static FileSystem getDefaultFileSystem() throws IOException{
+    return miniDFS.getFileSystem();
+  }
+
+  public static String getDefaultWareHouseDir() {
+    return WAREHOUSE_DIR;
   }
 
   /**
@@ -229,7 +239,7 @@ public abstract class BaseHiveIT {
     }
 
     // Filesystem clean up
-    miniDFS.getFileSystem().delete(new Path("/user/hive/warehouse"), true);
+    miniDFS.getFileSystem().delete(new Path(WAREHOUSE_DIR), true);
   }
 
   /**

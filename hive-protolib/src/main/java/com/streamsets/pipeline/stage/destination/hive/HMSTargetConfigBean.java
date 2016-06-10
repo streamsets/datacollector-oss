@@ -23,12 +23,19 @@ import com.google.common.base.Joiner;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
+import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
@@ -71,15 +78,31 @@ public class HMSTargetConfigBean {
   )
   public boolean storedAsAvro = true;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Folder Location",
+      description = "If specified, the data collector will use the hdfs location for serializing avro schemas." +
+          " If the path does not start with '/' (relative) it will be relative to table data location in hdfs",
+      displayPosition = 40,
+      group = "ADVANCED",
+      defaultValue = ".schemas",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, StringEL.class, TimeEL.class},
+      dependsOn = "storedAsAvro",
+      triggeredByValue = "false"
+  )
+  public String schemaFolderLocation;
+
   //Same as in HDFS origin.
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "HDFS User",
-      description = "If set, the data collector will serialize avro " +
+      description = "If specified, the data collector will serialize avro " +
           "schemas in HDFS with specified hdfs user. The data collector" +
           " user must be configured as a proxy user in HDFS.",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "ADVANCED",
       dependsOn = "storedAsAvro",
       triggeredByValue = "false"
@@ -90,6 +113,12 @@ public class HMSTargetConfigBean {
 
   public FileSystem getFileSystem() {
     return fs;
+  }
+
+  public String getSchemaFolderLocation(Record metadataRecord) throws ELEvalException {
+    ELVars vars = hiveConfigBean.getElEval().createVariables();
+    RecordEL.setRecordInContext(vars, metadataRecord);
+    return HiveMetastoreUtil.resolveEL(hiveConfigBean.getElEval(), vars, schemaFolderLocation);
   }
 
   public UserGroupInformation getHDFSUgi() {

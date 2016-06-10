@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.it;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -88,7 +87,7 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
     formatConfig.avroSchemaInHeader = true;
 
     return HdfsTargetUtil.newBuilder()
-        .hdfsUri(BaseHiveIT.getDefaultFS())
+        .hdfsUri(BaseHiveIT.getDefaultFsUri())
         .hdfsUser(System.getProperty("user.name"))
         .dirPathTemplateInHeader(true)
         .dataForamt(DataFormat.AVRO)

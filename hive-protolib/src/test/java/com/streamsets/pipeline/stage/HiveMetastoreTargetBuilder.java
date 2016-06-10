@@ -26,13 +26,19 @@ public class HiveMetastoreTargetBuilder {
 
   private boolean storedAsAvro;
   private String hdfsUser;
+  private String schemaFolderLocation = ".schemas";
 
   public HiveMetastoreTargetBuilder() {
     this.storedAsAvro = true;
   }
 
-  public HiveMetastoreTargetBuilder useAsAvro(boolean storedAsAvro) {
+  public HiveMetastoreTargetBuilder storedAsAvro(boolean storedAsAvro) {
     this.storedAsAvro = storedAsAvro;
+    return this;
+  }
+
+  public HiveMetastoreTargetBuilder schemFolderLocation(String schemaFolderLocation) {
+    this.schemaFolderLocation = schemaFolderLocation;
     return this;
   }
 
@@ -46,6 +52,7 @@ public class HiveMetastoreTargetBuilder {
     config.storedAsAvro = storedAsAvro;
     config.hdfsUser = hdfsUser;
     config.hiveConfigBean = BaseHiveIT.getHiveConfigBean();
+    config.schemaFolderLocation = schemaFolderLocation;
     return new HiveMetastoreTarget(config);
   }
 

@@ -71,7 +71,6 @@ public final class HiveMetastoreUtil {
   public static final String PARTITION_VALUE = "value";
 
   public static final String AVRO_SCHEMA = "avro_schema";
-  public static final String HDFS_SCHEMA_FOLDER_NAME = ".schemas";
 
   // Configuration constants
   public static final String CONF = "conf";
@@ -98,6 +97,7 @@ public final class HiveMetastoreUtil {
   public static final String TYPE_INFO = "typeInfo";
   public static final String TYPE = "type";
   public static final String EXTRA_INFO = "extraInfo";
+  public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;;
 
   public enum MetadataRecordType {
     /**
@@ -147,7 +147,7 @@ public final class HiveMetastoreUtil {
   }
 
   // Resolve expression from record
-  public static String resolveEL(ELEval elEval,ELVars variables, String val) throws ELEvalException {
+  public static String resolveEL(ELEval elEval, ELVars variables, String val) throws ELEvalException {
     return elEval.eval(variables, val, String.class);
   }
 
@@ -561,21 +561,31 @@ public final class HiveMetastoreUtil {
   /**
    * Returns the hdfs paths where the avro schema is stored after serializing.
    * Path is appended with current time so as to have an ordering.
-   * @param rootTableLocation Root Table Location
+   * @param schemaFolder Schema Folder (If this starts with '/' it is considered absolute)
    * @return Hdfs Path String.
    */
   public static String serializeSchemaToHDFS(
       UserGroupInformation loginUGI,
       final FileSystem fs,
-      final String rootTableLocation,
+      final String location,
+      final String schemaFolder,
+      final String databaseName,
+      final String tableName,
       final String schemaJson
   ) throws StageException{
-    final String folderPath = rootTableLocation + HiveMetastoreUtil.SEP + HiveMetastoreUtil.HDFS_SCHEMA_FOLDER_NAME ;
-    final Path schemasFolderPath = new Path(folderPath);
-    final String path =  folderPath + SEP
-        + HiveMetastoreUtil.AVRO_SCHEMA
-        + DateFormatUtils.format(new Date(System.currentTimeMillis()), "yyyy-MM-dd--HH_mm_ss")
-        + AVRO_SCHEMA_EXT;
+    String folderLocation;
+    if (schemaFolder.startsWith(SEP)) {
+      folderLocation = schemaFolder;
+    } else {
+      folderLocation = location + SEP + schemaFolder;
+    }
+    final Path schemasFolderPath = new Path(folderLocation);
+    final String path =  folderLocation + SEP + String.format(
+        AVRO_SCHEMA_FILE_FORMAT,
+        databaseName,
+        tableName,
+        DateFormatUtils.format(new Date(System.currentTimeMillis()), "yyyy-MM-dd--HH-mm-ss")
+    );
     try {
       loginUGI.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
