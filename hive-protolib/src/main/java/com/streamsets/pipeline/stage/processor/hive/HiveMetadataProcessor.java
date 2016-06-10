@@ -229,7 +229,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
         schemaChanged = true;
         avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
-        handleSchemaChange(dbName, tableName, recordStructure, targetPath,
+        handleSchemaChange(record, dbName, tableName, recordStructure, targetPath,
             avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
       } else {
         if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
@@ -248,7 +248,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       targetPath += partitionStr;
 
       if (diff != null) {
-        handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
+        handleNewPartition(partitionValMap, pCache, record, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
       }
 
       // Send record to HDFS target
@@ -318,6 +318,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   @VisibleForTesting
   Record generateSchemaChangeRecord(
+      Record record,
       String database,
       String tableName,
       LinkedHashMap<String, HiveTypeInfo> columnList,
@@ -325,9 +326,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String location,
       String avroSchema) throws StageException
   {
-    Record metadataRecord = getContext().createRecord("MetadataRecordForSchemaChange");
+    Record metadataRecord = getContext().cloneRecord(record);
 
-    Field matadata = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+    Field metadataField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
         database,
         tableName,
         columnList,
@@ -336,11 +337,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
         location,
         avroSchema
     );
-    metadataRecord.set(matadata);
+    metadataRecord.set(metadataField);
     return metadataRecord;
   }
 
   private void handleSchemaChange(
+      Record record,
       String dbName,
       String tableName,
       LinkedHashMap<String, HiveTypeInfo> recordStructure,
@@ -351,7 +353,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache)
       throws StageException {
 
-    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
+    Record r = generateSchemaChangeRecord(record, dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
     batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
     if (tableCache != null) {
@@ -423,24 +425,27 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   @VisibleForTesting
   Record generateNewPartitionRecord(
+      Record record,
       String database,
       String tableName,
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
-    Record metadataRecord = getContext().createRecord("MetadataRecordForNewPartition");
-    Field metadata = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+
+    Record metadataRecord = getContext().cloneRecord(record);
+    Field metadataField = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
         database,
         tableName,
         partitionList,
         location
     );
-    metadataRecord.set(metadata);
+    metadataRecord.set(metadataField);
     return metadataRecord;
   }
 
   private void handleNewPartition(
       LinkedHashMap<String, String> partitionValMap,
       PartitionInfoCacheSupport.PartitionInfo pCache,
+      Record record,
       String database,
       String tableName,
       String location,
@@ -449,7 +454,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       Set<LinkedHashMap<String, String>> diff
   ) throws StageException{
 
-    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
+    Record r = generateNewPartitionRecord(record, database, tableName, partitionValMap, location);
     batchMaker.addRecord(r, hmsLane);
     if (pCache != null) {
       pCache.updateState(diff);
