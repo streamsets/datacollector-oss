@@ -29,7 +29,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -43,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HiveConfigBean {
-  private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HiveConfigBean.class);
   private static final String KERBEROS_JDBC_REGEX = "jdbc:.*;principal=.*@.*";
   private  static final String HIVE_JDBC_URL = "hiveJDBCUrl";
 

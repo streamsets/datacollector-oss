@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -141,7 +142,11 @@ public final class HiveMetastoreUtil {
    * @return Resolved JDBC URL
    * @throws ELEvalException if it is an invalid EL
    */
-  public static String resolveJDBCUrl(ELEval elEval, String unresolvedJDBCUrl, Record metadataRecord) throws ELEvalException {
+  public static String resolveJDBCUrl(
+      ELEval elEval,
+      String unresolvedJDBCUrl,
+      Record metadataRecord
+  ) throws ELEvalException {
     ELVars elVars = elEval.createVariables();
     RecordEL.setRecordInContext(elVars, metadataRecord);
     return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
@@ -152,7 +157,7 @@ public final class HiveMetastoreUtil {
       Record record,
       String timeDriver,
       ELEval timeDriverElEval
-  ) throws ELEvalException{
+  ) throws ELEvalException {
     ELVars elVars = context.createELVars();
     TimeNowEL.setTimeNowInContext(elVars, new Date());
     RecordEL.setRecordInContext(elVars, record);
@@ -185,8 +190,8 @@ public final class HiveMetastoreUtil {
       String innerPairSecondFieldName,
       boolean isSecondFieldHiveType,
       LinkedHashMap<String, T> returnValMap,
-      StageException exception
-  ) throws StageException{
+      HiveStageCheckedException exception
+  ) throws HiveStageCheckedException{
     boolean throwException = false;
     try {
       if (metadataRecord.has(SEP + listFieldName)) {
@@ -221,7 +226,6 @@ public final class HiveMetastoreUtil {
       throwException = true;
       exception.initCause(e);
     }
-
     if (throwException) {
       throw exception;
     }
@@ -238,7 +242,7 @@ public final class HiveMetastoreUtil {
       String innerPairFirstFieldName,
       String innerPairSecondFieldName,
       boolean isSecondFieldHiveType
-  ) throws StageException {
+  ) throws HiveStageCheckedException {
     List<Field> columnList = new LinkedList<>();
 
     for(Map.Entry<String,T> pair:  original.entrySet()) {
@@ -305,9 +309,9 @@ public final class HiveMetastoreUtil {
    *
    * @param metadataRecord record which contains the {@link #COLUMNS_FIELD} and conform to the above structure.
    * @return Map of column name to column type
-   * @throws StageException if no column information exists or the record has invalid fields.
+   * @throws HiveStageCheckedException if no column information exists or the record has invalid fields.
    */
-  public static LinkedHashMap<String, HiveTypeInfo> getColumnNameType(Record metadataRecord) throws StageException{
+  public static LinkedHashMap<String, HiveTypeInfo> getColumnNameType(Record metadataRecord) throws HiveStageCheckedException {
     LinkedHashMap<String, HiveTypeInfo> columnNameType = new LinkedHashMap<>();
     extractInnerMapFromTheList(
         metadataRecord,
@@ -316,7 +320,7 @@ public final class HiveMetastoreUtil {
         TYPE_INFO,
         true,
         columnNameType,
-        new StageException(Errors.HIVE_17, COLUMNS_FIELD, metadataRecord)
+        new HiveStageCheckedException(Errors.HIVE_17, COLUMNS_FIELD, metadataRecord)
     );
     return columnNameType;
   }
@@ -330,9 +334,10 @@ public final class HiveMetastoreUtil {
    *
    * @param metadataRecord record which contains the {@link #PARTITION_FIELD} and conform to the above structure.
    * @return Map of partition name to partition type
-   * @throws StageException if no partition information exists or the record has invalid fields.
+   * @throws HiveStageCheckedException if no partition information exists or the record has invalid fields.
    */
-  public static LinkedHashMap<String, HiveTypeInfo> getPartitionNameType(Record metadataRecord) throws StageException{
+  public static LinkedHashMap<String, HiveTypeInfo> getPartitionNameType(Record metadataRecord)
+      throws HiveStageCheckedException{
     LinkedHashMap<String, HiveTypeInfo> partitionNameType = new LinkedHashMap<>();
     extractInnerMapFromTheList(
         metadataRecord,
@@ -341,7 +346,7 @@ public final class HiveMetastoreUtil {
         TYPE_INFO,
         true,
         partitionNameType,
-        new StageException(Errors.HIVE_17, PARTITION_FIELD, metadataRecord)
+        new HiveStageCheckedException(Errors.HIVE_17, PARTITION_FIELD, metadataRecord)
     );
     return partitionNameType;
   }
@@ -354,9 +359,9 @@ public final class HiveMetastoreUtil {
    *
    * @param metadataRecord record which contains the {@link #PARTITION_FIELD} and conform to the above structure.
    * @return Map of partition name to partition value
-   * @throws StageException if no partition value information exists or the record has invalid fields.
+   * @throws HiveStageCheckedException if no partition value information exists or the record has invalid fields.
    */
-  public static LinkedHashMap<String, String> getPartitionNameValue(Record metadataRecord) throws StageException{
+  public static LinkedHashMap<String, String> getPartitionNameValue(Record metadataRecord) throws HiveStageCheckedException{
     LinkedHashMap<String, String> partitionNameValue = new LinkedHashMap<>();
     extractInnerMapFromTheList(
         metadataRecord,
@@ -365,7 +370,7 @@ public final class HiveMetastoreUtil {
         PARTITION_VALUE,
         false,
         partitionNameValue,
-        new StageException(Errors.HIVE_17, PARTITION_FIELD, metadataRecord)
+        new HiveStageCheckedException(Errors.HIVE_17, PARTITION_FIELD, metadataRecord)
     );
     return partitionNameValue;
   }
@@ -380,12 +385,12 @@ public final class HiveMetastoreUtil {
     return MetadataRecordType.TABLE.name().equals(metadataRecord.get(SEP + METADATA_RECORD_TYPE).getValueAsString());
   }
 
-  public static void validateMetadataRecordForRecordTypeAndVersion(Record metadataRecord) throws StageException{
+  public static void validateMetadataRecordForRecordTypeAndVersion(Record metadataRecord) throws HiveStageCheckedException {
     if (!metadataRecord.has(SEP + METADATA_RECORD_TYPE)) {
-      throw new StageException(Errors.HIVE_17, METADATA_RECORD_TYPE, metadataRecord);
+      throw new HiveStageCheckedException(Errors.HIVE_17, METADATA_RECORD_TYPE, metadataRecord);
     }
     if(!metadataRecord.has(SEP + VERSION)) {
-      throw new StageException(Errors.HIVE_17, VERSION, metadataRecord);
+      throw new HiveStageCheckedException(Errors.HIVE_17, VERSION, metadataRecord);
     }
   }
 
@@ -393,66 +398,66 @@ public final class HiveMetastoreUtil {
    * Get Table Name from the metadata record.
    * @param metadataRecord the metadata record
    * @return Table Name
-   * @throws StageException if the table field does not exist in the metadata record.
+   * @throws HiveStageCheckedException if the table field does not exist in the metadata record.
    */
-  public static String getTableName(Record metadataRecord) throws StageException{
+  public static String getTableName(Record metadataRecord) throws HiveStageCheckedException {
     if (metadataRecord.has(SEP + TABLE_FIELD)) {
       return metadataRecord.get(SEP + TABLE_FIELD).getValueAsString();
     }
-    throw new StageException(Errors.HIVE_17, TABLE_FIELD, metadataRecord);
+    throw new HiveStageCheckedException(Errors.HIVE_17, TABLE_FIELD, metadataRecord);
   }
 
   /**
    * Get Database Name from the metadata record.
    * @param metadataRecord the metadata record
    * @return Database Name
-   * @throws StageException if the database name does not exist in the metadata record.
+   * @throws HiveStageCheckedException if the database name does not exist in the metadata record.
    */
-  public static String getDatabaseName(Record metadataRecord) throws StageException{
+  public static String getDatabaseName(Record metadataRecord) throws HiveStageCheckedException {
     if (metadataRecord.has(SEP + DATABASE_FIELD)) {
       String dbName = metadataRecord.get(SEP + DATABASE_FIELD).getValueAsString();
       return dbName.isEmpty()? DEFAULT_DBNAME : dbName;
     }
-    throw new StageException(Errors.HIVE_17, DATABASE_FIELD, metadataRecord);
+    throw new HiveStageCheckedException(Errors.HIVE_17, DATABASE_FIELD, metadataRecord);
   }
 
   /**
    * Get internal field from the metadata record.
    * @param metadataRecord the metadata record
    * @return internal field value
-   * @throws StageException if the internal field does not exist in the metadata record.
+   * @throws HiveStageCheckedException if the internal field does not exist in the metadata record.
    */
-  public static boolean getInternalField(Record metadataRecord) throws StageException{
+  public static boolean getInternalField(Record metadataRecord) throws HiveStageCheckedException{
     if (metadataRecord.has(SEP + INTERNAL_FIELD)) {
       return metadataRecord.get(SEP + INTERNAL_FIELD).getValueAsBoolean();
     }
-    throw new StageException(Errors.HIVE_17, INTERNAL_FIELD, metadataRecord);
+    throw new HiveStageCheckedException(Errors.HIVE_17, INTERNAL_FIELD, metadataRecord);
   }
 
   /**
    * Get Location from the metadata record.
    * @param metadataRecord the metadata record
    * @return location
-   * @throws StageException if the location field does not exist in the metadata record.
+   * @throws HiveStageCheckedException if the location field does not exist in the metadata record.
    */
-  public static String getLocation(Record metadataRecord) throws StageException{
+  public static String getLocation(Record metadataRecord) throws HiveStageCheckedException{
     if (metadataRecord.has(SEP + LOCATION_FIELD)) {
       return metadataRecord.get(SEP + LOCATION_FIELD).getValueAsString();
     }
-    throw new StageException(Errors.HIVE_17, LOCATION_FIELD, metadataRecord);
+    throw new HiveStageCheckedException(Errors.HIVE_17, LOCATION_FIELD, metadataRecord);
   }
 
   /**
    * Get Avro Schema from Metadata Record.
    * @param metadataRecord the metadata record.
    * @return Avro Schema
-   * @throws StageException if the avro schema field does not exist in the metadata record.
+   * @throws HiveStageCheckedException if the avro schema field does not exist in the metadata record.
    */
-  public static String getAvroSchema(Record metadataRecord) throws StageException{
+  public static String getAvroSchema(Record metadataRecord) throws HiveStageCheckedException{
     if (metadataRecord.has(SEP + AVRO_SCHEMA)) {
       return metadataRecord.get(SEP + AVRO_SCHEMA).getValueAsString();
     }
-    throw new StageException(Errors.HIVE_17, AVRO_SCHEMA, metadataRecord);
+    throw new HiveStageCheckedException(Errors.HIVE_17, AVRO_SCHEMA, metadataRecord);
   }
 
   /**
@@ -462,7 +467,7 @@ public final class HiveMetastoreUtil {
       String database,
       String tableName,
       LinkedHashMap<String, String> partitionList,
-      String location) throws StageException {
+      String location) throws HiveStageCheckedException {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
     metadata.put(VERSION, Field.create(PARTITION_ADDITION_METADATA_RECORD_VERSION));
     metadata.put(METADATA_RECORD_TYPE, Field.create(MetadataRecordType.PARTITION.name()));
@@ -494,7 +499,7 @@ public final class HiveMetastoreUtil {
       boolean internal,
       String location,
       String avroSchema
-  ) throws StageException  {
+  ) throws HiveStageCheckedException  {
     LinkedHashMap<String, Field> metadata = new LinkedHashMap<>();
     metadata.put(VERSION, Field.create(SCHEMA_CHANGE_METADATA_RECORD_VERSION));
     metadata.put(METADATA_RECORD_TYPE, Field.create(MetadataRecordType.TABLE.name()));
@@ -533,9 +538,10 @@ public final class HiveMetastoreUtil {
    * supported types and change the value in record.
    * @param record incoming Record
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
-   * @throws StageException
+   * @throws HiveStageCheckedException
    */
-  public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(Record record) throws StageException {
+  public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(Record record)
+      throws HiveStageCheckedException {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
@@ -576,11 +582,16 @@ public final class HiveMetastoreUtil {
    * @throws StageException
    */
   public static String generateAvroSchema(Map<String, HiveTypeInfo> typeInfo, String qualifiedName)
-      throws StageException {
+      throws HiveStageCheckedException {
     Utils.checkNotNull(typeInfo, "Error TypeInfo cannot be null");
     // Avro doesn't allow "`" in names, so we're dropping those from qualified name
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator(qualifiedName.replace("`", ""));
-    return gen.inferSchema(typeInfo);
+    try {
+      return gen.inferSchema(typeInfo);
+    } catch (StageException e) {
+      //So that any error to generate avro schema will result in onRecordErrorException and routed to error lane.
+      throw new HiveStageCheckedException(e.getErrorCode(), e.getParams());
+    }
   }
 
   /**
@@ -597,7 +608,7 @@ public final class HiveMetastoreUtil {
       final String databaseName,
       final String tableName,
       final String schemaJson
-  ) throws StageException{
+  ) throws StageException {
     String folderLocation;
     if (schemaFolder.startsWith(SEP)) {
       folderLocation = schemaFolder;

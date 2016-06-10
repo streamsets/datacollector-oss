@@ -52,7 +52,7 @@ public class PartitionInfoCacheSupport
     }
 
     @Override
-    public Set<LinkedHashMap<String,String>> getDiff(Set<LinkedHashMap<String,String>> newState) throws StageException{
+    public Set<LinkedHashMap<String,String>> getDiff(Set<LinkedHashMap<String,String>> newState) throws StageException {
       Set<LinkedHashMap<String,String>> diff = new HashSet<>(newState);
       diff.removeAll(state);
       return diff;

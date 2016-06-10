@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,7 +110,8 @@ public abstract class HiveTypeSupport {
    * @return {@link HiveTypeInfo}
    * @throws StageException
    */
-  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromResultSet(String hiveTypeString) throws StageException;
+  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromResultSet(String hiveTypeString)
+      throws HiveStageCheckedException;
 
   /**
    * Get the {@link HiveTypeInfo} from the record field
@@ -118,7 +120,8 @@ public abstract class HiveTypeSupport {
    * @return {@link HiveTypeInfo}
    * @throws StageException
    */
-  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field) throws StageException;
+  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field)
+      throws HiveStageCheckedException;
 
   /**
    * Create a new {@link HiveTypeInfo} from the {@link HiveTypeConfig}

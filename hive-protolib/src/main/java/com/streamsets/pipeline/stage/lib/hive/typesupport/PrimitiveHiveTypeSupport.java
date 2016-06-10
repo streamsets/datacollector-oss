@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 
 import java.util.LinkedHashMap;
 
@@ -38,14 +39,16 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromResultSet(String hiveTypeString) throws StageException {
+  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromResultSet(String hiveTypeString)
+      throws HiveStageCheckedException {
     HiveType type = HiveType.prefixMatch(hiveTypeString);
     return new PrimitiveHiveTypeInfo(type);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field) throws StageException{
+  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field)
+      throws HiveStageCheckedException{
     return new PrimitiveHiveTypeInfo(HiveType.getHiveTypeforFieldType(field.getType()));
   }
 

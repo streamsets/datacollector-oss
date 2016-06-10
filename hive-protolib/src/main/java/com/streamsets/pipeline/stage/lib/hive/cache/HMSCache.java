@@ -25,6 +25,7 @@ import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.Collection;
@@ -64,7 +65,7 @@ public class HMSCache {
   @SuppressWarnings("unchecked")
   public <T extends HMSCacheSupport.HMSCacheInfo> T getIfPresent(
       HMSCacheType hmsCacheType,
-      String qualifiedTableName) throws StageException{
+      String qualifiedTableName) throws StageException {
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }

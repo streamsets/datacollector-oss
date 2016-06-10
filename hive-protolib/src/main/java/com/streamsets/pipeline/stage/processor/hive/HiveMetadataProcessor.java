@@ -45,8 +45,11 @@ import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.hive.conf.HiveConf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -58,7 +61,7 @@ import java.util.List;
 import java.util.Set;
 
 public class HiveMetadataProcessor extends RecordProcessor {
-
+  private static final Logger LOG = LoggerFactory.getLogger(HiveMetadataProcessor.class.getCanonicalName());
   // mandatory configuration values
   private static final String HIVE_DB_NAME = "dbNameEL";
   private static final String HIVE_TABLE_NAME = "tableNameEL";
@@ -250,7 +253,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (dbName.isEmpty()) {
         dbName = DEFAULT_DB;
       }
-      validateNames(record, dbName, tableName, warehouseDir);
+      validateNames(dbName, tableName, warehouseDir);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
       // path from warehouse directory to table
       String targetPath = HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
@@ -265,7 +268,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
               qualifiedName
           );
       if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
-        throw new StageException(
+        throw new HiveStageCheckedException(
             com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
             "EXTERNAL",
             externalTable,
@@ -308,24 +311,25 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // Send record to HDFS target
       updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
-    } catch (OnRecordErrorException | ELEvalException error) {
-      errorRecordHandler.onError(error.getErrorCode(), error.getMessage(), error);
+    } catch (HiveStageCheckedException error) {
+      LOG.error("Error happened when processing the record : {}" + record.toString(), error);
+      errorRecordHandler.onError(new OnRecordErrorException(record, error.getErrorCode(), error.getParams()));
     }
   }
 
-  private void validateNames(Record r, String dbName, String tableName, String warehouseDir)
-      throws OnRecordErrorException {
+  private void validateNames(String dbName, String tableName, String warehouseDir)
+      throws HiveStageCheckedException {
 
     if (!HiveMetastoreUtil.validateName(dbName)){
-      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_04, "Database name", dbName);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, "Database name", dbName);
     }
     if (tableName.isEmpty()) {
-      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, tableEL);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, tableEL);
     } else if (!HiveMetastoreUtil.validateName(tableName)){
-      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_04, HIVE_TABLE_NAME, tableName);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, HIVE_TABLE_NAME, tableName);
     }
     if (warehouseDir.isEmpty()) {
-      throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, warehouseDir);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, warehouseDir);
     }
   }
   /**
@@ -378,7 +382,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, HiveTypeInfo> columnList,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeList,
       String location,
-      String avroSchema) throws StageException
+      String avroSchema
+  ) throws HiveStageCheckedException
   {
     Record metadataRecord = getContext().cloneRecord(record);
 
@@ -475,7 +480,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String ret = getPartitionValue(timeBasis, r, pName.valueEL);
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
-        throw new OnRecordErrorException(r, Errors.HIVE_METADATA_03, pName.valueEL);
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, pName.valueEL);
       }  else {
         values.put(pName.name, ret);
         sb.append(HiveMetastoreUtil.SEP);
@@ -557,9 +562,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   //Add header information to send to HDFS
   @VisibleForTesting
-  static void updateRecordForHDFS(Record record, boolean roll,
-                                  String avroSchema,
-                                  String location){
+  static void updateRecordForHDFS(
+      Record record,
+      boolean roll,
+      String avroSchema,
+      String location
+  ){
     if(roll){
       record.getHeader().setAttribute(HDFS_HEADER_ROLL, "true");
     }

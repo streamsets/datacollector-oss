@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,13 +46,14 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   }
 
   @Override
-  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) throws StageException {
+  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField)
+      throws HiveStageCheckedException {
     Map<String, Field> extraInfo = hiveTypeField.getValueAsMap();
     if(!extraInfo.containsKey(SCALE)) {
-      throw new StageException(Errors.HIVE_01, Utils.format("Missing {} in field {}", SCALE, hiveTypeField));
+      throw new HiveStageCheckedException(Errors.HIVE_01, Utils.format("Missing {} in field {}", SCALE, hiveTypeField));
     }
     if(!extraInfo.containsKey(PRECISION)) {
-      throw new StageException(Errors.HIVE_01, Utils.format("Missing {} in field {}", PRECISION, hiveTypeField));
+      throw new HiveStageCheckedException(Errors.HIVE_01, Utils.format("Missing {} in field {}", PRECISION, hiveTypeField));
     }
     int scale = extraInfo.get(SCALE).getValueAsInteger();
     int precision = extraInfo.get(PRECISION).getValueAsInteger();
@@ -59,15 +61,16 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   }
 
   @Override
-  public DecimalTypeInfo generateHiveTypeInfoFromResultSet(String hiveTypeString) throws StageException {
+  public DecimalTypeInfo generateHiveTypeInfoFromResultSet(String hiveTypeString)
+      throws HiveStageCheckedException {
     HiveType type = HiveType.prefixMatch(hiveTypeString);
     if (type != HiveType.DECIMAL) {
-      throw new StageException(Errors.HIVE_01, "Invalid Column Type Definition: " + hiveTypeString);
+      throw new HiveStageCheckedException(Errors.HIVE_01, "Invalid Column Type Definition: " + hiveTypeString);
     }
     String scalePrecision  = hiveTypeString.substring(type.name().length() + 1, hiveTypeString.length() - 1);
     String split[]  = scalePrecision.split(HiveMetastoreUtil.COMMA);
     if (split.length != 2) {
-      throw new StageException(Errors.HIVE_01, "Invalid Column Type Definition: " + hiveTypeString);
+      throw new HiveStageCheckedException(Errors.HIVE_01, "Invalid Column Type Definition: " + hiveTypeString);
     }
     int scale = Integer.parseInt(split[0]);
     int precision = Integer.parseInt(split[1]);
@@ -76,7 +79,7 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
 
   @Override
   @SuppressWarnings("unchecked")
-  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field) throws StageException{
+  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field) throws HiveStageCheckedException {
     BigDecimal bigDecimal = field.getValueAsDecimal();
     return new DecimalTypeInfo(bigDecimal.scale(), bigDecimal.precision());
   }

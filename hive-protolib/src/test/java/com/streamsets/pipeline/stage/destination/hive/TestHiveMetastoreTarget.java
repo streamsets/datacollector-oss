@@ -20,9 +20,11 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -33,7 +35,6 @@ import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.TestHMSCache;
 import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
-import com.streamsets.pipeline.stage.lib.hive.cache.AvroSchemaInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
@@ -46,9 +47,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -58,10 +56,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -174,21 +169,49 @@ public class TestHiveMetastoreTarget {
     );
   }
 
-  private void runHMSTargetWriteAndCheckException(
-      TargetRunner targetRunner,
-      List<Record> records
-  ) {
-    try {
-      targetRunner.runWrite(records);
-      Assert.fail("Stage exception expected for missing/invalid field in record:" + records.toString());
-    } catch (StageException e) {
-      LOG.info("Expected exception: {}", e.getMessage());
-      Assert.assertEquals("Error codes did not match", Errors.HIVE_17, e.getErrorCode());
+  private void runHMSTargetWriteAndValidateResultingAction(
+      List<Record> records,
+      OnRecordError onRecordError
+  ) throws Exception{
+    HiveMetastoreTarget target = PowerMockito.spy(new HiveMetastoreTargetBuilder().build());
+    TargetRunner targetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, target)
+        .setOnRecordError(onRecordError)
+        .build();
+    targetRunner.runInit();
+    switch (onRecordError) {
+      case TO_ERROR:
+        try {
+          targetRunner.runWrite(records);
+          List<Record> errorRecords = targetRunner.getErrorRecords();
+          Assert.assertEquals("Error Record size should match", records.size(), errorRecords.size());
+        } catch (StageException e) {
+          Assert.fail("Pipeline should not error out");
+        }
+        break;
+      case STOP_PIPELINE:
+        try {
+          targetRunner.runWrite(records);
+          Assert.fail("Stage exception expected for missing/invalid field in record:" + records.toString());
+        } catch (StageException e) {
+          LOG.info("Expected exception: {}", e.getMessage());
+          Assert.assertEquals(" Should be OnRecordException", OnRecordErrorException.class, e.getClass());
+          Assert.assertEquals("Error codes did not match", Errors.HIVE_17, e.getErrorCode());
+        }
+        break;
+      case DISCARD:
+        try {
+          targetRunner.runWrite(records);
+          List<Record> errorRecords = targetRunner.getErrorRecords();
+          Assert.assertEquals("For discard no error record should come", 0, errorRecords.size());
+        } catch (StageException e) {
+          Assert.fail("Pipeline should not error out");
+        }
+        break;
     }
+    targetRunner.runDestroy();
   }
 
-  @Test
-  public void testCommonMissingInfoMetadataRecord() throws Exception {
+  public void testCommonMissingInfoMetadataRecord(OnRecordError onRecordError) throws Exception {
     TestHMSCache.setMockForHMSCacheLoader(
         TestHMSCache.EMPTY_TYPE_INFO,
         TestHMSCache.EMPTY_TYPE_INFO,
@@ -196,85 +219,94 @@ public class TestHiveMetastoreTarget {
         false,
         true
     );
-
-    HiveMetastoreTarget target = PowerMockito.spy(new HiveMetastoreTargetBuilder().build());
-    TargetRunner targetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, target).build();
-    targetRunner.runInit();
-
     //Test schema change record
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.VERSION,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.METADATA_RECORD_TYPE,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.DATABASE_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.TABLE_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.LOCATION_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        onRecordError
     );
 
     //Test Partition Addition Record
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.VERSION,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.METADATA_RECORD_TYPE,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.DATABASE_FIELD,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        OnRecordError.STOP_PIPELINE
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.TABLE_FIELD,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        onRecordError
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.LOCATION_FIELD,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        onRecordError
     );
-    targetRunner.runDestroy();
+  }
+
+  @Test
+  public void testOnRecordErrorToError() throws Exception{
+    testCommonMissingInfoMetadataRecord(OnRecordError.TO_ERROR);
+  }
+
+  @Test
+  public void testOnRecordErrorStopPipeline() throws Exception{
+    testCommonMissingInfoMetadataRecord(OnRecordError.STOP_PIPELINE);
+  }
+
+  @Test
+  public void testOnRecordErrorDiscard() throws Exception{
+    testCommonMissingInfoMetadataRecord(OnRecordError.DISCARD);
   }
 
   @Test
@@ -286,29 +318,26 @@ public class TestHiveMetastoreTarget {
         false,
         true
     );
-    HiveMetastoreTarget target = PowerMockito.spy(new HiveMetastoreTargetBuilder().build());
-    TargetRunner targetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, target).build();
-    targetRunner.runInit();
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.INTERNAL_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        OnRecordError.STOP_PIPELINE
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.COLUMNS_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        OnRecordError.STOP_PIPELINE
     );
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.PARTITION_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
-        )
+        ),
+        OnRecordError.STOP_PIPELINE
     );
 
     //Check column type removal
@@ -322,10 +351,14 @@ public class TestHiveMetastoreTarget {
 
     Record schemaChangeRecord = RecordCreator.create();
     schemaChangeRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(targetRunner, Collections.singletonList(schemaChangeRecord));
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(schemaChangeRecord),
+        OnRecordError.STOP_PIPELINE
+    );
 
     //Check column extra info removal
-    fieldMap = generateRecordWithMissingField("", HiveMetastoreUtil.MetadataRecordType.TABLE).get(0).get().getValueAsMap();
+    fieldMap =
+        generateRecordWithMissingField("", HiveMetastoreUtil.MetadataRecordType.TABLE).get(0).get().getValueAsMap();
     columnList = fieldMap.get(HiveMetastoreUtil.COLUMNS_FIELD).getValueAsList();
     idColumn = columnList.get(0).getValueAsMap();
     typeInfoColumn = idColumn.get(HiveMetastoreUtil.TYPE_INFO).getValueAsMap();
@@ -333,7 +366,10 @@ public class TestHiveMetastoreTarget {
 
     schemaChangeRecord = RecordCreator.create();
     schemaChangeRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(targetRunner, Collections.singletonList(schemaChangeRecord));
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(schemaChangeRecord),
+        OnRecordError.STOP_PIPELINE
+    );
 
     //Check decimal column extra info removal
     fieldMap = generateRecordWithMissingField("", HiveMetastoreUtil.MetadataRecordType.TABLE).get(0).get().getValueAsMap();
@@ -346,7 +382,10 @@ public class TestHiveMetastoreTarget {
 
     schemaChangeRecord = RecordCreator.create();
     schemaChangeRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(targetRunner, Collections.singletonList(schemaChangeRecord));
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(schemaChangeRecord),
+        OnRecordError.STOP_PIPELINE
+    );
 
     //Remove precision
     extraInfo.put("scale", Field.create(10));
@@ -354,8 +393,10 @@ public class TestHiveMetastoreTarget {
 
     schemaChangeRecord = RecordCreator.create();
     schemaChangeRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(targetRunner, Collections.singletonList(schemaChangeRecord));
-    targetRunner.runDestroy();
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(schemaChangeRecord),
+        OnRecordError.STOP_PIPELINE
+    );
   }
 
   @Test
@@ -390,15 +431,12 @@ public class TestHiveMetastoreTarget {
         false,
         true
     );
-    HiveMetastoreTarget target = PowerMockito.spy(new HiveMetastoreTargetBuilder().build());
-    TargetRunner targetRunner = new TargetRunner.Builder(HiveMetastoreDTarget.class, target).build();
-    targetRunner.runInit();
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
+    runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.PARTITION_FIELD,
             HiveMetastoreUtil.MetadataRecordType.PARTITION
-        )
+        ),
+        OnRecordError.STOP_PIPELINE
     );
 
     //Partition Name removal
@@ -410,9 +448,9 @@ public class TestHiveMetastoreTarget {
     firstPartition.remove(HiveMetastoreUtil.PARTITION_NAME);
     Record partitionAdditionRecord = RecordCreator.create();
     partitionAdditionRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
-        Collections.singletonList(partitionAdditionRecord)
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(partitionAdditionRecord),
+        OnRecordError.STOP_PIPELINE
     );
 
     fieldMap = generateRecordWithMissingField("", HiveMetastoreUtil.MetadataRecordType.PARTITION).get(0).get().getValueAsMap();
@@ -421,12 +459,10 @@ public class TestHiveMetastoreTarget {
     partitionAdditionRecord = RecordCreator.create();
     partitionAdditionRecord.set(Field.create(fieldMap));
     partitionAdditionRecord.set(Field.create(fieldMap));
-    runHMSTargetWriteAndCheckException(
-        targetRunner,
-        Collections.singletonList(partitionAdditionRecord)
+    runHMSTargetWriteAndValidateResultingAction(
+        Collections.singletonList(partitionAdditionRecord),
+        OnRecordError.STOP_PIPELINE
     );
-
-    targetRunner.runDestroy();
   }
 
   @Test

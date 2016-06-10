@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +124,7 @@ public class HiveMetastoreTarget extends BaseTarget {
         } else {
           handlePartitionAddition(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor);
         }
-      } catch (StageException e) {
+      } catch (HiveStageCheckedException e) {
         LOG.error("Error processing record: {}", e);
         defaultErrorRecordHandler.onError(new OnRecordErrorException(metadataRecord, e.getErrorCode(), e.getParams()));
       }
@@ -160,7 +161,7 @@ public class HiveMetastoreTarget extends BaseTarget {
     String schemaPath = null;
 
     if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() == isInternal) {
-      throw new StageException(Errors.HIVE_23, EXTERNAL, !isInternal, tblPropertiesInfo.isExternal());
+      throw new HiveStageCheckedException(Errors.HIVE_23, EXTERNAL, !isInternal, tblPropertiesInfo.isExternal());
     }
 
     if (cachedColumnTypeInfo == null) {

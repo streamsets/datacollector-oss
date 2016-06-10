@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -73,7 +74,11 @@ public class TypeInfoCacheSupport
         if (!state.containsKey(columnName)) {
           columnDiff.put(columnName, columnTypeInfo);
         } else if (!state.get(columnName).equals(columnTypeInfo)) {
-          throw new StageException(Errors.HIVE_21, state.get(columnName).getHiveType().name(), columnTypeInfo.getHiveType().name());
+          throw new HiveStageCheckedException(
+              Errors.HIVE_21,
+              state.get(columnName).getHiveType().name(),
+              columnTypeInfo.getHiveType().name()
+          );
         }
       }
       return columnDiff;

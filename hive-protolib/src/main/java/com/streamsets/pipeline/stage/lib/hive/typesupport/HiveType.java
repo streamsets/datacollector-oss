@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive.typesupport;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 
 /**
  * Hive Types Supported.
@@ -52,7 +53,7 @@ public enum HiveType {
    * @return {@link HiveType}
    * @throws StageException if it is an unsupported {@link com.streamsets.pipeline.api.Field.Type} or null
    */
-  public static HiveType getHiveTypeforFieldType(Field.Type fieldType) throws StageException{
+  public static HiveType getHiveTypeforFieldType(Field.Type fieldType) throws HiveStageCheckedException {
     switch (fieldType) {
       case BOOLEAN: return HiveType.BOOLEAN;
       case INTEGER: return HiveType.INT;
@@ -62,7 +63,7 @@ public enum HiveType {
       case DECIMAL: return HiveType.DECIMAL;
       case STRING: return HiveType.STRING;
       case BYTE_ARRAY: return HiveType.BINARY;
-      default: throw new StageException(Errors.HIVE_19, fieldType);
+      default: throw new HiveStageCheckedException(Errors.HIVE_19, fieldType);
     }
   }
 
@@ -73,7 +74,7 @@ public enum HiveType {
    * @return {@link Field.Type}
    * @throws StageException if it is an unsupported {@link HiveType} or null
    */
-  public static Field.Type getFieldTypeForHiveType(HiveType hiveType) throws StageException{
+  public static Field.Type getFieldTypeForHiveType(HiveType hiveType) throws HiveStageCheckedException {
     switch (hiveType) {
       case BOOLEAN: return Field.Type.BOOLEAN;
       case INT: return Field.Type.INTEGER;
@@ -85,7 +86,7 @@ public enum HiveType {
       //Suffice to say don't need timestamp
       //(Won't be a problem if we are the ones creating the table)
       case STRING: return Field.Type.STRING;
-      default: throw new StageException(Errors.HIVE_19, hiveType);
+      default: throw new HiveStageCheckedException(Errors.HIVE_19, hiveType);
     }
   }
 
@@ -98,12 +99,12 @@ public enum HiveType {
     return HiveType.valueOf(hiveTypeString.toUpperCase());
   }
 
-  public static HiveType prefixMatch(String hiveTypeString) throws StageException{
+  public static HiveType prefixMatch(String hiveTypeString) throws HiveStageCheckedException {
     for (HiveType hiveType : HiveType.values()) {
       if (hiveTypeString.toUpperCase().startsWith(hiveType.name().toUpperCase())) {
         return hiveType;
       }
     }
-    throw new StageException(Errors.HIVE_01, "Invalid Hive Type Definition: {} " + hiveTypeString);
+    throw new HiveStageCheckedException(Errors.HIVE_01, "Invalid Hive Type Definition: {} " + hiveTypeString);
   }
 }
