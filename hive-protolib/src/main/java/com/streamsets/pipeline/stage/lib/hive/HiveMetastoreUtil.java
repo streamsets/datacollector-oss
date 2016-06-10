@@ -55,6 +55,7 @@ import java.util.Map;
 
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
+  private static final String PARTITION_PATH = "/%s=%s";
   private static final String AVRO_SCHEMA_EXT = ".avsc";
 
   //Common Constants
@@ -592,6 +593,19 @@ public final class HiveMetastoreUtil {
       //So that any error to generate avro schema will result in onRecordErrorException and routed to error lane.
       throw new HiveStageCheckedException(e.getErrorCode(), e.getParams());
     }
+  }
+
+  /**
+   * Build a partition path for the external table.
+   * @param partitions A list of key-value pair to build a partition path
+   * @return String that represents partition path
+   */
+  public static String generatePartitionPath(LinkedHashMap<String, String> partitions) {
+    StringBuilder builder = new StringBuilder();
+    for(Map.Entry<String, String> pair:  partitions.entrySet()) {
+      builder.append(String.format(PARTITION_PATH, pair.getKey(), pair.getValue()));
+    }
+    return builder.toString();
   }
 
   /**

@@ -52,7 +52,7 @@ public final class PartitionConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue="${record:attribute('/dt')}",
+      defaultValue="${record:attribute('dt')}",
       label = "Partition Value Expression",
       description="Expression language to obtain partition value from record",
       evaluation = ConfigDef.Evaluation.EXPLICIT,

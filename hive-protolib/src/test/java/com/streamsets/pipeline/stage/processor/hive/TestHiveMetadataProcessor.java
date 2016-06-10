@@ -19,8 +19,8 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
-
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.stage.BaseHiveIT;
@@ -41,14 +42,15 @@ import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.cache.*;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -58,10 +60,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.security.*")
 @PrepareForTest({
     HiveConfigBean.class,
     HiveMetadataProcessor.class,
     BaseHiveIT.class,
+    HMSCache.class
 })
 public class TestHiveMetadataProcessor {
 
@@ -134,6 +138,17 @@ public class TestHiveMetadataProcessor {
             String.class,
             Record.class)
     );
+    // do not run Hive queries
+    PowerMockito.suppress(
+        MemberMatcher.method(
+            HMSCache.class,
+            "getOrLoad",
+            HMSCacheType.class,
+            String.class,
+            String.class,
+            UserGroupInformation.class
+    ));
+
     // Do not create issues
     PowerMockito.suppress(
         MemberMatcher.method(
@@ -279,8 +294,8 @@ public class TestHiveMetadataProcessor {
   ProcessorRunner getProcessRunner(Processor processor) {
     return new ProcessorRunner.Builder(HiveMetadataDProcessor.class, processor)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addOutputLane("hive")
         .addOutputLane("hdfs")
+        .addOutputLane("hive")
         .build();
   }
 
@@ -465,30 +480,29 @@ public class TestHiveMetadataProcessor {
     ELVars elVars = runner.getContext().createELVars();
     RecordEL.setRecordInContext(elVars, record);
 
+    LinkedHashMap<String, String> values = null;
+
     Calendar cal = Calendar.getInstance();
     cal.setTime(new Date(System.currentTimeMillis()));
+
+    TimeEL.setCalendarInContext(elVars, cal);
+    TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
     String year = String.valueOf(cal.get(Calendar.YEAR));
     String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
     String day =  String.valueOf(Utils.intToPaddedString(cal.get(Calendar.DAY_OF_MONTH), 2));
 
-    TimeEL.setCalendarInContext(elVars, cal);
-    TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
-
-    LinkedHashMap<String, String> values = new LinkedHashMap<>();
-    String result = null;
     try {
-      result = processor.getPartitionValuesFromRecord(record, elVars, values);
+      values = processor.getPartitionValuesFromRecord(record, elVars);
     } catch (StageException e) {
       Assert.fail("getPartitionValuesFromRecord should not raise StageException");
     }
-
-
-    Assert.assertEquals(Utils.format("/year={}/month={}/day={}", year, month, day), result);
     Assert.assertEquals(
         "Number of partition name-value pair is wrong",
         3,
         values.size()
     );
+    String path = HiveMetastoreUtil.generatePartitionPath(values);
+    Assert.assertEquals(Utils.format("/year={}/month={}/day={}", year, month, day), path);
     runner.runDestroy();
   }
 
@@ -524,5 +538,91 @@ public class TestHiveMetadataProcessor {
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_TARGET_DIRECTORY),
         targetDir);
+  }
+
+  @Test
+  public void testExternalTableDirectoryPathDefault() throws Exception {
+    /* database : default
+       table    : tbl
+       path template : /user/hive/warehouse
+       partition template: secret-value
+       Expected directory path = /user/hive/some_directory/tbl/secret-value
+    */
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .database("")
+        .external(true)
+        .tablePathTemplate("/user/hive/some_directory/tbl")
+        .partitionPathTemplate("secret-value")
+        .build();
+    ProcessorRunner runner = getProcessRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "default database"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertNotNull(hdfsRecord);
+    // Target directory with correct path
+    Assert.assertEquals(
+        "/user/hive/some_directory/tbl/secret-value",
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
+  }
+
+  @Test
+  public void testExternalTableDirectoryPath() throws Exception {
+    /* database : testDB
+       table    : tbl
+       path template : /user/hive/some_directory
+       partition path: ${YYYY()}-${MM()}-${DD()}
+       Expected directory path
+            : /user/hive/some_directory/testDB.db/tbl/<year>-<month>-<date>
+    */
+    String tableTemplate = "/user/hive/some_directory/testDB.db/tbl";
+    String partitionTemplate = "${YYYY()}-${MM()}-${DD()}";
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .database("testDB")
+        .external(true)
+        .tablePathTemplate(tableTemplate)
+        .partitionPathTemplate(partitionTemplate)
+        .build();
+    ProcessorRunner runner = getProcessRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "default database"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    ELVars elVars = runner.getContext().createELVars();
+    RecordEL.setRecordInContext(elVars, record);
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertNotNull(hdfsRecord);
+
+    // Obtain Today's date
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date(System.currentTimeMillis()));
+    TimeEL.setCalendarInContext(elVars, cal);
+    TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
+    String year = String.valueOf(cal.get(Calendar.YEAR));
+    String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
+    String day =  String.valueOf(Utils.intToPaddedString(cal.get(Calendar.DAY_OF_MONTH), 2));
+
+    // Target directory with correct path
+    String expected = String.format("%s/%s-%s-%s", tableTemplate, year, month, day);
+    Assert.assertEquals(
+        expected,
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
   }
 }

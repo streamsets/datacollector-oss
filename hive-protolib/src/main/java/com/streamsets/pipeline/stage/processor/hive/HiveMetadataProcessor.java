@@ -20,24 +20,24 @@
 package com.streamsets.pipeline.stage.processor.hive;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
-import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.cache.AvroSchemaInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
@@ -87,7 +87,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   // Optional configuration values
   private String tablePathTemplate;
-  private String partitionPathTemplate; //TODO
+  private String partitionPathTemplate;
 
   private HMSCache cache;
 
@@ -147,13 +147,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     if (!externalTable) {
       internalWarehouseDir = HiveConf.getVar(hiveConfigBean.getConfiguration(), HiveConf.ConfVars.METASTOREWAREHOUSE);
-      if (internalWarehouseDir == null || internalWarehouseDir.isEmpty()){
-        issues.add(getContext().createConfigIssue(
-            Groups.HIVE.name(),
-            "warehouseDirectory",
-            Errors.HIVE_METADATA_01,
-            "Warehouse Directory"));
-      }
+      validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_06, issues);
+    } else {
+      validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_07, issues);
+      validateTemplate(partitionPathTemplate, "Partition Path Template", Errors.HIVE_METADATA_07, issues);
     }
 
     if (partitionConfigList.isEmpty()) {
@@ -163,7 +160,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
           Errors.HIVE_METADATA_01,
           "Partition Configuration"));
     }
-
     partitionTypeInfo = new LinkedHashMap<>();
     for (PartitionConfig partition: partitionConfigList){
       // Validation on partition column name
@@ -230,24 +226,40 @@ public class HiveMetadataProcessor extends RecordProcessor {
     return issues;
   }
 
+  private void validateTemplate(String template, String configName, ErrorCode errorCode, List<ConfigIssue> issues){
+    if (template == null || template.isEmpty()){
+      issues.add(getContext().createConfigIssue(
+          Groups.HIVE.name(),
+          template,
+          errorCode,
+          configName
+      ));
+    }
+  }
+
   @Override
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
     ELVars variables = getContext().createELVars();
     RecordEL.setRecordInContext(variables, record);
     TimeEL.setCalendarInContext(variables, Calendar.getInstance());
-
     String dbName = HiveMetastoreUtil.resolveEL(elEvals.dbNameELEval, variables, databaseEL);
     String tableName = HiveMetastoreUtil.resolveEL(elEvals.tableNameELEval,variables,tableEL);
-    String warehouseDir;
-    if (externalTable){
-      warehouseDir = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables,tablePathTemplate);
-    } else {
-      warehouseDir = internalWarehouseDir;
-    }
-    LinkedHashMap<String, String> partitionValMap = new LinkedHashMap<>();
-    String avroSchema;
+    String warehouseDir, partitionStr, avroSchema;
+    LinkedHashMap<String, String> partitionValMap;
     boolean schemaChanged = false;
 
+    partitionValMap = getPartitionValuesFromRecord(record, variables);
+    if (externalTable) {
+      warehouseDir
+          = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate);
+      partitionStr
+          = HiveMetastoreUtil.resolveEL(elEvals.partitionPathTemplateELEval, variables, partitionPathTemplate);
+      if (!partitionStr.startsWith("/"))
+        partitionStr = "/" + partitionStr;
+    } else {
+      warehouseDir = internalWarehouseDir;
+      partitionStr = HiveMetastoreUtil.generatePartitionPath(partitionValMap);
+    }
     // First, find out if this record has all necessary data to process
     try {
       if (dbName.isEmpty()) {
@@ -256,11 +268,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
       validateNames(dbName, tableName, warehouseDir);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
       // path from warehouse directory to table
-      String targetPath = HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
+      String targetPath = externalTable ? warehouseDir :
+          HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
       // Obtain the record structure from current record
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
       // Obtain all the partition values from record and build a path using partition values
-      String partitionStr = getPartitionValuesFromRecord(record, variables, partitionValMap);
 
       TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo =
           (TBLPropertiesInfoCacheSupport.TBLPropertiesInfo) getCacheInfo(
@@ -465,16 +477,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
   /**
    * Obtain a list of partition values from record.
    * @param variables ELvariables
-   * @param values Blank LinkedHashMap. This function fills parition name and value obtained from record.
    * @return String that represents partitions name=value.
    *         For example, "dt=2016-01-01/country=US/state=CA"
    * @throws StageException
    */
   @VisibleForTesting
-  String getPartitionValuesFromRecord(Record r, ELVars variables, LinkedHashMap<String, String> values)
+  LinkedHashMap<String, String> getPartitionValuesFromRecord(Record r, ELVars variables)
       throws StageException
   {
-    StringBuilder sb = new StringBuilder();
+    LinkedHashMap<String, String> values = new LinkedHashMap<>();
     Date timeBasis = HiveMetastoreUtil.getTimeBasis(getContext(), r, timeDriver, elEvals.timeDriverElEval);
     for (PartitionConfig pName: partitionConfigList) {
       String ret = getPartitionValue(timeBasis, r, pName.valueEL);
@@ -483,13 +494,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
         throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, pName.valueEL);
       }  else {
         values.put(pName.name, ret);
-        sb.append(HiveMetastoreUtil.SEP);
-        sb.append(pName.name);
-        sb.append(HiveMetastoreUtil.EQUALS);
-        sb.append(ret);
       }
     }
-    return sb.toString();
+    return values;
   }
 
   /**
