@@ -263,8 +263,8 @@ public final class HiveQueryExecutor {
     try (
         Connection con = getConnection();
         Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
     ){
-      ResultSet rs = statement.executeQuery(sql);
       return rs.next();
     } catch (Exception e) {
       LOG.error("SQL Exception happened when creating table: {}", e);
@@ -372,8 +372,8 @@ public final class HiveQueryExecutor {
     try (
         Connection con = getConnection();
         Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
     ){
-      ResultSet rs = statement.executeQuery(sql);
       while(rs.next()) {
         String partitionInfoString = rs.getString(1);
         String[] partitionInfoSplit = partitionInfoString.split(HiveMetastoreUtil.SEP);
@@ -435,8 +435,8 @@ public final class HiveQueryExecutor {
     try (
         Connection con = getConnection();
         Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
     ){
-      ResultSet rs = statement.executeQuery(sql);
       LinkedHashMap<String, HiveTypeInfo> columnTypeInfo  = extractTypeInfo(rs);
       processDelimiter(rs, "#");
       processDelimiter(rs, "#");
@@ -467,9 +467,9 @@ public final class HiveQueryExecutor {
     boolean isExternal = false, useAsAvro = true;
     try (
         Connection con = getConnection();
-        Statement statement = con.createStatement()
+        Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
     ){
-      ResultSet rs = statement.executeQuery(sql);
       while (rs.next()) {
         String propName = rs.getString(RESULT_SET_PROP_NAME);
         String propValue = rs.getString(RESULT_SET_PROP_VALUE);
