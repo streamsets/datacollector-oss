@@ -17,68 +17,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.jdbc;
+package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 
-public class JdbcFieldMappingConfig {
+public class JdbcFieldColumnMapping {
 
   /**
    * Constructor used for unit testing purposes
-   * @param field
    * @param columnName
-   */
-  public JdbcFieldMappingConfig(final String field, final String columnName) {
-    this(field, columnName, "?");
-  }
-
-  /**
-   * Constructor used for unit testing purposes
    * @param field
-   * @param columnName
-   * @param paramValue
    */
-  public JdbcFieldMappingConfig(final String field, final String columnName, final String paramValue) {
-    this.field = field;
+  public JdbcFieldColumnMapping(final String columnName, final String field) {
     this.columnName = columnName;
-    this.paramValue = paramValue;
+    this.field = field;
   }
 
   /**
    * Parameter-less constructor required.
    */
-  public JdbcFieldMappingConfig() {}
+  public JdbcFieldColumnMapping() {}
+
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.STRING,
+          defaultValue="",
+          label = "Column Name",
+          description = "The database column name.",
+          displayPosition = 10
+  )
+  public String columnName;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "SDC Field",
-      description = "The field in the incoming record to output.",
-      displayPosition = 10
+      description = "The field in the record to receive the value.",
+      displayPosition = 20
   )
   @FieldSelectorModel(singleValued = true)
   public String field;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue="",
-      label = "Column Name",
-      description = "The column name to write this field to.",
-      displayPosition = 20
-  )
-  public String columnName;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "?",
-      label = "Parameterized Value",
-      description = "A parameterized value to use in the JDBC insert statement. Must include a ?.",
-      displayPosition = 30
-      // TODO: Have this depend on a checkbox in the JdbcDTarget. Blocked by SDC-1704
-  )
-  public String paramValue;
 }

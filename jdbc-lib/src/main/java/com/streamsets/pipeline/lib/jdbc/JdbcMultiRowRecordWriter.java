@@ -32,8 +32,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.destination.jdbc.Errors;
-import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,13 +79,37 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
-      List<JdbcFieldMappingConfig> customMappings,
-      int maxPrepStmtParameters)
-      throws StageException
-  {
+      List<JdbcFieldColumnParamMapping> customMappings,
+      int maxPrepStmtParameters
+  ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
-    this.maxPrepStmtParameters =
-        maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE : maxPrepStmtParameters;
+    this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
+        maxPrepStmtParameters;
+  }
+
+  /**
+   * Class constructor
+   * @param connectionString database connection string
+   * @param dataSource a JDBC {@link DataSource} to get a connection from
+   * @param tableName the name of the table to write to
+   * @param rollbackOnError whether to attempt rollback of failed queries
+   * @param customMappings any custom mappings the user provided
+   * @param maxPrepStmtParameters max number of parameters to include in each INSERT statement
+   * @param generatedColumnMappings mappings from field names to generated column names
+   * @throws StageException
+   */
+  public JdbcMultiRowRecordWriter(
+      String connectionString,
+      DataSource dataSource,
+      String tableName,
+      boolean rollbackOnError,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      int maxPrepStmtParameters,
+      List<JdbcFieldColumnMapping> generatedColumnMappings
+  ) throws StageException {
+    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, generatedColumnMappings);
+    this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
+        maxPrepStmtParameters;
   }
 
   /** {@inheritDoc} */
@@ -131,7 +153,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     Collection<Record> partition = partitions.get(partitionKey);
     // Fetch the base insert query for this partition.
     SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(
-        getColumnsToParameters(), partition.iterator().next()
+        getColumnsToParameters(),
+        partition.iterator().next()
     );
 
     // put all the records in a queue for consumption
@@ -139,11 +162,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
     // compute number of rows per batch
     if (columnsToParameters.isEmpty()) {
-      throw new OnRecordErrorException(Errors.JDBCDEST_22);
+      throw new OnRecordErrorException(JdbcErrors.JDBC_22);
     }
     int maxRowsPerBatch = maxPrepStmtParameters / columnsToParameters.size();
 
     PreparedStatement statement = null;
+
+    List<JdbcFieldColumnMapping> generatedColumnMappings = getGeneratedColumnMappings();
 
     // parameters are indexed starting with 1
     int paramIdx = 1;
@@ -152,12 +177,12 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       // we're at the start of a batch.
       if (statement == null) {
         // instantiate the new statement
-        statement = generatePreparedStatement(
-            columnsToParameters,
+        statement = generatePreparedStatement(columnsToParameters,
             // the next batch will have either the max number of records, or however many are left.
             Math.min(maxRowsPerBatch, queue.size()),
             getTableName(),
-            connection
+            connection,
+            generatedColumnMappings
         );
       }
 
@@ -186,8 +211,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
               break;
           }
         } catch (SQLException e) {
-          LOG.error(Errors.JDBCDEST_23.getMessage(), column, fieldType.toString(), e);
-          throw new OnRecordErrorException(record, Errors.JDBCDEST_23, column, fieldType.toString());
+          LOG.error(JdbcErrors.JDBC_23.getMessage(), column, fieldType.toString(), e);
+          throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, column, fieldType.toString());
         }
         ++paramIdx;
       }
@@ -199,6 +224,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         // time to execute the current batch
         statement.addBatch();
         statement.executeBatch();
+        if (generatedColumnMappings != null) {
+          writeGeneratedColumns(statement, partition.iterator(), errorRecords);
+        }
         statement.close();
         statement = null;
 
@@ -213,6 +241,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     if (statement != null) {
       statement.addBatch();
       statement.executeBatch();
+      if (generatedColumnMappings != null) {
+        writeGeneratedColumns(statement, partition.iterator(), errorRecords);
+      }
       statement.close();
     }
   }
@@ -221,17 +252,25 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       SortedMap<String, String> columns,
       int numRecords,
       Object tableName,
-      Connection connection
+      Connection connection,
+      List<JdbcFieldColumnMapping> generatedColumnMappings
   ) throws SQLException {
     String valuePlaceholder = String.format("(%s)", Joiner.on(", ").join(columns.values()));
     String valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-    String query = String.format(
-        "INSERT INTO %s (%s) VALUES %s",
+    String query = String.format("INSERT INTO %s (%s) VALUES %s",
         tableName,
         // keySet and values will both return the same ordering, due to using a SortedMap
         Joiner.on(", ").join(columns.keySet()),
         valuePlaceholders
     );
+
+    if (generatedColumnMappings != null) {
+      String[] generatedColumns = new String[generatedColumnMappings.size()];
+      for (int i = 0; i < generatedColumnMappings.size(); i++) {
+        generatedColumns[i] = generatedColumnMappings.get(i).columnName;
+      }
+      return connection.prepareStatement(query, generatedColumns);
+    }
 
     return connection.prepareStatement(query);
   }
@@ -275,9 +314,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   private HashCode getColumnHash(Record record) {
     Map<String, String> parameters = getColumnsToParameters();
     SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(parameters, record);
-    return columnHashFunction.newHasher()
-        .putObject(columnsToParameters, stringMapFunnel)
-        .hash();
+    return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
   }
 
   /**
@@ -291,6 +328,6 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     String formattedError = JdbcUtil.formatSqlException(e);
     LOG.error(formattedError);
     LOG.debug(formattedError, e);
-    throw new StageException(Errors.JDBCDEST_14, formattedError);
+    throw new StageException(JdbcErrors.JDBC_14, formattedError);
   }
 }

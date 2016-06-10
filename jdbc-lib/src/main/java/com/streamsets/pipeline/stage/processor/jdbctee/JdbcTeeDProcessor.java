@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,39 +17,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.jdbc;
+package com.streamsets.pipeline.stage.processor.jdbctee;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
+import com.streamsets.pipeline.stage.destination.jdbc.ChangeLogFormatChooserValues;
+import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
 import java.util.List;
 
-@HideConfigs(value = {"hikariConfigBean.readOnly"})
-@GenerateResourceBundle
 @StageDef(
-    version = 5,
-    label = "JDBC Producer",
-    description = "Writes data to a JDBC destination.",
-    upgrader = JdbcTargetUpgrader.class,
+    version = 1,
+    label = "JDBC Tee",
+    description = "Write records to JDBC and enrich records with generated columns",
     icon = "rdbms.png",
-    onlineHelpRefUrl = "index.html#Destinations/JDBCProducer.html#task_cx3_lhh_ht"
+    onlineHelpRefUrl = "index.html#Processors/JDBCTee.html#task_qpj_ncy_hw"
 )
-@ConfigGroups(value = Groups.class)
-public class JdbcDTarget extends DTarget {
+@ConfigGroups(Groups.class)
+@GenerateResourceBundle
+public class JdbcTeeDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
@@ -58,9 +58,9 @@ public class JdbcDTarget extends DTarget {
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "${record:attribute('tableName')}",
       label = "Table Name",
-      description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema " +
-          "be specified separately in the connection string.",
-      displayPosition = 30,
+      description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema "
+          + "be specified separately in the connection string.",
+      displayPosition = 20,
       group = "JDBC"
   )
   public String tableNameTemplate;
@@ -71,11 +71,23 @@ public class JdbcDTarget extends DTarget {
       defaultValue = "",
       label = "Field to Column Mapping",
       description = "Optionally specify additional field mappings when input field name and column name don't match.",
+      displayPosition = 30,
+      group = "JDBC"
+  )
+  @ListBeanModel
+  public List<JdbcFieldColumnParamMapping> customMappings;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Generated Column Mappings",
+      defaultValue = "",
+      description = "Mappings from generated columns to field names",
       displayPosition = 40,
       group = "JDBC"
   )
   @ListBeanModel
-  public List<JdbcFieldColumnParamMapping> columnNames;
+  public List<JdbcFieldColumnMapping> generatedColumnMappings;
 
   @ConfigDef(
       required = false,
@@ -118,7 +130,7 @@ public class JdbcDTarget extends DTarget {
       defaultValue = "-1",
       label = "Statement Parameter Limit",
       description = "The maximum number of prepared statement parameters allowed in each batch insert statement when " +
-          "using multi-row inserts. Set to -1 to disable limit.",
+          "" + "using multi-row inserts. Set to -1 to disable limit.",
       dependsOn = "useMultiRowInsert",
       triggeredByValue = "true",
       displayPosition = 60,
@@ -130,10 +142,11 @@ public class JdbcDTarget extends DTarget {
   public HikariPoolConfigBean hikariConfigBean;
 
   @Override
-  protected Target createTarget() {
-    return new JdbcTarget(
+  protected Processor createProcessor() {
+    return new JdbcTeeProcessor(
         tableNameTemplate,
-        columnNames,
+        customMappings,
+        generatedColumnMappings,
         rollbackOnError,
         useMultiRowInsert,
         maxPrepStmtParameters,

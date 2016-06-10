@@ -25,31 +25,22 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,8 +50,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
 
 public class JdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcSource.class);
@@ -145,14 +134,14 @@ public class JdbcSource extends BaseSource {
     issues = hikariConfigBean.validateConfigs(context, issues);
 
     if (queryIntervalMillis < 0) {
-      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, Errors.JDBC_07));
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, JdbcErrors.JDBC_27));
     }
 
     if (!hikariConfigBean.driverClassName.isEmpty()) {
       try {
         Class.forName(hikariConfigBean.driverClassName);
       } catch (ClassNotFoundException e) {
-        issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, Errors.JDBC_01, e.toString()));
+        issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, JdbcErrors.JDBC_28, e.toString()));
       }
     }
 
@@ -167,35 +156,37 @@ public class JdbcSource extends BaseSource {
     String upperCaseQuery = query.toUpperCase();
     boolean checkOffsetColumnInWhereOrder = true;
     if(!upperCaseQuery.contains("WHERE")) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_17, "WHERE"));
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "WHERE"));
       checkOffsetColumnInWhereOrder = false;
     }
     if(!upperCaseQuery.contains("ORDER BY")) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_17, "ORDER BY"));
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "ORDER BY"));
       checkOffsetColumnInWhereOrder = false;
     }
     if(checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_05, offsetColumn));
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_29, offsetColumn));
     }
 
     if (txnMaxSize < 0) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), TXN_MAX_SIZE, Errors.JDBC_10, txnMaxSize, 0));
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), TXN_MAX_SIZE, JdbcErrors.JDBC_10, txnMaxSize, 0));
     }
     if (maxBatchSize < 0) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_BATCH_SIZE, Errors.JDBC_10, maxBatchSize, 0));
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_BATCH_SIZE, JdbcErrors.JDBC_10, maxBatchSize, 0));
     }
     if (maxClobSize < 0) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_CLOB_SIZE, Errors.JDBC_10, maxClobSize, 0));
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_CLOB_SIZE, JdbcErrors.JDBC_10, maxClobSize, 0));
     }
 
     if (issues.isEmpty()) {
       try {
-        createDataSource();
+        if (null == dataSource) {
+          dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+        }
         try (Connection connection = dataSource.getConnection()) {
           DatabaseMetaData dbMetadata = connection.getMetaData();
           // If CDC is enabled, scrollable cursors must be supported by JDBC driver.
           if (!txnColumnName.isEmpty() && !dbMetadata.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)) {
-            issues.add(context.createConfigIssue(Groups.CDC.name(), TXN_ID_COLUMN_NAME, Errors.JDBC_12));
+            issues.add(context.createConfigIssue(Groups.CDC.name(), TXN_ID_COLUMN_NAME, JdbcErrors.JDBC_30));
           }
           try (Statement statement = connection.createStatement()) {
             statement.setFetchSize(1);
@@ -209,20 +200,20 @@ public class JdbcSource extends BaseSource {
                 while (--columnIdx > 0) {
                   String columnLabel = metadata.getColumnLabel(columnIdx);
                   if (columnLabels.contains(columnLabel)) {
-                    issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_08, columnLabel));
+                    issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_31, columnLabel));
                   } else {
                     columnLabels.add(columnLabel);
                   }
                 }
                 if (offsetColumn.contains(".")) {
-                  issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_09, offsetColumn));
+                  issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, JdbcErrors.JDBC_32, offsetColumn));
                 } else {
                   resultSet.findColumn(offsetColumn);
                 }
               } catch (SQLException e) {
                 // Log a warning instead of an error because some implementations such as Oracle have implicit
                 // "columns" such as ROWNUM that won't appear as part of the resultset.
-                LOG.warn(Errors.JDBC_02.getMessage(), offsetColumn, query);
+                LOG.warn(JdbcErrors.JDBC_33.getMessage(), offsetColumn, query);
                 LOG.warn(JdbcUtil.formatSqlException(e));
               }
             } catch (SQLException e) {
@@ -230,7 +221,7 @@ public class JdbcSource extends BaseSource {
               LOG.error(formattedError);
               LOG.debug(formattedError, e);
               issues.add(
-                  context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, formattedError)
+                  context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_34, preparedQuery, formattedError)
               );
             }
           }
@@ -238,14 +229,14 @@ public class JdbcSource extends BaseSource {
           String formattedError = JdbcUtil.formatSqlException(e);
           LOG.error(formattedError);
           LOG.debug(formattedError, e);
-          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, formattedError));
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
         }
       } catch (StageException e) {
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }
     }
     if (createJDBCNsHeaders && !jdbcNsHeaderPrefix.endsWith(".")) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), JDBC_NS_HEADER_PREFIX, Errors.JDBC_15));
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), JDBC_NS_HEADER_PREFIX, JdbcErrors.JDBC_15));
     }
     return issues;
   }
@@ -347,7 +338,7 @@ public class JdbcSource extends BaseSource {
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
-        errorRecordHandler.onError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), formattedError);
+        errorRecordHandler.onError(JdbcErrors.JDBC_34, prepareQuery(query, lastSourceOffset), formattedError);
       }
     }
     return nextSourceOffset;
@@ -371,90 +362,9 @@ public class JdbcSource extends BaseSource {
     }
   }
 
-  private void createDataSource() throws StageException {
-    if (null != dataSource) {
-      return;
-    }
-
-    HikariConfig config = new HikariConfig();
-    config.setJdbcUrl(hikariConfigBean.connectionString);
-    config.setUsername(hikariConfigBean.username);
-    config.setPassword(hikariConfigBean.password);
-    config.setReadOnly(hikariConfigBean.readOnly);
-    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
-    config.setMinimumIdle(hikariConfigBean.minIdle);
-    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
-    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
-    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
-
-    if (!hikariConfigBean.connectionTestQuery.isEmpty()) {
-      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
-    }
-
-    // User configurable JDBC driver properties
-    config.setDataSourceProperties(driverProperties);
-
-    try {
-      dataSource = new HikariDataSource(config);
-    } catch (RuntimeException e) {
-      LOG.error(Errors.JDBC_06.getMessage(), e);
-      throw new StageException(Errors.JDBC_06, e.getCause().toString());
-    }
-  }
-
   private String prepareQuery(String query, String lastSourceOffset) {
     final String offset = null == lastSourceOffset ? initialOffset : lastSourceOffset;
     return query.replaceAll("\\$\\{offset\\}", offset);
-  }
-
-  private String getClobString(Clob data) throws IOException, SQLException {
-    if (data == null) {
-      return null;
-    }
-
-    StringBuilder sb = new StringBuilder();
-    int bufLen = 1024;
-    char[] cbuf = new char[bufLen];
-
-    // Read up to max clob length
-    long maxRemaining = maxClobSize;
-    int count;
-    Reader r = data.getCharacterStream();
-    while ((count = r.read(cbuf)) > -1 && maxRemaining > 0) {
-      // If c is more then the remaining chars we want to read, read only as many are available
-      if (count > maxRemaining) {
-        count = (int) maxRemaining;
-      }
-      sb.append(cbuf, 0, count);
-      // decrement available according to the number of chars we've read
-      maxRemaining -= count;
-    }
-    return sb.toString();
-  }
-
-  private byte[] getBlobBytes(Blob data) throws IOException, SQLException {
-    if (data == null) {
-      return new byte[0];
-    }
-
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    int bufLen = 1024;
-    byte[] buf = new byte[bufLen];
-
-    // Read up to max blob length
-    long maxRemaining = maxBlobSize;
-    int count;
-    InputStream is = data.getBinaryStream();
-    while ((count = is.read(buf)) > -1 && maxRemaining > 0) {
-      // If count is more then the remaining bytes we want to read, read only as many are available
-      if (count > maxRemaining) {
-        count = (int) maxRemaining;
-      }
-      os.write(buf, 0, count);
-      // decrement available according to the number of bytes we've read
-      maxRemaining -= count;
-    }
-    return os.toByteArray();
   }
 
   private Record processRow(ResultSet resultSet) throws SQLException, StageException {
@@ -462,11 +372,10 @@ public class JdbcSource extends BaseSource {
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
 
-    // Generate fields
-    LinkedHashMap<String, Field> fields = resultSetToFields(resultSet);
+    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet, maxClobSize, maxBlobSize, errorRecordHandler);
 
     if (fields.size() != numColumns) {
-      errorRecordHandler.onError(Errors.JDBC_14, fields.size(), numColumns);
+      errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), numColumns);
       return null; // Don't output this record.
     }
 
@@ -491,102 +400,5 @@ public class JdbcSource extends BaseSource {
       JdbcUtil.setColumnSpecificHeaders(record, md, jdbcNsHeaderPrefix);
     }
     return record;
-  }
-
-  private LinkedHashMap<String, Field> resultSetToFields(ResultSet rs) throws SQLException, StageException {
-    ResultSetMetaData md = rs.getMetaData();
-    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
-
-    for (int i = 1; i <= md.getColumnCount(); i++) {
-      Object value = rs.getObject(i);
-      try {
-        Field field;
-        // All types as of JDBC 2.0 are here:
-        // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
-        // Good source of recommended mappings is here:
-        // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
-        switch (md.getColumnType(i)) {
-          case Types.BIGINT:
-            field = Field.create(Field.Type.LONG, rs.getObject(i));
-            break;
-          case Types.BINARY:
-          case Types.LONGVARBINARY:
-          case Types.VARBINARY:
-            field = Field.create(Field.Type.BYTE_ARRAY, rs.getObject(i));
-            break;
-          case Types.BIT:
-          case Types.BOOLEAN:
-            field = Field.create(Field.Type.BOOLEAN, rs.getObject(i));
-            break;
-          case Types.CHAR:
-          case Types.LONGNVARCHAR:
-          case Types.LONGVARCHAR:
-          case Types.NCHAR:
-          case Types.NVARCHAR:
-          case Types.VARCHAR:
-            field = Field.create(Field.Type.STRING, rs.getObject(i));
-            break;
-          case Types.CLOB:
-          case Types.NCLOB:
-            field = Field.create(Field.Type.STRING, getClobString(rs.getClob(i)));
-            break;
-          case Types.BLOB:
-            field = Field.create(Field.Type.BYTE_ARRAY, getBlobBytes(rs.getBlob(i)));
-            break;
-          case Types.DATE:
-            field = Field.create(Field.Type.DATE, rs.getDate(i));
-            break;
-          case Types.DECIMAL:
-          case Types.NUMERIC:
-            field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(i));
-            break;
-          case Types.DOUBLE:
-            field = Field.create(Field.Type.DOUBLE, rs.getObject(i));
-            break;
-          case Types.FLOAT:
-          case Types.REAL:
-            field = Field.create(Field.Type.FLOAT, rs.getObject(i));
-            break;
-          case Types.INTEGER:
-            field = Field.create(Field.Type.INTEGER, rs.getObject(i));
-            break;
-          case Types.ROWID:
-            field = Field.create(Field.Type.STRING, rs.getRowId(i).toString());
-            break;
-          case Types.SMALLINT:
-          case Types.TINYINT:
-            field = Field.create(Field.Type.SHORT, rs.getObject(i));
-            break;
-          case Types.TIME:
-            field = Field.create(Field.Type.TIME, rs.getObject(i));
-            break;
-          case Types.TIMESTAMP:
-            field = Field.create(Field.Type.DATETIME, rs.getObject(i));
-            break;
-          case Types.ARRAY:
-          case Types.DATALINK:
-          case Types.DISTINCT:
-          case Types.JAVA_OBJECT:
-          case Types.NULL:
-          case Types.OTHER:
-          case Types.REF:
-            //case Types.REF_CURSOR: // JDK8 only
-          case Types.SQLXML:
-          case Types.STRUCT:
-            //case Types.TIME_WITH_TIMEZONE: // JDK8 only
-            //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
-          default:
-            throw new StageException(Errors.JDBC_16, md.getColumnType(i), md.getColumnLabel(i));
-        }
-
-        fields.put(md.getColumnLabel(i), field);
-      } catch (SQLException e) {
-        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage(), e);
-      } catch (IOException e) {
-        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value, e);
-      }
-    }
-
-    return fields;
   }
 }

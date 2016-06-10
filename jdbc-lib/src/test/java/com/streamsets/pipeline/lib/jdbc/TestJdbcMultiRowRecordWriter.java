@@ -25,8 +25,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.stage.destination.jdbc.Errors;
-import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.After;
@@ -104,7 +102,7 @@ public class TestJdbcMultiRowRecordWriter {
 
   @Test
   public void testThreePartitions() throws Exception {
-    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
@@ -126,7 +124,7 @@ public class TestJdbcMultiRowRecordWriter {
 
   @Test
   public void testParameterLimit() throws Exception {
-    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
@@ -153,7 +151,7 @@ public class TestJdbcMultiRowRecordWriter {
 
   @Test
   public void testDatetimeColumn() throws Exception {
-    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
@@ -178,7 +176,7 @@ public class TestJdbcMultiRowRecordWriter {
 
   @Test(expected = OnRecordErrorException.class)
   public void testEmptyColumnMappingError() throws Exception {
-    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
@@ -194,7 +192,7 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       writer.writeBatch(records);
     } catch (StageException e) {
-      assertEquals(Errors.JDBCDEST_22.getCode(), e.getErrorCode().toString());
+      assertEquals(JdbcErrors.JDBC_22.getCode(), e.getErrorCode().toString());
       throw e;
     }
   }

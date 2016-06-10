@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
-import com.streamsets.pipeline.stage.origin.jdbc.Errors;
 
 import java.util.HashMap;
 import java.util.List;
@@ -219,7 +218,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               MAX_POOL_SIZE_NAME,
-              Errors.JDBC_10,
+              JdbcErrors.JDBC_10,
               maximumPoolSize,
               MAX_POOL_SIZE_NAME
           )
@@ -231,7 +230,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               MIN_IDLE_NAME,
-              Errors.JDBC_10,
+              JdbcErrors.JDBC_10,
               minIdle,
               MIN_IDLE_MIN
           )
@@ -243,7 +242,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               MIN_IDLE_NAME,
-              Errors.JDBC_11,
+              JdbcErrors.JDBC_11,
               minIdle,
               maximumPoolSize
           )
@@ -255,7 +254,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               CONNECTION_TIMEOUT_NAME,
-              Errors.JDBC_10,
+              JdbcErrors.JDBC_10,
               connectionTimeout,
               CONNECTION_TIMEOUT_MIN
           )
@@ -267,7 +266,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               IDLE_TIMEOUT_NAME,
-              Errors.JDBC_10,
+              JdbcErrors.JDBC_10,
               idleTimeout,
               IDLE_TIMEOUT_MIN
           )
@@ -279,7 +278,7 @@ public class HikariPoolConfigBean {
           context.createConfigIssue(
               Groups.ADVANCED.name(),
               MAX_LIFETIME_NAME,
-              Errors.JDBC_10,
+              JdbcErrors.JDBC_10,
               maxLifetime,
               MAX_LIFETIME_MIN
           )

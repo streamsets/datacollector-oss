@@ -20,25 +20,28 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.destination.jdbc.Errors;
-import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcBaseRecordWriter.class);
-  private final List<JdbcFieldMappingConfig> customMappings;
+  private final List<JdbcFieldColumnParamMapping> customMappings;
 
   private String connectionString;
   private DataSource dataSource;
@@ -47,11 +50,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
 
   private Map<String, String> columnsToFields = new HashMap<>();
   private Map<String, String> columnsToParameters = new HashMap<>();
-
-  public int getColumnType(String columnName) {
-    return columnType.get(columnName);
-  }
-
+  private final List<JdbcFieldColumnMapping> generatedColumnMappings;
   private Map<String, Integer> columnType = new HashMap<>();
 
   public JdbcBaseRecordWriter(
@@ -59,17 +58,32 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
-      List<JdbcFieldMappingConfig> customMappings
+      List<JdbcFieldColumnParamMapping> customMappings
+  ) throws StageException {
+    this(connectionString, dataSource, tableName, rollbackOnError, customMappings, null);
+  }
+
+  public JdbcBaseRecordWriter(
+      String connectionString,
+      DataSource dataSource,
+      String tableName,
+      boolean rollbackOnError,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      List<JdbcFieldColumnMapping> generatedColumnMappings
   ) throws StageException {
     this.connectionString = connectionString;
     this.dataSource = dataSource;
     this.tableName = tableName;
     this.rollbackOnError = rollbackOnError;
     this.customMappings = customMappings;
+    this.generatedColumnMappings = generatedColumnMappings;
 
     createDefaultFieldMappings();
     createCustomFieldMappings();
+
   }
+
+  int getColumnType(String columnName) { return columnType.get(columnName); }
 
   private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
@@ -85,12 +99,12 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
       String errorMessage = JdbcUtil.formatSqlException(e);
       LOG.error(errorMessage);
       LOG.debug(errorMessage, e);
-      throw new StageException(Errors.JDBCDEST_09, tableName);
+      throw new StageException(JdbcErrors.JDBC_09, tableName);
     }
   }
 
   private void createCustomFieldMappings() {
-    for (JdbcFieldMappingConfig mapping : customMappings) {
+    for (JdbcFieldColumnParamMapping mapping : customMappings) {
       LOG.debug("Custom mapping field {} to column {}", mapping.field, mapping.columnName);
       if (columnsToFields.containsKey(mapping.columnName)) {
         LOG.debug("Mapping field {} to column {}", mapping.field, mapping.columnName);
@@ -134,13 +148,14 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         return "VARBINARY";
       case LIST_MAP:
       case MAP:
-        throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported list or map type: MAP");
+        throw new OnRecordErrorException(JdbcErrors.JDBC_05, "Unsupported list or map type: MAP");
       case LIST:
         return "ARRAY";
       default:
-        throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported type: " + type.name());
+        throw new OnRecordErrorException(JdbcErrors.JDBC_05, "Unsupported type: " + type.name());
     }
   }
+
   /**
    * Database connection string
    * @return connection string
@@ -198,4 +213,42 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     return unpackedList;
   }
 
+  List<JdbcFieldColumnMapping> getGeneratedColumnMappings() {
+    return generatedColumnMappings;
+  }
+
+  void writeGeneratedColumns(
+      PreparedStatement statement,
+      Iterator<Record> iter,
+      List<OnRecordErrorException> errorRecords
+  ) throws SQLException {
+    ResultSet resultSet = statement.getGeneratedKeys();
+
+    ResultSetMetaData md = resultSet.getMetaData();
+    int numColumns = md.getColumnCount();
+
+    while (resultSet.next()) {
+      Record record = iter.next();
+      // Process row
+      for (int i = 1; i <= numColumns; i++) {
+        try {
+          // Assuming generated columns can't be CLOBs/BLOBs, so just pass
+          // zero for maxClobSize
+          Field field = JdbcUtil.resultToField(md, resultSet, i, 0, 0);
+
+          if (field == null) {
+            LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i));
+            errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
+                md.getColumnName(i), resultSet.getObject(i)));
+          }
+
+          record.set(generatedColumnMappings.get(i - 1).field, field);
+        } catch (IOException e) {
+          LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i));
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
+              md.getColumnName(i), resultSet.getObject(i)));
+        }
+      }
+    }
+  }
 }

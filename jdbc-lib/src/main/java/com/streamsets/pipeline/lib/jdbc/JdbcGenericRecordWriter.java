@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.destination.jdbc.Errors;
-import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +56,30 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
-      List<JdbcFieldMappingConfig> customMappings
+      List<JdbcFieldColumnParamMapping> customMappings
   ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
+  }
+
+  /**
+   * Class constructor
+   * @param connectionString database connection string
+   * @param dataSource a JDBC {@link javax.sql.DataSource} to get a connection from
+   * @param tableName the name of the table to write to
+   * @param rollbackOnError whether to attempt rollback of failed queries
+   * @param customMappings any custom mappings the user provided
+   * @param generatedColumnMappings mappings from field names to generated column names
+   * @throws StageException
+   */
+  public JdbcGenericRecordWriter(
+      String connectionString,
+      DataSource dataSource,
+      String tableName,
+      boolean rollbackOnError,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      List<JdbcFieldColumnMapping> generatedColumnMappings
+  ) throws StageException {
+    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, generatedColumnMappings);
   }
 
   /** {@inheritDoc} */
@@ -74,6 +93,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
       PreparedStatementMap statementsForBatch = new PreparedStatementMap(connection, getTableName());
 
+      List<JdbcFieldColumnMapping> generatedColumnMappings = getGeneratedColumnMappings();
+
       for (Record record : batch) {
         Map<String, String> parameters = getColumnsToParameters();
         SortedMap<String, String> columnsToParameters = new TreeMap<>();
@@ -85,7 +106,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             columnsToParameters.put(columnName, parameters.get(columnName));
           }
         }
-        PreparedStatement statement = statementsForBatch.getInsertFor(columnsToParameters);
+        PreparedStatement statement = statementsForBatch.getInsertFor(columnsToParameters, generatedColumnMappings);
 
         if (setParameters(columnsToParameters, record, connection, statement, errorRecords)) {
           statement.addBatch();
@@ -100,6 +121,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             connection.rollback();
           }
           handleBatchUpdateException(batch, e, errorRecords);
+        }
+        if (generatedColumnMappings != null) {
+          writeGeneratedColumns(statement, batch.iterator(), errorRecords);
         }
       }
       connection.commit();
@@ -150,8 +174,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             break;
         }
       } catch (SQLException e) {
-        LOG.error(Errors.JDBCDEST_23.getMessage(), column, fieldType.toString(), e);
-        errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_23, column, fieldType.toString()));
+        LOG.error(JdbcErrors.JDBC_23.getMessage(), column, fieldType.toString(), e);
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_23, column, fieldType.toString()));
         isOk = false;
       } catch (OnRecordErrorException e) {
         LOG.error(e.toString(), e);
@@ -173,7 +197,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     String formattedError = JdbcUtil.formatSqlException(e);
     LOG.error(formattedError);
     LOG.debug(formattedError, e);
-    throw new StageException(Errors.JDBCDEST_14, formattedError);
+    throw new StageException(JdbcErrors.JDBC_14, formattedError);
   }
 
   /**
@@ -189,9 +213,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    * @param errorRecords List of error records for this batch
    */
   private void handleBatchUpdateException(
-      Collection<Record> failedRecords,
-      SQLException e,
-      List<OnRecordErrorException> errorRecords
+      Collection<Record> failedRecords, SQLException e, List<OnRecordErrorException> errorRecords
   ) throws StageException {
     if (JdbcUtil.isDataError(getConnectionString(), e)) {
       String formattedError = JdbcUtil.formatSqlException(e);
@@ -204,15 +226,14 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
         int i = 0;
         for (Record record : failedRecords) {
-          if (i >= bue.getUpdateCounts().length ||
-              bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
-            errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
+          if (i >= bue.getUpdateCounts().length || bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
+            errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_14, formattedError));
           }
           i++;
         }
       } else {
         for (Record record : failedRecords) {
-          errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_14, formattedError));
         }
       }
     } else {

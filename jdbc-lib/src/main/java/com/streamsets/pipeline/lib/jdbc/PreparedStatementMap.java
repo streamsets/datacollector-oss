@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -39,7 +40,8 @@ class PreparedStatementMap {
     this.tableName = tableName;
   }
 
-  public PreparedStatement getInsertFor(SortedMap<String, String> columns) throws SQLException {
+  public PreparedStatement getInsertFor(SortedMap<String, String> columns,
+      List<JdbcFieldColumnMapping> generatedColumnMappings) throws SQLException {
     // The INSERT query we're going to perform (parameterized).
     if (cache.containsKey(columns)) {
       return cache.get(columns);
@@ -51,7 +53,18 @@ class PreparedStatementMap {
           Joiner.on(", ").join(columns.keySet()),
           Joiner.on(", ").join(columns.values())
       );
-      PreparedStatement statement = connection.prepareStatement(query);
+
+      PreparedStatement statement;
+      if (generatedColumnMappings != null) {
+        String[] generatedColumns = new String[generatedColumnMappings.size()];
+        for (int i = 0; i < generatedColumnMappings.size(); i++) {
+          generatedColumns[i] = generatedColumnMappings.get(i).columnName;
+        }
+        statement = connection.prepareStatement(query, generatedColumns);
+      } else {
+        statement = connection.prepareStatement(query);
+      }
+
       cache.put(columns, statement);
       return statement;
     }

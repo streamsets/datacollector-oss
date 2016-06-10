@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,21 +17,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.jdbc;
+package com.streamsets.pipeline.stage.processor.jdbctee;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcGenericRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
@@ -40,21 +42,20 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MicrosoftJdbcRecordWriter;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-/**
- * JDBC Destination for StreamSets Data Collector
- */
-public class JdbcTarget extends BaseTarget {
-  private static final Logger LOG = LoggerFactory.getLogger(JdbcTarget.class);
+public class JdbcTeeProcessor extends SingleLaneProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(JdbcTeeProcessor.class);
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
@@ -65,17 +66,39 @@ public class JdbcTarget extends BaseTarget {
 
   private final String tableNameTemplate;
   private final List<JdbcFieldColumnParamMapping> customMappings;
+  private final List<JdbcFieldColumnMapping> generatedColumnMappings;
 
   private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
 
-  private ErrorRecordHandler errorRecordHandler;
-  private HikariDataSource dataSource = null;
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
 
+  private ErrorRecordHandler errorRecordHandler;
+  private HikariDataSource dataSource = null;
   private Connection connection = null;
+
+  public JdbcTeeProcessor(
+      String tableNameTemplate,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      boolean rollbackOnError,
+      boolean useMultiRowInsert,
+      int maxPrepStmtParameters,
+      ChangeLogFormat changeLogFormat,
+      HikariPoolConfigBean hikariConfigBean
+  ) {
+    this.tableNameTemplate = tableNameTemplate;
+    this.customMappings = customMappings;
+    this.generatedColumnMappings = generatedColumnMappings;
+    this.rollbackOnError = rollbackOnError;
+    this.useMultiRowInsert = useMultiRowInsert;
+    this.maxPrepStmtParameters = maxPrepStmtParameters;
+    this.driverProperties.putAll(hikariConfigBean.driverProperties);
+    this.changeLogFormat = changeLogFormat;
+    this.hikariConfigBean = hikariConfigBean;
+  }
 
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
     @Override
@@ -89,38 +112,20 @@ public class JdbcTarget extends BaseTarget {
       .expireAfterAccess(1, TimeUnit.HOURS)
       .build(new RecordWriterLoader());
 
-  public JdbcTarget(
-      final String tableNameTemplate,
-      final List<JdbcFieldColumnParamMapping> customMappings,
-      final boolean rollbackOnError,
-      final boolean useMultiRowInsert,
-      int maxPrepStmtParameters,
-      final ChangeLogFormat changeLogFormat,
-      final HikariPoolConfigBean hikariConfigBean
-  ) {
-    this.tableNameTemplate = tableNameTemplate;
-    this.customMappings = customMappings;
-    this.rollbackOnError = rollbackOnError;
-    this.useMultiRowInsert = useMultiRowInsert;
-    this.maxPrepStmtParameters = maxPrepStmtParameters;
-    this.driverProperties.putAll(hikariConfigBean.driverProperties);
-    this.changeLogFormat = changeLogFormat;
-    this.hikariConfigBean = hikariConfigBean;
-  }
-
+  /** {@inheritDoc} */
   @Override
   protected List<ConfigIssue> init() {
+    // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
-    Target.Context context = getContext();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    Processor.Context context = getContext();
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
     tableNameVars = getContext().createELVars();
     tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
-    ELUtils.validateExpression(
-        tableNameEval,
+    ELUtils.validateExpression(tableNameEval,
         tableNameVars,
         tableNameTemplate,
         getContext(),
@@ -133,8 +138,7 @@ public class JdbcTarget extends BaseTarget {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForWrite(
-            hikariConfigBean,
+        dataSource = JdbcUtil.createDataSourceForWrite(hikariConfigBean,
             driverProperties,
             tableNameTemplate,
             issues,
@@ -147,16 +151,15 @@ public class JdbcTarget extends BaseTarget {
       }
     }
 
+    // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void destroy() {
     JdbcUtil.closeQuietly(connection);
-
-    if (null != dataSource) {
-      dataSource.close();
-    }
+    JdbcUtil.closeQuietly(dataSource);
     super.destroy();
   }
 
@@ -166,21 +169,21 @@ public class JdbcTarget extends BaseTarget {
     switch (changeLogFormat) {
       case NONE:
         if (!useMultiRowInsert) {
-          recordWriter = new JdbcGenericRecordWriter(
-              hikariConfigBean.connectionString,
-              dataSource,
-              tableName,
-              rollbackOnError,
-              customMappings
-          );
-        } else {
-          recordWriter = new JdbcMultiRowRecordWriter(
-              hikariConfigBean.connectionString,
+          recordWriter = new JdbcGenericRecordWriter(hikariConfigBean.connectionString,
               dataSource,
               tableName,
               rollbackOnError,
               customMappings,
-              maxPrepStmtParameters
+              generatedColumnMappings
+          );
+        } else {
+          recordWriter = new JdbcMultiRowRecordWriter(hikariConfigBean.connectionString,
+              dataSource,
+              tableName,
+              rollbackOnError,
+              customMappings,
+              maxPrepStmtParameters,
+              generatedColumnMappings
           );
         }
         break;
@@ -193,9 +196,14 @@ public class JdbcTarget extends BaseTarget {
     return recordWriter;
   }
 
+  /** {@inheritDoc} */
   @Override
-  @SuppressWarnings("unchecked")
-  public void write(Batch batch) throws StageException {
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
     JdbcUtil.write(batch, tableNameEval, tableNameVars, tableNameTemplate, recordWriters, errorRecordHandler);
+
+    Iterator<Record> it = batch.getRecords();
+    while (it.hasNext()) {
+      batchMaker.addRecord(it.next());
+    }
   }
 }

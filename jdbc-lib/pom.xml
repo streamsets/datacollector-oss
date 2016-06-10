@@ -32,6 +32,7 @@
   <properties>
     <h2.version>1.4.187</h2.version>
     <hikaricp.version>2.4.1</hikaricp.version>
+    <guava.version>18.0</guava.version>
     <commons-lang.version>3.4</commons-lang.version>
   </properties>
 
@@ -40,6 +41,7 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -72,6 +74,11 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
       <version>${hikaricp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->

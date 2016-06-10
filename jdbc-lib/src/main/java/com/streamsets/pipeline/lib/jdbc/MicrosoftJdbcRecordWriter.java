@@ -23,7 +23,6 @@ import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.destination.jdbc.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
       String formattedError = JdbcUtil.formatSqlException(e);
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
-      throw new StageException(Errors.JDBCDEST_17, tableName, formattedError);
+      throw new StageException(JdbcErrors.JDBC_17, tableName, formattedError);
     } finally {
       if (connection != null) {
         try {
@@ -91,7 +90,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
     }
 
     if (primaryKeyColumns.isEmpty()) {
-      throw new StageException(Errors.JDBCDEST_17, tableName);
+      throw new StageException(JdbcErrors.JDBC_17, tableName);
     }
 
   }
@@ -138,7 +137,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
               );
               break;
             default:
-              errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_09, operation, FORMAT));
+              errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_09, operation, FORMAT));
               continue;
           }
 
@@ -157,7 +156,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
             // Also bind the primary keys for the where clause
             for (String key : primaryKeyColumns) {
               if (!columnMappings.containsKey(key)) {
-                errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_19, key));
+                errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_19, key));
                 continue recordLoop;
               }
               statement.setObject(i, columnMappings.get(key));
@@ -171,7 +170,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
           statement.execute();
           statement.close();
         } else {
-          errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_08, OP_FIELD, FORMAT));
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_08, OP_FIELD, FORMAT));
         }
       }
       connection.commit();
@@ -182,7 +181,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
       // Whole batch fails
       errorRecords.clear();
       for (Record record : batch) {
-        errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_14, formattedError));
       }
     } finally {
       if (connection != null) {

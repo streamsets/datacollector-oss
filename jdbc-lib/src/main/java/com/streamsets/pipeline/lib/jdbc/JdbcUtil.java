@@ -21,10 +21,31 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -34,24 +55,32 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+
+import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
 
 /**
  * Utility classes for working with JDBC
  */
 public class JdbcUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(JdbcUtil.class);
   /**
    * Position in ResultSet for column and primary key metadata of the column name.
    *
    * @see java.sql.DatabaseMetaData#getColumns
    * @see java.sql.DatabaseMetaData#getPrimaryKeys
    */
-  public static final int COLUMN_NAME = 4;
+  private static final int COLUMN_NAME = 4;
+  private static final String EL_PREFIX = "${";
+  private static final String CUSTOM_MAPPINGS = "columnNames";
 
-  private JdbcUtil() {}
+  public static final String TABLE_NAME = "tableNameTemplate";
+
+  private JdbcUtil() {
+  }
 
   /**
    * <p>Mapping of sqlStates that when encountered should determine that we will send a record to the
@@ -91,7 +120,7 @@ public class JdbcUtil {
     String errorCode = String.valueOf(ex.getErrorCode());
     if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
       return MYSQL_DATA_ERROR_ERROR_CODES.containsKey(errorCode);
-    } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0,2))) {
+    } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0, 2))) {
       return true;
     }
     return false;
@@ -127,6 +156,7 @@ public class JdbcUtil {
    * @param connection An open JDBC connection
    * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
    * @return ResultSet containing the column metadata
+   *
    * @throws SQLException
    */
   public static ResultSet getColumnMetadata(Connection connection, String tableName) throws SQLException {
@@ -147,9 +177,11 @@ public class JdbcUtil {
 
   /**
    * Wrapper for {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}
+   *
    * @param connection An open JDBC connection
    * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
    * @return ResultSet containing the table metadata for a table
+   *
    * @throws SQLException
    */
   public static ResultSet getTableMetadata(Connection connection, String tableName) throws SQLException {
@@ -170,9 +202,11 @@ public class JdbcUtil {
 
   /**
    * Wrapper for {@link java.sql.DatabaseMetaData#getPrimaryKeys(String, String, String)}
+   *
    * @param connection An open JDBC connection
    * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
    * @return List of primary key column names for a table
+   *
    * @throws SQLException
    */
   public static List<String> getPrimaryKeys(Connection connection, String tableName) throws SQLException {
@@ -221,5 +255,333 @@ public class JdbcUtil {
     }
 
     header.setAttribute(jdbcNameSpacePrefix + "tables", Joiner.on(",").join(tableNames));
+  }
+
+  private static String getClobString(Clob data, int maxClobSize) throws IOException, SQLException {
+    if (data == null) {
+      return null;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    int bufLen = 1024;
+    char[] cbuf = new char[bufLen];
+
+    // Read up to max clob length
+    long maxRemaining = maxClobSize;
+    int count;
+    Reader r = data.getCharacterStream();
+    while ((count = r.read(cbuf)) > -1 && maxRemaining > 0) {
+      // If c is more then the remaining chars we want to read, read only as many are available
+      if (count > maxRemaining) {
+        count = (int) maxRemaining;
+      }
+      sb.append(cbuf, 0, count);
+      // decrement available according to the number of chars we've read
+      maxRemaining -= count;
+    }
+    return sb.toString();
+  }
+
+  private static byte[] getBlobBytes(Blob data, int maxBlobSize) throws IOException, SQLException {
+    if (data == null) {
+      return null;
+    }
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    int bufLen = 1024;
+    byte[] buf = new byte[bufLen];
+
+    // Read up to max blob length
+    long maxRemaining = maxBlobSize;
+    int count;
+    InputStream is = data.getBinaryStream();
+    while ((count = is.read(buf)) > -1 && maxRemaining > 0) {
+      // If count is more then the remaining bytes we want to read, read only as many are available
+      if (count > maxRemaining) {
+        count = (int) maxRemaining;
+      }
+      os.write(buf, 0, count);
+      // decrement available according to the number of bytes we've read
+      maxRemaining -= count;
+    }
+    return os.toByteArray();
+  }
+
+
+  public static Field resultToField(
+      ResultSetMetaData md,
+      ResultSet rs,
+      int columnIndex,
+      int maxClobSize,
+      int maxBlobSize
+  ) throws SQLException, IOException {
+      Field field;
+      // All types as of JDBC 2.0 are here:
+      // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
+      // Good source of recommended mappings is here:
+      // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
+      switch (md.getColumnType(columnIndex)) {
+        case Types.BIGINT:
+          field = Field.create(Field.Type.LONG, rs.getObject(columnIndex));
+          break;
+        case Types.BINARY:
+        case Types.LONGVARBINARY:
+        case Types.VARBINARY:
+          field = Field.create(Field.Type.BYTE_ARRAY, rs.getObject(columnIndex));
+          break;
+        case Types.BIT:
+        case Types.BOOLEAN:
+          field = Field.create(Field.Type.BOOLEAN, rs.getObject(columnIndex));
+          break;
+        case Types.CHAR:
+        case Types.LONGNVARCHAR:
+        case Types.LONGVARCHAR:
+        case Types.NCHAR:
+        case Types.NVARCHAR:
+        case Types.VARCHAR:
+          field = Field.create(Field.Type.STRING, rs.getObject(columnIndex));
+          break;
+        case Types.CLOB:
+        case Types.NCLOB:
+          field = Field.create(Field.Type.STRING, getClobString(rs.getClob(columnIndex), maxClobSize));
+          break;
+        case Types.BLOB:
+          field = Field.create(Field.Type.BYTE_ARRAY, getBlobBytes(rs.getBlob(columnIndex), maxBlobSize));
+          break;
+        case Types.DATE:
+          field = Field.create(Field.Type.DATE, rs.getDate(columnIndex));
+          break;
+        case Types.DECIMAL:
+        case Types.NUMERIC:
+          field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(columnIndex));
+          break;
+        case Types.DOUBLE:
+          field = Field.create(Field.Type.DOUBLE, rs.getObject(columnIndex));
+          break;
+        case Types.FLOAT:
+        case Types.REAL:
+          field = Field.create(Field.Type.FLOAT, rs.getObject(columnIndex));
+          break;
+        case Types.INTEGER:
+          field = Field.create(Field.Type.INTEGER, rs.getObject(columnIndex));
+          break;
+        case Types.ROWID:
+          field = Field.create(Field.Type.STRING, rs.getRowId(columnIndex).toString());
+          break;
+        case Types.SMALLINT:
+        case Types.TINYINT:
+          field = Field.create(Field.Type.SHORT, rs.getObject(columnIndex));
+          break;
+        case Types.TIME:
+          field = Field.create(Field.Type.TIME, rs.getObject(columnIndex));
+          break;
+        case Types.TIMESTAMP:
+          field = Field.create(Field.Type.DATETIME, rs.getObject(columnIndex));
+          break;
+        case Types.ARRAY:
+        case Types.DATALINK:
+        case Types.DISTINCT:
+        case Types.JAVA_OBJECT:
+        case Types.NULL:
+        case Types.OTHER:
+        case Types.REF:
+          //case Types.REF_CURSOR: // JDK8 only
+        case Types.SQLXML:
+        case Types.STRUCT:
+          //case Types.TIME_WITH_TIMEZONE: // JDK8 only
+          //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
+        default:
+          return null;
+      }
+
+      return field;
+  }
+
+  public static LinkedHashMap<String, Field> resultSetToFields(
+      ResultSet rs,
+      int maxClobSize,
+      int maxBlobSize,
+      ErrorRecordHandler errorRecordHandler
+  ) throws SQLException, StageException {
+    ResultSetMetaData md = rs.getMetaData();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
+
+    for (int i = 1; i <= md.getColumnCount(); i++) {
+      try {
+        Field field = resultToField(md, rs, i, maxClobSize, maxBlobSize);
+
+        if (field == null) {
+          throw new StageException(JdbcErrors.JDBC_37, md.getColumnType(i), md.getColumnLabel(i));
+        }
+
+        fields.put(md.getColumnLabel(i), field);
+      } catch (SQLException e) {
+        errorRecordHandler.onError(JdbcErrors.JDBC_13, e.getMessage(), e);
+      } catch (IOException e) {
+        errorRecordHandler.onError(JdbcErrors.JDBC_03, md.getColumnName(i), rs.getObject(i), e);
+      }
+    }
+
+    return fields;
+  }
+
+  public static LinkedHashMap<String, Field> resultSetToFields(
+      Record record,
+      ResultSet rs,
+      int maxClobSize,
+      int maxBlobSize,
+      List<OnRecordErrorException> errorRecords
+      ) throws SQLException, StageException {
+    ResultSetMetaData md = rs.getMetaData();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
+
+    for (int i = 1; i <= md.getColumnCount(); i++) {
+      try {
+        Field field = resultToField(md, rs, i, maxClobSize, maxBlobSize);
+
+        if (field == null) {
+          throw new StageException(JdbcErrors.JDBC_37, md.getColumnType(i), md.getColumnLabel(i));
+        }
+
+        fields.put(md.getColumnLabel(i), field);
+      } catch (SQLException e) {
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_13,
+            md.getColumnName(i), rs.getObject(i)));
+      } catch (IOException e) {
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
+            md.getColumnName(i), rs.getObject(i)));
+      }
+    }
+
+    return fields;
+  }
+
+  public static HikariDataSource createDataSourceForWrite(
+      HikariPoolConfigBean hikariConfigBean,
+      Properties driverProperties,
+      String tableNameTemplate,
+      List<Stage.ConfigIssue> issues,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      Stage.Context context
+  ) throws SQLException {
+    HikariConfig config = new HikariConfig();
+
+    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setUsername(hikariConfigBean.username);
+    config.setPassword(hikariConfigBean.password);
+    config.setAutoCommit(false);
+    config.setReadOnly(false);
+    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
+    config.setMinimumIdle(hikariConfigBean.minIdle);
+    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
+    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
+    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
+
+    if (hikariConfigBean.driverClassName != null && !hikariConfigBean.driverClassName.isEmpty()) {
+      config.setDriverClassName(hikariConfigBean.driverClassName);
+    }
+
+    if (hikariConfigBean.connectionTestQuery != null && !hikariConfigBean.connectionTestQuery.isEmpty()) {
+      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
+    }
+
+    // User configurable JDBC driver properties
+    config.setDataSourceProperties(driverProperties);
+
+    HikariDataSource dataSource = new HikariDataSource(config);
+
+    // Test connectivity
+    Connection connection = dataSource.getConnection();
+
+    // Can only validate schema if the user specified a single table.
+    if (!tableNameTemplate.contains(EL_PREFIX)) {
+      ResultSet res = JdbcUtil.getTableMetadata(connection, tableNameTemplate);
+      if (!res.next()) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
+      } else {
+        ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemplate);
+        Set<String> columnNames = new HashSet<>();
+        while (columns.next()) {
+          columnNames.add(columns.getString(4));
+        }
+        for (JdbcFieldColumnParamMapping customMapping : customMappings) {
+          if (!columnNames.contains(customMapping.columnName)) {
+            issues.add(context.createConfigIssue(Groups.JDBC.name(),
+                CUSTOM_MAPPINGS,
+                JdbcErrors.JDBC_07,
+                customMapping.field,
+                customMapping.columnName
+            ));
+          }
+        }
+      }
+    }
+    connection.close();
+
+    return dataSource;
+  }
+
+  public static HikariDataSource createDataSourceForRead(
+      HikariPoolConfigBean hikariConfigBean,
+      Properties driverProperties
+  ) throws StageException {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setUsername(hikariConfigBean.username);
+    config.setPassword(hikariConfigBean.password);
+    config.setReadOnly(hikariConfigBean.readOnly);
+    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
+    config.setMinimumIdle(hikariConfigBean.minIdle);
+    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
+    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
+    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
+
+    if (!hikariConfigBean.connectionTestQuery.isEmpty()) {
+      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
+    }
+
+    // User configurable JDBC driver properties
+    config.setDataSourceProperties(driverProperties);
+
+    HikariDataSource dataSource;
+    try {
+      dataSource = new HikariDataSource(config);
+    } catch (RuntimeException e) {
+      LOG.error(JdbcErrors.JDBC_06.getMessage(), e);
+      throw new StageException(JdbcErrors.JDBC_06, e.getCause().toString());
+    }
+
+    return dataSource;
+  }
+
+  public static void closeQuietly(AutoCloseable c) {
+    try {
+      if (null != c) {
+        c.close();
+      }
+    } catch (Exception ignored) {
+    }
+  }
+
+  public static void write(
+      Batch batch,
+      ELEval tableNameEval,
+      ELVars tableNameVars,
+      String tableNameTemplate,
+      LoadingCache<String, JdbcRecordWriter> recordWriters,
+      ErrorRecordHandler errorRecordHandler
+  ) throws StageException {
+    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(tableNameEval,
+        tableNameVars,
+        tableNameTemplate,
+        batch
+    );
+    Set<String> tableNames = partitions.keySet();
+    for (String tableName : tableNames) {
+      List<OnRecordErrorException> errors = recordWriters.getUnchecked(tableName).writeBatch(partitions.get(tableName));
+      for (OnRecordErrorException error : errors) {
+        errorRecordHandler.onError(error);
+      }
+    }
   }
 }

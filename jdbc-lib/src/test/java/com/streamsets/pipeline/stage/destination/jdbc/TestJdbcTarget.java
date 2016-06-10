@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -113,6 +114,9 @@ public class TestJdbcTarget {
     try (Statement statement = connection.createStatement()) {
       // Setup table
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_ONE;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
     }
 
     // Last open connection terminates H2
@@ -130,11 +134,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testEmptyBatch() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -156,11 +160,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testSingleRecord() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -196,11 +200,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testSingleRecordWithCustomParam() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME", "UPPER(?)"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME", "UPPER(?)"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -237,11 +241,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testRecordWithBatchUpdateException() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -298,11 +302,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testRollback() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -359,11 +363,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testRecordWithDataTypeException() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -422,11 +426,11 @@ public class TestJdbcTarget {
   public void testMultiRowRecordWriterWithDataTypeException() throws Exception {
     thrown.expect(OnRecordErrorException.class);
 
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -479,11 +483,11 @@ public class TestJdbcTarget {
   public void testRecordWithBadPermissions() throws Exception {
     thrown.expect(StageException.class);
 
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -535,11 +539,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testBadConnectionString() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -559,11 +563,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testBadCredentials() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -583,11 +587,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testBadColumnMapping() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST"),
+        new JdbcFieldColumnParamMapping("[2]", "last_name"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -607,11 +611,11 @@ public class TestJdbcTarget {
 
   @Test
   public void testMultipleTables() throws Exception {
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
-        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
-        new JdbcFieldMappingConfig("[3]", "TS")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
     );
 
     Target target = new JdbcTarget(
@@ -671,11 +675,11 @@ public class TestJdbcTarget {
   public void testDateTimeTypes() throws Exception {
     Date d = new Date();
 
-    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "P_ID"),
-        new JdbcFieldMappingConfig("[1]", "T"),
-        new JdbcFieldMappingConfig("[2]", "D"),
-        new JdbcFieldMappingConfig("[3]", "DT")
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "T"),
+        new JdbcFieldColumnParamMapping("[2]", "D"),
+        new JdbcFieldColumnParamMapping("[3]", "DT")
     );
 
     Target target = new JdbcTarget(
