@@ -371,7 +371,10 @@ angular.module('dataCollectorApp.common')
         // Fetch the pipelineInfo full object
         // then Create new config object
         // then copy the configuration from pipelineInfo to new Object.
-        $q.all([api.pipelineAgent.getPipelineConfig(pipelineInfo.name), api.pipelineAgent.getPipelineRules(pipelineInfo.name)])
+        $q.all([
+          api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
+          api.pipelineAgent.getPipelineRules(pipelineInfo.name)
+        ])
           .then(function(results) {
             pipelineObject = results[0].data;
             pipelineRulesObject = results[1].data;
@@ -961,11 +964,12 @@ angular.module('dataCollectorApp.common')
         }).then(function(result) {
           var remoteStorePipeline = result.data;
           var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
-          deferred.resolve(pipelineDefinition.metadata);
+          return api.pipelineAgent.savePipelineConfig(name, pipelineDefinition);
+        }).then(function(res) {
+          deferred.resolve(res.data.metadata);
         }, function(err) {
           deferred.reject(err);
         });
-
         return deferred.promise;
       },
 

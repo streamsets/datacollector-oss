@@ -4,13 +4,18 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.publish.headerLabel">Publish Pipeline</h3>
+    <h3 class="modal-title"
+        ng-if="!isList"
+        translate="home.publish.headerLabel">Publish Pipeline</h3>
+    <h3 class="modal-title"
+        ng-if="isList"
+        translate="home.publish.listHeaderLabel">Publish Pipelines</h3>
   </div>
   <div class="modal-body">
 
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-    <div class="form-group" show-errors="{ trigger: 'keypress' }">
+    <div ng-if="!isList" class="form-group" show-errors="{ trigger: 'keypress' }">
       <label class="control-label" translate="global.form.name">Name</label>
       <i class="fa fa-info-circle help-icon"
          popover-placement="right"

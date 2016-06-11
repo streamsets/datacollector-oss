@@ -503,7 +503,8 @@
       "createPipelineAndImport": "Create New Pipeline & Import"
     },
     "publish": {
-      "headerLabel" : "Publish Pipeline"
+      "headerLabel" : "Publish Pipeline",
+      "listHeaderLabel": "Publish Pipelines"
     },
     "resetOffset": {
       "title": "Reset Origin",

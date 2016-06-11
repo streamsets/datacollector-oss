@@ -43,6 +43,16 @@
       </a>
 
       <a class="btn btn-link icon-button"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && common.isDPMEnabled"
+         ng-disabled="selectedPipelineList.length === 0"
+         ng-click="selectedPipelineList.length === 0 || publishSelectedPipelines()"
+         tooltip-placement="bottom"
+         tooltip="{{('global.form.publish' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
+         tooltip-popup-delay="500">
+        <i class="fa fa-cloud fa-14x"></i>
+      </a>
+
+      <a class="btn btn-link icon-button"
          ng-disabled="selectedPipelineList.length === 0"
          ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true)"
          tooltip-placement="bottom"
@@ -88,7 +98,6 @@
       </a>
 
     </div>
-
 
     <div class="pull-right" ng-show="pipelines.length > 1 && header.pipelineGridView">
 
@@ -186,7 +195,6 @@
       <span ng-if="limit < filteredPipelines.length">{{limit}} of {{filteredPipelines.length}} {{filteredPipelines.length > 1 ? 'Pipelines' : 'Pipeline'}}</span>
 
     </div>
-
 
   </div>
 

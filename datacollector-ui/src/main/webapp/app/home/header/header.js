@@ -327,12 +327,12 @@ angular
         pipelineService.publishPipelineCommand(pipelineInfo, $event)
           .then(
             function(metadata) {
-              $scope.pipelineConfig.metadata = metadata;
               $rootScope.common.successList.push({
                 message: 'Successfully Published Pipeline. New Pipeline Commit Version - ' +
                 metadata['dpm.pipeline.version']
               });
               $scope.clearUndoRedoArchive();
+              $route.reload();
             });
       },
 

@@ -94,7 +94,7 @@ angular
             $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
               var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
               return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-                _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
+              _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
             });
             break;
           case 'Non Running Pipelines':
@@ -269,10 +269,16 @@ angular
           $event.stopPropagation();
         }
 
-        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Start Pipeline',
+          1
+        );
+
         if($rootScope.common.pipelineStatusMap[pipelineInfo.name].state !== 'RUNNING') {
           api.pipelineAgent.startPipeline(pipelineInfo.name, 0).
-            then(
+          then(
             function (res) {
               $rootScope.common.pipelineStatusMap[pipelineInfo.name] = res.data;
             },
@@ -294,8 +300,12 @@ angular
        *
        */
       startSelectedPipelines: function() {
-        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipelines', 1);
-
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Start Pipelines',
+          1
+        );
 
         var selectedPipelineList = $scope.selectedPipelineList;
         var validationIssues = [];
@@ -344,7 +354,12 @@ angular
           $event.stopPropagation();
         }
 
-        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipeline', 1);
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Stop Pipeline',
+          1
+        );
         var modalInstance = $modal.open({
           templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
           controller: 'StopConfirmationModalInstanceController',
@@ -371,14 +386,16 @@ angular
         });
       },
 
-
-
       /**
        * On Stop Pipelines button click.
-       *
        */
       stopSelectedPipelines: function() {
-        $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipelines', 1);
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Stop Pipelines',
+          1
+        );
 
         var selectedPipelineList = $scope.selectedPipelineList;
         var selectedPipelineInfoList = [];
@@ -400,7 +417,6 @@ angular
           return;
         }
         $rootScope.common.errors = [];
-
 
         var modalInstance = $modal.open({
           templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
@@ -431,6 +447,47 @@ angular
       },
 
       /**
+       * On Publish Pipelines Click
+       */
+      publishSelectedPipelines: function() {
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Publish Pipelines',
+          1
+        );
+
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var selectedPipelineInfoList = [];
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name) {
+              if (!pipelineInfo.valid) {
+                validationIssues.push('Publish operation is not supported for Invalid Pipeline "' + pipelineInfo.name);
+              } else if (pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE) {
+                validationIssues.push('Publish operation is not supported for Remote Pipeline "' + pipelineInfo.name);
+              }
+              selectedPipelineInfoList.push(pipelineInfo);
+            }
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+
+        $rootScope.common.errors = [];
+
+        pipelineService.publishPipelineCommand(selectedPipelineInfoList)
+          .then(function() {
+            $scope.unSelectAll();
+          });
+      },
+
+      /**
        * Return pipeline alerts for tooltip
        *
        * @param pipelineAlerts
@@ -453,6 +510,9 @@ angular
         return alertMsg;
       },
 
+      /**
+       * On Select All check box select
+       */
       selectAll: function () {
         $scope.selectedPipelineList = [];
         $scope.selectedPipelineMap = {};
@@ -463,6 +523,9 @@ angular
         $scope.allSelected = true;
       },
 
+      /**
+       * On UnSelect All check box select
+       */
       unSelectAll: function () {
         $scope.selectedPipelineList = [];
         $scope.selectedPipelineMap = {};
@@ -470,11 +533,19 @@ angular
         $scope.limit = pipelinesLimit;
       },
 
+      /**
+       * On Selecting Individual Pipeline checkbox
+       * @param pipeline
+       */
       selectPipeline: function(pipeline) {
         $scope.selectedPipelineMap[pipeline.name] = true;
         $scope.selectedPipelineList.push(pipeline.name);
       },
 
+      /**
+       * On UnSelecting Individual Pipeline checkbox
+       * @param pipeline
+       */
       unSelectPipeline: function(pipeline) {
         $scope.selectedPipelineMap[pipeline.name] = false;
         var index = $scope.selectedPipelineList.indexOf(pipeline.name);
@@ -484,19 +555,34 @@ angular
         $scope.allSelected = false;
       },
 
+      /**
+       * On Show Details link click
+       */
       showPipelineDetails: function () {
         $scope.showDetails = true;
       },
 
+      /**
+       * On Hide Details link click
+       */
       hidePipelineDetails: function () {
         $scope.showDetails = false;
       },
 
+      /**
+       * On Clicking on Column Header
+       * @param columnName
+       */
       onSortColumnHeaderClick: function(columnName) {
         $scope.header.sortColumn = columnName;
         $scope.header.sortReverse = !$scope.header.sortReverse;
       },
 
+      /**
+       * Custom sort function for filtering pipelines
+       * @param pipelineInfo
+       * @returns {*}
+       */
       customPipelineSortFunction: function (pipelineInfo) {
         if ($scope.header.sortColumn === 'status') {
           var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
@@ -521,26 +607,26 @@ angular
       pipelineService.init(true),
       configuration.init()
     ])
-    .then(
-      function (results) {
-        $scope.loaded = true;
-        $rootScope.common.pipelineStatusMap = results[0].data;
-        $scope.pipelines = pipelineService.getPipelines();
-        $scope.updateFilteredPipelines();
+      .then(
+        function (results) {
+          $scope.loaded = true;
+          $rootScope.common.pipelineStatusMap = results[0].data;
+          $scope.pipelines = pipelineService.getPipelines();
+          $scope.updateFilteredPipelines();
 
-        if($scope.pipelines && $scope.pipelines.length) {
-          $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
-            '/collector/pipeline/' + $scope.pipelines[0].name;
-        }
+          if($scope.pipelines && $scope.pipelines.length) {
+            $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
+              '/collector/pipeline/' + $scope.pipelines[0].name;
+          }
 
-        if(configuration.isAnalyticsEnabled()) {
-          Analytics.trackPage('/');
+          if(configuration.isAnalyticsEnabled()) {
+            Analytics.trackPage('/');
+          }
+        },
+        function (results) {
+          $scope.loaded = true;
         }
-      },
-      function (results) {
-        $scope.loaded = true;
-      }
-    );
+      );
 
     $scope.$on('onAlertClick', function(event, alert) {
       if(alert && alert.pipelineName) {
