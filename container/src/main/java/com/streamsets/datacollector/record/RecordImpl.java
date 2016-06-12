@@ -35,6 +35,9 @@ import java.util.Set;
 public class RecordImpl implements Record, Cloneable {
   private final HeaderImpl header;
   private Field value;
+  //Default true: so as to denote the record is just created
+  //and initialized in a stage and did not pass through any other stage.
+  private boolean isInitialRecord = true;
 
   // need default constructor for deserialization purposes (Kryo)
   private RecordImpl() {
@@ -74,6 +77,7 @@ public class RecordImpl implements Record, Cloneable {
     Preconditions.checkNotNull(record, "record cannot be null");
     header = record.header.clone();
     value = (record.value != null) ? record.value.clone() : null;
+    isInitialRecord = record.isInitialRecord();
   }
 
   public void addStageToStagePath(String stage) {
@@ -89,6 +93,14 @@ public class RecordImpl implements Record, Cloneable {
       header.setPreviousTrackingId(currentTrackingId);
     }
     header.setTrackingId(newTrackingId);
+  }
+
+  public boolean isInitialRecord() {
+    return isInitialRecord;
+  }
+
+  public void setInitialRecord(boolean isInitialRecord) {
+    this.isInitialRecord = isInitialRecord;
   }
 
   @Override

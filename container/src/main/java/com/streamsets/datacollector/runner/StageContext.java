@@ -35,7 +35,6 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
@@ -321,8 +320,9 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   private void toError(Record record, ErrorMessage errorMessage) {
     RecordImpl recordImpl = ((RecordImpl) record).clone();
-    if (stageType == StageType.SOURCE) {
+    if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
+      recordImpl.setInitialRecord(false);
     }
     recordImpl.getHeader().setError(instanceName, errorMessage);
     errorSink.addRecord(instanceName, recordImpl);

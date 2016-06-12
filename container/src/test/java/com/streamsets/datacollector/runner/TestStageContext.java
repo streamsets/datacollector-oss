@@ -146,11 +146,10 @@ public class TestStageContext {
     Assert.assertEquals("TEST - FOO:BAR", eRecord.getHeader().getErrorMessage());
   }
 
-  @Test
-  public void testToErrorStageException() throws Exception {
+  private void testToErrorStageException(StageType type) throws Exception {
     StageContext context = new StageContext(
         "stage",
-        StageType.SOURCE,
+        type,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -172,6 +171,25 @@ public class TestStageContext {
     Assert.assertEquals(record.getHeader().getSourceId(), eRecord.getHeader().getSourceId());
     Assert.assertEquals("TEST", eRecord.getHeader().getErrorCode());
     Assert.assertEquals("TEST - FOO:BAR", eRecord.getHeader().getErrorMessage());
+    Record sourceRecordForERecord = ((RecordImpl)eRecord).getHeader().getSourceRecord();
+    Assert.assertNotNull(sourceRecordForERecord);
+    Assert.assertEquals("Source Record should be same as Error Record", eRecord, sourceRecordForERecord);
+  }
+
+  @Test
+  public void testToErrorStageExceptionSource() throws Exception {
+    testToErrorStageException(StageType.SOURCE);
+  }
+
+  @Test
+  public void testToErrorStageExceptionProcessor() throws Exception {
+    testToErrorStageException(StageType.PROCESSOR);
+
+  }
+
+  @Test
+  public void testToErrorStageExceptionTarget() throws Exception {
+    testToErrorStageException(StageType.TARGET);
   }
 
   @Test

@@ -114,9 +114,13 @@ public class BatchMakerImpl implements BatchMaker {
     recordCopy.addStageToStagePath(instanceName);
     recordCopy.createTrackingId();
 
-    if (getStagePipe().getStage().getDefinition().getType() == StageType.SOURCE) {
+    if (recordCopy.isInitialRecord()) {
       RecordImpl recordSource = recordCopy.clone();
       recordCopy.getHeader().setSourceRecord(recordSource);
+      recordCopy.setInitialRecord(false);
+    }
+
+    if (getStagePipe().getStage().getDefinition().getType() == StageType.SOURCE) {
       // Now slow down until we can actually add the record.
       if (rateLimiterOptional.isPresent()) {
         rateLimiterOptional.get().acquire();
