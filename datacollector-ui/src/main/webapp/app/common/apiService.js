@@ -387,6 +387,11 @@ angular.module('dataCollectorApp.common')
             duplicatePipelineObject.errorStage = pipelineObject.errorStage;
             duplicatePipelineObject.statsAggregatorStage = pipelineObject.statsAggregatorStage;
             duplicatePipelineObject.stages = pipelineObject.stages;
+            if (pipelineObject.metadata && pipelineObject.metadata.labels) {
+              duplicatePipelineObject.metadata = {
+                labels: pipelineObject.metadata.labels
+              };
+            }
             return api.pipelineAgent.savePipelineConfig(name, duplicatePipelineObject);
           })
           .then(function(res) {
