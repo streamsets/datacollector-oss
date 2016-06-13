@@ -397,7 +397,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String avroSchema
   ) throws HiveStageCheckedException
   {
-    Record metadataRecord = getContext().cloneRecord(record);
+    Record metadataRecord = getContext().createRecord("Table Metadata Record");
 
     Field metadataField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
         database,
@@ -517,7 +517,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
 
-    Record metadataRecord = getContext().cloneRecord(record);
+    Record metadataRecord = getContext().createRecord("Partition Metadata Record");
     Field metadataField = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
         database,
         tableName,
