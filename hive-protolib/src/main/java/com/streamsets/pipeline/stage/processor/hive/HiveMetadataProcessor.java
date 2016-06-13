@@ -161,25 +161,26 @@ public class HiveMetadataProcessor extends RecordProcessor {
           "Partition Configuration"));
     }
     partitionTypeInfo = new LinkedHashMap<>();
+    // Each field in partition configuration is not automatically checked on Preview
     for (PartitionConfig partition: partitionConfigList){
       // Validation on partition column name
-      if(!HiveMetastoreUtil.validateColumnName(partition.name)){
+      if(partition.name.isEmpty() || !HiveMetastoreUtil.validateColumnName(partition.name)){
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
             "partitionList",
             Errors.HIVE_METADATA_04,
-            "Partition Configuration"));
-        continue;
+            "Partition Column Name",
+            partition.name)
+        );
       }
-      // Expression for partition value is not automatically checked on Preview
       if (partition.valueEL.isEmpty()){
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
             "partitionList",
             Errors.HIVE_METADATA_02,
             "Partition Configuration",
-            partition.name));
-        continue;
+            partition.valueEL)
+        );
       }
       partitionTypeInfo.put(
           partition.name,
@@ -248,7 +249,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     LinkedHashMap<String, String> partitionValMap;
     boolean schemaChanged = false;
 
-    partitionValMap = getPartitionValuesFromRecord(record, variables);
+    partitionValMap = getPartitionValuesFromRecord(record);
     if (externalTable) {
       warehouseDir
           = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate);
@@ -260,8 +261,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       warehouseDir = internalWarehouseDir;
       partitionStr = HiveMetastoreUtil.generatePartitionPath(partitionValMap);
     }
-    // First, find out if this record has all necessary data to process
-    try {
+
+    try{
+      // First, find out if this record has all necessary data to process
       if (dbName.isEmpty()) {
         dbName = DEFAULT_DB;
       }
@@ -272,8 +274,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
           HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
       // Obtain the record structure from current record
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
-      // Obtain all the partition values from record and build a path using partition values
-
+      if (recordStructure.isEmpty())  // If record has no data to process, No-op
+        return;
       TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo =
           (TBLPropertiesInfoCacheSupport.TBLPropertiesInfo) getCacheInfo(
               HMSCacheType.TBLPROPERTIES_INFO,
@@ -333,7 +335,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       throws HiveStageCheckedException {
 
     if (!HiveMetastoreUtil.validateName(dbName)){
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, "Database name", dbName);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, HIVE_DB_NAME, dbName);
     }
     if (tableName.isEmpty()) {
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, tableEL);
@@ -463,6 +465,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     return null;
   }
 
+  @VisibleForTesting
   String getPartitionValue(Date date, Record record, String partitionValueEL) throws ELEvalException {
     ELVars vars = getContext().createELVars();
     RecordEL.setRecordInContext(vars, record);
@@ -476,13 +479,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   /**
    * Obtain a list of partition values from record.
-   * @param variables ELvariables
    * @return String that represents partitions name=value.
    *         For example, "dt=2016-01-01/country=US/state=CA"
    * @throws StageException
    */
   @VisibleForTesting
-  LinkedHashMap<String, String> getPartitionValuesFromRecord(Record r, ELVars variables)
+  LinkedHashMap<String, String> getPartitionValuesFromRecord(Record r)
       throws StageException
   {
     LinkedHashMap<String, String> values = new LinkedHashMap<>();
