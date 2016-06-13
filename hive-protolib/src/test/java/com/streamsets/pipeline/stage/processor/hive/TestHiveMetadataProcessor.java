@@ -563,7 +563,7 @@ public class TestHiveMetadataProcessor {
     Record errorRecord = runner.getErrorRecords().get(0);
 
     Assert.assertEquals(
-        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08.name(),
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07.name(),
         errorRecord.getHeader().getErrorCode()
     );
     runner.runDestroy();
@@ -575,7 +575,7 @@ public class TestHiveMetadataProcessor {
     Assert.assertEquals(runner.getErrorRecords().size(), 1);
     errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals(
-        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08.name(),
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07.name(),
         errorRecord.getHeader().getErrorCode()
     );
     runner.runDestroy();
@@ -587,7 +587,7 @@ public class TestHiveMetadataProcessor {
     Assert.assertEquals(runner.getErrorRecords().size(), 1);
     errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals(
-        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_09.name(),
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08.name(),
         errorRecord.getHeader().getErrorCode()
     );
     runner.runDestroy();

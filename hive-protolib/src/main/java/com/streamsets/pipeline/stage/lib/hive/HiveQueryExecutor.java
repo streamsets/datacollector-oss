@@ -146,11 +146,13 @@ public final class HiveQueryExecutor {
     sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
 
     sb.append(HiveMetastoreUtil.SPACE);
-    sb.append(PARTITIONED_BY);
+    if (!partitionTypeMap.isEmpty()) {
+      sb.append(PARTITIONED_BY);
 
-    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
-    buildNameTypeFormatWithElements(sb, partitionTypeMap);
-    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
+      sb.append(HiveMetastoreUtil.OPEN_BRACKET);
+      buildNameTypeFormatWithElements(sb, partitionTypeMap);
+      sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
+    }
   }
 
   private static String buildCreateTableQueryNew(

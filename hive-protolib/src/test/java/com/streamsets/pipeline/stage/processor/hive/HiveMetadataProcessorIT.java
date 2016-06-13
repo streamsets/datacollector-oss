@@ -24,7 +24,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -33,6 +35,7 @@ import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -200,4 +203,115 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     );
   }
 
+  @Test
+  public void testNoPartitions() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .partitions(new PartitionConfigBuilder().build())
+        .build();
+
+    ProcessorRunner runner = getProcessorRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "Junko"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    // There should be only one metadata record, which is new partition info
+    Assert.assertEquals(1, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    Record hiveRecord = output.getRecords().get("hive").get(0);
+    LinkedHashMap<String, Field> meteadata = hiveRecord.get().getValueAsListMap();
+    Assert.assertEquals(
+        "/user/hive/warehouse/tbl",
+        meteadata.get(HiveMetastoreUtil.LOCATION_FIELD).getValueAsString()
+    );
+    Assert.assertFalse(
+        "Partition filed should be set in Metadata Record for non-partitioned table",
+        meteadata.containsKey(HiveMetastoreUtil.PARTITION_FIELD)
+    );
+
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertEquals(
+        "/user/hive/warehouse/tbl",
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
+  }
+
+  @Test
+  public void testUppercaseELsAndColumnName() throws Exception {
+    /*
+      Database name EL: ${record:attribute('DATABASE')} mapped to "default"
+      Table mame EL   : ${record:attribute('TABLE_NAME')} mapped to "lowercase"
+
+      Partition:
+         Name    : UPPER_CASE => should be stored as "upper_case"
+         Value EL: ${record:attribute('PARTITION_FIELD')} -> mapped to "some-value"
+
+      Table Column :
+         Name : COLUMN1 => should be stored as "column1"
+     */
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .database("${record:attribute('DATABASE')}")
+        .table("${record:attribute('TABLE_NAME')}")
+        .partitions(new PartitionConfigBuilder()
+            .addPartition("UPPER_CASE", HiveType.STRING, "${record:attribute('PARTITION_FIELD')}")
+            .build()
+        )
+        .build();
+
+    ProcessorRunner runner = getProcessorRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("COLUMN1", Field.create(Field.Type.STRING, "upper case column"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    record.getHeader().setAttribute("DATABASE", "default");
+    record.getHeader().setAttribute("TABLE_NAME", "lowercase");
+    record.getHeader().setAttribute("PARTITION_FIELD", "some-value");
+    ELVars elVars = runner.getContext().createELVars();
+    RecordEL.setRecordInContext(elVars, record);
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    // There should be two metadata records, both schema change and new partition
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+
+    Record schemaChangeRecord = output.getRecords().get("hive").get(0);
+    LinkedHashMap<String, Field> metadata1 = schemaChangeRecord.get().getValueAsListMap();
+    // Check if path to table is right.
+    Assert.assertEquals(
+        "/user/hive/warehouse/lowercase",
+        metadata1.get(HiveMetastoreUtil.LOCATION_FIELD).getValueAsString()
+    );
+
+    // Check if partition name is lowercase in schema change record
+    Map<String, Field> partitions = metadata1.get(HiveMetastoreUtil.PARTITION_FIELD).getValueAsListMap();
+    Assert.assertEquals(partitions.get("0").getValueAsMap().get("name").getValueAsString(), "upper_case");
+    // Check if column name is lowercase in schema change record
+    Map<String, Field> columns = metadata1.get(HiveMetastoreUtil.COLUMNS_FIELD).getValueAsListMap();
+    Assert.assertEquals(columns.get("0").getValueAsMap().get("name").getValueAsString(), "column1");
+
+
+    Record newPartitionRecord = output.getRecords().get("hive").get(0);
+    LinkedHashMap<String, Field> metadata2 = newPartitionRecord.get().getValueAsListMap();
+    // Check if path to table is right.
+    Assert.assertEquals(
+        "/user/hive/warehouse/lowercase",
+        metadata2.get(HiveMetastoreUtil.LOCATION_FIELD).getValueAsString()
+    );
+    // Check if partition name is lowercase in new partition record
+    Map<String, Field> pValues = metadata2.get(HiveMetastoreUtil.PARTITION_FIELD).getValueAsListMap();
+    Assert.assertEquals(pValues.get("0").getValueAsMap().get("name").getValueAsString(), "upper_case");
+
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertEquals(
+        "/user/hive/warehouse/lowercase/upper_case=some-value",
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
+  }
 }

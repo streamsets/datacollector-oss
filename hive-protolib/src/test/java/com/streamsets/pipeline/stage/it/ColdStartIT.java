@@ -25,7 +25,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -37,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -53,10 +54,11 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
 
-  @Parameterized.Parameters(name = "db({0}),storedAsAvro({1}),external({2})")
+  @Parameterized.Parameters(name = "db({0}),storedAsAvro({1}),external({2}),partitioned({3})")
   public static Collection<Object[]> data() {
     return ParametrizedUtils.crossProduct(
         new String[] {"", "default", "custom"},
+        new Boolean[] {true, false},
         new Boolean[] {true, false},
         new Boolean[] {true, false}
     );
@@ -65,22 +67,30 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   private String database;
   private boolean storedAsAvro;
   private boolean external;
-  public ColdStartIT(String database, boolean storedAsAvro, boolean external) {
+  private boolean partitioned;
+
+  public ColdStartIT(String database, boolean storedAsAvro, boolean external, boolean partitioned) {
     this.database = database;
     this.storedAsAvro = storedAsAvro;
     this.external = external;
+    this.partitioned = partitioned;
   }
-
 
   @Test
   public void testColdStart() throws  Exception {
-    LOG.info(Utils.format("Starting cold start with database({}), storedAsAvro({}) and external({})", database, storedAsAvro, external));
-
+    LOG.info(Utils.format(
+        "Starting cold start with database({}), storedAsAvro({}), external({}), and partitioned({})",
+        database, storedAsAvro, external, partitioned)
+    );
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database(database)
-      .tablePathTemplate(getDefaultWareHouseDir())
-      .partitionPathTemplate("dt=super-secret")
       .external(external)
+      .tablePathTemplate(external ? getExternalWareHouseDir() : getDefaultWareHouseDir())
+      .partitionPathTemplate(partitioned ? "dt=super-secret" : null)
+      .partitions(partitioned ?
+          new PartitionConfigBuilder().addPartition("dt", HiveType.STRING, "secret-value").build() :
+          new PartitionConfigBuilder().build()
+      )
       .build();
 
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
@@ -107,10 +117,17 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
     assertQueryResult(Utils.format("select * from {}.tbl", database), new QueryValidator() {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
-        assertResultSetStructure(rs,
-            new ImmutablePair("tbl.name", Types.VARCHAR),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
-        );
+
+        if (partitioned) {
+          assertResultSetStructure(rs,
+              new ImmutablePair("tbl.name", Types.VARCHAR),
+              new ImmutablePair("tbl.dt", Types.VARCHAR)
+          );
+        } else {
+          assertResultSetStructure(rs,
+              new ImmutablePair("tbl.name", Types.VARCHAR)
+          );
+        }
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
         Assert.assertEquals("StreamSets", rs.getString(1));

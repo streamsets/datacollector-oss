@@ -85,6 +85,7 @@ public abstract class BaseHiveIT {
   private static final int METASTORE_PORT;
   private static final int HIVE_SERVER_PORT;
   private static final String WAREHOUSE_DIR = "/user/hive/warehouse";
+  private static final String EXTERNAL_DIR = "/user/hive/external";
   static {
     METASTORE_PORT = NetworkUtils.findAvailablePort();
     HIVE_SERVER_PORT = NetworkUtils.findAvailablePort();
@@ -210,6 +211,10 @@ public abstract class BaseHiveIT {
     return WAREHOUSE_DIR;
   }
 
+  public static String getExternalWareHouseDir() {
+    return EXTERNAL_DIR;
+  }
+
   /**
    * Since we're reusing the same HS2 instance between tests, drop all databases and tables that were created.
    */
@@ -240,6 +245,7 @@ public abstract class BaseHiveIT {
 
     // Filesystem clean up
     miniDFS.getFileSystem().delete(new Path(WAREHOUSE_DIR), true);
+    miniDFS.getFileSystem().delete(new Path(EXTERNAL_DIR), true);
   }
 
   /**

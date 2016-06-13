@@ -85,6 +85,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   private HiveConfigBean hiveConfigBean;
   private String internalWarehouseDir;
+
+  private boolean partitioned;
+
   // Triplet of partition name, type and value expression obtained from configuration
   private List<PartitionConfig> partitionConfigList;
   // List of partition name and value type.
@@ -152,49 +155,41 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     hiveConfigBean.init(getContext(), "hiveConfigBean", issues);
 
-    if (!externalTable) {
-      internalWarehouseDir = HiveConf.getVar(hiveConfigBean.getConfiguration(), HiveConf.ConfVars.METASTOREWAREHOUSE);
-      validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_06, issues);
-    } else {
-      validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_07, issues);
-      validateTemplate(partitionPathTemplate, "Partition Path Template", Errors.HIVE_METADATA_07, issues);
+    partitioned = !(partitionConfigList.isEmpty());
+    if (partitioned) {
+      partitionTypeInfo = new LinkedHashMap<>();
+      for (PartitionConfig partition: partitionConfigList) {
+        // Validation on partition column name
+        if (!HiveMetastoreUtil.validateColumnName(partition.name)) {
+          issues.add(getContext().createConfigIssue(
+              Groups.HIVE.name(),
+              "partitionList",
+              Errors.HIVE_METADATA_03,
+              "Partition Configuration"));
+        }
+        // Expression for partition value is not automatically checked on Preview
+        if (partition.valueEL.isEmpty()) {
+          issues.add(getContext().createConfigIssue(
+              Groups.HIVE.name(),
+              "partitionList",
+              Errors.HIVE_METADATA_01,
+              "Partition Configuration",
+              partition.name));
+        }
+        partitionTypeInfo.put(
+            partition.name.toLowerCase(),
+            partition.valueType.getSupport().createTypeInfo(partition.valueType)
+        );
+      }
     }
 
-    if (partitionConfigList.isEmpty()) {
-      issues.add(getContext().createConfigIssue(
-          Groups.HIVE.name(),
-          "partitionList",
-          Errors.HIVE_METADATA_01,
-          "Partition Configuration"));
-    }
-    partitionTypeInfo = new LinkedHashMap<>();
-    // Each field in partition configuration is not automatically checked on Preview
-    for (PartitionConfig partition: partitionConfigList){
-      // Validation on partition column name
-      if(partition.name.isEmpty() || !HiveMetastoreUtil.validateColumnName(partition.name)){
-        issues.add(getContext().createConfigIssue(
-            Groups.HIVE.name(),
-            "partitionList",
-            Errors.HIVE_METADATA_04,
-            "Partition Column Name",
-            partition.name)
-        );
-      }
-      if (partition.valueEL.isEmpty()){
-        issues.add(getContext().createConfigIssue(
-            Groups.HIVE.name(),
-            "partitionList",
-            Errors.HIVE_METADATA_02,
-            "Partition Configuration",
-            partition.valueEL)
-        );
-      }
-      //No decimal support for partition
-      //This is partition name should be lower case.
-      partitionTypeInfo.put(
-          partition.name.toLowerCase(),
-          partition.valueType.getSupport().createTypeInfo(partition.valueType)
-      );
+    if (!externalTable) {
+      internalWarehouseDir = HiveConf.getVar(hiveConfigBean.getConfiguration(), HiveConf.ConfVars.METASTOREWAREHOUSE);
+      validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
+    } else {
+      validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_06, issues);
+      if (partitioned)
+        validateTemplate(partitionPathTemplate, "Partition Path Template", Errors.HIVE_METADATA_06, issues);
     }
 
     if (issues.isEmpty()) {
@@ -212,7 +207,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
             getContext().createConfigIssue(
                 Groups.ADVANCED.name(),
                 "conf.timeDriver",
-                Errors.HIVE_METADATA_05,
+                Errors.HIVE_METADATA_04,
                 ex.toString(),
                 ex
             )
@@ -264,30 +259,30 @@ public class HiveMetadataProcessor extends RecordProcessor {
     TimeEL.setCalendarInContext(variables, Calendar.getInstance());
     String dbName = HiveMetastoreUtil.resolveEL(elEvals.dbNameELEval, variables, databaseEL);
     String tableName = HiveMetastoreUtil.resolveEL(elEvals.tableNameELEval,variables,tableEL);
-    String warehouseDir, partitionStr, avroSchema;
+    String warehouseDir, avroSchema;
+    String partitionStr = "";
     LinkedHashMap<String, String> partitionValMap;
     boolean schemaChanged = false;
 
-    changeRecordFieldToLowerCase(record);
-
     partitionValMap = getPartitionValuesFromRecord(record);
-    if (externalTable) {
-      warehouseDir
-          = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate);
-      partitionStr
-          = HiveMetastoreUtil.resolveEL(elEvals.partitionPathTemplateELEval, variables, partitionPathTemplate);
+    warehouseDir = externalTable ?
+        HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate) :
+        internalWarehouseDir;
+
+    if (partitioned) {
+      partitionStr = externalTable ?
+          HiveMetastoreUtil.resolveEL(elEvals.partitionPathTemplateELEval, variables, partitionPathTemplate) :
+          HiveMetastoreUtil.generatePartitionPath(partitionValMap);
       if (!partitionStr.startsWith("/"))
         partitionStr = "/" + partitionStr;
-    } else {
-      warehouseDir = internalWarehouseDir;
-      partitionStr = HiveMetastoreUtil.generatePartitionPath(partitionValMap);
+    }
+
+    if (dbName.isEmpty()) {
+      dbName = DEFAULT_DB;
     }
 
     try{
       // First, find out if this record has all necessary data to process
-      if (dbName.isEmpty()) {
-        dbName = DEFAULT_DB;
-      }
       validateNames(dbName, tableName, warehouseDir);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
       // path from warehouse directory to table
@@ -355,25 +350,25 @@ public class HiveMetadataProcessor extends RecordProcessor {
           avroSchema = schemaCache.getSchema();
       }
 
-      // Send new partition metadata if new partition is detected.
-      PartitionInfoCacheSupport.PartitionInfo pCache = HiveMetastoreUtil.getCacheInfo(
-          cache,
-          HMSCacheType.PARTITION_VALUE_INFO,
-          hiveConfigBean,
-          qualifiedName,
-          record
-      );
+      if (partitioned) {
+        PartitionInfoCacheSupport.PartitionInfo pCache = HiveMetastoreUtil.getCacheInfo(
+            cache,
+            HMSCacheType.PARTITION_VALUE_INFO,
+            hiveConfigBean,
+            qualifiedName,
+            record
+        );
+        Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
 
-      Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
-
-      // Append partition path to target path as all paths from now should be with the partition info
-      targetPath += partitionStr;
-
-      if (diff != null) {
-        handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
+        // Append partition path to target path as all paths from now should be with the partition info
+        targetPath += partitionStr;
+        // Send new partition metadata if new partition is detected.
+        if (diff != null) {
+          handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
+        }
       }
-
-      // Send record to HDFS target
+      // Send record to HDFS target.
+      changeRecordFieldToLowerCase(record);
       updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
     } catch (HiveStageCheckedException error) {
@@ -386,15 +381,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
       throws HiveStageCheckedException {
 
     if (!HiveMetastoreUtil.validateName(dbName)){
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, HIVE_DB_NAME, dbName);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_DB_NAME, dbName);
     }
     if (tableName.isEmpty()) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, tableEL);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, tableEL);
     } else if (!HiveMetastoreUtil.validateName(tableName)){
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_04, HIVE_TABLE_NAME, tableName);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_TABLE_NAME, tableName);
     }
     if (warehouseDir.isEmpty()) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, warehouseDir);
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, warehouseDir);
     }
   }
 
@@ -501,8 +496,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   /**
    * Obtain a list of partition values from record.
-   * @return String that represents partitions name=value.
-   *         For example, "dt=2016-01-01/country=US/state=CA"
+   * @return LinkedHashMap that contains pairs of partition name-values
    * @throws StageException
    */
   @VisibleForTesting
@@ -515,9 +509,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String ret = getPartitionValue(timeBasis, r, pName.valueEL);
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
-        throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, pName.valueEL);
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, pName.valueEL);
       }  else {
-        values.put(pName.name, ret);
+        values.put(pName.name.toLowerCase(), ret);
       }
     }
     return values;

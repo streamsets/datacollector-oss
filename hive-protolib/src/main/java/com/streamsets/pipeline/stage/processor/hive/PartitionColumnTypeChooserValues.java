@@ -25,6 +25,12 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 
 public class PartitionColumnTypeChooserValues extends BaseEnumChooserValues<HiveType> {
   public PartitionColumnTypeChooserValues() {
-    super(HiveType.class);
+    super(
+        HiveType.INT,
+        HiveType.BIGINT,
+        HiveType.STRING
+    );
   }
 }
+
+

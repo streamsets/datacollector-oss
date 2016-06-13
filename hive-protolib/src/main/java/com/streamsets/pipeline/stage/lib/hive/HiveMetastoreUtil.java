@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.security.PrivilegedExceptionAction;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -227,7 +226,9 @@ public final class HiveMetastoreUtil {
           }
         }
       } else {
-        throwException = true;
+        // we allow partition to be empty for non-partitioned table
+        if (!listFieldName.equals(PARTITION_FIELD))
+          throwException = true;
       }
     } catch(Exception e) {
       LOG.error("Can't parse metadata record", e);
@@ -525,15 +526,17 @@ public final class HiveMetastoreUtil {
         )
     );
     //fill in partition type list here
-    metadata.put(
-        PARTITION_FIELD,
-        generateInnerFieldFromTheList(
-            partitionTypeList,
-            PARTITION_NAME,
-            TYPE_INFO,
-            true
-        )
-    );
+    if (partitionTypeList != null) {
+      metadata.put(
+          PARTITION_FIELD,
+          generateInnerFieldFromTheList(
+              partitionTypeList,
+              PARTITION_NAME,
+              TYPE_INFO,
+              true
+          )
+      );
+    }
     metadata.put(INTERNAL_FIELD, Field.create(internal));
     metadata.put(AVRO_SCHEMA, Field.create(avroSchema));
     return Field.create(metadata);
@@ -577,13 +580,13 @@ public final class HiveMetastoreUtil {
 
   private static void validateScaleAndPrecision(int scale, int precision) throws HiveStageCheckedException{
     if (scale > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, "scale");
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale");
     }
     if (precision > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, precision, "precision");
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision");
     }
     if (scale > precision) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_09, scale, precision);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, precision);
     }
   }
 
@@ -638,7 +641,7 @@ public final class HiveMetastoreUtil {
       } else {
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField);
       }
-      columns.put(pair.getKey(), hiveTypeInfo);
+      columns.put(pair.getKey().toLowerCase(), hiveTypeInfo);
     }
     return columns;
   }

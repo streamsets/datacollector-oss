@@ -325,16 +325,10 @@ public class TestHiveMetastoreTarget {
         ),
         OnRecordError.STOP_PIPELINE
     );
+
     runHMSTargetWriteAndValidateResultingAction(
         generateRecordWithMissingField(
             HiveMetastoreUtil.COLUMNS_FIELD,
-            HiveMetastoreUtil.MetadataRecordType.TABLE
-        ),
-        OnRecordError.STOP_PIPELINE
-    );
-    runHMSTargetWriteAndValidateResultingAction(
-        generateRecordWithMissingField(
-            HiveMetastoreUtil.PARTITION_FIELD,
             HiveMetastoreUtil.MetadataRecordType.TABLE
         ),
         OnRecordError.STOP_PIPELINE
@@ -430,13 +424,6 @@ public class TestHiveMetastoreTarget {
         TestHMSCache.EMPTY_PARTITION_INFO,
         false,
         true
-    );
-    runHMSTargetWriteAndValidateResultingAction(
-        generateRecordWithMissingField(
-            HiveMetastoreUtil.PARTITION_FIELD,
-            HiveMetastoreUtil.MetadataRecordType.PARTITION
-        ),
-        OnRecordError.STOP_PIPELINE
     );
 
     //Partition Name removal
