@@ -112,7 +112,7 @@ public class TestHiveMetastoreUtil {
     Map<String, HiveTypeInfo> expected = new LinkedHashMap<>();
     expected.put("char", generatePrimitiveTypeInfo(HiveType.STRING));
     expected.put("short", generatePrimitiveTypeInfo(HiveType.INT));
-    expected.put("date", generatePrimitiveTypeInfo(HiveType.STRING));
+    expected.put("date", generatePrimitiveTypeInfo(HiveType.DATE));
     expected.put("decimal", generatePrimitiveTypeInfo(HiveType.DECIMAL));
 
     Map<String, HiveTypeInfo> actual = null;
@@ -141,8 +141,8 @@ public class TestHiveMetastoreUtil {
     Assert.assertEquals(f2.getValueAsInteger(), 10);
 
     Field f3 = list.get("date");
-    Assert.assertEquals(f3.getType(), Field.Type.STRING);
-    Assert.assertTrue(f3.getValue() instanceof String);
+    Assert.assertEquals(f3.getType(), Field.Type.DATE);
+    Assert.assertTrue(f3.getValue() instanceof Date);
     Assert.assertEquals(f3.getValueAsString(), today.toString());
 
     Field f4 = list.get("decimal");

@@ -39,19 +39,27 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class AvroTypeUtil {
+
+  private static final long MILLIS_PER_DAY = TimeUnit.DAYS.toMillis(1);
+  private static TimeZone localTimeZone = Calendar.getInstance().getTimeZone();
 
   public static final String SCHEMA_PATH_SEPARATOR = ".";
 
   private static final String LOGICAL_TYPE = "logicalType";
   private static final String LOGICAL_TYPE_DECIMAL = "decimal";
+  private static final String LOGICAL_TYPE_DATE = "date";
 
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
@@ -68,6 +76,24 @@ public class AvroTypeUtil {
       .setValidate(true)
       .setValidateDefaults(true)
       .parse(schema);
+  }
+
+  /**
+   * Return number of days since the unix epoch.
+   *
+   * This function has been copied from Apache Hive project.
+   */
+  private static int millisToDays(long millisLocal) {
+    // We assume millisLocal is midnight of some date. What we are basically trying to do
+    // here is go from local-midnight to UTC-midnight (or whatever time that happens to be).
+    long millisUtc = millisLocal + localTimeZone.getOffset(millisLocal);
+    int days;
+    if (millisUtc >= 0L) {
+      days = (int) (millisUtc / MILLIS_PER_DAY);
+    } else {
+      days = (int) ((millisUtc - 86399999 /*(MILLIS_PER_DAY - 1)*/) / MILLIS_PER_DAY);
+    }
+    return days;
   }
 
   /**
@@ -105,6 +131,11 @@ public class AvroTypeUtil {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
           return Field.create(Field.Type.DECIMAL, value);
+        case LOGICAL_TYPE_DATE:
+          if(schema.getType() != Schema.Type.INT) {
+            throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
+          }
+          return Field.create(Field.Type.DATE, value);
       }
     }
 
@@ -225,6 +256,9 @@ public class AvroTypeUtil {
         if(field.getType() == Field.Type.DECIMAL || field.getType() ==  Field.Type.BYTE_ARRAY) {
           object = ByteBuffer.wrap(new byte[]{});
         }
+        if(field.getType() == Field.Type.DATE) {
+          object = new Integer(0);
+        }
 
         try {
           int typeIndex = GenericData.get().resolveUnion(schema, object);
@@ -252,6 +286,11 @@ public class AvroTypeUtil {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
           return ByteBuffer.wrap(field.getValueAsDecimal().unscaledValue().toByteArray());
+        case LOGICAL_TYPE_DATE:
+          if(schema.getType() != Schema.Type.INT) {
+            throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
+          }
+          return millisToDays(field.getValueAsDate().getTime());
       }
     }
 

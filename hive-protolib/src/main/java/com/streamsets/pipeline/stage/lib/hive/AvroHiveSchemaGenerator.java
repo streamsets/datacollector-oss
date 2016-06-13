@@ -35,6 +35,7 @@ import java.util.Map;
 public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, HiveTypeInfo>> {
 
   private static final String LOGICAL_TYPE_PROP = "logicalType";
+  private static final String DATE_TYPE = "date";
   private static final String DECIMAL_TYPE = "decimal";
   private static final String PRECISION = "precision";
   private static final String SCALE = "scale";
@@ -88,6 +89,11 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
 
       case BINARY:
         return Schema.create(Schema.Type.BYTES);
+
+      case DATE:
+        Schema dateSchema = Schema.create(Schema.Type.INT);
+        dateSchema.addProp(LOGICAL_TYPE_PROP, DATE_TYPE);
+        return dateSchema;
 
       case DECIMAL:
         Utils.checkArgument(node.getValue() instanceof DecimalTypeInfo, "Invalid type used in HiveTypeInfo");

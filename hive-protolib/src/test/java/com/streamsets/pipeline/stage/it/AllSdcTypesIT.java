@@ -70,7 +70,7 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       {Field.create(Field.Type.LONG, 10), true, Types.BIGINT, 10L},
       {Field.create(Field.Type.FLOAT, 1.5), true, Types.FLOAT, 1.5},
       {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
-      {Field.create(Field.Type.DATE, date), true, Types.VARCHAR, dateFormat.format(date)},
+      {Field.create(Field.Type.DATE, new Date(116, 5, 13)), true, Types.DATE, new Date(116, 5, 13)},
       {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
       {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), true, Types.DECIMAL, BigDecimal.valueOf(1.5)},
       {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},

@@ -550,7 +550,6 @@ public final class HiveMetastoreUtil {
       if (currField.getType() == Field.Type.SHORT) {  // Convert short to integer
         currField = Field.create(pair.getValue().getValueAsInteger());
       } else if (currField.getType() == Field.Type.CHAR ||  // Convert Char, Date, Datetime to String
-          currField.getType() == Field.Type.DATE ||
           currField.getType() == Field.Type.DATETIME ) {
         currField = Field.create(pair.getValue().getValueAsString());
       }

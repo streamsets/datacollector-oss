@@ -39,6 +39,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -215,6 +216,21 @@ public class TestAvroTypeUtil {
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof ByteBuffer);
     Assert.assertArrayEquals(new byte[] {0x0F}, ((ByteBuffer)avroObject).array());
+  }
+
+  @Test
+  public void testCreateDateField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, new Date(116, 0, 1));
+    Assert.assertEquals(Field.Type.DATE, field.getType());
+    Assert.assertEquals(new Date(116, 0, 1), field.getValueAsDate());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
+    Assert.assertTrue(avroObject instanceof Integer);
+    Assert.assertEquals(16801, (int)avroObject);
   }
 
   @Test

@@ -49,6 +49,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -76,6 +77,14 @@ public class TestAvroDataGenerator {
     +" {\"name\": \"decimal\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}"
     +"]}";
   private static final Schema DECIMAL_SCHEMA = new Schema.Parser().parse(DECIMAL_AVRO_SCHEMA);
+
+  private static final String DATE_AVRO_SCHEMA = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"WithDate\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"d\", \"type\": \"int\", \"logicalType\": \"date\"}"
+    +"]}";
+  private static final Schema DATE_SCHEMA = new Schema.Parser().parse(DATE_AVRO_SCHEMA);
 
 
   private static final String INVALID_SCHEMA = "{\n"
@@ -479,6 +488,35 @@ public class TestAvroDataGenerator {
     GenericRecord readRecord = dataFileReader.next();
 
     Assert.assertArrayEquals(new byte[] {0x0F}, ((ByteBuffer)readRecord.get("decimal")).array());
+    Assert.assertFalse(dataFileReader.hasNext());
+  }
+
+  @Test
+  public void testAvroGeneratorDateType() throws Exception {
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("d", Field.create(Field.Type.DATE, new Date(116, 0, 1)));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      DATE_SCHEMA,
+      new HashMap<String, Object>()
+    );
+    gen.write(record);
+    gen.close();
+
+    //reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Assert.assertEquals(16801, readRecord.get("d"));
     Assert.assertFalse(dataFileReader.hasNext());
   }
 

@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedExcepti
  */
 public enum HiveType {
   BOOLEAN(new PrimitiveHiveTypeSupport()),
+  DATE(new PrimitiveHiveTypeSupport()),
   INT(new PrimitiveHiveTypeSupport()),
   BIGINT(new PrimitiveHiveTypeSupport()),
   FLOAT(new PrimitiveHiveTypeSupport()),
@@ -56,6 +57,7 @@ public enum HiveType {
   public static HiveType getHiveTypeforFieldType(Field.Type fieldType) throws HiveStageCheckedException {
     switch (fieldType) {
       case BOOLEAN: return HiveType.BOOLEAN;
+      case DATE: return HiveType.DATE;
       case INTEGER: return HiveType.INT;
       case LONG: return HiveType.BIGINT;
       case FLOAT: return HiveType.FLOAT;
@@ -77,6 +79,7 @@ public enum HiveType {
   public static Field.Type getFieldTypeForHiveType(HiveType hiveType) throws HiveStageCheckedException {
     switch (hiveType) {
       case BOOLEAN: return Field.Type.BOOLEAN;
+      case DATE: return Field.Type.DATE;
       case INT: return Field.Type.INTEGER;
       case BIGINT: return Field.Type.LONG;
       case FLOAT: return Field.Type.FLOAT;
