@@ -130,10 +130,17 @@ angular
        * Refresh pipelines
        */
       refreshPipelines: function() {
-        pipelineService.refreshPipelines().then(function(pipelines) {
-          $scope.pipelines = pipelines;
-          $scope.updateFilteredPipelines();
-        });
+        $scope.unSelectAll();
+        $q.all([
+          api.pipelineAgent.getAllPipelineStatus(),
+          pipelineService.refreshPipelines()
+        ]).then(
+          function (results) {
+            $rootScope.common.pipelineStatusMap = results[0].data;
+            $scope.pipelines = pipelineService.getPipelines();
+            $scope.updateFilteredPipelines();
+          }
+        );
       },
 
       /**
@@ -217,9 +224,7 @@ angular
           });
           pipelineService.duplicatePipelineConfigCommand(selectedPipeline)
             .then(function(pipelines) {
-              $scope.pipelines = pipelineService.getPipelines();
-              $scope.updateFilteredPipelines();
-              $scope.unSelectAll();
+              $scope.refreshPipelines();
             });
         }
       },
@@ -465,7 +470,7 @@ angular
             var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
             if (pipelineStatus && pipelineStatus.name === pipelineInfo.name) {
               if (!pipelineInfo.valid) {
-                validationIssues.push('Publish operation is not supported for Invalid Pipeline "' + pipelineInfo.name);
+                validationIssues.push('Publish operation is not supported for Invalid Pipeline - ' + pipelineInfo.name);
               } else if (pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE) {
                 validationIssues.push('Publish operation is not supported for Remote Pipeline "' + pipelineInfo.name);
               }
@@ -606,27 +611,26 @@ angular
       api.pipelineAgent.getAllPipelineStatus(),
       pipelineService.init(true),
       configuration.init()
-    ])
-      .then(
-        function (results) {
-          $scope.loaded = true;
-          $rootScope.common.pipelineStatusMap = results[0].data;
-          $scope.pipelines = pipelineService.getPipelines();
-          $scope.updateFilteredPipelines();
+    ]).then(
+      function (results) {
+        $scope.loaded = true;
+        $rootScope.common.pipelineStatusMap = results[0].data;
+        $scope.pipelines = pipelineService.getPipelines();
+        $scope.updateFilteredPipelines();
 
-          if($scope.pipelines && $scope.pipelines.length) {
-            $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
-              '/collector/pipeline/' + $scope.pipelines[0].name;
-          }
-
-          if(configuration.isAnalyticsEnabled()) {
-            Analytics.trackPage('/');
-          }
-        },
-        function (results) {
-          $scope.loaded = true;
+        if($scope.pipelines && $scope.pipelines.length) {
+          $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
+            '/collector/pipeline/' + $scope.pipelines[0].name;
         }
-      );
+
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.trackPage('/');
+        }
+      },
+      function (results) {
+        $scope.loaded = true;
+      }
+    );
 
     $scope.$on('onAlertClick', function(event, alert) {
       if(alert && alert.pipelineName) {

@@ -79,11 +79,11 @@
                target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
           </li>
 
-          <li role="presentation" ng-if="isPipelineRunning"
+          <li role="presentation" ng-if="isPipelineRunning && activeDetailTab.name == 'summary'"
               ng-if="!$storage.dontShowRESTResponseMenu"
               class="divider"></li>
 
-          <li role="presentation" ng-if="isPipelineRunning">
+          <li role="presentation" ng-if="isPipelineRunning && activeDetailTab.name == 'summary'">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="launchSettings()">{{'global.form.settings' | translate}}</a>
           </li>
@@ -113,8 +113,6 @@
             ng-class="{'glyphicon-fullscreen' : !$storage.maximizeDetailPane , 'glyphicon-resize-small': $storage.maximizeDetailPane}"
             ng-click="onMaximizeDetailPane()"></span>
     </div>
-
-
 
     <div class="btn-group pull-right detail-time-range-dropdown"
          ng-if="common.isMetricsTimeSeriesEnabled && isPipelineRunning && activeDetailTab.name == 'summary'">
