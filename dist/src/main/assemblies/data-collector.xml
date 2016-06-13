@@ -375,6 +375,11 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- redis-lib -->
+    <fileSet>
+      <directory>${basedir}/../redis-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
   </fileSets>
 

@@ -181,6 +181,7 @@
     <module>mesos-bootstrap</module>
     <module>cli</module>
     <module>common-ui</module>
+    <module>redis-lib</module>
   </modules>
 
   <build>
@@ -457,6 +458,7 @@
         <elasticsearch_2_0-lib>elasticsearch_2_0-lib</elasticsearch_2_0-lib>
         <elasticsearch_2_1-lib>elasticsearch_2_1-lib</elasticsearch_2_1-lib>
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
+        <redis_lib>redis-lib</redis_lib>
         <aws-lib>aws-lib</aws-lib>
       </properties>
       <modules>
@@ -483,6 +485,7 @@
         <module>elasticsearch_2_1-lib</module>
         <module>elasticsearch_2_2-lib</module>
         <module>aws-lib</module>
+        <module>redis-lib</module>
       </modules>
     </profile>
 
