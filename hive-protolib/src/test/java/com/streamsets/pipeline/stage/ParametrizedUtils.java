@@ -51,4 +51,29 @@ public class ParametrizedUtils {
       crossProductInternal(i+1, arrays, work, ret);
     }
   }
+
+  /**
+   * Convert given array to "array of arrays".
+   *
+   * This method is particularly useful if one needs only one directional array to be given to
+   * Parametrized runner.
+   */
+  public static Collection<Object []> toArrayOfArrays(Object ...array) {
+    LinkedList<Object []> ret = new LinkedList<>();
+    for(Object o : array) {
+      ret.add(toArray(o));
+    }
+    return ret;
+  }
+
+  /**
+   * If given object is an array, return it, otherwise wrap it in one-item array.
+   */
+  public static Object [] toArray(Object o) {
+    if(o.getClass().isArray()) {
+      return (Object [])o;
+    }
+
+    return new Object[] {o};
+  }
 }
