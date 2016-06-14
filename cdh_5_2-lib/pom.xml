@@ -146,10 +146,10 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
       <exclusions>
-      <exclusion>
+        <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
-      </exclusion>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -209,7 +209,7 @@
     </dependency>
 
 
-     <dependency>
+    <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-hbase-protolib</artifactId>
       <version>${project.version}</version>
@@ -233,6 +233,40 @@
           <artifactId>solr-solrj</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-solr-api</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-solr-api</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.solr</groupId>
+          <artifactId>solr-solrj</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
     </dependency>
 
     <dependency>
@@ -412,7 +446,7 @@
                 <resource>
                   <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                 </resource>
-             </resources>
+              </resources>
             </configuration>
           </execution>
         </executions>

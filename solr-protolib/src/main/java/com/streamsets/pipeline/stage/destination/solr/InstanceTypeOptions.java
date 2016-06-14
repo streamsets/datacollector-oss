@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,15 +24,15 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum InstanceTypeOptions implements Label {
-  SINGLE_NODE("Single Node", SolrTarget.SolrInstanceType.SINGLE_NODE),
-  SOLR_CLOUD("SolrCloud",  SolrTarget.SolrInstanceType.SOLR_CLOUD),
+  SINGLE_NODE("Single Node", SolrInstanceType.SINGLE_NODE),
+  SOLR_CLOUD("SolrCloud",  SolrInstanceType.SOLR_CLOUD),
   ;
 
 
   private final String label;
-  private SolrTarget.SolrInstanceType instanceType;
+  private SolrInstanceType instanceType;
 
-  InstanceTypeOptions(String label, SolrTarget.SolrInstanceType instanceType) {
+  InstanceTypeOptions(String label, SolrInstanceType instanceType) {
     this.label = label;
     this.instanceType = instanceType;
   }
@@ -42,7 +42,7 @@ public enum InstanceTypeOptions implements Label {
     return label;
   }
 
-  public SolrTarget.SolrInstanceType getInstanceType() {
+  public SolrInstanceType getInstanceType() {
     return instanceType;
   }
 

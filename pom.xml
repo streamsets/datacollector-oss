@@ -89,6 +89,10 @@
     <mongodb_3-lib>none</mongodb_3-lib>
     <influxdb_0_9-lib>none</influxdb_0_9-lib>
     <redis-lib>none</redis-lib>
+    <apache-solr_6_1_0-lib>none</apache-solr_6_1_0-lib>
+    <sdc-solr-api>none</sdc-solr-api>
+    <sdc-solr_4-lib>none</sdc-solr_4-lib>
+    <sdc-solr_6-lib>none</sdc-solr_6-lib>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -166,6 +170,7 @@
     <module>elasticsearch-protolib</module>
 
     <module>solr-protolib</module>
+    <module>apache-solr_6_1_0-lib</module>
 
     <module>cassandra-protolib</module>
 
@@ -184,6 +189,9 @@
     <module>cli</module>
     <module>common-ui</module>
     <module>redis-lib</module>
+    <module>sdc-solr-api</module>
+    <module>sdc-solr_4-lib</module>
+    <module>sdc-solr_6-lib</module>
   </modules>
 
   <build>
@@ -462,6 +470,7 @@
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
         <redis_lib>redis-lib</redis_lib>
         <aws-lib>aws-lib</aws-lib>
+        <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
       </properties>
       <modules>
         <module>ipc-kafka-apache-kafka_0_8_1-lib</module>
@@ -488,6 +497,7 @@
         <module>elasticsearch_2_2-lib</module>
         <module>aws-lib</module>
         <module>redis-lib</module>
+        <module>apache-solr_6_1_0-lib</module>
       </modules>
     </profile>
 
@@ -517,6 +527,7 @@
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
+        <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
       </properties>
       <modules>
         <module>hdp_2_4-lib</module>
@@ -534,6 +545,7 @@
         <module>apache-kudu-0_7-lib</module>
         <module>influxdb_0_9-lib</module>
         <module>redis-lib</module>
+        <module>apache-solr_6_1_0-lib</module>
       </modules>
     </profile>
 
