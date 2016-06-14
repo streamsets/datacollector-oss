@@ -29,14 +29,15 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.solr.api.Errors;
+import com.streamsets.pipeline.solr.api.SdcSolrTestUtil;
+import com.streamsets.pipeline.solr.api.SdcSolrTestUtilFactory;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.solr.SolrJettyTestBase;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.client.solrj.embedded.JettySolrRunner;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,12 +47,17 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestSolrTarget  extends SolrJettyTestBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestSolrTarget.class);
+  private static JettySolrRunner jetty;
+
+  private static SdcSolrTestUtil sdcSolrTestUtil;
 
   @BeforeClass
   public static void beforeTest() throws Exception {
@@ -60,7 +66,14 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     URL url = Thread.currentThread().getContextClassLoader().getResource("solr/");
     Assert.assertNotNull(url);
     FileUtils.copyDirectoryToDirectory(new File(url.toURI()), solrHomeDir);
-    createJetty(solrHomeDir.getAbsolutePath() + "/solr", null, null);
+    jetty = createJetty(solrHomeDir.getAbsolutePath() + "/solr", (String)null, null);
+    String jettyUrl = jetty.getBaseUrl().toString() + "/" + "collection1";
+    sdcSolrTestUtil = SdcSolrTestUtilFactory.getInstance().create(jettyUrl);
+  }
+
+  @AfterClass
+  public static void destory() {
+    sdcSolrTestUtil.destroy();
   }
 
   @Test
@@ -118,12 +131,8 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     Target target = createTarget();
     TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target).build();
     try {
-      SolrServer solrClient = getSolrServer();
-
-      solrClient.ping();
-
       //delete all index
-      solrClient.deleteByQuery("*:*");
+      sdcSolrTestUtil.deleteByQuery("*:*");
 
       runner.runInit();
       List<Record> records = new ArrayList<>();
@@ -151,15 +160,14 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Assert.assertTrue(runner.getErrorRecords().isEmpty());
       Assert.assertTrue(runner.getErrors().isEmpty());
 
+      Map<String, String> parameters = new HashMap();
+      parameters.put("q", "name:Hello");
 
-      SolrQuery parameters = new SolrQuery();
-      parameters.set("q", "name:Hello");
-      QueryResponse queryResponse = solrClient.query(parameters);
+      List<Map<String, Object>> solrDocuments = sdcSolrTestUtil.query(parameters);
 
-      SolrDocumentList solrDocuments = queryResponse.getResults();
       Assert.assertEquals(1, solrDocuments.size());
 
-      SolrDocument solrDocument = solrDocuments.get(0);
+      Map<String, Object> solrDocument = solrDocuments.get(0);
       String fieldAVal = (String) solrDocument.get("name");
       Assert.assertNotNull(fieldAVal);
       Assert.assertEquals("Hello", fieldAVal);
@@ -193,24 +201,21 @@ public class TestSolrTarget  extends SolrJettyTestBase {
   public void testWriteRecordsOnErrorDiscard() throws Exception {
     Target target = createTarget();
     TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target).setOnRecordError(OnRecordError.DISCARD)
-      .build();
+        .build();
     try {
-
-      SolrServer solrClient = getSolrServer();
-
       //delete all index
-      solrClient.deleteByQuery("*:*");
+      sdcSolrTestUtil.deleteByQuery("*:*");
 
       runner.runInit();
       List<Record> records = new ArrayList<>();
 
       Record record1 = RecordCreator.create();
       record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
-        "b", Field.create("i1"), "c", Field.create("t1"))));
+          "b", Field.create("i1"), "c", Field.create("t1"))));
 
       Record record2 = RecordCreator.create();
       record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
-        "b", Field.create("i2"), "c2", Field.create("t2"))));
+          "b", Field.create("i2"), "c2", Field.create("t2"))));
 
       records.add(record1);
       records.add(record2);
@@ -219,11 +224,11 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Assert.assertTrue(runner.getErrorRecords().isEmpty());
       Assert.assertTrue(runner.getErrors().isEmpty());
 
-      SolrQuery parameters = new SolrQuery();
-      parameters.set("q", "sku:i1");
-      QueryResponse queryResponse = solrClient.query(parameters);
+      Map<String, String> parameters = new HashMap();
+      parameters.put("q", "sku:i1");
 
-      SolrDocumentList solrDocuments = queryResponse.getResults();
+      List<Map<String, Object>> solrDocuments = sdcSolrTestUtil.query(parameters);
+
       Assert.assertEquals(0, solrDocuments.size());
 
     } finally {
@@ -235,12 +240,10 @@ public class TestSolrTarget  extends SolrJettyTestBase {
   public void testWriteRecordsOnErrorToError() throws Exception {
     Target target = createTarget();
     TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR)
-      .build();
+        .build();
     try {
-      SolrServer solrClient = getSolrServer();
-
       //delete all index
-      solrClient.deleteByQuery("*:*");
+      sdcSolrTestUtil.deleteByQuery("*:*");
 
       runner.runInit();
       List<Record> records = new ArrayList<>();
@@ -248,11 +251,11 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Record record1 = RecordCreator.create();
       // intentionally create Record with mismatching field name ("nota" instead of "a") to trigger an error
       record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
-        "b", Field.create("i1"), "c", Field.create("t1"))));
+          "b", Field.create("i1"), "c", Field.create("t1"))));
 
       Record record2 = RecordCreator.create();
       record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
-        "b", Field.create("i2"), "c", Field.create("t2"))));
+          "b", Field.create("i2"), "c", Field.create("t2"))));
 
       records.add(record1);
       records.add(record2);
@@ -262,11 +265,10 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get("/nota").getValueAsString());
       Assert.assertTrue(runner.getErrors().isEmpty());
 
-      SolrQuery parameters = new SolrQuery();
-      parameters.set("q", "sku:i1");
-      QueryResponse queryResponse = solrClient.query(parameters);
+      Map<String, String> parameters = new HashMap();
+      parameters.put("q", "sku:i1");
+      List<Map<String, Object>> solrDocuments = sdcSolrTestUtil.query(parameters);
 
-      SolrDocumentList solrDocuments = queryResponse.getResults();
       Assert.assertEquals(0, solrDocuments.size());
     } finally {
       runner.runDestroy();
@@ -284,23 +286,21 @@ public class TestSolrTarget  extends SolrJettyTestBase {
         , null);
 
     TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target).setOnRecordError(OnRecordError.TO_ERROR)
-      .build();
+        .build();
     try {
-      SolrServer solrClient = getSolrServer();
-
       //delete all index
-      solrClient.deleteByQuery("*:*");
+      sdcSolrTestUtil.deleteByQuery("*:*");
 
       runner.runInit();
       List<Record> records = new ArrayList<>();
 
       Record record1 = RecordCreator.create();
       record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
-        "b", Field.create("i1"), "c", Field.create("t1"))));
+          "b", Field.create("i1"), "c", Field.create("t1"))));
 
       Record record2 = RecordCreator.create();
       record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
-        "b", Field.create("i2"), "c", Field.create("t2"))));
+          "b", Field.create("i2"), "c", Field.create("t2"))));
 
       records.add(record1);
       records.add(record2);
@@ -310,11 +310,10 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get("/nota").getValueAsString());
       Assert.assertTrue(runner.getErrors().isEmpty());
 
-      SolrQuery parameters = new SolrQuery();
-      parameters.set("q", "sku:i1");
-      QueryResponse queryResponse = solrClient.query(parameters);
+      Map<String, String> parameters = new HashedMap();
+      parameters.put("q", "sku:i1");
+      List<Map<String, Object>> solrDocuments = sdcSolrTestUtil.query(parameters);
 
-      SolrDocumentList solrDocuments = queryResponse.getResults();
       Assert.assertEquals(0, solrDocuments.size());
     } finally {
       runner.runDestroy();
@@ -325,19 +324,19 @@ public class TestSolrTarget  extends SolrJettyTestBase {
   public void testWriteRecordsOnErrorStopPipeline() throws Exception {
     Target target = createTarget();
     TargetRunner runner = new TargetRunner.Builder(SolrDTarget.class, target)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
     try {
       runner.runInit();
       List<Record> records = new ArrayList<>();
 
       Record record1 = RecordCreator.create();
       record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
-        "b", Field.create("i1"), "c", Field.create("t1"))));
+          "b", Field.create("i1"), "c", Field.create("t1"))));
 
       Record record2 = RecordCreator.create();
       record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
-        "b", Field.create("i2"), "c", Field.create("t2"))));
+          "b", Field.create("i2"), "c", Field.create("t2"))));
 
       records.add(record1);
       records.add(record2);

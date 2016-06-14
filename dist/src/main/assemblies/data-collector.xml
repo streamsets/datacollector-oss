@@ -381,6 +381,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- solr-lib -->
+    <fileSet>
+      <directory>${basedir}/../apache-solr_6_1_0-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
   </fileSets>
 
   <dependencySets>

@@ -172,27 +172,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-solr-protolib</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.solr</groupId>
-                    <artifactId>solr-solrj</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-solr-protolib</artifactId>
-            <type>test-jar</type>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Hive related -->
         <dependency>
             <groupId>com.streamsets</groupId>
@@ -302,6 +281,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Solr related -->
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
@@ -313,6 +293,61 @@
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-test-framework</artifactId>
             <version>${solr.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-solr-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-solr-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.solr</groupId>
+                    <artifactId>solr-solrj</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-solr-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.solr</groupId>
+                    <artifactId>solr-solrj</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-solr-protolib</artifactId>
+            <type>test-jar</type>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 

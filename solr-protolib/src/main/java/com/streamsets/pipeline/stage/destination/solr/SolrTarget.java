@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.solr;
 
 
+import com.esotericsoftware.minlog.Log;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -27,27 +28,24 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.solr.api.Errors;
+import com.streamsets.pipeline.solr.api.SdcSolrTarget;
+import com.streamsets.pipeline.solr.api.SdcSolrTargetFactory;
+import com.streamsets.pipeline.solr.api.TargetFactorySettings;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.CloudSolrServer;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class SolrTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(SolrTarget.class);
-  public enum SolrInstanceType {SINGLE_NODE, SOLR_CLOUD}
 
   private final InstanceTypeOptions instanceType;
   private final String solrURI;
@@ -57,7 +55,7 @@ public class SolrTarget extends BaseTarget {
   private final List<SolrFieldMappingConfig> fieldNamesMap;
 
   private ErrorRecordHandler errorRecordHandler;
-  private SolrServer solrClient;
+  private SdcSolrTarget sdcSolrTarget;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
                     final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
@@ -90,13 +88,19 @@ public class SolrTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.SOLR.name(), "fieldNamesMap", Errors.SOLR_02));
     }
 
-    if(solrInstanceInfo) {
+    if (solrInstanceInfo) {
+      TargetFactorySettings settings = new TargetFactorySettings(
+          instanceType.toString(),
+          solrURI,
+          zookeeperConnect,
+          defaultCollection
+      );
+      sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {
-        solrClient = getSolrClient();
-        solrClient.ping();
+        sdcSolrTarget.init();
       } catch (Exception ex) {
         String configName = "solrURI";
-        if(SolrInstanceType.SOLR_CLOUD.equals(instanceType.getInstanceType())) {
+        if(InstanceTypeOptions.SOLR_CLOUD.equals(instanceType.getInstanceType())) {
           configName = "zookeeperConnect";
         }
         issues.add(getContext().createConfigIssue(Groups.SOLR.name(), configName, Errors.SOLR_03, ex.toString(), ex));
@@ -106,20 +110,10 @@ public class SolrTarget extends BaseTarget {
     return issues;
   }
 
-  private SolrServer getSolrClient() throws MalformedURLException {
-    if(SolrInstanceType.SINGLE_NODE.equals(instanceType.getInstanceType())) {
-      return new HttpSolrServer(this.solrURI);
-    } else {
-      CloudSolrServer cloudSolrServer = new CloudSolrServer(this.zookeeperConnect);
-      cloudSolrServer.setDefaultCollection(defaultCollection);
-      return cloudSolrServer;
-    }
-  }
-
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
-    List<SolrInputDocument> solrDocuments = new ArrayList<>();
+    List<Map<String, Object>> batchFieldMap = new ArrayList();
     List<Record> recordsBackup = new ArrayList<>();
     boolean atLeastOne = false;
 
@@ -127,23 +121,23 @@ public class SolrTarget extends BaseTarget {
       atLeastOne = true;
       Record record = it.next();
       try {
-        SolrInputDocument document = new SolrInputDocument();
+        Map<String, Object> fieldMap = new HashMap();
         for(SolrFieldMappingConfig fieldMapping: fieldNamesMap) {
           Field field = record.get(fieldMapping.field);
           if (field == null) {
             throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
           }
-          document.addField(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
+          fieldMap.put(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
         }
 
         if(ProcessingMode.BATCH.equals(indexingMode)) {
-          solrDocuments.add(document);
+          batchFieldMap.add(fieldMap);
           recordsBackup.add(record);
         } else {
-          solrClient.add(document);
+          sdcSolrTarget.add(fieldMap);
         }
 
-      } catch (OnRecordErrorException | SolrServerException | IOException ex) {
+      } catch (StageException ex) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
                 record,
@@ -159,15 +153,15 @@ public class SolrTarget extends BaseTarget {
     if(atLeastOne) {
       try {
         if(ProcessingMode.BATCH.equals(indexingMode)) {
-          solrClient.add(solrDocuments);
+          sdcSolrTarget.add(batchFieldMap);
         }
-        solrClient.commit();
-      } catch (SolrException | SolrServerException | IOException ex) {
+        sdcSolrTarget.commit();
+      } catch (StageException ex) {
         try {
-          solrClient.rollback();
-          errorRecordHandler.onError(recordsBackup, new StageException(Errors.SOLR_05, ex.toString(), ex));
-        } catch (SolrServerException | IOException ex2) {
-          errorRecordHandler.onError(recordsBackup, new StageException(Errors.SOLR_05, ex2.toString(), ex2));
+          sdcSolrTarget.rollback();
+          errorRecordHandler.onError(recordsBackup, ex);
+        } catch (StageException ex2) {
+          errorRecordHandler.onError(recordsBackup, ex2);
         }
       }
     }
@@ -175,8 +169,12 @@ public class SolrTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if(this.solrClient != null) {
-      this.solrClient.shutdown();
+    if(this.sdcSolrTarget != null){
+      try {
+        this.sdcSolrTarget.destroy();
+      } catch (Exception e) {
+        Log.error(e.toString());
+      }
     }
     super.destroy();
   }
