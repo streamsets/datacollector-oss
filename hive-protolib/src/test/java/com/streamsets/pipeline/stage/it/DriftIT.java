@@ -49,6 +49,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Before
   public void createTestTable() throws Exception {
     executeUpdate("CREATE TABLE `tbl` (id int) PARTITIONED BY (dt string) STORED AS AVRO");
+    executeUpdate("CREATE TABLE `multiple` (id int, value string) PARTITIONED BY (dt string) STORED AS AVRO");
   }
 
   @Test
@@ -91,6 +92,58 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
         Assert.assertTrue("Unexpected number of rows", rs.next());
         Assert.assertEquals(2, rs.getLong(1));
         Assert.assertEquals("new value", rs.getString(2));
+
+        Assert.assertFalse("Unexpected number of rows", rs.next());
+      }
+    });
+  }
+
+  @Test
+  public void testNewColumnInTheMiddle() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .table("multiple")
+      .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+      .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 1));
+    map.put("value", Field.create(Field.Type.STRING, "exists"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 2));
+    map.put("new_column", Field.create(Field.Type.STRING, "new value"));
+    map.put("value", Field.create(Field.Type.STRING, "exists"));
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    processRecords(processor, hiveTarget, records);
+
+    assertQueryResult("select * from multiple order by id", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+          new ImmutablePair("multiple.id", Types.INTEGER),
+          new ImmutablePair("multiple.value", Types.VARCHAR),
+          new ImmutablePair("multiple.new_column", Types.VARCHAR),
+          new ImmutablePair("multiple.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(1, rs.getLong(1));
+        Assert.assertEquals("exists", rs.getString(2));
+        Assert.assertEquals(null, rs.getString(3));
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(2, rs.getLong(1));
+        Assert.assertEquals("exists", rs.getString(2));
+        Assert.assertEquals("new value", rs.getString(3));
 
         Assert.assertFalse("Unexpected number of rows", rs.next());
       }
