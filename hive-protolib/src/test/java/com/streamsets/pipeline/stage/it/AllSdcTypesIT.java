@@ -56,7 +56,7 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
 
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private static Date date = new Date();
 
   @Parameterized.Parameters(name = "type({0})")

@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -101,6 +102,8 @@ public final class HiveMetastoreUtil {
   public static final String TYPE = "type";
   public static final String EXTRA_INFO = "extraInfo";
   public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;;
+
+  private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   public enum MetadataRecordType {
     /**
@@ -547,12 +550,18 @@ public final class HiveMetastoreUtil {
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
       Field currField = pair.getValue();
-      if (currField.getType() == Field.Type.SHORT) {  // Convert short to integer
-        currField = Field.create(pair.getValue().getValueAsInteger());
-      } else if (currField.getType() == Field.Type.CHAR ||  // Convert Char, Date, Datetime to String
-          currField.getType() == Field.Type.DATETIME ) {
-        currField = Field.create(pair.getValue().getValueAsString());
+      switch(currField.getType()) {
+        case SHORT:
+          currField = Field.create(pair.getValue().getValueAsInteger());
+          break;
+        case CHAR:
+          currField = Field.create(pair.getValue().getValueAsString());
+          break;
+        case DATETIME:
+          currField = Field.create(datetimeFormat.format(pair.getValue().getValueAsDate()));
+          break;
       }
+
       // Update the Field type and value in Record
       pair.setValue(currField);
       HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
