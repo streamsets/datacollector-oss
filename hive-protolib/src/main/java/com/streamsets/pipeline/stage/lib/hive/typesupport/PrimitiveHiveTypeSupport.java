@@ -47,15 +47,15 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field)
+  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
       throws HiveStageCheckedException{
     return new PrimitiveHiveTypeInfo(HiveType.getHiveTypeforFieldType(field.getType()));
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo createTypeInfo(HiveTypeConfig hiveTypeConfig){
-    return new PrimitiveHiveTypeInfo(hiveTypeConfig.valueType);
+  public PrimitiveHiveTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs){
+    return new PrimitiveHiveTypeInfo(hiveType);
   }
 
   public static class PrimitiveHiveTypeInfo extends HiveTypeInfo{

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage;
 
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.processor.hive.DecimalDefaultsConfig;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 
@@ -33,6 +34,7 @@ public class HiveMetadataProcessorBuilder {
   private String tablePathTemplate;
   private String partitionPathTemplate;
   private String timeDriver;
+  private DecimalDefaultsConfig decimalDefaultsConfig;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -42,6 +44,9 @@ public class HiveMetadataProcessorBuilder {
     external = false;
     tablePathTemplate = null;
     partitionPathTemplate = null;
+    decimalDefaultsConfig = new DecimalDefaultsConfig();
+    decimalDefaultsConfig.defaultScale = String.valueOf(38);
+    decimalDefaultsConfig.defaultPrecision = String.valueOf(38);
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -79,6 +84,18 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder decimalDefaultsConfig(int scale, int precision) {
+    decimalDefaultsConfig = new DecimalDefaultsConfig();
+    decimalDefaultsConfig.defaultScale = String.valueOf(scale);
+    decimalDefaultsConfig.defaultPrecision = String.valueOf(precision);
+    return this;
+  }
+
+  public HiveMetadataProcessorBuilder decimalDefaultsConfig(DecimalDefaultsConfig decimalDefaultsConfig) {
+    this.decimalDefaultsConfig = decimalDefaultsConfig;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
         database,
@@ -88,7 +105,8 @@ public class HiveMetadataProcessorBuilder {
         tablePathTemplate,
         partitionPathTemplate,
         BaseHiveIT.getHiveConfigBean(),
-        timeDriver
+        timeDriver,
+        decimalDefaultsConfig
     );
   }
 }

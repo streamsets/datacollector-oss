@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,19 +36,12 @@ public class TestHiveMetastoreUtil {
 
   // Utility function to generate HiveTypeInfo from HiveType.
   public static HiveTypeInfo generatePrimitiveTypeInfo(HiveType type){
-    HiveTypeConfig config = new HiveTypeConfig();
-    config.valueType = type;
-    type.getSupport().createTypeInfo(config);
-    return type.getSupport().createTypeInfo(config);
+    return type.getSupport().createTypeInfo(type);
   }
 
   // Utility function to generate HiveTypeInfo from HiveType.
   public static HiveTypeInfo generateDecimalTypeInfo(int precision, int scale){
-    HiveTypeConfig config = new HiveTypeConfig();
-    config.valueType = HiveType.DECIMAL;
-    config.precision = precision;
-    config.scale = scale;
-    return HiveType.DECIMAL.getSupport().createTypeInfo(config);
+    return HiveType.DECIMAL.getSupport().createTypeInfo(HiveType.DECIMAL, scale, precision);
   }
 
   @Test
@@ -77,7 +69,7 @@ public class TestHiveMetastoreUtil {
 
     Map<String, HiveTypeInfo> actual = null;
     try {
-      actual = HiveMetastoreUtil.convertRecordToHMSType(record);
+      actual = HiveMetastoreUtil.convertRecordToHMSType(record, 38, 38);
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
     }
@@ -113,11 +105,11 @@ public class TestHiveMetastoreUtil {
     expected.put("char", generatePrimitiveTypeInfo(HiveType.STRING));
     expected.put("short", generatePrimitiveTypeInfo(HiveType.INT));
     expected.put("date", generatePrimitiveTypeInfo(HiveType.DATE));
-    expected.put("decimal", generatePrimitiveTypeInfo(HiveType.DECIMAL));
+    expected.put("decimal", generateDecimalTypeInfo(decimalVal.scale(), decimalVal.precision()));
 
     Map<String, HiveTypeInfo> actual = null;
     try {
-      actual = HiveMetastoreUtil.convertRecordToHMSType(record);
+      actual = HiveMetastoreUtil.convertRecordToHMSType(record, decimalVal.scale(), decimalVal.precision());
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
     }

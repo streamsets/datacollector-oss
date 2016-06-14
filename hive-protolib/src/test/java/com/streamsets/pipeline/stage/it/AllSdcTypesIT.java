@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.processor.hive.DecimalDefaultsConfig;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
@@ -38,6 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
@@ -72,7 +76,11 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
       {Field.create(Field.Type.DATE, new Date(116, 5, 13)), true, Types.DATE, new Date(116, 5, 13)},
       {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
-      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), true, Types.DECIMAL, BigDecimal.valueOf(1.5)},
+      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)),
+          true,
+          Types.DECIMAL,
+          new BigDecimal(BigInteger.valueOf(15), 1, new MathContext(2, RoundingMode.FLOOR))
+      },
       {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},
       {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, Types.BINARY, new byte [] {(byte)0x00}},
       {Field.create(Field.Type.MAP, Collections.emptyMap()), false, 0, null},
@@ -94,7 +102,10 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
 
   @Test
   public void testType() throws  Exception {
-    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+    DecimalDefaultsConfig decimalDefaultsConfig = new DecimalDefaultsConfig();
+    decimalDefaultsConfig.defaultScale = "${record:attributeOrDefault('scale', 2)}";
+    decimalDefaultsConfig.defaultPrecision = "${record:attributeOrDefault('precision', 2)}";
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(decimalDefaultsConfig)
       .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
       .build();
@@ -103,7 +114,8 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
     map.put("col", field);
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
-
+    record.getHeader().setAttribute("scale", "1");
+    //So scale - 1 , precision -1 (at last as scale is set to 1, precision is not set ( default is 2))
     try {
       processRecords(processor, hiveTarget, ImmutableList.of(record));
       if(!supported) {

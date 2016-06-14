@@ -148,6 +148,9 @@ public class HiveMetadataDProcessor extends DProcessor {
   )
   public String timeDriver;
 
+  @ConfigDefBean
+  public DecimalDefaultsConfig decimalDefaultsConfig;
+
   @Override
   protected Processor createProcessor() {
     return new HiveMetadataProcessor(
@@ -158,7 +161,8 @@ public class HiveMetadataDProcessor extends DProcessor {
         tablePathTemplate,
         partitionPathTemplate,
         hiveConfigBean,
-        timeDriver
+        timeDriver,
+        decimalDefaultsConfig
     );
   }
 

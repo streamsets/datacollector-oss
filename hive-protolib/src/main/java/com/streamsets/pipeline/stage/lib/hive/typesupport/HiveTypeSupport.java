@@ -120,14 +120,13 @@ public abstract class HiveTypeSupport {
    * @return {@link HiveTypeInfo}
    * @throws StageException
    */
-  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field)
+  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
       throws HiveStageCheckedException;
 
   /**
-   * Create a new {@link HiveTypeInfo} from the {@link HiveTypeConfig}
-   * @param hiveTypeConfig {@link HiveTypeConfig}
+   * Create a new {@link HiveTypeInfo}
    * @param <T> {@link HiveTypeInfo}
    * @return {@link HiveTypeInfo}
    */
-  public abstract <T extends HiveTypeInfo> T createTypeInfo(HiveTypeConfig hiveTypeConfig);
+  public abstract <T extends HiveTypeInfo> T createTypeInfo(HiveType hiveType, Object... auxillaryArgs);
 }

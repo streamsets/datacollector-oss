@@ -25,9 +25,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +39,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,9 +59,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Test
   public void testNewColumn() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .build();
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     List<Record> records = new LinkedList<>();
 
@@ -80,9 +84,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("tbl.id", Types.INTEGER),
-          new ImmutablePair("tbl.new_column", Types.VARCHAR),
-          new ImmutablePair("tbl.dt", Types.VARCHAR)
+            new ImmutablePair("tbl.id", Types.INTEGER),
+            new ImmutablePair("tbl.new_column", Types.VARCHAR),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -101,10 +105,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Test
   public void testNewColumnInTheMiddle() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .table("multiple")
-      .build();
+        .table("multiple")
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     List<Record> records = new LinkedList<>();
 
@@ -129,10 +133,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("multiple.id", Types.INTEGER),
-          new ImmutablePair("multiple.value", Types.VARCHAR),
-          new ImmutablePair("multiple.new_column", Types.VARCHAR),
-          new ImmutablePair("multiple.dt", Types.VARCHAR)
+            new ImmutablePair("multiple.id", Types.INTEGER),
+            new ImmutablePair("multiple.value", Types.VARCHAR),
+            new ImmutablePair("multiple.new_column", Types.VARCHAR),
+            new ImmutablePair("multiple.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -153,9 +157,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Test
   public void testRemovedColumn() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .build();
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     List<Record> records = new LinkedList<>();
 
@@ -178,9 +182,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("tbl.id", Types.INTEGER),
-          new ImmutablePair("tbl.removed", Types.VARCHAR),
-          new ImmutablePair("tbl.dt", Types.VARCHAR)
+            new ImmutablePair("tbl.id", Types.INTEGER),
+            new ImmutablePair("tbl.removed", Types.VARCHAR),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -199,9 +203,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Test
   public void testChangedColumnType() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .build();
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     List<Record> records = new LinkedList<>();
 
@@ -228,10 +232,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   @Test
   public void testChangedColumnTypeDecimal() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .table("decimal")
-      .build();
+        .table("decimal").decimalDefaultsConfig(1, 2)
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     List<Record> records = new LinkedList<>();
 
@@ -256,4 +260,34 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     }
   }
 
+
+  @Test
+  public void testDifferentColumnCase() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("ID", Field.create(Field.Type.INTEGER, 1));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+    processRecords(processor, hiveTarget, records);
+
+    assertQueryResult("select * from tbl order by id", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+            new ImmutablePair("tbl.id", Types.INTEGER),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(1, rs.getLong(1));
+        Assert.assertFalse("Unexpected number of rows", rs.next());
+      }
+    });
+  }
 }

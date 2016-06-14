@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage;
 
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 
 import java.util.LinkedList;
@@ -40,8 +39,7 @@ public class PartitionConfigBuilder {
   public PartitionConfigBuilder addPartition(String name, HiveType type, String valueEL) {
     PartitionConfig p = new PartitionConfig();
     p.name = name;
-    p.typeConfig = new HiveTypeConfig();
-    p.typeConfig.valueType = type;
+    p.valueType = type;
     p.valueEL = valueEL;
     partitions.add(p);
 

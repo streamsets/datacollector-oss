@@ -55,9 +55,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class HiveMetadataProcessor extends RecordProcessor {
@@ -69,6 +71,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String TABLE_PATH_TEMPLATE = "tablePathTemplate";
   private static final String PARTITION_PATH_TEMPLATE = "partitionPathTemplate";
   private static final String TIME_DRIVER = "timeDriver";
+  private static final String DEFAULT_SCALE = "defaultScale";
+  private static final String DEFAULT_PRECISION = "defaultPrecision";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
@@ -77,8 +81,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final String databaseEL;
   private final String tableEL;
   private final boolean externalTable;
-  private String internalWarehouseDir;
   private final String timeDriver;
+  private final DecimalDefaultsConfig decimalDefaultsConfig;
+
+  private String internalWarehouseDir;
+
 
   // Triplet of partition name, type and value expression obtained from configuration
   private List<PartitionConfig> partitionConfigList;
@@ -89,6 +96,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private String tablePathTemplate;
   private String partitionPathTemplate;
 
+
   private HMSCache cache;
 
   private String hdfsLane;
@@ -97,7 +105,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private HiveConfigBean hiveConfigBean;
   private ErrorRecordHandler errorRecordHandler;
   private HiveMetadataProcessorELEvals elEvals = new HiveMetadataProcessorELEvals();
-  ;
 
   private static class HiveMetadataProcessorELEvals {
     private ELEval dbNameELEval;
@@ -106,6 +113,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
     private ELEval tablePathTemplateELEval;
     private ELEval timeDriverElEval;
     private ELEval partitionPathTemplateELEval;
+    private ELEval defaultScaleEL;
+    private ELEval defaultPrecisionEL;
 
     public void init(Stage.Context context) {
       dbNameELEval = context.createELEval(HIVE_DB_NAME);
@@ -114,6 +123,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       tablePathTemplateELEval = context.createELEval(TABLE_PATH_TEMPLATE);
       partitionPathTemplateELEval = context.createELEval(PARTITION_PATH_TEMPLATE);
       timeDriverElEval = context.createELEval(TIME_DRIVER);
+      defaultScaleEL = context.createELEval(DEFAULT_SCALE);
+      defaultPrecisionEL = context.createELEval(DEFAULT_PRECISION);
     }
   }
 
@@ -125,7 +136,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String tablePathTemplate,
       String partitionPathTemplate,
       HiveConfigBean hiveConfig,
-      String timeDriver
+      String timeDriver,
+      DecimalDefaultsConfig decimalDefaultsConfig
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -137,6 +149,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       this.partitionPathTemplate = partitionPathTemplate;
     }
     this.timeDriver = timeDriver;
+    this.decimalDefaultsConfig = decimalDefaultsConfig;
   }
 
   @Override
@@ -182,9 +195,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
             partition.valueEL)
         );
       }
+      //No decimal support for partition
+      //This is partition name should be lower case.
       partitionTypeInfo.put(
-          partition.name,
-          partition.typeConfig.valueType.getSupport().createTypeInfo(partition.typeConfig)
+          partition.name.toLowerCase(),
+          partition.valueType.getSupport().createTypeInfo(partition.valueType)
       );
     }
 
@@ -238,6 +253,44 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
   }
 
+  private int getDefaultScale(ELVars variables) throws ELEvalException{
+    return elEvals.defaultScaleEL.eval(
+        variables,
+        decimalDefaultsConfig.defaultScale,
+        Integer.class
+    );
+  }
+
+  private int getDefaultPrecision(ELVars variables) throws ELEvalException{
+    return elEvals.defaultPrecisionEL.eval(
+        variables,
+        decimalDefaultsConfig.defaultPrecision,
+        Integer.class
+    );
+  }
+
+  private void changeRecordFieldToLowerCase(Record record) {
+    Field field = record.get();
+    Map<String, Field> newFieldMap = new LinkedHashMap<>();
+    for (Map.Entry<String, Field> fieldEntry : field.getValueAsMap().entrySet()) {
+      //User toLowercase on fieldName so as to have column/partition name lower case.
+      newFieldMap.put(fieldEntry.getKey().toLowerCase(), fieldEntry.getValue());
+    }
+    record.set(Field.create(newFieldMap));
+  }
+
+  private void validateScaleAndPrecision(int scale, int precision) throws HiveStageCheckedException{
+    if (scale > 38) {
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_08, scale, "scale");
+    }
+    if (precision > 38) {
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_08, precision, "precision");
+    }
+    if (scale > precision) {
+      throw new HiveStageCheckedException(Errors.HIVE_METADATA_09, scale, precision);
+    }
+  }
+
   @Override
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
     ELVars variables = getContext().createELVars();
@@ -248,6 +301,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
     String warehouseDir, partitionStr, avroSchema;
     LinkedHashMap<String, String> partitionValMap;
     boolean schemaChanged = false;
+
+    changeRecordFieldToLowerCase(record);
 
     partitionValMap = getPartitionValuesFromRecord(record);
     if (externalTable) {
@@ -272,8 +327,17 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // path from warehouse directory to table
       String targetPath = externalTable ? warehouseDir :
           HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
+
+      int defaultScale = getDefaultScale(variables);
+      int defaultPrecision = getDefaultPrecision(variables);
+      validateScaleAndPrecision(defaultScale, defaultPrecision);
+
       // Obtain the record structure from current record
-      LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(record);
+      LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(
+          record,
+          defaultScale,
+          defaultPrecision
+      );
       if (recordStructure.isEmpty())  // If record has no data to process, No-op
         return;
       TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo =
@@ -300,7 +364,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
         schemaChanged = true;
         avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
-        handleSchemaChange(record, dbName, tableName, recordStructure, targetPath,
+        handleSchemaChange(dbName, tableName, recordStructure, targetPath,
             avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
       } else {
         if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
@@ -319,7 +383,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       targetPath += partitionStr;
 
       if (diff != null) {
-        handleNewPartition(partitionValMap, pCache, record, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
+        handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
       }
 
       // Send record to HDFS target
@@ -390,7 +454,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   @VisibleForTesting
   Record generateSchemaChangeRecord(
-      Record record,
       String database,
       String tableName,
       LinkedHashMap<String, HiveTypeInfo> columnList,
@@ -415,7 +478,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   private void handleSchemaChange(
-      Record record,
       String dbName,
       String tableName,
       LinkedHashMap<String, HiveTypeInfo> recordStructure,
@@ -426,7 +488,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache)
       throws StageException {
 
-    Record r = generateSchemaChangeRecord(record, dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
+    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
     batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
     if (tableCache != null) {
@@ -513,7 +575,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
    */
   @VisibleForTesting
   Record generateNewPartitionRecord(
-      Record record,
       String database,
       String tableName,
       LinkedHashMap<String, String> partitionList,
@@ -533,7 +594,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private void handleNewPartition(
       LinkedHashMap<String, String> partitionValMap,
       PartitionInfoCacheSupport.PartitionInfo pCache,
-      Record record,
       String database,
       String tableName,
       String location,
@@ -542,7 +602,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       Set<LinkedHashMap<String, String>> diff
   ) throws StageException{
 
-    Record r = generateNewPartitionRecord(record, database, tableName, partitionValMap, location);
+    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
     batchMaker.addRecord(r, hmsLane);
     if (pCache != null) {
       pCache.updateState(diff);

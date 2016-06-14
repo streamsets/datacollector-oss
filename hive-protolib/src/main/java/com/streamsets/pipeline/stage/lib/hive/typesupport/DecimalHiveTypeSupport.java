@@ -35,6 +35,7 @@ import java.util.Map;
 public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   public static final String SCALE = "scale";
   public static final String PRECISION = "precision";
+  private static final int MAX_SCALE_PRECISION = 38;
 
   @Override
   protected Field generateExtraInfoFieldForMetadataRecord(HiveTypeInfo hiveTypeInfo) {
@@ -77,17 +78,37 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     return new DecimalTypeInfo(scale, precision);
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field) throws HiveStageCheckedException {
-    BigDecimal bigDecimal = field.getValueAsDecimal();
-    return new DecimalTypeInfo(bigDecimal.scale(), bigDecimal.precision());
+  private static int getDefaultScale(Object... auxillaryArgs) {
+    if (auxillaryArgs != null) {
+      return (int)auxillaryArgs[0];
+    }
+    return MAX_SCALE_PRECISION;
+  }
+
+  private static int getDefaultPrecision(Object... auxillaryArgs) {
+    if (auxillaryArgs != null) {
+      return (int)auxillaryArgs[1];
+    }
+    return MAX_SCALE_PRECISION;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public DecimalTypeInfo createTypeInfo(HiveTypeConfig typeConfig){
-    return new DecimalTypeInfo(typeConfig.scale, typeConfig.precision);
+  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
+      throws HiveStageCheckedException {
+    BigDecimal bigDecimal = field.getValueAsDecimal();
+    int scale = bigDecimal.scale();
+    int precision = bigDecimal.precision();
+    return new DecimalTypeInfo(
+        Math.max(scale, getDefaultScale(auxillaryArgs)),
+        Math.max(precision, getDefaultPrecision(auxillaryArgs))
+    );
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public DecimalTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs) {
+    return new DecimalTypeInfo(getDefaultScale(auxillaryArgs), getDefaultPrecision(auxillaryArgs));
   }
 
   public static class DecimalTypeInfo extends PrimitiveHiveTypeInfo {

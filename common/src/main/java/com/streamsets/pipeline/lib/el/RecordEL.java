@@ -100,6 +100,23 @@ public class RecordEL {
   }
 
   @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "attributeOrDefault",
+      description = "Returns the value of the attribute represented by 'attributeName' for the record in context or "
+          + "the default value if the attribute is not present or if the attribute is null")
+  public static Object getAttributeOrDefault(
+      @ElParam("attributeName") String attributeName, @ElParam("defaultValue") String defaultValue) {
+    Record record = getRecordInContext();
+    if (record != null) {
+      Object attributeValue = record.getHeader().getAttribute(attributeName);
+      if (attributeValue != null) {
+        return attributeValue;
+      }
+    }
+    return defaultValue;
+  }
+
+  @ElFunction(
     prefix = RECORD_EL_PREFIX,
     name = "exists",
     description = "Checks if the field represented by path 'fieldPath' exists in the record")

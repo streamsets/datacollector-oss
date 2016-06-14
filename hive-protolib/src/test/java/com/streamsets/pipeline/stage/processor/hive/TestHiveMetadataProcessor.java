@@ -147,7 +147,7 @@ public class TestHiveMetadataProcessor {
             String.class,
             String.class,
             UserGroupInformation.class
-    ));
+        ));
 
     // Do not create issues
     PowerMockito.suppress(
@@ -379,7 +379,6 @@ public class TestHiveMetadataProcessor {
     runner.runInit();
 
     Record record = processor.generateSchemaChangeRecord(
-        RecordCreator.create(),
         dbName,
         tableName,
         SAMPLE_RECORD1,
@@ -402,7 +401,6 @@ public class TestHiveMetadataProcessor {
     runner.runInit();
 
     Record record = processor.generateSchemaChangeRecord(
-        RecordCreator.create(),
         dbName,
         tableName,
         DECIMAL_RECORD1,
@@ -432,7 +430,6 @@ public class TestHiveMetadataProcessor {
 
     try {
       record = processor.generateNewPartitionRecord(
-          RecordCreator.create(),
           dbName,
           tableName,
           sampleValues,
@@ -538,6 +535,59 @@ public class TestHiveMetadataProcessor {
     Assert.assertEquals(record.getHeader().getAttribute(
         HiveMetadataProcessor.HDFS_HEADER_TARGET_DIRECTORY),
         targetDir);
+  }
+
+  @Test
+  public void testScaleAndPrecision() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(39, 39).build();
+    ProcessorRunner runner = getProcessRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "default database"));
+    map.put("decimal", Field.create(1.5));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(runner.getErrorRecords().size(), 1);
+    Record errorRecord = runner.getErrorRecords().get(0);
+
+    Assert.assertEquals(
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08.name(),
+        errorRecord.getHeader().getErrorCode()
+    );
+    runner.runDestroy();
+
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(37, 39).build();
+    runner = getProcessRunner(processor);
+    runner.runInit();
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(runner.getErrorRecords().size(), 1);
+    errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08.name(),
+        errorRecord.getHeader().getErrorCode()
+    );
+    runner.runDestroy();
+
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(5, 2).build();
+    runner = getProcessRunner(processor);
+    runner.runInit();
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(runner.getErrorRecords().size(), 1);
+    errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(
+        com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_09.name(),
+        errorRecord.getHeader().getErrorCode()
+    );
+    runner.runDestroy();
+
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(1, 1).build();
+    runner = getProcessRunner(processor);
+    runner.runInit();
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(runner.getErrorRecords().size(), 0);
+    runner.runDestroy();
   }
 
   @Test

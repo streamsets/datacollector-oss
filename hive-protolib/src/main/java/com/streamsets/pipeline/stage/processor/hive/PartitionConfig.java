@@ -19,15 +19,11 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeConfig;
 
 public final class PartitionConfig {
 
@@ -46,8 +42,16 @@ public final class PartitionConfig {
   )
   public String name;
 
-  @ConfigDefBean
-  public HiveTypeConfig typeConfig;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="STRING",
+      label = "Partition Value Type",
+      description="Partition column's value type",
+      displayPosition = 20
+  )
+  @ValueChooserModel(PartitionColumnTypeChooserValues.class)
+  public HiveType valueType = HiveType.STRING;
 
   @ConfigDef(
       required = true,

@@ -248,7 +248,6 @@ public final class HiveMetastoreUtil {
       boolean isSecondFieldHiveType
   ) throws HiveStageCheckedException {
     List<Field> columnList = new LinkedList<>();
-
     for(Map.Entry<String,T> pair:  original.entrySet()) {
       Map<String, Field> entry = new LinkedHashMap<>();
       entry.put(innerPairFirstFieldName, Field.create(pair.getKey()));
@@ -274,9 +273,9 @@ public final class HiveMetastoreUtil {
    */
   public static String getQualifiedTableName(String dbName, String tableName) {
     return (dbName == null || dbName.isEmpty())?
-      escapeHiveObjectName(tableName) :
-      JOINER.join(escapeHiveObjectName(dbName), escapeHiveObjectName(tableName))
-      ;
+        escapeHiveObjectName(tableName) :
+        JOINER.join(escapeHiveObjectName(dbName), escapeHiveObjectName(tableName))
+        ;
   }
 
   /**
@@ -541,11 +540,16 @@ public final class HiveMetastoreUtil {
    * Since Avro does not support char, short, and date types, it needs to convert the type to corresponding
    * supported types and change the value in record.
    * @param record incoming Record
+   * @param defaultScale default scale for decimal fields
+   * @param defaultPrecision default precision for decimal fields.
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
    * @throws HiveStageCheckedException
    */
-  public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(Record record)
-      throws HiveStageCheckedException {
+  public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(
+      Record record,
+      int defaultScale,
+      int defaultPrecision
+  ) throws HiveStageCheckedException {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
@@ -565,10 +569,14 @@ public final class HiveMetastoreUtil {
       // Update the Field type and value in Record
       pair.setValue(currField);
       HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
-      columns.put(
-          pair.getKey(),
-          hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField)
-      );
+      HiveTypeInfo hiveTypeInfo;
+      if (hiveType == HiveType.DECIMAL) {
+        hiveTypeInfo =
+            hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, defaultScale, defaultPrecision);
+      } else {
+        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField);
+      }
+      columns.put(pair.getKey(), hiveTypeInfo);
     }
     return columns;
   }
