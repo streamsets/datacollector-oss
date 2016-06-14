@@ -1,0 +1,139 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.it;
+
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
+import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.PartitionConfigBuilder;
+import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Run all various data types that are available for partitioning column.
+ */
+@RunWith(Parameterized.class)
+public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
+
+  private static Logger LOG = LoggerFactory.getLogger(AllPartitionTypesIT.class);
+
+  private static List<PartitionConfig> partition(HiveType type) {
+    return new PartitionConfigBuilder().addPartition("part", type, "${record:value('/col')}").build();
+  }
+
+  @Parameterized.Parameters(name = "type({0})")
+  public static Collection<Object[]> data() throws Exception {
+    /* TODO: Need to add verification for unsupported types once SDC-3205 gets resolved
+      BOOLEAN(new PrimitiveHiveTypeSupport()),
+      DATE(new PrimitiveHiveTypeSupport()),
+      FLOAT(new PrimitiveHiveTypeSupport()),
+      DOUBLE(new PrimitiveHiveTypeSupport()),
+      DECIMAL(new DecimalHiveTypeSupport()),
+      BINARY(new PrimitiveHiveTypeSupport()),
+     */
+    return Arrays.asList(new Object[][]{
+      {Field.create(Field.Type.INTEGER, 1), partition(HiveType.INT), true, Types.INTEGER, 1},
+      {Field.create(Field.Type.LONG, 1), partition(HiveType.BIGINT), true, Types.BIGINT, 1L},
+      {Field.create(Field.Type.STRING, "value"), partition(HiveType.STRING), true, Types.VARCHAR, "value"},
+    });
+  }
+  Field field;
+  List<PartitionConfig> partition;
+  boolean supported;
+  int hiveType;
+  Object hiveValue;
+  public AllPartitionTypesIT(Field field, List<PartitionConfig> partition, boolean supported, int hiveType, Object hiveValue) {
+    this.field = field;
+    this.partition = partition;
+    this.supported = supported;
+    this.hiveType = hiveType;
+    this.hiveValue = hiveValue;
+  }
+
+  @Test
+  public void testPartitionType() throws  Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .partitions(partition)
+      .build();
+    final HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+      .build();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("col", field);
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    try {
+      processRecords(processor, hiveTarget, ImmutableList.of(record));
+      if(!supported) {
+        Assert.fail("Type is not supported, but yet no exception was thrown");
+      }
+    } catch(StageException se) {
+      if(supported) {
+        LOG.error("Processing exception", se);
+        Assert.fail("Processing testing record unexpectedly failed: " + se.getMessage());
+        throw se;
+      } else {
+        Assert.assertEquals(Errors.HIVE_19, se.getErrorCode());
+        // No additional verification necessary
+        return;
+      }
+    }
+
+    assertTableExists("default.tbl");
+    assertQueryResult("select * from tbl", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+          new ImmutablePair("tbl.col", hiveType),
+          new ImmutablePair("tbl.part", hiveType)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(hiveValue, rs.getObject(1));
+        Assert.assertEquals(hiveValue, rs.getObject(2));
+        Assert.assertFalse("Table tbl contains more then one row", rs.next());
+      }
+    });
+  }
+}
