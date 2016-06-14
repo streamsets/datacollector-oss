@@ -76,8 +76,8 @@ public class TypeInfoCacheSupport
         } else if (!state.get(columnName).equals(columnTypeInfo)) {
           throw new HiveStageCheckedException(
               Errors.HIVE_21,
-              state.get(columnName).getHiveType().name(),
-              columnTypeInfo.getHiveType().name()
+              state.get(columnName).toString(),
+              columnTypeInfo.toString()
           );
         }
       }

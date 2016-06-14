@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.LinkedHashMap;
@@ -168,6 +169,37 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       Assert.fail("Column type change haven't resulted in exception");
     } catch (StageException e) {
       Assert.assertEquals(Errors.HIVE_21, e.getErrorCode());
+    }
+  }
+
+  @Test
+  public void testChangedColumnTypeDecimal() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .table("decimal")
+      .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+      .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("dec", Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(2.2)));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("dec", Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(2.22)));
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    try {
+      processRecords(processor, hiveTarget, records);
+      Assert.fail("Column type change haven't resulted in exception");
+    } catch (StageException e) {
+      Assert.assertEquals(Errors.HIVE_21, e.getErrorCode());
+      Assert.assertTrue(e.getMessage().contains("Expected: DECIMAL(2,1), Actual: DECIMAL(3,2)"));
     }
   }
 
