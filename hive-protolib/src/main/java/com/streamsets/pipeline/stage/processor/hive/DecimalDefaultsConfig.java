@@ -34,7 +34,7 @@ public class DecimalDefaultsConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public String defaultScale;
+  public String defaultScale = "38";
 
   @ConfigDef(
       required = true,
@@ -47,5 +47,5 @@ public class DecimalDefaultsConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public String defaultPrecision;
+  public String defaultPrecision = "38";
 }

@@ -53,7 +53,7 @@ public class HiveConfigBean {
       description = "JDBC URL used to connect to Hive." +
           "Use a valid JDBC URL format, such as: jdbc:hive2://<host>:<port>/<dbname>.",
       defaultValue = "jdbc:hive2://<host>:<port>/" +
-          "${record:value('"+ HiveMetastoreUtil.SEP + HiveMetastoreUtil.DATABASE_FIELD+"')}",
+          "${record:attribute('" + HiveMetastoreUtil.DATABASE_FIELD + "')}",
       displayPosition= 10,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class},

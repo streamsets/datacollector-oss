@@ -29,6 +29,9 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -553,6 +556,9 @@ public final class HiveMetastoreUtil {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
+      if (pair.getKey().isEmpty()) {
+        throw new HiveStageCheckedException(Errors.HIVE_01, "Field names are empty");
+      }
       Field currField = pair.getValue();
       switch(currField.getType()) {
         case SHORT:
@@ -678,5 +684,41 @@ public final class HiveMetastoreUtil {
       throw new StageException(Errors.HIVE_18, path, e.getMessage());
     }
     return path;
+  }
+
+  /**
+   * Gets cached {@link com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport.HMSCacheInfo}
+   * from cache.<br>
+   * First call getIfPresent to obtain data from local cache.If not exists, load from HMS
+   *
+   * @param hmsCache {@link HMSCache}
+   * @param cacheType Type of cache to load.
+   * @param hiveConfigBean {@link HiveConfigBean}
+   * @param qualifiedName qualified table name.
+   * @param <T> {@link com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport.HMSCacheInfo}
+   * @return Cache object if successfully loaded. Null if no data is found in cache.
+   * @throws StageException
+   */
+  @SuppressWarnings("unchecked")
+  public static <T extends HMSCacheSupport.HMSCacheInfo> T getCacheInfo(
+      HMSCache hmsCache,
+      HMSCacheType cacheType,
+      HiveConfigBean hiveConfigBean,
+      String qualifiedName,
+      Record record
+  ) throws StageException {
+    HMSCacheSupport.HMSCacheInfo cacheInfo = hmsCache.getIfPresent(  // Or better to keep this in this class?
+        cacheType,
+        qualifiedName);
+    if (cacheType != HMSCacheType.AVRO_SCHEMA_INFO && cacheInfo == null) {
+      // Try loading by executing HMS query
+      cacheInfo = hmsCache.getOrLoad(
+          cacheType,
+          resolveJDBCUrl(hiveConfigBean.getElEval(), hiveConfigBean.hiveJDBCUrl, record),
+          qualifiedName,
+          hiveConfigBean.getUgi()
+      );
+    }
+    return (T)cacheInfo;
   }
 }

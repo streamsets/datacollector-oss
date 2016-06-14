@@ -42,6 +42,7 @@ import java.util.List;
     description = "Generates Hive metadata and write information for HDFS",
     icon="metadata.png",
     outputStreams = HiveMetadataOutputStreams.class,
+    privateClassLoader = true,
     onlineHelpRefUrl = "index.html#Processors/HiveMetadata.html#task_hpg_pft_zv"
 )
 

@@ -49,6 +49,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.api.mockito.PowerMockito;
@@ -64,6 +65,7 @@ import java.util.*;
 @PrepareForTest({
     HiveConfigBean.class,
     HiveMetadataProcessor.class,
+    HiveMetastoreUtil.class,
     BaseHiveIT.class,
     HMSCache.class
 })
@@ -128,16 +130,23 @@ public class TestHiveMetadataProcessor {
   );
 
   @Before
-  public void setup(){
+  public void setup() throws Exception {
     // do not resolve JDBC URL
-    PowerMockito.suppress(
+    PowerMockito.spy(HiveMetastoreUtil.class);
+    PowerMockito.replace(
         MemberMatcher.method(
             HiveMetastoreUtil.class,
             "resolveJDBCUrl",
             ELEval.class,
             String.class,
-            Record.class)
-    );
+            Record.class
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return "";
+      }
+    });
     // do not run Hive queries
     PowerMockito.suppress(
         MemberMatcher.method(

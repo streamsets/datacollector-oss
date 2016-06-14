@@ -84,9 +84,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final String timeDriver;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
 
+  private HiveConfigBean hiveConfigBean;
   private String internalWarehouseDir;
-
-
   // Triplet of partition name, type and value expression obtained from configuration
   private List<PartitionConfig> partitionConfigList;
   // List of partition name and value type.
@@ -96,13 +95,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private String tablePathTemplate;
   private String partitionPathTemplate;
 
-
-  private HMSCache cache;
-
   private String hdfsLane;
   private String hmsLane;
-
-  private HiveConfigBean hiveConfigBean;
+  private HMSCache cache;
   private ErrorRecordHandler errorRecordHandler;
   private HiveMetadataProcessorELEvals elEvals = new HiveMetadataProcessorELEvals();
 
@@ -273,7 +268,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     Field field = record.get();
     Map<String, Field> newFieldMap = new LinkedHashMap<>();
     for (Map.Entry<String, Field> fieldEntry : field.getValueAsMap().entrySet()) {
-      //User toLowercase on fieldName so as to have column/partition name lower case.
+      //Use toLowercase on fieldName so as to have column/partition name lower case.
       newFieldMap.put(fieldEntry.getKey().toLowerCase(), fieldEntry.getValue());
     }
     record.set(Field.create(newFieldMap));
@@ -338,13 +333,19 @@ public class HiveMetadataProcessor extends RecordProcessor {
           defaultScale,
           defaultPrecision
       );
-      if (recordStructure.isEmpty())  // If record has no data to process, No-op
+
+      if (recordStructure.isEmpty()) {  // If record has no data to process, No-op
         return;
-      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo =
-          (TBLPropertiesInfoCacheSupport.TBLPropertiesInfo) getCacheInfo(
-              HMSCacheType.TBLPROPERTIES_INFO,
-              qualifiedName
-          );
+      }
+
+      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
+          cache,
+          HMSCacheType.TBLPROPERTIES_INFO,
+          hiveConfigBean,
+          qualifiedName,
+          record
+      );
+
       if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
         throw new HiveStageCheckedException(
             com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
@@ -354,11 +355,21 @@ public class HiveMetadataProcessor extends RecordProcessor {
         );
       }
 
-      TypeInfoCacheSupport.TypeInfo tableCache
-          = (TypeInfoCacheSupport.TypeInfo) getCacheInfo(HMSCacheType.TYPE_INFO, qualifiedName);
+      TypeInfoCacheSupport.TypeInfo tableCache = HiveMetastoreUtil.getCacheInfo(
+          cache,
+          HMSCacheType.TYPE_INFO,
+          hiveConfigBean,
+          qualifiedName,
+          record
+      );
 
-      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache
-          = (AvroSchemaInfoCacheSupport.AvroSchemaInfo) getCacheInfo(HMSCacheType.AVRO_SCHEMA_INFO, qualifiedName);
+      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = HiveMetastoreUtil.getCacheInfo(
+          cache,
+          HMSCacheType.AVRO_SCHEMA_INFO,
+          hiveConfigBean,
+          qualifiedName,
+          record
+      );
 
       // Generate schema only if there is no table exist, or schema is changed.
       if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
@@ -375,8 +386,14 @@ public class HiveMetadataProcessor extends RecordProcessor {
       }
 
       // Send new partition metadata if new partition is detected.
-      PartitionInfoCacheSupport.PartitionInfo pCache
-          = (PartitionInfoCacheSupport.PartitionInfo) getCacheInfo(HMSCacheType.PARTITION_VALUE_INFO, qualifiedName);
+      PartitionInfoCacheSupport.PartitionInfo pCache = HiveMetastoreUtil.getCacheInfo(
+          cache,
+          HMSCacheType.PARTITION_VALUE_INFO,
+          hiveConfigBean,
+          qualifiedName,
+          record
+      );
+
       Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
 
       // Append partition path to target path as all paths from now should be with the partition info
@@ -409,33 +426,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
     if (warehouseDir.isEmpty()) {
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, warehouseDir);
     }
-  }
-  /**
-   * Get cached data from cache. First call getIfPresent to obtain data from local cache.
-   * If not exist, load from HMS
-   * @param cacheType Type of caache to load.
-   * @param qualifiedName  Qualified name. E.g. "default.sampleTable"
-   * @return Cache object if successfully loaded. Null if no data is found in cache.
-   * @throws StageException
-   */
-  private HMSCacheSupport.HMSCacheInfo getCacheInfo(HMSCacheType cacheType, String qualifiedName)
-      throws StageException {
-    HMSCacheSupport.HMSCacheInfo cacheInfo;
-
-    cacheInfo = cache.getIfPresent(  // Or better to keep this in this class?
-        cacheType,
-        qualifiedName);
-
-    if (cacheType != HMSCacheType.AVRO_SCHEMA_INFO && cacheInfo == null) {
-      // Try loading by executing HMS query
-      cacheInfo = cache.getOrLoad(
-          cacheType,
-          hiveConfigBean.hiveJDBCUrl,
-          qualifiedName,
-          hiveConfigBean.getUgi()
-      );
-    }
-    return cacheInfo;
   }
 
   // ------------ Handle New Schema ------------------------//
