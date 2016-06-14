@@ -56,7 +56,7 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   @Parameterized.Parameters(name = "db({0}),storedAsAvro({1}),external({2})")
   public static Collection<Object[]> data() {
     return ParametrizedUtils.crossProduct(
-        new String[] {"default", "custom"},
+        new String[] {"", "default", "custom"},
         new Boolean[] {true, false},
         new Boolean[] {true, false}
     );
@@ -75,7 +75,6 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   @Test
   public void testColdStart() throws  Exception {
     LOG.info(Utils.format("Starting cold start with database({}), storedAsAvro({}) and external({})", database, storedAsAvro, external));
-    executeUpdate(Utils.format("create database if not exists {}", database));
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database(database)
@@ -92,6 +91,15 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
     map.put("name", Field.create(Field.Type.STRING, "StreamSets"));
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
+
+    // Empty string as a database was already configured, so we replace it with
+    // string "default", so that we don't have to do that for every single method
+    // call from now on.
+    if(database.isEmpty()) {
+      database = "default";
+    }
+
+    executeUpdate(Utils.format("create database if not exists {}", database));
 
     processRecords(processor, hiveTarget, ImmutableList.of(record));
 
