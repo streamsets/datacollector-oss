@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +17,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.solr;
+package com.streamsets.pipeline.solr.api;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  SOLR_00("Solr URI cannot be empty"),
-  SOLR_01("ZooKeeper Connection String cannot be empty"),
-  SOLR_02("Fields value cannot be empty"),
-  SOLR_03("Could not connect to the Solr instance: {}"),
-  SOLR_04("Could not write record '{}': {}"),
-  SOLR_05("Could not index '{}' records: {}"),
-  SOLR_06("Record is missing mapped field {}"),
-  ;
-  private final String msg;
+public interface SdcSolrTarget {
 
-  Errors(String msg) {
-    this.msg = msg;
-  }
+  public void init() throws Exception;
 
-  @Override
-  public String getCode() {
-    return name();
-  }
+  public void destroy() throws IOException;
 
-  @Override
-  public String getMessage() {
-    return msg;
-  }
+  public void add(Map<String, Object> fieldMap) throws StageException;
+
+  public void add(List<Map<String, Object>> fieldMaps) throws StageException;
+
+  public void commit() throws StageException;
+
+  public void rollback() throws StageException;
+
+  public String getVersion();
+
 }
