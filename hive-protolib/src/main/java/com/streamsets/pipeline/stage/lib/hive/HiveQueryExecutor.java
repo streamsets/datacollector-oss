@@ -53,8 +53,8 @@ public final class HiveQueryExecutor {
   private static final String ADD_PARTITION = "ADD PARTITION";
   private static final String SHOW_PARTITIONS = "SHOW PARTITIONS %s";
   private static final String SHOW_TBLPROPERTIES = "SHOW TBLPROPERTIES %s";
-  private static final String PARTITION_FIELD_EQUALS_NON_QUOTES_VAL = "%s=%s";
-  private static final String PARTITION_FIELD_EQUALS_QUOTES_VAL = "%s='%s'";
+  private static final String PARTITION_FIELD_EQUALS_NON_QUOTES_VAL = "`%s`=%s";
+  private static final String PARTITION_FIELD_EQUALS_QUOTES_VAL = "`%s`='%s'";
   private static final String TBL_PROPERTIES = "TBLPROPERTIES";
   private static final String AVRO_SCHEMA_URL = "avro.schema.url";
   private static final String STORED_AS_AVRO = "STORED AS AVRO";
