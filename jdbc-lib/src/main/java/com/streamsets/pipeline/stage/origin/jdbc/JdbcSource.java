@@ -70,6 +70,7 @@ public class JdbcSource extends BaseSource {
   private static final String TXN_MAX_SIZE = "txnMaxSize";
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";
+  private static final String JDBC_NS_HEADER_PREFIX = "jdbcNsHeaderPrefix";
 
   private final boolean isIncrementalMode;
   private final String query;
@@ -82,6 +83,9 @@ public class JdbcSource extends BaseSource {
   private final int maxBatchSize;
   private final int maxClobSize;
   private final HikariPoolConfigBean hikariConfigBean;
+  private final boolean createJDBCNsHeaders;
+  private final String jdbcNsHeaderPrefix;
+
 
   private ErrorRecordHandler errorRecordHandler;
 
@@ -104,7 +108,9 @@ public class JdbcSource extends BaseSource {
       JdbcRecordType jdbcRecordType,
       int maxBatchSize,
       int maxClobSize,
-      HikariPoolConfigBean hikariConfigBean
+      HikariPoolConfigBean hikariConfigBean,
+      boolean createJDBCNsHeaders,
+      String jdbcNsHeaderPrefix
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.query = query;
@@ -118,6 +124,8 @@ public class JdbcSource extends BaseSource {
     this.maxBatchSize = maxBatchSize;
     this.maxClobSize = maxClobSize;
     this.hikariConfigBean = hikariConfigBean;
+    this.createJDBCNsHeaders = createJDBCNsHeaders;
+    this.jdbcNsHeaderPrefix = jdbcNsHeaderPrefix;
   }
 
   @Override
@@ -217,6 +225,9 @@ public class JdbcSource extends BaseSource {
       } catch (StageException e) {
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
       }
+    }
+    if (createJDBCNsHeaders && !jdbcNsHeaderPrefix.endsWith(".")) {
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), JDBC_NS_HEADER_PREFIX, Errors.JDBC_15));
     }
     return issues;
   }
@@ -408,7 +419,6 @@ public class JdbcSource extends BaseSource {
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>(numColumns);
-
     // Process row
     for (int i = 1; i <= numColumns; i++) {
       Object value = resultSet.getObject(i);
@@ -419,6 +429,7 @@ public class JdbcSource extends BaseSource {
           value = getClobString(clobValue);
         }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
+
       } catch (SQLException e) {
         errorRecordHandler.onError(Errors.JDBC_13, e.getMessage(), e);
       } catch (IOException e) {
@@ -447,6 +458,12 @@ public class JdbcSource extends BaseSource {
         row.add(Field.create(cell));
       }
       record.set(Field.create(row));
+    }
+    if (createJDBCNsHeaders) {
+      Map<String, String> extraColumnInfos = JdbcUtil.getColumnSpecificHeadersIfNeeded(md, jdbcNsHeaderPrefix);
+      for (Map.Entry<String, String> extraColumnInfo : extraColumnInfos.entrySet()) {
+        record.getHeader().setAttribute(extraColumnInfo.getKey(), extraColumnInfo.getValue());
+      }
     }
     return record;
   }

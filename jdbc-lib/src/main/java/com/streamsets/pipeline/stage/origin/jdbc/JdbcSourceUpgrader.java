@@ -46,6 +46,8 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         // fall through
       case 5:
         upgradeV5toV6(configs);
+      case 6:
+        upgradeV6toV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -73,4 +75,10 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
   private void upgradeV5toV6(List<Config> configs) {
     upgradeToConfigBeanV1(configs);
   }
+
+  private void upgradeV6toV7(List<Config> configs) {
+    configs.add(new Config("createJDBCNsHeaders", false));
+    configs.add(new Config("jdbcNsHeaderPrefix", "jdbc."));
+  }
+
 }

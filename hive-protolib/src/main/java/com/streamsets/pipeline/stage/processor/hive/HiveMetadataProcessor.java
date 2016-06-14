@@ -55,7 +55,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -71,8 +70,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String TABLE_PATH_TEMPLATE = "tablePathTemplate";
   private static final String PARTITION_PATH_TEMPLATE = "partitionPathTemplate";
   private static final String TIME_DRIVER = "timeDriver";
-  private static final String DEFAULT_SCALE = "defaultScale";
-  private static final String DEFAULT_PRECISION = "defaultPrecision";
+  private static final String SCALE_EXPRESSION = "scaleExpression";
+  private static final String PRECISION_EXPRESSION = "precisionExpression";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
@@ -108,8 +107,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
     private ELEval tablePathTemplateELEval;
     private ELEval timeDriverElEval;
     private ELEval partitionPathTemplateELEval;
-    private ELEval defaultScaleEL;
-    private ELEval defaultPrecisionEL;
+    private ELEval scaleEL;
+    private ELEval precisionEL;
 
     public void init(Stage.Context context) {
       dbNameELEval = context.createELEval(HIVE_DB_NAME);
@@ -118,8 +117,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       tablePathTemplateELEval = context.createELEval(TABLE_PATH_TEMPLATE);
       partitionPathTemplateELEval = context.createELEval(PARTITION_PATH_TEMPLATE);
       timeDriverElEval = context.createELEval(TIME_DRIVER);
-      defaultScaleEL = context.createELEval(DEFAULT_SCALE);
-      defaultPrecisionEL = context.createELEval(DEFAULT_PRECISION);
+      scaleEL = context.createELEval(SCALE_EXPRESSION);
+      precisionEL = context.createELEval(PRECISION_EXPRESSION);
     }
   }
 
@@ -248,22 +247,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
   }
 
-  private int getDefaultScale(ELVars variables) throws ELEvalException{
-    return elEvals.defaultScaleEL.eval(
-        variables,
-        decimalDefaultsConfig.defaultScale,
-        Integer.class
-    );
-  }
-
-  private int getDefaultPrecision(ELVars variables) throws ELEvalException{
-    return elEvals.defaultPrecisionEL.eval(
-        variables,
-        decimalDefaultsConfig.defaultPrecision,
-        Integer.class
-    );
-  }
-
   private void changeRecordFieldToLowerCase(Record record) {
     Field field = record.get();
     Map<String, Field> newFieldMap = new LinkedHashMap<>();
@@ -272,18 +255,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
       newFieldMap.put(fieldEntry.getKey().toLowerCase(), fieldEntry.getValue());
     }
     record.set(Field.create(newFieldMap));
-  }
-
-  private void validateScaleAndPrecision(int scale, int precision) throws HiveStageCheckedException{
-    if (scale > 38) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_08, scale, "scale");
-    }
-    if (precision > 38) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_08, precision, "precision");
-    }
-    if (scale > precision) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_09, scale, precision);
-    }
   }
 
   @Override
@@ -323,15 +294,14 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String targetPath = externalTable ? warehouseDir :
           HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
 
-      int defaultScale = getDefaultScale(variables);
-      int defaultPrecision = getDefaultPrecision(variables);
-      validateScaleAndPrecision(defaultScale, defaultPrecision);
-
       // Obtain the record structure from current record
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(
           record,
-          defaultScale,
-          defaultPrecision
+          elEvals.scaleEL,
+          elEvals.precisionEL,
+          decimalDefaultsConfig.scaleExpression,
+          decimalDefaultsConfig.precisionExpression,
+          variables
       );
 
       if (recordStructure.isEmpty()) {  // If record has no data to process, No-op

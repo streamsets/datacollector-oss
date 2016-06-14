@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -160,6 +160,31 @@ public class JdbcDSource extends DSource {
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Create JDBC Namespace Headers",
+      description = "Specifies whether to populate jdbc column" +
+          " specific information in the record headers under jdbc namespace",
+      defaultValue = "false",
+      displayPosition = 200,
+      group = "ADVANCED")
+  public boolean createJDBCNsHeaders = false;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "JDBC Header Prefix",
+      description = "This prefix is used as a namespace to populate jdbc column specific information in headers." +
+          "For Ex: If this is a decimal column we will specify jdbc.${columnName}.scale and jdbc.${columnName}.precision",
+      defaultValue = "jdbc.",
+      displayPosition = 200,
+      group = "ADVANCED",
+      dependsOn = "createJDBCNsHeaders",
+      triggeredByValue = "true"
+  )
+  public String jdbcNsHeaderPrefix = "jdbc.";
+
   @Override
   protected Source createSource() {
     return new JdbcSource(
@@ -173,7 +198,9 @@ public class JdbcDSource extends DSource {
         jdbcRecordType,
         maxBatchSize,
         maxClobSize,
-        hikariConfigBean
+        hikariConfigBean,
+        createJDBCNsHeaders,
+        jdbcNsHeaderPrefix
       );
   }
 }

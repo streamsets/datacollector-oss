@@ -33,6 +33,7 @@ import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -82,6 +83,10 @@ public class TestJdbcSource {
           "CREATE TABLE IF NOT EXISTS TEST.TEST_CLOB " +
               "(p_id INT NOT NULL, clob_col CLOB, UNIQUE(p_id));"
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TEST_JDBC_NS_HEADERS " +
+              "(p_id INT NOT NULL, dec DECIMAL(2, 1));"
+      );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
@@ -91,7 +96,7 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_CLOB VALUES  (1, 'short string for clob')");
       statement.addBatch("INSERT INTO TEST.TEST_CLOB VALUES  (2, 'long string for clob" +
           RandomStringUtils.randomAlphanumeric(CLOB_SIZE) + "')");
-
+      statement.addBatch("INSERT INTO TEST.TEST_JDBC_NS_HEADERS VALUES  (1, 1.5)");
       statement.executeBatch();
     }
   }
@@ -103,6 +108,8 @@ public class TestJdbcSource {
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_ARRAY;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_CLOB;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_JDBC_NS_HEADERS;");
+
     }
 
     // Last open connection terminates H2
@@ -131,7 +138,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -186,7 +195,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -253,7 +264,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean("some bad connection string", username, password)
+        createConfigBean("some bad connection string", username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -278,7 +291,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -303,7 +318,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -331,7 +348,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -356,7 +375,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -381,7 +402,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -417,7 +440,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -458,7 +483,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -502,7 +529,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -528,7 +557,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -553,7 +584,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -579,7 +612,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -615,7 +650,9 @@ public class TestJdbcSource {
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE,
         CLOB_SIZE,
-        createConfigBean(h2ConnectionString, username, password)
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        ""
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -640,6 +677,48 @@ public class TestJdbcSource {
       // Second record is longer than CLOB_SIZE, so it must be truncated.
       assertEquals(CLOB_SIZE, parsedRecords.get(1).get("/CLOB_COL").getValueAsString().length());
       assertTrue(parsedRecords.get(1).get("/CLOB_COL").getValueAsString().startsWith("long string for clob"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+  @Test
+  public void testJDBCNsHeaders() throws Exception{
+    String queryDecimal = "SELECT * from TEST.TEST_JDBC_NS_HEADERS T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+    JdbcSource origin = new JdbcSource(
+        true,
+        queryDecimal,
+        initialOffset,
+        "P_ID",
+        queryInterval,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE,
+        createConfigBean(h2ConnectionString, username, password),
+        true,
+        "jdbc."
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertEquals("1", output.getNewOffset());
+
+      Record parsedRecord = parsedRecords.get(0);
+      assertEquals(new BigDecimal(1.5), parsedRecord.get("/DEC").getValueAsDecimal());
+      assertEquals("1", parsedRecord.getHeader().getAttribute("jdbc.DEC.scale"));
+      assertEquals("2", parsedRecord.getHeader().getAttribute("jdbc.DEC.precision"));
     } finally {
       runner.runDestroy();
     }

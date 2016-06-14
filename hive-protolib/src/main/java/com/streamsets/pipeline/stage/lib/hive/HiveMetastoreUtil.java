@@ -538,21 +538,71 @@ public final class HiveMetastoreUtil {
     return Field.create(metadata);
   }
 
+
+
+  public static int resolveScaleExpression(
+      ELEval elEval,
+      ELVars variables,
+      String defaultScaleEL,
+      String fieldPath
+  ) throws ELEvalException{
+    if (elEval != null) {
+      FieldPathEL.setFieldInContext(variables, fieldPath);
+      return elEval.eval(
+          variables,
+          defaultScaleEL,
+          Integer.class
+      );
+    }
+    return Integer.parseInt(defaultScaleEL);
+  }
+
+  public static int resolvePrecisionExpression(
+      ELEval elEval,
+      ELVars variables,
+      String defaultPrecisionEL,
+      String fieldPath
+  ) throws ELEvalException{
+    if (elEval != null) {
+      FieldPathEL.setFieldInContext(variables, fieldPath);
+      return elEval.eval(
+          variables,
+          defaultPrecisionEL,
+          Integer.class
+      );
+    }
+    return Integer.parseInt(defaultPrecisionEL);
+  }
+
+  private static void validateScaleAndPrecision(int scale, int precision) throws HiveStageCheckedException{
+    if (scale > 38) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, "scale");
+    }
+    if (precision > 38) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, precision, "precision");
+    }
+    if (scale > precision) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_09, scale, precision);
+    }
+  }
+
+
   /**
    * Convert a Record to LinkedHashMap. This is for comparing the structure of incoming Record with cache.
    * Since Avro does not support char, short, and date types, it needs to convert the type to corresponding
    * supported types and change the value in record.
    * @param record incoming Record
-   * @param defaultScale default scale for decimal fields
-   * @param defaultPrecision default precision for decimal fields.
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
    * @throws HiveStageCheckedException
    */
   public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(
       Record record,
-      int defaultScale,
-      int defaultPrecision
-  ) throws HiveStageCheckedException {
+      ELEval scaleEL,
+      ELEval precisionEL,
+      String scaleExpression,
+      String precisionExpression,
+      ELVars variables
+  ) throws HiveStageCheckedException, ELEvalException {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
@@ -577,6 +627,9 @@ public final class HiveMetastoreUtil {
       HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
       HiveTypeInfo hiveTypeInfo;
       if (hiveType == HiveType.DECIMAL) {
+        int defaultScale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
+        int defaultPrecision = resolvePrecisionExpression(precisionEL, variables, precisionExpression, pair.getKey());
+        validateScaleAndPrecision(defaultScale, defaultPrecision);
         hiveTypeInfo =
             hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, defaultScale, defaultPrecision);
       } else {

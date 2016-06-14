@@ -66,26 +66,26 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
   @Parameterized.Parameters(name = "type({0})")
   public static Collection<Object[]> data() throws Exception {
     return Arrays.asList(new Object[][]{
-      {Field.create(Field.Type.BOOLEAN, true), true, Types.BOOLEAN, true},
-      {Field.create(Field.Type.CHAR, 'A'), true, Types.VARCHAR, "A"},
-      {Field.create(Field.Type.BYTE, (byte)0x00), false, 0, null},
-      {Field.create(Field.Type.SHORT, 10), true, Types.INTEGER, 10},
-      {Field.create(Field.Type.INTEGER, 10), true, Types.INTEGER, 10},
-      {Field.create(Field.Type.LONG, 10), true, Types.BIGINT, 10L},
-      {Field.create(Field.Type.FLOAT, 1.5), true, Types.FLOAT, 1.5},
-      {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
-      {Field.create(Field.Type.DATE, new Date(116, 5, 13)), true, Types.DATE, new Date(116, 5, 13)},
-      {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
-      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)),
-          true,
-          Types.DECIMAL,
-          new BigDecimal(BigInteger.valueOf(15), 1, new MathContext(2, RoundingMode.FLOOR))
-      },
-      {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},
-      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, Types.BINARY, new byte [] {(byte)0x00}},
-      {Field.create(Field.Type.MAP, Collections.emptyMap()), false, 0, null},
-      {Field.create(Field.Type.LIST, Collections.emptyList()), false, 0, null},
-      {Field.create(Field.Type.LIST_MAP, new LinkedHashMap<>()), false, 0, null},
+        {Field.create(Field.Type.BOOLEAN, true), true, Types.BOOLEAN, true},
+        {Field.create(Field.Type.CHAR, 'A'), true, Types.VARCHAR, "A"},
+        {Field.create(Field.Type.BYTE, (byte)0x00), false, 0, null},
+        {Field.create(Field.Type.SHORT, 10), true, Types.INTEGER, 10},
+        {Field.create(Field.Type.INTEGER, 10), true, Types.INTEGER, 10},
+        {Field.create(Field.Type.LONG, 10), true, Types.BIGINT, 10L},
+        {Field.create(Field.Type.FLOAT, 1.5), true, Types.FLOAT, 1.5},
+        {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
+        {Field.create(Field.Type.DATE, new Date(116, 5, 13)), true, Types.DATE, new Date(116, 5, 13)},
+        {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
+        {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)),
+            true,
+            Types.DECIMAL,
+            new BigDecimal(BigInteger.valueOf(15), 1, new MathContext(2, RoundingMode.FLOOR))
+        },
+        {Field.create(Field.Type.STRING, "StreamSets"), true, Types.VARCHAR, "StreamSets"},
+        {Field.create(Field.Type.BYTE_ARRAY, new byte[] {(byte)0x00}), true, Types.BINARY, new byte [] {(byte)0x00}},
+        {Field.create(Field.Type.MAP, Collections.emptyMap()), false, 0, null},
+        {Field.create(Field.Type.LIST, Collections.emptyList()), false, 0, null},
+        {Field.create(Field.Type.LIST_MAP, new LinkedHashMap<>()), false, 0, null},
     });
   }
 
@@ -103,18 +103,20 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
   @Test
   public void testType() throws  Exception {
     DecimalDefaultsConfig decimalDefaultsConfig = new DecimalDefaultsConfig();
-    decimalDefaultsConfig.defaultScale = "${record:attributeOrDefault('scale', 2)}";
-    decimalDefaultsConfig.defaultPrecision = "${record:attributeOrDefault('precision', 2)}";
+    decimalDefaultsConfig.scaleExpression =
+        "${record:attributeOrDefault(str:concat(str:concat('jdbc.', str:toUpper(field:field())), '.scale'), 2)}";
+    decimalDefaultsConfig.precisionExpression =
+        "${record:attributeOrDefault(str:concat(str:concat('jdbc.', str:toUpper(field:field())), '.precision'), 2)}";
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(decimalDefaultsConfig)
-      .build();
+        .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("col", field);
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
-    record.getHeader().setAttribute("scale", "1");
+    record.getHeader().setAttribute("jdbc.COL.scale", "1");
     //So scale - 1 , precision -1 (at last as scale is set to 1, precision is not set ( default is 2))
     try {
       processRecords(processor, hiveTarget, ImmutableList.of(record));
@@ -138,8 +140,8 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("tbl.col", hiveType),
-          new ImmutablePair("tbl.dt", Types.VARCHAR)
+            new ImmutablePair("tbl.col", hiveType),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

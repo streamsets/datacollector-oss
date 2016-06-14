@@ -21,12 +21,17 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +77,9 @@ public class JdbcUtil {
    */
   private static final String MYSQL_GENERAL_ERROR = "HY000";
   private static final Map<String, String> MYSQL_DATA_ERROR_ERROR_CODES = ImmutableMap.of(
-    "1364", "Field '%s' doesn't have a default value",
-    "1366", "Incorrect %s value: '%s' for column '%s' at row %ld",
-    "1391", "Key part '%s' length cannot be 0"
+      "1364", "Field '%s' doesn't have a default value",
+      "1366", "Incorrect %s value: '%s' for column '%s' at row %ld",
+      "1391", "Key part '%s' length cannot be 0"
   );
 
   public static boolean isDataError(String connectionString, SQLException ex) {
@@ -186,5 +191,19 @@ public class JdbcUtil {
       keys.add(result.getString(COLUMN_NAME));
     }
     return keys;
+  }
+
+  public static Map<String, String> getColumnSpecificHeadersIfNeeded(
+      ResultSetMetaData metaData,
+      String jdbcNameSpacePrefix
+  ) throws SQLException {
+    Map<String, String> columnInfo = new LinkedHashMap<>();
+    for (int i=1; i<=metaData.getColumnCount(); i++) {
+      if (metaData.getColumnType(i) == Types.DECIMAL) {
+        columnInfo.put(jdbcNameSpacePrefix + metaData.getColumnName(i) + ".scale", String.valueOf(metaData.getScale(i)));
+        columnInfo.put(jdbcNameSpacePrefix + metaData.getColumnName(i) + ".precision", String.valueOf(metaData.getPrecision(i)));
+      }
+    }
+    return columnInfo;
   }
 }

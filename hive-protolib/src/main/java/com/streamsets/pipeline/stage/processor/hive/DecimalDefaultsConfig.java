@@ -21,31 +21,33 @@ package com.streamsets.pipeline.stage.processor.hive;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.stage.lib.hive.FieldPathEL;
 
 public class DecimalDefaultsConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "38",
-      label = "Default Scale",
-      description = "Default Scale which will be used to create Decimal Columns",
+      defaultValue = "${record:attributeOrDefault(str:concat(str:concat('jdbc.', field:field()), '.scale'), 2)}",
+      label = "Decimal Field Scale Expression",
+      description = "Scale Expression which will be evaluated to create Decimal Columns",
       displayPosition = 130,
       group = "ADVANCED",
-      elDefs = {RecordEL.class},
+      elDefs = {RecordEL.class, FieldPathEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public String defaultScale = "38";
+  public String scaleExpression = "2";
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "38",
-      label = "Default Precision",
-      description = "Default Precision which will be used to create Decimal Columns",
+      defaultValue = "${record:attributeOrDefault(str:concat(str:concat('jdbc.', field:field()), '.precision'), 2)}",
+      label = "Decimal Field Precision Expression",
+      description = "Precision Expression which will be evaluated to create Decimal Columns",
       displayPosition = 130,
       group = "ADVANCED",
-      elDefs = {RecordEL.class},
+      elDefs = {RecordEL.class, FieldPathEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public String defaultPrecision = "38";
+
+  public String precisionExpression = "2";
 }

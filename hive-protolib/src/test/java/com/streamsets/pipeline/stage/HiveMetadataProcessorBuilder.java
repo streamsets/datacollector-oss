@@ -45,8 +45,8 @@ public class HiveMetadataProcessorBuilder {
     tablePathTemplate = null;
     partitionPathTemplate = null;
     decimalDefaultsConfig = new DecimalDefaultsConfig();
-    decimalDefaultsConfig.defaultScale = String.valueOf(38);
-    decimalDefaultsConfig.defaultPrecision = String.valueOf(38);
+    decimalDefaultsConfig.scaleExpression = String.valueOf(38);
+    decimalDefaultsConfig.precisionExpression = String.valueOf(38);
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -86,8 +86,8 @@ public class HiveMetadataProcessorBuilder {
 
   public HiveMetadataProcessorBuilder decimalDefaultsConfig(int scale, int precision) {
     decimalDefaultsConfig = new DecimalDefaultsConfig();
-    decimalDefaultsConfig.defaultScale = String.valueOf(scale);
-    decimalDefaultsConfig.defaultPrecision = String.valueOf(precision);
+    decimalDefaultsConfig.scaleExpression = String.valueOf(scale);
+    decimalDefaultsConfig.precisionExpression = String.valueOf(precision);
     return this;
   }
 

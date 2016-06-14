@@ -69,7 +69,7 @@ public class TestHiveMetastoreUtil {
 
     Map<String, HiveTypeInfo> actual = null;
     try {
-      actual = HiveMetastoreUtil.convertRecordToHMSType(record, 38, 38);
+      actual = HiveMetastoreUtil.convertRecordToHMSType(record, null, null, null, null, null);
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
     }
@@ -109,7 +109,14 @@ public class TestHiveMetastoreUtil {
 
     Map<String, HiveTypeInfo> actual = null;
     try {
-      actual = HiveMetastoreUtil.convertRecordToHMSType(record, decimalVal.scale(), decimalVal.precision());
+      actual = HiveMetastoreUtil.convertRecordToHMSType(
+          record,
+          null,
+          null,
+          String.valueOf(decimalVal.scale()),
+          String.valueOf(decimalVal.precision()),
+          null
+      );
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
     }

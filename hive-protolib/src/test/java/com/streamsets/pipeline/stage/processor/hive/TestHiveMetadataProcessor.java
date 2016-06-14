@@ -58,6 +58,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 
 @RunWith(PowerMockRunner.class)
@@ -554,7 +555,7 @@ public class TestHiveMetadataProcessor {
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("name", Field.create(Field.Type.STRING, "default database"));
-    map.put("decimal", Field.create(1.5));
+    map.put("decimal", Field.create(new BigDecimal(1.5)));
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
     runner.runProcess(ImmutableList.of(record));
