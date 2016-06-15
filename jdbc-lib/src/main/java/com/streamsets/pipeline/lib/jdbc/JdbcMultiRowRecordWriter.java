@@ -177,9 +177,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
               break;
             case DATE:
             case DATETIME:
-              // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Date
-              java.util.Date date = field.getValueAsDatetime();
-              statement.setObject(paramIdx, new java.sql.Date(date.getTime()));
+              // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
+              statement.setTimestamp(paramIdx, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
               break;
             default:
               statement.setObject(paramIdx, value, getColumnType(column));

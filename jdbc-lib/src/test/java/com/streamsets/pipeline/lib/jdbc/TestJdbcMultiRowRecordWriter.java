@@ -42,6 +42,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class TestJdbcMultiRowRecordWriter {
 
   private final String username = "sa";
   private final String password = "sa";
+  private final Date expectedDatetime = new Date();
   private static final String connectionString = "jdbc:h2:mem:test";
   private DataSource dataSource;
   private Connection connection;
@@ -78,7 +80,7 @@ public class TestJdbcMultiRowRecordWriter {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-              "(P_ID INT NOT NULL, F1 INT, F2 INT, F3 INT, UNIQUE(P_ID), PRIMARY KEY(P_ID));"
+              "(P_ID INT NOT NULL, F1 INT, F2 INT, F3 INT, F4 DATETIME, UNIQUE(P_ID), PRIMARY KEY(P_ID));"
       );
       String unprivUser = "unpriv_user";
       String unprivPassword = "unpriv_pass";
@@ -149,6 +151,31 @@ public class TestJdbcMultiRowRecordWriter {
     }
   }
 
+  @Test
+  public void testDatetimeColumn() throws Exception {
+    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+
+    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST.TEST_TABLE",
+        false,
+        mappings,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS
+    );
+
+    Collection<Record> records = generateRecords(1);
+    writer.writeBatch(records);
+
+    connection = DriverManager.getConnection(connectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT F4 FROM TEST.TEST_TABLE LIMIT 1");
+      rs.next();
+      // Make sure timestamp retrieved from the table is equal to the expected datetime.
+      assertEquals(0, rs.getTimestamp(1).compareTo(expectedDatetime));
+    }
+  }
+
   @Test(expected = OnRecordErrorException.class)
   public void testEmptyColumnMappingError() throws Exception {
     List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
@@ -191,6 +218,7 @@ public class TestJdbcMultiRowRecordWriter {
     if (id % 4 == 0) {
       fields.put("F3", Field.create(random.nextInt()));
     }
+    fields.put("F4", Field.createDatetime(expectedDatetime));
     record.set(Field.create(fields));
 
     LOG.debug(record.toString());
