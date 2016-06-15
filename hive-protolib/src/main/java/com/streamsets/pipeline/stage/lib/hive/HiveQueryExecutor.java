@@ -155,6 +155,7 @@ public final class HiveQueryExecutor {
 
   private static String buildCreateTableQueryNew(
       String qualifiedTableName,
+      String location,
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean isInternal
@@ -164,11 +165,18 @@ public final class HiveQueryExecutor {
     sb.append(HiveMetastoreUtil.SPACE);
     //Stored as AVRO used for new way of creating a table.
     sb.append(STORED_AS_AVRO);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(LOCATION);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+    sb.append(location);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     return sb.toString();
   }
 
   private static String buildCreateTableQueryOld(
       String qualifiedTableName,
+      String location,
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       String schemaPath,
@@ -179,6 +187,11 @@ public final class HiveQueryExecutor {
     sb.append(HiveMetastoreUtil.SPACE);
     sb.append(OLD_WAY_AVRO_ROW_STORAGE_INPUT_OUPTUT_FORMAT);
     sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(LOCATION);
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+    sb.append(location);
+    sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(TBL_PROPERTIES);
     sb.append(HiveMetastoreUtil.OPEN_BRACKET);
     sb.append(buildAvroSchemaTableProperty(schemaPath));
@@ -275,6 +288,7 @@ public final class HiveQueryExecutor {
 
   public void executeCreateTableQuery(
       String qualifiedTableName,
+      String tableLocation,
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean useAsAvro,
@@ -286,8 +300,8 @@ public final class HiveQueryExecutor {
         "Invalid configuration for table creation in use As Avro"
     );
 
-    String sql = useAsAvro? buildCreateTableQueryNew(qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal)
-        : buildCreateTableQueryOld(qualifiedTableName, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
+    String sql = useAsAvro? buildCreateTableQueryNew(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, isInternal)
+        : buildCreateTableQueryOld(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
 
     LOG.debug("Executing SQL: {}", sql);
     try (

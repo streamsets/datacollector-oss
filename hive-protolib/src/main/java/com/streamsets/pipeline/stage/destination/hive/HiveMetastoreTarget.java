@@ -190,6 +190,7 @@ public class HiveMetastoreTarget extends BaseTarget {
       //Create Table
       hiveQueryExecutor.executeCreateTableQuery(
           qualifiedTableName,
+          location,
           newColumnTypeInfo,
           partitionTypeInfo,
           conf.storedAsAvro,
