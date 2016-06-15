@@ -22,13 +22,9 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.google.common.base.Joiner;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -37,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,11 +47,10 @@ public class HiveConfigBean {
       type = ConfigDef.Type.STRING,
       description = "JDBC URL used to connect to Hive." +
           "Use a valid JDBC URL format, such as: jdbc:hive2://<host>:<port>/<dbname>.",
-      defaultValue = "jdbc:hive2://<host>:<port>/" +
-          "${record:attribute('" + HiveMetastoreUtil.DATABASE_FIELD + "')}",
+      defaultValue = "jdbc:hive2://<host>:<port>/default}",
       displayPosition= 10,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      elDefs = {StringEL.class},
       group = "HIVE"
   )
   public String hiveJDBCUrl;
@@ -113,11 +107,12 @@ public class HiveConfigBean {
    */
   private Configuration configuration;
   private UserGroupInformation loginUgi;
-  private ELEval elEval;
+  private Connection hiveConnection;
 
   public Configuration getConfiguration() {
     return configuration;
   }
+  public Connection getHiveConnection() {return hiveConnection;}
 
   /**
    * This is for testing purpose
@@ -128,10 +123,6 @@ public class HiveConfigBean {
   }
   public UserGroupInformation getUgi() {
     return loginUgi;
-  }
-
-  public ELEval getElEval() {
-    return elEval;
   }
 
   /**
@@ -180,26 +171,6 @@ public class HiveConfigBean {
       return;
     }
 
-    elEval = context.createELEval(HIVE_JDBC_URL);
-
-    // Try to connect to HMS to validate if the URL is valid
-    Record dummyRecord = context.createRecord("DummyHiveMetastoreTargetRecord");
-    Map<String, Field> databaseFieldValue = new HashMap<>();
-    databaseFieldValue.put(HiveMetastoreUtil.DATABASE_FIELD, Field.create("default"));
-    dummyRecord.set(Field.create(databaseFieldValue));
-    String jdbcUrl;
-    try {
-      jdbcUrl = HiveMetastoreUtil.resolveJDBCUrl(elEval, hiveJDBCUrl, dummyRecord);
-    } catch (ELEvalException e) {
-      LOG.error("Error evaluating EL:", e);
-      issues.add(context.createConfigIssue(
-          Groups.HIVE.name(),
-          JOINER.join(prefix, HIVE_JDBC_URL),
-          Errors.HIVE_01,
-          e.getMessage()
-      ));
-      return;
-    }
     try {
       loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
     } catch (Exception e) {
@@ -208,14 +179,14 @@ public class HiveConfigBean {
               Groups.HIVE.name(),
               JOINER.join(prefix, HIVE_JDBC_URL),
               Errors.HIVE_22,
-              jdbcUrl,
+              hiveJDBCUrl,
               e.getMessage()
           )
       );
       return;
     }
     try {
-      if (jdbcUrl.matches(KERBEROS_JDBC_REGEX)) {
+      if (hiveJDBCUrl.matches(KERBEROS_JDBC_REGEX)) {
         LOG.info("Authentication: Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           issues.add(
@@ -246,17 +217,26 @@ public class HiveConfigBean {
       return;
     }
 
-    HiveQueryExecutor executor = new HiveQueryExecutor(jdbcUrl, loginUgi);
-
-    try (Connection con = executor.getConnection()) {} catch (Exception e) {
-      LOG.error(Utils.format("Error Connecting to Hive Default Database with URL {}", jdbcUrl), e);
+    try {
+      hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi);
+    } catch(Exception e) {
+      LOG.error(Utils.format("Error Connecting to Hive Database with URL {}", hiveJDBCUrl), e);
       issues.add(context.createConfigIssue(
           Groups.HIVE.name(),
           JOINER.join(prefix, HIVE_JDBC_URL),
           Errors.HIVE_22,
-          jdbcUrl,
+          hiveJDBCUrl,
           e.getMessage()
       ));
+    }
+  }
+  public void destroy() {
+    if (hiveConnection != null) {
+      try {
+        hiveConnection.close();
+      } catch (Exception e) {
+        LOG.error("Error with closing Hive Connection", e);
+      }
     }
   }
 }

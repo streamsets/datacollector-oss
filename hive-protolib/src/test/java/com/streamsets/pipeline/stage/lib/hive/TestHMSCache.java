@@ -33,8 +33,8 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -48,6 +48,7 @@ import java.util.Set;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
     HMSCache.class,
+    HiveQueryExecutor.class,
     HMSCacheSupport.HMSCacheLoader.class,
     TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader.class,
     TypeInfoCacheSupport.TypeInfoCacheLoader.class,
@@ -56,8 +57,7 @@ import java.util.Set;
 })
 @PowerMockIgnore("javax.security.*")
 public class TestHMSCache {
-  private static final String LOAD_HMS_CACHE_INFO_METHOD = "loadHMSCacheInfo";
-  private static final String HMS_CACHE_LOADER_CALL_METHOD = "call";
+  private static final String HMS_CACHE_LOADER_LOAD_METHOD = "load";
   private static final String qualifiedTableName = "default.sample";
   public static final LinkedHashMap<String, HiveTypeInfo> EMPTY_TYPE_INFO = new LinkedHashMap<>();
   public static final Set<LinkedHashMap<String, String>> EMPTY_PARTITION_INFO = new HashSet<>();
@@ -80,80 +80,43 @@ public class TestHMSCache {
       final Set<LinkedHashMap<String, String>> partitionInfo,
       final boolean external,
       final boolean asAvro
-  ) {
-    if (!columnTypeInfo.isEmpty()) {
-      PowerMockito.replace(
-          MemberMatcher.method(
-              TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader.class,
-              LOAD_HMS_CACHE_INFO_METHOD
-          )
-      ).with(new InvocationHandler() {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          return new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(external, asAvro);
+  ) throws Exception {
+    Method cacheLoadMethod =
+        HMSCacheSupport.HMSCacheLoader.class.getDeclaredMethod(HMS_CACHE_LOADER_LOAD_METHOD, String.class);
+    PowerMockito.replace(cacheLoadMethod).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Object returnVal = null;
+        if (!columnTypeInfo.isEmpty()) {
+          if (proxy.getClass() == TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader.class) {
+            returnVal = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(external, asAvro);
+          } else if (proxy.getClass() == TypeInfoCacheSupport.TypeInfoCacheLoader.class) {
+            returnVal = new TypeInfoCacheSupport.TypeInfo(columnTypeInfo, partitionTypeInfo);
+          } else if (proxy.getClass() == PartitionInfoCacheSupport.PartitionInfoCacheLoader.class) {
+            returnVal = new PartitionInfoCacheSupport.PartitionInfo(partitionInfo);
+          } else if (proxy.getClass() == AvroSchemaInfoCacheSupport.AvroSchemaInfoCacheLoader.class) {
+            Method avroLoadHMSCacheInfoMethod = proxy.getClass().getDeclaredMethod("loadHMSCacheInfo", String.class);
+            returnVal = avroLoadHMSCacheInfoMethod.invoke(proxy, args);
+          }
         }
-      });
-
-      PowerMockito.replace(
-          MemberMatcher.method(
-              TypeInfoCacheSupport.TypeInfoCacheLoader.class,
-              LOAD_HMS_CACHE_INFO_METHOD
-          )
-      ).with(new InvocationHandler() {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          return new TypeInfoCacheSupport.TypeInfo(columnTypeInfo, partitionTypeInfo);
-        }
-      });
-      PowerMockito.replace(
-          MemberMatcher.method(
-              PartitionInfoCacheSupport.PartitionInfoCacheLoader.class,
-              LOAD_HMS_CACHE_INFO_METHOD
-          )
-      ).with(new InvocationHandler() {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          return new PartitionInfoCacheSupport.PartitionInfo(partitionInfo);
-        }
-      });
-
-      PowerMockito.replace(
-          MemberMatcher.method(
-              HMSCacheSupport.HMSCacheLoader.class,
-              HMS_CACHE_LOADER_CALL_METHOD
-          )
-      ).with(new InvocationHandler() {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          Method m = MemberMatcher.method(HMSCacheSupport.HMSCacheLoader.class, LOAD_HMS_CACHE_INFO_METHOD);
-          return Optional.of(m.invoke(proxy, args));
-        }
-      });
-
-    } else {
-      PowerMockito.replace(
-          MemberMatcher.method(HMSCacheSupport.HMSCacheLoader.class, HMS_CACHE_LOADER_CALL_METHOD)
-      ).with(new InvocationHandler() {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-          return Optional.absent();
-        }
-      });
-    }
+        return returnVal != null ? Optional.of(returnVal) : Optional.absent();
+      }
+    });
   }
-
 
   @Test
   public void testInvalidHMSCache() throws Exception {
     try {
-      hmsCache = HMSCache.newCacheBuilder().build();
+      hmsCache = HMSCache.newCacheBuilder().build(Mockito.mock(HiveQueryExecutor.class));
       Assert.fail("Cache should have supported cache types");
     } catch (Exception e) {
       //Expected exception
     }
     //Trying to fetch an unsupported cache type
     try {
-      hmsCache = HMSCache.newCacheBuilder().addCacheTypeSupport(HMSCacheType.TBLPROPERTIES_INFO).build();
+      hmsCache = HMSCache.newCacheBuilder()
+          .addCacheTypeSupport(HMSCacheType.TBLPROPERTIES_INFO)
+          .build(Mockito.mock(HiveQueryExecutor.class));
       hmsCache.getIfPresent(HMSCacheType.TYPE_INFO, qualifiedTableName);
       Assert.fail("Unsupported cache types should fail");
     } catch (StageException e) {
@@ -165,7 +128,10 @@ public class TestHMSCache {
       HMSCacheType hmsCacheType,
       long maxCachSize
   ) throws Exception {
-    hmsCache = HMSCache.newCacheBuilder().addCacheTypeSupport(hmsCacheType).maxCacheSize(maxCachSize).build();
+    hmsCache = HMSCache.newCacheBuilder()
+        .addCacheTypeSupport(hmsCacheType)
+        .maxCacheSize(maxCachSize)
+        .build(Mockito.mock(HiveQueryExecutor.class));
   }
 
   private void checkCacheType(Class expected, HMSCacheSupport.HMSCacheInfo hmsCacheInfo) {
@@ -201,7 +167,7 @@ public class TestHMSCache {
     setMockForHMSCacheLoader(EMPTY_TYPE_INFO, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, false, false);
 
     //Cache loader returns Optional.absent by default when column type info is not present
-    Assert.assertNull(hmsCache.getOrLoad(cacheType, "", qualifiedTableName, null));
+    Assert.assertNull(hmsCache.getOrLoad(cacheType, qualifiedTableName));
 
     // Optional.absent is store after the above call so invalidating again.
     hmsCache.invalidate(cacheType, qualifiedTableName);
@@ -210,7 +176,7 @@ public class TestHMSCache {
     columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
     setMockForHMSCacheLoader(columnTypeInfo, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, true, true);
 
-    tblPropertiesInfo = hmsCache.getOrLoad(cacheType, "", qualifiedTableName, null);
+    tblPropertiesInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
 
     //Check cache loading - returns
     Assert.assertTrue("External Mismatch", tblPropertiesInfo.isExternal());
@@ -256,7 +222,7 @@ public class TestHMSCache {
     //Now set the cache loader to return true false
     setMockForHMSCacheLoader(columnTypeInfo, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, true, false);
 
-    tblPropertiesInfo1 = hmsCache.getOrLoad(cacheType, "", table1, null);
+    tblPropertiesInfo1 = hmsCache.getOrLoad(cacheType, table1);
     //This means cache is loaded and returns value from the mock.
     Assert.assertTrue("External Mismatch", tblPropertiesInfo1.isExternal());
     Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isStoredAsAvro());
@@ -311,7 +277,7 @@ public class TestHMSCache {
     //invalidate and set cache loader
     setMockForHMSCacheLoader(defaultColumnTypeInfo, defaultPartitionTypeInfo, EMPTY_PARTITION_INFO, false, true);
     hmsCache.invalidate(cacheType, qualifiedTableName);
-    typeInfo = hmsCache.getOrLoad(cacheType, "", qualifiedTableName, null);
+    typeInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
     Assert.assertEquals("Column Size mismatch", defaultColumnTypeInfo.size(), typeInfo.getColumnTypeInfo().size());
     Assert.assertEquals(
         "Partition Size mismatch",
@@ -426,7 +392,7 @@ public class TestHMSCache {
         true
     );
     hmsCache.invalidate(cacheType, qualifiedTableName);
-    partitionInfo = hmsCache.getOrLoad(cacheType, "", qualifiedTableName, null);
+    partitionInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
     Assert.assertEquals(
         "Partition Values Size mismatch",
         defaultPartitionValues.size(),
@@ -489,7 +455,7 @@ public class TestHMSCache {
     );
     //Trying to load will fail.
     try {
-      hmsCache.getOrLoad(cacheType, "", qualifiedTableName, null);
+      hmsCache.getOrLoad(cacheType, qualifiedTableName);
       Assert.fail("Trying to use load on avro schema info should fail");
     } catch (StageException e) {
       Assert.assertEquals("Error code mismatch", Errors.HIVE_01, e.getErrorCode());

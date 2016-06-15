@@ -20,12 +20,9 @@
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
+import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
-import org.apache.hadoop.security.UserGroupInformation;
-
-import java.util.concurrent.Callable;
 
 /**
  * This is a generic Cache Supporter interface for {@link HMSCacheType}.<br>
@@ -39,12 +36,10 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
 
   /**
    * Creates a new {@link HMSCacheLoader}
-   * @param jdbcUrl JDBC URL
-   * @param qualifiedTableName Database name.Table name
-   * @param ugi {@link UserGroupInformation}
+   * @param executor {@link HiveQueryExecutor}
    * @return new {@link HMSCacheLoader}
    */
-  CL newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi);
+  CL newHMSCacheLoader(HiveQueryExecutor executor) throws StageException;
 
   /**
    * A Cache information which should be extended for each
@@ -76,15 +71,13 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
 
   /**
    * A Cache Loader which is responsible for loading the corresponding {@link HMSCacheInfo} into the cache,
-   * @param <T> the corresponding Cache Information {@link HMSCacheInfo} for this particular loader.
+   * @param <IN> the corresponding Cache Information {@link HMSCacheInfo} for this particular loader.
    */
-  abstract class HMSCacheLoader<T extends HMSCacheInfo> implements Callable<Optional<T>> {
-    protected final String qualifiedTableName;
+  abstract class HMSCacheLoader<IN extends HMSCacheInfo> extends CacheLoader<String, Optional<IN>> {
     protected final HiveQueryExecutor executor;
 
-    protected HMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
-      this.qualifiedTableName = qualifiedTableName;
-      executor = new HiveQueryExecutor(jdbcUrl, ugi);
+    protected HMSCacheLoader(HiveQueryExecutor executor){
+      this.executor = executor;
     }
 
     /**
@@ -92,12 +85,12 @@ public interface HMSCacheSupport<IN extends HMSCacheSupport.HMSCacheInfo,
      * @return {@link HMSCacheInfo}
      * @throws StageException if there is an issue in loading.
      */
-    protected abstract T loadHMSCacheInfo() throws StageException;
+    protected abstract IN loadHMSCacheInfo(String qualifiedTableName) throws StageException;
 
     @Override
-    public Optional<T> call() throws StageException {
+    public Optional<IN> load(String qualifiedTableName) throws StageException {
       boolean doesTableExist = executor.executeShowTableQuery(qualifiedTableName);
-      return doesTableExist? Optional.of(loadHMSCacheInfo()): Optional.<T>absent();
+      return doesTableExist ? Optional.of(loadHMSCacheInfo(qualifiedTableName)) : Optional.<IN>absent();
     }
   }
 }

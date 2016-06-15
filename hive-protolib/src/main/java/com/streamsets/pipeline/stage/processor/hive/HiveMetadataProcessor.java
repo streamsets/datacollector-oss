@@ -38,9 +38,9 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.cache.AvroSchemaInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
-import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSupport;
@@ -216,19 +216,34 @@ public class HiveMetadataProcessor extends RecordProcessor {
       hdfsLane = getContext().getOutputLanes().get(0);
       hmsLane = getContext().getOutputLanes().get(1);
       // load cache
-      cache = HMSCache.newCacheBuilder()
-          .addCacheTypeSupport(
-              Arrays.asList(
-                  HMSCacheType.TBLPROPERTIES_INFO,
-                  HMSCacheType.TYPE_INFO,
-                  HMSCacheType.PARTITION_VALUE_INFO,
-                  HMSCacheType.AVRO_SCHEMA_INFO
-              )
-          )
-          .maxCacheSize(hiveConfigBean.maxCacheSize)
-          .build();
+      try {
+        cache = HMSCache.newCacheBuilder()
+            .addCacheTypeSupport(
+                Arrays.asList(
+                    HMSCacheType.TBLPROPERTIES_INFO,
+                    HMSCacheType.TYPE_INFO,
+                    HMSCacheType.PARTITION_VALUE_INFO,
+                    HMSCacheType.AVRO_SCHEMA_INFO
+                )
+            )
+            .maxCacheSize(hiveConfigBean.maxCacheSize)
+            .build(new HiveQueryExecutor(hiveConfigBean.getHiveConnection()));
+      } catch (StageException e) {
+        issues.add(getContext().createConfigIssue(
+            Groups.HIVE.name(),
+            "hiveConfigBean.hiveJDBCUrl",
+            com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_01,
+            e.getMessage()
+        ));
+      }
     }
     return issues;
+  }
+
+  @Override
+  public void destroy() {
+    hiveConfigBean.destroy();
+    super.destroy();
   }
 
   private void validateTemplate(String template, String configName, ErrorCode errorCode, List<ConfigIssue> issues){
@@ -306,9 +321,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
           cache,
           HMSCacheType.TBLPROPERTIES_INFO,
-          hiveConfigBean,
-          qualifiedName,
-          record
+          qualifiedName
       );
 
       if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
@@ -323,17 +336,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
       TypeInfoCacheSupport.TypeInfo tableCache = HiveMetastoreUtil.getCacheInfo(
           cache,
           HMSCacheType.TYPE_INFO,
-          hiveConfigBean,
-          qualifiedName,
-          record
+          qualifiedName
       );
 
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = HiveMetastoreUtil.getCacheInfo(
           cache,
           HMSCacheType.AVRO_SCHEMA_INFO,
-          hiveConfigBean,
-          qualifiedName,
-          record
+          qualifiedName
       );
 
       // Generate schema only if there is no table exist, or schema is changed.
@@ -354,9 +363,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         PartitionInfoCacheSupport.PartitionInfo pCache = HiveMetastoreUtil.getCacheInfo(
             cache,
             HMSCacheType.PARTITION_VALUE_INFO,
-            hiveConfigBean,
-            qualifiedName,
-            record
+            qualifiedName
         );
         Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
 

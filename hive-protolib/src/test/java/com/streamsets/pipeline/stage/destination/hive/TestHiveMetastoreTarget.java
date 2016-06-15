@@ -47,6 +47,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -56,6 +57,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,6 +74,7 @@ import java.util.Set;
     HMSTargetConfigBean.class,
     HiveMetastoreUtil.class,
     HMSCache.class,
+    HMSCache.Builder.class,
     HMSCacheSupport.HMSCacheLoader.class,
     TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader.class,
     TypeInfoCacheSupport.TypeInfoCacheLoader.class,
@@ -82,24 +87,27 @@ public class TestHiveMetastoreTarget {
 
   @Before
   public void setup() throws Exception{
-    //Don't resolve JDBC
-    PowerMockito.spy(HiveMetastoreUtil.class);
-    PowerMockito.suppress(MemberMatcher.method(
-        HMSTargetConfigBean.class,
-        "init",
-        Stage.Context.class,
-        String.class,
-        List.class
-    ));
     PowerMockito.suppress(
         MemberMatcher.method(
-            HiveMetastoreUtil.class,
-            "resolveJDBCUrl",
-            ELEval.class,
+            HMSTargetConfigBean.class,
+            "init",
+            Stage.Context.class,
             String.class,
-            Record.class
+            List.class
         )
     );
+    PowerMockito.replace(
+        MemberMatcher.method(
+            HMSCache.Builder.class,
+            "build"
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        args[0] = Mockito.mock(HiveQueryExecutor.class);
+        return method.invoke(proxy, args);
+      }
+    });
     //Suppress queries
     PowerMockito.suppress(MemberMatcher.method(HiveQueryExecutor.class, "executeCreateTableQuery"));
     PowerMockito.suppress(MemberMatcher.method(HiveQueryExecutor.class, "executeAlterTableAddColumnsQuery"));

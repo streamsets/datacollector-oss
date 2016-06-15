@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.hadoop.security.UserGroupInformation;
 
 
@@ -29,12 +30,8 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
     AvroSchemaInfoCacheSupport.AvroSchemaInfoCacheLoader> {
 
   @Override
-  public AvroSchemaInfoCacheLoader newHMSCacheLoader(
-      String jdbcUrl,
-      String qualifiedTableName, UserGroupInformation ugi
-  )
-  {
-    return new AvroSchemaInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
+  public AvroSchemaInfoCacheLoader newHMSCacheLoader(HiveQueryExecutor executor) {
+    return new AvroSchemaInfoCacheLoader(executor);
   }
 
   public static class AvroSchemaInfo extends HMSCacheSupport.HMSCacheInfo<String> {
@@ -59,12 +56,12 @@ public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInf
 
   public class AvroSchemaInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<AvroSchemaInfo> {
 
-    protected AvroSchemaInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
-      super(jdbcUrl, qualifiedTableName, ugi);
+    protected AvroSchemaInfoCacheLoader(HiveQueryExecutor executor) {
+      super(executor);
     }
 
     @Override
-    protected AvroSchemaInfo loadHMSCacheInfo() throws StageException {
+    protected AvroSchemaInfo loadHMSCacheInfo(String qualifiedTableName) throws StageException {
       // we don't perform load on avroSchema. This function should not be called
       throw new StageException(Errors.HIVE_01,  "Invalid operation");
     }

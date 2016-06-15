@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.security.UserGroupInformation;
 
@@ -32,12 +33,8 @@ public class TBLPropertiesInfoCacheSupport
     TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader> {
 
   @Override
-  public TBLPropertiesInfoCacheLoader newHMSCacheLoader(
-      String jdbcUrl,
-      String qualifiedTableName,
-      UserGroupInformation ugi
-  ) {
-    return new TBLPropertiesInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
+  public TBLPropertiesInfoCacheLoader newHMSCacheLoader(HiveQueryExecutor executor) {
+    return new TBLPropertiesInfoCacheLoader(executor);
   }
 
   public static class TBLPropertiesInfo extends HMSCacheSupport.HMSCacheInfo<Pair<Boolean, Boolean>> {
@@ -69,12 +66,12 @@ public class TBLPropertiesInfoCacheSupport
   }
 
   public class TBLPropertiesInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<TBLPropertiesInfo> {
-    protected TBLPropertiesInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
-      super(jdbcUrl, qualifiedTableName, ugi);
+    protected TBLPropertiesInfoCacheLoader(HiveQueryExecutor executor) {
+      super(executor);
     }
 
     @Override
-    protected TBLPropertiesInfo loadHMSCacheInfo() throws StageException {
+    protected TBLPropertiesInfo loadHMSCacheInfo(String qualifiedTableName) throws StageException {
       return new TBLPropertiesInfo(executor.executeShowTBLPropertiesQuery(qualifiedTableName));
     }
   }

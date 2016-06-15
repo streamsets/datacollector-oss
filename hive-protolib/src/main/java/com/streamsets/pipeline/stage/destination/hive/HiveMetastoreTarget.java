@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -28,6 +29,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
@@ -54,6 +56,7 @@ public class HiveMetastoreTarget extends BaseTarget {
   private static final String CONF = "conf";
   private static final String STORED_AS_AVRO = "storedAsAvro";
   private static final String EXTERNAL = "External";
+  private static final Joiner JOINER = Joiner.on(".");
 
   private final HMSTargetConfigBean conf;
 
@@ -67,19 +70,28 @@ public class HiveMetastoreTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    defaultErrorRecordHandler = new DefaultErrorRecordHandler(getContext());
     conf.init(getContext(), CONF, issues);
     if (issues.isEmpty()) {
-      defaultErrorRecordHandler = new DefaultErrorRecordHandler(getContext());
-      hmsCache =  HMSCache.newCacheBuilder()
-          .addCacheTypeSupport(
-              Arrays.asList(
-                  HMSCacheType.TBLPROPERTIES_INFO,
-                  HMSCacheType.TYPE_INFO,
-                  HMSCacheType.PARTITION_VALUE_INFO
-              )
-          )
-          .maxCacheSize(conf.hiveConfigBean.maxCacheSize)
-          .build();
+      try {
+        hmsCache = HMSCache.newCacheBuilder()
+            .addCacheTypeSupport(
+                Arrays.asList(
+                    HMSCacheType.TBLPROPERTIES_INFO,
+                    HMSCacheType.TYPE_INFO,
+                    HMSCacheType.PARTITION_VALUE_INFO
+                )
+            )
+            .maxCacheSize(conf.hiveConfigBean.maxCacheSize)
+            .build(new HiveQueryExecutor(conf.hiveConfigBean.getHiveConnection()));
+      } catch (StageException e) {
+        issues.add(getContext().createConfigIssue(
+            Groups.HIVE.name(),
+            JOINER.join(CONF, "hiveConfigBean.hiveJDBCUrl"),
+            Errors.HIVE_01,
+            e.getMessage()
+        ));
+      }
     }
     return issues;
   }
@@ -95,20 +107,13 @@ public class HiveMetastoreTarget extends BaseTarget {
         String databaseName = HiveMetastoreUtil.getDatabaseName(metadataRecord);
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
         String location = HiveMetastoreUtil.getLocation(metadataRecord);
-        String resolvedJDBCUrl = HiveMetastoreUtil.resolveJDBCUrl(
-            conf.hiveConfigBean.getElEval(),
-            conf.hiveConfigBean.hiveJDBCUrl,
-            metadataRecord
-        );
 
-        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(resolvedJDBCUrl, conf.hiveConfigBean.getUgi());
+        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(conf.hiveConfigBean.getHiveConnection());
 
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
             hmsCache,
             HMSCacheType.TBLPROPERTIES_INFO,
-            conf.hiveConfigBean,
-            qualifiedTableName,
-            metadataRecord
+            qualifiedTableName
         );
 
         if (tblPropertiesInfo != null && tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
@@ -132,7 +137,7 @@ public class HiveMetastoreTarget extends BaseTarget {
               tblPropertiesInfo
           );
         } else {
-          handlePartitionAddition(metadataRecord, qualifiedTableName, resolvedJDBCUrl, location, hiveQueryExecutor);
+          handlePartitionAddition(metadataRecord, qualifiedTableName, location, hiveQueryExecutor);
         }
       } catch (HiveStageCheckedException e) {
         LOG.error("Error processing record: {}", e);
@@ -161,9 +166,7 @@ public class HiveMetastoreTarget extends BaseTarget {
     TypeInfoCacheSupport.TypeInfo cachedColumnTypeInfo = HiveMetastoreUtil.getCacheInfo(
         hmsCache,
         cacheType,
-        conf.hiveConfigBean,
-        qualifiedTableName,
-        metadataRecord
+        qualifiedTableName
     );
     LinkedHashMap<String, HiveTypeInfo> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
     LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
@@ -181,7 +184,7 @@ public class HiveMetastoreTarget extends BaseTarget {
             conf.getHDFSUgi(),
             conf.getFileSystem(),
             location,
-            conf.getSchemaFolderLocation(metadataRecord),
+            conf.getSchemaFolderLocation(getContext(), metadataRecord),
             databaseName,
             tableName,
             HiveMetastoreUtil.getAvroSchema(metadataRecord)
@@ -215,7 +218,7 @@ public class HiveMetastoreTarget extends BaseTarget {
               conf.getHDFSUgi(),
               conf.getFileSystem(),
               location,
-              conf.getSchemaFolderLocation(metadataRecord),
+              conf.getSchemaFolderLocation(getContext(), metadataRecord),
               databaseName,
               tableName,
               HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName)
@@ -236,16 +239,13 @@ public class HiveMetastoreTarget extends BaseTarget {
   private void handlePartitionAddition(
       Record metadataRecord,
       String qualifiedTableName,
-      String resolvedJDBCUrl,
       String location,
       HiveQueryExecutor hiveQueryExecutor
   ) throws StageException {
     //Partition Addition
     TypeInfoCacheSupport.TypeInfo cachedTypeInfo = hmsCache.getOrLoad(
         HMSCacheType.TYPE_INFO,
-        resolvedJDBCUrl,
-        qualifiedTableName,
-        conf.hiveConfigBean.getUgi()
+        qualifiedTableName
     );
 
     if (cachedTypeInfo == null) {
@@ -256,9 +256,7 @@ public class HiveMetastoreTarget extends BaseTarget {
     PartitionInfoCacheSupport.PartitionInfo cachedPartitionInfo = HiveMetastoreUtil.getCacheInfo(
         hmsCache,
         hmsCacheType,
-        conf.hiveConfigBean,
-        qualifiedTableName,
-        metadataRecord
+        qualifiedTableName
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
     Set<LinkedHashMap <String, String>> partitionInfoDiff =

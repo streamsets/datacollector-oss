@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
@@ -110,15 +111,16 @@ public class HMSTargetConfigBean {
   public String hdfsUser;
 
   private FileSystem fs;
+  private ELEval schemaFolderELEval;
 
   public FileSystem getFileSystem() {
     return fs;
   }
 
-  public String getSchemaFolderLocation(Record metadataRecord) throws ELEvalException {
-    ELVars vars = hiveConfigBean.getElEval().createVariables();
+  public String getSchemaFolderLocation(Stage.Context context, Record metadataRecord) throws ELEvalException {
+    ELVars vars = context.createELVars();
     RecordEL.setRecordInContext(vars, metadataRecord);
-    return HiveMetastoreUtil.resolveEL(hiveConfigBean.getElEval(), vars, schemaFolderLocation);
+    return HiveMetastoreUtil.resolveEL(schemaFolderELEval, vars, schemaFolderLocation);
   }
 
   public UserGroupInformation getHDFSUgi() {
@@ -127,6 +129,7 @@ public class HMSTargetConfigBean {
   }
 
   public void destroy() {
+    hiveConfigBean.destroy();
     if (storedAsAvro) {
       return;
     }
@@ -147,6 +150,7 @@ public class HMSTargetConfigBean {
 
   public void init(final Stage.Context context, final String prefix, final List<Stage.ConfigIssue> issues) {
     hiveConfigBean.init(context, JOINER.join(prefix, HIVE_CONFIG_BEAN), issues);
+    schemaFolderELEval = context.createELEval("schemaFolderLocation");
     if (storedAsAvro) {
       return;
     }

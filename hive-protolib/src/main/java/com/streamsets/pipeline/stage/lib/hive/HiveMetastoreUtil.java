@@ -50,6 +50,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -139,24 +142,6 @@ public final class HiveMetastoreUtil {
     } else {
       conf.addResource(new Path(confFile.getAbsolutePath()));
     }
-  }
-
-  /**
-   * Resolve JDBCUrl
-   * @param elEval
-   * @param unresolvedJDBCUrl
-   * @param metadataRecord
-   * @return Resolved JDBC URL
-   * @throws ELEvalException if it is an invalid EL
-   */
-  public static String resolveJDBCUrl(
-      ELEval elEval,
-      String unresolvedJDBCUrl,
-      Record metadataRecord
-  ) throws ELEvalException {
-    ELVars elVars = elEval.createVariables();
-    RecordEL.setRecordInContext(elVars, metadataRecord);
-    return HiveMetastoreUtil.resolveEL(elEval, elVars, unresolvedJDBCUrl);
   }
 
   public static Date getTimeBasis(
@@ -746,16 +731,33 @@ public final class HiveMetastoreUtil {
     return path;
   }
 
+  public static Connection getHiveConnection(
+      final String jdbcUrl,
+      final UserGroupInformation loginUgi
+  ) throws StageException {
+    try {
+      return loginUgi.doAs(new PrivilegedExceptionAction<Connection>() {
+        @Override
+        public Connection run() throws SQLException {
+          return DriverManager.getConnection(jdbcUrl);
+        }
+      });
+    } catch (Exception e) {
+      LOG.error("Failed to connect to Hive with JDBC URL:" + jdbcUrl, e);
+      throw new StageException(Errors.HIVE_22, jdbcUrl, e.getMessage());
+    }
+  }
+
+
   /**
    * Gets cached {@link com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport.HMSCacheInfo}
    * from cache.<br>
    * First call getIfPresent to obtain data from local cache.If not exists, load from HMS
    *
+   * @param <T> {@link HMSCacheSupport.HMSCacheInfo}
    * @param hmsCache {@link HMSCache}
    * @param cacheType Type of cache to load.
-   * @param hiveConfigBean {@link HiveConfigBean}
    * @param qualifiedName qualified table name.
-   * @param <T> {@link com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport.HMSCacheInfo}
    * @return Cache object if successfully loaded. Null if no data is found in cache.
    * @throws StageException
    */
@@ -763,21 +765,12 @@ public final class HiveMetastoreUtil {
   public static <T extends HMSCacheSupport.HMSCacheInfo> T getCacheInfo(
       HMSCache hmsCache,
       HMSCacheType cacheType,
-      HiveConfigBean hiveConfigBean,
-      String qualifiedName,
-      Record record
+      String qualifiedName
   ) throws StageException {
-    HMSCacheSupport.HMSCacheInfo cacheInfo = hmsCache.getIfPresent(  // Or better to keep this in this class?
-        cacheType,
-        qualifiedName);
+    HMSCacheSupport.HMSCacheInfo cacheInfo = hmsCache.getIfPresent(cacheType, qualifiedName);
     if (cacheType != HMSCacheType.AVRO_SCHEMA_INFO && cacheInfo == null) {
       // Try loading by executing HMS query
-      cacheInfo = hmsCache.getOrLoad(
-          cacheType,
-          resolveJDBCUrl(hiveConfigBean.getElEval(), hiveConfigBean.hiveJDBCUrl, record),
-          qualifiedName,
-          hiveConfigBean.getUgi()
-      );
+      cacheInfo = hmsCache.getOrLoad(cacheType, qualifiedName);
     }
     return (T)cacheInfo;
   }

@@ -19,47 +19,60 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.*;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
-import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
-import com.streamsets.pipeline.stage.lib.hive.cache.*;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
+import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
+import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.*;
+import java.sql.Connection;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.security.*")
@@ -68,7 +81,9 @@ import java.util.*;
     HiveMetadataProcessor.class,
     HiveMetastoreUtil.class,
     BaseHiveIT.class,
-    HMSCache.class
+    HMSCache.class,
+    HMSCache.Builder.class,
+    HiveQueryExecutor.class
 })
 public class TestHiveMetadataProcessor {
 
@@ -134,31 +149,28 @@ public class TestHiveMetadataProcessor {
   public void setup() throws Exception {
     // do not resolve JDBC URL
     PowerMockito.spy(HiveMetastoreUtil.class);
-    PowerMockito.replace(
-        MemberMatcher.method(
-            HiveMetastoreUtil.class,
-            "resolveJDBCUrl",
-            ELEval.class,
-            String.class,
-            Record.class
-        )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return "";
-      }
-    });
+
     // do not run Hive queries
     PowerMockito.suppress(
         MemberMatcher.method(
             HMSCache.class,
             "getOrLoad",
             HMSCacheType.class,
-            String.class,
-            String.class,
-            UserGroupInformation.class
-        ));
-
+            String.class
+        )
+    );
+    PowerMockito.replace(
+        MemberMatcher.method(
+            HMSCache.Builder.class,
+            "build"
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        args[0] = Mockito.mock(HiveQueryExecutor.class);
+        return method.invoke(proxy, args);
+      }
+    });
     // Do not create issues
     PowerMockito.suppress(
         MemberMatcher.method(

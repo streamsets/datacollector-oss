@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,8 +39,8 @@ public class TypeInfoCacheSupport
     TypeInfoCacheSupport.TypeInfoCacheLoader> {
 
   @Override
-  public TypeInfoCacheLoader newHMSCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
-    return new TypeInfoCacheLoader(jdbcUrl, qualifiedTableName, ugi);
+  public TypeInfoCacheLoader newHMSCacheLoader(HiveQueryExecutor executor) {
+    return new TypeInfoCacheLoader(executor);
   }
 
   public static class TypeInfo extends HMSCacheSupport.HMSCacheInfo<LinkedHashMap<String, HiveTypeInfo>>{
@@ -91,11 +92,11 @@ public class TypeInfoCacheSupport
   }
 
   public class TypeInfoCacheLoader extends HMSCacheSupport.HMSCacheLoader<TypeInfo> {
-    protected TypeInfoCacheLoader(String jdbcUrl, String qualifiedTableName, UserGroupInformation ugi) {
-      super(jdbcUrl, qualifiedTableName, ugi);
+    protected TypeInfoCacheLoader(HiveQueryExecutor executor) {
+      super(executor);
     }
     @Override
-    protected TypeInfo loadHMSCacheInfo() throws StageException{
+    protected TypeInfo loadHMSCacheInfo(String qualifiedTableName) throws StageException{
       Pair<LinkedHashMap<String, HiveTypeInfo>, LinkedHashMap<String, HiveTypeInfo>>  typeInfo =
           executor.executeDescTableQuery(qualifiedTableName);
       return new TypeInfo(typeInfo.getLeft(), typeInfo.getRight());

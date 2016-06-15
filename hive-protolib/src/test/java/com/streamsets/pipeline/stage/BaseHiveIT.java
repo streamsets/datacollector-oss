@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
+import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
@@ -155,9 +156,8 @@ public abstract class BaseHiveIT {
 
     // JDBC Connection to Hive
     Class.forName(HIVE_JDBC_DRIVER);
-    hiveQueryExecutor = new HiveQueryExecutor(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
-    hiveConnection = hiveQueryExecutor.getConnection();
-
+    hiveConnection = HiveMetastoreUtil.getHiveConnection(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
+    hiveQueryExecutor = new HiveQueryExecutor(hiveConnection);
   }
 
   /**

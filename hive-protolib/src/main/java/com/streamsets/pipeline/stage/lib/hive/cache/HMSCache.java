@@ -20,14 +20,16 @@
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
-import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
-import org.apache.hadoop.security.UserGroupInformation;
+import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +42,9 @@ import java.util.concurrent.ExecutionException;
  * which it is supposed to support.
  */
 public class HMSCache {
-  private Map<HMSCacheType, Cache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap;
+  private Map<HMSCacheType, LoadingCache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap;
 
-  private HMSCache(Map<HMSCacheType, Cache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap) {
+  private HMSCache(Map<HMSCacheType, LoadingCache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap) {
     this.cacheMap = cacheMap;
   }
 
@@ -69,7 +71,7 @@ public class HMSCache {
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
-    Optional<HMSCacheSupport.HMSCacheInfo> ret =cacheMap.get(hmsCacheType).getIfPresent(qualifiedTableName);
+    Optional<HMSCacheSupport.HMSCacheInfo> ret = cacheMap.get(hmsCacheType).getIfPresent(qualifiedTableName);
     return ret == null ? null : (T)ret.orNull();
   }
 
@@ -79,7 +81,6 @@ public class HMSCache {
    * If it is not there load it using corresponding {@link HMSCacheSupport.HMSCacheLoader}
    * @param <T> {@link HMSCacheSupport.HMSCacheInfo}
    * @param hmsCacheType {@link HMSCacheType}
-   * @param jdbcUrl JDBC Url.
    * @param qualifiedTableName qualified table name
    * @return Corresponding {@link HMSCacheSupport.HMSCacheInfo} for the qualified table name.
    * @throws StageException if the {@link HMSCacheType} is not supported by {@link HMSCache}
@@ -87,22 +88,13 @@ public class HMSCache {
   @SuppressWarnings("unchecked")
   public <T extends HMSCacheSupport.HMSCacheInfo> T getOrLoad(
       HMSCacheType hmsCacheType,
-      String jdbcUrl,
-      String qualifiedTableName,
-      UserGroupInformation ugi
-  ) throws StageException{
+      String qualifiedTableName
+  ) throws StageException {
     if (!cacheMap.containsKey(hmsCacheType)) {
       throw new StageException(Errors.HIVE_16, hmsCacheType);
     }
     try {
-      return (T) (cacheMap.get(hmsCacheType).get(
-              qualifiedTableName,
-              hmsCacheType.getSupport().newHMSCacheLoader(
-                  jdbcUrl,
-                  qualifiedTableName,
-                  ugi
-              )
-      )).orNull();
+      return (T)(cacheMap.get(hmsCacheType).get(qualifiedTableName)).orNull();
     } catch(ExecutionException e) {
       throw new StageException(Errors.HIVE_01, e);
     }
@@ -181,9 +173,14 @@ public class HMSCache {
      * Build instance of {@link HMSCache}
      * @return {@link HMSCache}
      */
-    public HMSCache build() {
-      Utils.checkArgument(!cacheTypes.isEmpty(), "Invalid HMSCache Configuration");
-      Map<HMSCacheType, Cache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    public HMSCache build(HiveQueryExecutor executor) throws StageException {
+      Utils.checkArgument(
+          !cacheTypes.isEmpty(),
+          "Invalid HMSCache Configuration, Should support at least one type of cache"
+      );
+
+      Map<HMSCacheType, LoadingCache<String, Optional<HMSCacheSupport.HMSCacheInfo>>> cacheMap = new HashMap<>();
       CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
 
       if (maxCacheSize > 0) {
@@ -191,7 +188,7 @@ public class HMSCache {
       }
 
       for (HMSCacheType type : cacheTypes) {
-        cacheMap.put(type, cacheBuilder.build());
+        cacheMap.put(type, cacheBuilder.build(type.getSupport().newHMSCacheLoader(executor)));
       }
       return new HMSCache(cacheMap);
     }
