@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.lib.security.http.SSOService;
@@ -83,7 +84,7 @@ public class TestWebServerTaskHttpHttps {
       final Configuration conf,
       final Set<WebAppProvider> webAppProviders
   ) throws Exception {
-    runtimeInfo = new RuntimeInfo(
+    runtimeInfo = new StandaloneRuntimeInfo(
         RuntimeModule.SDC_PROPERTY_PREFIX,
         new MetricRegistry(),
         Collections.<ClassLoader>emptyList()

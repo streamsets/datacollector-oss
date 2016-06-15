@@ -17,28 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.store;
+package com.streamsets.datacollector.stagelibrary;
 
-import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
 import com.streamsets.datacollector.main.SlaveRuntimeModule;
-import com.streamsets.datacollector.stagelibrary.SlaveStageLibraryModule;
-import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
-import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
-
-import com.streamsets.datacollector.util.LockCacheModule;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = PipelineStoreTask.class, library = true, includes = {SlaveRuntimeModule.class, SlaveStageLibraryModule
-    .class, SlavePipelineStateStoreModule.class, LockCacheModule.class})
-public class SlavePipelineStoreModule {
+@Module(injects = StageLibraryTask.class, library = true, includes = {SlaveRuntimeModule.class})
+public class SlaveStageLibraryModule {
 
   @Provides
   @Singleton
-  public PipelineStoreTask provideStore(FilePipelineStoreTask filePipelineStoreTask) {
-    return new SlavePipelineStoreTask(filePipelineStoreTask);
+  public StageLibraryTask provideStageLibrary(ClassLoaderStageLibraryTask stageLibraryTask) {
+    return stageLibraryTask;
   }
 
 }

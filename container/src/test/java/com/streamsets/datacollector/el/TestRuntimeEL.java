@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import dagger.ObjectGraph;
@@ -86,7 +87,7 @@ public class TestRuntimeEL {
 
   @Before()
   public void setUp() {
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX,new MetricRegistry(),
+    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX,new MetricRegistry(),
       Arrays.asList(getClass().getClassLoader()));
   }
 

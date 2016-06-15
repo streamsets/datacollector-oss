@@ -20,28 +20,22 @@
 package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import javax.net.ssl.SSLContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.net.ssl.SSLContext;
 
-public class RuntimeInfo {
+public abstract class RuntimeInfo {
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
@@ -59,27 +53,18 @@ public class RuntimeInfo {
 
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
-  private String id;
   private String httpUrl;
-  private SSLContext sslContext;
-  private String appAuthToken;
+
   private final Map<String, Object> attributes;
   private ShutdownHandler shutdownRunnable;
   private final Map<String, String> authenticationTokens;
   private final String propertyPrefix;
-  private final File baseDir;
   private final UUID randomUUID;
+  private SSLContext sslContext;
   private boolean remoteRegistrationSuccessful;
-  private String masterSDCId;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
                      List<? extends ClassLoader> stageLibraryClassLoaders) {
-    this(propertyPrefix, metrics, stageLibraryClassLoaders, null);
-  }
-  @VisibleForTesting
-  public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
-                     List<? extends ClassLoader> stageLibraryClassLoaders,
-                     File baseDir) {
     this.metrics = metrics;
     if(stageLibraryClassLoaders != null) {
       this.stageLibraryClassLoaders = ImmutableList.copyOf(stageLibraryClassLoaders);
@@ -87,7 +72,6 @@ public class RuntimeInfo {
       this.stageLibraryClassLoaders = null;
     }
     this.propertyPrefix = propertyPrefix;
-    this.baseDir = baseDir;
     httpUrl = UNDEF;
     this.attributes = new ConcurrentHashMap<>();
     authenticationTokens = new HashMap<>();
@@ -95,43 +79,19 @@ public class RuntimeInfo {
     randomUUID = UUID.randomUUID();
   }
 
-  public void init() {
-    this.id = getSdcId(getDataDir());
-    // in transient environment, the SDC ID Callable must be set
-    // by the cluster environment such as the spark executor function
-    if (!Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
-      // inject SDC ID into the API sdc:id EL function
-      Utils.setSdcIdCallable(new Callable<String>() {
-        @Override
-        public String call() throws Exception {
-          return RuntimeInfo.this.id;
-        }
-      });
-    }
+  protected UUID getRandomUUID() {
+    return randomUUID;
   }
 
-  protected String getSdcId(String dir) {
-    File dataDir = new File(dir);
-    if (!dataDir.exists()) {
-      if (!dataDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create data directory '{}'", dataDir));
-      }
-    }
-    File idFile = new File(dataDir, "sdc.id");
-    if (!idFile.exists()) {
-      try {
-        Files.write(UUID.randomUUID().toString(), idFile, StandardCharsets.UTF_8);
-      } catch (IOException ex) {
-        throw new RuntimeException(Utils.format("Could not create SDC ID file '{}': {}", idFile, ex.toString(), ex));
-      }
-    }
-    try {
-      return Files.readFirstLine(idFile, StandardCharsets.UTF_8).trim();
-    } catch (IOException ex) {
-      throw new RuntimeException(Utils.format("Could not read SDC ID file '{}': {}", idFile, ex.toString(), ex));
-    }
-  }
+  public abstract void init();
 
+  public abstract String getId();
+
+  public abstract String getMasterSDCId();
+
+  public abstract String getRuntimeDir();
+
+  public abstract String getAppAuthToken();
 
   public MetricRegistry getMetrics() {
     return metrics;
@@ -143,28 +103,6 @@ public class RuntimeInfo {
 
   public String getBaseHttpUrl() {
     return httpUrl;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getRuntimeDir() {
-    if (baseDir != null) {
-      return baseDir.getAbsolutePath();
-    }
-    if (Boolean.getBoolean(TRANSIENT_ENVIRONMENT)) {
-      if (Boolean.getBoolean("sdc.testing-mode")) {
-        return System.getProperty("user.dir") + "/target/runtime-" + randomUUID;
-      } else {
-        return System.getProperty("user.dir") + "/" + randomUUID;
-      }
-    } else {
-      if (Boolean.getBoolean("sdc.testing-mode")) {
-        return System.getProperty("test.data.dir") + "/runtime-" + randomUUID;
-      }
-      return System.getProperty("user.dir");
-    }
   }
 
   public String getStaticWebDir() {
@@ -296,14 +234,6 @@ public class RuntimeInfo {
     return this.remoteRegistrationSuccessful;
   }
 
-  public void setMasterSDCId(String masterSDCId) {
-    this.masterSDCId = masterSDCId;
-  }
-
-  public String getMasterSDCId() {
-    return this.masterSDCId;
-  }
-
   public void setSSLContext(SSLContext sslContext) {
     this.sslContext = sslContext;
   }
@@ -312,11 +242,4 @@ public class RuntimeInfo {
     return sslContext;
   }
 
-  void setAppAuthToken(String appAuthToken) {
-    this.appAuthToken = appAuthToken;
-  }
-
-  public String getAppAuthToken() {
-    return appAuthToken;
-  }
 }

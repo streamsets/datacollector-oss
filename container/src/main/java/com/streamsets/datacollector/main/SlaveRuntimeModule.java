@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,13 +19,14 @@
  */
 package com.streamsets.datacollector.main;
 
+
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
 import dagger.Provides;
 import org.slf4j.Logger;
@@ -38,42 +39,44 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class, EventListenerManager.class},
-    includes = MetricsModule.class)
-public class RuntimeModule {
-  private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
-  public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
+@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class, EventListenerManager
+    .class}, includes = MetricsModule.class)
+public class SlaveRuntimeModule {
+  private static final Logger LOG = LoggerFactory.getLogger(SlaveRuntimeModule.class);
   public static final String SDC_PROPERTY_PREFIX = "sdc";
-  public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
-  private static List<ClassLoader> stageLibraryClassLoaders = Collections.EMPTY_LIST;//ImmutableList.of(RuntimeModule.class.getClassLoader());
+  private static List<ClassLoader> stageLibraryClassLoaders = Collections.EMPTY_LIST;
 
+  // Called by BootstrapCluster through reflection
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
     stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   public BuildInfo provideBuildInfo() {
     return new DataCollectorBuildInfo();
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    RuntimeInfo info = new StandaloneRuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
+    RuntimeInfo info = new SlaveRuntimeInfo(SDC_PROPERTY_PREFIX, metrics, stageLibraryClassLoaders);
     info.init();
     return info;
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
     Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
     Configuration conf = new Configuration();
     File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
     if (configFile.exists()) {
-      try(FileReader reader = new FileReader(configFile)) {
+      try (FileReader reader = new FileReader(configFile)) {
         conf.load(reader);
-        runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
-        String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
-        ((StandaloneRuntimeInfo)runtimeInfo).setAppAuthToken(appAuthToken);
+        ((SlaveRuntimeInfo) runtimeInfo).setMasterSDCId(Utils.checkNotNull(conf.get(Constants.SDC_ID, null),
+            Constants.SDC_ID
+        ));
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }
@@ -83,9 +86,9 @@ public class RuntimeModule {
     return conf;
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   public EventListenerManager provideEventListenerManager() {
     return new EventListenerManager();
   }
-
 }

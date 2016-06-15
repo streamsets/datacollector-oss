@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import org.eclipse.jetty.server.Server;
@@ -43,7 +44,8 @@ public class TestWebServerTask {
       final String confDir, final Configuration conf, final Set<WebAppProvider> webAppProviders
   ) throws Exception {
     RuntimeInfo runtimeInfo =
-        new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.<ClassLoader>emptyList()) {
+        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
+            .<ClassLoader>emptyList()) {
           @Override
           public String getConfigDir() {
             return confDir;

@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
@@ -74,7 +75,7 @@ public class TestRuntimeInfo {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "r");
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     Assert.assertEquals(System.getProperty("user.dir"), info.getRuntimeDir());
     Assert.assertEquals("w", info.getStaticWebDir());
     Assert.assertEquals("x", info.getConfigDir());
@@ -88,7 +89,7 @@ public class TestRuntimeInfo {
 
   @Test
   public void testAttributes() {
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(getClass().getClassLoader()));
     Assert.assertFalse(info.hasAttribute("a"));
     info.setAttribute("a", 1);
@@ -131,6 +132,29 @@ public class TestRuntimeInfo {
   }
 
   @Test
+  public void testSlaveRuntimeInfoConfigAndId() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
+    Properties props = new Properties();
+    props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
+    props.setProperty(Constants.SDC_ID, "MASTER_ID");
+    Writer writer = new FileWriter(new File(dir, "sdc.properties"));
+    props.store(writer, "");
+    writer.close();
+    ObjectGraph og  = ObjectGraph.create(SlaveRuntimeModule.class);
+    og.get(Configuration.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    Assert.assertTrue(info instanceof SlaveRuntimeInfo);
+    Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
+    Assert.assertNull(info.getAppAuthToken());
+    Assert.assertEquals("MASTER_ID", info.getMasterSDCId());
+    ((SlaveRuntimeInfo)info).setId("ID");
+    Assert.assertEquals("ID", info.getId());
+  }
+
+  @Test
   public void testRuntimeInfoSdcId() {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
@@ -140,17 +164,17 @@ public class TestRuntimeInfo {
                        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
 
     List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     info.init();
     String id = info.getId();
     Assert.assertNotNull(id);
-    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     info.init();
     Assert.assertEquals(id, info.getId());
 
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
                        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
-    info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
+    info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     info.init();
     Assert.assertNotEquals(id, info.getId());
   }

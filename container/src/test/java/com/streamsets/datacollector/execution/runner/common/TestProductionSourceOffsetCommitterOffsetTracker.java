@@ -22,6 +22,7 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -56,7 +57,7 @@ public class TestProductionSourceOffsetCommitterOffsetTracker {
   @Test
   public void testProductionSourceOffsetCommitterOffsetTracker() {
 
-    RuntimeInfo info = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(getClass().getClassLoader()));
     ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(
       PIPELINE_NAME, PIPELINE_REV, info, new OffsetCommitter() {

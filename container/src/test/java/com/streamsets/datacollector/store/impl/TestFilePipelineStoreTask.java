@@ -88,6 +88,17 @@ public class TestFilePipelineStoreTask {
     public PipelineStateStore providePipelineStateStore() {
       return null;
     }
+
+    @Provides
+    @Singleton
+    public FilePipelineStoreTask providePipelineStoreTask(
+        RuntimeInfo runtimeInfo,
+        StageLibraryTask stageLibraryTask,
+        PipelineStateStore pipelineStateStore,
+        LockCache<String> lockCache
+    ) {
+      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, lockCache);
+    }
   }
 
   @Before

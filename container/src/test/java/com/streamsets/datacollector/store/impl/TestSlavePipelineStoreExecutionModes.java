@@ -26,6 +26,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import org.junit.Test;
 
 import com.codahale.metrics.MetricRegistry;
@@ -47,7 +48,7 @@ public class TestSlavePipelineStoreExecutionModes {
   public void testSlaveExecutionModeStoreDir() {
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo =
-      new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
@@ -62,7 +63,7 @@ public class TestSlavePipelineStoreExecutionModes {
   public void testStandaloneExecutionModeStoreDir() {
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo =
-      new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,

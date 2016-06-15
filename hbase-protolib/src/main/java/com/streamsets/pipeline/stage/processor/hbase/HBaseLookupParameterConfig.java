@@ -63,6 +63,18 @@ public class HBaseLookupParameterConfig {
   public String timestampExpr = "";
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "TimeStamp Expression",
+      description = "An EL expression defining the timestamp to use for a lookup.",
+      elDefs = {StringEL.class, RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      displayPosition = 15,
+      group = "#0"
+  )
+  public String tables = "t1";
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Output Field",

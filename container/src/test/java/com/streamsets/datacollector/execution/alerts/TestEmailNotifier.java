@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.junit.After;
@@ -61,7 +62,7 @@ public class TestEmailNotifier {
     conf.set("mail.smtp.port", Integer.toString(server.getSmtp().getPort()));
     emailSender = new EmailSender(conf);
 
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestEmailNotifier.class.getClassLoader()));
   }
 

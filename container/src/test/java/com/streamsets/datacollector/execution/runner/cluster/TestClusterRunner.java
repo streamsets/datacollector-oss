@@ -36,6 +36,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineRunnerExcept
 import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -108,7 +109,7 @@ public class TestClusterRunner {
     MockSystemProcess.isAlive = false;
     MockSystemProcess.output.clear();
     MockSystemProcess.error.clear();
-    runtimeInfo = new RuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
+    runtimeInfo = new StandaloneRuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
     clusterProvider = new MockClusterProvider();
     conf = new Configuration();
     pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf));

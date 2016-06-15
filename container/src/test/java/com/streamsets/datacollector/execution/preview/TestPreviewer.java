@@ -30,6 +30,7 @@ import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -91,7 +92,7 @@ public abstract class TestPreviewer {
     @Provides
     @Singleton
     public RuntimeInfo providesRuntimeInfo() {
-      return new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      return new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPreviewer.class.getClassLoader()));
     }
 

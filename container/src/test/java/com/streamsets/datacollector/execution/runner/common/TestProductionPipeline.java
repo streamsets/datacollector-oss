@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.memory.TestMemoryUsageCollector;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
@@ -96,7 +97,7 @@ public class TestProductionPipeline {
   @Before
   public void setUp() {
     runtimeInfoMetrics = new MetricRegistry();
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
+    runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, runtimeInfoMetrics,
                                   Arrays.asList(getClass().getClassLoader()));
     runtimeInfo.init();
     memoryLimit = new MemoryLimitConfiguration();

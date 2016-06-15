@@ -30,11 +30,14 @@ import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -102,8 +105,8 @@ public class TestPipelineStateStore {
   static class TestPipelineStateStoreModule {
 
     @Provides @Singleton
-    public RuntimeInfo provideRuntimeInfo() {
-      return new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+    public SlaveRuntimeInfo provideRuntimeInfo() {
+      return new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         ImmutableList.of(getClass().getClassLoader()));
     }
 
@@ -113,13 +116,19 @@ public class TestPipelineStateStore {
     }
 
     @Provides @Singleton
-    public PipelineStateStore providePipelineStateStore(RuntimeInfo runtimeInfo, Configuration configuration) {
+    public PipelineStateStore providePipelineStateStore(SlaveRuntimeInfo runtimeInfo, Configuration configuration) {
       return new MockFilePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration));
     }
 
-    @Provides @Singleton
-    public PipelineStoreTask providePipelineStore(FilePipelineStoreTask pipelineStoreTask) {
-      return pipelineStoreTask;
+    @Provides
+    @Singleton
+    public PipelineStoreTask providePipelineStore(
+        SlaveRuntimeInfo slaveRuntimeInfo,
+        StageLibraryTask stageLibraryTask,
+        PipelineStateStore pipelineStateStore,
+        LockCache<String> lockCache
+    ) {
+      return new FilePipelineStoreTask(slaveRuntimeInfo, stageLibraryTask, pipelineStateStore, lockCache);
     }
   }
 

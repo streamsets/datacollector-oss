@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -145,7 +146,7 @@ public class TestClusterProviderImpl {
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
-    RuntimeInfo runtimeInfo = new RuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
     sparkProvider = new ClusterProviderImpl(runtimeInfo, null);
   }
 

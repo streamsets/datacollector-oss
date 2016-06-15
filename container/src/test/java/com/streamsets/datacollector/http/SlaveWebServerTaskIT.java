@@ -32,6 +32,7 @@ import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -46,11 +47,11 @@ import com.streamsets.datacollector.util.Configuration;
 
 public class SlaveWebServerTaskIT {
 
-  private RuntimeInfo runtimeInfo;
+  private SlaveRuntimeInfo runtimeInfo;
 
   private WebServerTask createSlaveWebServerTask(final String confDir, final Configuration conf, final
   Set<WebAppProvider> webAppProviders) throws Exception {
-    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
+    runtimeInfo = new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
         .<ClassLoader>emptyList()) {
       @Override
       public String getConfigDir() {

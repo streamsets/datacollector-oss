@@ -32,6 +32,7 @@ import com.streamsets.datacollector.main.MainSlavePipelineManagerModule;
 import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.ShutdownHandler;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.task.Task;
@@ -63,7 +64,7 @@ public class EmbeddedDataCollector implements DataCollector {
   private ObjectGraph dagger;
   private Thread waitingThread;
   private Task task;
-  private RuntimeInfo runtimeInfo;
+  private SlaveRuntimeInfo runtimeInfo;
   private Runner runner;
   private PipelineTask pipelineTask;
   private SecurityContext securityContext;
@@ -88,9 +89,6 @@ public class EmbeddedDataCollector implements DataCollector {
             is.close();
           }
         }
-        String masterSDCId = Utils.checkNotNull(properties.getProperty("sdc.id"), "SDC_ID");
-        LOG.info(Utils.format("Master sdc id is: '{}'", masterSDCId));
-        runtimeInfo.setMasterSDCId(masterSDCId);
         String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
@@ -127,7 +125,7 @@ public class EmbeddedDataCollector implements DataCollector {
     pipelineTask = (PipelineTask) ((TaskWrapper) task).getTask();
     pipelineName = pipelineTask.getName();
     pipelineManager = pipelineTask.getManager();
-    runtimeInfo = dagger.get(RuntimeInfo.class);
+    runtimeInfo = (SlaveRuntimeInfo)dagger.get(RuntimeInfo.class);
     dagger.get(LogConfigurator.class).configure();
     LOG.info("-----------------------------------------------------------------");
     dagger.get(BuildInfo.class).log(LOG);

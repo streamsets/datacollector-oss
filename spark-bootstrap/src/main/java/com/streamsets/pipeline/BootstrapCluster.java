@@ -221,7 +221,8 @@ public class BootstrapCluster {
       throw new IllegalStateException(msg, ex);
     }
     try {
-      Class<?> runtimeModuleClz = Class.forName("com.streamsets.datacollector.main.RuntimeModule", true, containerCL);
+      Class<?> runtimeModuleClz = Class.forName("com.streamsets.datacollector.main.SlaveRuntimeModule", true,
+          containerCL);
       Method setStageLibraryClassLoadersMethod = runtimeModuleClz.getMethod("setStageLibraryClassLoaders", List.class);
       setStageLibraryClassLoadersMethod.invoke(null, stageLibrariesCLs);
     } catch (Exception ex) {

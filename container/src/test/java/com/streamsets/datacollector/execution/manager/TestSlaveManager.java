@@ -25,7 +25,6 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.SnapshotStore;
-import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.provider.SlaveRunnerProviderImpl;
@@ -34,6 +33,7 @@ import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -69,8 +69,7 @@ public class TestSlaveManager {
   private Manager manager;
 
   @Module(
-    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class,
-      StandaloneRunner.class, EventListenerManager.class},
+    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class, EventListenerManager.class},
     library = true)
   public static class TestSlaveManagerModule {
 
@@ -80,7 +79,7 @@ public class TestSlaveManager {
     @Provides
     @Singleton
     public RuntimeInfo providesRuntimeInfo() {
-      return new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      return new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestSlaveManager.class.getClassLoader()));
     }
 
@@ -105,7 +104,7 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
-    public PipelineStateStore providePipelineStateStore(RuntimeInfo runtimeInfo, Configuration configuration) {
+    public PipelineStateStore providePipelineStateStore() {
       PipelineStateStore pipelineStateStore = new SlavePipelineStateStore();
       return pipelineStateStore;
     }

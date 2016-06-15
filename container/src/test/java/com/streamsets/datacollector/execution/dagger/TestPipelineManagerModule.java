@@ -34,6 +34,7 @@ import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.SlavePipelineTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
@@ -113,7 +114,7 @@ public class TestPipelineManagerModule {
     ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     taskWrapper.init();
-    Assert.assertTrue(taskWrapper.getTask() instanceof PipelineTask);
+    Assert.assertTrue(taskWrapper.getTask() instanceof SlavePipelineTask);
     PipelineTask pipelineTask = (PipelineTask) taskWrapper.getTask();
     Manager pipelineManager = pipelineTask.getManager();
     Assert.assertTrue(pipelineManager instanceof SlavePipelineManager);

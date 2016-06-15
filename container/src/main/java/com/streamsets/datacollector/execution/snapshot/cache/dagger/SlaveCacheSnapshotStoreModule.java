@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,28 +17,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.store;
+package com.streamsets.datacollector.execution.snapshot.cache.dagger;
 
-import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
-import com.streamsets.datacollector.main.SlaveRuntimeModule;
-import com.streamsets.datacollector.stagelibrary.SlaveStageLibraryModule;
-import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
-import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
-
+import com.streamsets.datacollector.execution.SnapshotStore;
+import com.streamsets.datacollector.execution.snapshot.cache.CacheSnapshotStore;
+import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
+import com.streamsets.datacollector.execution.snapshot.file.dagger.FileSnapshotStoreModule;
+import com.streamsets.datacollector.execution.snapshot.file.dagger.SlaveFileSnapshotStoreModule;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = PipelineStoreTask.class, library = true, includes = {SlaveRuntimeModule.class, SlaveStageLibraryModule
-    .class, SlavePipelineStateStoreModule.class, LockCacheModule.class})
-public class SlavePipelineStoreModule {
+/**
+ * Provides a singleton instance of FileSnapshotStore
+ */
+@Module(injects = SnapshotStore.class, library = true, includes = {SlaveFileSnapshotStoreModule.class,
+  LockCacheModule.class})
+public class SlaveCacheSnapshotStoreModule {
 
   @Provides
   @Singleton
-  public PipelineStoreTask provideStore(FilePipelineStoreTask filePipelineStoreTask) {
-    return new SlavePipelineStoreTask(filePipelineStoreTask);
+  public SnapshotStore provideSnapshotStore(FileSnapshotStore fileSnapshotStore,
+     LockCache<String> lockCache) {
+    return new CacheSnapshotStore(fileSnapshotStore, lockCache);
   }
 
 }
