@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.processor.hbase;
+package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;

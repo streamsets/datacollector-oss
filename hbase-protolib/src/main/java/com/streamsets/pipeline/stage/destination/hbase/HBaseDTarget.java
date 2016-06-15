@@ -32,7 +32,6 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
-import com.streamsets.pipeline.stage.processor.hbase.HBaseTargetUpgrader;
 
 import java.util.List;
 

@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.processor.hbase.HBaseTargetUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
