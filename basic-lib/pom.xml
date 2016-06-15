@@ -45,6 +45,7 @@
     <jetty.version>9.4.2.v20170220</jetty.version>
     <paho.version>1.0.2</paho.version>
     <snappy.version>0.4</snappy.version>
+    <snmp4j.version>2.5.0</snmp4j.version>
   </properties>
 
   <dependencies>
@@ -288,6 +289,11 @@
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
       <version>3.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.snmp4j</groupId>
+      <artifactId>snmp4j</artifactId>
+      <version>${snmp4j.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->
