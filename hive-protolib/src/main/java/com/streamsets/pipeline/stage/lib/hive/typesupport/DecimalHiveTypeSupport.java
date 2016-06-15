@@ -20,13 +20,10 @@
 package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -73,19 +70,19 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     if (split.length != 2) {
       throw new HiveStageCheckedException(Errors.HIVE_01, "Invalid Column Type Definition: " + hiveTypeString);
     }
-    int scale = Integer.parseInt(split[0]);
-    int precision = Integer.parseInt(split[1]);
+    int precision = Integer.parseInt(split[0]);
+    int scale = Integer.parseInt(split[1]);
     return new DecimalTypeInfo(scale, precision);
   }
 
-  private static int getDefaultScale(Object... auxillaryArgs) {
+  private static int getScale(Object... auxillaryArgs) {
     if (auxillaryArgs != null) {
       return (int)auxillaryArgs[0];
     }
     return MAX_SCALE_PRECISION;
   }
 
-  private static int getDefaultPrecision(Object... auxillaryArgs) {
+  private static int getPrecision(Object... auxillaryArgs) {
     if (auxillaryArgs != null) {
       return (int)auxillaryArgs[1];
     }
@@ -96,19 +93,25 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   @SuppressWarnings("unchecked")
   public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
       throws HiveStageCheckedException {
-    BigDecimal bigDecimal = field.getValueAsDecimal();
-    int scale = bigDecimal.scale();
-    int precision = bigDecimal.precision();
-    return new DecimalTypeInfo(
-        Math.max(scale, getDefaultScale(auxillaryArgs)),
-        Math.max(precision, getDefaultPrecision(auxillaryArgs))
-    );
+    int precision = getPrecision(auxillaryArgs);
+    int scale = getScale(auxillaryArgs);
+
+    // Since data and metadata are separate here, we need to make sure that the given decimal is properly formed
+    BigDecimal value = field.getValueAsDecimal();
+    if(value.scale() > scale) {
+      throw new HiveStageCheckedException(Errors.HIVE_26, value, "scale", value.scale(), scale);
+    }
+    if(value.precision() > precision) {
+      throw new HiveStageCheckedException(Errors.HIVE_26, value, "precision", value.precision(), precision);
+    }
+
+    return new DecimalTypeInfo(scale, precision);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DecimalTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs) {
-    return new DecimalTypeInfo(getDefaultScale(auxillaryArgs), getDefaultPrecision(auxillaryArgs));
+    return new DecimalTypeInfo(getScale(auxillaryArgs), getPrecision(auxillaryArgs));
   }
 
   public static class DecimalTypeInfo extends PrimitiveHiveTypeInfo {

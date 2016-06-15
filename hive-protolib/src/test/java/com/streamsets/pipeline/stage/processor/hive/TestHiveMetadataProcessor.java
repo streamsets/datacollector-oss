@@ -568,7 +568,7 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(37, 39).build();
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(39, 37).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
@@ -580,7 +580,7 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(5, 2).build();
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(2, 5).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
@@ -592,7 +592,7 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(1, 1).build();
+    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(2, 1).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));

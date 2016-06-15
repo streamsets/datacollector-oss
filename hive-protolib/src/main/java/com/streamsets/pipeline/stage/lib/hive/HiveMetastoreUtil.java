@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.PrivilegedExceptionAction;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -626,12 +627,14 @@ public final class HiveMetastoreUtil {
       pair.setValue(currField);
       HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
       HiveTypeInfo hiveTypeInfo;
+      // Some types requires special checks or alterations
       if (hiveType == HiveType.DECIMAL) {
-        int defaultScale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
-        int defaultPrecision = resolvePrecisionExpression(precisionEL, variables, precisionExpression, pair.getKey());
-        validateScaleAndPrecision(defaultScale, defaultPrecision);
-        hiveTypeInfo =
-            hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, defaultScale, defaultPrecision);
+        int scale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
+        int precision = resolvePrecisionExpression(precisionEL, variables, precisionExpression, pair.getKey());
+        validateScaleAndPrecision(scale, precision);
+        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, scale, precision);
+        // We need to make sure that all java objects have the same scale
+        pair.setValue(Field.create(pair.getValue().getValueAsDecimal().setScale(scale)));
       } else {
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField);
       }

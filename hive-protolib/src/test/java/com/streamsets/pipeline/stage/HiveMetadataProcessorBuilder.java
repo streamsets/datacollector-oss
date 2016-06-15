@@ -84,7 +84,7 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
-  public HiveMetadataProcessorBuilder decimalDefaultsConfig(int scale, int precision) {
+  public HiveMetadataProcessorBuilder decimalDefaultsConfig(int precision, int scale) {
     decimalDefaultsConfig = new DecimalDefaultsConfig();
     decimalDefaultsConfig.scaleExpression = String.valueOf(scale);
     decimalDefaultsConfig.precisionExpression = String.valueOf(precision);

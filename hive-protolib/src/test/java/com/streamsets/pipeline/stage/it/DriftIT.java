@@ -25,12 +25,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
-import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
-import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +36,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -231,8 +227,11 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
 
   @Test
   public void testChangedColumnTypeDecimal() throws Exception {
+    executeUpdate("CREATE TABLE `decimal` (dec decimal(2, 1)) PARTITIONED BY (dt string) STORED AS AVRO");
+
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-        .table("decimal").decimalDefaultsConfig(1, 2)
+        .table("decimal")
+        .decimalDefaultsConfig(3, 2)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();
@@ -242,12 +241,6 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("dec", Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(2.2)));
     Record record = RecordCreator.create("s", "s:1");
-    record.set(Field.create(map));
-    records.add(record);
-
-    map = new LinkedHashMap<>();
-    map.put("dec", Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(2.22)));
-    record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
     records.add(record);
 
