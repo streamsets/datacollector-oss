@@ -723,7 +723,8 @@ public final class HiveMetastoreUtil {
           //and let user handle this via error record handling.
           if (!fs.exists(schemaFilePath)) {
             try (FSDataOutputStream os = fs.create(schemaFilePath)) {
-              os.writeChars(schemaJson);
+              byte []schemaBytes = schemaJson.getBytes("UTF-8");
+              os.write(schemaBytes, 0, schemaBytes.length);
             }
           } else {
             LOG.error(Utils.format("Already schema file {} exists in HDFS", path));
