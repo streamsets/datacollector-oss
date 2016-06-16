@@ -73,6 +73,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String SCALE_EXPRESSION = "scaleExpression";
   private static final String PRECISION_EXPRESSION = "precisionExpression";
 
+  private static final String WAREHOUSE_DIR_PROPERTY = "hive.metastore.warehouse.dir";
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
   protected static final String HDFS_HEADER_TARGET_DIRECTORY = "targetDirectory";
@@ -184,7 +185,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
 
     if (!externalTable) {
-      internalWarehouseDir = HiveConf.getVar(hiveConfigBean.getConfiguration(), HiveConf.ConfVars.METASTOREWAREHOUSE);
+      internalWarehouseDir
+          = new HiveConf(hiveConfigBean.getConfiguration(), HiveConf.class)
+          .get(WAREHOUSE_DIR_PROPERTY);
       validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
     } else {
       validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_06, issues);
