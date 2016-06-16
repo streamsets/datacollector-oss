@@ -151,4 +151,26 @@ public class TestHiveMetastoreUtil {
     Assert.assertEquals(f4.getValueAsDecimal().precision(), decimalVal.precision());
     Assert.assertEquals(f4.getValueAsDecimal().toString(), decimalVal.toString());
   }
+
+  @Test
+  public void testUnsupportedColumnValue() {
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("/"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("*"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("="));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("%"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("\\"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("^"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("[]"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("?"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("'"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("\""));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("123=45"));
+    Assert.assertTrue(HiveMetastoreUtil.hasUnsupportedChar("test[3]"));
+
+    // They don't contain unsupported chars
+    Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("$56.77"));
+    Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("2016-01-01"));
+    Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("hive_avro+hdfs"));
+    Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("test(3)"));
+  }
 }

@@ -296,24 +296,22 @@ public class HiveMetadataProcessor extends RecordProcessor {
     LinkedHashMap<String, String> partitionValMap;
     boolean schemaChanged = false;
 
-    partitionValMap = getPartitionValuesFromRecord(record);
-    warehouseDir = externalTable ?
-        HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate) :
-        internalWarehouseDir;
-
-    if (partitioned) {
-      partitionStr = externalTable ?
-          HiveMetastoreUtil.resolveEL(elEvals.partitionPathTemplateELEval, variables, partitionPathTemplate) :
-          HiveMetastoreUtil.generatePartitionPath(partitionValMap);
-      if (!partitionStr.startsWith("/"))
-        partitionStr = "/" + partitionStr;
-    }
-
     if (dbName.isEmpty()) {
       dbName = DEFAULT_DB;
     }
-
     try{
+      partitionValMap = getPartitionValuesFromRecord(record);
+      warehouseDir = externalTable ?
+          HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate) :
+          internalWarehouseDir;
+
+      if (partitioned) {
+        partitionStr = externalTable ?
+            HiveMetastoreUtil.resolveEL(elEvals.partitionPathTemplateELEval, variables, partitionPathTemplate) :
+            HiveMetastoreUtil.generatePartitionPath(partitionValMap);
+        if (!partitionStr.startsWith("/"))
+          partitionStr = "/" + partitionStr;
+      }
       // First, find out if this record has all necessary data to process
       validateNames(dbName, tableName, warehouseDir);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
@@ -562,9 +560,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
         throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, pName.valueEL);
-      }  else {
-        values.put(pName.name.toLowerCase(), ret);
+      }  else if (HiveMetastoreUtil.hasUnsupportedChar(ret)){
+          throw new HiveStageCheckedException(Errors.HIVE_METADATA_10, pName.valueEL, ret);
       }
+      values.put(pName.name.toLowerCase(), ret);
     }
     return values;
   }

@@ -21,15 +21,16 @@ package com.streamsets.pipeline.stage.it;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
-import com.streamsets.pipeline.stage.ParametrizedUtils;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.processor.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
@@ -42,8 +43,10 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 
@@ -56,20 +59,43 @@ public class MaliciousPartitionStringsIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(MaliciousPartitionStringsIT.class);
 
-  @Parameterized.Parameters(name = "type({0})")
+  @Parameterized.Parameters(name = "type({0}), expected({1})")
   public static Collection<Object[]> data() throws Exception {
-    return ParametrizedUtils.toArrayOfArrays(
-      // Working ones
-      "-", "/", "*", "_", "$", ",", "=", "(", ")",  "&", "@", "!", "%", "\"", "^", "?", ".", "|", "~", "`"
-      // Broken ones
-//      "\\", "'", "[", "]",
-
-    );
+    return Arrays.asList(new Object[][]{
+        // Supported characters. They are not encoded in HDFS path
+        {"-", Result.SUCCESS},
+        {"_", Result.SUCCESS},
+        {"$", Result.SUCCESS},
+        {",", Result.SUCCESS},
+        {"(", Result.SUCCESS},
+        {")", Result.SUCCESS},
+        {"&", Result.SUCCESS},
+        {"@", Result.SUCCESS},
+        {"!", Result.SUCCESS},
+        {".", Result.SUCCESS},
+        {"|", Result.SUCCESS},
+        {"~", Result.SUCCESS},
+        {"`", Result.SUCCESS},
+        // Unsupported characters. Processor will send the record to error record.
+        {"\\", Result.ERROR_RECORD},
+        {"'", Result.ERROR_RECORD},
+        {"[", Result.ERROR_RECORD},
+        {"]", Result.ERROR_RECORD},
+        {"/", Result.ERROR_RECORD},
+        {"*", Result.ERROR_RECORD},
+        {"?", Result.ERROR_RECORD},
+        {"\"", Result.ERROR_RECORD},
+        {"%", Result.ERROR_RECORD},
+        {"=", Result.ERROR_RECORD},
+        {"^", Result.ERROR_RECORD},
+    });
   }
 
   private String partitionValue;
-  public MaliciousPartitionStringsIT(String partitionValue) {
+  private Result expected;
+  public MaliciousPartitionStringsIT(String partitionValue, Result expected) {
     this.partitionValue = partitionValue;
+    this.expected = expected;
   }
 
   @Test
@@ -88,26 +114,38 @@ public class MaliciousPartitionStringsIT extends BaseHiveMetadataPropagationIT {
     record.set(Field.create(map));
 
     try {
-      processRecords(processor, hiveTarget, ImmutableList.of(record));
+      processRecords(processor, hiveTarget, ImmutableList.of(record), OnRecordError.TO_ERROR);
     } catch(Exception e) {
-      LOG.error("Processing failed with", e);
+      LOG.error("Received Exception with", e);
+      // Currently we don't have characters that we throw StageException.
       fail(Utils.format("Partition value '{}' failed with {}", partitionValue, e.getMessage()));
     }
 
-    assertTableExists("default.tbl");
-    assertQueryResult("select * from tbl", new QueryValidator() {
-      @Override
-      public void validateResultSet(ResultSet rs) throws Exception {
-        assertResultSetStructure(rs,
-          new ImmutablePair("tbl.col", Types.VARCHAR),
-          new ImmutablePair("tbl.part", Types.VARCHAR)
-        );
+    if (expected == Result.ERROR_RECORD){
+      // Check the contents of the error record
+      List<Record> errorRecord  = getErrorRecord(Stage.METADATA_PROCESSOR);
+      Assert.assertEquals(1, errorRecord.size());
+      Assert.assertEquals(
+          Errors.HIVE_METADATA_10.name(),
+          errorRecord.get(0).getHeader().getErrorCode()
+      );
 
-        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
-        Assert.assertEquals("value", rs.getString(1));
-        Assert.assertEquals(partitionValue, rs.getString(2));
-        Assert.assertFalse("Table tbl contains more then one row", rs.next());
-      }
-    });
+    } else if (expected == Result.SUCCESS) {
+      assertTableExists("default.tbl");
+      assertQueryResult("select * from tbl", new QueryValidator() {
+        @Override
+        public void validateResultSet(ResultSet rs) throws Exception {
+          assertResultSetStructure(rs,
+              new ImmutablePair("tbl.col", Types.VARCHAR),
+              new ImmutablePair("tbl.part", Types.VARCHAR)
+          );
+
+          Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+          Assert.assertEquals("value", rs.getString(1));
+          Assert.assertEquals(partitionValue, rs.getString(2));
+          Assert.assertFalse("Table tbl contains more then one row", rs.next());
+        }
+      });
+    }
   }
 }

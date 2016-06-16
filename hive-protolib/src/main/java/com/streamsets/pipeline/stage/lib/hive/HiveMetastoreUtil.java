@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
@@ -112,6 +113,9 @@ public final class HiveMetastoreUtil {
   public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;;
 
   private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+  private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
+  private static final Pattern PATTERN_MATCHER = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
 
   public enum MetadataRecordType {
     /**
@@ -637,6 +641,15 @@ public final class HiveMetastoreUtil {
 
   public static boolean validateName(String valName){
     return MetaStoreUtils.validateName(valName);
+  }
+
+  /**
+   * Checks if partition value contains unsupported character.
+   * @param value String to check
+   * @return True if the string contains unsuppoted character.
+   */
+  public static boolean hasUnsupportedChar(String value) {
+    return PATTERN_MATCHER.matcher(value).matches();
   }
 
   public static boolean validateColumnName(String colName) {
