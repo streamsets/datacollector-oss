@@ -41,7 +41,7 @@ public class TestHiveMetastoreUtil {
 
   // Utility function to generate HiveTypeInfo from HiveType.
   public static HiveTypeInfo generateDecimalTypeInfo(int precision, int scale){
-    return HiveType.DECIMAL.getSupport().createTypeInfo(HiveType.DECIMAL, scale, precision);
+    return HiveType.DECIMAL.getSupport().createTypeInfo(HiveType.DECIMAL, precision, scale);
   }
 
   @Test

@@ -578,7 +578,7 @@ public final class HiveMetastoreUtil {
     return Integer.parseInt(defaultPrecisionEL);
   }
 
-  private static void validateScaleAndPrecision(int scale, int precision) throws HiveStageCheckedException{
+  private static void validateScaleAndPrecision(int precision, int scale) throws HiveStageCheckedException{
     if (scale > 38) {
       throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale");
     }
@@ -632,10 +632,10 @@ public final class HiveMetastoreUtil {
       HiveTypeInfo hiveTypeInfo;
       // Some types requires special checks or alterations
       if (hiveType == HiveType.DECIMAL) {
-        int scale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
         int precision = resolvePrecisionExpression(precisionEL, variables, precisionExpression, pair.getKey());
-        validateScaleAndPrecision(scale, precision);
-        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, scale, precision);
+        int scale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
+        validateScaleAndPrecision(precision, scale);
+        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, precision, scale);
         // We need to make sure that all java objects have the same scale
         pair.setValue(Field.create(pair.getValue().getValueAsDecimal().setScale(scale)));
       } else {

@@ -55,7 +55,7 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     }
     int scale = extraInfo.get(SCALE).getValueAsInteger();
     int precision = extraInfo.get(PRECISION).getValueAsInteger();
-    return new DecimalTypeInfo(scale, precision);
+    return new DecimalTypeInfo(precision, scale);
   }
 
   @Override
@@ -72,19 +72,19 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     }
     int precision = Integer.parseInt(split[0]);
     int scale = Integer.parseInt(split[1]);
-    return new DecimalTypeInfo(scale, precision);
+    return new DecimalTypeInfo(precision, scale);
   }
 
   private static int getScale(Object... auxillaryArgs) {
     if (auxillaryArgs != null) {
-      return (int)auxillaryArgs[0];
+      return (int)auxillaryArgs[1];
     }
     return MAX_SCALE_PRECISION;
   }
 
   private static int getPrecision(Object... auxillaryArgs) {
     if (auxillaryArgs != null) {
-      return (int)auxillaryArgs[1];
+      return (int)auxillaryArgs[0];
     }
     return MAX_SCALE_PRECISION;
   }
@@ -105,23 +105,23 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
       throw new HiveStageCheckedException(Errors.HIVE_26, value, "precision", value.precision(), precision);
     }
 
-    return new DecimalTypeInfo(scale, precision);
+    return new DecimalTypeInfo(precision, scale);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DecimalTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs) {
-    return new DecimalTypeInfo(getScale(auxillaryArgs), getPrecision(auxillaryArgs));
+    return new DecimalTypeInfo(getPrecision(auxillaryArgs), getScale(auxillaryArgs));
   }
 
   public static class DecimalTypeInfo extends PrimitiveHiveTypeInfo {
-    private int scale;
     private int precision;
+    private int scale;
 
-    public DecimalTypeInfo(int scale, int precision) {
+    public DecimalTypeInfo(int precision, int scale) {
       super(HiveType.DECIMAL);
-      this.scale = scale;
       this.precision = precision;
+      this.scale = scale;
     }
 
     public int getScale() {
