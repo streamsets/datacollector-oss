@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
+import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -59,6 +60,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
@@ -511,7 +513,7 @@ public final class HiveMetastoreUtil {
         )
     );
     //fill in partition type list here
-    if (partitionTypeList != null) {
+    if (partitionTypeList != null && !partitionTypeList.isEmpty()) {
       metadata.put(
           PARTITION_FIELD,
           generateInnerFieldFromTheList(
@@ -658,6 +660,31 @@ public final class HiveMetastoreUtil {
     } catch (StageException e) {
       //So that any error to generate avro schema will result in onRecordErrorException and routed to error lane.
       throw new HiveStageCheckedException(e.getErrorCode(), e.getParams());
+    }
+  }
+
+  /**
+   * Checks whether the number of partition columns and names match w.r.t hive.
+   * @param typeInfo {@link com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport.TypeInfo}
+   * @param partitionValMap Map of partition name to values
+   * @param qualifiedTableName Qualified table name.
+   * @throws HiveStageCheckedException if there is a mismatch w.r.t hive
+   */
+  public static void validatePartitionInformation(
+      TypeInfoCacheSupport.TypeInfo typeInfo,
+      LinkedHashMap<String, String> partitionValMap,
+      String qualifiedTableName
+  ) throws HiveStageCheckedException {
+    Set<String> partitionNamesInHive = typeInfo.getPartitionTypeInfo().keySet();
+    Set<String> partitionNames = partitionValMap.keySet();
+    if (!(partitionNamesInHive.size() == partitionNames.size()
+        && partitionNamesInHive.containsAll(partitionNames))) {
+      LOG.error(Utils.format(
+          "Partition mismatch. In Hive: {}, In Record : {}",
+          partitionNamesInHive.size(),
+          partitionNames.size())
+      );
+      throw new HiveStageCheckedException(Errors.HIVE_27, qualifiedTableName);
     }
   }
 

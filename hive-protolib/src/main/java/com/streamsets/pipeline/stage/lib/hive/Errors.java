@@ -50,6 +50,8 @@ public enum Errors implements ErrorCode {
   HIVE_24("Type conversion from Hive.{} to Avro Type is not supported"),
   HIVE_25("Trying to create partition for non existing table: {}"),
   HIVE_26("Invalid decimal value {}: {} {} is more then expected {} "),
+  HIVE_27("Partition Information mismatch for the table {}"),
+  HIVE_28("Partition Column {} has Type Mismatch in table {}. Expected Type: {}, Actual Type: {}")
   ;
   private final String msg;
 

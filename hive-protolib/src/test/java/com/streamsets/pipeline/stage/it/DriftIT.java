@@ -28,8 +28,12 @@ import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
+import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +55,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
   public void createTestTable() throws Exception {
     executeUpdate("CREATE TABLE `tbl` (id int) PARTITIONED BY (dt string) STORED AS AVRO");
     executeUpdate("CREATE TABLE `tbl_no_partition` (city string) STORED AS AVRO");
+    executeUpdate("CREATE TABLE `tbl_partition` (city string) partitioned by (dt1 String, dt2 String) STORED AS AVRO");
     executeUpdate("CREATE TABLE `multiple` (id int, value string) PARTITIONED BY (dt string) STORED AS AVRO");
     executeUpdate("CREATE EXTERNAL TABLE `ext_table` (id int, value string) STORED AS AVRO LOCATION '/user/hive/external'");
   }
@@ -95,6 +100,57 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
         Assert.assertTrue("Unexpected number of rows", rs.next());
         Assert.assertEquals(2, rs.getLong(1));
         Assert.assertEquals("new value", rs.getString(2));
+
+        Assert.assertFalse("Unexpected number of rows", rs.next());
+      }
+    });
+  }
+
+  @Test
+  public void testRenameColumn() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 1));
+    map.put("old_column", Field.create(Field.Type.STRING, "old_value"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 2));
+    map.put("new_column", Field.create(Field.Type.STRING, "new_value"));
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    processRecords(processor, hiveTarget, records);
+
+    assertQueryResult("select * from tbl order by id", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+            new ImmutablePair("tbl.id", Types.INTEGER),
+            new ImmutablePair("tbl.old_column", Types.VARCHAR),
+            new ImmutablePair("tbl.new_column", Types.VARCHAR),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(1, rs.getLong(1));
+        Assert.assertEquals("old_value", rs.getString(2));
+        Assert.assertEquals(null, rs.getString(3));
+
+
+        Assert.assertTrue("Unexpected number of rows", rs.next());
+        Assert.assertEquals(2, rs.getLong(1));
+        Assert.assertEquals(null, rs.getString(2));
+        Assert.assertEquals("new_value", rs.getString(3));
 
         Assert.assertFalse("Unexpected number of rows", rs.next());
       }
@@ -198,6 +254,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       }
     });
   }
+
 
   @Test
   public void testChangedColumnType() throws Exception {
@@ -377,7 +434,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       processRecords(processor, hiveTarget, records);
       Assert.fail("Adding a partition to non-partitioned table should fail");
     } catch (StageException e) {
-      Assert.assertEquals(e.getErrorCode(), Errors.HIVE_01);
+      Assert.assertEquals(e.getErrorCode(), Errors.HIVE_27);
     }
 
     assertQueryResult("select * from tbl_no_partition", new QueryValidator() {
@@ -392,4 +449,100 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       }
     });
   }
+
+
+  public void testPartitionMismatch(List<PartitionConfig> partitionConfigList) throws Exception {
+    HiveMetadataProcessorBuilder processorBuilder = new HiveMetadataProcessorBuilder()
+        .table("tbl_partition");
+    if (!partitionConfigList.isEmpty()) {
+      processorBuilder.partitions(partitionConfigList);
+    }
+    HiveMetadataProcessor processor = processorBuilder.build();
+
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("city", Field.create("San Jose"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    records.add(record);
+
+    try {
+      processRecords(processor, hiveTarget, records);
+      Assert.fail("Specifying no partitions to partitioned table should fail");
+    } catch (StageException e) {
+      Assert.assertEquals(e.getErrorCode(), Errors.HIVE_27);
+    }
+
+    assertQueryResult("select * from tbl_partition", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        // Table structure should not be altered
+        assertResultSetStructure(
+            rs,
+            new ImmutablePair("tbl_partition.city", Types.VARCHAR),
+            new ImmutablePair("tbl_partition.dt1", Types.VARCHAR),
+            new ImmutablePair("tbl_partition.dt2", Types.VARCHAR)
+        );
+        // Alter Table query failed, so no data should be added to the table
+        Assert.assertFalse("Table tbl_partition should not contain rows", rs.next());
+      }
+    });
+  }
+
+  @Test
+  public void testNoPartitionsToPartitionedTable() throws Exception {
+    testPartitionMismatch(new PartitionConfigBuilder().build());
+  }
+
+  //Delete partition
+  @Test
+  public void testLessPartitionsMismatch() throws Exception {
+    testPartitionMismatch(new PartitionConfigBuilder().addPartition("dt1", HiveType.STRING, "2016").build());
+  }
+
+  //Add partition
+  @Test
+  public void testMorePartitionsMismatch() throws Exception {
+    testPartitionMismatch(
+        new PartitionConfigBuilder()
+            .addPartition("dt1", HiveType.STRING, "2016")
+            .addPartition("dt2", HiveType.STRING, "2017")
+            .addPartition("dt3", HiveType.STRING, "2018")
+            .build()
+    );
+  }
+
+  @Test
+  public void testChangePartitionType() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .table("tbl_partition")
+        .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt1", HiveType.STRING, "2016")
+                .addPartition("dt2", HiveType.BIGINT, "2017")
+                .build()
+        )
+        .build();
+
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(123));
+    map.put("value", Field.create("testtest"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    records.add(record);
+    try {
+      processRecords(processor, hiveTarget, records);
+      Assert.fail("Partition type mismatch should cause a failure");
+    } catch (StageException e) {
+      Assert.assertEquals("Error codes should match", e.getErrorCode(), Errors.HIVE_28);
+    }
+  }
+
 }

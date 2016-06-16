@@ -353,6 +353,27 @@ public class HiveMetadataProcessor extends RecordProcessor {
           qualifiedName
       );
 
+      if (tableCache != null) {
+        //Checks number and name of partitions.
+        HiveMetastoreUtil.validatePartitionInformation(tableCache, partitionValMap, qualifiedName);
+        //Checks the type of partitions.
+        Map<String, HiveTypeInfo> cachedPartitionTypeInfoMap = tableCache.getPartitionTypeInfo();
+        for (Map.Entry<String, HiveTypeInfo> cachedPartitionTypeInfo : cachedPartitionTypeInfoMap.entrySet()) {
+          String partitionName = cachedPartitionTypeInfo.getKey();
+          HiveTypeInfo expectedTypeInfo = cachedPartitionTypeInfo.getValue();
+          HiveTypeInfo actualTypeInfo = partitionTypeInfo.get(partitionName);
+          if (!expectedTypeInfo.equals(actualTypeInfo)) {
+            throw new HiveStageCheckedException(
+                com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_28,
+                partitionName,
+                qualifiedName,
+                expectedTypeInfo.toString(),
+                actualTypeInfo.toString()
+            );
+          }
+        }
+      }
+
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = HiveMetastoreUtil.getCacheInfo(
           cache,
           HMSCacheType.AVRO_SCHEMA_INFO,

@@ -250,6 +250,8 @@ public class HiveMetastoreTarget extends BaseTarget {
 
     if (cachedTypeInfo == null) {
       throw new StageException(Errors.HIVE_25, qualifiedTableName);
+    } else if (cachedTypeInfo.getPartitionTypeInfo().isEmpty()) {
+      throw new HiveStageCheckedException(Errors.HIVE_27, qualifiedTableName);
     }
 
     HMSCacheType hmsCacheType = HMSCacheType.PARTITION_VALUE_INFO;
@@ -259,6 +261,9 @@ public class HiveMetastoreTarget extends BaseTarget {
         qualifiedTableName
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
+
+    HiveMetastoreUtil.validatePartitionInformation(cachedTypeInfo, partitionValMap, qualifiedTableName);
+
     Set<LinkedHashMap <String, String>> partitionInfoDiff =
         new LinkedHashSet<>(Collections.singletonList(partitionValMap));
     partitionInfoDiff = (cachedPartitionInfo != null)?

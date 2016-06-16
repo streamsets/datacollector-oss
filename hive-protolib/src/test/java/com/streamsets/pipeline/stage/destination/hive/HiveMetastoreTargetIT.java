@@ -28,6 +28,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -93,6 +94,125 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         new ImmutablePair("tbl.name", Types.VARCHAR),
         new ImmutablePair("tbl.dt", Types.VARCHAR)
     );
+  }
+
+  @Test
+  public void testNonPartitionedInfoToPartitionedTable() throws Exception {
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl",
+        columns,
+        null,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+    );
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be no error records", 0, runner.getErrorRecords().size());
+    LinkedHashMap<String, String> partitionVals = new LinkedHashMap<String, String>();
+    partitionVals.put("dt", "2016");
+
+    Field newPartitionField = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+        "default",
+        "tbl",
+        partitionVals,
+        "/user/hive/warehouse/tbl/dt=2016"
+    );
+    record = RecordCreator.create();
+    record.set(newPartitionField);
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be one error record", 1, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(errorRecord.getHeader().getErrorCode(), Errors.HIVE_27.name());
+  }
+
+  @Test
+  public void testPartitionMismatch() throws Exception {
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    LinkedHashMap<String, HiveTypeInfo> partitions = new LinkedHashMap<>();
+    partitions.put("dt1", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+    partitions.put("dt2", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+    );
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be no error records", 0, runner.getErrorRecords().size());
+
+    //More Partitions (3) than configured
+    LinkedHashMap<String, String> partitionVals = new LinkedHashMap<>();
+    partitionVals.put("dt1", "2016");
+    partitionVals.put("dt2", "2017");
+    partitionVals.put("dt3", "2018");
+
+    Field newPartitionField1 = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+        "default",
+        "tbl",
+        partitionVals,
+        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018"
+    );
+    record = RecordCreator.create();
+    record.set(newPartitionField1);
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be one error record", 1, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(errorRecord.getHeader().getErrorCode(), Errors.HIVE_27.name());
+
+    //Resetting the runner
+    runner.getErrorRecords().clear();
+    //Remove 3 partition names, less number of partitions than configured.
+    partitionVals.remove("dt2");
+    partitionVals.remove("dt3");
+
+    Field newPartitionField2 = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+        "default",
+        "tbl",
+        partitionVals,
+        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018"
+    );
+
+    record = RecordCreator.create();
+    record.set(newPartitionField2);
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be one error record", 1, runner.getErrorRecords().size());
+    errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(errorRecord.getHeader().getErrorCode(), Errors.HIVE_27.name());
   }
 }
 
