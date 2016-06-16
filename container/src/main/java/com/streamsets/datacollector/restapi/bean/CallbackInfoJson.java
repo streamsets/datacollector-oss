@@ -40,9 +40,10 @@ public class CallbackInfoJson {
                           @JsonProperty("creatorToken") String creatorToken,
                           @JsonProperty("managerToken") String managerToken,
                           @JsonProperty("guestToken") String guestToken,
-                          @JsonProperty("metrics") String metrics) {
+                          @JsonProperty("metrics") String metrics,
+                          @JsonProperty("slaveSdcId") String slaveSdcId) {
     this.callbackInfo = new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, sdcURL,
-      adminToken, creatorToken, managerToken, guestToken, metrics);
+      adminToken, creatorToken, managerToken, guestToken, metrics, slaveSdcId);
   }
 
 
@@ -70,7 +71,6 @@ public class CallbackInfoJson {
     return callbackInfo.getSdcSlaveToken();
   }
 
-
   public String getSdcURL() {
     return callbackInfo.getSdcURL();
   }
@@ -93,6 +93,10 @@ public class CallbackInfoJson {
 
   public String getMetrics() {
     return callbackInfo.getMetrics();
+  }
+
+  public String getSlaveSdcId() {
+    return callbackInfo.getSlaveSdcId();
   }
 
   @JsonIgnore

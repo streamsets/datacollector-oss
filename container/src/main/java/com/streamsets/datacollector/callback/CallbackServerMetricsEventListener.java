@@ -79,7 +79,8 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
       CallbackInfo callbackInfo =
         new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, runtimeInfo.getBaseHttpUrl(),
           authenticationToken.get(AuthzRole.ADMIN), authenticationToken.get(AuthzRole.CREATOR),
-          authenticationToken.get(AuthzRole.MANAGER), authenticationToken.get(AuthzRole.GUEST), metrics);
+          authenticationToken.get(AuthzRole.MANAGER), authenticationToken.get(AuthzRole.GUEST), metrics, runtimeInfo
+            .getId());
       if (IS_TRACE_ENABLED) {
         LOG.trace("Calling back on " + callbackServerURL + " with the sdc url of " + runtimeInfo.getBaseHttpUrl());
       }

@@ -42,9 +42,22 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
   private final String name;
   private final String rev;
   private final String user;
+  private final String slaveSdcId;
 
-  public CallbackInfo(String user, String name, String rev, String sdcClusterToken, String sdcSlaveToken,
-                      String sdcURL, String adminToken, String creatorToken, String managerToken, String guestToken, String metrics) {
+  public CallbackInfo(
+      String user,
+      String name,
+      String rev,
+      String sdcClusterToken,
+      String sdcSlaveToken,
+      String sdcURL,
+      String adminToken,
+      String creatorToken,
+      String managerToken,
+      String guestToken,
+      String metrics,
+      String slaveSdcId
+  ) {
     this.name = name;
     this.rev = rev;
     this.user = user;
@@ -56,6 +69,7 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
     this.managerToken = managerToken;
     this.guestToken = guestToken;
     this.metrics = metrics;
+    this.slaveSdcId = slaveSdcId;
   }
 
   public String getSdcClusterToken() {
@@ -114,6 +128,10 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
     return metricRegistryJson;
   }
 
+  public String getSlaveSdcId() {
+    return slaveSdcId;
+  }
+
   @Override
   public int compareTo(CallbackInfo o) {
     return sdcURL.compareToIgnoreCase(o.sdcURL);
@@ -123,4 +141,5 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
   public boolean equals(Object o) {
     return compareTo((CallbackInfo)o) == 0;
   }
+
 }

@@ -25,6 +25,7 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.ServerNotYetRunningException;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.LogConfigurator;
@@ -89,6 +90,11 @@ public class EmbeddedDataCollector implements DataCollector {
             is.close();
           }
         }
+        // For kafka this is the partitionId, for MR this will be the taskId
+        String uniqueId = Utils.getSdcId();
+        String slaveId = runtimeInfo.getMasterSDCId() + Constants.MASTER_SDC_ID_SEPARATOR + uniqueId;
+        runtimeInfo.setId(slaveId);
+        LOG.info(Utils.format("Slave SDC Id is: '{}'", slaveId));
         String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");

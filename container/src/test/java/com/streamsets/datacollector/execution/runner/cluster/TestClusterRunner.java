@@ -386,12 +386,13 @@ public class TestClusterRunner {
   public void testSlaveList() throws Exception {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "",
-      "", "", "", "", "");
+      "", "", "", "", "","sdc_id");
     clusterRunner.updateSlaveCallbackInfo(callbackInfo);
     List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
     assertFalse(slaves.isEmpty());
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
     assertEquals("myToken", slaves.get(0).getSdcClusterToken());
+    assertEquals("sdc_id", slaves.get(0).getSlaveSdcId());
     clusterRunner.prepareForStart();
     clusterRunner.start();
     slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList());

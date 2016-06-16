@@ -59,16 +59,16 @@ public class TestMetricsAggregation {
     callbackInfoCollection = new HashSet<>();
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker1", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics1.json").getFile())));
+      readFile(classLoader.getResource("metrics/metrics1.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker2", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics2.json").getFile())));
+      readFile(classLoader.getResource("metrics/metrics2.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker3", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics3.json").getFile())));
+      readFile(classLoader.getResource("metrics/metrics3.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker4", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics4.json").getFile())));
+      readFile(classLoader.getResource("metrics/metrics4.json").getFile()), null));
 
 
     slaveCallbackManager = Mockito.mock(SlaveCallbackManager.class);
