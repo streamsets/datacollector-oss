@@ -34,6 +34,12 @@
   <properties>
     <kafka.version>0.8.1.1</kafka.version>
     <tec.version>0.3</tec.version>
+    <snappy.version>0.4</snappy.version>
+    <jetty.version>9.2.14.v20151106</jetty.version>
+    <commons-io.version>2.4</commons-io.version>
+    <commons-pool2.version>2.4.2</commons-pool2.version>
+    <bouncycastle.version>1.46</bouncycastle.version>
+    <h2.version>1.4.187</h2.version>
   </properties>
 
   <dependencies>
@@ -139,6 +145,50 @@
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
       <version>${kafka.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- SDC IPC to Kafka related -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+      <version>${commons-pool2.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>${snappy.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <version>${jetty.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

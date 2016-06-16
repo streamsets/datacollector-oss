@@ -33,6 +33,8 @@
 
   <properties>
     <kafka.version>0.9.0.1</kafka.version>
+    <bouncycastle.version>1.46</bouncycastle.version>
+    <h2.version>1.4.187</h2.version>
   </properties>
 
   <dependencies>
@@ -154,6 +156,19 @@
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>${protobuf.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

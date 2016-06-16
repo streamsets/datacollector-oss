@@ -33,6 +33,8 @@
 
   <properties>
     <kafka.version>0.8.2.1</kafka.version>
+    <bouncycastle.version>1.46</bouncycastle.version>
+    <h2.version>1.4.187</h2.version>
   </properties>
 
   <dependencies>
@@ -127,6 +129,19 @@
       <artifactId>kafka_2.11</artifactId>
       <version>${kafka.version}</version>
       <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
 

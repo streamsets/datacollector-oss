@@ -107,7 +107,24 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   ) {
     this.pipelineName = "myPipeline";
     this.rev = "0";
-    pipelineInfo = ImmutableList.of();
+    // create dummy info for Stage Runners. This is required for stages that expose custom metrics
+    Stage.Info info = new Stage.Info() {
+      @Override
+      public String getName() {
+        return "x";
+      }
+
+      @Override
+      public int getVersion() {
+        return 0;
+      }
+
+      @Override
+      public String getInstanceName() {
+        return "x";
+      }
+    };
+    pipelineInfo = ImmutableList.of(info);
     this.stageType = stageType;
     this.isPreview = isPreview;
     metrics = new MetricRegistry();
