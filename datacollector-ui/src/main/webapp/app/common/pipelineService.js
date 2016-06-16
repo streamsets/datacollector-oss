@@ -1432,11 +1432,11 @@ angular.module('dataCollectorApp.common')
             },
             {
               value: 'pipeline.batchErrorRecords.meter',
-              label: 'Pipeline Batch Bad Records Meter'
+              label: 'Pipeline Batch Error Records Meter'
             },
             {
               value: 'pipeline.batchErrorMessages.meter',
-              label: 'Pipeline Batch Error Messages Meter'
+              label: 'Pipeline Batch Stage Errors Meter'
             }
           ],
         TIMER: [{

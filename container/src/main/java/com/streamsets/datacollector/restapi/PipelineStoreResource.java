@@ -89,12 +89,12 @@ import java.util.Map;
 @DenyAll
 public class PipelineStoreResource {
   private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
-  private static final String HIGH_BAD_RECORDS_TEXT = "High incidence of Bad Records";
+  private static final String HIGH_BAD_RECORDS_TEXT = "High incidence of Error Records";
   private static final String HIGH_BAD_RECORDS_METRIC_ID = "pipeline.batchErrorRecords.meter";
   private static final String HIGH_BAD_RECORDS_CONDITION = "${value() > 100}";
 
   private static final String HIGH_STAGE_ERRORS_ID = "stageErrorAlertID";
-  private static final String HIGH_STAGE_ERRORS_TEXT = "High incidence of Error Messages";
+  private static final String HIGH_STAGE_ERRORS_TEXT = "High incidence of Stage Errors";
   private static final String HIGH_STAGE_ERRORS_METRIC_ID = "pipeline.batchErrorMessages.meter";
   private static final String HIGH_STAGE_ERRORS_CONDITION = "${value() > 100}";
 
