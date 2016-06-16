@@ -72,9 +72,14 @@
                                     <entry>Determines the authentication type used to connect to the
                                             server:<ul id="ul_icm_h1l_35">
                                             <li>None - Performs no authentication.</li>
-                                            <li>Basic - Uses basic authentication with username and
-                                                password.</li>
-                                            <li>OAuth - Uses OAuth credentials.</li>
+                                            <li>Basic - Uses basic authentication. Requires username
+                                                and password.</li>
+                                            <li>Digest - Uses digest authentication. Requires
+                                                username and password.</li>
+                                            <li>Universal - Uses universal authentication. Requires
+                                                username and password. </li>
+                                            <li>OAuth - Uses OAuth 1.0 authentication. Requires
+                                                OAuth credentials.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -151,11 +156,11 @@
                             <tbody>
                                 <row>
                                     <entry>Username</entry>
-                                    <entry>User name for basic authentication. </entry>
+                                    <entry>User name for basic, digest, or universal authentication. </entry>
                                 </row>
                                 <row>
                                     <entry>Password</entry>
-                                    <entry>Password for basic authentication. </entry>
+                                    <entry>Password for basic, digest, or universal authentication. </entry>
                                 </row>
                                 <row>
                                     <entry>Consumer Key</entry>
