@@ -189,7 +189,7 @@ public class IpcToKafkaServlet extends HttpServlet {
               resp.setStatus(HttpServletResponse.SC_OK);
               requestMeter.mark();
             } catch (StageException ex ) {
-              LOG.warn("Kakfa producer error: {}", ex.toString(), ex);
+              LOG.warn("Kafka producer error: {}", ex.toString(), ex);
               errorQueue.offer(ex);
               errorRequestMeter.mark();
               LOG.warn("Error while reading payload from '{}': {}", requestor, ex.toString(), ex);

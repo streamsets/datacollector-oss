@@ -88,7 +88,7 @@ public class KafkaTestUtil08 extends SdcKafkaTestUtil {
     StringBuilder sb = new StringBuilder();
     for(int i = 0; i < numberOfBrokers; i ++) {
       int port = TestUtils.choosePort();
-      Properties props = TestUtils.createBrokerConfig(i, port);
+      Properties props = createBrokerConfig(i, port);
       props.put("auto.create.topics.enable", "false");
       kafkaServers.add(TestUtils.createServer(new KafkaConfig(props), new MockTime()));
       sb.append("localhost:").append(port).append(",");
@@ -96,6 +96,18 @@ public class KafkaTestUtil08 extends SdcKafkaTestUtil {
     metadataBrokerURI = sb.deleteCharAt(sb.length()-1).toString();
     LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
     kafkaProps.put("auto.offset.reset", "smallest");
+  }
+
+  private static Properties createBrokerConfig(int i, int port) {
+    Properties props = new Properties();
+    props.put("broker.id", String.valueOf(i));
+    props.put("host.name", "localhost");
+    props.put("port", String.valueOf(port));
+    props.put("log.dir", TestUtils.tempDir().getAbsolutePath());
+    props.put("zookeeper.connect", TestZKUtils.zookeeperConnect());
+    props.put("replica.socket.timeout.ms", "1500");
+    props.put("controlled.shutdown.enable", "true");
+    return props;
   }
 
   public void createTopic(String topic, int partitions, int replicationFactor) {

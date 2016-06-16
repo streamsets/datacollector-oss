@@ -34,6 +34,8 @@
   <properties>
     <kafka.version>0.8.1.1</kafka.version>
     <scala.version>2.10.4</scala.version>
+    <bouncycastle.version>1.46</bouncycastle.version>
+    <h2.version>1.4.187</h2.version>
  </properties>
 
   <repositories>
@@ -110,10 +112,6 @@
           <groupId>com.fasterxml.jackson.dataformat</groupId>
           <artifactId>jackson-dataformat-avro</artifactId>
         </exclusion>
-        <!--<exclusion>-->
-          <!--<groupId>com.streamsets</groupId>-->
-          <!--<artifactId>streamsets-datacollector-kafka-common</artifactId>-->
-        <!--</exclusion>-->
         <exclusion>
           <groupId>org.tukaani</groupId>
           <artifactId>xz</artifactId>
@@ -128,6 +126,40 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.10</artifactId>
+      <version>${kafka.version}</version>
+      <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-commonlib</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-kafka-08</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

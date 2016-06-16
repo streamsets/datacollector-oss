@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -57,7 +56,7 @@ public class SdcIpcToKafkaSource extends BaseSource implements OffsetCommitter {
       try {
         ipcToKafkaServer.start();
       } catch (Exception ex) {
-        Stage.ConfigIssue issue = getContext().createConfigIssue(null, null, Errors.IPC_KAKFA_ORIG_20, ex.toString());
+        Stage.ConfigIssue issue = getContext().createConfigIssue(null, null, Errors.IPC_KAFKA_ORIG_20, ex.toString());
         LOG.warn(issue.toString(), ex);
         issues.add(issue);
       }

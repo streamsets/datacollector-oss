@@ -24,16 +24,16 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  IPC_KAKFA_ORIG_00("Port out of range"),
-  IPC_KAKFA_ORIG_01("Port not available: {}"),
+  IPC_KAFKA_ORIG_00("Port out of range"),
+  IPC_KAFKA_ORIG_01("Port not available: {}"),
 
-  IPC_KAKFA_ORIG_07("File does not exist"),
-  IPC_KAKFA_ORIG_08("Path is not a file"),
-  IPC_KAKFA_ORIG_09("File is not readable by the Data Collector"),
-  IPC_KAKFA_ORIG_10("Could not load key store: {}"),
-  IPC_KAKFA_ORIG_11("Configuration value is empty"),
+  IPC_KAFKA_ORIG_07("File does not exist"),
+  IPC_KAFKA_ORIG_08("Path is not a file"),
+  IPC_KAFKA_ORIG_09("File is not readable by the Data Collector"),
+  IPC_KAFKA_ORIG_10("Could not load key store: {}"),
+  IPC_KAFKA_ORIG_11("Configuration value is empty"),
 
-  IPC_KAKFA_ORIG_20("Could not start IPC to Kafka server: {}"),
+  IPC_KAFKA_ORIG_20("Could not start IPC to Kafka server: {}"),
   ;
 
   private final String msg;

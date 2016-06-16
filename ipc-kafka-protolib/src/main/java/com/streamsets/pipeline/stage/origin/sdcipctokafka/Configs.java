@@ -181,12 +181,12 @@ public class Configs {
 
   void validatePort(Stage.Context context, List<Stage.ConfigIssue> issues) {
     if (port < 1 || port > 65535) {
-      issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_KAKFA_ORIG_00));
+      issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_KAFKA_ORIG_00));
 
     } else {
       try (ServerSocket ss = new ServerSocket(port)){
       } catch (Exception ex) {
-        issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_KAKFA_ORIG_01, ex.toString()));
+        issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_KAFKA_ORIG_01, ex.toString()));
 
       }
     }
@@ -197,13 +197,13 @@ public class Configs {
       if (!keyStoreFile.isEmpty()) {
         File file = getKeyStoreFile(context);
         if (!file.exists()) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAKFA_ORIG_07));
+          issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAFKA_ORIG_07));
         } else {
           if (!file.isFile()) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAKFA_ORIG_08));
+            issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAFKA_ORIG_08));
           } else {
             if (!file.canRead()) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAKFA_ORIG_09));
+              issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAFKA_ORIG_09));
             } else {
               try {
                 KeyStore keystore = KeyStore.getInstance("jks");
@@ -211,13 +211,13 @@ public class Configs {
                   keystore.load(is, keyStorePassword.toCharArray());
                 }
               } catch (Exception ex) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAKFA_ORIG_10, ex.toString()));
+                issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAFKA_ORIG_10, ex.toString()));
               }
             }
           }
         }
       } else {
-        issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAKFA_ORIG_11));
+        issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_KAFKA_ORIG_11));
       }
     }
   }
