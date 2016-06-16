@@ -21,9 +21,9 @@
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HTTP
           Client</indexterm></indexterm>When you configure HTTP Client, you specify the resource URL
       and other read properties. </p>
-    <p>You can use basic or OAuth credentials to access data. You can enter the OAuth credentials in
-      the origin or you can secure the credentials in runtime resource files and reference the files
-      in the origin.</p>
+    <p>The origin provides several different authentication types to access data. You can enter
+      credentials in the origin or you can secure the credentials in runtime resource files and
+      reference the files in the origin.</p>
     <p>You can optionally use a proxy to connect to the origin system. </p>
  </conbody>
   <related-links>
