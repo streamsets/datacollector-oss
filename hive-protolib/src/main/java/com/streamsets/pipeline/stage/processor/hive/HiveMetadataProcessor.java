@@ -158,6 +158,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     partitioned = !(partitionConfigList.isEmpty());
     if (partitioned) {
+      PartitionColumnTypeChooserValues supportedPartitionTypes = new PartitionColumnTypeChooserValues();
       partitionTypeInfo = new LinkedHashMap<>();
       for (PartitionConfig partition: partitionConfigList) {
         // Validation on partition column name
@@ -168,6 +169,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
               Errors.HIVE_METADATA_03,
               "Partition Configuration"));
         }
+
+        // Validate that the partition type is indeed supported
+        if(!supportedPartitionTypes.getValues().contains(partition.valueType.name())) {
+          issues.add(getContext().createConfigIssue(
+            Groups.HIVE.name(),
+            "partitionList",
+            Errors.HIVE_METADATA_09,
+            partition.valueType));
+        }
+
         // Expression for partition value is not automatically checked on Preview
         if (partition.valueEL.isEmpty()) {
           issues.add(getContext().createConfigIssue(

@@ -28,8 +28,8 @@ import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
-import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.processor.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Run all various data types that are available for partitioning column.
  */
@@ -63,18 +64,19 @@ public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
 
   @Parameterized.Parameters(name = "type({0})")
   public static Collection<Object[]> data() throws Exception {
-    /* TODO: Need to add verification for unsupported types once SDC-3205 gets resolved
-      BOOLEAN(new PrimitiveHiveTypeSupport()),
-      DATE(new PrimitiveHiveTypeSupport()),
-      FLOAT(new PrimitiveHiveTypeSupport()),
-      DOUBLE(new PrimitiveHiveTypeSupport()),
-      DECIMAL(new DecimalHiveTypeSupport()),
-      BINARY(new PrimitiveHiveTypeSupport()),
-     */
     return Arrays.asList(new Object[][]{
+      // Supported types
       {Field.create(Field.Type.INTEGER, 1), partition(HiveType.INT), true, Types.INTEGER, 1},
       {Field.create(Field.Type.LONG, 1), partition(HiveType.BIGINT), true, Types.BIGINT, 1L},
       {Field.create(Field.Type.STRING, "value"), partition(HiveType.STRING), true, Types.VARCHAR, "value"},
+      // Unsupported types
+      {Field.create(Field.Type.BOOLEAN, true), partition(HiveType.BOOLEAN), false, 0, null},
+      {Field.create(Field.Type.DATE, new Date()), partition(HiveType.DATE), false, 0, null},
+      {Field.create(Field.Type.FLOAT, 1.2), partition(HiveType.FLOAT), false, 0, null},
+      {Field.create(Field.Type.DOUBLE, 1.2), partition(HiveType.DOUBLE), false, 0, null},
+      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {0x00}), partition(HiveType.BINARY), false, 0, null},
+      // Decimal fails with java.lang.ArrayIndexOutOfBoundsException
+//      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), partition(HiveType.DECIMAL), false, 0, null},
     });
   }
   Field field;
@@ -114,7 +116,9 @@ public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
         Assert.fail("Processing testing record unexpectedly failed: " + se.getMessage());
         throw se;
       } else {
-        Assert.assertEquals(Errors.HIVE_19, se.getErrorCode());
+        // We're comparing string here as the class ContainerError is not on classpath
+        Assert.assertEquals("CONTAINER_0010", se.getErrorCode().getCode());
+        Assert.assertTrue(se.getMessage().contains(Errors.HIVE_METADATA_09.name()));
         // No additional verification necessary
         return;
       }
