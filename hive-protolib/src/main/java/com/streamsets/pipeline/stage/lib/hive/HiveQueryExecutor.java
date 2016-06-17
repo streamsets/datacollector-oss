@@ -21,16 +21,14 @@ package com.streamsets.pipeline.stage.lib.hive;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,6 +45,7 @@ public final class HiveQueryExecutor {
   private static final String ALTER_TABLE = "ALTER TABLE %s";
   private static final String CREATE_TABLE = "CREATE %s TABLE %s";
   private static final String DESC = "DESC %s";
+  private static final String DESC_FORMATTED_PARTITION = "DESC formatted %s partition";
   private static final String SHOW_TABLES = "SHOW TABLES in %s like '%s'";
   private static final String PARTITIONED_BY = "PARTITIONED BY";
   private static final String ADD_COLUMNS = "ADD COLUMNS";
@@ -71,6 +70,8 @@ public final class HiveQueryExecutor {
   private static final String RESULT_SET_DATA_TYPE = "data_type";
   private static final String RESULT_SET_PROP_NAME = "prpt_name";
   private static final String RESULT_SET_PROP_VALUE = "prpt_value";
+  private static final String LOCATION_INFORMATION_IN_RESULT_SET = "Location:";
+  private static final String DETAILED_PARTITION_INFORMATION = "# Detailed Partition Information";
 
   private final Connection con;
 
@@ -108,7 +109,11 @@ public final class HiveQueryExecutor {
       if (needComma) {
         sb.append(HiveMetastoreUtil.COMMA);
       }
-      HiveType partitionType = partitionTypeMap.get(partitionValEntry.getKey()).getHiveType();
+      //Even INT/BIG_INT partition values work with quotes so won't be a problem i use
+      //string to generate the partitiond definition.
+      //This is only used for desc extended table name partition (partition definition) query
+      HiveType partitionType = (partitionTypeMap.containsKey(partitionValEntry.getKey()))?
+          partitionTypeMap.get(partitionValEntry.getKey()).getHiveType() : HiveType.STRING;
       String format = (partitionType == HiveType.STRING)?
           PARTITION_FIELD_EQUALS_QUOTES_VAL: PARTITION_FIELD_EQUALS_NON_QUOTES_VAL;
       sb.append(String.format(format, partitionValEntry.getKey(), partitionValEntry.getValue()));
@@ -234,6 +239,22 @@ public final class HiveQueryExecutor {
     sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
     sb.append(partitionPath);
     sb.append(HiveMetastoreUtil.SINGLE_QUOTE);
+    return sb.toString();
+  }
+
+  private static String buildDescExtendedPartitionQuery(
+      String qualifiedTableName,
+      LinkedHashMap<String, String> partitionValues
+  ) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(String.format(DESC_FORMATTED_PARTITION, qualifiedTableName));
+    sb.append(HiveMetastoreUtil.SPACE);
+    sb.append(HiveMetastoreUtil.OPEN_BRACKET);
+    //Empty for partition types
+    //This is so that cache loader for partition values does
+    //not have to depend on type info
+    buildPartitionNameValuePair(sb, partitionValues, new LinkedHashMap<String, HiveTypeInfo>());
+    sb.append(HiveMetastoreUtil.CLOSE_BRACKET);
     return sb.toString();
   }
 
@@ -367,9 +388,9 @@ public final class HiveQueryExecutor {
    * @return {@link Set} of partitions
    * @throws StageException in case of any {@link SQLException}
    */
-  public Set<LinkedHashMap<String, String>> executeShowPartitionsQuery(String qualifiedTableName) throws StageException {
+  public Set<PartitionInfoCacheSupport.PartitionValues> executeShowPartitionsQuery(String qualifiedTableName) throws StageException {
     String sql = buildShowPartitionsQuery(qualifiedTableName);
-    Set<LinkedHashMap<String, String>> partitionInfoSet = new HashSet<>();
+    Set<PartitionInfoCacheSupport.PartitionValues> partitionValuesSet = new HashSet<>();
     LOG.debug("Executing SQL: {}", sql);
     try (
         Statement statement = con.createStatement();
@@ -383,9 +404,9 @@ public final class HiveQueryExecutor {
           String[] partitionNameVal = partitionValInfo.split("=");
           vals.put(partitionNameVal[0], partitionNameVal[1]);
         }
-        partitionInfoSet.add(vals);
+        partitionValuesSet.add(new PartitionInfoCacheSupport.PartitionValues(vals));
       }
-      return partitionInfoSet;
+      return partitionValuesSet;
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
@@ -448,7 +469,48 @@ public final class HiveQueryExecutor {
       }
       return Pair.of(columnTypeInfo, partitionTypeInfo);
     } catch (Exception e) {
-      LOG.error("SQL Exception happened when adding partition: {}", e);
+      LOG.error("SQL Exception happened when adding partition", e);
+      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+    }
+  }
+
+
+  public String executeDescFormattedPartitionAndGetLocation(
+      String qualifiedTableName,
+      LinkedHashMap<String, String> partitionValues
+  ) throws StageException {
+    String sql = buildDescExtendedPartitionQuery(qualifiedTableName, partitionValues);
+
+    LOG.debug("Executing SQL: {}", sql);
+    String location = null;
+    try (
+        Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql)
+    ){
+      boolean isDetailedPartitionInformationRowSeen = false;
+      while (rs.next()) {
+        String col_name = rs.getString(RESULT_SET_COL_NAME).trim();
+        if (col_name.equals(DETAILED_PARTITION_INFORMATION)) {
+          isDetailedPartitionInformationRowSeen = true;
+        }
+        if (isDetailedPartitionInformationRowSeen
+            && col_name != null
+            && col_name.startsWith(LOCATION_INFORMATION_IN_RESULT_SET)) {
+          //Replace hdfs://host:port
+          location = rs.getString(RESULT_SET_DATA_TYPE).replaceFirst("hdfs://.*:[0-9]+", "");
+          break;
+        }
+      }
+      if (location == null) {
+        throw new StageException(
+            Errors.HIVE_20,
+            sql,
+            Utils.format("Location information not found for partitions in table {}", qualifiedTableName)
+        );
+      }
+      return location;
+    } catch (Exception e) {
+      LOG.error("SQL Exception happened when describing partition", e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
     }
   }

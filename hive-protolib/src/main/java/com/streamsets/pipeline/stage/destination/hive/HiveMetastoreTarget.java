@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -261,13 +262,15 @@ public class HiveMetastoreTarget extends BaseTarget {
         qualifiedTableName
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
+    PartitionInfoCacheSupport.PartitionValues partitionValues =
+        new PartitionInfoCacheSupport.PartitionValues(partitionValMap);
 
     HiveMetastoreUtil.validatePartitionInformation(cachedTypeInfo, partitionValMap, qualifiedTableName);
 
-    Set<LinkedHashMap <String, String>> partitionInfoDiff =
-        new LinkedHashSet<>(Collections.singletonList(partitionValMap));
-    partitionInfoDiff = (cachedPartitionInfo != null)?
-        cachedPartitionInfo.getDiff(partitionInfoDiff) : partitionInfoDiff;
+    Map<PartitionInfoCacheSupport.PartitionValues, String> partitionInfoDiff = new HashMap<>();
+    partitionInfoDiff.put(partitionValues, location);
+
+    partitionInfoDiff = (cachedPartitionInfo != null)? cachedPartitionInfo.getDiff(partitionInfoDiff) : partitionInfoDiff;
     if (!partitionInfoDiff.isEmpty()) {
       hiveQueryExecutor.executeAlterTableAddPartitionQuery(
           qualifiedTableName,

@@ -58,6 +58,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE TABLE `tbl_partition` (city string) partitioned by (dt1 String, dt2 String) STORED AS AVRO");
     executeUpdate("CREATE TABLE `multiple` (id int, value string) PARTITIONED BY (dt string) STORED AS AVRO");
     executeUpdate("CREATE EXTERNAL TABLE `ext_table` (id int, value string) STORED AS AVRO LOCATION '/user/hive/external'");
+    executeUpdate("CREATE EXTERNAL TABLE `ext_table_location` " +
+        "(id int, value string) partitioned by (dt String) STORED AS AVRO LOCATION '/user/hive/external'");
+
   }
 
   @Test
@@ -545,4 +548,74 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     }
   }
 
+  @Test
+  public void testPartitionLocationMismatch() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .table("ext_table_location")
+        .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt", HiveType.STRING, "2016")
+                .build()
+        )
+        .external(true)
+        .tablePathTemplate("/user/hive/external")
+        .partitionPathTemplate("location1")
+        .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(123));
+    map.put("value", Field.create("testtest"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    records.add(record);
+
+    //Added file in the location1
+    processRecords(processor, hiveTarget, records);
+
+    assertQueryResult("desc formatted ext_table_location partition(dt='2016')", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        // Table structure should not be altered
+        while (rs.next()) {
+          String col_name = rs.getString(1);
+          if (col_name != null && col_name.equals("Location:")) {
+            Assert.assertEquals("/user/hive/external/location1", rs.getString(2));
+          }
+
+        }
+      }
+    });
+
+    processor = new HiveMetadataProcessorBuilder()
+        .table("ext_table_location")
+        .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt", HiveType.STRING, "2016")
+                .build()
+        )
+        .external(true)
+        .tablePathTemplate("/user/hive/external")
+        .partitionPathTemplate("location2")
+        .build();
+    try {
+      processRecords(processor, hiveTarget, records);
+    } catch (StageException e) {
+      Assert.assertEquals("Errors Codes did not match", Errors.HIVE_31, e.getErrorCode());
+    }
+    assertQueryResult("desc formatted ext_table_location partition(dt='2016')", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        // Table structure should not be altered
+        while (rs.next()) {
+          String col_name = rs.getString(1);
+          if (col_name != null && col_name.equals("Location:")) {
+            Assert.assertEquals("/user/hive/external/location1", rs.getString(2));
+          }
+        }
+      }
+    });
+  }
 }

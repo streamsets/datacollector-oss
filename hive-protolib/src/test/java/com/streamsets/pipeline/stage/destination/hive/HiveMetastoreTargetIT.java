@@ -214,5 +214,68 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals(errorRecord.getHeader().getErrorCode(), Errors.HIVE_27.name());
   }
+
+  @Test
+  public void testPartitionLocationMismatch() throws Exception {
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    LinkedHashMap<String, HiveTypeInfo> partitions = new LinkedHashMap<>();
+    partitions.put("dt", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+    );
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+
+    Assert.assertEquals("There should be no error records", 0, runner.getErrorRecords().size());
+
+    LinkedHashMap<String, String> partitionVals = new LinkedHashMap<>();
+    partitionVals.put("dt", "2016");
+
+    Field newPartitionField1 = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+        "default",
+        "tbl",
+        partitionVals,
+        "/user/hive/external/tbl/location1"
+    );
+    record = RecordCreator.create();
+    record.set(newPartitionField1);
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be no error records", 0, runner.getErrorRecords().size());
+
+    Field newPartitionField2 = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
+        "default",
+        "tbl",
+        partitionVals,
+        "/user/hive/external/tbl/location2"
+    );
+
+    record = RecordCreator.create();
+    record.set(newPartitionField2);
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals("There should be no error records", 1, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals("Error codes mismatch", Errors.HIVE_31.name(), errorRecord.getHeader().getErrorCode());
+  }
 }
 

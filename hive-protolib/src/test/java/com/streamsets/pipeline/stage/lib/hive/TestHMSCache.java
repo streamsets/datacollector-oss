@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSuppor
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.sun.research.ws.wadl.Link;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +42,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 @RunWith(PowerMockRunner.class)
@@ -60,7 +63,7 @@ public class TestHMSCache {
   private static final String HMS_CACHE_LOADER_LOAD_METHOD = "load";
   private static final String qualifiedTableName = "default.sample";
   public static final LinkedHashMap<String, HiveTypeInfo> EMPTY_TYPE_INFO = new LinkedHashMap<>();
-  public static final Set<LinkedHashMap<String, String>> EMPTY_PARTITION_INFO = new HashSet<>();
+  public static final Map<PartitionInfoCacheSupport.PartitionValues, String> EMPTY_PARTITION_INFO = new HashMap<>();
 
   private HMSCache hmsCache;
 
@@ -77,7 +80,7 @@ public class TestHMSCache {
   public static void setMockForHMSCacheLoader(
       final LinkedHashMap<String, HiveTypeInfo> columnTypeInfo,
       final LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo,
-      final Set<LinkedHashMap<String, String>> partitionInfo,
+      final Map<PartitionInfoCacheSupport.PartitionValues, String> partitionInfo,
       final boolean external,
       final boolean asAvro
   ) throws Exception {
@@ -329,35 +332,36 @@ public class TestHMSCache {
     }
   }
 
-  private Set<LinkedHashMap<String, String>> getDefaultPartitionValuesInfo() {
-    Set<LinkedHashMap<String, String>> defaultPartitionValues = new HashSet<>();
+  private Map<PartitionInfoCacheSupport.PartitionValues, String> getDefaultPartitionValuesInfo() {
+    Map<PartitionInfoCacheSupport.PartitionValues, String> defaultPartitionValues = new HashMap<>();
 
     LinkedHashMap<String, String> partition1 = new LinkedHashMap<>();
     partition1.put("dt", "12-25-2015");
     partition1.put("year", "2015");
     partition1.put("month", "12");
     partition1.put("day", "25");
+    defaultPartitionValues.put(new PartitionInfoCacheSupport.PartitionValues(partition1), "1");
 
     LinkedHashMap<String, String> partition2 = new LinkedHashMap<>();
     partition2.put("dt", "11-25-2015");
     partition2.put("year", "2015");
     partition2.put("month", "11");
     partition2.put("day", "25");
+    defaultPartitionValues.put(new PartitionInfoCacheSupport.PartitionValues(partition2), "2");
+
 
     LinkedHashMap<String, String> partition3 = new LinkedHashMap<>();
     partition3.put("dt", "12-26-2015");
     partition3.put("year", "2015");
     partition3.put("month", "12");
     partition3.put("day", "26");
+    defaultPartitionValues.put(new PartitionInfoCacheSupport.PartitionValues(partition3), "3");
 
-    defaultPartitionValues.add(partition1);
-    defaultPartitionValues.add(partition2);
-    defaultPartitionValues.add(partition3);
     return defaultPartitionValues;
   }
 
   @Test
-  public void testPartitionInfoInfoCache() throws Exception {
+  public void testPartitionInfoCache() throws Exception {
     HMSCacheType cacheType = HMSCacheType.PARTITION_VALUE_INFO;
     buildSingleTypeCache(
         cacheType,
@@ -365,12 +369,12 @@ public class TestHMSCache {
     );
 
     PartitionInfoCacheSupport.PartitionInfo partitionInfo =
-        new PartitionInfoCacheSupport.PartitionInfo(EMPTY_PARTITION_INFO);
+        new PartitionInfoCacheSupport.PartitionInfo(new HashMap<PartitionInfoCacheSupport.PartitionValues, String>());
     hmsCache.put(cacheType, qualifiedTableName, partitionInfo);
     checkCacheType(PartitionInfoCacheSupport.PartitionInfo.class, hmsCache.getIfPresent(cacheType, qualifiedTableName));
     hmsCache.invalidate(cacheType, qualifiedTableName);
 
-    Set<LinkedHashMap<String, String>> defaultPartitionValues = getDefaultPartitionValuesInfo();
+    Map<PartitionInfoCacheSupport.PartitionValues, String> defaultPartitionValues = getDefaultPartitionValuesInfo();
 
     partitionInfo = new PartitionInfoCacheSupport.PartitionInfo(defaultPartitionValues);
     hmsCache.put(cacheType, qualifiedTableName, partitionInfo);
@@ -400,8 +404,8 @@ public class TestHMSCache {
     );
 
     //Check diff
-    Set<LinkedHashMap<String, String>> newPartitionValues = new HashSet<>(defaultPartitionValues);
-    Set<LinkedHashMap<String, String>> diff = partitionInfo.getDiff(newPartitionValues);
+    Map<PartitionInfoCacheSupport.PartitionValues, String> newPartitionValues = new HashMap<>(defaultPartitionValues);
+    Map<PartitionInfoCacheSupport.PartitionValues, String> diff = partitionInfo.getDiff(newPartitionValues);
     Assert.assertEquals("Partition Values Size mismatch", 0, diff.size());
 
     LinkedHashMap<String, String> partition4 = new LinkedHashMap<>();
@@ -409,7 +413,7 @@ public class TestHMSCache {
     partition4.put("year", "2016");
     partition4.put("month", "01");
     partition4.put("day", "01");
-    newPartitionValues.add(partition4);
+    newPartitionValues.put(new PartitionInfoCacheSupport.PartitionValues(partition4), "4");
 
     diff = partitionInfo.getDiff(newPartitionValues);
     Assert.assertEquals("Partition Values Size mismatch", 1, diff.size());

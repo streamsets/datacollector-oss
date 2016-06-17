@@ -54,6 +54,7 @@ public enum Errors implements ErrorCode {
   HIVE_28("Partition Column {} has Type Mismatch in table {}. Expected Type: {}, Actual Type: {}"),
   HIVE_29("Can't calculate {} for field '{}' - expression '{}' evaluated to '{}'"),
   HIVE_30("Invalid column name {}"),
+  HIVE_31("Partition Location mismatch. Actual : {}, Expected: {}"),
   ;
   private final String msg;
 

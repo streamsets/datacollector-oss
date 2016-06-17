@@ -508,14 +508,15 @@ public class TestHiveMetastoreTarget {
 
     LinkedHashMap<String, HiveTypeInfo> expectedColumnTypeInfo = generateColumnTypeInfo();
     LinkedHashMap<String, HiveTypeInfo> expectedPartitionTypeInfo = generatePartitionTypeInfo();
-    Set<LinkedHashMap<String, String>> expectedPartitionValueInfo = new HashSet<>();
-    expectedPartitionValueInfo.add(generatePartitionValueInfo("12-25-2015"));
 
     Assert.assertNotNull(typeInfo);
     Assert.assertNotNull(partitionInfo);
     Assert.assertEquals(expectedColumnTypeInfo, typeInfo.getColumnTypeInfo());
     Assert.assertEquals(expectedPartitionTypeInfo, typeInfo.getPartitionTypeInfo());
-    Assert.assertEquals(expectedPartitionValueInfo, partitionInfo.getPartitions());
+    Assert.assertEquals(
+        generatePartitionValueInfo("12-25-2015"),
+        partitionInfo.getPartitions().keySet().iterator().next().getPartitionValues()
+    );
     targetRunner.runDestroy();
   }
 }

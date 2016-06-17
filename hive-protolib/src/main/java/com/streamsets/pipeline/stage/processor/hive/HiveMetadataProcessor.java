@@ -55,6 +55,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -402,10 +403,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
             HMSCacheType.PARTITION_VALUE_INFO,
             qualifiedName
         );
-        Set<LinkedHashMap<String, String>> diff = detectNewPartition(partitionValMap, pCache);
 
         // Append partition path to target path as all paths from now should be with the partition info
         targetPath += partitionStr;
+
+        Map<PartitionInfoCacheSupport.PartitionValues, String> diff = detectNewPartition(partitionValMap, pCache, targetPath);
+
         // Send new partition metadata if new partition is detected.
         if (diff != null) {
           handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
@@ -512,12 +515,17 @@ public class HiveMetadataProcessor extends RecordProcessor {
    * @return Diff of partitions if new partition is detected. Otherwise null.
    * @throws StageException
    */
-  private Set<LinkedHashMap<String, String>> detectNewPartition(
+  private Map<PartitionInfoCacheSupport.PartitionValues, String> detectNewPartition(
       LinkedHashMap<String, String> partitionValMap,
-      PartitionInfoCacheSupport.PartitionInfo pCache) throws StageException{
+      PartitionInfoCacheSupport.PartitionInfo pCache,
+      String location
+  ) throws StageException{
     // Start evaluating partition value
-    Set<LinkedHashMap <String, String>> partitionInfoDiff
-        = new LinkedHashSet<>(Collections.singletonList(partitionValMap));
+    PartitionInfoCacheSupport.PartitionValues partitionValues =
+        new PartitionInfoCacheSupport.PartitionValues(partitionValMap);
+    Map<PartitionInfoCacheSupport.PartitionValues, String> partitionInfoDiff = new HashMap<>();
+    partitionInfoDiff.put(partitionValues, location);
+
     partitionInfoDiff
         = (pCache != null)? pCache.getDiff(partitionInfoDiff) : partitionInfoDiff;
     if (pCache == null || !partitionInfoDiff.isEmpty()){
@@ -597,7 +605,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String location,
       BatchMaker batchMaker,
       String qualifiedName,
-      Set<LinkedHashMap<String, String>> diff
+      Map<PartitionInfoCacheSupport.PartitionValues, String> diff
   ) throws StageException{
 
     Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
