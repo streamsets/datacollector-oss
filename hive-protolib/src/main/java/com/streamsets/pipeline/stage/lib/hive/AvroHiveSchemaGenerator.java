@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.avro.AvroSchemaGenerator;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport.DecimalTypeInfo;
 import com.google.common.collect.ImmutableList;
@@ -57,6 +58,9 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   {
     Map<String, Schema> fields = new LinkedHashMap();
     for(Map.Entry<String, HiveTypeInfo> pair:  record.entrySet()) {
+      if(!HiveMetastoreUtil.validateColumnName(pair.getKey())) {
+        throw new HiveStageCheckedException(Errors.HIVE_30, pair.getKey());
+      }
       Schema columnSchema = Schema.createUnion(ImmutableList.of(Schema.create(Schema.Type.NULL), traverse(pair)));
       // We always set default value to null
       columnSchema.addProp("default", NullNode.getInstance());

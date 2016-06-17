@@ -167,7 +167,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
               Groups.HIVE.name(),
               "partitionList",
               Errors.HIVE_METADATA_03,
-              "Partition Configuration"));
+              "Partition Configuration",
+              partition.name
+          ));
         }
 
         // Validate that the partition type is indeed supported
