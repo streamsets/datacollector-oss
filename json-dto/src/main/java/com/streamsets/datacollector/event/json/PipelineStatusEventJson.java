@@ -33,7 +33,8 @@ public class PipelineStatusEventJson implements EventJson {
   private ValidationStatusJson validationStatus;
   private String issues;
   private boolean isRemote;
-  private Collection<String> workerURLs;
+  private Collection<WorkerInfoJson> workerInfos;
+  private boolean isClusterMode;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -91,11 +92,19 @@ public class PipelineStatusEventJson implements EventJson {
     this.rev = rev;
   }
 
-  public Collection<String> getWorkerURLs() {
-    return workerURLs;
+  public Collection<WorkerInfoJson> getWorkerInfos() {
+    return workerInfos;
   }
 
-  public void setWorkerURLs(Collection<String> workerURLs) {
-    this.workerURLs = workerURLs;
+  public void setWorkerInfos(Collection<WorkerInfoJson> workerInfos) {
+    this.workerInfos = workerInfos;
+  }
+
+  public boolean isClusterMode() {
+    return isClusterMode;
+  }
+
+  public void setClusterMode(boolean clusterMode) {
+    isClusterMode = clusterMode;
   }
 }

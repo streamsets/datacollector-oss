@@ -295,8 +295,10 @@ public class TestRemoteEventHandler {
       getPipelinesCalled = true;
       List<PipelineAndValidationStatus> list = new ArrayList<PipelineAndValidationStatus>();
       if (putDummyPipelineStatus) {
-        list.add(new PipelineAndValidationStatus("name1", "rev1", false, PipelineStatus.RUNNING, "message", null));
-        list.add(new PipelineAndValidationStatus("name2", "rev2", false, PipelineStatus.CONNECTING, "message", null));
+        list.add(new PipelineAndValidationStatus("name1", "rev1", false, PipelineStatus.RUNNING, "message", null,
+            false));
+        list.add(new PipelineAndValidationStatus("name2", "rev2", false, PipelineStatus.CONNECTING, "message", null,
+            false));
       }
       return list;
     }

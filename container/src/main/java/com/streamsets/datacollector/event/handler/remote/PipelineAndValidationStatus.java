@@ -22,6 +22,7 @@ package com.streamsets.datacollector.event.handler.remote;
 import java.util.Collection;
 
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.validation.Issues;
 
@@ -33,20 +34,25 @@ public class PipelineAndValidationStatus {
     private ValidationStatus validationStatus;
     private Issues issues;
     private String message;
-    private Collection<String> workerURLList;
+    private Collection<WorkerInfo> workerInfos;
+    private boolean isClusterMode;
 
-    public PipelineAndValidationStatus(String name,
+    public PipelineAndValidationStatus(
+      String name,
       String rev,
       boolean isRemote,
       PipelineStatus pipelineStatus,
       String message,
-      Collection<String> workerURLList) {
+      Collection<WorkerInfo> workerInfos,
+      boolean isClusterMode) {
+
       this.name = name;
       this.rev = rev;
       this.isRemote = isRemote;
       this.pipelineStatus = pipelineStatus;
       this.message = message;
-      this.workerURLList = workerURLList;
+      this.workerInfos = workerInfos;
+      this.isClusterMode = isClusterMode;
     }
 
     public void setValidationStatus(ValidationStatus validationStatus) {
@@ -65,8 +71,8 @@ public class PipelineAndValidationStatus {
       return validationStatus;
     }
 
-    public Collection<String> getWorkerURLList() {
-      return workerURLList;
+    public Collection<WorkerInfo> getWorkerInfos() {
+      return workerInfos;
     }
 
     public Issues getIssues() {
@@ -91,6 +97,10 @@ public class PipelineAndValidationStatus {
 
     public boolean isRemote() {
       return isRemote;
+    }
+
+    public boolean isClusterMode() {
+      return isClusterMode;
     }
 }
 

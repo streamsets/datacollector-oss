@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import com.streamsets.datacollector.event.dto.WorkerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,16 +198,19 @@ public class RemoteDataCollector implements DataCollector {
       }
       // ignore local and non active pipelines
       if (isRemote || manager.isPipelineActive(name, rev)) {
-        Collection<String> workerURLList = null;
-        if (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) {
-          workerURLList = new ArrayList<>();
+        List<WorkerInfo> workerInfos = new ArrayList<>();
+        boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true: false;
+        if (isClusterMode) {
           for (CallbackInfo callbackInfo : manager.getRunner(user, name, rev).getSlaveCallbackList()) {
-            workerURLList.add(callbackInfo.getSdcURL());
+            WorkerInfo workerInfo = new WorkerInfo();
+            workerInfo.setWorkerURL(callbackInfo.getSdcURL());
+            workerInfo.setWorkerId(callbackInfo.getSlaveSdcId());
+            workerInfos.add(workerInfo);
           }
         }
         pipelineStatusMap.put(getNameAndRevString(name, rev),
           new PipelineAndValidationStatus(name, rev, isRemote, pipelineState.getStatus(), pipelineState.getMessage(),
-            workerURLList));
+              workerInfos, isClusterMode));
       }
     }
     setValidationStatus(pipelineStatusMap);

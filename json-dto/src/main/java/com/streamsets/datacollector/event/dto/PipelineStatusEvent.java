@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.event.dto;
 
 import java.util.Collection;
-
 import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.execution.PipelineStatus;
 
@@ -32,14 +31,24 @@ public class PipelineStatusEvent implements Event {
   private String message;
   private ValidationStatus validationStatus;
   private String issues;
-  private Collection<String> workerURLs;
+  private Collection<WorkerInfo> workerInfos;
   private boolean isRemote;
+  private boolean isClusterMode;
 
   public PipelineStatusEvent() {
   }
 
-  public PipelineStatusEvent(String name, String rev, boolean isRemote, PipelineStatus pipelineStatus,
-    String message, Collection<String> workerURLs, ValidationStatus validationStatus, String issues) {
+  public PipelineStatusEvent(
+      String name,
+      String rev,
+      boolean isRemote,
+      PipelineStatus pipelineStatus,
+      String message,
+      Collection<WorkerInfo> workerInfos,
+      ValidationStatus validationStatus,
+      String issues,
+      boolean isClusterMode
+  ) {
     this.name = name;
     this.rev = rev;
     this.pipelineStatus = pipelineStatus;
@@ -47,7 +56,8 @@ public class PipelineStatusEvent implements Event {
     this.validationStatus = validationStatus;
     this.issues = issues;
     this.isRemote = isRemote;
-    this.workerURLs = workerURLs;
+    this.workerInfos = workerInfos;
+    this.isClusterMode = isClusterMode;
   }
 
   public boolean isRemote() {
@@ -107,12 +117,19 @@ public class PipelineStatusEvent implements Event {
     this.issues = issues;
   }
 
-  public void setWorkerURLs(Collection<String> workerURLs) {
-    this.workerURLs = workerURLs;
+  public void setWorkerInfos(Collection<WorkerInfo> workerInfos) {
+    this.workerInfos = workerInfos;
   }
 
-  public Collection<String> getWorkerURLs() {
-    return workerURLs;
+  public Collection<WorkerInfo> getWorkerInfos() {
+    return workerInfos;
   }
 
+  public boolean isClusterMode() {
+    return isClusterMode;
+  }
+
+  public void setClusterMode(boolean clusterMode) {
+    isClusterMode = clusterMode;
+  }
 }

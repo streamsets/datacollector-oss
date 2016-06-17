@@ -21,9 +21,12 @@
 package com.streamsets.datacollector.event.binding;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import com.streamsets.datacollector.event.dto.WorkerInfo;
+import com.streamsets.datacollector.event.json.WorkerInfoJson;
 import org.junit.Test;
 
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
@@ -75,17 +78,29 @@ public class TestDtoJsonMapper {
 
   @Test
   public void testPipelineStatusEventJson() throws Exception {
+    WorkerInfo workerInfo = new WorkerInfo();
+    workerInfo.setWorkerURL("workerURL");
+    workerInfo.setWorkerId("slaveId");
     PipelineStatusEvent pipelineStatusEvent =
-      new PipelineStatusEvent("name", "rev", true, PipelineStatus.RUNNING, "message", Arrays.asList("worker1"), null, null);
+      new PipelineStatusEvent("name", "rev", true, PipelineStatus.RUNNING, "message", Arrays.asList(workerInfo), null,
+          null, true);
     PipelineStatusEventJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson(pipelineStatusEvent);
     assertEquals("name", pseJson.getName());
     assertEquals("rev", pseJson.getRev());
-    assertEquals("worker1", pseJson.getWorkerURLs().iterator().next());
+    assertTrue(pseJson.isClusterMode());
+    WorkerInfoJson workerInfoJson = pseJson.getWorkerInfos().iterator().next();
+    assertEquals("workerURL", workerInfoJson.getWorkerURL());
+    assertEquals("slaveId", workerInfoJson.getWorkerId());
 
-    pseJson.setWorkerURLs(Arrays.asList("worker2"));
+    pseJson.setWorkerInfos(Arrays.asList(workerInfoJson));
     pipelineStatusEvent = MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pseJson);
     assertEquals("name", pipelineStatusEvent.getName());
     assertEquals("rev", pipelineStatusEvent.getRev());
-    assertEquals("worker2", pipelineStatusEvent.getWorkerURLs().iterator().next());
+    workerInfo = pipelineStatusEvent.getWorkerInfos().iterator().next();
+    assertEquals("workerURL", workerInfo.getWorkerURL());
+    assertEquals("slaveId", workerInfo.getWorkerId());
+    assertTrue(pipelineStatusEvent.isClusterMode());
   }
+
+
 }
