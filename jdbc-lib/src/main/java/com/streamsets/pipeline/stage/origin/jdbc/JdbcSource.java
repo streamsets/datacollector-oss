@@ -45,6 +45,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -391,7 +392,7 @@ public class JdbcSource extends BaseSource {
 
   private String getClobString(Clob data) throws IOException, SQLException {
     if (data == null) {
-      return "";
+      return null;
     }
 
     StringBuilder sb = new StringBuilder();
@@ -418,24 +419,9 @@ public class JdbcSource extends BaseSource {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
-    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(numColumns);
-    // Process row
-    for (int i = 1; i <= numColumns; i++) {
-      Object value = resultSet.getObject(i);
-      try {
-        // Convert clob to string by truncating it to maxClobSize.
-        if (value instanceof Clob) {
-          Clob clobValue = (Clob) value;
-          value = getClobString(clobValue);
-        }
-        fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
 
-      } catch (SQLException e) {
-        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage(), e);
-      } catch (IOException e) {
-        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value, e);
-      }
-    }
+    // Generate fields
+    LinkedHashMap<String, Field> fields = resultSetToFields(resultSet);
 
     if (fields.size() != numColumns) {
       errorRecordHandler.onError(Errors.JDBC_14, fields.size(), numColumns);
@@ -460,11 +446,104 @@ public class JdbcSource extends BaseSource {
       record.set(Field.create(row));
     }
     if (createJDBCNsHeaders) {
-      Map<String, String> extraColumnInfos = JdbcUtil.getColumnSpecificHeadersIfNeeded(md, jdbcNsHeaderPrefix);
-      for (Map.Entry<String, String> extraColumnInfo : extraColumnInfos.entrySet()) {
-        record.getHeader().setAttribute(extraColumnInfo.getKey(), extraColumnInfo.getValue());
-      }
+      JdbcUtil.setColumnSpecificHeaders(record, md, jdbcNsHeaderPrefix);
     }
     return record;
+  }
+
+  private LinkedHashMap<String, Field> resultSetToFields(ResultSet rs) throws SQLException, StageException {
+    ResultSetMetaData md = rs.getMetaData();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
+
+    for (int i = 1; i <= md.getColumnCount(); i++) {
+      Object value = rs.getObject(i);
+      try {
+        Field field;
+        // All types as of JDBC 2.0 are here:
+        // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
+        // Good source of recommended mappings is here:
+        // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
+        switch (md.getColumnType(i)) {
+          case Types.BIGINT:
+            field = Field.create(Field.Type.LONG, rs.getObject(i));
+            break;
+          case Types.BINARY:
+          case Types.LONGVARBINARY:
+          case Types.VARBINARY:
+            field = Field.create(Field.Type.BYTE_ARRAY, rs.getObject(i));
+            break;
+          case Types.BIT:
+          case Types.BOOLEAN:
+            field = Field.create(Field.Type.BOOLEAN, rs.getObject(i));
+            break;
+          case Types.CHAR:
+          case Types.LONGNVARCHAR:
+          case Types.LONGVARCHAR:
+          case Types.NCHAR:
+          case Types.NVARCHAR:
+          case Types.VARCHAR:
+            field = Field.create(Field.Type.STRING, rs.getObject(i));
+            break;
+          case Types.CLOB:
+          case Types.NCLOB:
+            field = Field.create(Field.Type.STRING, getClobString(rs.getClob(i)));
+            break;
+          case Types.DATE:
+            field = Field.create(Field.Type.DATE, rs.getDate(i));
+            break;
+          case Types.DECIMAL:
+          case Types.NUMERIC:
+            field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(i));
+            break;
+          case Types.DOUBLE:
+            field = Field.create(Field.Type.DOUBLE, rs.getObject(i));
+            break;
+          case Types.FLOAT:
+          case Types.REAL:
+            field = Field.create(Field.Type.FLOAT, rs.getObject(i));
+            break;
+          case Types.INTEGER:
+            field = Field.create(Field.Type.INTEGER, rs.getObject(i));
+            break;
+          case Types.ROWID:
+            field = Field.create(Field.Type.STRING, rs.getRowId(i).toString());
+            break;
+          case Types.SMALLINT:
+          case Types.TINYINT:
+            field = Field.create(Field.Type.SHORT, rs.getObject(i));
+            break;
+          case Types.TIME:
+            // We currently don't have better type for just time, covered by SDC-3258
+            field = Field.create(Field.Type.DATETIME, rs.getObject(i));
+            break;
+          case Types.TIMESTAMP:
+            field = Field.create(Field.Type.DATETIME, rs.getObject(i));
+            break;
+          case Types.ARRAY:
+          case Types.BLOB:
+          case Types.DATALINK:
+          case Types.DISTINCT:
+          case Types.JAVA_OBJECT:
+          case Types.NULL:
+          case Types.OTHER:
+          case Types.REF:
+            //case Types.REF_CURSOR: // JDK8 only
+          case Types.SQLXML:
+          case Types.STRUCT:
+            //case Types.TIME_WITH_TIMEZONE: // JDK8 only
+            //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
+          default:
+            throw new StageException(Errors.JDBC_16, md.getColumnType(i), md.getColumnLabel(i));
+        }
+
+        fields.put(md.getColumnLabel(i), field);
+      } catch (SQLException e) {
+        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage(), e);
+      } catch (IOException e) {
+        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value, e);
+      }
+    }
+
+    return fields;
   }
 }

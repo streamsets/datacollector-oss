@@ -41,7 +41,8 @@ public enum Errors implements ErrorCode {
       "which are required when Transaction ID Column Name is specified."),
   JDBC_13("Failed to convert CLOB to string: {}"),
   JDBC_14("Parsed record had {} columns but SDC expected {}."),
-  JDBC_15("Invalid JDBC Namespace prefix, should end with '.'")
+  JDBC_15("Invalid JDBC Namespace prefix, should end with '.'"),
+  JDBC_16("Unsupported type {} for column {}"),
   ;
   private final String msg;
 

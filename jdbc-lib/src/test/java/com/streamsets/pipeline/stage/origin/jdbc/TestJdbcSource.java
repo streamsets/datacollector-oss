@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
@@ -38,10 +39,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
@@ -87,6 +90,14 @@ public class TestJdbcSource {
           "CREATE TABLE IF NOT EXISTS TEST.TEST_JDBC_NS_HEADERS " +
               "(p_id INT NOT NULL, dec DECIMAL(2, 1));"
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TEST_NULL " +
+              "(p_id INT NOT NULL, name VARCHAR(255), number int);"
+      );
+      statement.addBatch(
+        "CREATE TABLE IF NOT EXISTS TEST.TEST_TIMES " +
+          "(p_id INT NOT NULL, d DATE, t TIME, ts TIMESTAMP);"
+      );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
@@ -97,6 +108,8 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_CLOB VALUES  (2, 'long string for clob" +
           RandomStringUtils.randomAlphanumeric(CLOB_SIZE) + "')");
       statement.addBatch("INSERT INTO TEST.TEST_JDBC_NS_HEADERS VALUES  (1, 1.5)");
+      statement.addBatch("INSERT INTO TEST.TEST_NULL VALUES  (1, NULL, NULL)");
+      statement.addBatch("INSERT INTO TEST.TEST_TIMES VALUES  (1, '1993-09-01', '15:09:02', '1960-01-01 23:03:20')");
       statement.executeBatch();
     }
   }
@@ -109,7 +122,8 @@ public class TestJdbcSource {
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_ARRAY;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_CLOB;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_JDBC_NS_HEADERS;");
-
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_NULL");
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_TIMES");
     }
 
     // Last open connection terminates H2
@@ -719,6 +733,102 @@ public class TestJdbcSource {
       assertEquals(new BigDecimal(1.5), parsedRecord.get("/DEC").getValueAsDecimal());
       assertEquals("1", parsedRecord.getHeader().getAttribute("jdbc.DEC.scale"));
       assertEquals("2", parsedRecord.getHeader().getAttribute("jdbc.DEC.precision"));
+      assertEquals(String.valueOf(Types.DECIMAL), parsedRecord.getHeader().getAttribute("jdbc.DEC.jdbcType"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testImportingNull() throws Exception {
+    String query = "SELECT * from TEST.TEST_NULL T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        initialOffset,
+        "P_ID",
+        queryInterval,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE,
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        null
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertEquals("1", output.getNewOffset());
+
+      Record parsedRecord = parsedRecords.get(0);
+      assertTrue(parsedRecord.has("/NAME"));
+      assertEquals(Field.Type.STRING, parsedRecord.get("/NAME").getType());
+      assertNull(parsedRecord.get("/NAME").getValue());
+
+      assertTrue(parsedRecord.has("/NUMBER"));
+      assertEquals(Field.Type.INTEGER, parsedRecord.get("/NUMBER").getType());
+      assertNull(parsedRecord.get("/NUMBER").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTimeTypes() throws Exception {
+    String query = "SELECT * from TEST.TEST_TIMES T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        initialOffset,
+        "P_ID",
+        queryInterval,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE,
+        createConfigBean(h2ConnectionString, username, password),
+        false,
+        null
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertEquals("1", output.getNewOffset());
+
+      Record parsedRecord = parsedRecords.get(0);
+      assertTrue(parsedRecord.has("/D"));
+      assertEquals(Field.Type.DATE, parsedRecord.get("/D").getType());
+
+      assertTrue(parsedRecord.has("/T"));
+      assertEquals(Field.Type.DATETIME, parsedRecord.get("/T").getType());
+
+      assertTrue(parsedRecord.has("/TS"));
+      assertEquals(Field.Type.DATETIME, parsedRecord.get("/TS").getType());
     } finally {
       runner.runDestroy();
     }

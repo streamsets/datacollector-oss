@@ -193,17 +193,23 @@ public class JdbcUtil {
     return keys;
   }
 
-  public static Map<String, String> getColumnSpecificHeadersIfNeeded(
+  public static void setColumnSpecificHeaders(
+      Record record,
       ResultSetMetaData metaData,
       String jdbcNameSpacePrefix
   ) throws SQLException {
-    Map<String, String> columnInfo = new LinkedHashMap<>();
+    Record.Header header = record.getHeader();
     for (int i=1; i<=metaData.getColumnCount(); i++) {
-      if (metaData.getColumnType(i) == Types.DECIMAL) {
-        columnInfo.put(jdbcNameSpacePrefix + metaData.getColumnName(i) + ".scale", String.valueOf(metaData.getScale(i)));
-        columnInfo.put(jdbcNameSpacePrefix + metaData.getColumnName(i) + ".precision", String.valueOf(metaData.getPrecision(i)));
+      header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".jdbcType", String.valueOf(metaData.getColumnType(i)));
+
+      // Additional headers per various types
+      switch(metaData.getColumnType(i)) {
+        case Types.DECIMAL:
+        case Types.NUMERIC:
+          header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".scale", String.valueOf(metaData.getScale(i)));
+          header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".precision", String.valueOf(metaData.getPrecision(i)));
+          break;
       }
     }
-    return columnInfo;
   }
 }
