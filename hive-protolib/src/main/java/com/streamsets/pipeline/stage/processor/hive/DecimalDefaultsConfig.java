@@ -27,7 +27,7 @@ public class DecimalDefaultsConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:attributeOrDefault(str:concat(str:concat('jdbc.', field:field()), '.scale'), 2)}",
+      defaultValue = "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}",
       label = "Decimal Field Scale Expression",
       description = "Scale Expression which will be evaluated to create Decimal Columns",
       displayPosition = 130,
@@ -35,12 +35,12 @@ public class DecimalDefaultsConfig {
       elDefs = {RecordEL.class, FieldPathEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public String scaleExpression = "2";
+  public String scaleExpression;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:attributeOrDefault(str:concat(str:concat('jdbc.', field:field()), '.precision'), 2)}",
+      defaultValue = "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
       label = "Decimal Field Precision Expression",
       description = "Precision Expression which will be evaluated to create Decimal Columns",
       displayPosition = 130,
@@ -49,5 +49,5 @@ public class DecimalDefaultsConfig {
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
 
-  public String precisionExpression = "2";
+  public String precisionExpression;
 }

@@ -30,7 +30,7 @@ public enum Errors implements ErrorCode {
   HIVE_METADATA_04("Invalid time basis expression '{}': {}"),
   HIVE_METADATA_05("{} is missing in the configuration file"),
   HIVE_METADATA_06("{} is required for external table"),
-  HIVE_METADATA_07("Invalid value {} for {}, Maximum: 38"),
+  HIVE_METADATA_07("Invalid value {} for {}, minimum: {}, maximum: 38"),
   HIVE_METADATA_08("Invalid value: {} for scale, should be less than or equal to precision's value: {}"),
   HIVE_METADATA_09("Invalid type for partition: {}"),
   ;

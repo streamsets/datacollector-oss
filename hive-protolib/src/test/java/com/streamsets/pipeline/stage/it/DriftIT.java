@@ -291,7 +291,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .table("decimal")
-        .decimalDefaultsConfig(3, 2)
+        .decimalConfig(3, 2)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();

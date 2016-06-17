@@ -51,7 +51,7 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-        .decimalDefaultsConfig(4, 2)
+        .decimalConfig(4, 2)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();
@@ -134,7 +134,7 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-        .decimalDefaultsConfig(4, 2)
+        .decimalConfig(4, 2)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();
@@ -162,7 +162,7 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-        .decimalDefaultsConfig(4, 2)
+        .decimalConfig(4, 2)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();
@@ -190,7 +190,7 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(2, 0)) PARTITIONED BY (dt string) STORED AS AVRO");
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-        .decimalDefaultsConfig(2, 0)
+        .decimalConfig(2, 0)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();

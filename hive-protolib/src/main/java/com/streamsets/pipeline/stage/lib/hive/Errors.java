@@ -51,7 +51,8 @@ public enum Errors implements ErrorCode {
   HIVE_25("Trying to create partition for non existing table: {}"),
   HIVE_26("Invalid decimal value {}: {} {} is more then expected {} "),
   HIVE_27("Partition Information mismatch for the table {}"),
-  HIVE_28("Partition Column {} has Type Mismatch in table {}. Expected Type: {}, Actual Type: {}")
+  HIVE_28("Partition Column {} has Type Mismatch in table {}. Expected Type: {}, Actual Type: {}"),
+  HIVE_29("Can't calculate {} for field '{}' - expression '{}' evaluated to '{}'"),
   ;
   private final String msg;
 

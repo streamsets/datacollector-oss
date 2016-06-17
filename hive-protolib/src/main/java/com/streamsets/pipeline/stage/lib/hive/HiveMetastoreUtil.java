@@ -529,48 +529,48 @@ public final class HiveMetastoreUtil {
     return Field.create(metadata);
   }
 
-
-
-  public static int resolveScaleExpression(
+  /**
+   *  Evaluate precision or scale in context of record and given field path.
+   */
+  public static int resolveScaleOrPrecisionExpression(
+      String type,
       ELEval elEval,
       ELVars variables,
       String defaultScaleEL,
       String fieldPath
-  ) throws ELEvalException{
+  ) throws ELEvalException, HiveStageCheckedException {
+    // By default we take the constant given to this method
+    String value = defaultScaleEL;
+    // And if so evaluate it
     if (elEval != null) {
       FieldPathEL.setFieldInContext(variables, fieldPath);
-      return elEval.eval(
+      value = elEval.eval(
           variables,
           defaultScaleEL,
-          Integer.class
+          String.class
       );
     }
-    return Integer.parseInt(defaultScaleEL);
-  }
 
-  public static int resolvePrecisionExpression(
-      ELEval elEval,
-      ELVars variables,
-      String defaultPrecisionEL,
-      String fieldPath
-  ) throws ELEvalException{
-    if (elEval != null) {
-      FieldPathEL.setFieldInContext(variables, fieldPath);
-      return elEval.eval(
-          variables,
-          defaultPrecisionEL,
-          Integer.class
-      );
+    // Finally try to parse output as an integer. Failure means that we are unable to calculate proper scale/precision.
+    try {
+      return Integer.parseInt(value);
+    } catch(NumberFormatException e) {
+      throw new HiveStageCheckedException(Errors.HIVE_29, type, fieldPath, defaultScaleEL, value, e);
     }
-    return Integer.parseInt(defaultPrecisionEL);
   }
 
   private static void validateScaleAndPrecision(int precision, int scale) throws HiveStageCheckedException{
-    if (scale > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale");
-    }
     if (precision > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision");
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 1);
+    }
+    if (scale > 38) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale", 0);
+    }
+    if (precision < 1) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 1);
+    }
+    if (scale < 0) {
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 0);
     }
     if (scale > precision) {
       throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, precision);
@@ -619,8 +619,8 @@ public final class HiveMetastoreUtil {
       HiveTypeInfo hiveTypeInfo;
       // Some types requires special checks or alterations
       if (hiveType == HiveType.DECIMAL) {
-        int precision = resolvePrecisionExpression(precisionEL, variables, precisionExpression, pair.getKey());
-        int scale = resolveScaleExpression(scaleEL, variables, scaleExpression, pair.getKey());
+        int precision = resolveScaleOrPrecisionExpression("precision", precisionEL, variables, precisionExpression, pair.getKey());
+        int scale = resolveScaleOrPrecisionExpression("scale", scaleEL, variables, scaleExpression, pair.getKey());
         validateScaleAndPrecision(precision, scale);
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, precision, scale);
         // We need to make sure that all java objects have the same scale

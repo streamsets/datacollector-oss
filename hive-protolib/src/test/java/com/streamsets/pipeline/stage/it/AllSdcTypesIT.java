@@ -107,7 +107,7 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
         "${record:attributeOrDefault(str:concat(str:concat('jdbc.', str:toUpper(field:field())), '.scale'), 2)}";
     decimalDefaultsConfig.precisionExpression =
         "${record:attributeOrDefault(str:concat(str:concat('jdbc.', str:toUpper(field:field())), '.precision'), 2)}";
-    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(decimalDefaultsConfig)
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalConfig(decimalDefaultsConfig)
         .build();
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
         .build();

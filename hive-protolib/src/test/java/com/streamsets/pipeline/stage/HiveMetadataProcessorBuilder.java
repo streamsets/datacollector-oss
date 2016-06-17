@@ -84,14 +84,20 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
-  public HiveMetadataProcessorBuilder decimalDefaultsConfig(int precision, int scale) {
+  public HiveMetadataProcessorBuilder decimalConfig(int precision, int scale) {
     decimalDefaultsConfig = new DecimalDefaultsConfig();
     decimalDefaultsConfig.scaleExpression = String.valueOf(scale);
     decimalDefaultsConfig.precisionExpression = String.valueOf(precision);
     return this;
   }
 
-  public HiveMetadataProcessorBuilder decimalDefaultsConfig(DecimalDefaultsConfig decimalDefaultsConfig) {
+  public HiveMetadataProcessorBuilder decimalConfig(String precision, String scale) {
+    decimalDefaultsConfig = new DecimalDefaultsConfig();
+    decimalDefaultsConfig.scaleExpression = scale;
+    decimalDefaultsConfig.precisionExpression = precision;
+    return this;
+  }
+  public HiveMetadataProcessorBuilder decimalConfig(DecimalDefaultsConfig decimalDefaultsConfig) {
     this.decimalDefaultsConfig = decimalDefaultsConfig;
     return this;
   }

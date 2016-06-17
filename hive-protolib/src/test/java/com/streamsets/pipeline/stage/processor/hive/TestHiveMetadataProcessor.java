@@ -56,7 +56,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -66,7 +65,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -561,7 +559,7 @@ public class TestHiveMetadataProcessor {
 
   @Test
   public void testScaleAndPrecision() throws Exception {
-    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(39, 39).build();
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder().decimalConfig(39, 39).build();
     ProcessorRunner runner = getProcessRunner(processor);
     runner.runInit();
 
@@ -571,7 +569,7 @@ public class TestHiveMetadataProcessor {
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
     runner.runProcess(ImmutableList.of(record));
-    Assert.assertEquals(runner.getErrorRecords().size(), 1);
+    Assert.assertEquals(1, runner.getErrorRecords().size());
     Record errorRecord = runner.getErrorRecords().get(0);
 
     Assert.assertEquals(
@@ -580,11 +578,11 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(39, 37).build();
+    processor = new HiveMetadataProcessorBuilder().decimalConfig(39, 37).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
-    Assert.assertEquals(runner.getErrorRecords().size(), 1);
+    Assert.assertEquals(1, runner.getErrorRecords().size());
     errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals(
         com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07.name(),
@@ -592,7 +590,7 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(2, 5).build();
+    processor = new HiveMetadataProcessorBuilder().decimalConfig(2, 5).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
@@ -604,11 +602,41 @@ public class TestHiveMetadataProcessor {
     );
     runner.runDestroy();
 
-    processor = new HiveMetadataProcessorBuilder().decimalDefaultsConfig(2, 1).build();
+    processor = new HiveMetadataProcessorBuilder().decimalConfig(2, 1).build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
-    Assert.assertEquals(runner.getErrorRecords().size(), 0);
+    Assert.assertEquals(0, runner.getErrorRecords().size());
+    runner.runDestroy();
+
+    // Invalid precision evaluation
+    processor = new HiveMetadataProcessorBuilder()
+      .decimalConfig(
+        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
+        "2")
+      .build();
+    runner = getProcessRunner(processor);
+    runner.runInit();
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+    errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(Errors.HIVE_29.name(), errorRecord.getHeader().getErrorCode());
+    Assert.assertTrue(errorRecord.getHeader().getErrorMessage().contains("Can't calculate precision for field 'decimal'"));
+    runner.runDestroy();
+
+    // Invalid scale evaluation
+    processor = new HiveMetadataProcessorBuilder()
+      .decimalConfig(
+        "2",
+        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}")
+      .build();
+    runner = getProcessRunner(processor);
+    runner.runInit();
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+    errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals(Errors.HIVE_29.name(), errorRecord.getHeader().getErrorCode());
+    Assert.assertTrue(errorRecord.getHeader().getErrorMessage().contains("Can't calculate scale for field 'decimal'"));
     runner.runDestroy();
   }
 
