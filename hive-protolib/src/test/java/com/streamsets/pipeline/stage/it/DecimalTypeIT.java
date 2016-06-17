@@ -46,13 +46,10 @@ import java.util.Map;
  */
 public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
 
-  @Before
-  public void createTestTable() throws Exception {
-    executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
-  }
-
   @Test
   public void correctCases() throws Exception {
+    executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
+
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .decimalDefaultsConfig(4, 2)
         .build();
@@ -134,6 +131,8 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
 
   @Test
   public void incompatibleScale() throws Exception {
+    executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
+
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .decimalDefaultsConfig(4, 2)
         .build();
@@ -160,6 +159,8 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
 
   @Test
   public void incompatiblePrecision() throws Exception {
+    executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
+
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .decimalDefaultsConfig(4, 2)
         .build();
@@ -183,4 +184,44 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
       Assert.assertTrue(e.getMessage().contains("precision 5 is more then expected 4"));
     }
   }
+
+  @Test
+  public void zeroScale() throws Exception {
+    executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(2, 0)) PARTITIONED BY (dt string) STORED AS AVRO");
+
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .decimalConfig(2, 0)
+        .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(Field.Type.INTEGER, 1));
+    map.put("dec", Field.create(BigDecimal.valueOf(12)));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    processRecords(processor, hiveTarget, records);
+
+    assertQueryResult("select * from tbl order by id", new QueryValidator() {
+      @Override
+      public void validateResultSet(ResultSet rs) throws Exception {
+        assertResultSetStructure(rs,
+            new ImmutablePair("tbl.id", Types.INTEGER),
+            new ImmutablePair("tbl.dec", Types.DECIMAL),
+            new ImmutablePair("tbl.dt", Types.VARCHAR)
+        );
+
+        Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
+        Assert.assertEquals(1, rs.getLong(1));
+        Assert.assertEquals(BigDecimal.valueOf(12), rs.getBigDecimal(2));
+
+        Assert.assertFalse("Unexpected number of rows", rs.next());
+      }
+    });
+  }
+
 }
