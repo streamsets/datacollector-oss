@@ -603,13 +603,13 @@ public final class HiveMetastoreUtil {
       Field currField = pair.getValue();
       switch(currField.getType()) {
         case SHORT:
-          currField = Field.create(pair.getValue().getValueAsInteger());
+          currField = Field.create(Field.Type.INTEGER, currField.getValue());
           break;
         case CHAR:
-          currField = Field.create(pair.getValue().getValueAsString());
+          currField = Field.create(currField.getValueAsString());
           break;
         case DATETIME:
-          currField = Field.create(datetimeFormat.format(pair.getValue().getValueAsDate()));
+          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : datetimeFormat.format(currField.getValueAsDate()));
           break;
       }
 
@@ -624,7 +624,9 @@ public final class HiveMetastoreUtil {
         validateScaleAndPrecision(precision, scale);
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, precision, scale);
         // We need to make sure that all java objects have the same scale
-        pair.setValue(Field.create(pair.getValue().getValueAsDecimal().setScale(scale)));
+        if(currField.getValue() != null) {
+          pair.setValue(Field.create(currField.getValueAsDecimal().setScale(scale)));
+        }
       } else {
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField);
       }

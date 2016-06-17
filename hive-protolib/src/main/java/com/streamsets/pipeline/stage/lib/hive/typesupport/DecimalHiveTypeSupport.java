@@ -98,11 +98,13 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
 
     // Since data and metadata are separate here, we need to make sure that the given decimal is properly formed
     BigDecimal value = field.getValueAsDecimal();
-    if(value.scale() > scale) {
-      throw new HiveStageCheckedException(Errors.HIVE_26, value, "scale", value.scale(), scale);
-    }
-    if(value.precision() > precision) {
-      throw new HiveStageCheckedException(Errors.HIVE_26, value, "precision", value.precision(), precision);
+    if(value != null) {
+      if (value.scale() > scale) {
+        throw new HiveStageCheckedException(Errors.HIVE_26, value, "scale", value.scale(), scale);
+      }
+      if (value.precision() > precision) {
+        throw new HiveStageCheckedException(Errors.HIVE_26, value, "precision", value.precision(), precision);
+      }
     }
 
     return new DecimalTypeInfo(precision, scale);

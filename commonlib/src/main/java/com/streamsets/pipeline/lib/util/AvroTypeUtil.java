@@ -238,7 +238,7 @@ public class AvroTypeUtil {
       Map<String, Object> defaultValueMap
   ) throws StageException {
 
-    if(field == null) {
+    if(field == null || field.getValue() == null) {
       return null;
     }
     Object obj;
