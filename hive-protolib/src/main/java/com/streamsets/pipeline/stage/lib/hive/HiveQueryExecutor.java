@@ -45,7 +45,8 @@ public final class HiveQueryExecutor {
   private static final String ALTER_TABLE = "ALTER TABLE %s";
   private static final String CREATE_TABLE = "CREATE %s TABLE %s";
   private static final String DESC = "DESC %s";
-  private static final String DESC_FORMATTED_PARTITION = "DESC formatted %s partition";
+  private static final String DESC_FORMATTED = "DESC formatted %s ";
+  private static final String DESC_FORMATTED_PARTITION = DESC_FORMATTED +"partition";
   private static final String SHOW_TABLES = "SHOW TABLES in %s like '%s'";
   private static final String PARTITIONED_BY = "PARTITIONED BY";
   private static final String ADD_COLUMNS = "ADD COLUMNS";
@@ -72,6 +73,9 @@ public final class HiveQueryExecutor {
   private static final String RESULT_SET_PROP_VALUE = "prpt_value";
   private static final String LOCATION_INFORMATION_IN_RESULT_SET = "Location:";
   private static final String DETAILED_PARTITION_INFORMATION = "# Detailed Partition Information";
+  private static final String SERDE_LIBRARY_IN_RESULT_SET = "SerDe Library:";
+  private static final String STORAGE_INFORMATION = "# Storage Information";
+
 
   private final Connection con;
 
@@ -474,6 +478,40 @@ public final class HiveQueryExecutor {
     }
   }
 
+  public String executeDescFormattedExtractSerdeLibrary(
+      String qualifiedTableName
+  ) throws StageException {
+    String sql = String.format(DESC_FORMATTED, qualifiedTableName);
+    LOG.debug("Executing SQL: {}", sql);
+    try (
+        Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery(sql)
+    ){
+      String serdeLibrary = null;
+      boolean isStorageInfoSeen = false;
+      while (rs.next()) {
+        String col_name = rs.getString(RESULT_SET_COL_NAME).trim();
+        if (col_name.equals(STORAGE_INFORMATION)) {
+          isStorageInfoSeen = true;
+        }
+        if (isStorageInfoSeen && col_name.startsWith(SERDE_LIBRARY_IN_RESULT_SET)) {
+          serdeLibrary = rs.getString(RESULT_SET_DATA_TYPE);
+          break;
+        }
+      }
+      if (serdeLibrary == null) {
+        throw new StageException(
+            Errors.HIVE_20,
+            sql,
+            Utils.format("Serde Library not found for table {}", qualifiedTableName)
+        );
+      }
+      return serdeLibrary;
+    } catch (Exception e) {
+      LOG.error("SQL Exception happened when describing table", e);
+      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+    }
+  }
 
   public String executeDescFormattedPartitionAndGetLocation(
       String qualifiedTableName,

@@ -117,15 +117,24 @@ public class HiveMetastoreTarget extends BaseTarget {
             qualifiedTableName
         );
 
-        if (tblPropertiesInfo != null && tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
-          LOG.warn(
-              Utils.format(
-                  Errors.HIVE_23.getMessage(),
-                  STORED_AS_AVRO,
-                  conf.storedAsAvro,
-                  tblPropertiesInfo.isStoredAsAvro()
-              )
-          );
+        if (tblPropertiesInfo != null) {
+          if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
+            throw new HiveStageCheckedException(
+                Errors.HIVE_32,
+                qualifiedTableName,
+                tblPropertiesInfo.getSerdeLibrary()
+            );
+          }
+          if (tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
+            LOG.warn(
+                Utils.format(
+                    Errors.HIVE_23.getMessage(),
+                    STORED_AS_AVRO,
+                    conf.storedAsAvro,
+                    tblPropertiesInfo.isStoredAsAvro()
+                )
+            );
+          }
         }
 
         if (HiveMetastoreUtil.isSchemaChangeRecord(metadataRecord)) {

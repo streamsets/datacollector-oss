@@ -25,15 +25,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
+import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
-import com.streamsets.pipeline.stage.PartitionConfigBuilder;
-import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +58,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     executeUpdate("CREATE EXTERNAL TABLE `ext_table` (id int, value string) STORED AS AVRO LOCATION '/user/hive/external'");
     executeUpdate("CREATE EXTERNAL TABLE `ext_table_location` " +
         "(id int, value string) partitioned by (dt String) STORED AS AVRO LOCATION '/user/hive/external'");
+    executeUpdate("CREATE  TABLE `tbl_csv` (id int, value string) partitioned by (dt String)" +
+        " ROW FORMAT DELIMITED " +
+        " FIELDS TERMINATED BY ',' " +
+        " STORED AS TEXTFILE ");
 
   }
 
@@ -476,7 +478,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       processRecords(processor, hiveTarget, records);
       Assert.fail("Specifying no partitions to partitioned table should fail");
     } catch (StageException e) {
-      Assert.assertEquals(e.getErrorCode(), Errors.HIVE_27);
+      Assert.assertEquals("Error codes mismatch", Errors.HIVE_27, e.getErrorCode());
     }
 
     assertQueryResult("select * from tbl_partition", new QueryValidator() {
@@ -544,7 +546,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       processRecords(processor, hiveTarget, records);
       Assert.fail("Partition type mismatch should cause a failure");
     } catch (StageException e) {
-      Assert.assertEquals("Error codes should match", e.getErrorCode(), Errors.HIVE_28);
+      Assert.assertEquals("Error codes should match", Errors.HIVE_28, e.getErrorCode());
     }
   }
 
@@ -617,5 +619,36 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
         }
       }
     });
+  }
+
+  @Test
+  public void testNonAvroTable() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .table("tbl_csv")
+        .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt", HiveType.STRING, "2016")
+                .build()
+        )
+        .build();
+
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(123));
+    map.put("value", Field.create("testtest"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    records.add(record);
+
+    try {
+      processRecords(processor, hiveTarget, records);
+      Assert.fail("Non Avro tables should not be processed");
+    } catch (StageException e) {
+      Assert.assertEquals("Error codes should match", Errors.HIVE_32, e.getErrorCode());
+    }
+
   }
 }

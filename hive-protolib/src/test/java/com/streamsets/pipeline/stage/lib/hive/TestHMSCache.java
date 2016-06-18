@@ -30,7 +30,6 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSuppor
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import com.sun.research.ws.wadl.Link;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,10 +42,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
@@ -92,7 +89,9 @@ public class TestHMSCache {
         Object returnVal = null;
         if (!columnTypeInfo.isEmpty()) {
           if (proxy.getClass() == TBLPropertiesInfoCacheSupport.TBLPropertiesInfoCacheLoader.class) {
-            returnVal = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(external, asAvro);
+            returnVal = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(
+                new TBLPropertiesInfoCacheSupport.TBLProperties(external, asAvro, HiveMetastoreUtil.AVRO_SERDE)
+            );
           } else if (proxy.getClass() == TypeInfoCacheSupport.TypeInfoCacheLoader.class) {
             returnVal = new TypeInfoCacheSupport.TypeInfo(columnTypeInfo, partitionTypeInfo);
           } else if (proxy.getClass() == PartitionInfoCacheSupport.PartitionInfoCacheLoader.class) {
@@ -151,7 +150,9 @@ public class TestHMSCache {
     );
     //Check correct return type and correct cache return
     TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo
-        = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(false, false);
+        = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(
+        new TBLPropertiesInfoCacheSupport.TBLProperties(false, false, HiveMetastoreUtil.AVRO_SERDE)
+    );
     hmsCache.put(cacheType, qualifiedTableName, tblPropertiesInfo);
 
     tblPropertiesInfo = hmsCache.getIfPresent(cacheType, qualifiedTableName);
@@ -199,7 +200,9 @@ public class TestHMSCache {
 
     TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo1, tblPropertiesInfo2;
 
-    tblPropertiesInfo1 = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(false, false);
+    tblPropertiesInfo1 = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(
+        new TBLPropertiesInfoCacheSupport.TBLProperties(false, false, HiveMetastoreUtil.AVRO_SERDE)
+    );
     hmsCache.put(cacheType, table1, tblPropertiesInfo1);
 
     //not present entries cache should return null.
@@ -210,7 +213,9 @@ public class TestHMSCache {
     Assert.assertNull(hmsCache.getIfPresent(cacheType, table2));
 
     //Table 2 added.
-    tblPropertiesInfo2 = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(true, true);
+    tblPropertiesInfo2 = new TBLPropertiesInfoCacheSupport.TBLPropertiesInfo(
+        new TBLPropertiesInfoCacheSupport.TBLProperties(true, true, HiveMetastoreUtil.AVRO_SERDE)
+    );
     hmsCache.put(cacheType, table2, tblPropertiesInfo2);
 
     tblPropertiesInfo1 = hmsCache.getIfPresent(cacheType, table1);

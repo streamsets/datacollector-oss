@@ -110,7 +110,9 @@ public final class HiveMetastoreUtil {
   public static final String TYPE_INFO = "typeInfo";
   public static final String TYPE = "type";
   public static final String EXTRA_INFO = "extraInfo";
-  public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;;
+  public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;
+  public static final String AVRO_SERDE = "org.apache.hadoop.hive.serde2.avro.AvroSerDe";
+
 
   private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

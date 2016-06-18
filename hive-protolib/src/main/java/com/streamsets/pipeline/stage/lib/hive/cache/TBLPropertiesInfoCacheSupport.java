@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.security.UserGroupInformation;
 
 /**
  * Cache Support for TBLProperties Information.
@@ -37,30 +36,76 @@ public class TBLPropertiesInfoCacheSupport
     return new TBLPropertiesInfoCacheLoader(executor);
   }
 
-  public static class TBLPropertiesInfo extends HMSCacheSupport.HMSCacheInfo<Pair<Boolean, Boolean>> {
-    public TBLPropertiesInfo(boolean isExternal, boolean useAsAvro) {
-      super(Pair.of(isExternal, useAsAvro));
-    }
+  public static class TBLProperties {
+    private boolean isExternal;
+    private boolean storedAsAvro;
+    //This can be later enhanced to actually return DataFormat if we need.
+    String serdeLibrary;
 
-    public TBLPropertiesInfo(Pair<Boolean, Boolean> state) {
-      super(state);
+    public TBLProperties(boolean isExternal, boolean storedAsAvro, String serdeLibrary) {
+      this.isExternal = isExternal;
+      this.storedAsAvro = storedAsAvro;
+      this.serdeLibrary = serdeLibrary;
     }
 
     public boolean isExternal() {
-      return state.getLeft();
+      return isExternal;
     }
 
     public boolean isStoredAsAvro() {
-      return state.getRight();
+      return storedAsAvro;
+    }
+
+    public String getSerdeLibrary() {
+      return serdeLibrary;
     }
 
     @Override
-    Pair<Boolean, Boolean> getDiff(Pair<Boolean, Boolean> anotherState) throws StageException {
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      TBLProperties that = (TBLProperties) o;
+
+      if (isExternal != that.isExternal) return false;
+      if (storedAsAvro != that.storedAsAvro) return false;
+      return serdeLibrary != null ? serdeLibrary.equals(that.serdeLibrary) : that.serdeLibrary == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+      int result = (isExternal ? 1 : 0);
+      result = 31 * result + (storedAsAvro ? 1 : 0);
+      result = 31 * result + (serdeLibrary != null ? serdeLibrary.hashCode() : 0);
+      return result;
+    }
+  }
+
+  public static class TBLPropertiesInfo extends HMSCacheSupport.HMSCacheInfo<TBLProperties> {
+    public TBLPropertiesInfo(TBLProperties tblProperties) {
+      super(tblProperties);
+    }
+
+    public boolean isExternal() {
+      return state.isExternal();
+    }
+
+    public boolean isStoredAsAvro() {
+      return state.isStoredAsAvro();
+    }
+
+    public String getSerdeLibrary() {
+      return state.getSerdeLibrary();
+    }
+
+    @Override
+    TBLProperties getDiff(TBLProperties anotherState) throws StageException {
       throw new StageException(Errors.HIVE_01, anotherState, "Invalid operation");
     }
 
     @Override
-    void updateState(Pair<Boolean, Boolean> newState) throws StageException {
+    void updateState(TBLProperties newState) throws StageException {
       throw new StageException(Errors.HIVE_01, newState, "Invalid operation");
     }
   }
@@ -72,7 +117,10 @@ public class TBLPropertiesInfoCacheSupport
 
     @Override
     protected TBLPropertiesInfo loadHMSCacheInfo(String qualifiedTableName) throws StageException {
-      return new TBLPropertiesInfo(executor.executeShowTBLPropertiesQuery(qualifiedTableName));
+      String serdeLibrary = executor.executeDescFormattedExtractSerdeLibrary(qualifiedTableName);
+
+      Pair<Boolean, Boolean> externalAvro  = executor.executeShowTBLPropertiesQuery(qualifiedTableName);
+      return new TBLPropertiesInfo(new TBLProperties(externalAvro.getLeft(), externalAvro.getRight(), serdeLibrary));
     }
   }
 }

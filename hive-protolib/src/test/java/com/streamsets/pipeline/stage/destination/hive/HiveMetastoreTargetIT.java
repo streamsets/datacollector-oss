@@ -277,5 +277,45 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     Record errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals("Error codes mismatch", Errors.HIVE_31.name(), errorRecord.getHeader().getErrorCode());
   }
+
+  @Test
+  public void testNonAvroTable() throws Exception {
+    executeUpdate("CREATE  TABLE `tbl_csv` (id int, value string) partitioned by (dt String)" +
+        " ROW FORMAT DELIMITED " +
+        " FIELDS TERMINATED BY ',' " +
+        " STORED AS TEXTFILE ");
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    LinkedHashMap<String, HiveTypeInfo> partitions = new LinkedHashMap<>();
+    partitions.put("dt", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl_csv",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+    );
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+
+    Assert.assertEquals("There should be one error record", 1L, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals("Error codes mismatch", Errors.HIVE_32.name(), errorRecord.getHeader().getErrorCode());
+  }
 }
 

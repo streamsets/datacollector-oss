@@ -55,6 +55,7 @@ public enum Errors implements ErrorCode {
   HIVE_29("Can't calculate {} for field '{}' - expression '{}' evaluated to '{}'"),
   HIVE_30("Invalid column name {}"),
   HIVE_31("Partition Location mismatch. Actual : {}, Expected: {}"),
+  HIVE_32("Table {} is created using unsupported Storage Format Type {} "),
   ;
   private final String msg;
 

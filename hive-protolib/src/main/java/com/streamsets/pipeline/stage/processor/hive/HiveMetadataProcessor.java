@@ -339,13 +339,22 @@ public class HiveMetadataProcessor extends RecordProcessor {
           qualifiedName
       );
 
-      if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
-        throw new HiveStageCheckedException(
-            com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
-            "EXTERNAL",
-            externalTable,
-            tblPropertiesInfo.isExternal()
-        );
+      if (tblPropertiesInfo != null) {
+        if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
+          throw new HiveStageCheckedException(
+              com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_32,
+              qualifiedName,
+              tblPropertiesInfo.getSerdeLibrary()
+          );
+        }
+        if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
+          throw new HiveStageCheckedException(
+              com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
+              "EXTERNAL",
+              externalTable,
+              tblPropertiesInfo.isExternal()
+          );
+        }
       }
 
       TypeInfoCacheSupport.TypeInfo tableCache = HiveMetastoreUtil.getCacheInfo(
