@@ -734,6 +734,7 @@ public class TestJdbcSource {
       assertEquals("1", parsedRecord.getHeader().getAttribute("jdbc.DEC.scale"));
       assertEquals("2", parsedRecord.getHeader().getAttribute("jdbc.DEC.precision"));
       assertEquals(String.valueOf(Types.DECIMAL), parsedRecord.getHeader().getAttribute("jdbc.DEC.jdbcType"));
+      assertEquals("TEST_JDBC_NS_HEADERS", parsedRecord.getHeader().getAttribute("jdbc.tables"));
     } finally {
       runner.runDestroy();
     }

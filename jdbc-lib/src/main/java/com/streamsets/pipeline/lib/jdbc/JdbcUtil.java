@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
@@ -31,9 +32,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility classes for working with JDBC
@@ -199,6 +203,7 @@ public class JdbcUtil {
       String jdbcNameSpacePrefix
   ) throws SQLException {
     Record.Header header = record.getHeader();
+    Set<String> tableNames = new HashSet<>();
     for (int i=1; i<=metaData.getColumnCount(); i++) {
       header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".jdbcType", String.valueOf(metaData.getColumnType(i)));
 
@@ -210,6 +215,11 @@ public class JdbcUtil {
           header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".precision", String.valueOf(metaData.getPrecision(i)));
           break;
       }
+
+      // Store the column's table name
+      tableNames.add(metaData.getTableName(i));
     }
+
+    header.setAttribute(jdbcNameSpacePrefix + "tables", Joiner.on(",").join(tableNames));
   }
 }
