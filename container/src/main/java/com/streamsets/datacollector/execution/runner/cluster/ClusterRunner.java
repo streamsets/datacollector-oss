@@ -783,6 +783,7 @@ public class ClusterRunner extends AbstractRunner {
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, name);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, String.valueOf(isRemotePipeline()));
       for (Map.Entry<String, String> configsToShip : clusterSourceInfo.getConfigsToShip().entrySet()) {
         if (LOG.isTraceEnabled()) {
           LOG.trace("Config to ship " + configsToShip.getKey() + " = " + configsToShip.getValue());

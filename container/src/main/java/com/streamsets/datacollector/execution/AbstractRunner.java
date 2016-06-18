@@ -23,6 +23,7 @@ package com.streamsets.datacollector.execution;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -97,6 +98,12 @@ public abstract  class AbstractRunner implements Runner {
         pipelineConfigBean.emailIDs, states);
       eventListenerManager.addStateEventListener(emailNotifier);
     }
+  }
+
+  protected boolean isRemotePipeline() throws PipelineStoreException {
+    Object isRemote = getState().getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
+    // remote attribute will be null for pipelines with version earlier than 1.3
+    return isRemote != null && (boolean) isRemote;
   }
 
   protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor, long delay) {

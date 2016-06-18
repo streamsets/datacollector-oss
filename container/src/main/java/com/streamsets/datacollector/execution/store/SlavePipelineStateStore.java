@@ -54,6 +54,9 @@ public class SlavePipelineStateStore implements PipelineStateStore {
       throw new PipelineStoreException(ContainerError.CONTAINER_0212, name, rev, ExecutionMode.SLAVE,
         pipelineState.getName(), pipelineState.getRev());
     }
+    if (attributes == null) {
+      attributes = getState(name, rev).getAttributes();
+    }
     pipelineState =
       new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes,
         ExecutionMode.SLAVE, metrics, retryAttempt, nextRetryTimeStamp);

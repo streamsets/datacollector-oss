@@ -748,12 +748,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     return isEnabled && this.isRemotePipeline();
   }
 
-  public boolean isRemotePipeline() throws PipelineStoreException {
-    Object isRemote = getState().getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
-    // remote attribute will be null for pipelines with version earlier than 1.3
-    return isRemote != null && (boolean) isRemote;
-  }
-
   private void stopPipeline(boolean sdcShutting) throws PipelineException {
     if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
       LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());

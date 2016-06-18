@@ -22,6 +22,7 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.metrics.MetricsModule;
@@ -77,6 +78,10 @@ public class SlaveRuntimeModule {
         ((SlaveRuntimeInfo) runtimeInfo).setMasterSDCId(Utils.checkNotNull(conf.get(Constants.SDC_ID, null),
             Constants.SDC_ID
         ));
+        String remote = Utils.checkNotNull(conf.get(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, null),
+            ClusterModeConstants.CLUSTER_PIPELINE_REMOTE
+        );
+        ((SlaveRuntimeInfo) runtimeInfo).setRemotePipeline(Boolean.valueOf(remote));
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

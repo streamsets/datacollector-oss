@@ -28,6 +28,7 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
 
   private String masterSDCId;
   private String id;
+  private boolean isRemotePipeline;
 
   public SlaveRuntimeInfo(
       String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders
@@ -70,5 +71,13 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
   @Override
   public String getAppAuthToken() {
     return null;
+  }
+
+  public boolean isRemotePipeline() {
+    return isRemotePipeline;
+  }
+
+  public void setRemotePipeline(boolean remotePipeline) {
+    isRemotePipeline = remotePipeline;
   }
 }
