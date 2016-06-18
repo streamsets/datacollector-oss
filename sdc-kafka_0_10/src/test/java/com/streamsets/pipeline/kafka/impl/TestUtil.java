@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import kafka.admin.AdminUtils;
+import kafka.admin.RackAwareMode;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.utils.SystemTime$;
@@ -56,10 +57,14 @@ public class TestUtil {
   public static Properties createKafkaConfig(int port, String zkConnect, boolean autoCreateTopic) {
     final Option<File> noFile = scala.Option.apply(null);
     final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
+    // new params for kafka 0.10.0
+    Option<Properties> saslProperties = scala.Option.apply(null);
+    Option<String> rack = scala.Option.apply(RackAwareMode.Enforced$.MODULE$.toString());
+
     Properties props = TestUtils.createBrokerConfig(
-      0, zkConnect, false, false, port, noInterBrokerSecurityProtocol,
-      noFile, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
-      TestUtils.RandomPort());
+        0, zkConnect, false, false, port, noInterBrokerSecurityProtocol,
+        noFile, saslProperties, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
+        TestUtils.RandomPort(), rack);
     props.setProperty("auto.create.topics.enable", String.valueOf(autoCreateTopic));
     props.setProperty("num.partitions", "1");
     props.setProperty("message.max.bytes", "500");
@@ -104,6 +109,8 @@ public class TestUtil {
   }
 
   public static void createTopic(kafka.utils.ZkUtils zkUtils, String topic, int partitions, int replicationFactor) {
-    AdminUtils.createTopic(zkUtils, topic, partitions, replicationFactor, new Properties());
+    // new param for kafka 0.10
+    RackAwareMode rackAwareMode = RackAwareMode.Enforced$.MODULE$;
+    AdminUtils.createTopic(zkUtils, topic, partitions, replicationFactor, new Properties(), rackAwareMode);
   }
 }

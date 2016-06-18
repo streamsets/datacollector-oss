@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.kafka.api;
 
 import com.streamsets.pipeline.api.impl.Utils;
-
 import java.util.ServiceLoader;
 
 public abstract class FactoriesBean {
@@ -37,12 +36,26 @@ public abstract class FactoriesBean {
 
   private static FactoriesBean factoriesBean;
 
+  private final static String kafka10ClassName = "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean";
+
   static {
     int serviceCount = 0;
+    FactoriesBean kafka10FactoriesBean = null;
     for (FactoriesBean bean : factoriesBeanLoader) {
       factoriesBean = bean;
       serviceCount++;
+      // Exception for Kafak10 since Kafka10 depends on Kafak09, it should load 2 service loaders
+      if(bean.getClass().getName().toString().equals(kafka10ClassName)) {
+        kafka10FactoriesBean = bean;
+      }
     }
+
+    // Exception for Kafka10 since it should load 2 service loaders
+    if(kafka10FactoriesBean != null) {
+      factoriesBean = kafka10FactoriesBean;
+      serviceCount--;
+    }
+
     if (serviceCount != 1) {
       throw new RuntimeException(Utils.format("Unexpected number of FactoriesBean: {} instead of 1", serviceCount));
     }

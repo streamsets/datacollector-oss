@@ -76,6 +76,7 @@
     <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
     <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
+    <apache-kafka_0_10-lib>none</apache-kafka_0_10-lib>
     <jython_2_7-lib>none</jython_2_7-lib>
     <groovy_2_4-lib>none</groovy_2_4-lib>
     <elasticsearch_1_4-lib>none</elasticsearch_1_4-lib>
@@ -155,6 +156,7 @@
     <module>sdc-kafka_0_9-common</module>
     <module>sdc-kafka_0_9</module>
     <module>sdc-kafka_0_9_mapr_5_1</module>
+    <module>sdc-kafka_0_10</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_target-protolib</module>
@@ -517,6 +519,7 @@
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
+        <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
       </properties>
@@ -532,6 +535,7 @@
         <module>mongodb_3-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
         <module>apache-kafka_0_9-lib</module>
+        <module>apache-kafka_0_10-lib</module>
         <module>apache-kudu-0_9-lib</module>
         <module>influxdb_0_9-lib</module>
         <module>redis-lib</module>

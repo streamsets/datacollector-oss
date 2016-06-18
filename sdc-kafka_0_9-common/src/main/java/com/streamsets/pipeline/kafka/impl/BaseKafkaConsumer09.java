@@ -52,7 +52,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
 
   protected KafkaConsumer<String, byte[]> kafkaConsumer;
 
-  private final String topic;
+  protected final String topic;
 
   // blocking queue which is populated by the kafka consumer runnable that polls
   private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue;
@@ -167,7 +167,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     topicPartitionToOffsetMetadataMap.put(topicPartition, offsetAndMetadata);
   }
 
-  private void createConsumer() {
+  protected void createConsumer() {
     Properties  kafkaConsumerProperties = new Properties();
     configureKafkaProperties(kafkaConsumerProperties);
     LOG.debug("Creating Kafka Consumer with properties {}" , kafkaConsumerProperties.toString());
