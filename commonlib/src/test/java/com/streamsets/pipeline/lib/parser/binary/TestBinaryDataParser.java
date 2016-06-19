@@ -35,16 +35,16 @@ import java.util.Collections;
 
 public class TestBinaryDataParser {
 
-  private static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
-    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
-    "team that is laser-focused on solving hard problems so our customers don’t have to.";
+  private static final String TEST_STRING_251 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We're a " +
+    "team that is laser-focused on solving hard problems so our customers don't have to.";
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
   }
 
   private byte[] getTestBytes() throws Exception {
-    return TEST_STRING_255.getBytes();
+    return TEST_STRING_251.getBytes();
   }
 
   @Test
@@ -54,15 +54,15 @@ public class TestBinaryDataParser {
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
-    Assert.assertTrue(Arrays.equals(TEST_STRING_255.getBytes(), record.get().getValueAsByteArray()));
-    Assert.assertEquals(255, record.get().getValueAsByteArray().length);
+    Assert.assertTrue(Arrays.equals(TEST_STRING_251.getBytes(), record.get().getValueAsByteArray()));
+    Assert.assertEquals(251, record.get().getValueAsByteArray().length);
 
     long offset = Long.parseLong(parser.getOffset());
-    Assert.assertEquals(255, offset);
+    Assert.assertEquals(251, offset);
 
     record = parser.parse();
     Assert.assertNull(record);
-    Assert.assertEquals(255, Long.parseLong(parser.getOffset()));
+    Assert.assertEquals(251, Long.parseLong(parser.getOffset()));
     parser.close();
   }
 

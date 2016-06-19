@@ -36,16 +36,16 @@ import java.util.Collections;
 
 public class TestBinaryDataParserFactory {
 
-  private static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
-    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
-    "team that is laser-focused on solving hard problems so our customers don’t have to.";
+  private static final String TEST_STRING_251 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We're a " +
+    "team that is laser-focused on solving hard problems so our customers don't have to.";
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
   }
 
   private byte[] getTestBytes() throws Exception {
-    return TEST_STRING_255.getBytes();
+    return TEST_STRING_251.getBytes();
   }
 
   @Test
@@ -60,11 +60,11 @@ public class TestBinaryDataParserFactory {
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
-    Assert.assertEquals("255", parser.getOffset());
+    Assert.assertEquals("251", parser.getOffset());
 
     Assert.assertTrue(record.has("/"));
     Assert.assertTrue(Arrays.equals(getTestBytes(), record.get("/").getValueAsByteArray()));
-    Assert.assertEquals(255, record.get().getValueAsByteArray().length);
+    Assert.assertEquals(251, record.get().getValueAsByteArray().length);
 
     parser.close();
   }
