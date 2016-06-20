@@ -149,18 +149,16 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
     this.timeDriver = timeDriver;
     this.decimalDefaultsConfig = decimalDefaultsConfig;
+    partitionTypeInfo = new LinkedHashMap<>();
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
-
     hiveConfigBean.init(getContext(), "hiveConfigBean", issues);
-
     partitioned = !(partitionConfigList.isEmpty());
     if (partitioned) {
       PartitionColumnTypeChooserValues supportedPartitionTypes = new PartitionColumnTypeChooserValues();
-      partitionTypeInfo = new LinkedHashMap<>();
       for (PartitionConfig partition: partitionConfigList) {
         // Validation on partition column name
         if (!HiveMetastoreUtil.validateColumnName(partition.name)) {
