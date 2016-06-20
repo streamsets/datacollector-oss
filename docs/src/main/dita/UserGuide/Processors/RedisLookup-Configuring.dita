@@ -64,7 +64,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h6p_p2v_uq"/></xref>
                                     </entry>
-                                    <entry>Data type of the key in Redis.<p>Default is
+                                    <entry>Data type of the value in Redis.<p>Default is
                                         String.</p></entry>
                                 </row>
                                 <row>
