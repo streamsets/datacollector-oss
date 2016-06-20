@@ -117,6 +117,7 @@ public final class HiveMetastoreUtil {
 
 
   private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern PATTERN_MATCHER = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
@@ -632,6 +633,9 @@ public final class HiveMetastoreUtil {
           break;
         case DATETIME:
           currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : datetimeFormat.format(currField.getValueAsDate()));
+          break;
+        case TIME:
+          currField = Field.create(Field.Type.STRING, currField.getValue() == null ? null : timeFormat.format(currField.getValueAsTime()));
           break;
       }
 
