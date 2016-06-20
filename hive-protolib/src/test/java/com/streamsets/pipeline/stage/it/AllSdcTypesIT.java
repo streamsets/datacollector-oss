@@ -60,7 +60,8 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
 
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
   private static Date date = new Date();
 
   @Parameterized.Parameters(name = "type({0})")
@@ -75,7 +76,8 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
         {Field.create(Field.Type.FLOAT, 1.5), true, Types.FLOAT, 1.5},
         {Field.create(Field.Type.DOUBLE, 1.5), true, Types.DOUBLE, 1.5},
         {Field.create(Field.Type.DATE, new Date(116, 5, 13)), true, Types.DATE, new Date(116, 5, 13)},
-        {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, dateFormat.format(date)},
+        {Field.create(Field.Type.DATETIME, date), true, Types.VARCHAR, datetimeFormat.format(date)},
+        {Field.create(Field.Type.TIME, date), true, Types.VARCHAR, timeFormat.format(date)},
         {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)),
             true,
             Types.DECIMAL,
