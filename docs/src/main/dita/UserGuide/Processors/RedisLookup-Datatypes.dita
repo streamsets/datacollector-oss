@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qs3_zz4_zv">
  <title>Data Types</title>
- <shortdesc>When you define the key to look up in Redis, you specify the data type of the Redis key.
-        The Redis Lookup processor converts the Redis data type to a <ph
+ <shortdesc>When you define the key to look up in Redis, you specify the data type of the Redis
+        value. The Redis Lookup processor converts the Redis data type to a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> data
         type.</shortdesc>
  <conbody>
