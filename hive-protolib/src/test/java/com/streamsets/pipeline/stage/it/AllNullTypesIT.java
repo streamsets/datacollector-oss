@@ -65,6 +65,7 @@ public class AllNullTypesIT extends BaseHiveMetadataPropagationIT {
         {Field.create(Field.Type.DOUBLE, null), true, Types.DOUBLE},
         {Field.create(Field.Type.DATE, null), true, Types.DATE},
         {Field.create(Field.Type.DATETIME, null), true, Types.VARCHAR},
+        {Field.create(Field.Type.TIME, null), true, Types.VARCHAR},
         {Field.create(Field.Type.DECIMAL, null), true, Types.DECIMAL},
         {Field.create(Field.Type.STRING, null), true, Types.VARCHAR},
         {Field.create(Field.Type.BYTE_ARRAY, null), true, Types.BINARY},
