@@ -849,7 +849,7 @@ public class TestJdbcSource {
       assertEquals(Field.Type.DATE, parsedRecord.get("/D").getType());
 
       assertTrue(parsedRecord.has("/T"));
-      assertEquals(Field.Type.DATETIME, parsedRecord.get("/T").getType());
+      assertEquals(Field.Type.TIME, parsedRecord.get("/T").getType());
 
       assertTrue(parsedRecord.has("/TS"));
       assertEquals(Field.Type.DATETIME, parsedRecord.get("/TS").getType());
