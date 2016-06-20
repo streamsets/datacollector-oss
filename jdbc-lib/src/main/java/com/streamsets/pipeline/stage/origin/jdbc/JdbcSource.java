@@ -548,8 +548,7 @@ public class JdbcSource extends BaseSource {
             field = Field.create(Field.Type.SHORT, rs.getObject(i));
             break;
           case Types.TIME:
-            // We currently don't have better type for just time, covered by SDC-3258
-            field = Field.create(Field.Type.DATETIME, rs.getObject(i));
+            field = Field.create(Field.Type.TIME, rs.getObject(i));
             break;
           case Types.TIMESTAMP:
             field = Field.create(Field.Type.DATETIME, rs.getObject(i));
