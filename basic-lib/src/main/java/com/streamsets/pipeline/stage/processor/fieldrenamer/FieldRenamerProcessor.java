@@ -27,69 +27,175 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
- * Processor for renaming fields.
+ * Processor for renaming fields. The processor supported specifying regex
  *
  * This processor works similarly to how a Linux mv command would. Semantics are as follows:
- *   1. If source field does not exist, success of processor depends on the
- *      precondition-failure configuration.
- *   2. If source field exists and target field does not exist, source field will be renamed to
+ *   1. The source fields are matched from the from fields expression. If multiple rename configurations
+ *      fromFieldExpression matches the same from field, the success of the processor depends
+ *      on MultipleFromFieldsMatchHandling Configuration.
+ *   2. If source field does not exist, success of processor depends on the
+ *      non existing from Field Error Handling configuration.
+ *   3. If source field exists and target field does not exist, source field will be renamed to
  *      the target field's name. Source field will be removed at the end of the operation.
- *   3. If source field exists and target field exists, the overwrite configuration will determine
- *      whether or not the operation can succeed.
+ *   4. If source field exists and target field exists, the ExistingToFieldHandling configuration
+ *      will determine how and whether or not the operation can succeed.
  */
 public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
   private final List<FieldRenamerConfig> renameMapping;
-  private final OnStagePreConditionFailure onStagePreConditionFailure;
-  private final boolean overwriteExisting;
+  private final FieldRenamerProcessorErrorHandler errorHandler;
+  private final Map<Pattern, String> fromPatternToFieldExpMapping;
 
-  public FieldRenamerProcessor (List<FieldRenamerConfig> renameMapping,
-      OnStagePreConditionFailure onStagePreConditionFailure,
-      boolean overwriteExisting
+  public FieldRenamerProcessor(
+      List<FieldRenamerConfig> renameMapping,
+      FieldRenamerProcessorErrorHandler errorHandler
   ) {
-    this.renameMapping = Utils.checkNotNull(renameMapping, "Rename mapping cannot be nulll");
-    this.onStagePreConditionFailure = onStagePreConditionFailure;
-    this.overwriteExisting = overwriteExisting;
+    this.renameMapping = Utils.checkNotNull(renameMapping, "Rename mapping cannot be null");
+    this.errorHandler = errorHandler;
+    this.fromPatternToFieldExpMapping = new LinkedHashMap<>();
+  }
+
+  @Override
+  public List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+    for (FieldRenamerConfig renameConfig : renameMapping) {
+      String fromFieldPathRegex = FieldRegexUtil.patchUpFieldPathRegex(renameConfig.fromFieldExpression);
+      try {
+        Pattern pattern = Pattern.compile(fromFieldPathRegex);
+        fromPatternToFieldExpMapping.put(pattern, renameConfig.toFieldExpression);
+      } catch (PatternSyntaxException e) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.RENAME.name(),
+                "renameMapping",
+                Errors.FIELD_RENAMER_02,
+                renameConfig.fromFieldExpression
+            )
+        );
+      }
+    }
+    return issues;
+  }
+
+  private void populateFromAndToFieldsMap(
+      Pattern fromFieldPattern,
+      String toFieldExpression,
+      Set<String> fieldPaths,
+      Set<String> fieldsThatDoNotExist,
+      Map<String, List<String>> multipleRegexMatchingSameFields,
+      Map<String, String> fromFieldToFieldMap
+  ) {
+    boolean hasSourceFieldsMatching = false;
+    for(String existingFieldPath : fieldPaths) {
+      Matcher matcher = fromFieldPattern.matcher(existingFieldPath);
+      if (matcher.matches()) {
+        hasSourceFieldsMatching = true;
+        String toFieldPath = matcher.replaceAll(toFieldExpression);
+        if (fromFieldToFieldMap.containsKey(existingFieldPath)) {
+          List<String> patterns =  multipleRegexMatchingSameFields.get(existingFieldPath);
+          if (patterns == null) {
+            patterns = new ArrayList<>();
+          }
+          patterns.add(fromFieldPattern.pattern());
+          multipleRegexMatchingSameFields.put(existingFieldPath, patterns);
+          //We should not process the field.
+          fromFieldToFieldMap.remove(existingFieldPath);
+        } else {
+          fromFieldToFieldMap.put(existingFieldPath, toFieldPath);
+        }
+      }
+    }
+    if (!hasSourceFieldsMatching) {
+      fieldsThatDoNotExist.add(fromFieldPattern.pattern());
+    }
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     Set<String> fieldsRequiringOverwrite = new HashSet<>();
-    for (FieldRenamerConfig renameConfig : renameMapping) {
-      String fromFieldName = renameConfig.fromField;
-      String toFieldName = renameConfig.toField;
+    Map<String, List<String>> multipleRegexMatchingSameFields = new HashMap<>();
+    Map<String, String> fromFieldToFieldMap = new HashMap<>();
 
-      if (!record.has(fromFieldName)) {
-        // Source field does not exist, so generate an error for non-existent source field
-        fieldsThatDoNotExist.add(fromFieldName);
-      } else if ((record.has(fromFieldName) && !record.has(toFieldName)) || overwriteExisting) {
-        // If the source field exists and the target does not, we need to replace
-        // We can also replace in this case if overwrite existing is set to true
-        Field fromField = record.get(renameConfig.fromField);
-        record.set(renameConfig.toField, fromField);
-        record.delete(renameConfig.fromField);
+    for (Map.Entry<Pattern, String> fromPatternToFieldExpEntry : fromPatternToFieldExpMapping.entrySet()) {
+      populateFromAndToFieldsMap(
+          fromPatternToFieldExpEntry.getKey(),
+          fromPatternToFieldExpEntry.getValue(),
+          record.getEscapedFieldPaths(),
+          fieldsThatDoNotExist,
+          multipleRegexMatchingSameFields,
+          fromFieldToFieldMap
+      );
+    }
+
+    for (Map.Entry<String, String> fromFieldToFieldEntry : fromFieldToFieldMap.entrySet()) {
+      String fromFieldName = fromFieldToFieldEntry.getKey();
+      String toFieldName = fromFieldToFieldEntry.getValue();
+      // The fromFieldName will always exist, not need to check for its existence.
+      // If the source field exists and the target does not, we need to replace
+      // We can also replace in this case if overwrite existing is set to true
+      Field fromField = record.get(fromFieldName);
+      if (record.has(toFieldName)) {
+        switch (errorHandler.existingToFieldHandling) {
+          case TO_ERROR:
+            fieldsRequiringOverwrite.add(toFieldName);
+            break;
+          case CONTINUE:
+            break;
+          case APPEND_NUMBERS:
+            int i = 1;
+            for (;record.has(toFieldName+String.valueOf(i));i++);
+            toFieldName = toFieldName+String.valueOf(i);
+            //Fall through so as to edit.
+          case REPLACE:
+            record.set(toFieldName, fromField);
+            record.delete(fromFieldName);
+            break;
+        }
       } else {
-        // Target field exist, but overwrite existing is false, so generate an error
-        fieldsRequiringOverwrite.add(renameConfig.toField);
+        record.set(toFieldName, fromField);
+        record.delete(fromFieldName);
       }
     }
 
-    if (onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR && !fieldsThatDoNotExist.isEmpty()) {
-     throw new OnRecordErrorException(Errors.FIELD_RENAMER_00, record.getHeader().getSourceId(),
-       Joiner.on(", ").join(fieldsThatDoNotExist));
+    if (errorHandler.nonExistingFromFieldHandling == OnStagePreConditionFailure.TO_ERROR
+        && !fieldsThatDoNotExist.isEmpty()) {
+      throw new OnRecordErrorException(Errors.FIELD_RENAMER_00, record.getHeader().getSourceId(),
+          Joiner.on(", ").join(fieldsThatDoNotExist));
     }
 
-    if (!overwriteExisting && !fieldsRequiringOverwrite.isEmpty()) {
-      throw new OnRecordErrorException(Errors.FIELD_RENAMER_01,
-        Joiner.on(", ").join(fieldsRequiringOverwrite),
+    if (errorHandler.multipleFromFieldsMatching == OnStagePreConditionFailure.TO_ERROR
+        && !multipleRegexMatchingSameFields.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      for (Map.Entry<String, List<String>> multipleRegexMatchingSameFieldEntry : multipleRegexMatchingSameFields.entrySet()) {
+        sb.append(
+            "Field: " + multipleRegexMatchingSameFieldEntry.getKey() + " Regex: " +
+                Joiner.on(".").join(multipleRegexMatchingSameFieldEntry.getValue())
+        );
+      }
+      throw new OnRecordErrorException(record, Errors.FIELD_RENAMER_03, sb.toString());
+
+    }
+
+    if (!fieldsRequiringOverwrite.isEmpty()) {
+      throw new OnRecordErrorException(record, Errors.FIELD_RENAMER_01,
+          Joiner.on(", ").join(fieldsRequiringOverwrite),
           record.getHeader().getSourceId());
     }
+
     batchMaker.addRecord(record);
   }
 }
