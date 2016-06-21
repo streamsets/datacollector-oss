@@ -44,13 +44,4 @@ public class VaultEL {
   public static String read(@ElParam("path") String path, @ElParam("key") String key, @ElParam("delay") long delay) {
     return Vault.read(path, key, delay);
   }
-
-  @ElFunction(
-      prefix = "vault",
-      name = "token",
-      description = "Returns the current Vault auth token."
-  )
-  public static String token() {
-    return Vault.token();
-  }
 }
