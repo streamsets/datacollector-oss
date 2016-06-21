@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedList;
 
 
 /**
@@ -46,6 +47,7 @@ import java.util.Map;
  */
 public class ScriptingProcessorTestUtil {
   private ScriptingProcessorTestUtil() {}
+  static final String JAVASCRIPT_CLASSNAME = "com.streamsets.pipeline.stage.processor.javascript.JavaScriptProcessor";
 
   public static <C extends Processor> void verifyWriteErrorRecord(Class<C> clazz, Processor processor)
       throws StageException {
@@ -93,12 +95,13 @@ public class ScriptingProcessorTestUtil {
       // JavaScript only defines "Number" as a type which is a 64-bit float (double)
       if (System.getProperty("java.version").startsWith("1.7.")) {
         Assert.assertEquals(Field.Type.DOUBLE, outRec.get("[0]").getType());
+        Assert.assertEquals(5.0, outRec.get("[0]").getValue());
       }
       // Java8's Nashorn engine however, will respect the original Java type of Integer.
       if (System.getProperty("java.version").startsWith("1.8")) {
         Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+        Assert.assertEquals(5, outRec.get("[0]").getValue());
       }
-      Assert.assertEquals(5, outRec.get("[0]").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -234,7 +237,42 @@ public class ScriptingProcessorTestUtil {
       Field field = Field.create(list);
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((String) null), output.getRecords().get("lane").get(1).get());
+      Assert.assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  public static <C extends Processor> void verifyPreserveTypeForNullValue(Class<C> clazz, Processor processor)
+      throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    List<Field> list = new LinkedList<>();
+    list.add(Field.create(Field.Type.INTEGER, null));
+    list.add(Field.create(Field.Type.LONG, null));
+    list.add(Field.create(Field.Type.DOUBLE, null));
+    list.add(Field.create(Field.Type.FLOAT, null));
+    list.add(Field.create(Field.Type.DECIMAL, null));
+    list.add(Field.create(Field.Type.BOOLEAN, null));
+    list.add(Field.create(Field.Type.STRING, null));
+    list.add(Field.create(Field.Type.TIME, null));
+    list.add(Field.createDate(null));
+
+    Field field = Field.create(list);
+    record.set(field);
+    List<Record> input = Collections.singletonList(record);
+
+    try {
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      List<Field> result = output.getRecords().get("lane").get(0).get().getValueAsList();
+      for(int i = 0; i < list.size(); i++){
+        Assert.assertEquals(list.get(i).getType(), result.get(i).getType());
+      }
     } finally {
       runner.runDestroy();
     }
@@ -270,11 +308,56 @@ public class ScriptingProcessorTestUtil {
       Field field = Field.create(list);
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((String) null), output.getRecords().get("lane").get(1).get());
+      Assert.assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
     } finally {
       runner.runDestroy();
     }
   }
+
+  /**
+   * Incoming record has type and values, and script evaluator will modify the type
+   * as well as actual values. This test checks the output record if types in all
+   * fields are modified and have correct type.
+   * @param clazz PythonProcessor, JavaScriptProcessor, or GroovyProcessor.
+   * @param processor Processor
+   * @param <C>
+   */
+  public static <C extends Processor> void verifyChangedTypeFromScripting(
+      Class<C> clazz,
+      Processor processor) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("int_long", Field.create(123));  // int
+    map.put("long_bool", Field.create(12345L)); // long
+    map.put("str_date", Field.create("today")); // String
+    map.put("double_decimal", Field.create(123d)); // double
+    record.set(Field.create(map));
+    StageRunner.Output output;
+
+    try {
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertEquals(1, output.getRecords().get("lane").size());
+    Map<String, Field> outRec = output.getRecords().get("lane").get(0).get().getValueAsMap();
+    if (!clazz.getName().equals(JAVASCRIPT_CLASSNAME)) {
+      // JavaScript has ony "Number" type. No int, long, double, decimal types. So skip them.
+      Assert.assertEquals(Field.Type.LONG, outRec.get("int_long").getType());
+      Assert.assertEquals(Field.Type.DECIMAL, outRec.get("double_decimal").getType());
+      // JavaScript fails this test because Date is Object type.
+      Assert.assertEquals(Field.Type.DATE, outRec.get("str_date").getType());
+    }
+    Assert.assertEquals(Field.Type.BOOLEAN, outRec.get("long_bool").getType());
+  }
+
+
 
   public static <C extends Processor> void verifyStateObject(Class<C> clazz, Processor processor)
       throws StageException {
@@ -385,5 +468,67 @@ public class ScriptingProcessorTestUtil {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  /**
+   * Test for nested map. It changes the values in nested map and confirm that
+   * the types are preserved.
+   * @param clazz JythonEvaluator, JavaScripEvaluator or GroovyEvaluator.
+   * @param processor Processor
+   * @param <C>
+   * @throws StageException
+   */
+  public static <C extends Processor> void verifyNestedMap(Class<C> clazz, Processor processor)
+      throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    /*
+       This is the setup. Test will change col1-col4 to null, and row2 to null.
+       { row1: {
+                 col1: true,  // boolean
+                 col2: 10L,   // long
+                 col3: today's date // Date
+                 col4: 0.5d // double
+              },
+         row2 : {
+                 col5: 0.5f  //float
+              }
+       }
+     */
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    Map<String, Field> row1 = new HashMap<>();
+    Map<String, Field> row2 = new HashMap<>();
+    row1.put("col1", Field.create(true));
+    row1.put("col2", Field.create(10L));
+    row1.put("col3", Field.createDate(new Date()));
+    row1.put("col4", Field.create(0.5d));
+    row2.put("col5", Field.create(0.5f));
+    map.put("row1", Field.create(row1));
+    map.put("row2", Field.create(row2));
+
+    record.set(Field.create(map));
+    StageRunner.Output output;
+
+    try {
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertEquals(1, output.getRecords().get("lane").size());
+    Record outRec = output.getRecords().get("lane").get(0);
+    Assert.assertEquals(Field.Type.MAP, outRec.get().getType());
+
+    // All of the values in the "row1" map are null, but type should be preserved
+    Map<String, Field> row1map = outRec.get().getValueAsMap().get("row1").getValueAsMap();
+    for (Map.Entry<String, Field> r1 : row1map.entrySet()){
+      Assert.assertEquals(r1.getValue().getType(), row1.get(r1.getKey()).getType());
+    }
+    // "row2" map is null, but the type should be preserved
+    Assert.assertEquals(Field.Type.MAP, outRec.get().getValueAsMap().get("row2").getType());
+    Assert.assertNull(outRec.get().getValueAsMap().get("row2").getValue());
   }
 }

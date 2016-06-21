@@ -157,4 +157,32 @@ public class TestGroovyProcessor {
 
     ScriptingProcessorTestUtil.verifyListMapOrder(GroovyDProcessor.class, processor);
   }
+
+  @Test
+  public void testTypedNullPassThrough() throws Exception {
+    final String script = Resources.toString(Resources.getResource("PrimitiveTypesPassthroughScript.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(GroovyProcessor.class, processor);
+  }
+
+  @Test
+  public void testAssignNullToTypedField() throws Exception {
+    final String script = Resources.toString(Resources.getResource("AssignNullToTypedField.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(GroovyProcessor.class, processor);
+  }
+
+  @Test
+  public void testNestedMapWithNull() throws Exception {
+    final String script = Resources.toString(Resources.getResource("NestedMapWithNull.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyNestedMap(GroovyProcessor.class, processor);
+  }
+
+  @Test
+  public void testChangeFieldTypeFromScripting() throws Exception {
+    final String script = Resources.toString(Resources.getResource("ChangeFieldTypeScript.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH,script);
+    ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(GroovyProcessor.class, processor);
+  }
 }

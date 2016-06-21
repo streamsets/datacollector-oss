@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.javascript;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 
 import javax.script.ScriptEngine;
@@ -59,7 +60,7 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected Field scriptToField(Object scriptObject) {
+  protected Field scriptToField(Object scriptObject, Record record, String path) {
     Field field;
     if (scriptObject != null) {
       if (SCRIPT_OBJECT_MIRROR_CLASS.isInstance(scriptObject)) {
@@ -69,14 +70,20 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
             List<Field> fields = new ArrayList<>(set.size());
             for (Object obj : set) {
               Map.Entry<String, Object> entry = (Map.Entry<String, Object>) obj;
-              fields.add(scriptToField(entry.getValue()));
+              fields.add(scriptToField(entry.getValue(), record, composeMapPath(path,entry.getKey())));
             }
             field = Field.create(fields);
           } else {
             Map<String, Field> fields = new LinkedHashMap<>();
             for (Object obj : set) {
               Map.Entry<String, Object> entry = (Map.Entry<String, Object>) obj;
-              fields.put(entry.getKey(), scriptToField(entry.getValue()));
+              fields.put(
+                  entry.getKey(),
+                  scriptToField(entry.getValue(),
+                      record,
+                      composeMapPath(path, entry.getKey())
+                  )
+              );
             }
             field = Field.create(fields);
           }
@@ -87,22 +94,35 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
         Map<Object, Object> mapScriptObject = (Map<Object,Object>)scriptObject;
         LinkedHashMap<String, Field> fieldMap = new LinkedHashMap<>();
         for (Map.Entry entry : mapScriptObject.entrySet()) {
-          fieldMap.put(entry.getKey().toString(), scriptToField(mapScriptObject.get(entry.getKey())));
+          fieldMap.put(
+              entry.getKey().toString(),
+              scriptToField(
+                  mapScriptObject.get(entry.getKey()),
+                  record,
+                  composeMapPath(path, entry.getKey().toString())
+              )
+          );
         }
         boolean isListMap = (scriptObject instanceof MapInfo) && ((MapInfo) scriptObject).isListMap();
         field = (isListMap) ? Field.createListMap(fieldMap) : Field.create(fieldMap);
       } else if(scriptObject instanceof List) {
         List listScriptObject = (List)scriptObject;
         List<Field> fields = new ArrayList<>(listScriptObject.size());
-        for (Object listObj : listScriptObject) {
-          fields.add(scriptToField(listObj));
+        for (int i = 0; i < listScriptObject.size(); i++) {
+          Object listObj = listScriptObject.get(i);
+          fields.add(scriptToField(listObj, record, composeArrayPath(path, i)));
         }
         field = Field.create(fields);
       } else {
         field = convertPrimitiveObject(scriptObject);
       }
     } else {
-      field = Field.create((String)null);
+      Field originalField = record.get(path);
+      if (originalField != null) {
+        field = Field.create(originalField.getType(), null);
+      } else {
+        field = Field.create((String) null);
+      }
     }
     return field;
   }

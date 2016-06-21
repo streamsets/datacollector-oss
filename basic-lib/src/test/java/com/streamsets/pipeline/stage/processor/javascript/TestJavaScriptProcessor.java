@@ -279,6 +279,63 @@ public class TestJavaScriptProcessor {
     );
     ScriptingProcessorTestUtil.verifyListMap(JavaScriptDProcessor.class, processor);
   }
+
+  @Test
+  public void testTypedNullPassThrough() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.BATCH,
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  records[i].value['new_field'] = 'testtest';\n" +
+            "  output.write(records[i]);\n" +
+            "}"
+    );
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  public void testAssignNullToTypedField() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.BATCH,
+        "for (var i = 0; i < records.length; i++){\n" +
+            // record.value will be an array
+            "  for(var index=0; index < records[i].value.length; index++){\n" +
+            "    records[i].value[index] = null;\n" +
+            "  }\n" +
+            "  output.write(records[i]);\n" +
+            "}"
+    );
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JavaScriptProcessor.class, processor);
+  }
+
+  @Test
+  public void testNestedMapWithNull() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.BATCH,
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  for( var k = 0; k < records[i].value.row1.length; k++){\n" +
+            "      records[i].value.row1.k = null;\n" +
+            "  }\n" +
+            "  records[i].value.row2 = null;\n" +
+            "  output.write(records[i]);\n" +
+            "}"
+    );
+    ScriptingProcessorTestUtil.verifyNestedMap(JavaScriptProcessor.class, processor);
+  }
+
+  @Test
+  public void testChangeFieldTypeFromScripting() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.BATCH,
+        // record.value will be a map
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  records[i].value.long_bool = true;\n" +
+            "  records[i].value.str_date = new Date();\n" +
+            "  output.write(records[i]);" +
+            "}"
+    );
+    ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(JavaScriptProcessor.class, processor);
+  }
+
   @Test
   public void testListMapOrder() throws Exception {
     Processor processor = new JavaScriptProcessor(

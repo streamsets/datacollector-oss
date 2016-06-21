@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ScriptObjectFactory {
 
@@ -49,7 +51,7 @@ public class ScriptObjectFactory {
   @SuppressWarnings("unchecked")
   public Record getRecord(ScriptRecord scriptRecord) {
     Record record = scriptRecord.record;
-    Field field = scriptToField(scriptRecord.value);
+    Field field = scriptToField(scriptRecord.value, record, "");
     record.set(field);
     return record;
   }
@@ -62,7 +64,7 @@ public class ScriptObjectFactory {
 
   @SuppressWarnings("unchecked")
   public void putInMap(Object obj, Object key, Object value) {
-    ((Map)obj).put(key, value);
+    ((Map) obj).put(key, value);
   }
 
   private static class LinkedHashMapWithMapInfo extends LinkedHashMap implements MapInfo {
@@ -119,30 +121,59 @@ public class ScriptObjectFactory {
     return scriptObject;
   }
 
+  public static final Pattern PATTERN = Pattern.compile("\\W", Pattern.CASE_INSENSITIVE);
+
+  protected static String singleQuoteEscape(String path) {
+    if (path != null) {
+      Matcher matcher = PATTERN.matcher(path);
+      if (matcher.find()) {
+        path = path.replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("'", "\\\\\'");
+        return "'" + path + "'";
+      }
+    }
+    return path;
+  }
+
+  protected String composeMapPath(String parent, String mapEntry) {
+    return parent + "/" + singleQuoteEscape(mapEntry);
+  }
+
+  protected String composeArrayPath(String parent, int arrayIndex) {
+    return parent + "[" + arrayIndex + "]";
+  }
+
   @SuppressWarnings("unchecked")
-  protected Field scriptToField(Object scriptObject) {
+  protected Field scriptToField(Object scriptObject, Record record, String path) {
     Field field;
     if (scriptObject != null) {
       if (scriptObject instanceof Map) {
         Map<String, Object> scriptMap = (Map<String, Object>) scriptObject;
         LinkedHashMap<String, Field> fieldMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
-          fieldMap.put(entry.getKey(), scriptToField(entry.getValue()));
+          fieldMap.put(entry.getKey(), scriptToField(entry.getValue(), record, composeMapPath(path, entry.getKey())));
         }
         boolean isListMap = (scriptObject instanceof MapInfo) && ((MapInfo) scriptObject).isListMap();
         field = (isListMap) ? Field.createListMap(fieldMap) : Field.create(fieldMap);
       } else if (scriptObject instanceof List) {
         List scriptArray = (List) scriptObject;
         List<Field> fieldArray = new ArrayList<>(scriptArray.size());
-        for (Object element : scriptArray) {
-          fieldArray.add(scriptToField(element));
+        for (int i = 0; i < scriptArray.size(); i++) {
+          Object element = scriptArray.get(i);
+          fieldArray.add(scriptToField(element, record, composeArrayPath(path, i)));
         }
         field = Field.create(fieldArray);
       } else {
         field = convertPrimitiveObject(scriptObject);
       }
     } else {
-      field = Field.create((String)null);
+      Field originalField = record.get(path);
+      if (originalField != null) {
+        field = Field.create(originalField.getType(), null);
+      } else {
+        field = Field.create((String) null);
+      }
     }
     return field;
   }

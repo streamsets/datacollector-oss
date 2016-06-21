@@ -185,6 +185,59 @@ public class TestJythonProcessor {
     ScriptingProcessorTestUtil.verifyListMap(JythonDProcessor.class, processor);
   }
 
+
+  @Test
+  public void testTypedNullPassThrough() throws Exception {
+    Processor processor = new JythonProcessor(
+        ProcessingMode.BATCH,
+        "for record in records:\n" +
+            "  output.write(record)"
+    );
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testAssignNullToTypedField() throws Exception {
+    Processor processor = new JythonProcessor(
+        ProcessingMode.BATCH,
+        // record.value will be a list
+        "for record in records:\n" +
+            "  for r in record.value:\n" +
+            "      r = None\n" +
+            "  output.write(record)"
+    );
+    ScriptingProcessorTestUtil.verifyPreserveTypeForNullValue(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testNestedMapWithNull() throws Exception {
+    Processor processor = new JythonProcessor(
+        ProcessingMode.BATCH,
+        "for record in records:\n" +
+            "  for k in record.value['row1']:\n" +
+            "      record.value['row1'][k] = None\n" +
+            "  record.value['row2'] = None\n" +
+            "  output.write(record)"
+    );
+    ScriptingProcessorTestUtil.verifyNestedMap(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testChangeFieldTypeFromScripting() throws Exception {
+    Processor processor = new JythonProcessor(
+        ProcessingMode.BATCH,
+        "from decimal import Decimal\n" +
+        "from datetime import date\n" +
+        "for record in records:\n" +
+            "  record.value['int_long'] = 5L\n" +
+            "  record.value['long_bool'] = True\n" +
+            "  record.value['str_date'] = date.today()\n" +
+            "  record.value['double_decimal'] = Decimal(1235.678)\n" +
+            "  output.write(record)"
+    );
+    ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(JythonDProcessor.class, processor);
+  }
+
   @Test
   public void testListMapOrder() throws Exception {
     Processor processor = new JythonProcessor(ProcessingMode.RECORD,
