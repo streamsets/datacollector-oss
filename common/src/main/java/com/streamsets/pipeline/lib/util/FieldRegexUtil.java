@@ -45,11 +45,10 @@ public class FieldRegexUtil {
     //Reference to * in map must be replaced by regex that matches a field name
     //Reference to * in array index must be replaced by \d+
     fieldPath = fieldPath
-      .replace("[*]", "[\\d+]")
-      .replace("[", "\\[")
-      .replace("]", "\\]")
-      .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)");
-
+        .replace("[*]", "[\\d+]")
+        .replace("[", "\\[")
+        .replace("]", "\\]")
+        .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)");
     Pattern pattern = Pattern.compile(fieldPath);
     List<String> matchingFieldPaths = new ArrayList<>();
     for(String existingFieldPath : fieldPaths) {
@@ -59,5 +58,15 @@ public class FieldRegexUtil {
       }
     }
     return matchingFieldPaths;
+  }
+
+  public static String patchUpFieldPathRegex(String fieldPath) {
+    return fieldPath
+        .replace("[*]", "[\\d+]")
+        .replace("[(*)]", "[(\\d+)]")
+        .replace("[", "\\[")
+        .replace("]", "\\]")
+        .replaceAll("\\/\\(\\*\\)", "/([^\\\\/\\\\[]+)")
+        .replaceAll("\\/\\*", "/[^\\\\/\\\\[]+");
   }
 }

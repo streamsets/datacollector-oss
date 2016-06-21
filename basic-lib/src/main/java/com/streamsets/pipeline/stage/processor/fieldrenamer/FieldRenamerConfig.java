@@ -32,21 +32,21 @@ public class FieldRenamerConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "From Field",
-      description = "The field in the incoming record to rename.",
+      defaultValue = "",
+      label = "From Field Expression",
+      description = "The Field Expression to select fields in the incoming record to rename.",
       displayPosition = 10
   )
   @FieldSelectorModel(singleValued = true)
-  public String fromField;
+  public String fromFieldExpression;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue="",
-      label = "To Field",
-      description="The name of the field after renaming.",
+      defaultValue = "",
+      label = "To Field Expression",
+      description = "The Field expression for the incoming fields after renaming.",
       displayPosition = 20
   )
-  public String toField;
+  public String toFieldExpression;
 }

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldrenamer;
 
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
@@ -34,10 +35,11 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=1,
+    version=2,
     label="Field Renamer",
     description = "Rename fields",
     icon="edit.png",
+    upgrader = FieldRenamerProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/FieldRenamer.html#task_y5g_4hh_ht"
 )
 @ConfigGroups(Groups.class)
@@ -47,7 +49,7 @@ public class FieldRenamerDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
+      defaultValue = "",
       label = "Fields to Rename",
       description = "Fields to rename, and target field names.",
       displayPosition = 40,
@@ -56,31 +58,15 @@ public class FieldRenamerDProcessor extends DProcessor {
   @ListBeanModel
   public List<FieldRenamerConfig> renameMapping;
 
-  @ConfigDef(
-    required = true,
-    type = Type.MODEL,
-    defaultValue = "TO_ERROR",
-    label = "Field Does Not Exist",
-    description="Action for data that does not contain the specified fields",
-    displayPosition = 30,
-    group = "RENAME"
-  )
-  @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
-  public OnStagePreConditionFailure onStagePreConditionFailure;
 
-  @ConfigDef(
-      required = true,
-      type = Type.BOOLEAN,
-      defaultValue = "FALSE",
-      label = "Overwrite Existing Fields",
-      description="Whether or not to overwrite fields if a target field already exists",
-      displayPosition = 30,
-      group = "RENAME"
-  )
-  public boolean overwriteExisting;
+  @ConfigDefBean
+  public FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
 
   @Override
   protected Processor createProcessor() {
-    return new FieldRenamerProcessor(renameMapping, onStagePreConditionFailure, overwriteExisting);
+    return new FieldRenamerProcessor(
+        renameMapping,
+        errorHandler
+    );
   }
 }
