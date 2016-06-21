@@ -78,11 +78,6 @@
                                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entryDataFormats"/>
                                 </row>
                                 <row>
-                                    <entry>Poll Interval</entry>
-                                    <entry>Seconds the origin waits before checking for new files
-                                        from the remote server. </entry>
-                                </row>
-                                <row>
                                     <entry>Charset</entry>
                                     <entry>Character encoding of the messages to be
                                         processed.</entry>
