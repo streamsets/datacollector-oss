@@ -194,6 +194,16 @@
    <topicref href="../Destinations/RabbitMQ-DataFormats.dita"/>
    <topicref href="../Destinations/RabbitMQ-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Redis.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/Redis-Mode.dita">
+    <topicref href="../Destinations/Redis-BatchModeDataTypes.dita"/>
+    <topicref href="../Destinations/Redis-DataFormat.dita"/>
+   </topicref>
+   <topicref href="../Destinations/Redis-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>

@@ -564,5 +564,29 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Redis origin, destination, and Lookup processor use this
+   row</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_i5s_54s_zv">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Redis Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-RedisURI">
+      <entry>URI</entry>
+      <entry>URI of the Redis server. Use the following
+        format:<codeblock>redis://&lt;host name>:&lt;port number>/&lt;database></codeblock><p>You
+        can omit the port number or database if the server uses the default port number or default
+        database.</p><p>You can optionally include your password to log in to the Redis server. For
+        example:<codeblock>redis://:&lt;password>@&lt;host name>:&lt;port number>/&lt;database></codeblock></p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

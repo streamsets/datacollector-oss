@@ -239,6 +239,23 @@
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_r35_czc_kv"/></entry>
                         </row>
+                                                <row>
+                                                  <entry>Redis</entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_kxv_bsl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_nly_bsl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_jpz_bsl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_mv1_csl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_gvb_csl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_qyc_csl_3w"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_hf2_csl_3w"/></entry>
+                                                </row>
                         <row>
                             <entry>SDC RPC</entry>
                             <entry/>

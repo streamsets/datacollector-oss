@@ -112,15 +112,9 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>URI</entry>
-                                    <entry>URI of the Redis server. Use the following
-                                            format:<codeblock>redis://&lt;host name>:&lt;port number>/&lt;database></codeblock><p>You
-                                            can omit the port number or database if the server uses
-                                            the default port number or default database.</p><p>You
-                                            can optionally include the user name to log in to the
-                                            Redis server. For
-                                            example:<codeblock>redis://&lt;user name>:&lt;password>@&lt;host name>:&lt;port number>/&lt;database></codeblock></p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-RedisURI">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Connection Timeout (sec)</entry>

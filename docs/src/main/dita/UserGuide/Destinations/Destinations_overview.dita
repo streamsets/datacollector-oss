@@ -39,6 +39,7 @@
         <li>MapR Streams Producer - Writes data to MapR Streams.</li>
         <li>MongoDB - Writes data to MongoDB.</li>
         <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
+        <li>Redis - Writes data to Redis.</li>
         <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
