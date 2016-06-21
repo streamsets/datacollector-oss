@@ -96,7 +96,7 @@ verifySHA1() {
   DIR_NAME=`dirname ${1}`
   FILE_NAME=`basename ${1}`
   run cd ${DIR_NAME}
-  run sha1sum -s -c ${FILE_NAME}.sha1
+  run sha1sum --status -c ${FILE_NAME}.sha1
   run cd ${CURRENT_DIR}
 }
 
