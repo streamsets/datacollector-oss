@@ -25,20 +25,18 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.processor.fieldvaluereplacer.FieldValueReplacerConfig;
-import com.streamsets.pipeline.stage.processor.fieldvaluereplacer.FieldValueReplacerDProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class TestFieldRenamer {
@@ -47,20 +45,23 @@ public class TestFieldRenamer {
   public void testNonExistingSourceAndTargetFields() throws StageException {
     // If neither the source or target fields exist, then field renaming is a noop, and should succeed
     FieldRenamerConfig renameConfig = new FieldRenamerConfig();
-    renameConfig.fromField = "/nonExisting";
-    renameConfig.toField = "/alsoNonExisting";
+    renameConfig.fromFieldExpression = "/nonExisting";
+    renameConfig.toFieldExpression = "/alsoNonExisting";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
-        .addConfiguration("overwriteExisting", false)
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .addOutputLane("a").build();
     runner.runInit();
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("name", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -80,14 +81,17 @@ public class TestFieldRenamer {
   public void testNonExistingSourceFieldSuccess() throws StageException {
     // If source field does not exist, and precondition is set to continue, this should succeed
     FieldRenamerConfig renameConfig = new FieldRenamerConfig();
-    renameConfig.fromField = "/nonExisting";
-    renameConfig.toField = "/existing";
+    renameConfig.fromFieldExpression = "/nonExisting";
+    renameConfig.toFieldExpression = "/existing";
 
-    // Test non-existent source with existing target field
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
-        .addConfiguration("overwriteExisting", false)
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -109,10 +113,11 @@ public class TestFieldRenamer {
       runner.runDestroy();
     }
 
-    runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
-        .addConfiguration("overwriteExisting", true)
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -139,15 +144,19 @@ public class TestFieldRenamer {
   public void testNonExistingSourceFieldError() throws StageException {
     // If precondition failure is set to error, a missing source field should cause an error
     FieldRenamerConfig renameConfig = new FieldRenamerConfig();
-    renameConfig.fromField = "/nonExisting";
-    renameConfig.toField = "/existing";
+    renameConfig.fromFieldExpression = "/nonExisting";
+    renameConfig.toFieldExpression = "/existing";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
 
     // Test non-existent source with existing target field
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
-        .addConfiguration("overwriteExisting", false)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -167,16 +176,21 @@ public class TestFieldRenamer {
   }
 
   @Test
-  public void testOverwriteSuccess() throws StageException {
+  public void testTargetFieldExistsReplace() throws StageException {
     // Standard overwrite condition. Source and target fields exist
     FieldRenamerConfig renameConfig = new FieldRenamerConfig();
-    renameConfig.fromField = "/existing";
-    renameConfig.toField = "/overwrite";
+    renameConfig.fromFieldExpression = "/existing";
+    renameConfig.toFieldExpression = "/overwrite";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
-        .addConfiguration("overwriteExisting", true)
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -202,17 +216,22 @@ public class TestFieldRenamer {
   }
 
   @Test
-  public void testOverwriteError() throws StageException {
+  public void testTargetFieldExistsError() throws StageException {
     // If overwrite is set to false, overwriting should result in an error
     FieldRenamerConfig renameConfig = new FieldRenamerConfig();
-    renameConfig.fromField = "/existing";
-    renameConfig.toField = "/overwrite";
+    renameConfig.fromFieldExpression = "/existing";
+    renameConfig.toFieldExpression = "/overwrite";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
-        .addConfiguration("overwriteExisting", false)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -233,19 +252,347 @@ public class TestFieldRenamer {
   }
 
   @Test
+  public void testTargetFieldExistsAppendNumbers() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/field";
+    renameConfig.toFieldExpression = "/col";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.APPEND_NUMBERS;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("field", Field.create(Field.Type.STRING, "field"));
+      map.put("col", Field.create(Field.Type.STRING, "col"));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(Field.Type.MAP, map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertFalse(r.has("/field"));
+      Assert.assertTrue(r.has("/col"));
+      Assert.assertTrue(r.has("/col1"));
+      Assert.assertEquals("col", r.get("/col").getValueAsString());
+      Assert.assertEquals("field", r.get("/col1").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultipleRegexMatchingSameField() throws StageException {
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/sql(.*)";
+    renameConfig1.toFieldExpression = "/sqlRename$1";
+
+    FieldRenamerConfig renamerConfig2 = new FieldRenamerConfig();
+    renamerConfig2.fromFieldExpression = "/s(.*)";
+    renamerConfig2.toFieldExpression = "/sRename$1";
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("sqlField", Field.create(Field.Type.STRING, "foo"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(Field.Type.MAP, map));
+
+    try {
+      FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+      errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+      errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+      errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+      FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renamerConfig2),  errorHandler);
+
+      // Test non-existent source with existing target field
+      ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+          .setOnRecordError(OnRecordError.STOP_PIPELINE)
+          .addOutputLane("a").build();
+      runner.runInit();
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Should throw error if multiple regex match the same field");
+    } catch (OnRecordErrorException e) {
+      Assert.assertEquals(Errors.FIELD_RENAMER_03, e.getErrorCode());
+    }
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renamerConfig2),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(1, output.getRecords().get("a").size());
+    Record r = output.getRecords().get("a").get(0);
+    Assert.assertTrue(r.has("/sqlField"));
+  }
+
+  @Test
+  public void testRenameMapField() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/first";
+    renameConfig.toFieldExpression = "/second";
+
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> renameableInnerMap = new HashMap<>();
+    renameableInnerMap.put("value", Field.create(Field.Type.STRING, "value"));
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("first", Field.create(renameableInnerMap));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(Field.Type.MAP, map));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertFalse(r.has("/first"));
+      Assert.assertFalse(r.has("/first/value"));
+      Assert.assertTrue(r.has("/second"));
+      Assert.assertTrue(r.has("/second/value"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDifferentMatchesRegex() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/'(.*)(#)(.*)'";
+    renameConfig.toFieldExpression = "/$1hash$3";
+
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("#abcd", Field.create("hashabcd"));
+
+    Record record1 = RecordCreator.create("s", "s:1");
+    record1.set(Field.create(Field.Type.MAP, map));
+
+    map = new LinkedHashMap<>();
+    map.put("ab#cd", Field.create("abhashcd"));
+    Record record2 = RecordCreator.create("s", "s:2");
+    record2.set(Field.create(Field.Type.MAP, map));
+
+    map = new LinkedHashMap<>();
+    map.put("abcd#", Field.create("abcdhash"));
+    Record record3 = RecordCreator.create("s", "s:3");
+    record3.set(Field.create(Field.Type.MAP, map));
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record1, record2, record3));
+      Assert.assertEquals(3, output.getRecords().get("a").size());
+      for (Record record : output.getRecords().get("a")) {
+        Map<String, Field> fieldMap = record.get().getValueAsMap();
+        for (Map.Entry<String, Field> fieldEntry : fieldMap.entrySet()) {
+          Assert.assertEquals(fieldEntry.getKey(), fieldEntry.getValue().getValueAsString());
+        }
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRegexInNonComplexType() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/'sql(#)(.*)'";
+    renameConfig.toFieldExpression = "/sql$2";
+
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("sql#1", Field.create(Field.Type.STRING, "foo"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(Field.Type.MAP, map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertFalse(r.has("/'sql#1'"));
+      Assert.assertTrue(r.has("/sql1"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRegexInComplexMapType() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes]
+    renameConfig.fromFieldExpression = "/(*)/'SQL(#)(.*)'";
+    renameConfig.toFieldExpression = "/$1/SQL$3";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> innerMap1 = new LinkedHashMap<>();
+      innerMap1.put("SQL#1", Field.create(Field.Type.STRING, "foo1"));
+
+      Map<String, Field> innerMap2 = new LinkedHashMap<>();
+      innerMap2.put("SQL#2", Field.create(Field.Type.STRING, "foo2"));
+
+      Map<String, Field> map = new HashMap<>();
+      map.put("map1", Field.create(innerMap1));
+      map.put("map2", Field.create(innerMap2));
+
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+
+      Assert.assertFalse(r.getEscapedFieldPaths().contains("/map1/'SQL#1'"));
+      Assert.assertFalse(r.getEscapedFieldPaths().contains("/map2/'SQL#2'"));
+      Assert.assertTrue(r.getEscapedFieldPaths().contains("/map1/SQL1"));
+      Assert.assertTrue(r.getEscapedFieldPaths().contains("/map2/SQL2"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRegexInComplexListType() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/(*)[(*)]/'SQL(#)(.*)'";
+    renameConfig.toFieldExpression = "/$1[$2]/SQL$4";
+
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.TO_ERROR;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> innerMap1 = new LinkedHashMap<>();
+      innerMap1.put("SQL#1", Field.create(Field.Type.STRING, "foo1"));
+
+      Map<String, Field> innerMap2 = new LinkedHashMap<>();
+      innerMap2.put("SQL#2", Field.create(Field.Type.STRING, "foo2"));
+
+      List<Field> list = new LinkedList<>();
+      list.add(Field.create(innerMap1));
+      list.add(Field.create(innerMap2));
+
+      Map<String, Field> map = new HashMap<>();
+      map.put("list", Field.create(list));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertFalse(r.getEscapedFieldPaths().contains("/list[0]/'SQL#1'"));
+      Assert.assertFalse(r.getEscapedFieldPaths().contains("/list[1]/'SQL#2'"));
+      Assert.assertTrue(r.getEscapedFieldPaths().contains("/list[0]/SQL1"));
+      Assert.assertTrue(r.getEscapedFieldPaths().contains("/list[1]/SQL2"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testRename() throws StageException {
     // Straightforward rename -- existing source, non-existing target
     FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
-    renameConfig1.fromField = "/existing";
-    renameConfig1.toField = "/nonExisting";
+    renameConfig1.fromFieldExpression = "/existing";
+    renameConfig1.toFieldExpression = "/nonExisting";
     FieldRenamerConfig renameConfig2 = new FieldRenamerConfig();
-    renameConfig2.fromField = "/listOfMaps[0]/existing";
-    renameConfig2.toField = "/listOfMaps[0]/nonExisting";
+    renameConfig2.fromFieldExpression = "/listOfMaps[0]/existing";
+    renameConfig2.toFieldExpression = "/listOfMaps[0]/nonExisting";
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class)
-        .addConfiguration("renameMapping", ImmutableList.of(renameConfig1, renameConfig2))
-        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
-        .addConfiguration("overwriteExisting", false)
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renameConfig2),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -253,7 +600,7 @@ public class TestFieldRenamer {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("existing", Field.create(Field.Type.STRING, "foo"));
       map.put("listOfMaps", Field.create(ImmutableList.of(Field.create(ImmutableMap.of("existing",
-        Field.create(Field.Type.STRING, "foo"))))));
+          Field.create(Field.Type.STRING, "foo"))))));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
