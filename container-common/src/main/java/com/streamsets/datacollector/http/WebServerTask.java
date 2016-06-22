@@ -71,8 +71,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 
 import java.io.File;
@@ -147,6 +149,9 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String DPM_ENABLED = "dpm.enabled";
   public static final boolean DPM_ENABLED_DEFAULT = false;
 
+  public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "dpm.registration.retry.attempts";
+  public static final int DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT = 5;
+
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
@@ -164,6 +169,7 @@ public abstract class WebServerTask extends AbstractTask {
   private Server redirector;
   private HashSessionManager hashSessionManager;
   private Map<String, Set<String>> roleMapping;
+  private int dpmRegistrationMaxRetryAttempts;
 
   public WebServerTask(
       RuntimeInfo runtimeInfo,
@@ -176,6 +182,8 @@ public abstract class WebServerTask extends AbstractTask {
     this.conf = conf;
     this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
+    this.dpmRegistrationMaxRetryAttempts = conf.get(DPM_REGISTRATION_RETRY_ATTEMPTS,
+        DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT);
   }
 
   protected RuntimeInfo getRuntimeInfo() {
@@ -773,13 +781,28 @@ public abstract class WebServerTask extends AbstractTask {
 
   protected abstract String getComponentId(Configuration appConfiguration);
 
+  @VisibleForTesting
+  void sleep(int secs) {
+    try {
+      Thread.sleep(secs * 1000);
+    } catch (InterruptedException ex) {
+      String msg = "Interrupted while attempting DPM registration";
+      LOG.error(msg);
+      throw new RuntimeException(msg);
+    }
+  }
+
+  /**
+   * When Load Balancer(HAProxy or ELB) is used, it will take couple of seconds for load balancer to access
+   * security service. So we are retrying registration couple of times until server is accessible via load balancer.
+   */
   private void validateApplicationToken(String componentId, String applicationToken) {
     if (applicationToken.isEmpty() || componentId.isEmpty()) {
       if (applicationToken.isEmpty()) {
-        LOG.warn("Skiping component registration to DPM, application auth token is not set");
+        LOG.warn("Skipping component registration to DPM, application auth token is not set");
       }
       if (componentId.isEmpty()) {
-        LOG.warn("Skiping component registration to DPM, component ID is not set");
+        LOG.warn("Skipping component registration to DPM, component ID is not set");
       }
       throw new RuntimeException("Registration to DPM not done, missing component ID or app auth token");
     } else {
@@ -792,16 +815,55 @@ public abstract class WebServerTask extends AbstractTask {
       registrationData.put("authToken", applicationToken);
       registrationData.put("componentId", componentId);
       registrationData.put("attributes", ImmutableMap.of("baseHttpUrl", this.runtimeInfo.getBaseHttpUrl()));
-      Response response = ClientBuilder.newClient()
-          .target(registrationURI)
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(registrationData));
-      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-        LOG.info("Component ID '{}' registered with DPM", componentId);
-        this.runtimeInfo.setRemoteRegistrationStatus(true);
-      } else {
-        throw new RuntimeException("Registration to DPM failed : " + response.readEntity(String.class));
+      Invocation.Builder builder =
+          ClientBuilder.newClient().target(registrationURI).register(new CsrfProtectionFilter("CSRF")).request();
+
+      int delaySecs = 1;
+      int attempts = 0;
+      while (attempts < dpmRegistrationMaxRetryAttempts) {
+        if (attempts > 0) {
+          delaySecs = delaySecs * 2;
+          delaySecs = Math.min(delaySecs, 16);
+          String msg = Utils.format(
+              "DPM registration attempt '{}', waiting for '{}' seconds before retrying ...",
+              attempts,
+              delaySecs
+          );
+          LOG.warn(msg);
+          System.out.println(msg);
+          sleep(delaySecs);
+        }
+        attempts++;
+        Response response = null;
+        try {
+          response = builder.post(Entity.json(registrationData));
+          if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            LOG.info("DPM registration as component ID '{}' successful", componentId);
+            runtimeInfo.setRemoteRegistrationStatus(true);
+            break;
+          } else {
+            String msg = Utils.format("DPM Registration failed, status code '{}': {}",
+                response.getStatus(),
+                response.readEntity(String.class)
+            );
+            LOG.warn(msg);
+            System.out.println(msg);
+            if (response.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
+              break;
+            }
+          }
+        } catch (ProcessingException ex) {
+          String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
+          LOG.warn(msg);
+          System.out.println(msg);
+        } finally {
+          if (response != null) {
+            response.close();
+          }
+        }
+      }
+      if (!runtimeInfo.isRemoteRegistrationSuccessful()) {
+        throw new RuntimeException(Utils.format("DPM registration failed after '{}' attempts", attempts));
       }
     }
   }
