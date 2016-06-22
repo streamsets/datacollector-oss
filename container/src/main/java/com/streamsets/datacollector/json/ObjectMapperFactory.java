@@ -26,11 +26,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.streamsets.datacollector.metrics.ExtendedMeter;
 import com.streamsets.datacollector.record.FieldDeserializer;
 import com.streamsets.datacollector.restapi.bean.FieldJson;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 public class ObjectMapperFactory {
@@ -50,6 +52,7 @@ public class ObjectMapperFactory {
     module.addDeserializer(FieldJson.class, new FieldDeserializer());
     module.addSerializer(ExtendedMeter.class, new ExtendedMeterSerializer(TimeUnit.SECONDS));
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
+    module.addSerializer(BigDecimal.class, new ToStringSerializer());
     objectMapper.registerModule(module);
     if (indent) {
       objectMapper.enable(SerializationFeature.INDENT_OUTPUT);

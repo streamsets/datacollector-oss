@@ -25,6 +25,7 @@ import com.streamsets.datacollector.record.io.RecordEncoding;
 import com.streamsets.datacollector.record.io.RecordEncodingConstants;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.RecordWriter;
@@ -207,4 +208,27 @@ public  class TestRecordWriterReaderFactory {
     testRecordReaderWithOffset(RecordEncoding.KRYO1);
   }
 
+  @Test
+  public void testDecimal() throws IOException {
+    // We've picked this number because if it's casted to double, then it will lead to 36.7147000000000000483...
+    BigDecimal originalValue = new BigDecimal("36.7147");
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    RecordWriter writer = RecordWriterReaderFactory.createRecordWriter(RecordEncoding.JSON1, os);
+    RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mode");
+    record1.getHeader().setStagesPath("stagePath");
+    record1.getHeader().setTrackingId("trackingId");
+    Map<String, Field> map = new HashMap<>();
+    map.put("a", Field.create(originalValue));
+    record1.set(Field.create(map));
+    writer.write(record1);
+
+
+    InputStream is = new ByteArrayInputStream(os.toByteArray());
+    RecordReader reader = RecordWriterReaderFactory.createRecordReader(is, 0, 1000);
+    Record record = reader.readRecord();
+    BigDecimal destinationValue = record.get("/a").getValueAsDecimal();
+
+    Assert.assertEquals(originalValue, destinationValue);
+  }
 }
