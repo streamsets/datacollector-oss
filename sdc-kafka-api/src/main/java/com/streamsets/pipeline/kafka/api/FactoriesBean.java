@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.kafka.api;
 
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.util.ServiceLoader;
 
 public abstract class FactoriesBean {
@@ -42,7 +44,7 @@ public abstract class FactoriesBean {
       serviceCount++;
     }
     if (serviceCount != 1) {
-      throw new RuntimeException("There can only be one implementation of FactoriesBean");
+      throw new RuntimeException(Utils.format("Unexpected number of FactoriesBean: {} instead of 1", serviceCount));
     }
   }
 
