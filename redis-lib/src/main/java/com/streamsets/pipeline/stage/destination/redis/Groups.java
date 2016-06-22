@@ -30,8 +30,6 @@ public enum Groups implements Label {
   TEXT(DataFormat.TEXT.getLabel()),
   JSON(DataFormat.JSON.getLabel()),
   DELIMITED(DataFormat.DELIMITED.getLabel()),
-  XML(DataFormat.XML.getLabel()),
-  LOG(DataFormat.LOG.getLabel()),
   AVRO(DataFormat.AVRO.getLabel()),
   BINARY(DataFormat.BINARY.getLabel()),
   PROTOBUF(DataFormat.PROTOBUF.getLabel()),

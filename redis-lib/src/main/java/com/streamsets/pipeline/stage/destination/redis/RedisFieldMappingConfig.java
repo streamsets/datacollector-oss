@@ -37,8 +37,8 @@ public class RedisFieldMappingConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "/",
-      label = "Key Expression",
-      description = "Expression",
+      label = "Key",
+      description = "Field to use for the key",
       displayPosition = 10)
   @FieldSelectorModel(singleValued = true)
   public String keyExpr;
@@ -47,8 +47,8 @@ public class RedisFieldMappingConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "/",
-      label = "Value Expression",
-      description = "Expression",
+      label = "Value",
+      description = "Field to use for the value",
       displayPosition = 20)
   @FieldSelectorModel(singleValued = true)
   public String valExpr;
@@ -58,7 +58,7 @@ public class RedisFieldMappingConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "STRING",
       label = "Data Type",
-      description = "The data type for the key",
+      description = "The data type for the value",
       displayPosition = 30)
   @ValueChooserModel(DataTypeChooserValues.class)
   public DataType dataType = DataType.STRING;

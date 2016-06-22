@@ -29,8 +29,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Redis Target",
-    description = "Redis",
+    label = "Redis",
+    description = "Writes data to Redis",
     icon = "redis.png",
     onlineHelpRefUrl = "index.html#Destinations/Redis.html#task_mzk_lw2_gw"
 )

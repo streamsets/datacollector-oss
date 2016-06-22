@@ -58,6 +58,7 @@ public class RedisTargetConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Mode",
+      description = "Whether to write the data in batches as key-value pairs or to publish the data as messages",
       defaultValue = "BATCH",
       displayPosition = 30,
       group = "REDIS"
@@ -97,6 +98,7 @@ public class RedisTargetConfig {
       type = ConfigDef.Type.LIST,
       defaultValue = "[]",
       label = "Channel",
+      description = "Channel to publish the messages to",
       displayPosition = 50,
       group = "REDIS",
       dependsOn = "mode",
