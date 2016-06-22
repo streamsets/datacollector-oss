@@ -40,9 +40,7 @@ latitude_longitude: {Map}
                 <dd> You select the city field as the Redis key, and the latitude_longitude field as
                     the Redis value. Data Collector can convert the Map data type to the Redis Hash
                     data type, so you select Hash for the data type of the Redis value, as follows:
-                        <draft-comment author="alisontaylor">redo image when SDC-3277
-                        fixed</draft-comment><p><image
-                            href="../Graphics/RedisDestinationBatchMode.png" scale="70"
+                            <p><image href="../Graphics/RedisDestinationBatchMode.png" scale="70"
                             id="image_fcr_rxm_jw"/></p></dd>
                 <dd>When you run the pipeline, the Redis destination writes the key "San Francisco"
                     to Redis with a Hash value containing the latitude and longitude.</dd>
