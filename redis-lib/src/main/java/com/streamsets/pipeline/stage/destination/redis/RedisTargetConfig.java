@@ -45,7 +45,7 @@ public class RedisTargetConfig {
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
-      label = "Connection timeout (sec)",
+      label = "Connection Timeout (sec)",
       defaultValue = "1000",
       required = true,
       min = 1,
