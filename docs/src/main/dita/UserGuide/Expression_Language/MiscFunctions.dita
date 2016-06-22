@@ -90,6 +90,17 @@
             href="../Advanced_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
       </dlentry>
       <dlentry>
+        <dt>sdc:hostname()</dt>
+        <dd>Returns the host name of the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          machine. </dd>
+        <dd>For example, you might use the function in the directory template for the Hadoop FS
+          destination to write to a directory that includes the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> host
+          name.</dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
+      <dlentry>
         <dt>sdc:id()</dt>
         <dd>Returns the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> ID.

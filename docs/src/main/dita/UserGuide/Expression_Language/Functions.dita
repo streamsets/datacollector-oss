@@ -124,6 +124,7 @@
          <li>jvm:maxMemoryMB()</li>
          <li>runtime:conf('&lt;runtime property>')</li>
          <li>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</li>
+         <li>sdc:hostname()</li>
          <li>sdc:id()</li>
          <li>time:now()</li>
         </ul>
