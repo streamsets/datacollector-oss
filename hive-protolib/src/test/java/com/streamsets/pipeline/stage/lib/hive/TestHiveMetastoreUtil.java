@@ -173,4 +173,18 @@ public class TestHiveMetastoreUtil {
     Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("hive_avro+hdfs"));
     Assert.assertFalse(HiveMetastoreUtil.hasUnsupportedChar("test(3)"));
   }
+
+  @Test
+  public void testValidateColumnName() {
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("table"));
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Jarcec"));
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Junko"));
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Santhosh"));
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("sdc_log"));
+    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("sdc_log2"));
+
+    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool column"));
+    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("0"));
+    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool@column"));
+  }
 }

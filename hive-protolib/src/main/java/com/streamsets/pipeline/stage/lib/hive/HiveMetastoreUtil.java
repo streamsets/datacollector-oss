@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Matcher;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
@@ -119,6 +120,7 @@ public final class HiveMetastoreUtil {
 
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern PATTERN_MATCHER = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
+  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
 
   public enum MetadataRecordType {
     /**
@@ -667,8 +669,11 @@ public final class HiveMetastoreUtil {
     return PATTERN_MATCHER.matcher(value).matches();
   }
 
+  /**
+   * Validate that given column name is valid.
+   */
   public static boolean validateColumnName(String colName) {
-    return MetaStoreUtils.validateName(colName);
+    return COLUMN_NAME_PATTERN.matcher(colName).matches();
   }
 
   /**
