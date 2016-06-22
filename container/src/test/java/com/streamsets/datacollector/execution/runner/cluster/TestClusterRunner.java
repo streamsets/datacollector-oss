@@ -27,7 +27,11 @@ import com.streamsets.datacollector.cluster.MockClusterProvider;
 import com.streamsets.datacollector.cluster.MockSystemProcess;
 import com.streamsets.datacollector.cluster.MockSystemProcessFactory;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.execution.*;
+import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner.ClusterSourceInfo;
@@ -40,7 +44,6 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -53,7 +56,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -69,7 +71,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestClusterRunner {
 
@@ -437,9 +445,7 @@ public class TestClusterRunner {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, REV, PipelineStatus.EDITED, null, attributes, ExecutionMode.CLUSTER_BATCH,
       null, 0, 0);
     runner.start();
-    while(runner.getState().getStatus() != PipelineStatus.START_ERROR) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.START_ERROR));
     PipelineState state = runner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
@@ -453,9 +459,7 @@ public class TestClusterRunner {
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
     clusterRunner.onDataCollectorStart();
-    while(clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(clusterRunner, PipelineStatus.START_ERROR));
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
@@ -469,9 +473,7 @@ public class TestClusterRunner {
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
     clusterRunner.onDataCollectorStart();
-    while (clusterRunner.getState().getStatus() != PipelineStatus.START_ERROR) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(clusterRunner, PipelineStatus.START_ERROR));
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));

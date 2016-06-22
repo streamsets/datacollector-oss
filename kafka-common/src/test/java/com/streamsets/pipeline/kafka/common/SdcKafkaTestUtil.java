@@ -183,7 +183,7 @@ public abstract class SdcKafkaTestUtil {
     if (setPartitioner) {
       props.put("partitioner.class", "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner");
     }
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
     ProducerConfig config = new ProducerConfig(props);
     Producer<String, String> producer = new Producer<>(config);
     return producer;

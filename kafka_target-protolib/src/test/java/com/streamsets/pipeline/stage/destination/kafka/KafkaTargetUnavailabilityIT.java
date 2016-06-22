@@ -31,25 +31,28 @@ import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.KafkaStream;
 import kafka.server.KafkaServer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestKafkaTargetUnavailability {
+@Category(SingleForkNoReuseTest.class)
+public class KafkaTargetUnavailabilityIT {
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams;
 
   private static final String HOST = "localhost";
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
-  private static final String TOPIC = "TestKafkaTargetUnavailability";
+  private static final String TOPIC = "KafkaTargetUnavailabilityIT";
   private static KafkaServer kafkaServer;
   private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
@@ -81,7 +84,8 @@ public class TestKafkaTargetUnavailability {
   public void testKafkaServerDownStopPipeline() throws InterruptedException, StageException {
 
     Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
@@ -135,7 +139,8 @@ public class TestKafkaTargetUnavailability {
   public void testKafkaServerDownToError() throws InterruptedException, StageException {
 
     Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
@@ -189,7 +194,8 @@ public class TestKafkaTargetUnavailability {
   public void testKafkaServerDownDiscard() throws InterruptedException, StageException {
 
     Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
@@ -244,7 +250,8 @@ public class TestKafkaTargetUnavailability {
   public void testKafkaServerDownToErrorDynamicTopicResolution() throws InterruptedException, StageException {
 
     Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
@@ -299,7 +306,8 @@ public class TestKafkaTargetUnavailability {
   public void testKafkaServerDownDiscardDynamicTopicResolution() throws InterruptedException, StageException {
 
     Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");

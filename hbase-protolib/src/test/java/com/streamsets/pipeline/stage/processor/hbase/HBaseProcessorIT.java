@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
 import com.streamsets.pipeline.stage.processor.kv.LookupMode;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -47,6 +48,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Category(SingleForkNoReuseTest.class)
 public class HBaseProcessorIT {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseProcessorIT.class);
   private static HBaseTestingUtility utility;

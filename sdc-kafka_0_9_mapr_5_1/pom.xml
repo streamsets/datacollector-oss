@@ -141,6 +141,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.version}</version>
         <configuration>
           <!-- Execute each Test in a separate JVM. Kafka Sasl and Sasl with ssl tests fail without this option
           as some kerberos settings are read only on startup and cached -->

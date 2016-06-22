@@ -403,7 +403,7 @@ public class KafkaTargetConfig {
         String[] topics = topicWhiteList.split(",");
         for (String t : topics) {
           t = t.trim();
-          //validate sup0lied topic names in the white list
+          //validate supplied topic names in the white list
           validateTopicExistence(context, issues, t);
         }
       }
@@ -559,6 +559,7 @@ public class KafkaTargetConfig {
             topicPartitionMap.put(result, partitionCount);
           } catch (StageException s) {
             invalidTopicMap.put(result, s);
+            throw s;
           }
         }
         if (topicPartitionMap.keySet().size() % TOPIC_WARN_SIZE == 0) {

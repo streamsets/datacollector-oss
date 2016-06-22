@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintStream;
 import java.io.Writer;
-import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.UUID;
@@ -96,13 +95,6 @@ public class TestUtil {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     return dir.getAbsolutePath();
-  }
-
-  public static int getRandomPort() throws Exception {
-    ServerSocket ss = new ServerSocket(0);
-    int port = ss.getLocalPort();
-    ss.close();
-    return port;
   }
 
   public static String runCliCommand(String... args) {

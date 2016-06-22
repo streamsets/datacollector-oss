@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
@@ -60,6 +61,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -77,6 +79,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@Category(SingleForkNoReuseTest.class)
 public class TestKafkaSource {
 
   private static final String AVRO_SCHEMA = "{\n"
@@ -804,7 +807,7 @@ public class TestKafkaSource {
     props.put("metadata.broker.list", sdcKafkaTestUtil.getMetadataBrokerURI());
     props.put("serializer.class", "kafka.serializer.DefaultEncoder");
     props.put("key.serializer.class", "kafka.serializer.StringEncoder");
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
     ProducerConfig config = new ProducerConfig(props);
     Producer<String, byte[]> producer = new Producer<>(config);
 
@@ -1247,7 +1250,7 @@ public class TestKafkaSource {
     props.put("serializer.class", "kafka.serializer.DefaultEncoder");
     props.put("batch.size", 1); // force messages to be sent immediately.
     props.put("key.serializer.class", "kafka.serializer.StringEncoder");
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
     ProducerConfig config = new ProducerConfig(props);
     return new Producer<>(config);
   }

@@ -42,6 +42,8 @@ import java.util.Map;
 
 public class FlumeTestUtil {
 
+  private FlumeTestUtil() {}
+
   private static final String MIME = "text/plain";
   private static final String TEST_STRING = "Hello World";
   public static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
@@ -121,7 +123,7 @@ public class FlumeTestUtil {
   }
 
   public static FlumeConfig createFlumeConfig(
-    boolean backof,
+    boolean backoff,
     int batchSize,
     ClientType clientType,
     int connectionTimeout,
@@ -134,7 +136,7 @@ public class FlumeTestUtil {
     int waitBetweenRetries
   ) {
     FlumeConfig flumeConfig = new FlumeConfig();
-    flumeConfig.backOff = backof;
+    flumeConfig.backOff = backoff;
     flumeConfig.batchSize = batchSize;
     flumeConfig.clientType = clientType;
     flumeConfig.connectionTimeout = connectionTimeout;
@@ -148,18 +150,18 @@ public class FlumeTestUtil {
     return flumeConfig;
   }
 
-  public static FlumeConfig createDefaultFlumeConfig(boolean singleEvent) {
+  public static FlumeConfig createDefaultFlumeConfig(int port, boolean singleEvent) {
     return createFlumeConfig(
       false,                      // backOff
       1,                          // batchSize
       ClientType.AVRO_FAILOVER,
       1000,                       // connection timeout
-      ImmutableMap.of("h1", "localhost:9050"),
+      ImmutableMap.of("h1", "localhost:" + port),
       HostSelectionStrategy.RANDOM,
       0,                          // maxBackOff
-      0,                          // maxRetryAttempts
+      3,                          // maxRetryAttempts
       1000,                       // requestTimeout
-      singleEvent,                      // singleEventPerBatch
+      singleEvent,                // singleEventPerBatch
       0
     );
   }

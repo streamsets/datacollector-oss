@@ -60,7 +60,7 @@ public class RedisTargetIT {
   private static Jedis jedis;
 
   @ClassRule
-  public static GenericContainer redis = new GenericContainer("redis:latest").withExposedPorts(REDIS_PORT);
+  public static GenericContainer redis = new GenericContainer("redis:3.0.7").withExposedPorts(REDIS_PORT);
 
   @BeforeClass
   public static void setUpClass() {

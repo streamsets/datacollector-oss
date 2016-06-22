@@ -19,13 +19,13 @@
  */
 package com.streamsets.pipeline.stage.destination.flume;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.FlumeTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -39,6 +39,7 @@ import org.apache.flume.source.AvroSource;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -50,10 +51,19 @@ public class TestFlumeLoadBalancingTarget {
 
   private static final int NUM_HOSTS = 3;
   private static final int NUM_BATCHES = 5;
-  private static final int PORT = 9050;
+  private static final List<Integer> ports = new ArrayList<>(NUM_HOSTS);
+  private static final Map<String, String> flumeHosts = new HashMap<>(NUM_HOSTS);
   private List<AvroSource> sources;
   private List<Channel> chs;
 
+  @BeforeClass
+  public static void setUpClass() throws Exception {
+    for (int i = 0; i < NUM_HOSTS; i++) {
+      int port = NetworkUtils.getRandomPort();
+      ports.add(port);
+      flumeHosts.put("h" + i + 1, "localhost:" + port);
+    }
+  }
   @Before
   public void setUp() {
     sources = new ArrayList<>(NUM_HOSTS);
@@ -65,7 +75,7 @@ public class TestFlumeLoadBalancingTarget {
       Configurables.configure(channel, new Context());
 
       Context context = new Context();
-      context.put("port", String.valueOf(PORT + i));
+      context.put("port", String.valueOf(ports.get(i)));
       context.put("bind", "localhost");
       Configurables.configure(source, context);
 
@@ -104,7 +114,7 @@ public class TestFlumeLoadBalancingTarget {
         100,                          // batchSize
         ClientType.AVRO_LOAD_BALANCING,
         2000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        flumeHosts,
         HostSelectionStrategy.ROUND_ROBIN,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -138,7 +148,7 @@ public class TestFlumeLoadBalancingTarget {
         100,                          // batchSize
         ClientType.AVRO_LOAD_BALANCING,
         2000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        flumeHosts,
         HostSelectionStrategy.ROUND_ROBIN,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -193,7 +203,7 @@ public class TestFlumeLoadBalancingTarget {
         100,                          // batchSize
         ClientType.AVRO_LOAD_BALANCING,
         2000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        flumeHosts,
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts

@@ -21,6 +21,7 @@ package com.streamsets.datacollector.client.cli;
 
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -61,7 +62,7 @@ public class TestCLI {
     Task server = null;
     try {
       for(String authType: authenticationTypes) {
-        int port = TestUtil.getRandomPort();
+        int port = NetworkUtils.getRandomPort();
         server = TestUtil.startServer(port, authType);
         baseURL = "http://127.0.0.1:" + port;
 

@@ -29,24 +29,24 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.apache.commons.io.FileUtils;
+import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,8 +56,14 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
+import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class TestStandaloneRunner {
 
@@ -89,20 +95,22 @@ public class TestStandaloneRunner {
     }
     TestUtil.EMPTY_OFFSET = false;
     System.getProperties().remove(DATA_DIR_KEY);
-    while (dataDir.isDirectory()) {
-      FileUtils.deleteQuietly(dataDir);
-      Thread.sleep(1000);
-    }
+    await().atMost(Duration.ONE_MINUTE).until(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return FileUtils.deleteQuietly(dataDir);
+      }
+    });
   }
 
   @Test(timeout = 20000)
   public void testPipelineStart() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
-    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 50000)
@@ -153,9 +161,9 @@ public class TestStandaloneRunner {
   public void testPipelineRetry() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     TestUtil.EMPTY_OFFSET = true;
-    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    waitForState(runner, PipelineStatus.FINISHED);
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
     runner = ((AsyncRunner)runner).getRunner();
@@ -185,7 +193,7 @@ public class TestStandaloneRunner {
   public void testPipelineStartMultipleTimes() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     // call start on the already running pipeline and make sure it doesn't request new resource each time
     for (int counter =0; counter < 10; counter++) {
       try {
@@ -197,17 +205,17 @@ public class TestStandaloneRunner {
     }
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
-    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     assertNull(runner.getState().getMetrics());
     TestUtil.EMPTY_OFFSET = true;
-    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    waitForState(runner, PipelineStatus.FINISHED);
     assertNotNull(runner.getState().getMetrics());
   }
 
@@ -215,7 +223,7 @@ public class TestStandaloneRunner {
   public void testLoadingUnsupportedPipeline() throws Exception {
     Runner runner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.START_ERROR);
+    waitForState(runner, PipelineStatus.START_ERROR);
     PipelineState state = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
@@ -226,10 +234,10 @@ public class TestStandaloneRunner {
   public void testDisconnectedPipelineStartedAgain() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     // sdc going down
     pipelineManager.stop();
-    waitAndAssertState(runner, PipelineStatus.DISCONNECTED);
+    waitForState(runner, PipelineStatus.DISCONNECTED);
 
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
@@ -237,7 +245,7 @@ public class TestStandaloneRunner {
     pipelineManager.init();
 
     runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
     Assert.assertTrue(runner.getState().getStatus() == PipelineStatus.STOPPED);
@@ -248,10 +256,10 @@ public class TestStandaloneRunner {
   public void testFinishedPipelineNotStartingAgain() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
 
     TestUtil.EMPTY_OFFSET = true;
-    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    waitForState(runner, PipelineStatus.FINISHED);
 
     // sdc going down
     pipelineManager.stop();
@@ -266,7 +274,7 @@ public class TestStandaloneRunner {
 
     //Since SDC went down we need to get the runner again
     runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    waitForState(runner, PipelineStatus.FINISHED);
     assertNotNull(runner.getState().getMetrics());
   }
 
@@ -277,12 +285,12 @@ public class TestStandaloneRunner {
 
     runner1.start();
     runner2.start();
-    waitAndAssertState(runner1, PipelineStatus.RUNNING);
-    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+    waitForState(runner1, PipelineStatus.RUNNING);
+    waitForState(runner2, PipelineStatus.RUNNING);
 
     ((AsyncRunner)runner1).getRunner().prepareForStop();
     ((AsyncRunner)runner1).getRunner().stop();
-    waitAndAssertState(runner1, PipelineStatus.STOPPED);
+    waitForState(runner1, PipelineStatus.STOPPED);
     ((AsyncRunner)runner2).getRunner().prepareForStop();
     ((AsyncRunner)runner2).getRunner().stop();
     Assert.assertTrue(runner2.getState().getStatus() == PipelineStatus.STOPPED);
@@ -297,13 +305,13 @@ public class TestStandaloneRunner {
 
     runner1.start();
     runner2.start();
-    waitAndAssertState(runner1, PipelineStatus.RUNNING);
-    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+    waitForState(runner1, PipelineStatus.RUNNING);
+    waitForState(runner2, PipelineStatus.RUNNING);
 
     TestUtil.EMPTY_OFFSET = true;
 
-    waitAndAssertState(runner1, PipelineStatus.FINISHED);
-    waitAndAssertState(runner2, PipelineStatus.FINISHED);
+    waitForState(runner1, PipelineStatus.FINISHED);
+    waitForState(runner2, PipelineStatus.FINISHED);
     assertNotNull(runner1.getState().getMetrics());
     assertNotNull(runner2.getState().getMetrics());
   }
@@ -314,49 +322,44 @@ public class TestStandaloneRunner {
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
     runner1.start();
     runner2.start();
-    waitAndAssertState(runner1, PipelineStatus.RUNNING);
-    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+    waitForState(runner1, PipelineStatus.RUNNING);
+    waitForState(runner2, PipelineStatus.RUNNING);
 
     // sdc going down
     pipelineManager.stop();
-    waitAndAssertState(runner1, PipelineStatus.DISCONNECTED);
-    waitAndAssertState(runner2, PipelineStatus.DISCONNECTED);
+    waitForState(runner1, PipelineStatus.DISCONNECTED);
+    waitForState(runner2, PipelineStatus.DISCONNECTED);
 
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
-    Thread.sleep(2000);
 
     runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
 
-    waitAndAssertState(runner1, PipelineStatus.RUNNING);
-    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+    waitForState(runner1, PipelineStatus.RUNNING);
+    waitForState(runner2, PipelineStatus.RUNNING);
 
     ((AsyncRunner)runner1).getRunner().prepareForStop();
     ((AsyncRunner)runner1).getRunner().stop();
     ((AsyncRunner)runner2).getRunner().prepareForStop();
     ((AsyncRunner)runner2).getRunner().stop();
-    waitAndAssertState(runner1, PipelineStatus.STOPPED);
-    waitAndAssertState(runner2, PipelineStatus.STOPPED);
+    waitForState(runner1, PipelineStatus.STOPPED);
+    waitForState(runner2, PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
     assertNotNull(runner2.getState().getMetrics());
   }
 
-  private void waitAndAssertState(Runner runner, PipelineStatus pipelineStatus)
-    throws PipelineStoreException, InterruptedException {
-    while (runner.getState().getStatus() != pipelineStatus && runner.getState().getStatus().isActive()) {
-      Thread.sleep(100);
-    }
-    Assert.assertTrue(runner.getState().getStatus() == pipelineStatus);
+  private void waitForState(Runner runner, PipelineStatus pipelineStatus) {
+    await().until(desiredPipelineState(runner, pipelineStatus));
   }
 
   @Test
   public void testSnapshot() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
 
     //request to capture snapshot and check the status
     String snapshotId = runner.captureSnapshot("mySnapshot", "snapshot label", 5, 10);
@@ -406,7 +409,7 @@ public class TestStandaloneRunner {
 
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
-    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test (timeout = 60000)
@@ -418,7 +421,7 @@ public class TestStandaloneRunner {
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
     Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner1.start();
-    waitAndAssertState(runner1, PipelineStatus.RUNNING);
+    waitForState(runner1, PipelineStatus.RUNNING);
 
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
     try {
@@ -430,10 +433,10 @@ public class TestStandaloneRunner {
 
     ((AsyncRunner)runner1).getRunner().prepareForStop();
     ((AsyncRunner)runner1).getRunner().stop();
-    waitAndAssertState(runner1, PipelineStatus.STOPPED);
+    waitForState(runner1, PipelineStatus.STOPPED);
 
     runner2.start();
-    waitAndAssertState(runner2, PipelineStatus.RUNNING);
+    waitForState(runner2, PipelineStatus.RUNNING);
 
     try {
       runner1.start();
@@ -444,24 +447,23 @@ public class TestStandaloneRunner {
 
     ((AsyncRunner)runner2).getRunner().prepareForStop();
     ((AsyncRunner)runner2).getRunner().stop();
-    waitAndAssertState(runner2, PipelineStatus.STOPPED);
+    waitForState(runner2, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 20000)
   public void testPipelineStoppedWithMail() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
-    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    waitForState(runner, PipelineStatus.STOPPED);
     //wait for email
     GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();
     while(mailServer.getReceivedMessages().length < 1) {
       ThreadUtil.sleep(100);
     }
     String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
-    Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
     Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " + TestUtil.PIPELINE_WITH_EMAIL
       + " - STOPPED"));
@@ -475,10 +477,10 @@ public class TestStandaloneRunner {
   public void testPipelineFinishWithMail() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
     runner.start();
-    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    waitForState(runner, PipelineStatus.RUNNING);
     assertNull(runner.getState().getMetrics());
     TestUtil.EMPTY_OFFSET = true;
-    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    waitForState(runner, PipelineStatus.FINISHED);
     assertNotNull(runner.getState().getMetrics());
     //wait for email
     GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();
@@ -486,7 +488,6 @@ public class TestStandaloneRunner {
       ThreadUtil.sleep(100);
     }
     String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
-    Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
     Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " + TestUtil.PIPELINE_WITH_EMAIL
       + " - FINISHED"));

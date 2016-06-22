@@ -27,12 +27,12 @@ import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.testing.NetworkUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class TestStoreApi {
   public void testForDifferentAuthenticationTypes() {
     Task server = null;
     try {
-      int port = TestUtil.getRandomPort();
+      int port = NetworkUtils.getRandomPort();
       server = TestUtil.startServer(port, authType);
       baseURL = "http://127.0.0.1:" + port;
       ApiClient apiClient = getApiClient(authType);

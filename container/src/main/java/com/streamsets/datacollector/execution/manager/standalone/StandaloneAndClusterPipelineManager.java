@@ -251,7 +251,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @VisibleForTesting
   boolean isRunnerPresent(String name, String rev) {
-     return runnerCache.getIfPresent(getNameAndRevString(name, rev)) == null? false: true;
+     return runnerCache.getIfPresent(getNameAndRevString(name, rev)) != null;
 
   }
 

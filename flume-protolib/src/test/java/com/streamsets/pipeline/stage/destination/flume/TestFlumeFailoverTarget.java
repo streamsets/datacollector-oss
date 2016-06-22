@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -69,15 +70,17 @@ public class TestFlumeFailoverTarget {
 
   private AvroSource source;
   private Channel ch;
+  private int port;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
+    port = NetworkUtils.getRandomPort();
     source = new AvroSource();
     ch = new MemoryChannel();
     Configurables.configure(ch, new Context());
 
     Context context = new Context();
-    context.put("port", String.valueOf(9050));
+    context.put("port", String.valueOf(port));
     context.put("bind", "localhost");
     Configurables.configure(source, context);
 
@@ -99,7 +102,7 @@ public class TestFlumeFailoverTarget {
   public void testFlumeConfig() throws StageException {
 
     Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    flumeHostsConfig.put("h1", "localhost:" + port);
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.textFieldPath = "/";
@@ -143,7 +146,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -176,7 +179,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(true),
+      FlumeTestUtil.createDefaultFlumeConfig(port, true),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -208,7 +211,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -242,7 +245,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -275,7 +278,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -306,7 +309,7 @@ public class TestFlumeFailoverTarget {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig
     );
@@ -345,7 +348,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.csvReplaceNewLines = false;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.DELIMITED,
       dataGeneratorFormatConfig
     );
@@ -375,7 +378,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.AVRO,
       dataGeneratorFormatConfig
     );
@@ -415,7 +418,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.includeSchema = true;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(true),
+      FlumeTestUtil.createDefaultFlumeConfig(port, true),
       DataFormat.AVRO,
       dataGeneratorFormatConfig
     );
@@ -458,7 +461,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.includeSchema = false;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(false),
+      FlumeTestUtil.createDefaultFlumeConfig(port, false),
       DataFormat.AVRO,
       dataGeneratorFormatConfig
     );
@@ -497,7 +500,7 @@ public class TestFlumeFailoverTarget {
     dataGeneratorFormatConfig.includeSchema = false;
     dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-      FlumeTestUtil.createDefaultFlumeConfig(true),
+      FlumeTestUtil.createDefaultFlumeConfig(port, true),
       DataFormat.AVRO,
       dataGeneratorFormatConfig
     );
@@ -544,7 +547,7 @@ public class TestFlumeFailoverTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.binaryFieldPath = "/data";
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
-        FlumeTestUtil.createDefaultFlumeConfig(false),
+        FlumeTestUtil.createDefaultFlumeConfig(port, false),
         DataFormat.BINARY,
         dataGeneratorFormatConfig
     );

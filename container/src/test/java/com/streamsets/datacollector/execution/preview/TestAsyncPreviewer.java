@@ -36,12 +36,14 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPreviewStatus;
+import static org.awaitility.Awaitility.await;
 
 public class TestAsyncPreviewer extends TestPreviewer {
 
@@ -79,11 +81,9 @@ public class TestAsyncPreviewer extends TestPreviewer {
 
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
-    Previewer previewer  = createPreviewer();
+    final Previewer previewer  = createPreviewer();
     previewer.validateConfigs(100);
-    while(previewer.getStatus() != PreviewStatus.TIMED_OUT) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPreviewStatus(previewer, PreviewStatus.TIMED_OUT));
   }
 
   @Test(timeout = 5000)
@@ -115,10 +115,9 @@ public class TestAsyncPreviewer extends TestPreviewer {
 
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
-    Previewer previewer  = createPreviewer();
+    final Previewer previewer  = createPreviewer();
     previewer.start(1, 10, false, null, new ArrayList<StageOutput>(), 200);
-    while(previewer.getStatus() != PreviewStatus.TIMED_OUT) {
-      Thread.sleep(100);
-    }
+
+    await().until(desiredPreviewStatus(previewer, PreviewStatus.TIMED_OUT));
   }
 }
