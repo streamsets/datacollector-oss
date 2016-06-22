@@ -21,17 +21,14 @@ package com.streamsets.datacollector.http;
 
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.http.ProxyAuthenticator;
-import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
-
+import com.streamsets.testing.NetworkUtils;
 import dagger.ObjectGraph;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,11 +36,9 @@ import org.junit.Test;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -56,13 +51,6 @@ public class TestTokenAuthentication {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     return dir.getAbsolutePath();
-  }
-
-  private static int getRandomPort() throws Exception {
-    ServerSocket ss = new ServerSocket(0);
-    int port = ss.getLocalPort();
-    ss.close();
-    return port;
   }
 
   private static String baseDir;
@@ -94,7 +82,7 @@ public class TestTokenAuthentication {
   }
 
   private static String startServer(String authenticationType) throws  Exception {
-    int port = getRandomPort();
+    int port = NetworkUtils.getRandomPort();
 
     Configuration conf = new Configuration();
     conf.set(WebServerTask.HTTP_PORT_KEY, port);

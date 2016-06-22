@@ -30,9 +30,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.util.TestUtil.TestPipelineProviderModule;
-
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -43,6 +41,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+
+import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
+import static org.awaitility.Awaitility.await;
 
 public class TestSlaveStandaloneRunner {
 
@@ -80,13 +81,9 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     runner.stop();
-    while (runner.getState().getStatus() != PipelineStatus.STOPPED) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.STOPPED));
   }
 
   @Test(timeout = 20000)
@@ -97,10 +94,9 @@ public class TestSlaveStandaloneRunner {
     pipelineManager.init();
     Runner runner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
     runner.start();
-    while(pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState().getStatus() != PipelineStatus.START_ERROR) {
-      Thread.sleep(100);
-    }
-    PipelineState state = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
+    final Runner newerPipelineRunner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
+    await().until(desiredPipelineState(newerPipelineRunner, PipelineStatus.START_ERROR));
+    PipelineState state = newerPipelineRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
   }
@@ -113,13 +109,9 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     runner.onDataCollectorStop();
-    while (runner.getState().getStatus() != PipelineStatus.DISCONNECTED) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.DISCONNECTED));
   }
 
   @Test(timeout = 10000)
@@ -130,13 +122,9 @@ public class TestSlaveStandaloneRunner {
     manager.init();
     Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
-    while (runner.getState().getStatus() != PipelineStatus.RUNNING) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     TestUtil.EMPTY_OFFSET = true;
-    while (runner.getState().getStatus() != PipelineStatus.FINISHED) {
-      Thread.sleep(100);
-    }
+    await().until(desiredPipelineState(runner, PipelineStatus.FINISHED));
   }
 
 }

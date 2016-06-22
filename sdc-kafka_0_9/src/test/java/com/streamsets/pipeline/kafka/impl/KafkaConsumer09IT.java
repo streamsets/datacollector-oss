@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class TestKafkaConsumer09 {
+public class KafkaConsumer09IT {
 
   @Test
   public void testKafkaConsumer09Version() throws IOException {
@@ -135,7 +135,7 @@ public class TestKafkaConsumer09 {
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-    KafkaProducer<String, String> producer = new KafkaProducer(props);
+    KafkaProducer<String, String> producer = new KafkaProducer<>(props);
     for(int i = 0; i < 10; i++)
       producer.send(new ProducerRecord<>(topic, Integer.toString(0), message+i));
     producer.close();

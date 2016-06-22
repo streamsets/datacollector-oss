@@ -101,6 +101,12 @@
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-testing</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -155,7 +161,28 @@
           <configuration>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <argLine>${surefireArgLine}</argLine>
+            <forkCount>2</forkCount>
+            <reuseForks>true</reuseForks>
+            <!-- Exclude integration tests annotated with SingleForkNoReuseTest -->
+            <excludedGroups>com.streamsets.testing.SingleForkNoReuseTest</excludedGroups>
           </configuration>
+          <executions>
+            <!-- Execution for unit tests that cannot be run in parallel -->
+            <execution>
+              <id>single-fork-unit-test</id>
+              <phase>test</phase>
+              <goals>
+                <goal>test</goal>
+              </goals>
+              <configuration combine.self="override">
+                <groups>com.streamsets.testing.SingleForkNoReuseTest</groups>
+                <!-- Sets the VM argument line used when integration tests are run. -->
+                <argLine>${surefireArgLine}</argLine>
+                <forkCount>1</forkCount>
+                <reuseForks>false</reuseForks>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -249,21 +276,30 @@
                 <goal>verify</goal>
               </goals>
             </execution>
+            <!-- Execution for integration tests that cannot be run in parallel -->
+            <execution>
+              <id>single-fork-integration-test</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+              <configuration combine.self="override">
+                <groups>com.streamsets.testing.SingleForkNoReuseTest</groups>
+                <!-- Sets the VM argument line used when integration tests are run. -->
+                <argLine>${failsafeArgLine}</argLine>
+                <forkCount>1</forkCount>
+                <reuseForks>false</reuseForks>
+              </configuration>
+            </execution>
           </executions>
           <configuration>
             <!-- Sets the VM argument line used when integration tests are run. -->
             <argLine>${failsafeArgLine}</argLine>
+            <forkCount>2</forkCount>
+            <reuseForks>true</reuseForks>
+            <!-- Exclude integration tests annotated with SingleForkNoReuseTest -->
+            <excludedGroups>com.streamsets.testing.SingleForkNoReuseTest</excludedGroups>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${failsafe.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -399,8 +435,6 @@
         <configuration>
           <!-- Sets the VM argument line used when unit tests are run. -->
           <argLine>${surefireArgLine}</argLine>
-          <forkCount>1</forkCount>
-          <reuseForks>false</reuseForks>
         </configuration>
       </plugin>
       <plugin>
@@ -497,8 +531,6 @@
         <configuration>
           <!-- Sets the VM argument line used when integration tests are run. -->
           <argLine>${failsafeArgLine}</argLine>
-          <forkCount>1</forkCount>
-          <reuseForks>false</reuseForks>
         </configuration>
       </plugin>
     </plugins>

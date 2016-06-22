@@ -24,7 +24,6 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import kafka.admin.AdminUtils;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
-import kafka.server.BrokerState;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.server.RunningAsBroker;
@@ -103,7 +102,7 @@ public class KafkaTestUtil09 extends SdcKafkaTestUtil {
         Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
       }
       kafkaServers.add(kafkaServer);
-      sb.append("localhost:" + port).append(",");
+      sb.append("localhost:").append(port).append(",");
     }
     metadataBrokerURI = sb.deleteCharAt(sb.length() - 1).toString();
     LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
@@ -157,7 +156,7 @@ public class KafkaTestUtil09 extends SdcKafkaTestUtil {
     if (setPartitioner) {
       props.put("partitioner.class", "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner");
     }
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
     ProducerConfig config = new ProducerConfig(props);
     Producer<String, String> producer = new Producer<>(config);
     return producer;

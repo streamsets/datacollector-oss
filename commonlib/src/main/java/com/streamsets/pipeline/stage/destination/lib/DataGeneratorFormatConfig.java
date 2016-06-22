@@ -270,7 +270,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       triggeredByValue = "AVRO"
   )
   @ValueChooserModel(AvroCompressionChooserValues.class)
-  public AvroCompression avroCompression;
+  public AvroCompression avroCompression = AvroCompression.NULL;
 
   /********  For Binary Content  ***********/
 

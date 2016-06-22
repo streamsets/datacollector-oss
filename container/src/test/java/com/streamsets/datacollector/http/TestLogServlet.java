@@ -19,19 +19,16 @@
  */
 package com.streamsets.datacollector.http;
 
-import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
-import com.streamsets.datacollector.main.PipelineTaskModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
-
+import com.streamsets.testing.NetworkUtils;
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -42,7 +39,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -56,13 +52,6 @@ public class TestLogServlet {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     return dir.getAbsolutePath();
-  }
-
-  private int getRandomPort() throws Exception {
-    ServerSocket ss = new ServerSocket(0);
-    int port = ss.getLocalPort();
-    ss.close();
-    return port;
   }
 
   private String baseDir;
@@ -114,7 +103,7 @@ public class TestLogServlet {
       writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN + "=" + CONVERSION_PATTERN);
       writer.close();
 
-      int port = getRandomPort();
+      int port = NetworkUtils.getRandomPort();
       Configuration conf = new Configuration();
       conf.set(WebServerTask.HTTP_PORT_KEY, port);
       conf.set(WebServerTask.AUTHENTICATION_KEY, "none");

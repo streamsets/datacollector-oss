@@ -20,15 +20,14 @@
 package com.streamsets.datacollector.task;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.task.AbstractTask;
-import com.streamsets.datacollector.task.CompositeTask;
-import com.streamsets.datacollector.task.Task;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import static org.awaitility.Awaitility.await;
 
 public class TestCompositeTask {
   private final List<String> initOrder = new ArrayList<String>();
@@ -103,14 +102,17 @@ public class TestCompositeTask {
   public void testCompositeTaskWithMonitor() throws Exception {
     Task task1 = new SubTask("t1");
     Task task2 = new SubTask("t2");
-    Task task = new CompositeTask("ct", ImmutableList.of(task1, task2), true);
+    final Task task = new CompositeTask("ct", ImmutableList.of(task1, task2), true);
     task.init();
     task.run();
     task1.stop();
-    long start = System.currentTimeMillis();
-    while (System.currentTimeMillis() - start < 500 && task.getStatus() == Task.Status.RUNNING) {
-      Thread.sleep(50);
-    }
+    final long start = System.currentTimeMillis();
+    await().until(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return !(System.currentTimeMillis() - start < 500 && task.getStatus() == Task.Status.RUNNING);
+      }
+    });
     Assert.assertFalse("Test Waiting for stop detection timed out", task.getStatus() == Task.Status.RUNNING);
     Assert.assertEquals(Task.Status.STOPPED, task.getStatus());
     Assert.assertEquals(Task.Status.STOPPED, task1.getStatus());

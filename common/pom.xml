@@ -57,6 +57,11 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- This is for testing Kafka Consumer with XML messages. Need to create XML messages -->
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>

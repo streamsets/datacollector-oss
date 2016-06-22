@@ -34,6 +34,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.utils.SystemTime$;
@@ -43,6 +44,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,7 +55,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class TestSecureKafkaBase {
+@Category(SingleForkNoReuseTest.class)
+public abstract class SecureKafkaBase {
 
   private static EmbeddedZookeeper zookeeper;
   private static KafkaServer server;

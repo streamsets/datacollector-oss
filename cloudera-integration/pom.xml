@@ -61,5 +61,10 @@
       <artifactId>streamsets-datacollector-dist</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

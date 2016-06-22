@@ -37,6 +37,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.utils.TestUtils;
@@ -53,6 +54,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -65,6 +67,11 @@ import java.util.List;
 import java.util.Map;
 
 @Ignore
+/**
+ * Currently ignored due to issues with {@link #testTopicExpression4()} and {@link #testInvalidTopicWhiteList()}
+ * when run using maven even with SingleForkNoReuseTest.
+ */
+@Category(SingleForkNoReuseTest.class)
 public class TestKafkaTargetSinglePartition {
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
@@ -114,7 +121,7 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC21 = "TestKafkaTargetSinglePartition21";
 
   private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
-  
+
   @BeforeClass
   public static void setUp() throws IOException, InterruptedException {
     sdcKafkaTestUtil.startZookeeper();
@@ -222,8 +229,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecords() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -272,8 +280,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -323,8 +332,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -375,8 +385,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -523,7 +534,6 @@ public class TestKafkaTargetSinglePartition {
 
   }
 
-  @Ignore
   @Test
   /**
    * Tests runtime topic resolution from record where topics resolved are part of the white list.
@@ -531,8 +541,9 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression1() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -664,8 +675,9 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -798,8 +810,9 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -891,8 +904,9 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression4() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -958,8 +972,9 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testInvalidPartition() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -1006,8 +1021,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testTopicConstant() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     Map<String, Object> constants = new HashMap<>();
@@ -1055,14 +1071,15 @@ public class TestKafkaTargetSinglePartition {
     }
   }
 
-  @Test
+  @Test(expected = StageException.class)
   /**
    * Tests that KafkaTarget validates the names of the topics present in the white list during init
    */
   public void testInvalidTopicWhiteList() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
@@ -1089,12 +1106,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE).build();
 
-    try {
-      targetRunner.runInit();
-      Assert.fail("Expected exception while validating topic white list, got none");
-    } catch (StageException e) {
-      //All good
-    }
+    targetRunner.runInit();
   }
 
   @Test
@@ -1323,8 +1335,9 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteBinaryRecords() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
+    kafkaProducerConfig.put("acks", "all");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();

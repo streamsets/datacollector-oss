@@ -53,7 +53,6 @@ public final class NetworkUtils {
    * on "random" port.
    *
    * @return Available port number
-   * @throws IOException
    */
   public static int findAvailablePort() {
     try(ServerSocket socket = new ServerSocket(0)) {

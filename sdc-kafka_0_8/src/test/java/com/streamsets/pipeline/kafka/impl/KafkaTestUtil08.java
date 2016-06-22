@@ -91,7 +91,7 @@ public class KafkaTestUtil08 extends SdcKafkaTestUtil {
       Properties props = TestUtils.createBrokerConfig(i, port);
       props.put("auto.create.topics.enable", "false");
       kafkaServers.add(TestUtils.createServer(new KafkaConfig(props), new MockTime()));
-      sb.append("localhost:" + port).append(",");
+      sb.append("localhost:").append(port).append(",");
     }
     metadataBrokerURI = sb.deleteCharAt(sb.length()-1).toString();
     LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");

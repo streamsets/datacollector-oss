@@ -25,11 +25,12 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
-
-import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.lib.security.http.SSOService;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.awaitility.Duration;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
@@ -48,14 +49,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -65,6 +64,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+
+import static org.awaitility.Awaitility.given;
 
 public class TestWebServerTaskHttpHttps {
 
@@ -106,10 +108,6 @@ public class TestWebServerTaskHttpHttps {
     return new DataCollectorWebServerTask(runtimeInfo, conf, configurators, webAppProviders);
   }
 
-
-
-
-
   @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
     return createWebServerTask(confDir, conf, Collections.<WebAppProvider>emptySet());
@@ -121,11 +119,21 @@ public class TestWebServerTaskHttpHttps {
     return dir.getAbsolutePath();
   }
 
-  private int getRandomPort() throws Exception {
-    ServerSocket ss = new ServerSocket(0);
-    int port = ss.getLocalPort();
-    ss.close();
-    return port;
+  private Callable<Boolean> isWebServerTaskRunning(final WebServerTask ws) {
+    return new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        ws.getServerURI();
+        return true;
+      }
+    };
+  }
+
+  private void waitForStart(final WebServerTask ws) {
+    given().ignoreExceptions()
+        .await()
+        .atMost(Duration.FIVE_SECONDS)
+        .until(isWebServerTaskRunning(ws));
   }
 
   @Test
@@ -161,7 +169,7 @@ public class TestWebServerTaskHttpHttps {
   @Test
   public void testGetServerURI() throws Exception {
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf);
@@ -183,7 +191,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
       Assert.assertEquals(httpPort, ws.getServerURI().getPort());
     } finally {
       ws.stopTask();
@@ -193,7 +201,7 @@ public class TestWebServerTaskHttpHttps {
   @Test
   public void testHttp() throws Exception {
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf);
@@ -205,7 +213,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
 
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort  + "/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
@@ -229,7 +237,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
 
       HttpURLConnection conn =
           (HttpURLConnection) new URL("http://127.0.0.1:" + ws.getServerURI().getPort() + "/ping")
@@ -272,7 +280,7 @@ public class TestWebServerTaskHttpHttps {
   @Test
   public void testHttps() throws Exception {
     Configuration conf = new Configuration();
-    int httpsPort = getRandomPort();
+    int httpsPort = NetworkUtils.getRandomPort();
     String confDir = createTestDir();
     String keyStore = new File(confDir, "sdc-keystore.jks").getAbsolutePath();
     OutputStream os = new FileOutputStream(keyStore);
@@ -293,7 +301,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
       HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort + "/ping")
           .openConnection();
       configureHttpsUrlConnection(conn);
@@ -326,7 +334,8 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+
+      waitForStart(ws);
 
       HttpsURLConnection conn =
           (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort() + "/ping")
@@ -342,8 +351,8 @@ public class TestWebServerTaskHttpHttps {
   @Test
   public void testHttpRedirectToHttpss() throws Exception {
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
-    int httpsPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
+    int httpsPort = NetworkUtils.getRandomPort();
     String confDir = createTestDir();
     String keyStore = new File(confDir, "sdc-keystore.jks").getAbsolutePath();
     OutputStream os = new FileOutputStream(keyStore);
@@ -363,7 +372,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/ping").openConnection();
       conn.setInstanceFollowRedirects(false);
       Assert.assertTrue(conn.getResponseCode() >= 300 && conn.getResponseCode() < 400);
@@ -398,7 +407,7 @@ public class TestWebServerTaskHttpHttps {
       }
     };
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
@@ -410,7 +419,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
 
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
@@ -503,7 +512,7 @@ public class TestWebServerTaskHttpHttps {
       }
     };
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.DPM_ENABLED, true);
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
@@ -515,7 +524,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
 
       Assert.assertTrue(delegatedTo.delegated);
     } finally {
@@ -546,7 +555,7 @@ public class TestWebServerTaskHttpHttps {
       }
     };
     Configuration conf = new Configuration();
-    int httpPort = getRandomPort();
+    int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "basic");
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     String confDir = createTestDir();
@@ -572,7 +581,7 @@ public class TestWebServerTaskHttpHttps {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
 
       String baseUrl = "http://127.0.0.1:" + httpPort;
 

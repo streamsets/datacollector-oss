@@ -36,6 +36,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>fr.xebia.extras</groupId>
       <artifactId>selma-processor</artifactId>
       <scope>provided</scope>

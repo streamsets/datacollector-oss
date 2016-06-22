@@ -20,9 +20,12 @@
 package com.streamsets.pipeline.kafka.common;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.testing.SingleForkNoReuseTest;
+import org.junit.experimental.categories.Category;
 
 import java.util.ServiceLoader;
 
+@Category(SingleForkNoReuseTest.class)
 public abstract class TestUtilFactoriesBean {
 
   public abstract SdcKafkaTestUtilFactory createSdcKafkaTestUtilFactory();

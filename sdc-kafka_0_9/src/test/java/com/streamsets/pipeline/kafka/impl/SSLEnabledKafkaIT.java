@@ -25,7 +25,7 @@ import org.junit.BeforeClass;
 import java.util.Map;
 import java.util.Properties;
 
-public class TestSSLEnabledKafka extends TestSecureKafkaBase {
+public class SSLEnabledKafkaIT extends SecureKafkaBase {
 
   private static int plaintextPort;
   private static int specializedPort;
@@ -34,12 +34,12 @@ public class TestSSLEnabledKafka extends TestSecureKafkaBase {
   public static void beforeClass() throws Exception {
     plaintextPort = TestUtil.getFreePort();
     specializedPort = TestUtil.getFreePort();
-    TestSecureKafkaBase.beforeClass();
+    SecureKafkaBase.beforeClass();
   }
 
   @AfterClass
   public static void afterClass() {
-    TestSecureKafkaBase.afterClass();
+    SecureKafkaBase.afterClass();
   }
 
   @Override
@@ -71,6 +71,6 @@ public class TestSSLEnabledKafka extends TestSecureKafkaBase {
 
   @Override
   protected String getTopic() {
-    return "TestSSLEnabledKafka";
+    return "SSLEnabledKafkaIT";
   }
 }

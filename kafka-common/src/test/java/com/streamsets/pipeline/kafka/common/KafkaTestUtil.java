@@ -200,7 +200,7 @@ public class KafkaTestUtil {
       Properties props = TestUtils.createBrokerConfig(i, port);
       props.put("auto.create.topics.enable", "false");
       kafkaServers.add(TestUtils.createServer(new KafkaConfig(props), new MockTime()));
-      sb.append("localhost:" + port).append(",");
+      sb.append("localhost:").append(port).append(",");
     }
     metadataBrokerURI = sb.deleteCharAt(sb.length()-1).toString();
     LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
@@ -248,7 +248,7 @@ public class KafkaTestUtil {
     if (setPartitioner) {
       props.put("partitioner.class", "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner");
     }
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
     ProducerConfig config = new ProducerConfig(props);
 
     Producer<String, String> producer = new Producer<>(config);

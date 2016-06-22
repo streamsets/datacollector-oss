@@ -19,32 +19,28 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Field.Type;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.ConfigIssue;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
+import com.streamsets.pipeline.lib.util.JsonUtil;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
@@ -62,29 +58,33 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.Stage.ConfigIssue;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.Field.Type;
-import com.streamsets.pipeline.lib.util.JsonUtil;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.TargetRunner;
-
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.UUID;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+
+@Category(SingleForkNoReuseTest.class)
 public class HBaseTargetIT {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseTargetIT.class);
   private static HBaseTestingUtility utility;
