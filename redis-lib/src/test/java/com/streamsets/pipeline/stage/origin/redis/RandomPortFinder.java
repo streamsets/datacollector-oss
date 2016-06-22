@@ -23,41 +23,41 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomPortFinder {
 
-    private static final int MIN_PORT_NUMBER = 49152;
-    private static final int MAX_PORT_NUMBER = 65535;
+  private static final int MIN_PORT_NUMBER = 49152;
+  private static final int MAX_PORT_NUMBER = 65535;
 
 
-    public static int find() {
-        while (true) {
-            int port = ThreadLocalRandom.current().nextInt(MIN_PORT_NUMBER, MAX_PORT_NUMBER);
-            if (available(port)) {
-                return port;
-            }
-        }
+  public static int find() {
+    while (true) {
+      int port = ThreadLocalRandom.current().nextInt(MIN_PORT_NUMBER, MAX_PORT_NUMBER);
+      if (available(port)) {
+        return port;
+      }
     }
+  }
 
-    private static boolean available(final int port) {
-        ServerSocket serverSocket = null;
-        DatagramSocket dataSocket = null;
+  private static boolean available(final int port) {
+    ServerSocket serverSocket = null;
+    DatagramSocket dataSocket = null;
+    try {
+      serverSocket = new ServerSocket(port);
+      serverSocket.setReuseAddress(true);
+      dataSocket = new DatagramSocket(port);
+      dataSocket.setReuseAddress(true);
+      return true;
+    } catch (final IOException e) {
+      return false;
+    } finally {
+      if (dataSocket != null) {
+        dataSocket.close();
+      }
+      if (serverSocket != null) {
         try {
-            serverSocket = new ServerSocket(port);
-            serverSocket.setReuseAddress(true);
-            dataSocket = new DatagramSocket(port);
-            dataSocket.setReuseAddress(true);
-            return true;
+          serverSocket.close();
         } catch (final IOException e) {
-            return false;
-        } finally {
-            if (dataSocket != null) {
-                dataSocket.close();
-            }
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (final IOException e) {
 
-                }
-            }
         }
+      }
     }
+  }
 }

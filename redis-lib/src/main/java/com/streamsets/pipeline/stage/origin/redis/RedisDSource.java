@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,38 +23,35 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-        version = 1,
-        label = "Redis",
-        description = "Redis origin",
-        icon = "redis.png",
-        onlineHelpRefUrl = "",
-        execution = ExecutionMode.STANDALONE,
-        recordsByRef = true
+    version = 2,
+    label = "Redis Consumer",
+    description = "Reads data from Redis",
+    icon = "redis.png",
+    upgrader = RedisSourceUpgrader.class,
+    onlineHelpRefUrl = "index.html#Origins/Redis.html#task_dtz_npv_jw",
+    execution = ExecutionMode.STANDALONE,
+    recordsByRef = true
 
 )
-@ConfigGroups(value = RedisOriginGroups.class)
+@ConfigGroups(value = Groups.class)
+@HideConfigs(value = {"redisOriginConfigBean.dataFormatConfig.compression"})
 @GenerateResourceBundle
 public class RedisDSource extends DSource {
 
-    @ConfigDefBean()
-    public RedisOriginConfigBean redisOriginConfigBean;
+  @ConfigDefBean()
+  public RedisOriginConfigBean redisOriginConfigBean;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Source createSource() {
-        switch (redisOriginConfigBean.readStrategy) {
-            case SUBSCRIPTION:
-                return new RedisSubscriptionSource(redisOriginConfigBean);
-            case BATCH:
-            default:
-                return new RedisBatchReaderSource(redisOriginConfigBean);
-        }
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected Source createSource() {
+    return new RedisSubscriptionSource(redisOriginConfigBean);
+  }
 }

@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,25 +17,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.redis.configuration;
+package com.streamsets.pipeline.stage.origin.redis;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum ReadStrategy implements Label {
-    BATCH("Batch"),
-    SUBSCRIPTION("Subscription"),;
+public enum Errors implements ErrorCode {
 
-    private final String label;
+  REDIS_01("Failed to create Redis client: {}. {}"),
+  REDIS_02("Failed to subscribe channel: {}. {}"),
+  REDIS_03("Cannot parse record from message '{}': {}"),;
+  private final String msg;
 
-    ReadStrategy(String label) {
-        this.label = label;
-    }
+  Errors(String msg) {
+    this.msg = msg;
+  }
 
-    @Override
-    public String getLabel() {
-        return label;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getMessage() {
+    return msg;
+  }
 }
-
