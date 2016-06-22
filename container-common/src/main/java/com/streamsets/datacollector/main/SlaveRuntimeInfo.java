@@ -68,16 +68,16 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
     return id;
   }
 
-  @Override
-  public String getAppAuthToken() {
-    return null;
-  }
-
   public boolean isRemotePipeline() {
     return isRemotePipeline;
   }
 
   public void setRemotePipeline(boolean remotePipeline) {
     isRemotePipeline = remotePipeline;
+  }
+
+  @Override
+  public boolean isClusterSlave() {
+    return true;
   }
 }

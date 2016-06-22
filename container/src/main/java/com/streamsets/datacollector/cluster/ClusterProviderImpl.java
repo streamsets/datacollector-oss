@@ -260,7 +260,6 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
-      sdcProperties.remove(Configuration.CONFIG_INCLUDES);
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
       sdcProperties.remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);

@@ -150,11 +150,12 @@ public class TestRuntimeInfo {
     RuntimeInfo info = og.get(RuntimeInfo.class);
     Assert.assertTrue(info instanceof SlaveRuntimeInfo);
     Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
-    Assert.assertNull(info.getAppAuthToken());
     Assert.assertEquals("MASTER_ID", info.getMasterSDCId());
+    Assert.assertEquals("AUTH_TOKEN", info.getAppAuthToken());
     Assert.assertTrue(((SlaveRuntimeInfo)info).isRemotePipeline());
     ((SlaveRuntimeInfo)info).setId("ID");
     Assert.assertEquals("ID", info.getId());
+    Assert.assertTrue(info.isClusterSlave());
   }
 
   @Test
@@ -180,6 +181,7 @@ public class TestRuntimeInfo {
     info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), customCLs);
     info.init();
     Assert.assertNotEquals(id, info.getId());
+    Assert.assertFalse(info.isClusterSlave());
   }
 
 }

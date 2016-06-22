@@ -73,7 +73,7 @@ public class RuntimeModule {
         conf.load(reader);
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
         String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
-        ((StandaloneRuntimeInfo)runtimeInfo).setAppAuthToken(appAuthToken);
+        runtimeInfo.setAppAuthToken(appAuthToken);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

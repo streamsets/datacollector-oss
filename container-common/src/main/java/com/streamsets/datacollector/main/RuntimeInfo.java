@@ -54,7 +54,7 @@ public abstract class RuntimeInfo {
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String httpUrl;
-
+  private String appAuthToken;
   private final Map<String, Object> attributes;
   private ShutdownHandler shutdownRunnable;
   private final Map<String, String> authenticationTokens;
@@ -91,7 +91,7 @@ public abstract class RuntimeInfo {
 
   public abstract String getRuntimeDir();
 
-  public abstract String getAppAuthToken();
+  public abstract boolean isClusterSlave();
 
   public MetricRegistry getMetrics() {
     return metrics;
@@ -240,6 +240,14 @@ public abstract class RuntimeInfo {
 
   public SSLContext getSSLContext() {
     return sslContext;
+  }
+
+  void setAppAuthToken(String appAuthToken) {
+    this.appAuthToken = appAuthToken;
+  }
+
+  public String getAppAuthToken() {
+    return appAuthToken;
   }
 
 }

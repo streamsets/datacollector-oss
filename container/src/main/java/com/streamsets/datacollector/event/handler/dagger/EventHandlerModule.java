@@ -26,6 +26,7 @@ import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -57,7 +58,8 @@ public class EventHandlerModule {
     EventHandlerTask eventHandlerTask;
     boolean isDPMEnabled = conf.get(WebServerTask.DPM_ENABLED, WebServerTask.DPM_ENABLED_DEFAULT);
     String applicationToken = runtimeInfo.getAppAuthToken();
-    if (isDPMEnabled && applicationToken != null && applicationToken.trim().length() > 0) {
+    if (isDPMEnabled && applicationToken != null && applicationToken.trim().length() > 0
+        && !runtimeInfo.isClusterSlave()) {
       String remoteBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
           RemoteSSOService.DPM_BASE_URL_DEFAULT));
       String targetURL = remoteBaseURL + "messaging/rest/v1/events";

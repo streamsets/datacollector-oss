@@ -89,6 +89,11 @@ public class SlaveWebServerTask extends DataCollectorWebServerTask {
     return sslContextFactory;
   }
 
+  @Override
+  protected String getComponentId(Configuration appConfiguration) {
+    return getRuntimeInfo().getMasterSDCId();
+  }
+
   private File getWorkerHttpsKeystore() {
     final String httpsKeystorePath = conf.get(HTTPS_WORKER_KEYSTORE_PATH, HTTPS_WORKER_KEYSTORE_PATH_DEFAULT);
     if (httpsKeystorePath == null || httpsKeystorePath.trim().isEmpty()) {

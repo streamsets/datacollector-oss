@@ -33,7 +33,6 @@ import java.util.concurrent.Callable;
 public class StandaloneRuntimeInfo extends RuntimeInfo {
   private String id;
   private File baseDir;
-  private String appAuthToken;
 
   public StandaloneRuntimeInfo(
       String propertyPrefix, MetricRegistry metrics, List<? extends ClassLoader> stageLibraryClassLoaders
@@ -105,13 +104,8 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
     return null;
   }
 
-  void setAppAuthToken(String appAuthToken) {
-    this.appAuthToken = appAuthToken;
-  }
-
   @Override
-  public String getAppAuthToken() {
-    return appAuthToken;
+  public boolean isClusterSlave() {
+    return false;
   }
-
 }
