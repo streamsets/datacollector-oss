@@ -108,7 +108,7 @@
     <module>rbgen-maven-plugin</module>
     <module>root-proto</module>
     <module>root</module>
-
+    <module>testing</module>
     <module>bootstrap</module>
     <module>utils</module>
     <module>sso</module>

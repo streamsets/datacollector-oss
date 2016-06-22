@@ -39,8 +39,8 @@ public class TestKafkaTargetUpgrader {
   @Test
   public void testKafkaTargetUpgrader() throws StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
-    kafkaProducerConfig.put("request.required.acks", "2");
+    Map<String, String> kafkaProducerConfig = new HashMap<>();
+    kafkaProducerConfig.put("request.required.acks", "-1");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
     List<Config> configs = new ArrayList<>();

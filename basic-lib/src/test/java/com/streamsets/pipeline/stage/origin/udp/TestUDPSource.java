@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.parser.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,7 +41,6 @@ import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,16 +53,6 @@ public class TestUDPSource {
 
   @Before
   public void setup() throws Exception {
-  }
-
-  private List<String> genPorts() throws Exception {
-    List<String> ports = new ArrayList<>();
-    for (int i = 0; i < 2; i++) {
-      ServerSocket socket = new ServerSocket(0);
-      ports.add(String.valueOf(socket.getLocalPort()));
-      socket.close();;
-    }
-    return ports;
   }
 
   public static class TUDPSource extends UDPSource {
@@ -124,7 +114,7 @@ public class TestUDPSource {
   }
 
   private void doBasicTest(UDPDataFormat dataFormat) throws Exception {
-    List<String> ports = genPorts();
+    List<String> ports = NetworkUtils.getRandomPorts(2);
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");
     TUDPSource source = new TUDPSource(ports, parserConfig, dataFormat, 20, 100L);

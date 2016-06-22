@@ -24,16 +24,19 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaServer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.List;
 
-public class TestKafkaSourceUnavailability {
+@Category(SingleForkNoReuseTest.class)
+public class KafkaSourceUnavailabilityIT {
 
   private static Producer<String, String> producer;
 

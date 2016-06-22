@@ -26,20 +26,21 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumerFactory;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaServer;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.List;
 
-public class TestLowLevelKafkaConsumer {
+@Category(SingleForkNoReuseTest.class)
+public class LowLevelKafkaConsumerIT {
 
   private static Producer<String, String> producer;
 

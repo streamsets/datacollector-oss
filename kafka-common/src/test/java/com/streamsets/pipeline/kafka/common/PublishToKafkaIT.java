@@ -20,15 +20,18 @@
 package com.streamsets.pipeline.kafka.common;
 
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
+import org.junit.experimental.categories.Category;
 
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TestPublishToKafka {
+@Category(SingleForkNoReuseTest.class)
+public class PublishToKafkaIT {
 
   private static final String TOPIC = "testTopic";
   private static final int MULTIPLE_PARTITIONS = 1;
@@ -38,7 +41,7 @@ public class TestPublishToKafka {
     Properties props = new Properties();
     props.put("metadata.broker.list", "localhost:9001");
     props.put("serializer.class", "kafka.serializer.StringEncoder");
-    props.put("request.required.acks", "1");
+    props.put("request.required.acks", "-1");
 
     ProducerConfig config = new ProducerConfig(props);
     Producer<String, String> producer = new Producer<>(config);

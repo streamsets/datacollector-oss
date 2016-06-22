@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.FlumeTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.NetworkUtils;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -56,15 +57,17 @@ public class TestFlumeThriftTarget {
 
   private ThriftSource source;
   private Channel ch;
+  private int port;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
+    port = NetworkUtils.getRandomPort();
     source = new ThriftSource();
     ch = new MemoryChannel();
     Configurables.configure(ch, new Context());
 
     Context context = new Context();
-    context.put("port", String.valueOf(9051));
+    context.put("port", String.valueOf(port));
     context.put("bind", "localhost");
     Configurables.configure(source, context);
 
@@ -95,7 +98,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -139,7 +142,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -183,7 +186,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -227,7 +230,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -271,7 +274,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         -1,                          // maxBackOff
         1,                          // maxRetryAttempts
@@ -322,7 +325,7 @@ public class TestFlumeThriftTarget {
         1,                          // batchSize
         ClientType.THRIFT,
         1000,                       // connection timeout
-        ImmutableMap.of("h1", "localhost:9051"),
+        ImmutableMap.of("h1", "localhost:" + port),
         HostSelectionStrategy.RANDOM,
         0,                          // maxBackOff
         0,                          // maxRetryAttempts

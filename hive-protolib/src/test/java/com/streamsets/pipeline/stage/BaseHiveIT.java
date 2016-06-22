@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -39,6 +40,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +64,7 @@ import java.util.concurrent.Executors;
 /**
  * Base Hive Integration Test class that starts HDFS, HMS and HiveServer2.
  */
+@Category(SingleForkNoReuseTest.class)
 public abstract class BaseHiveIT {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseHiveIT.class);
@@ -77,7 +80,7 @@ public abstract class BaseHiveIT {
   private static ExecutorService hiveMetastoreExecutor = Executors.newSingleThreadExecutor();
   private static HiveServer2 hiveServer2;
   private static Connection hiveConnection;
-  public static Connection getHiveConnection() {
+  private static Connection getHiveConnection() {
     return hiveConnection;
   }
 

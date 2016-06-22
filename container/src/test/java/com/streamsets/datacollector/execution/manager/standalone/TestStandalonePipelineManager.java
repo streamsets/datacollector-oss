@@ -32,7 +32,6 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
-import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.provider.StandaloneAndClusterRunnerProviderImpl;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
@@ -50,12 +49,11 @@ import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.apache.commons.io.FileUtils;
+import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +63,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -73,8 +70,16 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
+import static com.streamsets.datacollector.util.AwaitConditionUtil.numPipelinesEqualTo;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestStandalonePipelineManager {
 
@@ -270,7 +275,9 @@ public class TestStandalonePipelineManager {
     pipelineStoreTask.stop();
 
     setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
-    Thread.sleep(2000);
+
+    await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
+
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
     assertTrue(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
@@ -280,7 +287,7 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
 
     setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
-    Thread.sleep(2000);
+    await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
@@ -303,8 +310,12 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
     pipelineManager = null;
     setUpManager(100);
-    Thread.sleep(2000);
-    assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
+    await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0");
+      }
+    });
   }
 
   @Test

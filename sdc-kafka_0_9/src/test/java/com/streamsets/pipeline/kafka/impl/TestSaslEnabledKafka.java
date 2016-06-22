@@ -34,7 +34,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Ignore
-public class TestSaslEnabledKafka extends TestSecureKafkaBase {
+public class TestSaslEnabledKafka extends SecureKafkaBase {
 
   private static final String JAAS_CONF =
       "KafkaServer {\n" +
@@ -95,12 +95,12 @@ public class TestSaslEnabledKafka extends TestSecureKafkaBase {
     Configuration.setConfiguration(null);
     System.setProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG, jaasConfigFile.getAbsolutePath());
 
-    TestSecureKafkaBase.beforeClass();
+    SecureKafkaBase.beforeClass();
   }
 
   @AfterClass
   public static void afterClass() {
-    TestSecureKafkaBase.afterClass();
+    SecureKafkaBase.afterClass();
     if (miniKdc != null) {
       miniKdc.stop();
       miniKdc = null;

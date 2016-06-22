@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-public class TestKafkaValidationUtil09 {
+public class KafkaValidationUtil09IT {
 
   private static int port;
   private static EmbeddedZookeeper zookeeper;

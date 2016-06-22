@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
@@ -29,13 +26,11 @@ import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
 import kafka.utils.TestUtils;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -55,7 +50,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-public class TestKafkaProducer09 {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+public class KafkaProducer09IT {
 
   private static int port;
   private static ZkUtils zkUtils = null;

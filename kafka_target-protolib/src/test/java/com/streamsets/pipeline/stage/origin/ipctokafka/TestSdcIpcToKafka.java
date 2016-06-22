@@ -32,6 +32,8 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
+import com.streamsets.testing.NetworkUtils;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.utils.TestUtils;
@@ -40,6 +42,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -57,7 +60,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.security.KeyPair;
 import java.security.KeyStore;
@@ -71,6 +73,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Category(SingleForkNoReuseTest.class)
 public class TestSdcIpcToKafka {
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
@@ -83,15 +86,9 @@ public class TestSdcIpcToKafka {
 
   private static int randomPort;
 
-  private static int getRandomPort() throws Exception {
-    try (ServerSocket ss = new ServerSocket(0)) {
-      return ss.getLocalPort();
-    }
-  }
-
   @BeforeClass
   public static void setUp() throws Exception {
-    randomPort = getRandomPort();
+    randomPort = NetworkUtils.getRandomPort();
 
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(3);

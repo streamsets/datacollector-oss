@@ -32,6 +32,7 @@ import com.streamsets.pipeline.elasticsearch.api.ElasticSearchFactory;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.testing.NetworkUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.node.Node;
@@ -43,7 +44,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -56,25 +56,18 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
-public class TestElasticSearchTarget {
+public class ElasticSearchTargetIT {
   private static String esName = UUID.randomUUID().toString();
   private static Node esServer;
   private static int esPort;
   private static int esHttpPort;
 
-  private static int getRandomPort() throws Exception {
-    ServerSocket ss = new ServerSocket(0);
-    int port = ss.getLocalPort();
-    ss.close();
-    return port;
-  }
-
   @BeforeClass
   @SuppressWarnings("unchecked")
   public static void setUp() throws Exception {
     File esDir = new File("target", UUID.randomUUID().toString());
-    esPort = getRandomPort();
-    esHttpPort = getRandomPort();
+    esPort = NetworkUtils.getRandomPort();
+    esHttpPort = NetworkUtils.getRandomPort();
     Assert.assertTrue(esDir.mkdirs());
     Map<String, Object> configs = new HashMap<>();
     configs.put("cluster.name", esName);

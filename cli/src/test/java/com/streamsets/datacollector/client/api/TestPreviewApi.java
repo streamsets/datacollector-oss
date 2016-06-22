@@ -26,6 +26,7 @@ import com.streamsets.datacollector.client.model.PreviewInfoJson;
 import com.streamsets.datacollector.client.model.StageOutputJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.testing.NetworkUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class TestPreviewApi {
     Task server = null;
     try {
       for(String authType: authenticationTypes) {
-        int port = TestUtil.getRandomPort();
+        int port = NetworkUtils.getRandomPort();
         server = TestUtil.startServer(port, authType);
         baseURL = "http://127.0.0.1:" + port;
         ApiClient apiClient = getApiClient(authType);

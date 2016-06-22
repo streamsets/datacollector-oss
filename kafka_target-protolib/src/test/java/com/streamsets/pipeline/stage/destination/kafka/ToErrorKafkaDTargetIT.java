@@ -28,18 +28,21 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestToErrorKafkaDTarget {
+@Category(SingleForkNoReuseTest.class)
+public class ToErrorKafkaDTargetIT {
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
 
