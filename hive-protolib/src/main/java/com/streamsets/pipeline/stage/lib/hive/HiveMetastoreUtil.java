@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -565,21 +566,33 @@ public final class HiveMetastoreUtil {
     }
   }
 
-  private static void validateScaleAndPrecision(int precision, int scale) throws HiveStageCheckedException{
+  private static void validateScaleAndPrecision(String fieldName, Field field, int precision, int scale) throws HiveStageCheckedException{
+    // Validate calculated precision/scale
     if (precision > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 1);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", fieldName, 1);
     }
     if (scale > 38) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale", 0);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale", fieldName, 0);
     }
     if (precision < 1) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 1);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", fieldName, 1);
     }
     if (scale < 0) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", 0);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", fieldName, 0);
     }
     if (scale > precision) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, precision);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, fieldName, precision);
+    }
+
+    // Validate that given decimal value is in the range of what was calculated
+    BigDecimal value = field.getValueAsDecimal();
+    if(value != null) {
+      if (value.scale() > scale) {
+        throw new HiveStageCheckedException(Errors.HIVE_26, value, fieldName, "scale", value.scale(), scale);
+      }
+      if (value.precision() > precision) {
+        throw new HiveStageCheckedException(Errors.HIVE_26, value, fieldName, "precision", value.precision(), precision);
+      }
     }
   }
 
@@ -627,7 +640,7 @@ public final class HiveMetastoreUtil {
       if (hiveType == HiveType.DECIMAL) {
         int precision = resolveScaleOrPrecisionExpression("precision", precisionEL, variables, precisionExpression, pair.getKey());
         int scale = resolveScaleOrPrecisionExpression("scale", scaleEL, variables, scaleExpression, pair.getKey());
-        validateScaleAndPrecision(precision, scale);
+        validateScaleAndPrecision(pair.getKey(), currField, precision, scale);
         hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, precision, scale);
         // We need to make sure that all java objects have the same scale
         if(currField.getValue() != null) {
