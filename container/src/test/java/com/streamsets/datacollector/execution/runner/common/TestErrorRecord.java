@@ -66,6 +66,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
@@ -107,14 +108,15 @@ public class TestErrorRecord {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
-  private void captureMockStages(final String errorStageName) {
+  private void captureMockStages(final String errorStageName, final AtomicBoolean errorStageAlreadyRun) {
     MockStages.setSourceCapture(new BaseSource() {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("s:s1");
         record.set(Field.create(SOURCE_FIELD_VAL));
-        if (errorStageName.equals(SOURCE_INSTANCE_NAME)) {
+        if (errorStageName.equals(SOURCE_INSTANCE_NAME) && !errorStageAlreadyRun.get()) {
           getContext().toError(record, SOURCE_INSTANCE_NAME + "error");
+          errorStageAlreadyRun.set(true);
         } else {
           batchMaker.addRecord(record);
         }
@@ -126,9 +128,10 @@ public class TestErrorRecord {
       @Override
       public void process(Batch batch, BatchMaker batchMaker) throws StageException {
         Record record = getContext().createRecord("s:s1");
-        record.set(Field.create(PROCESSOR_FIELD_VAL));
-        if (errorStageName.equals(PROCESSOR_INSTANCE_NAME)) {
+        record.set(Field.create(PROCESSOR_FIELD_VAL) );
+        if (errorStageName.equals(PROCESSOR_INSTANCE_NAME) && !errorStageAlreadyRun.get()) {
           getContext().toError(record, PROCESSOR_INSTANCE_NAME + "error");
+          errorStageAlreadyRun.set(true);
         } else {
           batchMaker.addRecord(record);
         }
@@ -140,8 +143,9 @@ public class TestErrorRecord {
       public void write(Batch batch) throws StageException {
         Record record = getContext().createRecord("s:s1");
         record.set(Field.create(TARGET_FIELD_VAL));
-        if (errorStageName.equals(TARGET_INSTANCE_NAME)) {
+        if (errorStageName.equals(TARGET_INSTANCE_NAME) && !errorStageAlreadyRun.get()) {
           getContext().toError(record, TARGET_INSTANCE_NAME + "error");
+          errorStageAlreadyRun.set(true);
         }
         latch.countDown();
       }
@@ -226,7 +230,7 @@ public class TestErrorRecord {
       }
     });
 
-    captureMockStages(errorStage);
+    captureMockStages(errorStage, new AtomicBoolean(false));
 
     ProductionPipelineRunnable runnable =
         new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner) this.runner).getRunner(), pipeline,
