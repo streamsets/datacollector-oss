@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,103 +25,92 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
-import com.streamsets.pipeline.stage.origin.redis.configuration.AdvancedConfig;
-import com.streamsets.pipeline.stage.origin.redis.configuration.ReadStrategy;
-import com.streamsets.pipeline.stage.origin.redis.configuration.ReadStrategyChooserValues;
 
 import java.util.List;
 
 public class RedisOriginConfigBean {
 
-    public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "dataFormatConfig.";
+  public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "dataFormatConfig.";
 
-    @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.STRING,
-            label = "URI",
-            description = "Use format redis://[username:password@]host[:port][/[database]]",
-            displayPosition = 10,
-            group = "REDIS"
-    )
-    public String uri = "redis://:password@localhost:6379/0";
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "URI",
+      description = "Use format redis://[:password@]host[:port][/[database]]",
+      group = "REDIS",
+      displayPosition = 10
+  )
+  public String uri = "redis://:password@localhost:6379/0";
 
-    @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.MODEL,
-            defaultValue = "BATCH",
-            label = "Read strategy",
-            description = "Redis read strategy",
-            displayPosition = 20,
-            group = "REDIS"
-    )
-    @ValueChooserModel(ReadStrategyChooserValues.class)
-    public ReadStrategy readStrategy;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Connection Timeout (sec)",
+      description = "Connection timeout (sec)",
+      defaultValue = "60",
+      min = 1,
+      group = "REDIS",
+      displayPosition = 20
+  )
+  public int connectionTimeout;
 
-    @ConfigDefBean(groups = "REDIS")
-    public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.LIST,
+      label = "Channels",
+      description = "Channels to subscribe to",
+      group = "REDIS",
+      displayPosition = 40
+  )
+  public List<String> subscriptionChannels;
 
-    @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.MODEL,
-            label = "Data Format",
-            description = "Format of data",
-            displayPosition = 30,
-            group = "REDIS"
-    )
-    @ValueChooserModel(DataFormatChooserValues.class)
-    public DataFormat dataFormat;
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.LIST,
+      label = "Pattern",
+      description = "Subscribes to channels with names that match the pattern",
+      group = "REDIS",
+      displayPosition = 50
+  )
+  public List<String> subscriptionPatterns;
 
-    @ConfigDef(
-            type = ConfigDef.Type.STRING,
-            label = "Key name",
-            description = "Key name to read from",
-            defaultValue = "",
-            required = true,
-            group = "BATCH",
-            displayPosition = 10,
-            dependsOn = "readStrategy",
-            triggeredByValue = "BATCH"
-    )
-    public String queueName;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Data Format",
+      description = "Format of data",
+      displayPosition = 60,
+      group = "REDIS"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
 
-    @ConfigDef(
-            type = ConfigDef.Type.LIST,
-            label = "Channel(s)",
-            description = "Channel(s) to subscribe to",
-            required = false,
-            group = "SUBSCRIPTION",
-            displayPosition = 10,
-            dependsOn = "readStrategy",
-            triggeredByValue = "SUBSCRIPTION"
+  @ConfigDefBean(groups = "REDIS")
+  public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
-    )
-    public List<String> subscriptionChannels;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Batch Wait Time (ms)",
+      defaultValue = "2000",
+      description = "Maximum time to wait for data before sending a partial or empty batch",
+      group = "REDIS",
+      min = 1,
+      max = Integer.MAX_VALUE,
+      displayPosition = 1000
+  )
+  public int maxWaitTime = 2000;
 
-    @ConfigDef(
-            type = ConfigDef.Type.LIST,
-            label = "Pattern",
-            description = "Subscribes to messages matching the given patterns",
-            required = false,
-            group = "SUBSCRIPTION",
-            displayPosition = 20,
-            dependsOn = "readStrategy",
-            triggeredByValue = "SUBSCRIPTION"
-    )
-    public List<String> subscriptionPatterns;
-
-    @ConfigDef(
-            type = ConfigDef.Type.NUMBER,
-            label = "Wait time",
-            defaultValue = "",
-            description = "Max wait time for batch",
-            required = false,
-            group = "SUBSCRIPTION",
-            displayPosition = 30,
-            dependsOn = "readStrategy",
-            triggeredByValue = "SUBSCRIPTION"
-    )
-    public int maxWaitTime;
-
-    @ConfigDefBean(groups = {"ADVANCED"})
-    public AdvancedConfig advancedConfig;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Batch Size (records)",
+      description = "Max number of records per batch",
+      group = "REDIS",
+      min = 1,
+      max = Integer.MAX_VALUE,
+      displayPosition = 1001
+  )
+  public int maxBatchSize = 1000;
 }

@@ -43,7 +43,7 @@ public class RedisLookupConfig {
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
-      label = "Connection timeout (sec)",
+      label = "Connection Timeout (sec)",
       defaultValue = "60",
       required = true,
       min = 1,
