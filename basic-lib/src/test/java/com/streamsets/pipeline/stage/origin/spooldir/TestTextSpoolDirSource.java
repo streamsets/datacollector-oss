@@ -171,7 +171,7 @@ public class TestTextSpoolDirSource {
       writer.close();
 
       // Read back the file to verify its content is gbk-encoded.
-      BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
       Assert.assertEquals(GBK_STRING, reader.readLine());
       reader.close();
 
