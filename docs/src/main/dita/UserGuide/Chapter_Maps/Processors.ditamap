@@ -90,6 +90,15 @@
    <topicref href="../Processors/HBaseLookup-HBaseProperties.dita"/>
    <topicref href="../Processors/HBaseLookup-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/HTTPClient.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/HTTPClient-Methods.dita">
+    <topicref href="../Processors/HTTPClient-ExpressionMethod.dita"/>
+   </topicref>
+   <topicref href="../Processors/HTTPClient-ParallelRequests.dita"/>
+   <topicref href="../Processors/HTTPClient-DataFormats.dita"/>
+   <topicref href="../Processors/HTTPClient-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JavaScript-ProcessingMode.dita"/>

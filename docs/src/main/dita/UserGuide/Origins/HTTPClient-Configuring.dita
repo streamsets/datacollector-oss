@@ -44,6 +44,12 @@
                                     <entry>URL where the data resides. </entry>
                                 </row>
                                 <row>
+                                    <entry>Headers</entry>
+                                    <entry>Optional headers to include in the request. Use the
+                                            <uicontrol>Add</uicontrol> icon to add additional
+                                        headers.</entry>
+                                </row>
+                                <row>
                                     <entry>HTTP Method</entry>
                                     <entry>HTTP method to use to request data from the
                                         server.</entry>
@@ -67,28 +73,17 @@
                                     <entry>Milliseconds the origin waits before checking for new
                                         data. Used in the polling mode only. </entry>
                                 </row>
-                                <row>
-                                    <entry>Authentication Type</entry>
-                                    <entry>Determines the authentication type used to connect to the
-                                            server:<ul id="ul_icm_h1l_35">
-                                            <li>None - Performs no authentication.</li>
-                                            <li>Basic - Uses basic authentication. Requires username
-                                                and password.</li>
-                                            <li>Digest - Uses digest authentication. Requires
-                                                username and password.</li>
-                                            <li>Universal - Uses universal authentication. Requires
-                                                username and password. </li>
-                                            <li>OAuth - Uses OAuth 1.0 authentication. Requires
-                                                OAuth credentials.</li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-AuthType">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Data Format <xref
                                             href="HTTPClient-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline"/></xref></entry>
-                                    <entry>Format of data in the file. Use one of the following
-                                            options:<ul id="ul_zbw_szg_j5">
+                                    <entry>Format of data. Use one of the following options:<ul
+                                            id="ul_zbw_szg_j5">
                                             <li>JSON</li>
                                             <li>Text</li>
                                             <li>XML</li>
@@ -104,17 +99,13 @@
                                             is \r\n, representing a carriage return and line feed.
                                         </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Use Proxy</entry>
-                                    <entry>
-                                        <p>Select to use an HTTP proxy to connect to the origin
-                                            system. </p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-UseProxy">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Charset</entry>
-                                    <entry>Character encoding of the messages to be
-                                        processed.</entry>
+                                    <entry>Character encoding of the data to be processed.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
@@ -139,81 +130,15 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>When using authentication, on the <wintitle>Credentials</wintitle> tab,
-                    configure the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_c2b_f4z_5r">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Username</entry>
-                                    <entry>User name for basic, digest, or universal authentication. </entry>
-                                </row>
-                                <row>
-                                    <entry>Password</entry>
-                                    <entry>Password for basic, digest, or universal authentication. </entry>
-                                </row>
-                                <row>
-                                    <entry>Consumer Key</entry>
-                                    <entry>Consumer key for OAuth authentication.</entry>
-                                </row>
-                                <row>
-                                    <entry>Consumer Secret</entry>
-                                    <entry>Consumer secret for OAuth authentication.</entry>
-                                </row>
-                                <row>
-                                    <entry>Token</entry>
-                                    <entry>Consumer token for OAuth authentication.</entry>
-                                </row>
-                                <row>
-                                    <entry>Token Secret</entry>
-                                    <entry>Token secret for OAuth authentication.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Credentials">
+                <cmd/>
             </step>
-            <step>
-                <cmd>To use an HTTP proxy, on the <wintitle>Proxy</wintitle> tab, configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_qbv_qz2_2v">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>HTTP Proxy Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Proxy URI</entry>
-                                    <entry>Proxy URI.</entry>
-                                </row>
-                                <row>
-                                    <entry>Username</entry>
-                                    <entry>Proxy user name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Password</entry>
-                                    <entry>Proxy password.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Proxy">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-SSLTLS">
+                <cmd/>
             </step>
             <step>
                 <cmd>For JSON data, on the <wintitle>JSON</wintitle> tab, configure the following

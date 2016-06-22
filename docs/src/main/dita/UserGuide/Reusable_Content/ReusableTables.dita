@@ -268,6 +268,46 @@
    </table>
   </p>
   <p>
+   <draft-comment author="Loretta">HTTP Client origin and processor rows:</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_jf4_g24_jw">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+     <thead>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+      <row id="HTTP-AuthType">
+       <entry>Authentication Type</entry>
+       <entry>Determines the authentication type used to connect to the server:<ul
+         id="ul_icm_h1l_35">
+         <li>None - Performs no authentication.</li>
+         <li>Basic - Uses basic authentication. Requires username and password.</li>
+         <li>Digest - Uses digest authentication. Requires username and password.</li>
+         <li>Universal - Uses universal authentication. Requires username and password. </li>
+         <li>OAuth - Uses OAuth 1.0 authentication. Requires OAuth credentials.</li>
+        </ul></entry>
+      </row>
+      <row id="HTTP-UseProxy">
+       <entry>Use Proxy</entry>
+       <entry>
+        <p>Enables using an HTTP proxy to connect to the system. </p>
+       </entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
    <draft-comment author="Loretta">PROCESSOR rows</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_u2r_4x5_lv">
     <tgroup cols="2">

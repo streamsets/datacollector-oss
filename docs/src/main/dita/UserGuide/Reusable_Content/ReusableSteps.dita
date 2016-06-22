@@ -891,9 +891,137 @@
                 
            <step>     
                 <cmd>
-                    <draft-comment author="Loretta">ORIGIN STEPS used by matching
-                        producer</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>HTTPClient-Credentials</uicontrol> -
+                        The following steps are used in HTTP Client origin and processor Configuring
+                        topics:</draft-comment>
                 </cmd>
+            </step>
+            <step id="HTTPClient-Credentials">
+                <cmd>When using authentication, on the <wintitle>Credentials</wintitle> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qfx_54h_jw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>User name for basic, digest, or universal authentication.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for basic, digest, or universal authentication.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Consumer Key</entry>
+                                    <entry>Consumer key for OAuth authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Consumer Secret</entry>
+                                    <entry>Consumer secret for OAuth authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Token</entry>
+                                    <entry>Consumer token for OAuth authentication.</entry>
+                                </row>
+                                <row>
+                                    <entry>Token Secret</entry>
+                                    <entry>Token secret for OAuth authentication.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>HTTPClient-Proxy</uicontrol> -  - The
+                        following steps are used in HTTP Client origin and processor Configuring
+                        topics:</draft-comment>
+                </cmd>
+            </step>
+            <step id="HTTPClient-Proxy">
+                <cmd>To use an HTTP proxy, on the <wintitle>Proxy</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qbv_qz2_2v">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>HTTP Proxy Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Proxy URI</entry>
+                                    <entry>Proxy URI.</entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>Proxy user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Proxy password.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>HTTPClient-SSLTLS</uicontrol> - same
+                        as above</draft-comment>
+                </cmd>
+            </step>
+            <step id="HTTPClient-SSLTLS">
+                <cmd>Optionally, on the <uicontrol>SSL/TLS</uicontrol> tab, configure truststore and
+                    keystore details:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_cpn_3rh_jw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>SSL/TLS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Path to Truststore</entry>
+                                    <entry>Absolute path to the truststore. </entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Truststore password.</entry>
+                                </row>
+                                <row>
+                                    <entry>Path to Keystore</entry>
+                                    <entry>Absolute path to the keystore. </entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Keystore password.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>
