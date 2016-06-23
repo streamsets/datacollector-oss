@@ -160,7 +160,9 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     } else if(result instanceof BigDecimal) {
       return Field.Type.DECIMAL;
     } else if(result instanceof Date) {
-      return Field.Type.DATE;
+      //This can only happen in ${time:now()}
+      return Field.Type.DATETIME;
+      //For all the timeEL, we currently return String so we are safe.
     } else if(result instanceof Short) {
       return Field.Type.SHORT;
     } else if(result instanceof Boolean) {
