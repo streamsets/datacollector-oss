@@ -20,7 +20,10 @@
 package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.SSEAlgorithm;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -29,6 +32,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -169,8 +173,49 @@ public class AmazonS3Target extends BaseTarget {
           // ByRefByteArrayOutputStream
           ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
 
+          ObjectMetadata metadata = null;
+          if (s3TargetConfigBean.sseConfig.useSSE) {
+            metadata = new ObjectMetadata();
+            switch (s3TargetConfigBean.sseConfig.encryption) {
+              case S3:
+                metadata.setSSEAlgorithm(SSEAlgorithm.AES256.getAlgorithm());
+                break;
+              case KMS:
+                metadata.setSSEAlgorithm(SSEAlgorithm.KMS.getAlgorithm());
+                metadata.setHeader(
+                    Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID,
+                    s3TargetConfigBean.sseConfig.kmsKeyId
+                );
+                if (!s3TargetConfigBean.sseConfig.encryptionContext.isEmpty()) {
+                  metadata.setHeader(
+                      "x-amz-server-side-encryption-context",
+                      s3TargetConfigBean.sseConfig.encryptionContext
+                  );
+                }
+                break;
+              case CUSTOMER:
+                metadata.setSSECustomerAlgorithm(SSEAlgorithm.AES256.getAlgorithm());
+                metadata.setHeader(
+                    Headers.SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY,
+                    s3TargetConfigBean.sseConfig.customerKey
+                );
+                metadata.setHeader(
+                    Headers.COPY_SOURCE_SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY_MD5,
+                    s3TargetConfigBean.sseConfig.customerKeyMd5
+                );
+                break;
+              default:
+                throw new IllegalStateException(
+                    Utils.format(
+                        "Unknown encryption option: ",
+                        s3TargetConfigBean.sseConfig.encryption
+                    )
+                );
+            }
+          }
+
           PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket,
-              fileName.toString(), byteArrayInputStream, null);
+              fileName.toString(), byteArrayInputStream, metadata);
 
           LOG.debug("Uploading object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
               s3TargetConfigBean.s3Config.delimiter + fileName);

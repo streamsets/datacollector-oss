@@ -37,6 +37,7 @@ import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
+import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -236,6 +237,7 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.partitionTemplate = partition;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
     s3TargetConfigBean.s3Config = s3Config;
+    s3TargetConfigBean.sseConfig = new SSEConfigBean();
     s3TargetConfigBean.advancedConfig = new ProxyConfig();
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
