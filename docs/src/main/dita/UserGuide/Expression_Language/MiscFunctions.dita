@@ -55,6 +55,12 @@
           </ul></dd>
       </dlentry>
       <dlentry>
+        <dt>field:field()</dt>
+        <dd>Returns the field name. Available only in the Decimal field expression properties of the
+          Hive Metadata processor. </dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
+      <dlentry>
         <dt>jvm:maxMemoryMB()</dt>
         <dd>Returns the Java heap size allocated to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in MB.

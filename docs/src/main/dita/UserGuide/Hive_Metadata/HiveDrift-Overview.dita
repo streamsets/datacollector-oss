@@ -14,15 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_phk_bdf_2w">
-    <title>Hive-Avro Drift Solution: Metadata Generation and Dynamic Data Processing</title>
+    <title>Hive Drift Solution: Ingesting Drifting Data into Hive</title>
     <conbody>
-        <p><indexterm>Hive-Avro drift solution<indexterm>overview</indexterm></indexterm><ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            provides a solution that detects drift in incoming data and updates the corresponding
-            Hive tables. The solution enables creating and updating Hive tables based on record
-            requirements and writing data based on stage attributes in record headers. You can use
-            the full functionality of the solution or individual pieces, as needed.<draft-comment
-                author="Loretta">add avro in here somewhere?</draft-comment></p>
+        <p><indexterm>Hive Drift Solution<indexterm>overview</indexterm></indexterm>The Hive Drift
+            Solution detects drift in incoming data and updates the corresponding Hive tables. The
+            solution enables creating and updating Hive tables based on record requirements and
+            writing data based on stage attributes in record headers. You can use the full
+            functionality of the solution or individual pieces, as needed. </p>
+        <p>You can use the Hive Drift Solution to process Avro data at this time. </p>
         <p>The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
             the Hadoop FS destination as follows:</p>
         <p>
@@ -34,20 +33,13 @@
                         that describe the necessary changes. </dd>
                     <dd>When the Hive Metastore destination receives a metadata record, it compares
                         the proposed changes with the latest Hive metadata, and creates and updates
-                        Hive tables as needed.<draft-comment author="Loretta">Delete or update the conref
-                            version below.</draft-comment></dd>
-                    <dd>
-                        <note>The destination can create tables and partitions, and add columns to
-                            existing tables. It does not drop columns from tables.</note>
-                    </dd>
-                    <dd>
-                        <note
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-CreatesAndNot"
-                        />
-                    </dd>
+                        Hive tables as needed.</dd>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-CreatesAndNot_PH"
+                        /></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Dynamic writes</dt>
+                    <dt>Record-based writes</dt>
                     <dd>The Hive Metadata processor also adds the following information to the
                         header of each record. The Hadoop FS destination writes data to HDFS based
                         on these details: <ul id="ul_sn1_bjg_2w">

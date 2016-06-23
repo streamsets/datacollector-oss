@@ -440,12 +440,12 @@
                   the addition or removal of fields in the record. Changes in data type are not
                   compatible.</p>
             <p>
-                  <draft-comment author="Loretta">D-HM-CreatesAndNot - the following is used in a
-                        couple places.</draft-comment>
+                  <draft-comment author="Loretta">D-HM-CreatesAndNot_Note , D-HM-CreatesAndNot_PH:
+                        the following is used in a couple places.</draft-comment>
             </p>
-            <note id="D-HM-CreatesAndNot">The destination can create tables and partitions. It can
-                  add columns to tables and ignore existing columns. It does not drop existing
-                  columns from tables.</note>
+            <note id="D-HM-CreatesAndNot_Note"><ph id="D-HM-CreatesAndNot_PH">The destination can
+                        create tables and partitions. It can add columns to tables and ignore
+                        existing columns. It does not drop existing columns from tables.</ph></note>
             <p>
                   <draft-comment author="Loretta"><uicontrol>P-HM-phPartitionDF</uicontrol> The
                         following sentence is used in Hive Metadata processor - Configuring, and

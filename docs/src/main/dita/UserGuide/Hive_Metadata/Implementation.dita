@@ -16,10 +16,10 @@
 <concept id="concept_y5w_dj3_fw">
  <title>Implementation Steps</title>
  <conbody>
-  <p><indexterm>Hive-Avro drift solution<indexterm>implementation</indexterm></indexterm>To
-            implement the Hive-Avro drift solution, perform the following steps:<ol
+  <p><indexterm>Hive Drift Solution<indexterm>implementation</indexterm></indexterm>To
+            implement the Hive Drift Solution, perform the following steps:<ol
                 id="ol_zr1_3j3_fw">
-                <li>To capture columnar drift and to enable dynamic writes, configure the Hive
+                <li>To capture columnar drift and to enable record-based writes, configure the Hive
                     Metadata processor.<ul id="ul_qsk_5x3_fw">
                         <li>Configure the Hive connection information.</li>
                         <li>Configure the database, table, and partition expressions.<p>You can
