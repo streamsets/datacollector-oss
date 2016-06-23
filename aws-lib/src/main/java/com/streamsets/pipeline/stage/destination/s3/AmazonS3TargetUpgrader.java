@@ -47,6 +47,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -116,5 +119,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
 
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "partitionTemplate", ""));
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config(S3TargetConfigBean.S3_SEE_CONFIG_PREFIX + "useSSE", "false"));
   }
 }

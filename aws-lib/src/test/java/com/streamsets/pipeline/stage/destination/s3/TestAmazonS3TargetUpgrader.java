@@ -48,9 +48,9 @@ public class TestAmazonS3TargetUpgrader {
     configs.add(new Config("s3TargetConfigBean.binaryFieldPath", "/binaryField"));
 
     AmazonS3TargetUpgrader amazonS3TargetUpgrader = new AmazonS3TargetUpgrader();
-    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 4, configs);
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 5, configs);
 
-    Assert.assertEquals(14, configs.size());
+    Assert.assertEquals(15, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -98,6 +98,8 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertEquals("NULL", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
     Assert.assertEquals("", configValues.get("s3TargetConfigBean.partitionTemplate"));
+
+    Assert.assertEquals("false", configValues.get("s3TargetConfigBean.sseConfig.useSSE"));
 
     //renamed configs
 
