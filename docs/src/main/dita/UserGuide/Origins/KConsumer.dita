@@ -25,5 +25,8 @@
       origin to use <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/> security
       features.</p>
+    <p>Kafka Consumer includes additional header attributes that enable you to include the
+      provenance of a record in the record. For more information, see <xref
+        href="FilePath_Offset.dita#concept_ljn_2h3_yv"/>. </p>
  </conbody>
 </concept>
