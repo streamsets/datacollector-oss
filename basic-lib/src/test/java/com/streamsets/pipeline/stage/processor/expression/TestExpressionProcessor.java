@@ -26,19 +26,31 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(TimeNowEL.class)
 public class TestExpressionProcessor {
 
   @Test
@@ -613,6 +625,45 @@ public class TestExpressionProcessor {
       Assert.assertTrue(myDate >= startTime);
       Assert.assertTrue(myDate <= endTime);
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTimeNowExpression() throws StageException {
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${time:now()}";
+    expressionProcessorConfig.fieldToSet = "/b";
+    final Date date = new Date();
+    PowerMockito.replace(
+        MemberMatcher.method(
+            TimeNowEL.class,
+            "getTimeNowFunc"
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return date;
+      }
+    });
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a", Field.create(123));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get().getValueAsMap().get("b");
+      Assert.assertEquals(Field.Type.DATETIME, field.getType());
+      Assert.assertEquals(date, field.getValueAsDatetime());
     } finally {
       runner.runDestroy();
     }
