@@ -22,16 +22,19 @@
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
                     FS</indexterm></indexterm>When you configure a Hadoop FS destination, you can
             define a directory template and time basis to determine the output directories that the
-            destination creates and the files where records are written. Alternatively, you can use
-            a stage attribute in record headers to specify where records are written. </p>
+            destination creates and the files where records are written. </p>
+        <p>Alternatively, you can use a stage attribute in record headers to specify where records
+            are written. You can also use stage attributes to indicate when to roll a file and the
+            schema to use for Avro data as part of the Hive-Avro drift solution.</p>
         <p>You can define a file prefix, the data time zone, and properties that define when the
             destination closes a file. You can specify the amount of time that a record can be
-            written to its associated directory and what happens to late records.<draft-comment
-                author="Loretta"> You can also use stage attributes to indicate when to roll a file
-                and the schema to use for Avro data.</draft-comment></p>
+            written to its associated directory and what happens to late records.</p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
     <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output files.
                 <draft-comment author="Loretta">Make sure changes in Hadoop FS topics go into MapR
                 FS. </draft-comment></p>
  </conbody>
+    <related-links>
+        <link href="../Hive_Metadata/HiveMetadata-Overview.dita#concept_phk_bdf_2w"/>
+    </related-links>
 </concept>

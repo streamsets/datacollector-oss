@@ -30,8 +30,8 @@
             <p>DPM long only: <ph id="DPM-LongOnly">Data Performance Manager</ph></p>
             <p>
                   <draft-comment author="Loretta">List of origins tha are part of the Basic
-                        installation. Used in BasicInstall_Overview and BasicInstall-LibList.
-                  </draft-comment>
+                        installation. Used in BasicInstall_Overview and BasicInstall-LibList
+                        (Available Stage Libraries).</draft-comment>
             </p>
             <p>
                   <ul id="BasicOrigins">
@@ -43,9 +43,9 @@
                         <li>UDP Source</li>
                   </ul>
             </p>
-            <draft-comment author="Loretta"/>
+            <draft-comment author="Loretta">All processors except...  </draft-comment>
             <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
-                        Lookup, Redis Lookup, and Static Lookup.</ph></p>
+                        Lookup, and Redis Lookup.</ph></p>
             <p>
                   <draft-comment author="Loretta">List of destinations tha are part of the Basic
                         installation. Used in BasicInstall_Overview and BasicInstall-LibList.
@@ -431,7 +431,31 @@
             </p>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
-                  <draft-comment author="Loretta">Scripting processors -  - Groovy and Jython use
+            </p>
+            <p>
+                  <draft-comment author="Loretta">P-HM-CompatChanges - The following is used in a
+                        couple places by the Hive Metadata processor: </draft-comment>
+            </p>
+            <p id="P-HM-CompatChanges ">Compatible changes include new tables and partitions, and
+                  the addition or removal of fields in the record. Changes in data type are not
+                  compatible.</p>
+            <p>
+                  <draft-comment author="Loretta">D-HM-CreatesAndNot - the following is used in a
+                        couple places.</draft-comment>
+            </p>
+            <note id="D-HM-CreatesAndNot">The destination can create tables and partitions. It can
+                  add columns to tables and ignore existing columns. It does not drop existing
+                  columns from tables.</note>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>P-HM-phPartitionDF</uicontrol> The
+                        following sentence is used in Hive Metadata processor - Configuring, and
+                        Database, Table, and Partition Expressions.</draft-comment>
+            </p>
+            <p>
+                  <ph id="P-HM-phPartitionDF">You can use the Int, Bigint, and String data formats
+                        for partition data.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Scripting processors - - Groovy and Jython use
                         both, JavaScript uses Record by Record only
                               (<uicontrol>P-ProcessM-RbyR</uicontrol>).</draft-comment>
             </p>
@@ -569,8 +593,8 @@
                         <dlentry id="Avro-Header">
                               <dt>Avro</dt>
                               <dd>The destination writes records based on the Avro schema in the
-                                    record header or the schema that you provide. The schema
-                                    definition is included in each file.</dd>
+                                    record header or on the schema that you define in the stage. The
+                                    schema definition is included in each file.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
                                     available in the destination. </dd>
@@ -705,12 +729,34 @@
                   <li>hbase-site.xml</li>
             </ul>
             <draft-comment author="Loretta">List of config files used by Hive Streaming - used in
-                  Hive Properties &amp; Configuring Hive Streaming dest.</draft-comment>
+                  Hive Properties &amp; Configuring Hive Streaming dest. Also in Hive Metadata
+                  processor - Hive properties &amp; configuring.</draft-comment>
             <ul id="HiveStreamingFiles">
                   <li>core-site.xml</li>
                   <li>hdfs-site.xml</li>
                   <li>hive-site.xml</li>
             </ul>
+            <p>
+                  <draft-comment author="Loretta">The following DD is used by </draft-comment>
+            </p>
+            <p>
+                  <ol id="OL-HiveConfigSteps">
+                        <li>Store the files or a symlink to the files in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> resources directory or elsewhere in a path local to the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              />.</li>
+                        <li>If the files are stored in the resources directory, specify a relative
+                              path to the files in the stage. If the files are stored outside of the
+                              resources directory, specify an absolute path to the files. <note>For
+                                    a Cloudera Manager installation, <ph
+                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> automatically creates a symlink to the files named
+                                          <codeph>hive-conf</codeph>. Enter
+                                          <codeph>hive-conf</codeph> for the location of the files
+                                    in the stage.</note></li>
+                  </ol>
+            </p>
             <p>
                   <draft-comment author="Loretta">DRIFT-IgnoreWMissing - Using this in the Data
                         Drift Functions topic:</draft-comment>

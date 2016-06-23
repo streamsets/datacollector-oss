@@ -110,8 +110,6 @@
                 <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
                     options:</cmd>
                 <info>
-                    <draft-comment author="Loretta">check order after Jarcec fixes
-                        bug.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_i4x_jh5_sv">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -123,16 +121,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Idle Timeout (secs)
-                                        <xref
-                                            href="HadoopFS-IdleTimeout.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_br5_fgs_7r"/></xref>
-                                    </entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-IdleTimeout"/>
-                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileType">
                                     <entry/>
@@ -176,13 +164,14 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Use Roll Attribute</entry>
-                                    <entry>Checks the record header for the roll attribute and
-                                        closes the current file when the attribute exists. </entry>
-                                </row>
-                                <row>
-                                    <entry>Roll Attribute Name</entry>
-                                    <entry>Name of the roll attribute.</entry>
+                                    <entry>Idle Timeout (secs) <xref
+                                            href="HadoopFS-IdleTimeout.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_br5_fgs_7r"/></xref>
+                                    </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-IdleTimeout"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-CCodec">
@@ -199,6 +188,20 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-CompressionType">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Roll Attribute  <xref
+                                            href="HadoopFS-StageAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_tfb_1ql_gw"/></xref>
+                                    </entry>
+                                    <entry>Checks the record header for the roll attribute and
+                                        closes the current file when the attribute exists. </entry>
+                                </row>
+                                <row>
+                                    <entry>Roll Attribute Name</entry>
+                                    <entry>Name of the roll attribute.<p>Default is roll, the name
+                                            used by the Hive Metadata processor.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -78,6 +78,19 @@
    <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
    <topicref href="../Destinations/HBase-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/HiveMetastore.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/HiveMetastore-MetadataProcessing.dita"/>
+   <topicref href="../Destinations/HiveMetastore-TableGen.dita"/>
+   <topicref href="../Destinations/HiveMetastore-Cache.dita">
+    <topicref href="../Reusable_Content/HiveMeta-CacheEvict.dita"/>
+   </topicref>
+   <topicref href="../Destinations/HiveMetastore-Kerberos.dita"/>
+   <topicref href="../Destinations/HiveMetastore-HiveProps.dita"/>
+   <topicref href="../Destinations/HiveMetastore-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Hive.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

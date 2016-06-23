@@ -49,6 +49,7 @@
         <p>
          <ul id="ul_gdz_wb2_gs">
           <li>record:attribute('&lt;attribute name>') </li>
+          <li>record:attributeOrDefault('&lt;attribute name>' , &lt;default value>)</li>
           <li>record:creator()</li>
           <li>record:exists('&lt;field path>')</li>
           <li>record:id()</li>

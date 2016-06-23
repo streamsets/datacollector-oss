@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_g3p_sss_dw">
+ <title>Stage Attributes and Metadata Records</title>
+ <conbody>
+        <p><indexterm>Hive Metadata processor<indexterm>metadata records and stage
+                    attributes</indexterm></indexterm>The Hive Metadata processor produces the
+            following specialized output: </p>
+  <p>
+            <dl>
+                <dlentry>
+                    <dt>stage attributes</dt>
+                    <dd>The Hive Metadata processor adds the following stage attributes to each
+                        record header and passes the records to Hadoop FS:<ul id="ul_oj1_1ws_dw">
+                            <li>targetDirectory - The location where each record should be written.
+                                The processor generates the directory based on the database, table,
+                                and partition information for each record and writes it to the stage
+                                    attribute.<p>You can configure the Hadoop FS destination to
+                                    write records using the location in the targetDirectory stage
+                                    attribute.</p></li>
+                            <li>avroSchema - The Avro schema for the record. The processor writes
+                                the Avro schema for each record in the stage attribute. When the
+                                processor notes a compatible change in the Avro schema, it generates
+                                a new Avro schema.<p>You can configure the Hadoop FS destination to
+                                    write record using the Avro schema in the avroSchema stage
+                                    attribute.</p></li>
+                            <li> roll - An indicator to roll the file associated with the record.
+                                The processor generates a roll indicator only when the Avro schema
+                                changes in a compatible way. <p>You can configure the Hadoop FS
+                                    destination to roll records when encountering the roll stage
+                                    attribute in the record header. </p></li>
+                        </ul></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>metadata record</dt>
+                    <dd>When encountering compatible metadata changes, the Hive Metadata processor
+                        generates a metadata record. The metadata record passes the following
+                        information to the Hive Metastore destination:<ul id="ul_o45_n5s_dw">
+                            <li>The expected table structure for compatible changes, based on the
+                                    record.<p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-CompatChanges"
+                                /></li>
+                        </ul></dd>
+                    <dd>When the Hive Metastore destination receives the metadata record, the
+                        destination performs a final check against Hive metadata and creates or
+                        alters tables as needed.</dd>
+                </dlentry>
+            </dl>
+        </p>
+        <p>
+            <note>Records with incompatible changes are sent to the stage for error handling.</note>
+        </p>
+ </conbody>
+</concept>

@@ -28,21 +28,18 @@
         <p>Use the basic installation to install only the stage libraries that you want to use. The
             basic installation also results in smaller downloads for installation files. </p>
         <p>The basic installation includes the following origins:<draft-comment author="Loretta"
-                >Check this list with each release</draft-comment><ul id="ul_z3l_k2n_s5">
-                <li>Directory origin</li>
-                <li>File Tail origin</li>
-                <li>HTTP Client origin</li>
-                <li>SDC RPC origin</li>
-                <li>UDP Source origin</li>
+                >Check this list with each release</draft-comment><ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicOrigins"
+                id="ul_h4k_sdk_3w">
+                <li/>
             </ul>The basic installation includes all processors <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicNotProcessor"
             /></p>
         
-        <p>The basic installation includes the following destinations:<ul id="ul_lx5_5ph_cw">
-                <li>Local FS destination</li>
-                <li>SDC RPC destination</li>
-                <li>To Error destination</li>
-                <li>Trash destination</li>
+        <p>The basic installation includes the following destinations:<ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
+                id="ul_dn2_5dk_3w">
+                <li/>
             </ul></p>
         <p> </p>
  </conbody>

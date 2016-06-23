@@ -27,23 +27,10 @@
                             id="ul_stc_qjf_lt">
                             <li/>
                         </ul></dd>
-                    <dd>To use the configuration files: <ol id="ol_rb2_2nr_bt">
-                            <li>Store the files or a symlink to the files in the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> resources directory or elsewhere in a path local to the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />.</li>
-                            <li>In the Hive Streaming destination, if the files are stored in the
-                                resources directory, specify a relative path to the files. If the
-                                files are stored outside of the resources directory, specify an
-                                absolute path to the files. <note>For a Cloudera Manager
-                                    installation, <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> automatically creates a symlink to the files named
-                                        <codeph>hive-conf</codeph>. Enter <codeph>hive-conf</codeph>
-                                    for the location of the files in the Hive Streaming
-                                    destination.</note></li>
-                        
+                    <dd>To use the configuration files:<ol
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OL-HiveConfigSteps"
+                            id="ol_ilw_sbs_dw">
+                            <li/>
                         </ol></dd>
                 </dlentry>
                 <dlentry>
@@ -52,7 +39,9 @@
                         Hive property, specify the exact property name and the value. The
                         destination does not validate the property names or values.<note>Individual
                             properties override properties defined in the configuration files.
-                        </note></dd>
+                            </note><draft-comment author="Loretta">Versions of this used in Hive
+                            Metadata processor and Hive Metastore destination. Make sure changes
+                            from here go there, as needed. 6/2016.</draft-comment></dd>
                 </dlentry>
             </dl></p>
     </conbody>
