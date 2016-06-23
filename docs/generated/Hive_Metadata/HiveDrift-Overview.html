@@ -1,0 +1,118 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Hive Drift Solution detects drift in incoming data and updates the corresponding Hive tables. The solution enables creating and updating Hive tables based on record requirements and writing data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Hive Drift Solution: Ingesting Drifting Data into Hive"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Metadata/HiveDriftSolution_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_phk_bdf_2w"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Hive Drift Solution: Ingesting Drifting Data into Hive</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution">Hive Drift Solution</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_phk_bdf_2w">
+    <h1 class="title topictitle1">Hive Drift Solution: Ingesting Drifting Data into Hive</h1>
+
+    <div class="body conbody">
+        <p class="p">The Hive Drift
+            Solution detects drift in incoming data and updates the corresponding Hive tables. The
+            solution enables creating and updating Hive tables based on record requirements and
+            writing data based on stage attributes in record headers. You can use the full
+            functionality of the solution or individual pieces, as needed. </p>
+
+        <p class="p">You can use the Hive Drift Solution to process Avro data at this time. </p>
+
+        <p class="p">The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
+            the Hadoop FS destination as follows:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Drift detection</dt>
+
+                    <dd class="dd">When processing records, the Hive Metadata processor detects columnar drift
+                        and the need for new tables and partitions. It generates metadata records
+                        that describe the necessary changes. </dd>
+
+                    <dd class="dd">When the Hive Metastore destination receives a metadata record, it compares
+                        the proposed changes with the latest Hive metadata, and creates and updates
+                        Hive tables as needed.</dd>
+
+                    <dd class="dd"><span class="ph">The destination can
+                        create tables and partitions. It can add columns to tables and ignore
+                        existing columns. It does not drop existing columns from tables.</span></dd>
+
+                
+                
+                    <dt class="dt dlterm">Record-based writes</dt>
+
+                    <dd class="dd">The Hive Metadata processor also adds the following information to the
+                        header of each record. The Hadoop FS destination writes data to HDFS based
+                        on these details: <ul class="ul" id="concept_phk_bdf_2w__ul_sn1_bjg_2w">
+                            <li class="li">Target directory - Based on user-defined expressions, the Hive
+                                Metadata processor assembles the path on HDFS where each record
+                                should be stored. It writes the generated path to a
+                                "targetDirectory" stage attribute in each record header.<p class="p">To write
+                                    the record to the generated path, configure Hadoop FS to use the
+                                    targetDirectory stage attribute. </p>
+</li>
+
+                            <li class="li">Avro schema - The processor writes the Avro schema to the
+                                "avroSchema" stage attribute in each record header. It generates new
+                                Avro schemas when necessary based on the record structure.<p class="p">To use
+                                    the generated Avro schema, configure Hadoop FS to use the
+                                    avroSchema stage attribute.</p>
+</li>
+
+                            <li class="li">Roll files - When a change in Avro schema occurs, the processor
+                                generates a roll indicator - the "roll" stage attribute. <p class="p">To roll
+                                    files based on schema changes, configure Hadoop FS use the roll
+                                    stage attribute.</p>
+</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+
+        </div>
+
+        <p class="p">For example, say you use this solution to write sales data to Hive. A partial upgrade of
+            the sales system adds several new fields to a subset of the incoming data. </p>
+
+        <p class="p">With this drift solution, the Hive Metadata processor notes the new fields in a metadata
+            record and passes it to the Hive Metastore destination. The Hive Metastore destination
+            adds the new columns to the Hive target table. Hadoop FS then writes the data to the
+            updated table. When writing data without the new fields to the updated table, Hadoop FS
+            inserts null values for the missing fields. </p>
+
+    </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </div>
+</body>
+</html>

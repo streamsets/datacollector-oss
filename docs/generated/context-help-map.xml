@@ -37,7 +37,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_843279263"/>
+               path="Install_Config/CMInstall-Overview.html#unique_1025150046"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -315,6 +315,8 @@
                path="Origins/JDBCConsumer.html#concept_uj4_mxy_bs"/>
    <appContext helpID="concept_e1j_jwv_ht"
                path="Origins/JDBCConsumer.html#concept_e1j_jwv_ht"/>
+   <appContext helpID="concept_egw_d4c_kw"
+               path="Origins/JDBCConsumer.html#concept_egw_d4c_kw"/>
    <appContext helpID="task_ryz_tkr_bs"
                path="Origins/JDBCConsumer.html#task_ryz_tkr_bs"/>
    <appContext helpID="concept_rhh_4nj_dt" path="Origins/JMS.html#concept_rhh_4nj_dt"/>
@@ -378,6 +380,11 @@
    <appContext helpID="concept_nhr_5tk_k5"
                path="Origins/RabbitMQ.html#concept_nhr_5tk_k5"/>
    <appContext helpID="task_hrz_mq1_h5" path="Origins/RabbitMQ.html#task_hrz_mq1_h5"/>
+   <appContext helpID="concept_plr_t3v_jw" path="Origins/Redis.html"/>
+   <appContext helpID="concept_kww_cmw_jw" path="Origins/Redis-ChannelPattern.html"/>
+   <appContext helpID="concept_w54_kpv_jw" path="Origins/Redis-DataFormats.html"/>
+   <appContext helpID="concept_tr1_spd_sr" path="Origins/LogFormats.html"/>
+   <appContext helpID="task_dtz_npv_jw" path="Origins/Redis-Configuring.html"/>
    <appContext helpID="concept_agb_5c1_ct"
                path="Origins/SDC_RPCorigin.html#concept_agb_5c1_ct"/>
    <appContext helpID="task_lxh_1w2_ct"
@@ -471,6 +478,38 @@
                path="Processors/HBaseLookup.html#concept_nks_rdy_bw"/>
    <appContext helpID="task_z25_b3q_bw"
                path="Processors/HBaseLookup.html#task_z25_b3q_bw"/>
+   <appContext helpID="concept_rz5_nft_zv"
+               path="Processors/HiveMetadata.html#concept_rz5_nft_zv"/>
+   <appContext helpID="concept_avd_qym_fw"
+               path="Processors/HiveMetadata.html#concept_avd_qym_fw"/>
+   <appContext helpID="concept_g3p_sss_dw"
+               path="Processors/HiveMetadata.html#concept_g3p_sss_dw"/>
+   <appContext helpID="concept_zbk_jk3_fw"
+               path="Processors/HiveMetadata.html#concept_zbk_jk3_fw"/>
+   <appContext helpID="concept_pg1_1fl_3w"
+               path="Processors/HiveMetadata.html#concept_pg1_1fl_3w"/>
+   <appContext helpID="concept_utk_3bt_dw"
+               path="Processors/HiveMetadata.html#concept_utk_3bt_dw"/>
+   <appContext helpID="concept_ovn_kdt_dw"
+               path="Processors/HiveMetadata.html#concept_ovn_kdt_dw"/>
+   <appContext helpID="concept_fdq_ngd_3w"
+               path="Processors/HiveMetadata.html#concept_fdq_ngd_3w"/>
+   <appContext helpID="concept_d2h_y1s_dw"
+               path="Processors/HiveMetadata.html#concept_d2h_y1s_dw"/>
+   <appContext helpID="task_hpg_pft_zv"
+               path="Processors/HiveMetadata.html#task_hpg_pft_zv"/>
+   <appContext helpID="concept_ghx_ypr_fw"
+               path="Processors/HTTPClient.html#concept_ghx_ypr_fw"/>
+   <appContext helpID="concept_t4k_2hh_jw"
+               path="Processors/HTTPClient.html#concept_t4k_2hh_jw"/>
+   <appContext helpID="concept_dc2_qwn_jw"
+               path="Processors/HTTPClient.html#concept_dc2_qwn_jw"/>
+   <appContext helpID="concept_d3m_yrn_jw"
+               path="Processors/HTTPClient.html#concept_d3m_yrn_jw"/>
+   <appContext helpID="concept_jrj_hmh_jw"
+               path="Processors/HTTPClient.html#concept_jrj_hmh_jw"/>
+   <appContext helpID="task_z54_1qr_fw"
+               path="Processors/HTTPClient.html#task_z54_1qr_fw"/>
    <appContext helpID="concept_n2p_jgf_lr"
                path="Processors/JavaScript.html#concept_n2p_jgf_lr"/>
    <appContext helpID="concept_zsj_jxt_lv"
@@ -611,6 +650,22 @@
    <appContext helpID="concept_tjp_v5l_zq"
                path="Destinations/HBase.html#concept_tjp_v5l_zq"/>
    <appContext helpID="task_pyq_qx5_vr" path="Destinations/HBase.html#task_pyq_qx5_vr"/>
+   <appContext helpID="concept_gcr_z2t_zv"
+               path="Destinations/HiveMetastore.html#concept_gcr_z2t_zv"/>
+   <appContext helpID="concept_f23_cqy_dw"
+               path="Destinations/HiveMetastore.html#concept_f23_cqy_dw"/>
+   <appContext helpID="concept_wyr_5jv_hw"
+               path="Destinations/HiveMetastore.html#concept_wyr_5jv_hw"/>
+   <appContext helpID="concept_f4y_spy_dw"
+               path="Destinations/HiveMetastore.html#concept_f4y_spy_dw"/>
+   <appContext helpID="concept_ovn_kdt_dw"
+               path="Destinations/HiveMetastore.html#concept_ovn_kdt_dw"/>
+   <appContext helpID="concept_wsq_dgd_3w"
+               path="Destinations/HiveMetastore.html#concept_wsq_dgd_3w"/>
+   <appContext helpID="concept_smb_rdz_dw"
+               path="Destinations/HiveMetastore.html#concept_smb_rdz_dw"/>
+   <appContext helpID="task_a4n_1ft_zv"
+               path="Destinations/HiveMetastore.html#task_a4n_1ft_zv"/>
    <appContext helpID="concept_kvs_3hh_ht"
                path="Destinations/Hive.html#concept_kvs_3hh_ht"/>
    <appContext helpID="concept_xh5_y4d_br"
@@ -737,6 +792,15 @@
                path="Destinations/RabbitMQ.html#concept_jdx_chy_fv"/>
    <appContext helpID="task_rwy_wn5_2v"
                path="Destinations/RabbitMQ.html#task_rwy_wn5_2v"/>
+   <appContext helpID="concept_ktc_gw2_gw"
+               path="Destinations/Redis.html#concept_ktc_gw2_gw"/>
+   <appContext helpID="concept_ing_cvm_jw"
+               path="Destinations/Redis.html#concept_ing_cvm_jw"/>
+   <appContext helpID="concept_ozv_24h_jw"
+               path="Destinations/Redis.html#concept_ozv_24h_jw"/>
+   <appContext helpID="concept_xl3_3ql_3w"
+               path="Destinations/Redis.html#concept_xl3_3ql_3w"/>
+   <appContext helpID="task_mzk_lw2_gw" path="Destinations/Redis.html#task_mzk_lw2_gw"/>
    <appContext helpID="concept_lfk_hx2_ct"
                path="Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct"/>
    <appContext helpID="concept_icz_wzw_dt"
@@ -786,6 +850,24 @@
                path="RPC_Pipelines/EnablingEncryption.html"/>
    <appContext helpID="concept_mhl_1jc_dt"
                path="RPC_Pipelines/ConfiguringSDCRPCPipelines.html"/>
+   <appContext helpID="concept_fjj_zcf_2w"
+               path="Hive_Metadata/HiveDriftSolution_title.html"/>
+   <appContext helpID="concept_phk_bdf_2w"
+               path="Hive_Metadata/HiveDrift-Overview.html#concept_phk_bdf_2w"/>
+   <appContext helpID="concept_zzs_fkg_2w"
+               path="Hive_Metadata/BasicImplementation.html"/>
+   <appContext helpID="concept_y5w_dj3_fw" path="Hive_Metadata/Implementation.html"/>
+   <appContext helpID="concept_a1w_kkn_fw"
+               path="Hive_Metadata/Example.html#concept_a1w_kkn_fw"/>
+   <appContext helpID="concept_fzk_mmn_fw"
+               path="Hive_Metadata/Example.html#concept_fzk_mmn_fw"/>
+   <appContext helpID="concept_vh3_s4n_fw"
+               path="Hive_Metadata/Example.html#concept_vh3_s4n_fw"/>
+   <appContext helpID="concept_jzr_ypn_fw"
+               path="Hive_Metadata/Example.html#concept_jzr_ypn_fw"/>
+   <appContext helpID="concept_jlr_zlk_gw"
+               path="Hive_Metadata/Example.html#concept_jlr_zlk_gw"/>
+   <appContext helpID="concept_ry2_qkm_hw" path="Hive_Metadata/HiveDataTypes.html"/>
    <appContext helpID="concept_jjk_23z_sq" path="Data_Preview/DataPreview_Title.html"/>
    <appContext helpID="concept_jtn_s3m_lq"
                path="Data_Preview/DataPreview.html#concept_jtn_s3m_lq"/>
@@ -980,7 +1062,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_1022036984"/>
+               path="Troubleshooting/Destinations.html#unique_1518633876"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
@@ -1018,6 +1100,8 @@
                path="Expression_Language/Functions.html#concept_ndj_43v_1r"/>
    <appContext helpID="concept_ahp_f4v_1r"
                path="Expression_Language/Functions.html#concept_ahp_f4v_1r"/>
+   <appContext helpID="concept_ylk_v44_jw"
+               path="Expression_Language/Functions.html#concept_ylk_v44_jw"/>
    <appContext helpID="concept_ddw_ld1_1s"
                path="Expression_Language/Functions.html#concept_ddw_ld1_1s"/>
    <appContext helpID="concept_ybc_ly4_yt" path="Expression_Language/Constants.html"/>
