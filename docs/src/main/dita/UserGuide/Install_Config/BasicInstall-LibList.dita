@@ -342,8 +342,9 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-redis-lib</entry>
-                            <entry>For Redis versions 2.8.x and 3.0.x.<p>Includes the Redis Lookup
-                                    processor and the Redis destination.</p></entry>
+                            <entry>For Redis versions 2.8.x and 3.0.x.<p>Includes the Redis Consumer
+                                    origin, Redis Lookup processor, and the Redis
+                                destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>

@@ -13,9 +13,14 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_bcw_qzb_kv">
- <title>Data Format Support</title>
- <shortdesc>This appendix lists the data formats supported by <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        origins and destinations.</shortdesc>
+<concept id="concept_plr_t3v_jw">
+ <title>Redis Consumer</title>
+ <shortdesc>The Redis Consumer origin reads messages from Redis. </shortdesc>
+ <conbody>
+        <p><indexterm>origins<indexterm>Redis Consumer</indexterm></indexterm><indexterm>Redis
+                Consumer origin<indexterm>overview</indexterm></indexterm>When you configure Redis
+            Consumer, you define Redis URI and the channels to read from. You can specify specific
+            channels or provide patterns to subscribe to all matching channels. You can also
+            configure the connection timeout. </p>
+ </conbody>
 </concept>

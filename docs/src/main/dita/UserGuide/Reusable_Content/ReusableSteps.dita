@@ -1164,7 +1164,10 @@
                                             <li>JSON</li>
                                             <li>Log</li>
                                             <li>Protobuf</li>
-                                            <li>SDC Record</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
                                             <li>Text</li>
                                             <li>XML</li>
                                         </ul></entry>

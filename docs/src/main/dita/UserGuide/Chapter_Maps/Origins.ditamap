@@ -132,6 +132,13 @@
    <topicref href="../Origins/RabbitMQ-DataFormat.dita"/>
    <topicref href="../Origins/RabbitMQ-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/Redis.dita">
+   <topicref href="../Origins/Redis-ChannelPattern.dita"/>
+   <topicref href="../Origins/Redis-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/Redis-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>

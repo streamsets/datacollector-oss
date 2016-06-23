@@ -245,6 +245,27 @@
                             <entry><image href="../Graphics/CheckIcon.png" scale="30"
                                     id="image_jlp_pqc_kv"/></entry>
                         </row>
+                                                <row>
+                                                  <entry>Redis Consumer</entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_nb3_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_fdj_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_vjk_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_snl_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_gmm_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_jrp_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_sqr_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_h5s_k2w_jw"/></entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_h25_k2w_jw"/></entry>
+                                                </row>
                         <row>
                             <entry>SDC RPC</entry>
                             <entry/>
