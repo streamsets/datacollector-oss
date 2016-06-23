@@ -75,8 +75,6 @@ public final class HiveQueryExecutor {
   private static final String DETAILED_PARTITION_INFORMATION = "# Detailed Partition Information";
   private static final String SERDE_LIBRARY_IN_RESULT_SET = "SerDe Library:";
   private static final String STORAGE_INFORMATION = "# Storage Information";
-
-
   private final Connection con;
 
   public HiveQueryExecutor(Connection con) {
@@ -513,6 +511,8 @@ public final class HiveQueryExecutor {
     }
   }
 
+
+
   public String executeDescFormattedPartitionAndGetLocation(
       String qualifiedTableName,
       LinkedHashMap<String, String> partitionValues
@@ -535,7 +535,7 @@ public final class HiveQueryExecutor {
             && col_name != null
             && col_name.startsWith(LOCATION_INFORMATION_IN_RESULT_SET)) {
           //Replace hdfs://host:port
-          location = rs.getString(RESULT_SET_DATA_TYPE).replaceFirst("hdfs://.*:[0-9]+", "");
+          location = HiveMetastoreUtil.stripHdfsHostAndPort(rs.getString(RESULT_SET_DATA_TYPE));
           break;
         }
       }
