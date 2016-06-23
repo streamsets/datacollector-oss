@@ -31,7 +31,7 @@ public class FieldRenamerProcessorErrorHandler {
       defaultValue = "TO_ERROR",
       label = "Handle From Field Does Not Exist",
       description="Action for data that does not contain the specified From Fields",
-      displayPosition = 30,
+      displayPosition = 10,
       group = "RENAME"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -40,10 +40,10 @@ public class FieldRenamerProcessorErrorHandler {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ERROR",
-      label = "To Field Already Exist",
+      defaultValue = "TO_ERROR",
+      label = "Handle To Field Already Exist",
       description="Action for data that contains the specified To Fields",
-      displayPosition = 40,
+      displayPosition = 20,
       group = "RENAME"
   )
   @ValueChooserModel(ExistingFieldHandlingChooserValues.class)
@@ -52,10 +52,10 @@ public class FieldRenamerProcessorErrorHandler {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "ERROR",
-      label = "Action for Multiple from Field Expressions matching the same from Field",
+      defaultValue = "TO_ERROR",
+      label = "Handle Multiple From Fields Match",
       description="Action for multiple From Field Expressions matching the same from Field",
-      displayPosition = 40,
+      displayPosition = 30,
       group = "RENAME"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
