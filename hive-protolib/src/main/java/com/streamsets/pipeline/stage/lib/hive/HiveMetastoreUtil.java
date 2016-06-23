@@ -121,6 +121,7 @@ public final class HiveMetastoreUtil {
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern PATTERN_MATCHER = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
   private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+  private static final String HDFS_LOCATION_REGEX = "hdfs://[^/]+(:[0-9]+)?/";
 
   public enum MetadataRecordType {
     /**
@@ -810,6 +811,17 @@ public final class HiveMetastoreUtil {
     }
   }
 
+  public static String stripHdfsHostAndPort(String location) {
+    Utils.checkNotNull(location, "HDFS Partition location");
+    Utils.checkArgument(
+        !location.isEmpty(), "HDFS location cannot be empty"
+    );
+    Utils.checkArgument(
+        location.matches(HDFS_LOCATION_REGEX + ".*"),
+        "HdFS Partition location should match pattern" + HDFS_LOCATION_REGEX + ".*"
+    );
+    return location.replaceFirst(HDFS_LOCATION_REGEX, HiveMetastoreUtil.SEP);
+  }
 
   /**
    * Gets cached {@link com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport.HMSCacheInfo}
