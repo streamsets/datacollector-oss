@@ -45,9 +45,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="31.25%" id="d60911e40">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d65314e40">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d60911e43">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d65314e43">Functions</th>
 
       </tr>
 
@@ -55,12 +55,14 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute('&lt;attribute name&gt;') </li>
+
+          <li class="li">record:attributeOrDefault('&lt;attribute name&gt;' , &lt;default value&gt;)</li>
 
           <li class="li">record:creator()</li>
 
@@ -85,10 +87,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists('&lt;header&gt;') </li>
 
@@ -111,9 +113,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
          <li class="li">drift:names('&lt;field path&gt;', &lt;ignoreWhenMissing: true | false&gt;)</li>
 
@@ -130,10 +132,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -154,9 +156,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:concat("&lt;string1&gt;", "&lt;string2&gt;")</li>
@@ -196,10 +198,29 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d60911e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
+
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
+         <li class="li">base64:decodeBytes("&lt;string&gt;")</li>
+
+         <li class="li">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</li>
+
+         <li class="li">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</li>
+
+         <li class="li">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;, "&lt;charset&gt;")</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="31.25%" headers="d65314e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d60911e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65314e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">alert:info()</li>
 
@@ -209,11 +230,15 @@
 
          <li class="li">every(&lt;interval&gt;, &lt;mm() | ss()&gt;)</li>
 
+         <li class="li">field:field()</li>
+
          <li class="li">jvm:maxMemoryMB()</li>
 
          <li class="li">runtime:conf('&lt;runtime property&gt;')</li>
 
          <li class="li">runtime:loadResource("&lt;file name&gt;", &lt;restricted: true | false&gt;)</li>
+
+         <li class="li">sdc:hostname()</li>
 
          <li class="li">sdc:id()</li>
 
@@ -257,6 +282,19 @@
     <dd class="dd">For example, the following expression returns the value of a tag attribute added by a File
      Tail origin:<pre class="pre codeblock">${record:attribute('tag')}</pre>
 </dd>
+
+   
+   
+    <dt class="dt dlterm">record:attributeOrDefault('&lt;attribute name&gt;' , &lt;default value&gt;)</dt>
+
+    <dd class="dd">Returns the value of the attribute in the appropriate data type. If the attribute does not
+     exist or if the field is null, returns the default value.</dd>
+
+    <dd class="dd">Use to provide a default value when an attribute does not exist or when the attribute is
+     null. </dd>
+
+    <dd class="dd">Return type: Variable, based on whether the function returns the attribute value or default
+     value.</dd>
 
    
    
@@ -904,6 +942,107 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_ylk_v44_jw">
+ <h2 class="title topictitle2">Base64 Functions</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use Base64 functions to encode or decode data using Base64.</p>
+
+  <p class="p">The expression language
+            provides the following Base64 functions:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">base64:decodeBytes("&lt;string&gt;")</dt>
+
+                <dd class="dd">Returns a decoded byte array from a Base64 encoded string.</dd>
+
+                <dd class="dd">Return type: Byte Array.</dd>
+
+                <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ylk_v44_jw__ul_jvq_sx4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:decodeBytes(record:value("/ID"))} decodes the Base64
+                    encoded string in the ID field as a byte array value.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</dt>
+
+                <dd class="dd">Returns a decoded string from a Base64 encoded string using the specified
+                    character set.</dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_ogd_ty4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                        <li class="li">charset - The character set to use to decode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:decodeString(record:value("/ID"), "UTF-8")} decodes the
+                    Base64 encoded string in the ID field using the UTF-8 character set as a string
+                    value.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</dt>
+
+                <dd class="dd">Returns a Base64 encoded string value of the specified byte array.</dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_hsr_kz4_jw">
+                        <li class="li">byte array - The byte array to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:encodeBytes(record:value("/ID"), true)} uses Base64 to
+                    encode the byte array in the ID field such that the encoded data is URL
+                    safe.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;,
+                    "&lt;charset&gt;")</dt>
+
+                <dd class="dd">
+                    <p class="p">Returns a Base64 encoded string value of the specified string. </p>
+
+                </dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_okr_dbp_jw">
+                        <li class="li">string - The string to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                        <li class="li">charset - The character set to use to encode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:encodeString(record:value("/ID"), false, "UTF-8")} uses
+                    Base64 to encode the string in the ID field using the UTF-8 character set such
+                    that the encoded data is not URL safe.</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ddw_ld1_1s">
  <h2 class="title topictitle2">Miscellaneous Functions</h2>
 
@@ -962,6 +1101,15 @@
 
       
       
+        <dt class="dt dlterm">field:field()</dt>
+
+        <dd class="dd">Returns the field name. Available only in the Decimal field expression properties of the
+          Hive Metadata processor. </dd>
+
+        <dd class="dd">Return type: String.</dd>
+
+      
+      
         <dt class="dt dlterm">jvm:maxMemoryMB()</dt>
 
         <dd class="dd">Returns the Java heap size allocated to the <span class="ph">Data
@@ -1009,6 +1157,21 @@
 </dd>
 
         <dd class="dd">For more information about runtime resources, see <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Runtime Resources</a>.</dd>
+
+      
+      
+        <dt class="dt dlterm">sdc:hostname()</dt>
+
+        <dd class="dd">Returns the host name of the <span class="ph">Data
+                  Collector</span>
+          machine. </dd>
+
+        <dd class="dd">For example, you might use the function in the directory template for the Hadoop FS
+          destination to write to a directory that includes the <span class="ph">Data
+                  Collector</span> host
+          name.</dd>
+
+        <dd class="dd">Return type: String.</dd>
 
       
       

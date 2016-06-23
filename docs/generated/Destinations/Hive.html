@@ -78,24 +78,22 @@
             </ul>
 </dd>
 
-                    <dd class="dd">To use the configuration files: <ol class="ol" id="concept_xh5_y4d_br__ol_rb2_2nr_bt">
-                            <li class="li">Store the files or a symlink to the files in the <span class="ph">Data
+                    <dd class="dd">To use the configuration files:<ol class="ol" id="concept_xh5_y4d_br__ol_ilw_sbs_dw">
+                        <li class="li">Store the files or a symlink to the files in the <span class="ph">Data
                   Collector</span> resources directory or elsewhere in a path local to the <span class="ph">Data
                   Collector</span>.</li>
 
-                            <li class="li">In the Hive Streaming destination, if the files are stored in the
-                                resources directory, specify a relative path to the files. If the
-                                files are stored outside of the resources directory, specify an
-                                absolute path to the files. <div class="note note"><span class="notetitle">Note:</span> For a Cloudera Manager
-                                    installation, <span class="ph">Data
+                        <li class="li">If the files are stored in the resources directory, specify a relative
+                              path to the files in the stage. If the files are stored outside of the
+                              resources directory, specify an absolute path to the files. <div class="note note"><span class="notetitle">Note:</span> For
+                                    a Cloudera Manager installation, <span class="ph">Data
                   Collector</span> automatically creates a symlink to the files named
-                                        <samp class="ph codeph">hive-conf</samp>. Enter <samp class="ph codeph">hive-conf</samp>
-                                    for the location of the files in the Hive Streaming
-                                    destination.</div>
+                                          <samp class="ph codeph">hive-conf</samp>. Enter
+                                          <samp class="ph codeph">hive-conf</samp> for the location of the files
+                                    in the stage.</div>
 </li>
 
-                        
-                        </ol>
+                  </ol>
 </dd>
 
                 
@@ -106,7 +104,7 @@
                         Hive property, specify the exact property name and the value. The
                         destination does not validate the property names or values.<div class="note note"><span class="notetitle">Note:</span> Individual
                             properties override properties defined in the configuration files.
-                        </div>
+                            </div>
 </dd>
 
                 
@@ -128,14 +126,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d1735e2577" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cx3_lhh_ht__d1735e2834" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d34858e175">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d35785e177">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d34858e178">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d35785e180">Description</th>
 
                                 </tr>
 
@@ -143,31 +141,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_cx3_lhh_ht__d1735e2632" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_cx3_lhh_ht__d1735e2889" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -175,10 +173,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_cx3_lhh_ht__d1735e2646" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_cx3_lhh_ht__d1735e2903" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -186,9 +184,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e175 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e177 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e178 ">Error record handling for the stage: <ul class="ul" id="task_cx3_lhh_ht__d1735e2663">
+                                    <td class="entry" valign="top" width="70%" headers="d35785e180 ">Error record handling for the stage: <ul class="ul" id="task_cx3_lhh_ht__d1735e2920">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -217,9 +215,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d34858e297">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d35785e299">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d34858e300">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d35785e302">Description</th>
 
                                 </tr>
 
@@ -227,9 +225,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e297 ">Hive Metastore Thrift URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e299 ">Hive Metastore Thrift URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e300 ">Thrift URI for the Hive metastore. Use the following
+                                    <td class="entry" valign="top" width="70%" headers="d35785e302 ">Thrift URI for the Hive metastore. Use the following
                                         format:
                                             <pre class="pre codeblock">thrift://&lt;host&gt;:&lt;port&gt;</pre>
 <p class="p">The
@@ -239,24 +237,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e297 ">Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e299 ">Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e300 ">Hive schema.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e297 ">Table </td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d34858e300 ">Bucketed Hive table stored in as an ORC file.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d35785e302 ">Hive schema.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e297 ">Hive Configuration Directory <a class="xref" href="Hive.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="30%" headers="d35785e299 ">Table </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d35785e302 ">Bucketed Hive table stored in as an ORC file.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d35785e299 ">Hive Configuration Directory <a class="xref" href="Hive.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_cx3_lhh_ht__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e300 ">
+                                    <td class="entry" valign="top" width="70%" headers="d35785e302 ">
                                         <p class="p">Absolute path to the directory containing the Hive and
                                             Hadoop configuration files. For a Cloudera Manager
                                             installation, enter <samp class="ph codeph">hive-conf</samp>. </p>
@@ -284,9 +282,9 @@
                                 </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d34858e297 ">Field to Column Mapping</td>
+      <td class="entry" valign="top" width="30%" headers="d35785e299 ">Field to Column Mapping</td>
 
-      <td class="entry" valign="top" width="70%" headers="d34858e300 ">
+      <td class="entry" valign="top" width="70%" headers="d35785e302 ">
        <p class="p">Use to override the default field to column mappings. </p>
 
        <p class="p">By default, fields are written to columns of the same name. </p>
@@ -296,9 +294,9 @@
      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e297 ">Create Partitions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e299 ">Create Partitions</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e300 ">Automatically creates partitions when needed. Used for
+                                    <td class="entry" valign="top" width="70%" headers="d35785e302 ">Automatically creates partitions when needed. Used for
                                         partitioned tables only.</td>
 
                                 </tr>
@@ -320,9 +318,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d34858e429">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d35785e431">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d34858e432">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d35785e434">Description</th>
 
                                 </tr>
 
@@ -330,9 +328,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e429 ">Transaction Batch Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e431 ">Transaction Batch Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e432 ">The number of transactions to request in a batch for each
+                                    <td class="entry" valign="top" width="70%" headers="d35785e434 ">The number of transactions to request in a batch for each
                                         partition in the table. For more information, see the Hive
                                         documentation. <p class="p">Default is 1000 transactions.</p>
 </td>
@@ -340,9 +338,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e429 ">Buffer Limit (KB)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e431 ">Buffer Limit (KB)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e432 ">Maximum size of the record to be written to the
+                                    <td class="entry" valign="top" width="70%" headers="d35785e434 ">Maximum size of the record to be written to the
                                         destination. Increase the size to accommodate larger
                                         records. <p class="p">Records that exceed the limit are handled based
                                             on the error handling configured for the stage.
@@ -352,9 +350,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d34858e429 ">Hive Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d35785e431 ">Hive Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d34858e432 ">
+                                    <td class="entry" valign="top" width="70%" headers="d35785e434 ">
                                         <p class="p">Additional Hive properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the
                                             property name and value. </p>
