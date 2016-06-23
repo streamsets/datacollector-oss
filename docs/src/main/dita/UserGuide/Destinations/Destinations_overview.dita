@@ -26,6 +26,7 @@
         <li>Flume - Writes data to a Flume source.</li>
         <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
         <li>HBase - Writes data to an HBase cluster.</li>
+        <li>Hive Metastore - Creates and updates Hive tables as needed.</li>
         <li>Hive Streaming - Writes data to Hive.</li>
         <li>InfluxDB - Writes data to InfluxDB.</li>
         <li>JDBC Producer - Writes data to JDBC.</li>

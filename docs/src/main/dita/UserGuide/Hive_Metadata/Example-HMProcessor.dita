@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fzk_mmn_fw">
+ <title>The Hive Metadata Processor</title>
+ <conbody>
+  <p>You set up the Kafka Consumer and connect it to the Hive Metadata processor. When you configure
+            the processor, you have a few things to consider in addition to your basic connection
+            details: <ol id="ol_fzm_bmv_fw">
+                <li>Which database should the records be written to? <p>Hadoop FS will do the
+                        writing, but the processor needs to know where the records should
+                        go.</p><p>Let's write to the Hive default database. To do that, you can
+                        leave the database property empty.</p></li>
+                <li>What tables should the records be written to?<p>The pipeline supplying the data
+                        to Kafka uses the "tag" header attribute to indicate the originating web
+                        service. To use the tag attribute to write to tables, you use the following
+                        expression for the table name:
+                        <codeblock>${record:attribute('tag')}</codeblock></p></li>
+                <li>What partitions, if any, do you want to use? <p>Let's partition the data by date
+                        using data in the date field. So you'd use the following the partition value
+                        expression:<codeblock>${record:value('/date')}</codeblock></p></li>
+            </ol></p>
+        <p> At this point, your pipeline would look like this: </p>
+        <p><image href="../Graphics/HiveMeta-Ex-Processor.png" id="image_g5b_34n_fw" scale="75"
+            /></p>
+        <p>With this configuration, Hadoop FS will write every record to the Hive table listed the
+            tag attribute and to the date partition in the dt field of the record.</p>
+ </conbody>
+</concept>

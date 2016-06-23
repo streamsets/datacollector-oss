@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hnm_n4l_xs">
  <title>Enabling Kerberos Authentication</title>
- <shortdesc>You can use Kerberos authentication to connect to origin and destination systems, as
-    well as YARN clusters. </shortdesc>
+ <shortdesc>You can use Kerberos authentication to connect to external systems as well as YARN
+    clusters. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
           authentication</indexterm></indexterm><indexterm>Kerberos
@@ -32,6 +32,8 @@
         <li>Hadoop FS destination</li>
         <li>HBase destination</li>
         <li>HBase Lookup processor</li>
+        <li>Hive Metadata processor</li>
+        <li>Hive Metastore destination</li>
         <li>Kafka Producer, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>
@@ -49,7 +51,7 @@
               id="ul_w1d_hpf_55">
               <li/>
             </ul></p></li>
-        <li>Configure the origin or destination stage to use Kerberos. </li>
+        <li>Configure the stage to use Kerberos. </li>
       </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
         requires it and if <ph
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has

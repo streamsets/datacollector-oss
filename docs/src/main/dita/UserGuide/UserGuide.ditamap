@@ -52,6 +52,7 @@
     <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/ClusterMode.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/RPCPipelines.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/HiveMetadata.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/DataPreview.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Alerts.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/AdvancedPipelineConfig.ditamap" format="ditamap"/>

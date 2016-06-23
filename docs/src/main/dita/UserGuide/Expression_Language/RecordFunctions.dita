@@ -31,6 +31,15 @@
      Tail origin:<codeblock>${record:attribute('tag')}</codeblock></dd>
    </dlentry>
    <dlentry>
+    <dt>record:attributeOrDefault('&lt;attribute name>' , &lt;default value>)</dt>
+    <dd>Returns the value of the attribute in the appropriate data type. If the attribute does not
+     exist or if the field is null, returns the default value.</dd>
+    <dd>Use to provide a default value when an attribute does not exist or when the attribute is
+     null. </dd>
+    <dd>Return type: Variable, based on whether the function returns the attribute value or default
+     value.</dd>
+   </dlentry>
+   <dlentry>
     <dt>record:creator()</dt>
     <dd>Returns the instance name of the stage that created the record, typically an origin stage.
      Data is stored in the stageCreator field of a record. </dd>
