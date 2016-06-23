@@ -69,6 +69,8 @@
 
         <li class="li">RabbitMQ Consumer - Reads messages from RabbitMQ.</li>
 
+        <li class="li">Redis Consumer - Reads messages from Redis.</li>
+
         <li class="li">SDC RPC - Reads data from an SDC RPC destination in an SDC RPC pipeline.</li>
 
         <li class="li">SFTP/FTP Client - Reads files from an SFTP or FTP server.</li>
@@ -186,9 +188,9 @@
           
           <thead class="thead" align="left">
             <tr class="row">
-              <th class="entry" valign="top" width="30%" id="d106113e279">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d113097e282">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d106113e282">Description</th>
+              <th class="entry" valign="top" width="70%" id="d113097e285">Description</th>
 
             </tr>
 
@@ -196,16 +198,16 @@
 
           <tbody class="tbody">
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d106113e279 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d113097e282 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d106113e282 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d113097e285 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d106113e279 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d113097e282 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d106113e282 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d113097e285 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -226,9 +228,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d106113e279 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d113097e282 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d106113e282 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d113097e285 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -249,9 +251,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d106113e279 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d113097e282 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d106113e282 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d113097e285 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -266,33 +268,84 @@
 
 </div>
 <div class="topic concept nested1" id="concept_ljn_2h3_yv">
- <h2 class="title topictitle2">File Name, File Path, and Offset Header Attributes</h2>
+ <h2 class="title topictitle2">Record Header Attributes</h2>
 
     
- <div class="body conbody"><p class="shortdesc">The Directory and File Tail origins include record header attributes that provide the
-        file name, file path, as well as the offset for each record. To track the provenance of each
-        record, you can use a function to include this information in the records.</p>
+ <div class="body conbody"><p class="shortdesc">The Directory, File Tail, and Kafka Consumer origins include record header attributes
+        for each record. To track the provenance of each record, you can use a function to include
+        this information in the records.</p>
 
-  <div class="p">The Directory and File Tail origins
-            include the following additional record header attributes:<ul class="ul" id="concept_ljn_2h3_yv__ul_ebj_1l3_yv">
-                <li class="li">file_name - Provides the file name.</li>
+  <p class="p">The following table lists the additional record
+            header attributes that each origin includes:</p>
 
-                <li class="li">file - Provides the file path and name. </li>
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ljn_2h3_yv__table_oww_wpv_jw" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d113097e439">Origins</th>
 
-                <li class="li">offset - Provides the offset in bytes.</li>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d113097e442">Record Header Attributes</th>
 
-            </ul>
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d113097e439 ">Directory and File Tail</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d113097e442 ">
+                                <ul class="ul" id="concept_ljn_2h3_yv__ul_ebj_1l3_yv">
+                                    <li class="li">file_name - Provides the file name.</li>
+
+                                    <li class="li">file - Provides the file path and name. </li>
+
+                                    <li class="li">offset - Provides the offset in bytes.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d113097e439 ">Kafka Consumer</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d113097e442 ">
+                                <ul class="ul" id="concept_ljn_2h3_yv__ul_i4q_2qv_jw">
+                                    <li class="li">offset - Provides the offset in bytes.</li>
+
+                                    <li class="li">partition - Provides the partition name.</li>
+
+                                    <li class="li">topic - Provides the topic name.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
 </div>
+
+        </div>
 
         <div class="p">To include these attributes in a record, you can use the following expressions in the
             Expression
             Evaluator:<pre class="pre codeblock">${record:attribute('file_name')}
 ${record:attribute('file')}
-${record:attribute('offset')}</pre>
+${record:attribute('offset')}
+${record:attribute('partition')}
+${record:attribute('topic')}</pre>
 </div>
 
-        <p class="p">The following image shows an Expression Editor that adds the file and offset record
-            header attribute information to the record: </p>
+        <p class="p">The following image shows an Expression Evaluator that adds the file and offset record
+            header attribute information to the record read by a Directory origin: </p>
 
         <p class="p"><img class="image" id="concept_ljn_2h3_yv__image_prx_fn3_yv" src="../Graphics/Origins-EEval-headerattributes.png" height="289" width="588"></img></p>
 
@@ -336,9 +389,9 @@ ${record:attribute('offset')}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d106113e514">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d113097e588">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d106113e517">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d113097e591">Description</th>
 
                                 </tr>
 
@@ -346,38 +399,38 @@ ${record:attribute('offset')}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106113e514 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d113097e588 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106113e517 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106113e514 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106113e517 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d113097e591 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106113e514 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d113097e588 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106113e517 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d113097e591 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d113097e588 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d113097e591 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106113e514 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d113097e588 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106113e517 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d113097e591 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106113e514 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d113097e588 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106113e517 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d113097e591 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

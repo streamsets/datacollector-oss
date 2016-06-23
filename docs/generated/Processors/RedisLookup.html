@@ -46,7 +46,7 @@
             a bulk lookup of all keys in a batch, or performs an individual lookup of each key in a
             record. You use an expression to define the key to look up in Redis, and specify the
             output field to write the lookup values to. You also specify the data type of the Redis
-            key.</p>
+            value.</p>
 
         <p class="p">You can configure the processor to locally cache the key-value pairs to improve
             performance.</p>
@@ -61,8 +61,8 @@
  <h2 class="title topictitle2">Data Types</h2>
 
  
- <div class="body conbody"><p class="shortdesc">When you define the key to look up in Redis, you specify the data type of the Redis key.
-        The Redis Lookup processor converts the Redis data type to a <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">When you define the key to look up in Redis, you specify the data type of the Redis
+        value. The Redis Lookup processor converts the Redis data type to a <span class="ph">Data
                   Collector</span> data
         type.</p>
 
@@ -75,9 +75,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d141495e89">Redis Data Type</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d153592e89">Redis Data Type</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d141495e92"><span class="ph">Data
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d153592e92"><span class="ph">Data
                   Collector</span> Data Type</th>
 
                         </tr>
@@ -86,16 +86,16 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e89 ">String</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e89 ">String</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e92 ">String</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e92 ">String</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e89 ">List</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e89 ">List</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e92 ">List. <p class="p">Converts the data to an indexed list of values, for
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e92 ">List. <p class="p">Converts the data to an indexed list of values, for
                                     example:</p>
 <pre class="pre codeblock">0: &lt;value&gt;
 1: &lt;value&gt;
@@ -105,9 +105,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e89 ">Hash</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e89 ">Hash</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e92 ">Map. <p class="p">Converts the data to a map of the Redis field names and
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e92 ">Map. <p class="p">Converts the data to a map of the Redis field names and
                                     values, for
                                 example:</p>
 <pre class="pre codeblock">/&lt;first field name&gt;: &lt;value&gt;
@@ -118,9 +118,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e89 ">Set</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e89 ">Set</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e92 ">List. <p class="p">Converts the data to an indexed list of values, for
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e92 ">List. <p class="p">Converts the data to an indexed list of values, for
                                     example:</p>
 <pre class="pre codeblock">0: &lt;value&gt;
 1: &lt;value&gt;
@@ -198,14 +198,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gpv_npr_pv__d15969e2243" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gpv_npr_pv__d16700e2500" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d141495e247">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d153592e247">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d141495e250">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d153592e250">Description</th>
 
                                 </tr>
 
@@ -213,24 +213,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d141495e247 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d153592e247 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d141495e250 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d141495e247 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d141495e250 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d153592e250 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d141495e247 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_gpv_npr_pv__d15969e2289" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d153592e247 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d141495e250 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d153592e250 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d153592e247 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_gpv_npr_pv__d16700e2546" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d153592e250 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -238,10 +238,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d141495e247 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_gpv_npr_pv__d15969e2303" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d153592e247 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_gpv_npr_pv__d16700e2560" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d141495e250 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d153592e250 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -249,9 +249,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d141495e247 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d153592e247 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d141495e250 ">Error record handling for the stage: <ul class="ul" id="task_gpv_npr_pv__d15969e2319">
+                                    <td class="entry" valign="top" width="70%" headers="d153592e250 ">Error record handling for the stage: <ul class="ul" id="task_gpv_npr_pv__d16700e2576">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -282,9 +282,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d141495e359">Lookup Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d153592e359">Lookup Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d141495e362">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d153592e362">Description</th>
 
                                 </tr>
 
@@ -292,9 +292,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Mode</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Mode</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Mode used to perform the lookups:<ul class="ul" id="task_gpv_npr_pv__d16187e846">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Mode used to perform the lookups:<ul class="ul" id="task_gpv_npr_pv__d16918e1015">
        <li class="li">Per Batch - Performs a bulk lookup of all keys in a
         batch. The processor performs a single lookup for
         each batch.</li>
@@ -311,9 +311,9 @@
      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Key Expression</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Key Expression</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Key to look up in Redis. Enter a key name or enter an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Key to look up in Redis. Enter a key name or enter an
                                         expression that defines the key.<div class="p">For example, enter the
                                             following expression to use the data in the city field
                                             as the lookup
@@ -324,9 +324,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Output Field</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Name of the field to pass the lookup value. You can
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Name of the field to pass the lookup value. You can
                                         specify an existing field or a new field. If the field does
                                         not exist, Redis Lookup creates the field. <p class="p">Precede each
                                             field name with a slash as follows:
@@ -336,32 +336,32 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Data Type
-                                        <a class="xref" href="RedisLookup.html#concept_qs3_zz4_zv" title="When you define the key to look up in Redis, you specify the data type of the Redis key. The Redis Lookup processor converts the Redis data type to a Data Collector data type.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Data Type
+                                        <a class="xref" href="RedisLookup.html#concept_qs3_zz4_zv" title="When you define the key to look up in Redis, you specify the data type of the Redis value. The Redis Lookup processor converts the Redis data type to a Data Collector data type.">
                                             <img class="image" id="task_gpv_npr_pv__image_h6p_p2v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Data type of the key in Redis.<p class="p">Default is
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Data type of the value in Redis.<p class="p">Default is
                                         String.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Enable Local Caching
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Enable Local Caching
                                         <a class="xref" href="RedisLookup.html#concept_zcg_21p_zv">
                                             <img class="image" id="task_gpv_npr_pv__image_h2p_p7v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Specifies whether to locally cache the returned key-value
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Specifies whether to locally cache the returned key-value
        pairs.</td>
 
                                 </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Maximum Entries to Cache</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Maximum Entries to Cache</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Maximum number of key-value pairs to cache. When the
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Maximum number of key-value pairs to cache. When the
        maximum number is reached, the processor evicts the oldest
        key-value pairs from the cache. <p class="p">Default is -1, which
         means unlimited.</p>
@@ -370,10 +370,10 @@
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Eviction Policy Type</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Eviction Policy Type</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Policy used to evict key-value pairs from the local cache
-       when the expiration time has passed:<ul class="ul" id="task_gpv_npr_pv__d16187e885">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Policy used to evict key-value pairs from the local cache
+       when the expiration time has passed:<ul class="ul" id="task_gpv_npr_pv__d16918e1054">
         <li class="li">Expire After Last Access - Measures the expiration
          time since the key-value pair was last accessed by a
          read or a write.</li>
@@ -388,9 +388,9 @@
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Expiration Time</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Expiration Time</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Amount of time that a key-value pair can remain in the
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Amount of time that a key-value pair can remain in the
        local cache without being accessed or written to. <p class="p">Default
         is 1 second.</p>
 </td>
@@ -398,9 +398,9 @@
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e359 ">Time Unit</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e359 ">Time Unit</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e362 ">Unit of time for the expiration time. <p class="p">Default is
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e362 ">Unit of time for the expiration time. <p class="p">Default is
        seconds.</p>
 </td>
 
@@ -423,9 +423,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d141495e526">Redis Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d153592e526">Redis Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d141495e529">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d153592e529">Description</th>
 
                                 </tr>
 
@@ -433,26 +433,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e526 ">URI</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e526 ">URI</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e529 ">URI of the Redis server. Use the following
-                                            format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e529 ">URI of the Redis server. Use the following
+        format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
 <p class="p">You
-                                            can omit the port number or database if the server uses
-                                            the default port number or default database.</p>
-<div class="p">You
-                                            can optionally include the user name to log in to the
-                                            Redis server. For
-                                            example:<pre class="pre codeblock">redis://&lt;user name&gt;:&lt;password&gt;@&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+        can omit the port number or database if the server uses the default port number or default
+        database.</p>
+<div class="p">You can optionally include your password to log in to the Redis server. For
+        example:<pre class="pre codeblock">redis://:&lt;password&gt;@&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
 </div>
 </td>
 
-                                </tr>
+     </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d141495e526 ">Connection Timeout (sec)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d153592e526 ">Connection Timeout (sec)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d141495e529 ">Maximum time in seconds to wait for a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d153592e529 ">Maximum time in seconds to wait for a
                                             connection.<p class="p">Default is 60 seconds.</p>
 </td>
 

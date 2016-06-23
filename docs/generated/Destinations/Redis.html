@@ -1,0 +1,830 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Redis destination writes data to Redis. When you configure the destination, you specify the mode that the destination uses to write data. You also specify properties to connect to Redis, including ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Redis"></meta><meta name="abstract" content="The Redis destination writes data to Redis."></meta><meta name="description" content="The Redis destination writes data to Redis."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ktc_gw2_gw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Redis</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ktc_gw2_gw">
+ <h1 class="title topictitle1">Redis</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Redis destination writes data to Redis. </p>
+
+  <p class="p">When you configure the
+            destination, you specify the mode that the destination uses to write data. You also
+            specify properties to connect to Redis, including the URI of the Redis server. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ing_cvm_jw">
+ <h2 class="title topictitle2">Mode</h2>
+
+ <div class="body conbody">
+  <p class="p">The Redis destination writes data to Redis
+            using one of the following modes:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Batch mode</dt>
+
+                <dd class="dd">In batch mode, the destination writes data to Redis key-value pairs. You
+                    configure each key-value pair by selecting the incoming fields to use as the key
+                    and the value. You also select the data type of the Redis value. You can
+                    configure the destination to write to multiple key-value pairs.</dd>
+
+                <dd class="dd">For example, you are processing records that contain a String city field and a
+                    Map latitude_longitude field. Let’s assume that one record contains the
+                    following
+                    data:<pre class="pre codeblock">city: {String} "San Francisco"
+latitude_longitude: {Map}
+    latitude: {String} "37.7749"
+    longitude: {String} "-122.4194"</pre>
+</dd>
+
+                <dd class="dd"> You select the city field as the Redis key, and the latitude_longitude field as
+                    the Redis value. Data Collector can convert the Map data type to the Redis Hash
+                    data type, so you select Hash for the data type of the Redis value, as follows:
+                            <p class="p"><img class="image" id="concept_ing_cvm_jw__image_fcr_rxm_jw" src="../Graphics/RedisDestinationBatchMode.png" height="126" width="653"></img></p>
+</dd>
+
+                <dd class="dd">When you run the pipeline, the Redis destination writes the key "San Francisco"
+                    to Redis with a Hash value containing the latitude and longitude.</dd>
+
+            
+            
+                <dt class="dt dlterm">Publish mode</dt>
+
+                <dd class="dd">In publish mode, the destination publishes data as messages to a Redis channel.
+                    You specify the channel to use and the data format of the messages. The publish
+                    mode pushes each record as one message to the specified Redis channel.</dd>
+
+            
+        </dl>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ozv_24h_jw">
+ <h3 class="title topictitle3">Data Types for Batch Mode</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you configure the destination for batch mode, you select the incoming fields to use
+        as the Redis key and value. You also select the data type of the Redis value. If needed, the
+        Redis destination converts the Data Collector data type of the incoming value field to the
+        selected Redis data type. </p>
+
+  <p class="p">When appropriate, use a
+            Field Converter processor earlier in the pipeline to convert data types.</p>
+
+        <p class="p">The following table lists the Data Collector data types that can be converted to Redis
+            data types:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ozv_24h_jw__table_bpz_r4h_jw" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="53.57142857142857%" id="d60291e148">Data Collector Data Type</th>
+
+                            <th class="entry" valign="top" width="46.42857142857144%" id="d60291e151">Redis Data Type</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d60291e148 ">String</td>
+
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d60291e151 ">String</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d60291e148 ">List</td>
+
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d60291e151 ">List or Set</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d60291e148 ">Map</td>
+
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d60291e151 ">Hash</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+        <div class="note note"><span class="notetitle">Note:</span> The remaining Data Collector and Redis data types are not supported. </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_xl3_3ql_3w">
+ <h3 class="title topictitle3">Data Formats for Publish Mode</h3>
+
+ <div class="body conbody">
+  <div class="p">When you configure
+            the destination for publish mode, the destination publishes messages to Redis based on
+            the data format that you select. You can use the following data formats: <dl class="dl">
+                
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema that you
+                                    provide. </dd>
+
+                              <dd class="dd">You can optionally include the schema definition as part of the
+                                    message. Omitting the schema definition can improve performance,
+                                    but requires the appropriate schema management to avoid losing
+                                    track of the schema associated with the data.</dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
+
+                        
+                
+                        <dt class="dt dlterm">Binary</dt>
+
+                        <dd class="dd">The destination writes binary data from a single field in the record.
+                        </dd>
+
+                  
+                
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_xl3_3ql_3w__d1848e900">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes one record in a message. Uses the user-defined message type and
+                              the definition of the message type in the descriptor file to generate
+                              the message. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+                
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">The destination writes records in the SDC Record data format.
+                              </dd>
+
+                        
+                
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
+            </dl>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_mzk_lw2_gw">
+    <h2 class="title topictitle2">Configuring a Redis Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a
+                Redis destination to write data to Redis.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e2834" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e350">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e353">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzk_lw2_gw__d1735e2889" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzk_lw2_gw__d1735e2903" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e350 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e353 ">Error record handling for the stage: <ul class="ul" id="task_mzk_lw2_gw__d1735e2920">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Redis</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__table_kmz_ksl_3w" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d60291e472">Redis Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d60291e475">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">URI</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">URI of the Redis server. Use the following
+        format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+<p class="p">You
+        can omit the port number or database if the server uses the default port number or default
+        database.</p>
+<div class="p">You can optionally include your password to log in to the Redis server. For
+        example:<pre class="pre codeblock">redis://:&lt;password&gt;@&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+</div>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Connection Timeout (sec)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Maximum time in seconds to wait for a
+                                            connection.<p class="p">Default is 1000 seconds.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Mode
+                                        <a class="xref" href="Redis.html#concept_ing_cvm_jw" title="When you configure the destination for batch mode, you select the incoming fields to use as the Redis key and value. You also select the data type of the Redis value. If needed, the Redis destination converts the Data Collector data type of the incoming value field to the selected Redis data type.">
+                                            <img class="image" id="task_mzk_lw2_gw__image_h2p_p9v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Mode used to write to Redis:<ul class="ul" id="task_mzk_lw2_gw__ul_fmn_d5h_jw">
+                                            <li class="li">Batch - Writes data to Redis key-value pairs.</li>
+
+                                            <li class="li">Publish - Publishes data as messages to a Redis
+                                                channel. </li>
+
+                                        </ul>
+<p class="p">Default is Batch.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Key </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Incoming field to use for the Redis key. Used in batch
+                                        mode only.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Value</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Incoming field to use for the Redis value. Used in batch
+                                        mode only.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Data Type 
+                                        <a class="xref" href="Redis.html#concept_ozv_24h_jw" title="When you configure the destination for batch mode, you select the incoming fields to use as the Redis key and value. You also select the data type of the Redis value. If needed, the Redis destination converts the Data Collector data type of the incoming value field to the selected Redis data type.">
+                                            <img class="image" id="task_mzk_lw2_gw__image_h6p_p2v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Data type of the Redis value. Used in batch mode
+                                            only.<p class="p">Default is String.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Data Format
+                                        <a class="xref" href="Redis.html#concept_xl3_3ql_3w">
+                                            <img class="image" id="task_mzk_lw2_gw__image_h3p_p7v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Data format for messages:<ul class="ul" id="task_mzk_lw2_gw__ul_wlj_353_br">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Binary</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Protobuf</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_mzk_lw2_gw__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+                                            <li class="li">Text</li>
+
+                                        </ul>
+<p class="p">Used in publish mode only.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Channel</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Redis channel to publish the messages to. Used in publish
+                                        mode only.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d60291e472 ">Charset</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d60291e475 ">Character set to use when writing data. Used in publish
+                                        mode only.<p class="p">Not used with all data formats.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e3250" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e672">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e675">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e672 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e675 ">Schema definition to use when writing data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e672 ">Include Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e675 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e672 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e675 ">The Avro compression type to use. <p class="p">When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Binary</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e2959" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e740">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e743">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e740 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e743 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e3330" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e786">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e789">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Format for delimited data:<ul class="ul" id="task_mzk_lw2_gw__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Replace New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Replaces new line characters with the configured
+                                            string.<p class="p">Recommended when writing data as a single line
+                                            of text.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">New Line Character Replacement</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p class="p">Leave empty to remove the new line
+                                        characters.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e786 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e789 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="ph uicontrol">JSON</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e3464" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e939">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e942">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e939 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e942 ">Determines how JSON data is written:<ul class="ul" id="task_mzk_lw2_gw__d1735e3493">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Protobuf</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e3600" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e993">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e996">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e993 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e996 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>. <p class="p">For more information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information
+                                            about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e993 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e996 ">The fully-qualified name for the message type to use when
+                                        reading data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d1735e3529" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d60291e1098">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d60291e1101">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e1098 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e1101 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d60291e1098 ">Empty Line If No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d60291e1101 ">Creates an empty line when a record does not include the
+                                        text field specified above. <p class="p">When not selected, records
+                                            without the specified text field are
+                                        discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div>
+</body>
+</html>
