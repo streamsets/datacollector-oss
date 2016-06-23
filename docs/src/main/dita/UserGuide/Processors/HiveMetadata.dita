@@ -16,7 +16,7 @@
 <concept id="concept_rz5_nft_zv">
  <title>Hive Metadata</title>
  <shortdesc>The Hive Metadata processor works with the Hive Metastore destination and Hadoop FS
-        destination as part of the Hive-Avro drift solution. </shortdesc>
+        destination as part of the Hive Drift Solution. </shortdesc>
  <conbody>
         <p><indexterm>processors<indexterm>Hive Metadata</indexterm></indexterm><indexterm>Hive
                 Metadata processor<indexterm>overview</indexterm></indexterm>Use the Hive Metadata
@@ -30,7 +30,7 @@
             additional required properties. You can also set a maximum cache size.</p>
  </conbody>
     <related-links>
-        <link href="../Hive_Metadata/HiveMetadata-Overview.dita#concept_phk_bdf_2w"/>
+        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
         <link href="../Hive_Metadata/HiveDataTypes.dita#concept_ry2_qkm_hw"/>
     </related-links>
 </concept>

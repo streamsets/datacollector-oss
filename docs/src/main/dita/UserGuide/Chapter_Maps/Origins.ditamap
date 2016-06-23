@@ -78,6 +78,7 @@
    <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
    <topicref href="../Origins/JDBC-SQLQuery.dita"/>
    <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
+   <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita"/>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JMS.dita" chunk="to-content">

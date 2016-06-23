@@ -25,7 +25,7 @@
             destination creates and the files where records are written. </p>
         <p>Alternatively, you can use a stage attribute in record headers to specify where records
             are written. You can also use stage attributes to indicate when to roll a file and the
-            schema to use for Avro data as part of the Hive-Avro drift solution.</p>
+            schema to use for Avro data as part of the Hive Drift Solution.</p>
         <p>You can define a file prefix, the data time zone, and properties that define when the
             destination closes a file. You can specify the amount of time that a record can be
             written to its associated directory and what happens to late records.</p>
@@ -35,6 +35,6 @@
                 FS. </draft-comment></p>
  </conbody>
     <related-links>
-        <link href="../Hive_Metadata/HiveMetadata-Overview.dita#concept_phk_bdf_2w"/>
+        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
     </related-links>
 </concept>

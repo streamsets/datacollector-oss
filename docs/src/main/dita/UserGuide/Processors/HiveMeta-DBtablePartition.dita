@@ -25,7 +25,7 @@
                     <dd>The table expression represents the table to use. If the table doesn't
                         exist, the processor generates a metadata record to create the table.</dd>
                     <dd>The database and table expressions are also incorporated into the
-                        targetDirectory to allow the dynamic writing of records to the database. </dd>
+                        targetDirectory to allow record-based writes to the database. </dd>
                     <dd>Tips for configuring the database and table expressions:<ul
                             id="ul_osg_jn3_fw">
                             <li>If all records are to be written to a single database or table, you

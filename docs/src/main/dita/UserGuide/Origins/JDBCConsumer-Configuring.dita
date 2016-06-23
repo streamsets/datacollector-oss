@@ -173,6 +173,31 @@
                                 </row>
                             </tbody>
                         </tgroup>
+                    </table><table frame="all" rowsep="1" colsep="1" id="table_sqt_fkd_kw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry/>
+                                    <entry>
+                                        <draft-comment author="Loretta">update conrefs to rows
+                                            above, then add this to the table. :(</draft-comment>
+                                    </entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Create JDBC Namespace Headers</entry>
+                                    <entry>Use to add JDBC namespace header attributes to
+                                        records.</entry>
+                                </row>
+                                <row>
+                                    <entry>JDBC Header Prefix</entry>
+                                    <entry>Default prefix for namespace header attributes. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
                     </table></info>
             </step>
         </steps>

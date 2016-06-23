@@ -20,7 +20,7 @@
         record to, the Avro schema to use, and when to roll a file. </shortdesc>
     <conbody>
         <p>The Hive Metadata processor generates stage attributes that Hadoop FS can use as part of
-            the Hive-Avro drift solution. Or, you can use an Expression Evaluator to add the
+            the Hive Drift Solution. Or, you can use an Expression Evaluator to add the
             targetDirectory stage attribute to record headers. </p>
         <p>To pass a stage attribute to Hadoop FS, you configure the destination to use the
             attribute, and you ensure that the record headers include the stage attribute. </p>
@@ -60,7 +60,7 @@
             </dl></p>
     </conbody>
     <related-links>
-        <link href="../Hive_Metadata/HiveMetadata-Overview.dita#concept_phk_bdf_2w"/>
+        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
         <link href="../Processors/HiveMetadata.dita#concept_rz5_nft_zv"/>
     </related-links>
 </concept>
