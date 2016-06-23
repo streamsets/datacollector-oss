@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 
@@ -36,11 +37,15 @@ import java.util.List;
 
 public class S3TargetConfigBean {
 
-  public static final String S3_CONFIG_PREFIX = "s3TargetConfigBean.s3Config.";
   public static final String S3_TARGET_CONFIG_BEAN_PREFIX = "s3TargetConfigBean.";
+  public static final String S3_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "s3Config.";
+  public static final String S3_SEE_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "sseConfig.";
 
   @ConfigDefBean(groups = "S3")
   public S3Config s3Config;
+
+  @ConfigDefBean(groups = "SSE")
+  public SSEConfigBean sseConfig;
 
   @ConfigDefBean(groups = "ADVANCED")
   public ProxyConfig advancedConfig;
