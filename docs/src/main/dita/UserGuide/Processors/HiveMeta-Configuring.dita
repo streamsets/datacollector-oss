@@ -161,23 +161,27 @@
                                 </row>
                                 <row>
                                     <entry>Decimal Field Scale Expression</entry>
-                                    <entry>Expression that defines the scale for decimal fields. You
-                                        can enter a single value to be used by all decimal fields in
-                                        the record or you can enter an expression that evaluates to
-                                        different scales for different fields. <p>
-                                            <draft-comment author="Loretta">This is no longer true -
-                                                look for info from Jarcec. By default, what? What is
-                                                this default expression? </draft-comment>
-                                        </p></entry>
+                                    <entry>Expression that defines the scale for decimal fields.
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different scales
+                                        for different fields. <p>The default expression determines
+                                            the scale based on information in the JDBC namespace
+                                            header attribute. Use only when processing data from a
+                                            JDBC Consumer with namespace headers enabled. Replace
+                                            "jdbc." with the configured JDBC header prefix when
+                                            necessary. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Decimal Field Precision Expression</entry>
                                     <entry>Expression that defines the precision of decimal fields.
-                                        You can enter a single value to be used by all decimal
-                                        fields in the record or you can enter an expression that
-                                        evaluates to different precisions for different fields.
-                                            <draft-comment author="Loretta">By default, what? What
-                                            is this default expression? </draft-comment></entry>
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different
+                                        precisions for different fields.<p>The default expression
+                                            determines the precision based on information in the
+                                            JDBC namespace header attribute. Use only when
+                                            processing data from a JDBC Consumer with namespace
+                                            headers enabled. Replace "jdbc." with the configured
+                                            JDBC header prefix when necessary. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -186,4 +190,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../Origins/JDBCConsumer-HeaderAttributes.dita#concept_egw_d4c_kw"/>
+    </related-links>
 </task>

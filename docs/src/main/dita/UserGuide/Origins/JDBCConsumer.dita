@@ -24,8 +24,8 @@
       determine how the origin connects to the database. You configure the query mode, offset
       column, initial offset value, and SQL query to define the data returned by the database.</p>
         <p>You can configure the JDBC Consumer to perform change data capture for databases that
-            store the information in a table. You can also configure custom properties that your
-            driver requires. </p>
+            store the information in a table. You can configure the origin to add JDBC namespace
+            header attributes. You can also configure custom properties that your driver requires. </p>
     <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
   </conbody>
