@@ -102,6 +102,17 @@
                             <entry>HBase</entry>
                             <entry namest="c2" nameend="c9">* * * Not Applicable * * *</entry>
                         </row>
+                                                <row>
+                                                  <entry>Hive Metastore </entry>
+                                                  <entry><image href="../Graphics/CheckIcon.png"
+                                                  scale="30" id="image_ptc_flm_hw"/></entry>
+                                                  <entry/>
+                                                  <entry/>
+                                                  <entry/>
+                                                  <entry/>
+                                                  <entry/>
+                                                  <entry/>
+                                                </row>
                         <row>
                             <entry>Hive Streaming</entry>
                             <entry namest="c2" nameend="c9">* * * Not Applicable * * *</entry>

@@ -35,6 +35,7 @@
         <li>Geo IP- Provides geographic location information based on an IP address. </li>
         <li>Groovy Evaluator - Processes records based on custom Groovy code.</li>
         <li>HBase Lookup - Performs key-value lookups in HBase.</li>
+        <li>Hive Metadata - Generates Hive metadata and write information for HDFS. </li>
         <li>JavaScript Evaluator - Processes records based on custom JavaScript code.  </li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>

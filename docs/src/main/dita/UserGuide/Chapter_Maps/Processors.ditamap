@@ -90,6 +90,21 @@
    <topicref href="../Processors/HBaseLookup-HBaseProperties.dita"/>
    <topicref href="../Processors/HBaseLookup-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/HiveMetadata.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/HiveMeta-OutputStreams.dita"/>
+   <topicref href="../Processors/HiveMeta-MRecordStageAtts.dita"/>
+   <topicref href="../Processors/HiveMeta-DBtablePartition.dita"/>
+   <topicref href="../Processors/HiveMeta-TimeBasis.dita"/>
+   <topicref href="../Processors/HiveMeta-Cache.dita">
+    <topicref href="../Reusable_Content/HiveMeta-CacheEvict.dita"/>
+   </topicref>
+   <topicref href="../Processors/HiveMeta-Kerberos.dita"/>
+   <topicref href="../Processors/HiveMeta-ConfigFiles.dita"/>
+   <topicref href="../Processors/HiveMeta-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/HTTPClient.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/HTTPClient-Methods.dita">
