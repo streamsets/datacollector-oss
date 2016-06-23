@@ -36,6 +36,8 @@
         <li>Groovy Evaluator - Processes records based on custom Groovy code.</li>
         <li>HBase Lookup - Performs key-value lookups in HBase.</li>
         <li>Hive Metadata - Generates Hive metadata and write information for HDFS. </li>
+        <li>HTTP Client - The HTTP Client processor sends requests to an HTTP resource URL and
+          writes the results to a field.</li>
         <li>JavaScript Evaluator - Processes records based on custom JavaScript code.  </li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>

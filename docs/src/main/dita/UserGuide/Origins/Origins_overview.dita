@@ -35,6 +35,7 @@
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
         <li>RabbitMQ Consumer - Reads messages from RabbitMQ.</li>
+        <li>Redis Consumer - Reads messages from Redis.</li>
         <li>SDC RPC - Reads data from an SDC RPC destination in an SDC RPC pipeline.</li>
         <li>SFTP/FTP Client - Reads files from an SFTP or FTP server.</li>
         <li>UDP Source - Reads messages from one or more UDP ports. </li>
