@@ -574,6 +574,67 @@ public class TestFieldRenamer {
   }
 
   @Test
+  public void testCategoryRegexInNonComplexType() throws StageException {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    //Any field containing a non-word character should be in single quotes
+    renameConfig.fromFieldExpression = "/'(.*)[#&@|](.*)'";
+    renameConfig.toFieldExpression = "/$1_$2";
+
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.APPEND_NUMBERS;
+
+    FieldRenamerProcessor processor = new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a#b", Field.create(Field.Type.STRING, "foo1"));
+      map.put("a_b", Field.create(Field.Type.STRING, "foo2"));
+      map.put("a&b", Field.create(Field.Type.STRING, "foo3"));
+      map.put("a|b", Field.create(Field.Type.STRING, "foo4"));
+      map.put("a@b", Field.create(Field.Type.STRING, "foo5"));
+
+
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(Field.Type.MAP, map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Record r = output.getRecords().get("a").get(0);
+      Assert.assertFalse(r.has("/'a#b'"));
+      Assert.assertFalse(r.has("/'a&b'"));
+      Assert.assertFalse(r.has("/'a|b'"));
+      Assert.assertFalse(r.has("/'a&b'"));
+
+      Assert.assertTrue(r.has("/a_b"));
+      Assert.assertEquals("foo2" ,r.get("/a_b").getValueAsString());
+
+      Assert.assertTrue(r.has("/a_b1"));
+      Assert.assertEquals("foo1" ,r.get("/a_b1").getValueAsString());
+
+      Assert.assertTrue(r.has("/a_b2"));
+      Assert.assertEquals("foo3" ,r.get("/a_b2").getValueAsString());
+
+      Assert.assertTrue(r.has("/a_b3"));
+      Assert.assertEquals("foo4" ,r.get("/a_b3").getValueAsString());
+
+      Assert.assertTrue(r.has("/a_b4"));
+      Assert.assertEquals("foo5" ,r.get("/a_b4").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testRename() throws StageException {
     // Straightforward rename -- existing source, non-existing target
     FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
