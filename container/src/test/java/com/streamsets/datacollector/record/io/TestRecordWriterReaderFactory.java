@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -230,5 +231,30 @@ public  class TestRecordWriterReaderFactory {
     BigDecimal destinationValue = record.get("/a").getValueAsDecimal();
 
     Assert.assertEquals(originalValue, destinationValue);
+  }
+
+  @Test
+  public void testDateAndDateTime() throws IOException {
+    Date date = new Date();
+
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    RecordWriter writer = RecordWriterReaderFactory.createRecordWriter(RecordEncoding.JSON1, os);
+    RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mode");
+    record1.getHeader().setStagesPath("stagePath");
+    record1.getHeader().setTrackingId("trackingId");
+    Map<String, Field> map = new HashMap<>();
+    map.put("d", Field.create(Field.Type.DATE, date));
+    map.put("dt", Field.create(Field.Type.DATETIME, date));
+    record1.set(Field.create(map));
+    writer.write(record1);
+
+    InputStream is = new ByteArrayInputStream(os.toByteArray());
+    RecordReader reader = RecordWriterReaderFactory.createRecordReader(is, 0, 1000);
+    Record record = reader.readRecord();
+    Date destinationDate = record.get("/d").getValueAsDate();
+    Date destinationDateTime = record.get("/dt").getValueAsDatetime();
+
+    Assert.assertEquals(date, destinationDate);
+    Assert.assertEquals(date, destinationDateTime);
   }
 }
