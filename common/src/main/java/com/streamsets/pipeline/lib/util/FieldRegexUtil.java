@@ -27,6 +27,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldRegexUtil {
+  private static final Pattern ARRAY_IDX_REGEX_PATTERN = Pattern.compile("\\[(\\(?)(\\*|\\d+)(\\)?)\\]");
+  private static final String ARRAY_IDX_REPLACE_STRING = "\\\\[$1\\\\d+$3\\\\]";
+  private static final Pattern MAP_WILDCARD_FIELD_PATTERN = Pattern.compile("(\\/\\(?)\\*(\\)?)");
+  private static final String MAP_WILD_CARD_REPLACEMENT = "$1[^\\\\/\\\\[]+$2";
 
   private FieldRegexUtil() {}
 
@@ -60,13 +64,26 @@ public class FieldRegexUtil {
     return matchingFieldPaths;
   }
 
+  private static String patchUpSpecialCases(String fieldPath, Pattern pattern, String replaceMentString) {
+    Matcher matcher = pattern.matcher(fieldPath);
+    if (matcher.find()) {
+      return matcher.replaceAll(replaceMentString);
+    }
+    return fieldPath;
+  }
+
   public static String patchUpFieldPathRegex(String fieldPath) {
-    return fieldPath
-        .replace("[*]", "[\\d+]")
-        .replace("[(*)]", "[(\\d+)]")
-        .replace("[", "\\[")
-        .replace("]", "\\]")
-        .replaceAll("\\/\\(\\*\\)", "/([^\\\\/\\\\[]+)")
-        .replaceAll("\\/\\*", "/[^\\\\/\\\\[]+");
+    String returnPath = fieldPath;
+    returnPath = patchUpSpecialCases(
+        returnPath,
+        ARRAY_IDX_REGEX_PATTERN,
+        ARRAY_IDX_REPLACE_STRING
+    );
+    returnPath = patchUpSpecialCases(
+        returnPath,
+        MAP_WILDCARD_FIELD_PATTERN,
+        MAP_WILD_CARD_REPLACEMENT
+    );
+    return returnPath;
   }
 }
