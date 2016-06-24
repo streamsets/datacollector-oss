@@ -128,7 +128,8 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     Set<String> fieldsRequiringOverwrite = new HashSet<>();
     Map<String, List<String>> multipleRegexMatchingSameFields = new HashMap<>();
-    Map<String, String> fromFieldToFieldMap = new HashMap<>();
+    //So that the ordering of fieldPaths will be preserved
+    Map<String, String> fromFieldToFieldMap = new LinkedHashMap<>();
 
     for (Map.Entry<Pattern, String> fromPatternToFieldExpEntry : fromPatternToFieldExpMapping.entrySet()) {
       populateFromAndToFieldsMap(
