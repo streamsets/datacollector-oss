@@ -52,6 +52,7 @@
   </developers>
 
   <properties>
+    <rat-plugin.version>0.12</rat-plugin.version>
     <ipc-kafka-apache-kakfa_0_8_1-lib>none</ipc-kafka-apache-kakfa_0_8_1-lib>
     <cdh_5_2-lib>none</cdh_5_2-lib>
     <cdh_5_3-lib>none</cdh_5_3-lib>
@@ -198,7 +199,7 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.8</version>
+        <version>${rat-plugin.version}</version>
         <configuration>
           <excludeSubProjects>false</excludeSubProjects>
           <excludes>
