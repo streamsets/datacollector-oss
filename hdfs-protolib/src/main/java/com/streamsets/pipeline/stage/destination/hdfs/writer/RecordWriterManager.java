@@ -264,6 +264,9 @@ public class RecordWriterManager {
     return writer;
   }
 
+  /**
+   * This method must always be called after the closeLock() method on the writer has been called.
+   */
   public Path commitWriter(RecordWriter writer) throws IOException {
     Path path = null;
     if (!writer.isClosed() || writer.isIdleClosed()) {
@@ -271,9 +274,12 @@ public class RecordWriterManager {
       // resulting that the tmp file never gets renamed when stopping the pipeline.
       boolean interrupted = Thread.interrupted();
       try {
+        // Since this method is always called from exactly one thread, and
+        // we checked to make sure that it was not closed or it was idle closed, this method either closes
+        // the file or pushes us into the catch block.
         writer.close();
       } catch (IdleClosedException e) {
-        LOG.info("Failed to close writer writer for {} was closed as it was idle", writer.getPath());
+        LOG.info("Writer for {} was idle closed, renaming.." , writer.getPath());
       }
       // Reset the interrupt flag back.
       if (interrupted) {
