@@ -31,6 +31,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -93,7 +95,7 @@ public class RandomDataGeneratorSource extends BaseSource {
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
       map.put(dataGeneratorConfig.field, Field.create(getFieldType(dataGeneratorConfig.type),
-        generateRandomData(dataGeneratorConfig.type)));
+        generateRandomData(dataGeneratorConfig)));
     }
 
     switch (rootFieldType) {
@@ -124,14 +126,16 @@ public class RandomDataGeneratorSource extends BaseSource {
         return Field.Type.INTEGER;
       case FLOAT:
         return Field.Type.FLOAT;
+      case DECIMAL:
+        return Field.Type.DECIMAL;
       case BYTE_ARRAY:
         return Field.Type.BYTE_ARRAY;
     }
     return Field.Type.STRING;
   }
 
-  private Object generateRandomData(Type type) {
-    switch(type) {
+  private Object generateRandomData(DataGeneratorConfig config) {
+    switch(config.type) {
       case BOOLEAN :
         return random.nextBoolean();
       case DATE:
@@ -146,6 +150,8 @@ public class RandomDataGeneratorSource extends BaseSource {
         return random.nextLong();
       case STRING:
         return UUID.randomUUID().toString();
+      case DECIMAL:
+        return new BigDecimal(BigInteger.valueOf(random.nextLong() % (long)Math.pow(10, config.precision)), config.scale);
       case BYTE_ARRAY:
         return "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8);
     }
@@ -176,6 +182,31 @@ public class RandomDataGeneratorSource extends BaseSource {
       defaultValue = "STRING")
     @ValueChooserModel(TypeChooserValueProvider.class)
     public Type type;
+
+    @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "10",
+      label = "Precision",
+      description = "Precision of the generated decimal.",
+      min = 0,
+      dependsOn = "type",
+      triggeredByValue = "DECIMAL"
+    )
+    public long precision;
+
+    @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "2",
+      label = "scale",
+      description = "Scale of the generated decimal.",
+      min = 0,
+      dependsOn = "type",
+      triggeredByValue = "DECIMAL"
+    )
+    public int scale;
+
   }
 
   enum Type {
@@ -186,6 +217,7 @@ public class RandomDataGeneratorSource extends BaseSource {
     DOUBLE,
     DATE,
     BOOLEAN,
+    DECIMAL,
     BYTE_ARRAY
   }
 
