@@ -46,7 +46,7 @@
                             <entry>Directory and File Tail</entry>
                             <entry>
                                 <ul id="ul_ebj_1l3_yv">
-                                    <li>file_name - Provides the file name.</li>
+                                    <li>filename - Provides the file name.</li>
                                     <li>file - Provides the file path and name. </li>
                                     <li>offset - Provides the offset in bytes.</li>
                                 </ul>
@@ -68,7 +68,7 @@
         </p>
         <p>To include these attributes in a record, you can use the following expressions in the
             Expression
-            Evaluator:<codeblock>${record:attribute('file_name')}
+            Evaluator:<codeblock>${record:attribute('filename')}
 ${record:attribute('file')}
 ${record:attribute('offset')}
 ${record:attribute('partition')}
