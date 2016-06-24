@@ -20,8 +20,12 @@
           query<indexterm>JDBC Consumer</indexterm></indexterm>The SQL query defines the data
       returned from the database. When you define the SQL query, use the following guidelines:<dl>
         <dlentry>
+          <dt>Use a WHERE and an ORDER BY clause in the query</dt>
+          <dd>JDBC Consumer requires both clauses in the SQL query.</dd>
+        </dlentry>
+        <dlentry>
           <dt>In the WHERE clause, include the offset column and the offset value</dt>
-          <dd>JDBC Consumer uses an offset column and value to determine the data that is returned.
+          <dd>The origin uses an offset column and value to determine the data that is returned.
             Include both in the WHERE clause of the query. </dd>
         </dlentry>
         <dlentry>
@@ -43,5 +47,9 @@
           </dd>
         </dlentry>
       </dl></p>
+    <p>For example, the following query returns data from an Invoice table where the ID column is
+      the offset column. The query returns all data where the ID is greater than the offset and
+      orders the data by the
+      ID:<codeblock> SELECT * FROM invoice WHERE id > ${OFFSET} ORDER BY id</codeblock></p>
   </conbody>
 </concept>
