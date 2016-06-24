@@ -208,11 +208,14 @@ public class RecordWriter {
 
   private void close(boolean idleClosed) throws IOException {
     closeLock.writeLock().lock();
-    if (isClosed()) {
-      return;
-    }
     LOG.debug("Path[{}] - Closing", path);
     try {
+      throwIfIdleClosed();
+      // If this was closed previously, just return
+      if (isClosed()) {
+        return;
+      }
+
       if (generator != null) {
         generator.close();
       } else if (seqWriter != null) {
