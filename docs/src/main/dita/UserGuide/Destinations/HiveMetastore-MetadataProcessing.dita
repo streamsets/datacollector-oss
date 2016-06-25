@@ -42,7 +42,10 @@
                                 destination checks Hive for the current set of columns for the
                                 specified table.</li>
                             <li>When there are compatible differences, the destination generates a
-                                new Avro schema that incorporates the differences. </li>
+                                new Avro schema that incorporates the differences. <p>This can occur
+                                    when a separate entity changes the target table in the moments
+                                    between evaluation by the Hive Metadata processor and the Hive
+                                    Metastore destination.</p></li>
                         </ol>
                     </dd>
                 </dlentry>

@@ -19,8 +19,8 @@
         <p><indexterm>Hive Drift Solution<indexterm>overview</indexterm></indexterm>The Hive Drift
             Solution detects drift in incoming data and updates the corresponding Hive tables. The
             solution enables creating and updating Hive tables based on record requirements and
-            writing data based on stage attributes in record headers. You can use the full
-            functionality of the solution or individual pieces, as needed. </p>
+            writing data based on record header attributes. You can use the full functionality of
+            the solution or individual pieces, as needed. </p>
         <p>You can use the Hive Drift Solution to process Avro data at this time. </p>
         <p>The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
             the Hadoop FS destination as follows:</p>
@@ -46,18 +46,18 @@
                             <li>Target directory - Based on user-defined expressions, the Hive
                                 Metadata processor assembles the path on HDFS where each record
                                 should be stored. It writes the generated path to a
-                                "targetDirectory" stage attribute in each record header.<p>To write
-                                    the record to the generated path, configure Hadoop FS to use the
-                                    targetDirectory stage attribute. </p></li>
+                                "targetDirectory" attribute in each record header.<p>To write the
+                                    record to the generated path, configure Hadoop FS to use the
+                                    targetDirectory header attribute. </p></li>
                             <li>Avro schema - The processor writes the Avro schema to the
-                                "avroSchema" stage attribute in each record header. It generates new
-                                Avro schemas when necessary based on the record structure.<p>To use
-                                    the generated Avro schema, configure Hadoop FS to use the
-                                    avroSchema stage attribute.</p></li>
+                                "avroSchema" attribute in each record header. It generates new Avro
+                                schemas when necessary based on the record structure.<p>To use the
+                                    generated Avro schema, configure Hadoop FS to use the avroSchema
+                                    header attribute.</p></li>
                             <li>Roll files - When a change in Avro schema occurs, the processor
-                                generates a roll indicator - the "roll" stage attribute. <p>To roll
+                                generates a roll indicator - the "roll" header attribute. <p>To roll
                                     files based on schema changes, configure Hadoop FS use the roll
-                                    stage attribute.</p></li>
+                                    header attribute.</p></li>
                         </ul></dd>
                 </dlentry>
             </dl>

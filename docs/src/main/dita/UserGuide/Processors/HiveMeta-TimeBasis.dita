@@ -26,7 +26,7 @@
                     <dd>When you use processing time as the time basis, the processor uses the
                         processing time and the partition value expression to determine the
                         partition value to use in the metadata record and the partition portion of
-                        the targetDirectory stage attribute.  </dd>
+                        the targetDirectory header attribute. </dd>
                     <dd>For example, say a partition value expression creates a new partition every
                         day and the time basis is the time of processing. Then, the processor
                         generates a daily metadata record that the Hive Metastore destination uses
@@ -41,7 +41,7 @@
                         specify a Date field in the record as part of the partition value
                         expression. The processor uses the datetimes associated with the records and
                         the partition value expression to determine the partition value to use in
-                        the metadata record and the partition portion of the targetDirectory stage
+                        the metadata record and the partition portion of the targetDirectory header
                         attribute. </dd>
                     <dd>For example, say a partition value expression creates directories every hour
                         and the time basis is based on the record. Then, for every hour associated

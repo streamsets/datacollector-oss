@@ -1539,8 +1539,8 @@
                 <cmd>
                     <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH"
                             ><uicontrol>1stStep-StageLib-ReqField-EHandling</uicontrol> - Use this
-                        step for destinations with stage library, req fields, and error
-                        handling.</draft-comment>
+                        step for destinations with stage library, req fields, and error handling. –
+                        Some rows are used by Hive Metastore.</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-StageLib-ReqField-EHandling">
@@ -1558,15 +1558,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row id="row-Name">
                                     <entry>Name</entry>
                                     <entry>Stage name.</entry>
                                 </row>
-                                <row>
+                                <row id="row-Desc">
                                     <entry>Description</entry>
                                     <entry>Optional description.</entry>
                                 </row>
-                                <row>
+                                <row id="row-StageLib">
                                     <entry>Stage Library</entry>
                                     <entry>Library version that you want to use. </entry>
                                 </row>
@@ -1589,7 +1589,7 @@
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
                                 </row>
-                                <row>
+                                <row id="row-RecordError">
                                     <entry>On Record Error</entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_fqw_4fy_kt">
@@ -1701,7 +1701,7 @@
                             <tbody>
                                 <row>
                                     <entry>Avro Schema in Header <xref
-                                            href="../Destinations/HadoopFS-StageAttributes.dita">
+                                            href="../Destinations/HadoopFS-RecordHeaderAttributes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ydt_vvg_1w"/></xref></entry>
                                     <entry>Indicates that the Avro schema is embedded in the
