@@ -187,6 +187,15 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  @HideConfigs({"this.config.does.not.exists"})
+  public static class HideNonExistingConfigTarget extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
   public static class ToErrorTarget1 extends Target1 {
     @Override
@@ -302,6 +311,16 @@ public class TestStageDefinitionExtractor {
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
+  }
+
+  @Test
+  public void testExtractHiveNonExistingConfigTarget() {
+    try {
+      StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, HideNonExistingConfigTarget.class, "x");
+      Assert.fail("Should fail on hiding non-existing config.");
+    } catch(IllegalArgumentException ex) {
+      Assert.assertTrue(ex.getMessage().contains("is hiding non-existing config this.config.does.not.exists"));
+    }
   }
 
   @Test

@@ -47,7 +47,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -158,7 +160,7 @@ public abstract class StageDefinitionExtractor {
       }
 
       if (configErrors.isEmpty() && configGroupErrors.isEmpty()) {
-        List<ConfigDefinition> configDefs = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
+        List<ConfigDefinition> configDefs = extractConfigDefinitions(libraryDef, klass, hideConfigs, errors, contextMsg);
         ConfigGroupDefinition configGroupDef = ConfigGroupExtractor.get().extract(klass, contextMsg);
         errors.addAll(validateConfigGroups(configDefs, configGroupDef, contextMsg));
         if (variableOutputStreams) {
@@ -199,7 +201,7 @@ public abstract class StageDefinitionExtractor {
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
         boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
+        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList(), contextMsg);
         RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
         ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
         String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
@@ -299,20 +301,29 @@ public abstract class StageDefinitionExtractor {
   }
 
   private List<ConfigDefinition> extractConfigDefinitions(StageLibraryDefinition libraryDef,
-      Class<? extends Stage> klass, HideConfigs hideConfigs, Object contextMsg) {
+      Class<? extends Stage> klass, HideConfigs hideConfigs, List<ErrorMessage> errors, Object contextMsg) {
 
     List<String> stageGroups = getGroups(klass);
 
     List<ConfigDefinition> cDefs = ConfigDefinitionExtractor.get().extract(klass, stageGroups, contextMsg);
 
-    Set<String> hideConfigSet = (hideConfigs != null) ? ImmutableSet.copyOf(hideConfigs.value())
-                                                     : Collections.<String>emptySet();
+    Set<String> hideConfigSet = (hideConfigs != null) ?
+      new HashSet<>(Arrays.asList(hideConfigs.value())) :
+      Collections.<String>emptySet();
 
     if (!hideConfigSet.isEmpty()) {
       Iterator<ConfigDefinition> iterator = cDefs.iterator();
       while (iterator.hasNext()) {
-        if (hideConfigSet.contains(iterator.next().getName())) {
+        ConfigDefinition current = iterator.next();
+        if(hideConfigSet.contains(current.getName())) {
           iterator.remove();
+          hideConfigSet.remove(current.getName());
+        }
+      }
+
+      if(!hideConfigSet.isEmpty()) {
+        for(String toHide : hideConfigSet) {
+          errors.add(new ErrorMessage(DefinitionError.DEF_313, contextMsg, toHide));
         }
       }
     }
