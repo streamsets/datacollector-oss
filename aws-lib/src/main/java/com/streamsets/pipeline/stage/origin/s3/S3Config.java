@@ -26,6 +26,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
@@ -142,8 +143,8 @@ public class S3Config {
       s3Client.setRegion(Region.getRegion(region));
     }
     try {
-      //check if the credentials are right by trying to list buckets
-      s3Client.listBuckets();
+      //check if the credentials are right by trying to list an object in the common prefix
+      s3Client.listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1));
     } catch (AmazonS3Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
       issues.add(
