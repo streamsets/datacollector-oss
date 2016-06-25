@@ -21,8 +21,8 @@
         <p><indexterm>processors<indexterm>Hive Metadata</indexterm></indexterm><indexterm>Hive
                 Metadata processor<indexterm>overview</indexterm></indexterm>Use the Hive Metadata
             processor records to be written to Hive when you want the Hive Metastore destination to
-            create and update tables as needed. The processor also generates stage attributes for
-            record headers that the Hadoop FS destination can use to process the data.</p>
+            create and update tables as needed. The processor also generates record header
+            attributes that the Hadoop FS destination can use to process the data.</p>
   <p>When you configure the Hive Metadata processor, you define the connection information for Hive
             and the expressions that define the database, table, and partitions that the records
             require. </p>

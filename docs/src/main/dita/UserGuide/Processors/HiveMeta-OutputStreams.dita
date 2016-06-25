@@ -23,7 +23,7 @@
                 <dd>Passes records downstream to the Hadoop FS destination. You can add additional
                     stages between the Hive Metadata processor and the Hadoop FS destination if
                     pipeline logic requires it, but only the Hadoop FS destination can use the
-                    generated stage attributes to write records to Hive. </dd>
+                    generated record header attributes to write records to Hive. </dd>
             </dlentry>
             <dlentry>
                 <dt>Metadata output stream</dt>

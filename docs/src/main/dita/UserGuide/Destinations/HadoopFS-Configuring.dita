@@ -135,12 +135,12 @@
                                 </row>
                                 <row>
                                     <entry>Directory in Header <xref
-                                            href="HadoopFS-StageAttributes.dita">
+                                            href="HadoopFS-RecordHeaderAttributes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ydt_vvg_1w"/></xref>
                                     </entry>
                                     <entry>Indicates that the target directory is defined in record
-                                        headers. Use only when the targetDirectory stage attribute
+                                        headers. Use only when the targetDirectory header attribute
                                         is defined for all records. </entry>
                                 </row>
                                 <row
@@ -191,17 +191,17 @@
                                 </row>
                                 <row>
                                     <entry>Use Roll Attribute  <xref
-                                            href="HadoopFS-StageAttributes.dita">
+                                            href="HadoopFS-RecordHeaderAttributes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_tfb_1ql_gw"/></xref>
                                     </entry>
-                                    <entry>Checks the record header for the roll attribute and
-                                        closes the current file when the attribute exists. </entry>
+                                    <entry>Checks the record header for the roll header attribute
+                                        and closes the current file when the roll attribute exists. </entry>
                                 </row>
                                 <row>
                                     <entry>Roll Attribute Name</entry>
-                                    <entry>Name of the roll attribute.<p>Default is roll, the name
-                                            used by the Hive Metadata processor.</p></entry>
+                                    <entry>Name of the roll header attribute.<p>Default is roll, the
+                                            name used by the Hive Metadata processor.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

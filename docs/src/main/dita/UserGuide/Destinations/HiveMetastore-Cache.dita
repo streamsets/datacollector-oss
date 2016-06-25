@@ -23,6 +23,7 @@
                     the Hive Metastore destination</indexterm></indexterm>The destination caches the
             following Hive metadata:<ul id="ul_y1l_2dt_dw">
                 <li>Database and table to be written to</li>
+                <li>Hive table properties</li>
                 <li>Column names and types in the table</li>
                 <li>Partition values</li>
             </ul></p>

@@ -41,23 +41,22 @@
                         <li>Optionally configure cache information and how tables are updated.</li>
                     </ul><p>For more information about the Hive Metastore destination, see <xref
                             href="../Destinations/HiveMetastore.dita#concept_gcr_z2t_zv"/>.</p></li>
-                <li>To write records to Hive tables based on stage attributes in record headers,
-                    connect the data output of the Hive Metadata processor to the Hadoop FS
-                    destination. </li>
+                <li>To write records to Hive tables based on record header attributes, connect the
+                    data output of the Hive Metadata processor to the Hadoop FS destination. </li>
                 <li>Configure the Hadoop FS destination:<ul id="ul_n4p_dz3_fw">
-                        <li>To write records using the targetDirectory stage attribute, on the
+                        <li>To write records using the targetDirectory header attribute, on the
                                 <wintitle>Output Files</wintitle> tab, select <uicontrol>Directory
                                 in Header</uicontrol>.</li>
-                        <li>To roll records based on a roll stage attribute, on the <wintitle>Output
-                                Files</wintitle> tab, select <uicontrol>Use Roll
+                        <li>To roll records based on a roll header attribute, on the
+                                <wintitle>Output Files</wintitle> tab, select <uicontrol>Use Roll
                                 Attribute</uicontrol>, and for <uicontrol>Roll Attribute
                                 Name</uicontrol>, enter “roll”.</li>
-                        <li>To write records using the avroSchema stage attribute, on the
+                        <li>To write records using the avroSchema header attribute, on the
                                 <wintitle>Avro</wintitle> tab, select <uicontrol>Load Schema From
                                 Header</uicontrol>.</li>
-                    </ul><p>For more information about configuring stage attributes in the Hadoop FS
-                        destination, see <xref
-                            href="../Destinations/HadoopFS-StageAttributes.dita#concept_lmn_gdc_1w"
+                    </ul><p>For more information about using record header attributes with the
+                        Hadoop FS destination, see <xref
+                            href="../Destinations/HadoopFS-RecordHeaderAttributes.dita#concept_lmn_gdc_1w"
                         />.</p></li>
             </ol></p>
  </conbody>

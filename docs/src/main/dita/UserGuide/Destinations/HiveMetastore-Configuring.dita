@@ -23,9 +23,54 @@
                 Hive tables and Avro schemas as needed.</p>
         </context>
         <steps>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_lck_rqj_kw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-Desc">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-StageLib">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Required Fields</entry>
+                                    <entry>Since the destination processes only metadata records,
+                                        this property is not relevant.</entry>
+                                </row>
+                                <row>
+                                    <entry>Preconditions</entry>
+                                    <entry>Since the destination processes only metadata records,
+                                        this property is not relevant.</entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">check with Santhosh about
+                                            what we're doing here.</draft-comment>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>On the <wintitle>Hive</wintitle> tab, configure the following properties:</cmd>

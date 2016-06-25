@@ -23,6 +23,7 @@
                     the Hive Metadata processor</indexterm></indexterm>The processor caches the
             following Hive metadata:<ul id="ul_y1l_2dt_dw">
                 <li>Database and table to be written to</li>
+                <li>Hive table properties</li>
                 <li>Column names and data types in the table</li>
                 <li>Avro schema</li>
                 <li>Partition values</li>

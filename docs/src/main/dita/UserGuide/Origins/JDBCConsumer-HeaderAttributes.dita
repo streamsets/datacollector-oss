@@ -20,7 +20,8 @@
                 attributes</indexterm></indexterm><indexterm>JDBC namespace header
                     attributes<indexterm>JDBC Consumer</indexterm></indexterm>The JDBC Consumer can
             generate JDBC namespace header attributes that provide additional information about each
-            record, such as the original data type of a field or the source tables for the record. </p>
+            record, such as the original data type of a field or the source tables for the record.
+            The origin receives these details from the JDBC driver.</p>
         <p>You can use the record:attribute or record:attributeOrDefault functions to access the
             information in the attributes. </p>
         <p>JDBC Consumer can provide the following JDBC namespace header attributes:<table
@@ -36,12 +37,13 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry> &lt;JDBC prefix>.&lt;tables></entry>
-                            <entry>Provides a list of source tables for all fields in the
-                                record.</entry>
+                            <entry> &lt;JDBC prefix>.tables</entry>
+                            <entry>Provides a comma-separated list of source tables for the fields
+                                in the record.<note>Not all JDBC drivers provide this
+                                    information.</note></entry>
                         </row>
                         <row>
-                            <entry>&lt;JDBC prefix>.&lt;column name>.jdbctype</entry>
+                            <entry>&lt;JDBC prefix>.&lt;column name>.jdbcType</entry>
                             <entry>Provides the original SQL data type for each field in the
                                 record.</entry>
                         </row>
@@ -62,7 +64,8 @@
                 id="ul_l5p_jvc_kw">
                 <li>On the <wintitle>Advanced</wintitle> tab, select <uicontrol>Create JDBC
                         Namespace Headers</uicontrol>.</li>
-                <li>Configure a <uicontrol>JDBC Header Prefix</uicontrol>. The default is JDBC.</li>
+                <li>Configure a <uicontrol>JDBC Header Prefix</uicontrol>. The default is
+                    "jdbc".</li>
             </ul></p>
  </conbody>
 </concept>
