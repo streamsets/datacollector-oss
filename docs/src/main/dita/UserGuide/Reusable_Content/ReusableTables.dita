@@ -430,7 +430,7 @@
   </p>
   <p>
    <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer uses the whole table,
-    Producer uses all rows but last.</draft-comment>
+    row by row. Producer uses all rows but last.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -470,7 +470,7 @@
         time increment. <p>Use 0 to avoid removing any idle connections.</p><p>Default is 30
          seconds, defined as follows: <codeblock>${30 * SECONDS}</codeblock></p></entry>
       </row>
-      <row>
+      <row id="row-EnReadOnly">
        <entry>Enforce Read-only Connection</entry>
        <entry>Creates read-only connections to avoid any type of write. <p>Selected by default.
          Clearing this property is not recommended. </p></entry>

@@ -60,7 +60,7 @@
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/HadoopFS-IdleTimeout.dita"/>
-   <topicref href="../Destinations/HadoopFS-StageAttributes.dita"/>
+   <topicref href="../Destinations/HadoopFS-RecordHeaderAttributes.dita"/>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-Kerberos.dita"/>
    <topicref href="../Destinations/HadoopFS-HDFSUser-dest.dita"/>
