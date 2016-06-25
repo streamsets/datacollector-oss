@@ -323,8 +323,7 @@ public class JdbcSource extends BaseSource {
         }
         LOG.debug("Processed rows: " + rowCount);
 
-        // isAfterLast is not required to be implemented if using FORWARD_ONLY cursor.
-        if (resultSet.isAfterLast() || rowCount == 0) {
+        if (isAfterLast(resultSet) || rowCount == 0) {
           // We didn't have any data left in the cursor.
           closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
@@ -341,6 +340,26 @@ public class JdbcSource extends BaseSource {
       }
     }
     return nextSourceOffset;
+  }
+
+  /**
+   * Calls ResultSet.isAfterLast in safe way.
+   *
+   * To workaround some non standard behavior in some DBs we need to call the isAfterLast carefully.
+   */
+  private boolean isAfterLast(ResultSet rs) throws SQLException {
+    try {
+      return rs.isAfterLast();
+    } catch (SQLException e) {
+      // DB2 will close result set when it reaches end and hence isAfterLast will never return true, see
+      // https://www-304.ibm.com/support/docview.wss?uid=swg21461670
+      if(e.getErrorCode() == -4470 && e.getMessage().contains("Invalid operation: result set is closed.")) {
+        return true;
+      }
+
+      // By default we propagate whatever exception we got
+      throw e;
+    }
   }
 
   private boolean continueReading(int rowCount, int batchSize) {
