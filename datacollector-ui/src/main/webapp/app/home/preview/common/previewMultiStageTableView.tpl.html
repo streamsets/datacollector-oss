@@ -82,7 +82,7 @@
 
       <span class="pull-right glyphicon glyphicon-asterisk dirty-icon" ng-if="flattenOutputRecord[fieldPath].dirty"></span>
 
-      <div ng-if="flattenOutputRecord[fieldPath].type === 'DATETIME' || flattenOutputRecord[fieldPath].type === 'DATE'" class="clearfix">
+      <div ng-if="flattenOutputRecord[fieldPath].type === 'DATETIME' || flattenOutputRecord[fieldPath].type === 'DATE' || flattenInputRecord[fieldPath].type === 'TIME'" class="clearfix">
 
         <span class="field-value pull-left {{flattenOutputRecord[fieldPath].type}}"
               ng-class="{'value-deletion': (flattenOutputRecord[fieldPath].value !== flattenInputRecord[fieldPath].value) }"
@@ -102,7 +102,7 @@
       </div>
 
 
-      <div ng-if="flattenOutputRecord[fieldPath].type !== 'DATETIME' && flattenOutputRecord[fieldPath].type !== 'DATE'"
+      <div ng-if="flattenOutputRecord[fieldPath].type !== 'DATETIME' && flattenOutputRecord[fieldPath].type !== 'DATE' && flattenOutputRecord[fieldPath].type !== 'TIME'"
            contenteditable="{{previewMode}}"
            ng-model="flattenOutputRecord[fieldPath].value"
            ng-change="recordValueUpdated(outputRecord, flattenOutputRecord[fieldPath])"
@@ -130,7 +130,7 @@
         ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
         ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }"
         class="field-value {{flattenInputRecord[fieldPath].type}}"
-      >{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE') ? (flattenInputRecord[fieldPath].value + '' | date:'medium') : (flattenInputRecord[fieldPath].value + '')}}</td>
+      >{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE' || flattenInputRecord[fieldPath].type === 'TIME') ? (flattenInputRecord[fieldPath].value + '' | date:'medium') : (flattenInputRecord[fieldPath].value + '')}}</td>
 
 
 
@@ -150,7 +150,7 @@
 
     <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
         class="field-value {{flattenRecord[fieldPath].type}}"
-      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</td>
+      >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE' || flattenInputRecord[fieldPath].type === 'TIME') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</td>
 
   </tr>
 
