@@ -830,20 +830,19 @@ public class TestFieldTypeConverterProcessor {
     }
   }
 
-  @Test
-  public void testStringToDate() throws Exception {
-    FieldTypeConverterConfig beginnerConfig =
+  public void testStringToDateTimeTypes(Field.Type type) throws Exception {
+        FieldTypeConverterConfig beginnerConfig =
       new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
-    beginnerConfig.targetType = Field.Type.DATE;
+    beginnerConfig.targetType = type;
     beginnerConfig.dataLocale = "en";
     beginnerConfig.dateFormat = DateFormat.OTHER;
-    beginnerConfig.otherDateFormat = "yyyy-MM-dd";
+    beginnerConfig.otherDateFormat ="yyyy-MM-dd";
 
     FieldTypeConverterConfig intermediateConfig =
       new FieldTypeConverterConfig();
     intermediateConfig.fields = ImmutableList.of("/intermediate");
-    intermediateConfig.targetType = Field.Type.DATE;
+    intermediateConfig.targetType = type;
     intermediateConfig.dataLocale = "en";
     intermediateConfig.dateFormat = DateFormat.OTHER;
     intermediateConfig.otherDateFormat = "dd-MM-YYYY";
@@ -851,7 +850,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterConfig skilledConfig =
       new FieldTypeConverterConfig();
     skilledConfig.fields = ImmutableList.of("/skilled");
-    skilledConfig.targetType = Field.Type.DATE;
+    skilledConfig.targetType = type;
     skilledConfig.dataLocale = "en";
     skilledConfig.dateFormat = DateFormat.OTHER;
     skilledConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -859,7 +858,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterConfig advancedConfig =
       new FieldTypeConverterConfig();
     advancedConfig.fields = ImmutableList.of("/advanced");
-    advancedConfig.targetType = Field.Type.DATE;
+    advancedConfig.targetType = type;
     advancedConfig.dataLocale = "en";
     advancedConfig.dateFormat = DateFormat.OTHER;
     advancedConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
@@ -867,7 +866,7 @@ public class TestFieldTypeConverterProcessor {
     FieldTypeConverterConfig expertConfig =
       new FieldTypeConverterConfig();
     expertConfig.fields = ImmutableList.of("/expert");
-    expertConfig.targetType = Field.Type.DATE;
+    expertConfig.targetType = type;
     expertConfig.dataLocale = "en";
     expertConfig.dateFormat = DateFormat.OTHER;
     expertConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
@@ -897,34 +896,29 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertTrue(result.size() == 6);
 
       Assert.assertTrue(result.containsKey("beginner"));
-      Assert.assertEquals(Field.Type.DATE,result.get("beginner").getType());
       SimpleDateFormat beginnerDateFormat = new SimpleDateFormat(beginnerConfig.otherDateFormat);
       Assert.assertEquals("2015-01-03", beginnerDateFormat.format(result.get("beginner").getValueAsDate()));
 
-      /*Assert.assertTrue(result.containsKey("intermediate"));
-      SimpleDateFormat intermediateDateFormat = new SimpleDateFormat(intermediateConfig.dateFormat);
-      Assert.assertEquals("03-01-2015", intermediateDateFormat.format(result.get("intermediate").getValueAsDate()));*/
-
       Assert.assertTrue(result.containsKey("advanced"));
-      Assert.assertEquals(Field.Type.DATE,result.get("advanced").getType());
+      Assert.assertEquals(type,result.get("advanced").getType());
       SimpleDateFormat advancedDateFormat = new SimpleDateFormat(advancedConfig.otherDateFormat);
       Assert.assertEquals("2015-01-03 21:31:02.777",
         advancedDateFormat.format(result.get("advanced").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("expert"));
-      Assert.assertEquals(Field.Type.DATE,result.get("expert").getType());
+      Assert.assertEquals(type,result.get("expert").getType());
       SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.otherDateFormat);
       SimpleDateFormat expertDataSourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
       Assert.assertEquals(expertDateFormat.format(expertDataSourceFormat.parse("2015-01-03 21:32:32.333 PST")),
         expertDateFormat.format(result.get("expert").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("skilled"));
-      Assert.assertEquals(Field.Type.DATE,result.get("skilled").getType());
+      Assert.assertEquals(type,result.get("skilled").getType());
       SimpleDateFormat skilledDateFormat = new SimpleDateFormat(skilledConfig.otherDateFormat);
       Assert.assertEquals("2015-01-03 21:30:01", skilledDateFormat.format(result.get("skilled").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("null"));
-      Assert.assertEquals(Field.Type.STRING,result.get("null").getType());
+      Assert.assertEquals(Field.Type.STRING, result.get("null").getType());
       Assert.assertEquals(null, result.get("null").getValueAsDate());
 
     } finally {
@@ -934,103 +928,17 @@ public class TestFieldTypeConverterProcessor {
 
   @Test
   public void testStringToDateTime() throws Exception {
-    FieldTypeConverterConfig beginnerConfig =
-      new FieldTypeConverterConfig();
-    beginnerConfig.fields = ImmutableList.of("/beginner");
-    beginnerConfig.targetType = Field.Type.DATETIME;
-    beginnerConfig.dataLocale = "en";
-    beginnerConfig.dateFormat = DateFormat.OTHER;
-    beginnerConfig.otherDateFormat ="yyyy-MM-dd";
+    testStringToDateTimeTypes(Field.Type.DATETIME);
+  }
 
-    FieldTypeConverterConfig intermediateConfig =
-      new FieldTypeConverterConfig();
-    intermediateConfig.fields = ImmutableList.of("/intermediate");
-    intermediateConfig.targetType = Field.Type.DATETIME;
-    intermediateConfig.dataLocale = "en";
-    intermediateConfig.dateFormat = DateFormat.OTHER;
-    intermediateConfig.otherDateFormat = "dd-MM-YYYY";
+  @Test
+  public void testStringToDate() throws Exception {
+    testStringToDateTimeTypes(Field.Type.DATE);
+  }
 
-    FieldTypeConverterConfig skilledConfig =
-      new FieldTypeConverterConfig();
-    skilledConfig.fields = ImmutableList.of("/skilled");
-    skilledConfig.targetType = Field.Type.DATETIME;
-    skilledConfig.dataLocale = "en";
-    skilledConfig.dateFormat = DateFormat.OTHER;
-    skilledConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss";
-
-    FieldTypeConverterConfig advancedConfig =
-      new FieldTypeConverterConfig();
-    advancedConfig.fields = ImmutableList.of("/advanced");
-    advancedConfig.targetType = Field.Type.DATETIME;
-    advancedConfig.dataLocale = "en";
-    advancedConfig.dateFormat = DateFormat.OTHER;
-    advancedConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
-
-    FieldTypeConverterConfig expertConfig =
-      new FieldTypeConverterConfig();
-    expertConfig.fields = ImmutableList.of("/expert");
-    expertConfig.targetType = Field.Type.DATETIME;
-    expertConfig.dataLocale = "en";
-    expertConfig.dateFormat = DateFormat.OTHER;
-    expertConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
-
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(beginnerConfig, advancedConfig,
-        intermediateConfig, skilledConfig, expertConfig))
-      .addOutputLane("a").build();
-    runner.runInit();
-
-    try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      map.put("beginner", Field.create("2015-01-03")); //
-      map.put("intermediate", Field.create("03-01-2015"));
-      map.put("advanced", Field.create("2015-01-03 21:31:02.777"));//
-      map.put("expert", Field.create("2015-01-03 21:32:32.333 PST"));//
-      map.put("skilled", Field.create("2015-01-03 21:30:01"));//
-      map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 6);
-
-      Assert.assertTrue(result.containsKey("beginner"));
-      SimpleDateFormat beginnerDateFormat = new SimpleDateFormat(beginnerConfig.otherDateFormat);
-      Assert.assertEquals("2015-01-03", beginnerDateFormat.format(result.get("beginner").getValueAsDate()));
-
-      /*Assert.assertTrue(result.containsKey("intermediate"));
-      SimpleDateFormat intermediateDateFormat = new SimpleDateFormat(intermediateConfig.dateFormat);
-      Assert.assertEquals("03-01-2015", intermediateDateFormat.format(result.get("intermediate").getValueAsDate()));*/
-
-      Assert.assertTrue(result.containsKey("advanced"));
-      Assert.assertEquals(Field.Type.DATETIME,result.get("advanced").getType());
-      SimpleDateFormat advancedDateFormat = new SimpleDateFormat(advancedConfig.otherDateFormat);
-      Assert.assertEquals("2015-01-03 21:31:02.777",
-        advancedDateFormat.format(result.get("advanced").getValueAsDate()));
-
-      Assert.assertTrue(result.containsKey("expert"));
-      Assert.assertEquals(Field.Type.DATETIME,result.get("expert").getType());
-      SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.otherDateFormat);
-      SimpleDateFormat expertDataSourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
-      Assert.assertEquals(expertDateFormat.format(expertDataSourceFormat.parse("2015-01-03 21:32:32.333 PST")),
-        expertDateFormat.format(result.get("expert").getValueAsDate()));
-
-      Assert.assertTrue(result.containsKey("skilled"));
-      Assert.assertEquals(Field.Type.DATETIME,result.get("skilled").getType());
-      SimpleDateFormat skilledDateFormat = new SimpleDateFormat(skilledConfig.otherDateFormat);
-      Assert.assertEquals("2015-01-03 21:30:01", skilledDateFormat.format(result.get("skilled").getValueAsDate()));
-
-      Assert.assertTrue(result.containsKey("null"));
-      Assert.assertEquals(Field.Type.STRING,result.get("null").getType());
-      Assert.assertEquals(null, result.get("null").getValueAsDate());
-
-    } finally {
-      runner.runDestroy();
-    }
+  @Test
+  public void testStringToTime() throws Exception {
+    testStringToDateTimeTypes(Field.Type.TIME);
   }
 
   @Test
