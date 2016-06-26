@@ -47,8 +47,7 @@ public class SSOAuthenticator extends AbstractSSOAuthenticator {
     return LOG;
   }
 
-  @Override
-  public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
+  Authentication validateRequestDelegation(ServletRequest request, ServletResponse response, boolean mandatory)
       throws ServerAuthException {
     Authenticator auth = userAuthenticator;
     HttpServletRequest httpReq = (HttpServletRequest) request;
@@ -67,5 +66,19 @@ public class SSOAuthenticator extends AbstractSSOAuthenticator {
     }
     return auth.validateRequest(request, response, mandatory);
   }
+
+
+  @Override
+  public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
+      throws ServerAuthException {
+    SSOPrincipalJson.resetRequestIpAddress();
+    Authentication authentication = validateRequestDelegation(request, response, mandatory);
+    if (authentication instanceof SSOAuthenticationUser) {
+      // if the Authentication is an authenticated user, we set the IP address of the request in it.
+      SSOPrincipalUtils.setRequestInfo(((SSOAuthenticationUser)authentication).getSSOUserPrincipal(), request);
+    }
+    return authentication;
+  }
+
 
 }
