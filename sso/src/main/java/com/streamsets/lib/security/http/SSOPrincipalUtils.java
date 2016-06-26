@@ -19,35 +19,11 @@
  */
 package com.streamsets.lib.security.http;
 
-import java.security.Principal;
-import java.util.Map;
-import java.util.Set;
+import javax.servlet.ServletRequest;
 
-public interface SSOPrincipal extends Principal {
+public class SSOPrincipalUtils {
 
-  String getTokenStr();
-
-  String getIssuerUrl();
-
-  long getExpires();
-
-  // synonyms of getName(), to avoid confusion we should use this value when referring to the uid
-  String getPrincipalId();
-
-  String getPrincipalName();
-
-  String getOrganizationId();
-
-  String getOrganizationName();
-
-  String getEmail();
-
-  Set<String> getRoles();
-
-  Map<String, String> getAttributes();
-
-  boolean isApp();
-
-  String getRequestIpAddress();
-
+  public static void setRequestInfo(SSOPrincipal principal, ServletRequest request) {
+    ((SSOPrincipalJson) principal).setRequestIpAddress(request.getRemoteAddr());
+  }
 }
