@@ -68,7 +68,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 try {
                   String dateMask = null;
                   if (fieldTypeConverterConfig.targetType == Field.Type.DATE ||
-                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME) {
+                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME ||
+                    fieldTypeConverterConfig.targetType == Field.Type.TIME) {
                     dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
                       ? fieldTypeConverterConfig.dateFormat.getFormat()
                       : fieldTypeConverterConfig.otherDateFormat;
@@ -81,7 +82,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
                 }
               }
-            } else if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE) &&
+            } else if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE || field.getType() == Field.Type.TIME) &&
                 (fieldTypeConverterConfig.targetType == Field.Type.LONG ||
                     fieldTypeConverterConfig.targetType == Field.Type.STRING)) {
               if (field.getValue() == null) {
@@ -134,6 +135,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case DATETIME:
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
         return Field.createDatetime(dateTimeFormat.parse(stringValue));
+      case TIME:
+        java.text.DateFormat timeFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+        return Field.createTime(timeFormat.parse(stringValue));
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         return Field.create(new BigDecimal(decimal.toString()));
