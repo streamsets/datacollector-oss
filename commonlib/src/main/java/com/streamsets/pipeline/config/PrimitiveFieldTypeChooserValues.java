@@ -26,7 +26,7 @@ public class PrimitiveFieldTypeChooserValues extends BaseEnumChooserValues<Field
 
   public PrimitiveFieldTypeChooserValues() {
     super(Field.Type.BOOLEAN, Field.Type.CHAR, Field.Type.BYTE, Field.Type.SHORT, Field.Type.INTEGER, Field.Type.LONG,
-          Field.Type.FLOAT, Field.Type.DOUBLE, Field.Type.DECIMAL, Field.Type.DATE, Field.Type.DATETIME,
+          Field.Type.FLOAT, Field.Type.DOUBLE, Field.Type.DECIMAL, Field.Type.DATE, Field.Type.TIME, Field.Type.DATETIME,
           Field.Type.STRING, Field.Type.BYTE_ARRAY);
   }
 
