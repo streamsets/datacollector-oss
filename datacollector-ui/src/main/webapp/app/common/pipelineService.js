@@ -1665,6 +1665,11 @@ angular.module('dataCollectorApp.common')
           returnType: "Type"
         },
         {
+          name: "TIME",
+          description: "Field Type Time",
+          returnType: "Type"
+        },
+        {
           name: "DECIMAL",
           description: "Field Type Decimal",
           returnType: "Type"
