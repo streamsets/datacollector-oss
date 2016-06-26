@@ -68,4 +68,16 @@ public class TestSSOPrincipalJson {
     p.lock();
     p.setPrincipalId("id1");
   }
+
+  @Test
+  public void testRequestIpAddress() {
+    SSOPrincipalJson.resetRequestIpAddress();
+    SSOPrincipal principal =  createPrincipal(1);
+    Assert.assertNull(principal.getRequestIpAddress());
+    ((SSOPrincipalJson)principal).setRequestIpAddress("foo");
+    Assert.assertEquals("foo", principal.getRequestIpAddress());
+    SSOPrincipalJson.resetRequestIpAddress();
+    Assert.assertNull(principal.getRequestIpAddress());
+  }
+
 }

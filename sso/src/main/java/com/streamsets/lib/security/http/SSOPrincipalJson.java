@@ -145,6 +145,22 @@ public class SSOPrincipalJson implements SSOPrincipal {
     this.app = app;
   }
 
+  private final static ThreadLocal<String> REQUEST_IP_ADDRESS_TL = new ThreadLocal<>();
+
+  static void resetRequestIpAddress() {
+    REQUEST_IP_ADDRESS_TL.remove();
+  }
+
+  void setRequestIpAddress(String ipAddress) {
+    REQUEST_IP_ADDRESS_TL.set(ipAddress);
+  }
+
+  @Override
+  @JsonIgnore
+  public String getRequestIpAddress() {
+    return REQUEST_IP_ADDRESS_TL.get();
+  }
+
   @Override
   public Map<String, String> getAttributes() {
     return attributes;
