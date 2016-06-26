@@ -120,6 +120,10 @@ public class RandomDataGeneratorSource extends BaseSource {
         return Field.Type.DOUBLE;
       case DATE:
         return Field.Type.DATE;
+      case DATETIME:
+        return Field.Type.DATETIME;
+      case TIME:
+        return Field.Type.TIME;
       case STRING:
         return Field.Type.STRING;
       case INTEGER:
@@ -140,6 +144,10 @@ public class RandomDataGeneratorSource extends BaseSource {
         return random.nextBoolean();
       case DATE:
         return getRandomDate();
+      case DATETIME:
+        return getRandomDateTime();
+      case TIME:
+        return getRandomTime();
       case DOUBLE:
         return random.nextDouble();
       case FLOAT:
@@ -160,10 +168,36 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   public Date getRandomDate() {
     GregorianCalendar gc = new GregorianCalendar();
-    int year = randBetween(1990, 2010);
-    gc.set(gc.YEAR, year);
-    int dayOfYear = randBetween(1, gc.getActualMaximum(gc.DAY_OF_YEAR));
-    gc.set(gc.DAY_OF_YEAR, dayOfYear);
+    gc.set(
+      randBetween(1990, 2020),
+      randBetween(1, gc.getActualMaximum(gc.MONTH)),
+      randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH)),
+      0, 0, 0
+    );
+    return gc.getTime();
+  }
+
+  public Date getRandomTime() {
+    GregorianCalendar gc = new GregorianCalendar();
+    gc.set(
+      1970, 0, 1,
+      randBetween(0, gc.getActualMaximum(gc.HOUR_OF_DAY)),
+      randBetween(0, gc.getActualMaximum(gc.MINUTE)),
+      randBetween(0, gc.getActualMaximum(gc.SECOND))
+    );
+    return gc.getTime();
+  }
+
+  public Date getRandomDateTime() {
+    GregorianCalendar gc = new GregorianCalendar();
+    gc.set(
+      randBetween(1990, 2020),
+      randBetween(1, gc.getActualMaximum(gc.MONTH)),
+      randBetween(1, gc.getActualMaximum(gc.DAY_OF_MONTH)),
+      randBetween(0, gc.getActualMaximum(gc.HOUR_OF_DAY)),
+      randBetween(0, gc.getActualMaximum(gc.MINUTE)),
+      randBetween(0, gc.getActualMaximum(gc.SECOND))
+    );
     return gc.getTime();
   }
 
@@ -216,6 +250,8 @@ public class RandomDataGeneratorSource extends BaseSource {
     FLOAT,
     DOUBLE,
     DATE,
+    DATETIME,
+    TIME,
     BOOLEAN,
     DECIMAL,
     BYTE_ARRAY
