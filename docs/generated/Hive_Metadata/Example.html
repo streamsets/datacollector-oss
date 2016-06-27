@@ -141,14 +141,15 @@
  <h2 class="title topictitle2">The Hadoop FS Destination</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Hadoop FS is the destination that writes Avro data to Hive using stage attributes. The
-        stage attributes are the write details that Hive Metadata processor adds to record headers. </p>
+ <div class="body conbody"><p class="shortdesc">Hadoop FS is the destination that writes Avro data to HDFS using record header
+        attributes. Record header attributes contain the write details that the Hive Metadata
+        processor generates and adds to records. </p>
 
   <p class="p">So you connect the Hadoop FS destination to the data output stream of the processor. When you
             configure the destination, instead of configuring a directory template, you configure
-            the destination to use the directory in the header. Instead of configuring an Avro
-            schema, you indicate you have a schema in the record header. And you configure the
-            destination to roll files when it sees a "roll" attribute in the header. </p>
+            the destination to use the directory in the record header. Instead of configuring an
+            Avro schema, you indicate you have a schema in the record header. And you configure the
+            destination to roll files when it sees a "roll" attribute in the record header. </p>
 
         <p class="p">The Output Files tab of the destination might look something like this:</p>
 
@@ -158,11 +159,11 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="276" width="469"></img></p>
 
-        <p class="p">With this setup, the destination uses the information in stage attributes to write data
-            to Hive. It writes each record to the directory in the targetDirectory stage attribute,
-            using the Avro schema in the avroSchema attribute. And it rolls a file when it spots the
-            roll attribute in a record header. (The destination can also use Max Records in File and
-            Max Files Size to determine when to roll files.)</p>
+        <p class="p">With this setup, the destination uses the information in record header attributes to
+            write data to HDFS. It writes each record to the directory in the targetDirectory header
+            attribute, using the Avro schema in the avroSchema header attribute. And it rolls a file
+            when it spots the roll attribute in a record header. (The destination can also use Max
+            Records in File and Max Files Size to determine when to roll files.)</p>
 
  </div>
 
