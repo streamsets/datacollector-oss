@@ -24,7 +24,7 @@
             follows:</p>
         <p><image href="../Graphics/HiveMeta-Pipeline.png" id="image_ys3_ztg_2w" scale="70"/></p>
         <p>The Hive Metadata processor passes records through the first output stream - the data
-            stream. Connect the data stream to the Hadoop FS destination to write data to Hive using
+            stream. Connect the data stream to the Hadoop FS destination to write data to HDFS using
             record header attributes. </p>
         <p>The Hive Metadata processor passes the metadata record through the second output stream -
             the metadata output stream. Connect the Hive Metastore destination to the metadata

@@ -98,6 +98,10 @@
                             <entry>List-Map</entry>
                             <entry>Not supported</entry>
                         </row>
+                        <row>
+                            <entry>Time</entry>
+                            <entry>String</entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
