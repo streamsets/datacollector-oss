@@ -32,10 +32,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TestFieldValueReplacer {
@@ -557,37 +560,51 @@ public class TestFieldValueReplacer {
     }
   }
 
-  /*@Test
-  public void testReplaceNullDateFields() throws StageException {
+  public void testReplaceNullDateTimeTypesFields(Field.Type type, SimpleDateFormat format) throws Exception {
+    Date d = format.parse(format.format(new Date()));
 
-    FieldValueReplacer.FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacer.FieldValueReplacerConfig();
+    FieldValueReplacerConfig stringFieldReplacement = new FieldValueReplacerConfig();
     stringFieldReplacement.fields = ImmutableList.of("/dateField");
-    stringFieldReplacement.newValue = "32762";
+    stringFieldReplacement.newValue = format.format(d);
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacer.class)
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldValueReplacerDProcessor.class)
       .addConfiguration("fieldsToNull", null)
       .addConfiguration("fieldsToReplaceIfNull", ImmutableList.of(stringFieldReplacement))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addOutputLane("a").build();
     runner.runInit();
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("dateField", Field.create(Field.Type.SHORT, null));
-            Record record = RecordCreator.create("s", "s:1");
+      map.put("dateField", Field.create(type, null));
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 1);
-      Assert.assertTrue(result.containsKey("dateField"));
-      Assert.assertEquals((short)32762, result.get("dateField").getValue());
+
+      Record outputRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(outputRecord.has("/dateField"));
+      Field field = outputRecord.get("/dateField");
+      Assert.assertEquals(type, field.getType());
+      Assert.assertEquals(d, field.getValueAsDatetime());
     } finally {
       runner.runDestroy();
     }
-  }*/
+  }
+
+  @Test
+  public void testReplaceNullDateFields() throws Exception {
+    testReplaceNullDateTimeTypesFields(Field.Type.DATE, new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH));
+  }
+  @Test
+  public void testReplaceNullTimeFields() throws Exception {
+    testReplaceNullDateTimeTypesFields(Field.Type.TIME, new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH));
+  }
+  @Test
+  public void testReplaceNullDateTimeFields() throws Exception {
+    testReplaceNullDateTimeTypesFields(Field.Type.DATETIME, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.ENGLISH));
+  }
 
   @Test
   public void testFieldsToNullAndReplaceNulls() throws StageException {

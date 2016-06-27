@@ -111,6 +111,9 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       case DATE:
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return dateFormat.parse(stringValue);
+      case TIME:
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+        return timeFormat.parse(stringValue);
       case DATETIME:
         DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.ENGLISH);
         return dateTimeFormat.parse(stringValue);
