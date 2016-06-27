@@ -468,6 +468,9 @@ public class RecordEL {
   @ElConstant(name = "DATE", description = "Field Type Date")
   public static Field.Type DATE = Field.Type.DATE;
 
+  @ElConstant(name = "TIME", description = "Field Type Time")
+  public static Field.Type TIME = Field.Type.TIME;
+
   @ElConstant(name = "DATETIME", description = "Field Type Date Time")
   public static Field.Type DATETIME = Field.Type.DATETIME;
 
