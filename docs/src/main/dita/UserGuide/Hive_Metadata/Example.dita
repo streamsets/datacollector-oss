@@ -21,7 +21,7 @@
             /> pipeline that writes log data to Kafka. The File Tail origin in the pipeline
             processes data from several different web services, tagging each record with a "tag"
             header attribute that identifies the service that generated the data. </p>
-        <p>Now you want a new pipeline to pass the data to Hive where it can be stored and reviewed,
+        <p>Now you want a new pipeline to pass the data to HDFS where it can be stored and reviewed,
             and you'd like the data written to tables based on the web service that generated the
             data. </p>
         <p>To do this, add and configure a Kafka Consumer to read the data into the pipeline, then
