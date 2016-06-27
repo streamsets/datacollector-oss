@@ -20,10 +20,26 @@
 package com.streamsets.lib.security.http;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class SSOPrincipalUtils {
 
-  public static void setRequestInfo(SSOPrincipal principal, ServletRequest request) {
-    ((SSOPrincipalJson) principal).setRequestIpAddress(request.getRemoteAddr());
+  static final String CLIENT_IP_HEADER = "CLIENT-IP";
+  static final String UNKNOWN_IP = "unknown";
+
+  public static String getClientIpAddress(HttpServletRequest request) {
+    String ip = request.getHeader(CLIENT_IP_HEADER);
+    if (ip == null || ip.length() == 0 || UNKNOWN_IP.equalsIgnoreCase(ip)) {
+      ip = request.getRemoteAddr();
+      if (ip == null || ip.length() == 0) {
+        ip = UNKNOWN_IP;
+      }
+    }
+    return ip;
   }
+
+  public static void setRequestInfo(SSOPrincipal principal, ServletRequest request) {
+    ((SSOPrincipalJson) principal).setRequestIpAddress(getClientIpAddress((HttpServletRequest)request));
+  }
+
 }

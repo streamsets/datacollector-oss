@@ -27,6 +27,7 @@ import org.mockito.Mockito;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -55,7 +56,7 @@ public class TestSSOAuthenticator {
     Assert.assertEquals("foo", principal.getRequestIpAddress());
 
     //request returns 'bar' as remote address
-    ServletRequest request = Mockito.mock(ServletRequest.class);
+    ServletRequest request = Mockito.mock(HttpServletRequest.class);
     Mockito.when(request.getRemoteAddr()).thenReturn("bar");
 
     Assert.assertEquals(Authentication.NOT_CHECKED, authenticator.validateRequest(request, null, true));
@@ -85,7 +86,7 @@ public class TestSSOAuthenticator {
     Assert.assertEquals("foo", principal.getRequestIpAddress());
 
     //request returns 'bar' as remote address
-    request = Mockito.mock(ServletRequest.class);
+    request = Mockito.mock(HttpServletRequest.class);
     Mockito.when(request.getRemoteAddr()).thenReturn("bar");
 
     Assert.assertEquals(authentication, authenticator.validateRequest(request, null, true));
