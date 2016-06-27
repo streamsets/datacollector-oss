@@ -43,7 +43,7 @@ import java.sql.Types;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import com.streamsets.pipeline.stage.ParametrizedUtils;
+import com.streamsets.testing.ParametrizedUtils;
 
 /**
  * Run all combination of old/new way of creating tables with internal/external for case when the table in HMS

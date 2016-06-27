@@ -30,7 +30,7 @@ import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
-import com.streamsets.pipeline.stage.ParametrizedUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.it.ColdStartIT;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;

@@ -20,14 +20,23 @@
 package com.streamsets.testing;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for network-related test setup.
  */
 public class NetworkUtils {
+
+  private static final Logger LOG = LoggerFactory.getLogger(NetworkUtils.class);
+
   private NetworkUtils() {}
 
   /**
@@ -49,9 +58,11 @@ public class NetworkUtils {
    *
    * @return Available port number
    */
-  public static int getRandomPort() throws IOException {
+  public static int getRandomPort() {
     try (ServerSocket ss = new ServerSocket(0)) {
       return ss.getLocalPort();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -72,4 +83,34 @@ public class NetworkUtils {
     }
     return ports;
   }
+
+  /**
+   * Create a socket and attempt to connect to ``hostname``:``port``
+   * ``numberOfAttempts`` amount of times with ``sleepTime`` milliseconds
+   * between each attempt.
+   *
+   * @param hostname host name to connect to
+   * @param port port to connect on
+   * @param numberOfAttempts number of tries to connect
+   * @param sleepTime time in between connection attempts in milliseconds
+   * @throws InterruptedException
+   * @throws TimeoutException
+   */
+  public static void waitForStartUp(String hostname, int port, int numberOfAttempts, long sleepTime)
+    throws InterruptedException, TimeoutException {
+    for (int i = 0; i < numberOfAttempts; ++i) {
+      try {
+        LOG.debug("Attempt " + (i + 1) + " to access " + hostname + ":" + port);
+        new Socket(InetAddress.getByName(hostname), port).close();
+        return;
+      } catch (RuntimeException | IOException e) {
+        LOG.debug("Failed to connect to " + hostname + ":" + port, e);
+      }
+
+      Thread.sleep(sleepTime);
+    }
+
+    throw new TimeoutException("Couldn't access new server: " + hostname + ":" + port);
+  }
+
 }

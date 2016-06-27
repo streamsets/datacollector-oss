@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
+import com.streamsets.testing.NetworkUtils;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
@@ -91,8 +92,8 @@ public abstract class BaseHiveIT {
   private static final String WAREHOUSE_DIR = "/user/hive/warehouse";
   private static final String EXTERNAL_DIR = "/user/hive/external";
   static {
-    METASTORE_PORT = NetworkUtils.findAvailablePort();
-    HIVE_SERVER_PORT = NetworkUtils.findAvailablePort();
+    METASTORE_PORT = NetworkUtils.getRandomPort();
+    HIVE_SERVER_PORT = NetworkUtils.getRandomPort();
   }
 
   //TODO: SDC-2988, expose this better.

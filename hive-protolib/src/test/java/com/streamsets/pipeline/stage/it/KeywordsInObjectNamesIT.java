@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
-import com.streamsets.pipeline.stage.ParametrizedUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
