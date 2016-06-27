@@ -50,7 +50,7 @@
       </row>
       <row>
        <entry>Date</entry>
-       <entry>Datetime, Long, String</entry>
+       <entry>Datetime, Long, String, Time</entry>
       </row>
       <row>
        <entry>Datetime</entry>
@@ -83,6 +83,10 @@
       <row>
        <entry>String</entry>
        <entry>All supported data types except for Byte Array, List, and Map</entry>
+      </row>
+      <row>
+       <entry>Time</entry>
+       <entry>Date, Datetime, String, Long</entry>
       </row>
      </tbody>
     </tgroup>

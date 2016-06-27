@@ -30,7 +30,7 @@
                     new column. It also writes information to stage attributes so Hadoop FS can
                     write the record to the updated weblog table.</li>
                 <li>If a record has missing fields, the processor just writes information to stage
-                    attributes, and Hadoop FS writes the record to Hive with null values for the
+                    attributes, and Hadoop FS writes the record to HDFS with null values for the
                     missing fields.</li>
                 <li>If a field has been renamed, the processor treats the field as a new field,
                     generating a metadata record that the Hive Metastore destination uses to update

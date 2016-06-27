@@ -62,7 +62,7 @@
                 </dlentry>
             </dl>
         </p>
-        <p>For example, say you use this solution to write sales data to Hive. A partial upgrade of
+        <p>For example, say you use this solution to write sales data to HDFS. A partial upgrade of
             the sales system adds several new fields to a subset of the incoming data. </p>
         <p>With this drift solution, the Hive Metadata processor notes the new fields in a metadata
             record and passes it to the Hive Metastore destination. The Hive Metastore destination
