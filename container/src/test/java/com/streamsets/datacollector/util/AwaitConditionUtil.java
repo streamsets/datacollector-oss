@@ -24,8 +24,12 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.http.WebServerTask;
+import org.awaitility.Duration;
 
 import java.util.concurrent.Callable;
+
+import static org.awaitility.Awaitility.given;
 
 public class AwaitConditionUtil {
   private AwaitConditionUtil() {}
@@ -53,6 +57,23 @@ public class AwaitConditionUtil {
       @Override
       public Boolean call() throws Exception {
         return runner.getState().getStatus() == status;
+      }
+    };
+  }
+  
+  public static void waitForStart(final WebServerTask ws) {
+    given().ignoreExceptions()
+        .await()
+        .atMost(Duration.FIVE_SECONDS)
+        .until(isWebServerTaskRunning(ws));
+  }
+
+  private static Callable<Boolean> isWebServerTaskRunning(final WebServerTask ws) {
+    return new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        ws.getServerURI();
+        return true;
       }
     };
   }
