@@ -43,7 +43,6 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 @GenerateResourceBundle
 @HideConfigs(
     value = {
-      "kafkaConfigBean.dataGeneratorFormatConfig",
       "kafkaConfigBean.dataGeneratorFormatConfig.csvFileFormat",
       "kafkaConfigBean.dataGeneratorFormatConfig.csvHeader",
       "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines",
