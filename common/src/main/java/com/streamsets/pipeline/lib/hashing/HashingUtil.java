@@ -133,6 +133,9 @@ public final class HashingUtil {
             case DATE:
               sink.putLong(field.getValueAsDate().getTime());
               break;
+            case TIME:
+              sink.putLong(field.getValueAsTime().getTime());
+              break;
             case DATETIME:
               sink.putLong(field.getValueAsDatetime().getTime());
               break;

@@ -141,6 +141,9 @@ public class TestFieldHasherProcessor {
       case DATE:
         sink.putLong(new DateTypeSupport().convert(value).getTime());
         break;
+      case TIME:
+        sink.putLong(new DateTypeSupport().convert(value).getTime());
+        break;
       case DATETIME:
         sink.putLong(new DateTypeSupport().convert(value).getTime());
         break;
@@ -637,6 +640,37 @@ public class TestFieldHasherProcessor {
       Assert.assertTrue(result.containsKey("age"));
       Assert.assertEquals(
           computeHash(Field.Type.DATE, new Date(123456789), HashType.SHA2),
+          result.get("age").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testTimeField() throws StageException {
+    HasherConfig hasherConfig = createInPlaceHasherProcessor(ImmutableList.of("/age"), HashType.SHA2);
+
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("age", Field.create(Field.Type.TIME, new Date(123456789)));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("age"));
+      Assert.assertEquals(
+          computeHash(Field.Type.TIME, new Date(123456789), HashType.SHA2),
           result.get("age").getValue());
     } finally {
       runner.runDestroy();
