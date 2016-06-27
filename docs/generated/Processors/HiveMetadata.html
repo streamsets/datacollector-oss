@@ -40,8 +40,8 @@
 
         <p class="p">Use the Hive Metadata
             processor records to be written to Hive when you want the Hive Metastore destination to
-            create and update tables as needed. The processor also generates stage attributes for
-            record headers that the Hadoop FS destination can use to process the data.</p>
+            create and update tables as needed. The processor also generates record header
+            attributes that the Hadoop FS destination can use to process the data.</p>
 
   <p class="p">When you configure the Hive Metadata processor, you define the connection information for Hive
             and the expressions that define the database, table, and partitions that the records
@@ -70,7 +70,7 @@
                 <dd class="dd">Passes records downstream to the Hadoop FS destination. You can add additional
                     stages between the Hive Metadata processor and the Hadoop FS destination if
                     pipeline logic requires it, but only the Hadoop FS destination can use the
-                    generated stage attributes to write records to Hive. </dd>
+                    generated record header attributes to write records to Hive. </dd>
 
             
             
@@ -95,7 +95,7 @@
 
 </div>
 <div class="topic concept nested1" id="concept_g3p_sss_dw">
- <h2 class="title topictitle2">Stage Attributes and Metadata Records</h2>
+ <h2 class="title topictitle2">Metadata Records and Record Header Attributes</h2>
 
  <div class="body conbody">
         <p class="p">The Hive Metadata processor produces the
@@ -104,43 +104,11 @@
   <div class="p">
             <dl class="dl">
                 
-                    <dt class="dt dlterm">stage attributes</dt>
-
-                    <dd class="dd">The Hive Metadata processor adds the following stage attributes to each
-                        record header and passes the records to Hadoop FS:<ul class="ul" id="concept_g3p_sss_dw__ul_oj1_1ws_dw">
-                            <li class="li">targetDirectory - The location where each record should be written.
-                                The processor generates the directory based on the database, table,
-                                and partition information for each record and writes it to the stage
-                                    attribute.<p class="p">You can configure the Hadoop FS destination to
-                                    write records using the location in the targetDirectory stage
-                                    attribute.</p>
-</li>
-
-                            <li class="li">avroSchema - The Avro schema for the record. The processor writes
-                                the Avro schema for each record in the stage attribute. When the
-                                processor notes a compatible change in the Avro schema, it generates
-                                a new Avro schema.<p class="p">You can configure the Hadoop FS destination to
-                                    write record using the Avro schema in the avroSchema stage
-                                    attribute.</p>
-</li>
-
-                            <li class="li"> roll - An indicator to roll the file associated with the record.
-                                The processor generates a roll indicator only when the Avro schema
-                                changes in a compatible way. <p class="p">You can configure the Hadoop FS
-                                    destination to roll records when encountering the roll stage
-                                    attribute in the record header. </p>
-</li>
-
-                        </ul>
-</dd>
-
-                
-                
                     <dt class="dt dlterm">metadata record</dt>
 
                     <dd class="dd">When encountering compatible metadata changes, the Hive Metadata processor
                         generates a metadata record. The metadata record passes the following
-                        information to the Hive Metastore destination:<ul class="ul" id="concept_g3p_sss_dw__ul_o45_n5s_dw">
+                        information to the Hive Metastore destination:<ul class="ul" id="concept_g3p_sss_dw__ul_njs_x5j_kw">
                             <li class="li">The expected table structure for compatible changes, based on the
                                     record.<p class="p">Compatible changes include new tables and partitions, and
                   the addition or removal of fields in the record. Changes in data type are not
@@ -153,6 +121,38 @@
                     <dd class="dd">When the Hive Metastore destination receives the metadata record, the
                         destination performs a final check against Hive metadata and creates or
                         alters tables as needed.</dd>
+
+                
+                
+                    <dt class="dt dlterm">record header attributes</dt>
+
+                    <dd class="dd">The Hive Metadata processor adds the following header attributes to each
+                        record header and passes the records to Hadoop FS:<ul class="ul" id="concept_g3p_sss_dw__ul_oj1_1ws_dw">
+                            <li class="li">targetDirectory - The location where each record should be written.
+                                The processor generates the directory based on the database, table,
+                                and partition information for each record and writes it to the
+                                header attribute.<p class="p">You can configure the Hadoop FS destination to
+                                    write records using the location in the targetDirectory header
+                                    attribute.</p>
+</li>
+
+                            <li class="li">avroSchema - The Avro schema for the record. The processor writes
+                                the Avro schema in the header attribute for each record. When the
+                                processor notes a compatible change in the Avro schema, it generates
+                                a new Avro schema.<p class="p">You can configure the Hadoop FS destination to
+                                    write record using the Avro schema in the avroSchema header
+                                    attribute.</p>
+</li>
+
+                            <li class="li"> roll - An indicator to roll the file associated with the record.
+                                The processor generates a roll indicator only when the Avro schema
+                                changes in a compatible way. <p class="p">You can configure the Hadoop FS
+                                    destination to roll records when encountering the roll attribute
+                                    in the record header. </p>
+</li>
+
+                        </ul>
+</dd>
 
                 
             </dl>
@@ -258,7 +258,7 @@
                     <dd class="dd">When you use processing time as the time basis, the processor uses the
                         processing time and the partition value expression to determine the
                         partition value to use in the metadata record and the partition portion of
-                        the targetDirectory stage attribute.  </dd>
+                        the targetDirectory header attribute. </dd>
 
                     <dd class="dd">For example, say a partition value expression creates a new partition every
                         day and the time basis is the time of processing. Then, the processor
@@ -277,7 +277,7 @@
                         specify a Date field in the record as part of the partition value
                         expression. The processor uses the datetimes associated with the records and
                         the partition value expression to determine the partition value to use in
-                        the metadata record and the partition portion of the targetDirectory stage
+                        the metadata record and the partition portion of the targetDirectory header
                         attribute. </dd>
 
                     <dd class="dd">For example, say a partition value expression creates directories every hour
@@ -307,6 +307,8 @@
   <div class="p">The processor caches the
             following Hive metadata:<ul class="ul" id="concept_utk_3bt_dw__ul_y1l_2dt_dw">
                 <li class="li">Database and table to be written to</li>
+
+                <li class="li">Hive table properties</li>
 
                 <li class="li">Column names and data types in the table</li>
 
@@ -398,14 +400,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__d16700e2500" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__d16781e2500" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d147765e490">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d147747e493">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d147765e493">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d147747e496">Description</th>
 
                                 </tr>
 
@@ -413,24 +415,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e490 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e493 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e493 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e490 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d147765e493 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d147747e496 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e490 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_hpg_pft_zv__d16700e2546" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e493 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e493 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d147747e496 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e493 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_hpg_pft_zv__d16781e2546" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d147747e496 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -438,10 +440,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e490 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_hpg_pft_zv__d16700e2560" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e493 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_hpg_pft_zv__d16781e2560" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e493 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d147747e496 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -449,9 +451,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e490 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e493 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e493 ">Error record handling for the stage: <ul class="ul" id="task_hpg_pft_zv__d16700e2576">
+                                    <td class="entry" valign="top" width="70%" headers="d147747e496 ">Error record handling for the stage: <ul class="ul" id="task_hpg_pft_zv__d16781e2576">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -481,9 +483,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d147765e602">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d147747e605">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d147765e605">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d147747e608">Description</th>
 
                                 </tr>
 
@@ -491,25 +493,25 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d147765e602 ">Hive JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d147747e605 ">Hive JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d147765e605 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d147747e608 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d147765e602 ">Hive JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d147747e605 ">Hive JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d147765e605 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d147747e608 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Database Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Database Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_t3v_yzk_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Optional name of the database to use. You can use an
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Optional name of the database to use. You can use an
                                         expression that evaluates to a database name. <p class="p">When not
                                             defined, the processor uses the Hive default
                                             database.</p>
@@ -518,42 +520,42 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Table Name <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Table Name <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_jwt_11l_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Name of the table to use. You can use an expression that
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Name of the table to use. You can use an expression that
                                         evaluates to a table name. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Partition Column Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Partition Column Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Name of the partition column in the Hive table. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Name of the partition column in the Hive table. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Partition Value Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Partition Value Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">The data type of partition values. <span class="ph">You can use the Int, Bigint, and String data formats
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">The data type of partition values. <span class="ph">You can use the Int, Bigint, and String data formats
                         for partition data.</span></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Partition Value Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Partition Value Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_ojy_11l_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Expression that evaluates to the partition value to
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Expression that evaluates to the partition value to
                                         use.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">External Table</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">External Table</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Indicates if the table is an external table. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Indicates if the table is an external table. Select to
                                         write to tables outside the Hive default location. <p class="p">When
                                             not selected, the processor uses the default location
                                             defined by the hive.metastore.warehouse.dir property in
@@ -564,17 +566,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Table Path Template</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Table Path Template</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Expression that defines the path to use for external
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Expression that defines the path to use for external
                                         tables. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Partition Path Template</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Partition Path Template</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">Expression that defines the partition path to use for
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">Expression that defines the partition path to use for
                                         external tables when partitions are configured. When you
                                         omit partition configuration details, you can skip this
                                         property as well. <p class="p">When configured, the value of the
@@ -589,9 +591,9 @@
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d147765e602 ">Configuration Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d147747e605 ">Configuration Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d147765e605 ">
+       <td class="entry" valign="top" width="70%" headers="d147747e608 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -613,9 +615,9 @@
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e602 ">Additional Hadoop Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e605 ">Additional Hadoop Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e605 ">
+                                    <td class="entry" valign="top" width="70%" headers="d147747e608 ">
                                         <p class="p">Additional properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the
                                             property name and value. </p>
@@ -644,9 +646,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d147765e805">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d147747e808">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d147765e808">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d147747e811">Description</th>
 
                                 </tr>
 
@@ -654,10 +656,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e805 ">Max Cache Size (entries) <a class="xref" href="HiveMetadata.html#concept_utk_3bt_dw" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries.">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e808 ">Max Cache Size (entries) <a class="xref" href="HiveMetadata.html#concept_utk_3bt_dw" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries.">
                                             <img class="image" id="task_hpg_pft_zv__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e808 ">Maximum number of entries in the cache. <p class="p">When the cache
+                                    <td class="entry" valign="top" width="70%" headers="d147747e811 ">Maximum number of entries in the cache. <p class="p">When the cache
          reaches the maximum size, the oldest cached entries are evicted to allow for new
          data.</p>
 <p class="p">Default is -1, an unlimited cache size.</p>
@@ -666,18 +668,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e805 ">Time Basis  <a class="xref" href="HiveMetadata.html#concept_pg1_1fl_3w">
+                                    <td class="entry" valign="top" width="30%" headers="d147747e808 ">Time Basis  <a class="xref" href="HiveMetadata.html#concept_pg1_1fl_3w">
                                             <img class="image" id="task_hpg_pft_zv__image_mn2_pnl_3w" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e808 ">Time basis used to evaluate datetime-based partition
+                                    <td class="entry" valign="top" width="70%" headers="d147747e811 ">Time basis used to evaluate datetime-based partition
                                         value expressions.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e805 ">Decimal Field Scale Expression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e808 ">Decimal Field Scale Expression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e808 ">Expression that defines the scale for decimal fields.
+                                    <td class="entry" valign="top" width="70%" headers="d147747e811 ">Expression that defines the scale for decimal fields.
                                         Enter a single value to be used by all decimal fields in the
                                         record or an expression that evaluates to different scales
                                         for different fields. <p class="p">The default expression determines
@@ -691,9 +693,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d147765e805 ">Decimal Field Precision Expression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d147747e808 ">Decimal Field Precision Expression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d147765e808 ">Expression that defines the precision of decimal fields.
+                                    <td class="entry" valign="top" width="70%" headers="d147747e811 ">Expression that defines the precision of decimal fields.
                                         Enter a single value to be used by all decimal fields in the
                                         record or an expression that evaluates to different
                                         precisions for different fields.<p class="p">The default expression
