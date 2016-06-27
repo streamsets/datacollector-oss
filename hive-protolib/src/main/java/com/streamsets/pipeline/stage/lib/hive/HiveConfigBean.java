@@ -47,7 +47,7 @@ public class HiveConfigBean {
       type = ConfigDef.Type.STRING,
       description = "JDBC URL used to connect to Hive." +
           "Use a valid JDBC URL format, such as: jdbc:hive2://<host>:<port>/<dbname>.",
-      defaultValue = "jdbc:hive2://<host>:<port>/default}",
+      defaultValue = "jdbc:hive2://<host>:<port>/default",
       displayPosition= 10,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       elDefs = {StringEL.class},
