@@ -19,6 +19,18 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
+import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -30,20 +42,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import com.streamsets.datacollector.main.SlaveRuntimeInfo;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.main.RuntimeModule;
-import com.streamsets.datacollector.util.Configuration;
+import static com.streamsets.datacollector.util.AwaitConditionUtil.waitForStart;
 
 public class SlaveWebServerTaskIT {
 
@@ -96,23 +95,7 @@ public class SlaveWebServerTaskIT {
     conf.set(SlaveWebServerTask.HTTPS_WORKER_TRUSTSTORE_PATH, keyStore);
     conf.set(SlaveWebServerTask.HTTPS_WORKER_TRUSTSTORE_PASSWORD, "password");
     final WebServerTask ws = createSlaveWebServerTask(confDir, conf);
-    try {
-      ws.initTask();
-      new Thread() {
-        @Override
-        public void run() {
-          ws.runTask();
-        }
-      }.start();
-      Thread.sleep(1000);
-      HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort() +
-          "/ping").openConnection();
-      TestWebServerTaskHttpHttps.configureHttpsUrlConnection(conn);
-      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
-      Assert.assertNotNull(runtimeInfo.getSSLContext());
-    } finally {
-      ws.stopTask();
-    }
+    verifyWebServerTask(ws, runtimeInfo);
   }
 
   @Test
@@ -134,6 +117,10 @@ public class SlaveWebServerTaskIT {
     conf.set(SlaveWebServerTask.HTTPS_WORKER_TRUSTSTORE_PATH, keyStore);
     conf.set(SlaveWebServerTask.HTTPS_WORKER_TRUSTSTORE_PASSWORD, "password");
     final WebServerTask ws = createSlaveWebServerTask(confDir, conf);
+    verifyWebServerTask(ws, runtimeInfo);
+  }
+
+  private static void verifyWebServerTask(final WebServerTask ws, SlaveRuntimeInfo runtimeInfo) throws Exception {
     try {
       ws.initTask();
       new Thread() {
@@ -142,7 +129,7 @@ public class SlaveWebServerTaskIT {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
       HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort() +
           "/ping").openConnection();
       TestWebServerTaskHttpHttps.configureHttpsUrlConnection(conn);
@@ -169,7 +156,7 @@ public class SlaveWebServerTaskIT {
           ws.runTask();
         }
       }.start();
-      Thread.sleep(1000);
+      waitForStart(ws);
       HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + ws.getServerURI().getPort() +
           "/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());

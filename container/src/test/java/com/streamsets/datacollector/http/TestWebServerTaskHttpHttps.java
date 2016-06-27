@@ -30,7 +30,6 @@ import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.awaitility.Duration;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
@@ -66,7 +65,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import static org.awaitility.Awaitility.given;
+import static com.streamsets.datacollector.util.AwaitConditionUtil.waitForStart;
 
 public class TestWebServerTaskHttpHttps {
 
@@ -127,13 +126,6 @@ public class TestWebServerTaskHttpHttps {
         return true;
       }
     };
-  }
-
-  private void waitForStart(final WebServerTask ws) {
-    given().ignoreExceptions()
-        .await()
-        .atMost(Duration.FIVE_SECONDS)
-        .until(isWebServerTaskRunning(ws));
   }
 
   @Test
