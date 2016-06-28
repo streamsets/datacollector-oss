@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,7 +96,8 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       String toFieldExpression,
       Set<String> fieldPaths,
       Set<String> fieldsThatDoNotExist,
-      Map<String, List<String>> multipleRegexMatchingSameFields,
+      Map<String, Set<String>> multipleRegexMatchingSameFields,
+      Map<String, String> matchedByRegularExpression,
       Map<String, String> fromFieldToFieldMap
   ) {
     boolean hasSourceFieldsMatching = false;
@@ -105,16 +107,16 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
         hasSourceFieldsMatching = true;
         String toFieldPath = matcher.replaceAll(toFieldExpression);
         if (fromFieldToFieldMap.containsKey(existingFieldPath)) {
-          List<String> patterns =  multipleRegexMatchingSameFields.get(existingFieldPath);
+          Set<String> patterns =  multipleRegexMatchingSameFields.get(existingFieldPath);
           if (patterns == null) {
-            patterns = new ArrayList<>();
+            patterns = new LinkedHashSet<>();
           }
           patterns.add(fromFieldPattern.pattern());
+          patterns.add(matchedByRegularExpression.get(existingFieldPath));
           multipleRegexMatchingSameFields.put(existingFieldPath, patterns);
-          //We should not process the field.
-          fromFieldToFieldMap.remove(existingFieldPath);
         } else {
           fromFieldToFieldMap.put(existingFieldPath, toFieldPath);
+          matchedByRegularExpression.put(existingFieldPath, fromFieldPattern.pattern());
         }
       }
     }
@@ -127,7 +129,8 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     Set<String> fieldsRequiringOverwrite = new HashSet<>();
-    Map<String, List<String>> multipleRegexMatchingSameFields = new HashMap<>();
+    Map<String, String> matchedByRegularExpression = new HashMap<>();
+    Map<String, Set<String>> multipleRegexMatchingSameFields = new HashMap<>();
     //So that the ordering of fieldPaths will be preserved
     Map<String, String> fromFieldToFieldMap = new LinkedHashMap<>();
 
@@ -138,8 +141,13 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
           record.getEscapedFieldPaths(),
           fieldsThatDoNotExist,
           multipleRegexMatchingSameFields,
+          matchedByRegularExpression,
           fromFieldToFieldMap
       );
+    }
+    //We should not process fields  which are matched by multiple regex
+    for (String fieldsMatchedByMultipleExpression : multipleRegexMatchingSameFields.keySet()) {
+      fromFieldToFieldMap.remove(fieldsMatchedByMultipleExpression);
     }
 
     for (Map.Entry<String, String> fromFieldToFieldEntry : fromFieldToFieldMap.entrySet()) {
@@ -181,11 +189,12 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     if (errorHandler.multipleFromFieldsMatching == OnStagePreConditionFailure.TO_ERROR
         && !multipleRegexMatchingSameFields.isEmpty()) {
       StringBuilder sb = new StringBuilder();
-      for (Map.Entry<String, List<String>> multipleRegexMatchingSameFieldEntry : multipleRegexMatchingSameFields.entrySet()) {
-        sb.append(
-            "Field: " + multipleRegexMatchingSameFieldEntry.getKey() + " Regex: " +
-                Joiner.on(".").join(multipleRegexMatchingSameFieldEntry.getValue())
-        );
+      for (Map.Entry<String, Set<String>> multipleRegexMatchingSameFieldEntry
+          : multipleRegexMatchingSameFields.entrySet()) {
+        sb.append(" Field: ")
+            .append(multipleRegexMatchingSameFieldEntry.getKey())
+            .append(" Regex: ")
+            .append(Joiner.on(",").join(multipleRegexMatchingSameFieldEntry.getValue()));
       }
       throw new OnRecordErrorException(record, Errors.FIELD_RENAMER_03, sb.toString());
 
