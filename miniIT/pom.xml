@@ -335,10 +335,23 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${failsafe.version}</version>
         <configuration>
-          <argLine>-Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m</argLine>
+          <forkCount>1</forkCount>
+          <reuseForks>true</reuseForks>
         </configuration>
+        <executions>
+          <execution>
+            <id>single-fork-integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
