@@ -234,7 +234,7 @@ public  class TestRecordWriterReaderFactory {
   }
 
   @Test
-  public void testDateAndDateTime() throws IOException {
+  public void testDateTimeTypes() throws IOException {
     Date date = new Date();
 
     ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -245,16 +245,24 @@ public  class TestRecordWriterReaderFactory {
     Map<String, Field> map = new HashMap<>();
     map.put("d", Field.create(Field.Type.DATE, date));
     map.put("dt", Field.create(Field.Type.DATETIME, date));
+    map.put("t", Field.create(Field.Type.TIME, date));
     record1.set(Field.create(map));
     writer.write(record1);
 
     InputStream is = new ByteArrayInputStream(os.toByteArray());
     RecordReader reader = RecordWriterReaderFactory.createRecordReader(is, 0, 1000);
     Record record = reader.readRecord();
-    Date destinationDate = record.get("/d").getValueAsDate();
-    Date destinationDateTime = record.get("/dt").getValueAsDatetime();
 
-    Assert.assertEquals(date, destinationDate);
-    Assert.assertEquals(date, destinationDateTime);
+    Assert.assertTrue(record.has("/d"));
+    Assert.assertEquals(Field.Type.DATE, record.get("/d").getType());
+    Assert.assertEquals(date, record.get("/d").getValueAsDate());
+
+    Assert.assertTrue(record.has("/t"));
+    Assert.assertEquals(Field.Type.TIME, record.get("/t").getType());
+    Assert.assertEquals(date, record.get("/t").getValueAsTime());
+
+    Assert.assertTrue(record.has("/dt"));
+    Assert.assertEquals(Field.Type.DATETIME, record.get("/dt").getType());
+    Assert.assertEquals(date, record.get("/dt").getValueAsDatetime());
   }
 }
