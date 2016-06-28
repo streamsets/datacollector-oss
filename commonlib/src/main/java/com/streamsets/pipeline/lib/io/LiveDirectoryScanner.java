@@ -158,13 +158,18 @@ public class LiveDirectoryScanner {
   /**
    * Scans the directory for number of files yet to be processed.
    *
-   * @param current the last 'rolled' file processed. Use <code>null</code> to look for the first one. The provided
-   *                file cannot be the 'live' file.
-   * @return the number of rolled files yet to be processed.
+   * @param current the last 'rolled' file processed. Use <code>null</code> to look for the first one.
+   * @return the number of files yet to be processed.
    * @throws IOException thrown if the directory could not be scanned.
    */
   public long getPendingFiles(LiveFile current) throws IOException{
-    return findToBeProcessedMatchingFiles(current).size();
+    //Current will not be acceptable for roll files (if active file is without a counter/date pattern)
+    //and will be later renamed to a file with counter/date suffix, if that is the case we should
+    //return 0 as number of pending files
+    if (current == null || rollMode.isCurrentAcceptable(current.getPath().getFileName().toString())) {
+      return findToBeProcessedMatchingFiles(current!=null? current.refresh() : null).size();
+    }
+    return 0;
   }
 
   private LiveFile scanInternal(LiveFile current) throws IOException {
