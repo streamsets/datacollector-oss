@@ -51,6 +51,7 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -189,6 +190,7 @@ public class TestHiveMetadataProcessor {
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         HiveConfigBean bean = BaseHiveIT.getHiveConfigBean();
         bean.setConfiguration(new Configuration());
+        bean.setHiveConf(new HiveConf());
         return bean;
       }
     });
