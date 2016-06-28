@@ -50,6 +50,8 @@ public class XmlUtil {
       obj = field.getValueAsChar();
     } else if(field.getType()== Field.Type.DATE) {
       obj = field.getValueAsDate();
+    } else if(field.getType()== Field.Type.TIME) {
+      obj = field.getValueAsTime();
     } else if(field.getType()== Field.Type.DATETIME) {
       obj = field.getValueAsDatetime();
     } else if(field.getType()== Field.Type.DECIMAL) {

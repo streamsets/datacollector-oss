@@ -81,7 +81,7 @@ public class JsonUtil {
     } else if (json instanceof byte[]) {
       field = Field.create((byte[]) json);
     } else if (json instanceof Date) {
-      field = Field.createDate((Date) json);
+      field = Field.createDatetime((Date) json);
     } else if (json instanceof BigDecimal) {
       field = Field.create((BigDecimal) json);
     } else if (json instanceof UUID) {
@@ -106,6 +106,8 @@ public class JsonUtil {
       obj = field.getValueAsChar();
     } else if(field.getType()== Field.Type.DATE) {
       obj = field.getValueAsDate();
+    } else if(field.getType()== Field.Type.TIME) {
+      obj = field.getValueAsTime();
     } else if(field.getType()== Field.Type.DATETIME) {
       obj = field.getValueAsDatetime();
     } else if(field.getType()== Field.Type.DECIMAL) {
