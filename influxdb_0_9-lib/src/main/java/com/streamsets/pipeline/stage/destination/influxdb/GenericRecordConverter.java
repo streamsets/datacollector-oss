@@ -62,7 +62,10 @@ public class GenericRecordConverter implements RecordConverter {
 
   private long getTime(Record record) throws OnRecordErrorException {
     Field timeField = record.get(conf.timeField);
-    if (timeField.getType() == Field.Type.DATE || timeField.getType() == Field.Type.DATETIME) {
+    if (timeField.getType() == Field.Type.DATE ||
+        timeField.getType() == Field.Type.DATETIME ||
+        timeField.getType() == Field.Type.TIME)
+    {
       return timeField.getValueAsDatetime().getTime();
     } else if (timeField.getType() == Field.Type.LONG) {
       return timeField.getValueAsLong();
