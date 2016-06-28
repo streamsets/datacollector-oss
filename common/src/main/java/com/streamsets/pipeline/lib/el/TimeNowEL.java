@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.el;
 
 import com.streamsets.pipeline.api.ElFunction;
+import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -40,6 +41,24 @@ public class TimeNowEL {
       now = new Date();
     }
     return now;
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "trimDate", description = "Set date portion of datetime expression to January 1, 1970")
+  public static Date trimDate(@ElParam("datetime") Date in) {
+    Date ret = new Date(in.getTime());
+    ret.setYear(1900);
+    ret.setMonth(0);
+    ret.setDate(1);
+    return ret;
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "trimTime", description = "Set time portion of datetime expression to 00:00:00")
+  public static Date trimTime(@ElParam("datetime") Date in) {
+    Date ret = new Date(in.getTime());
+    ret.setHours(0);
+    ret.setMinutes(0);
+    ret.setSeconds(0);
+    return ret;
   }
 
   public static void setTimeNowInContext(ELVars variables, Date now) {
