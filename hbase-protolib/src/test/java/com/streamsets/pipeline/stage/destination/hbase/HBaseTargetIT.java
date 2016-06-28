@@ -215,15 +215,17 @@ public class HBaseTargetIT {
           new HBaseFieldMappingConfig("cf:c", "[3]", StorageType.TEXT),
           new HBaseFieldMappingConfig("cf:d", "[4]", StorageType.TEXT));
 
+    Date d = new Date();
+
     TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.TEXT, OnRecordError.DISCARD, "", false, "[0]", false, false);
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
     String rowKey = "row_key";
     fields.add(Field.create(rowKey));
-    fields.add(Field.create(20));
-    fields.add(Field.create(30));
-    fields.add(Field.create(40));
-    fields.add(Field.create(50));
+    fields.add(Field.create(Type.LONG, 20));
+    fields.add(Field.create(Type.DATE, d));
+    fields.add(Field.create(Type.TIME, d));
+    fields.add(Field.create(Type.DATETIME, d));
     record.set(Field.create(fields));
 
     List<Record> singleRecord = ImmutableList.of(record);
@@ -236,9 +238,9 @@ public class HBaseTargetIT {
     Get g = new Get(Bytes.toBytes(rowKey));
     Result r = htable.get(g);
     assertEquals("20", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
-    assertEquals("30", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
-    assertEquals("40", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c"))));
-    assertEquals("50", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
+    assertEquals(d.toString(), Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+    assertEquals(d.toString(), Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c"))));
+    assertEquals(d.toString(), Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
 
   }
 
@@ -507,7 +509,44 @@ public class HBaseTargetIT {
     assertEquals(30, Bytes.toInt(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
     assertEquals("40", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c"))));
     assertEquals("50", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d"))));
+  }
 
+  public void testSingleRecordBinaryStorageDateTimeTypes(Field.Type type) throws Exception {
+    List<HBaseFieldMappingConfig> fieldMappings = ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.BINARY));
+
+    TargetRunner targetRunner = buildRunner(fieldMappings, StorageType.BINARY, OnRecordError.STOP_PIPELINE, "", false, "[0]", false, false);
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create(123));
+    fields.add(Field.create(type, new Date()));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    try {
+      targetRunner.runWrite(singleRecord);
+      fail(Utils.format("Expected exception when converting {} type to binary", type.name()));
+    } catch(StageException e) {
+      Assert.assertTrue(e.getMessage().contains(Utils.format("HBASE_12 - Cannot convert type: {} to BINARY", type.name())));
+    } finally {
+      targetRunner.runDestroy();
+    }
+  }
+
+  @Test(timeout=60000)
+  public void testSingleRecordBinaryStorageDate() throws Exception {
+    testSingleRecordBinaryStorageDateTimeTypes(Type.DATE);
+  }
+
+  @Test(timeout=60000)
+  public void testSingleRecordBinaryStorageTime() throws Exception {
+    testSingleRecordBinaryStorageDateTimeTypes(Type.TIME);
+  }
+
+  @Test(timeout=60000)
+  public void testSingleRecordBinaryStorageDateTime() throws Exception {
+    testSingleRecordBinaryStorageDateTimeTypes(Type.DATETIME);
   }
 
   @Test(timeout=60000)

@@ -360,6 +360,7 @@ public class HBaseTarget extends BaseTarget {
       case BYTE:
       case CHAR:
       case DATE:
+      case TIME:
       case DATETIME:
       case DECIMAL:
       case DOUBLE:
@@ -545,6 +546,9 @@ public class HBaseTarget extends BaseTarget {
       case DATE:
         throw new OnRecordErrorException(record, Errors.HBASE_12, Type.DATE.name(),
             StorageType.BINARY.name());
+      case TIME:
+        throw new OnRecordErrorException(record, Errors.HBASE_12, Type.TIME.name(),
+          StorageType.BINARY.name());
       case DATETIME:
         throw new OnRecordErrorException(record, Errors.HBASE_12, Type.DATETIME.name(),
             StorageType.BINARY.name());
