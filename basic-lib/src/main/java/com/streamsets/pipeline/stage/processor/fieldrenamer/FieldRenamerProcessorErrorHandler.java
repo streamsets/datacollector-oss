@@ -53,8 +53,8 @@ public class FieldRenamerProcessorErrorHandler {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
-      label = "Handle Multiple From Fields Match",
-      description="Response when fields match multiple source field regular expressions.",
+      label = "Multiple Source Field Matches",
+      description="Response when source fields match multiple source field regular expressions.",
       displayPosition = 40,
       group = "RENAME"
   )
