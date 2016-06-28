@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.StringEL;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
@@ -108,11 +110,15 @@ public class HiveConfigBean {
   private Configuration configuration;
   private UserGroupInformation loginUgi;
   private Connection hiveConnection;
+  private HiveConf hConf;
 
   public Configuration getConfiguration() {
     return configuration;
   }
   public Connection getHiveConnection() {return hiveConnection;}
+  public String getHiveConfigValue(String name) {
+    return hConf.get(name);
+  }
 
   /**
    * This is for testing purpose
@@ -121,6 +127,11 @@ public class HiveConfigBean {
   public void setConfiguration(Configuration config) {
     configuration = config;
   }
+  // This is for testing purpose.
+  public void setHiveConf(HiveConf hConfig) {
+    this.hConf = hConfig;
+  }
+
   public UserGroupInformation getUgi() {
     return loginUgi;
   }
@@ -153,6 +164,10 @@ public class HiveConfigBean {
       HiveMetastoreUtil.validateConfigFile("core-site.xml", confDir, hiveConfDir, issues, configuration, context);
       HiveMetastoreUtil.validateConfigFile("hdfs-site.xml", confDir, hiveConfDir, issues, configuration, context);
       HiveMetastoreUtil.validateConfigFile("hive-site.xml", confDir, hiveConfDir, issues, configuration, context);
+
+      hConf = new HiveConf(configuration, HiveConf.class);
+      File confFile = new File(hiveConfDir.getAbsolutePath(), "hive-site.xml");
+      hConf.addResource(new Path(confFile.getAbsolutePath()));
     } else {
       issues.add(context.createConfigIssue(
           Groups.HIVE.name(),

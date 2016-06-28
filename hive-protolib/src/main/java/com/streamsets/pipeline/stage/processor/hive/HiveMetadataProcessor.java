@@ -197,9 +197,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
 
     if (!externalTable) {
-      internalWarehouseDir
-          = new HiveConf(hiveConfigBean.getConfiguration(), HiveConf.class)
-          .get(WAREHOUSE_DIR_PROPERTY);
+      internalWarehouseDir = hiveConfigBean.getHiveConfigValue(WAREHOUSE_DIR_PROPERTY);
       validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
     } else {
       validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_06, issues);
