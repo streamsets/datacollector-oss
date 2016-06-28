@@ -195,4 +195,67 @@ public class TestLiveDirectoryScanner {
     Assert.assertEquals(new LiveFile(liveFile), lf);
   }
 
+  @Test
+  public void testPendingFilesWithReverseCounter() throws Exception {
+    testPendingFiles("2", "1", LogRollModeFactory.REVERSE_COUNTER);
+  }
+
+  @Test
+  public void testPendingFilesWithAlphabetical() throws Exception {
+    testPendingFiles("a", "b", LogRollModeFactory.ALPHABETICAL);
+  }
+
+  @Test
+  public void testPendingFilesWithDATE_YYYY_MM() throws Exception {
+    testPendingFiles("2017-05", "2017-06", LogRollModeFactory.DATE_YYYY_MM);
+  }
+
+  @Test
+  public void testPendingFilesWithDATE_YYYY_MM_DD() throws Exception {
+    testPendingFiles("2017-05-06", "2017-05-07", LogRollModeFactory.DATE_YYYY_MM_DD);
+
+  }
+
+  @Test
+  public void testPendingFilesWithDATE_YYYY_MM_DD_HH() throws Exception {
+    testPendingFiles("2017-05-06-01", "2017-05-06-02", LogRollModeFactory.DATE_YYYY_MM_DD_HH);
+  }
+
+  @Test
+  public void testPendingFilesWithDATE_YYYY_MM_DD_HH_MM() throws Exception {
+    testPendingFiles("2017-05-06-01-01", "2017-05-06-01-02", LogRollModeFactory.DATE_YYYY_MM_DD_HH_MM);
+  }
+
+
+  private void testPendingFiles(
+      String rolledFileNameSuffix1,
+      String rolledFileNameSuffix2,
+      LogRollModeFactory factory
+  ) throws Exception {
+    Path rolledFile1 = new File(testDir, "my.log." + rolledFileNameSuffix1).toPath();
+    Path rolledFile2 = new File(testDir, "my.log." + rolledFileNameSuffix2).toPath();
+    Files.createFile(rolledFile1);
+    Files.createFile(rolledFile2);
+    Path liveFile = new File(testDir, "my.log").toPath();
+    Files.createFile(liveFile);
+    LiveDirectoryScanner spooler = new LiveDirectoryScanner(
+        testDir.getAbsolutePath(),
+        null,
+        factory.get(liveFile.getFileName().toString(), "")
+    );
+    LiveFile lf = spooler.scan(null);
+    Assert.assertNotNull(lf);
+    //got my.log.2, Only pending file with reverse counter is my.log.1
+    Assert.assertEquals(new LiveFile(rolledFile1), lf);
+    Assert.assertEquals(1, spooler.getPendingFiles(lf));
+
+    lf = spooler.scan(lf);
+    //got my.log.1, all files with reverse counter are processed
+    Assert.assertEquals(new LiveFile(rolledFile2), lf);
+    Assert.assertEquals(0, spooler.getPendingFiles(lf));
+
+    lf = spooler.scan(lf);
+    Assert.assertEquals(new LiveFile(liveFile), lf);
+    Assert.assertEquals(0, spooler.getPendingFiles(lf));
+  }
 }
