@@ -118,4 +118,10 @@ public class KafkaTestUtil08 extends SdcKafkaTestUtil {
     kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
   }
 
+  @Override
+  public Map<String, String> setMaxAcks(Map<String, String> producerConfigs) {
+    producerConfigs.put("request.required.acks", "-1");
+    return producerConfigs;
+  }
+
 }

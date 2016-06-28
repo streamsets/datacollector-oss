@@ -43,6 +43,7 @@ import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Category(SingleForkNoReuseTest.class)
@@ -140,7 +141,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC1,
         "-1",                               // partition
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.ROUND_ROBIN,
         false,                              // runtimeTopicResolution
@@ -192,7 +193,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC2,
         "-1",                               // partition
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.RANDOM,
         false,                              // runtimeTopicResolution
@@ -252,7 +253,7 @@ public class TestKafkaTargetMultiPartition {
         "${record:value('/') % 3}",
         //record has a map which contains an integer field with key "partitionKey",
         //kafka has 3 partitions. Expression distributes the record to partition based on the condition
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -305,7 +306,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC4,
         "${value('/') % 3}",                               // invalid partition expression
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -334,7 +335,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC5,
         "${record:value('/') % 3}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -370,7 +371,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC6,
         "13",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -405,7 +406,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC7,
         "${record:value('/')}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -441,7 +442,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC8,
         "${record:value('/') % 3}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         true,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         false,                              // runtimeTopicResolution
@@ -492,7 +493,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "${record:value('/partition') % 3}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         true,                              // singleMessagePerBatch
         PartitionStrategy.EXPRESSION,
         true,                              // runtimeTopicResolution
@@ -570,7 +571,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC12,
         "${record:value('/')}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.DEFAULT,
         false,                              // runtimeTopicResolution
@@ -626,7 +627,7 @@ public class TestKafkaTargetMultiPartition {
         sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC13,
         "${record:value('/')}",
-        null,                               // kafka producer configs
+        sdcKafkaTestUtil.setMaxAcks(new HashMap<String, String>()), // kafka producer configs
         false,                              // singleMessagePerBatch
         PartitionStrategy.DEFAULT,
         false,                              // runtimeTopicResolution

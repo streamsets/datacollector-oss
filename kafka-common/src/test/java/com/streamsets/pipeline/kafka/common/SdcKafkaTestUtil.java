@@ -501,4 +501,5 @@ public abstract class SdcKafkaTestUtil {
     throw new IllegalArgumentException("Unsupported data type requested");
   }
 
+  public abstract Map<String,String> setMaxAcks(Map<String, String> producerConfigs);
 }
