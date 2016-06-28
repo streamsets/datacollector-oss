@@ -122,6 +122,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         return "DOUBLE";
       case DATE:
         return "DATE";
+      case TIME:
+        return "TIME";
       case DATETIME:
         return "TIMESTAMP";
       case DECIMAL:

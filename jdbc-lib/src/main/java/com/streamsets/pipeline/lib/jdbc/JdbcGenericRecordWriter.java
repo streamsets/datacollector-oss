@@ -140,6 +140,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             statement.setArray(paramIdx, array);
             break;
           case DATE:
+          case TIME:
           case DATETIME:
             // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
             statement.setTimestamp(paramIdx, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
