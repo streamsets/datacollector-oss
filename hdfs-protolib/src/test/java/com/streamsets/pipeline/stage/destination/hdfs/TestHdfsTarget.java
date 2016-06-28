@@ -39,15 +39,18 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,23 +59,18 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class TestHdfsTarget {
   private String testDir;
 
+  @Rule
+  public TestName testName = new TestName();
+
   @Before
   public void setUp() {
-    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    File dir = new File("target/TestHdfsTarget", testName.getMethodName()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     testDir = dir.getAbsolutePath();
-  }
-
-  @After
-  public void after() {
-    FileUtils.deleteQuietly(new File(testDir));
   }
 
   private String getTestDir() {
