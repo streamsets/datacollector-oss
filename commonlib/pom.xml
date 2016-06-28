@@ -40,6 +40,7 @@
     <jackson.version>2.4.3</jackson.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
+    <netty.version>4.0.27.Final</netty.version>
   </properties>
 
   <dependencies>
@@ -142,6 +143,20 @@
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
       <version>${snappy.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport</artifactId>
+      <version>${netty.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-buffer</artifactId>
+      <version>${netty.version}</version>
       <scope>compile</scope>
     </dependency>
 

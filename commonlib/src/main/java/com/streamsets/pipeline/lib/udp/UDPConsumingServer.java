@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.udp;
+package com.streamsets.pipeline.lib.udp;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -38,6 +38,7 @@ import java.util.List;
 
 public class UDPConsumingServer {
   private static final Logger LOG = LoggerFactory.getLogger(UDPConsumingServer.class);
+  private final int acceptThreads;
   private final List<InetSocketAddress> addresses;
   private final UDPConsumer udpConsumer;
   private final List<ChannelFuture> channelFutures;
@@ -53,13 +54,18 @@ public class UDPConsumingServer {
   }
 
   public UDPConsumingServer(List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
+    this(1, addresses, udpConsumer);
+  }
+
+  public UDPConsumingServer(int acceptThreads, List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
+    this.acceptThreads = acceptThreads;
     this.addresses = ImmutableList.copyOf(addresses);
     this.udpConsumer = udpConsumer;
     this.channelFutures = new ArrayList<>();
   }
 
   public void listen() throws Exception {
-    group = new NioEventLoopGroup();
+    group = new NioEventLoopGroup(acceptThreads);
     for (SocketAddress address : addresses) {
       Bootstrap b = new Bootstrap();
       b.group(group)
@@ -74,7 +80,7 @@ public class UDPConsumingServer {
   }
 
   public void destroy() {
-    LOG.info("Destorying server on address(es) {}", addresses);
+    LOG.info("Destroying server on address(es) {}", addresses);
     for (ChannelFuture channelFuture : channelFutures) {
       if (channelFuture != null && channelFuture.isCancellable()) {
         channelFuture.cancel(true);

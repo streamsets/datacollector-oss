@@ -23,6 +23,7 @@ package com.streamsets.pipeline.stage.origin.udp;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.AbstractParser;
+import com.streamsets.pipeline.lib.udp.UDPConsumer;
 import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

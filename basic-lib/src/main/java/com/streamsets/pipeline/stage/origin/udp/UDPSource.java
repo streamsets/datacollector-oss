@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.parser.ParserConfig;
 import com.streamsets.pipeline.lib.parser.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.syslog.SyslogParser;
+import com.streamsets.pipeline.lib.udp.UDPConsumingServer;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
