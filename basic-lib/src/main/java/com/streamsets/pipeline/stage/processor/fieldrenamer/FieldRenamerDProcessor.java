@@ -52,7 +52,7 @@ public class FieldRenamerDProcessor extends DProcessor {
       defaultValue = "",
       label = "Fields to Rename",
       description = "Fields to rename, and target field names.",
-      displayPosition = 40,
+      displayPosition = 10,
       group = "RENAME"
   )
   @ListBeanModel
