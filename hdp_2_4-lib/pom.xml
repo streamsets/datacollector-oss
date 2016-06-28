@@ -43,6 +43,7 @@
     <avro.version>1.7.7</avro.version>
     <bouncycastle.version>1.46</bouncycastle.version>
     <h2.version>1.4.187</h2.version>
+    <httpclient.version>4.5.1</httpclient.version>
   </properties>
 
   <repositories>
@@ -263,6 +264,12 @@
       <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${httpclient.version}</version>
     </dependency>
 
     <!-- Hive related -->
