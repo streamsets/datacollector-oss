@@ -20,10 +20,8 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p>To use the command line for shutdown, use the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> process ID in the following command:</p>
-            <codeblock>kill -3 &lt;process ID></codeblock>
+            <p>To use the command line for shutdown, use the following command:</p>
+            <codeblock>service sdc stop</codeblock>
             <p>To use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> console for shutdown:</p>
