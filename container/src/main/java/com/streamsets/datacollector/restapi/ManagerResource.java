@@ -65,8 +65,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -176,10 +178,13 @@ public class ManagerResource {
   })
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
-    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
+    @QueryParam("rev") @DefaultValue("0") String rev,
+    @Context SecurityContext context) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if (manager.isRemotePipeline(pipelineName, rev)) {
-      throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineName);
+      if (!context.isUserInRole(AuthzRole.ADMIN) && !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+        throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineName);
+      }
     }
     Runner runner = manager.getRunner(user, pipelineName, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
