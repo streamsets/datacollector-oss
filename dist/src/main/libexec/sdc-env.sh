@@ -51,5 +51,5 @@ export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m
 #
 export SDC_SECURITY_MANAGER_ENABLED=true
 
-# Enables/disables MapR support
-#export SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Djava.library.path=/opt/mapr/lib -Dmapr.library.flatclass=false"
+# Indicate that MapR Username/Password security is enabled
+#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"

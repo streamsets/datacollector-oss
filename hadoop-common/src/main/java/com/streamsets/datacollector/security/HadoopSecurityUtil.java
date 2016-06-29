@@ -19,18 +19,17 @@
  */
 package com.streamsets.datacollector.security;
 
-import java.io.IOException;
-import java.security.AccessControlContext;
-import java.security.AccessController;
-
-import javax.security.auth.Subject;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.util.KerberosName;
 import org.apache.zookeeper.server.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.Subject;
+import java.io.IOException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
 
 public class HadoopSecurityUtil {
 
@@ -48,12 +47,7 @@ public class HadoopSecurityUtil {
     // This should be always out of sync block
     UserGroupInformation.setConfiguration(hdfsConfiguration);
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
+      loginUgi = LoginUgiProviderFactory.getLoginUgiProvider().getLoginUgi(subject);
       if (LOG.isDebugEnabled()) {
         LOG.debug("Subject = {}, Principals = {}, Login UGI = {}", subject, subject == null ? "null" : subject.getPrincipals(),
           loginUgi);

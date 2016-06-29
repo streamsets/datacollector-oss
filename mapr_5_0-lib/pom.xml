@@ -85,6 +85,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- include the LoginUgiProvider implementation for MapR with workaround -->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-mapr-common</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- Avro -->
     <dependency>
       <groupId>org.apache.avro</groupId>
