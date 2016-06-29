@@ -25,7 +25,6 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.pipeline.api.ExecutionMode;
 import dagger.Module;
 import dagger.Provides;
 import org.slf4j.Logger;
@@ -74,6 +73,8 @@ public class RuntimeModule {
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
         String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
         runtimeInfo.setAppAuthToken(appAuthToken);
+        boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
+        runtimeInfo.setDPMEnabled(isDPMEnabled);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

@@ -44,7 +44,10 @@ public class TestWebServerTask {
 
   @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(
-      final String confDir, final Configuration conf, final Set<WebAppProvider> webAppProviders
+      final String confDir,
+      final Configuration conf,
+      final Set<WebAppProvider> webAppProviders,
+      boolean isDPMEnabled
   ) throws Exception {
     RuntimeInfo runtimeInfo =
         new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
@@ -54,6 +57,7 @@ public class TestWebServerTask {
             return confDir;
           }
         };
+    runtimeInfo.setDPMEnabled(isDPMEnabled);
     Set<ContextConfigurator> configurators = new HashSet<>();
     return new WebServerTask(runtimeInfo, conf, configurators, webAppProviders) {
       @Override
@@ -94,7 +98,7 @@ public class TestWebServerTask {
 
 
     WebServerTask webServerTask =
-        createWebServerTask(new File("target").getAbsolutePath(), serverConf, ImmutableSet.of(webAppProvider));
+        createWebServerTask(new File("target").getAbsolutePath(), serverConf, ImmutableSet.of(webAppProvider), false);
     webServerTask = Mockito.spy(webServerTask);
 
     try {
@@ -113,11 +117,11 @@ public class TestWebServerTask {
   @Test
   public void testInjectionOfComponentIdAndAppToken() throws Exception {
     Configuration serverConf = new Configuration();
-    serverConf.set(WebServerTask.DPM_ENABLED, true);
     serverConf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "applicationToken");
 
     WebServerTask webServerTask =
-        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet());
+        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet(),
+            true);
     webServerTask = Mockito.spy(webServerTask);
 
     RemoteSSOService ssoService = Mockito.mock(RemoteSSOService.class);
@@ -135,13 +139,13 @@ public class TestWebServerTask {
   @Test
   public void testValidateApplicationTokenRetryAttempts() throws Exception {
     Configuration serverConf = new Configuration();
-    serverConf.set(WebServerTask.DPM_ENABLED, true);
     serverConf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "applicationToken");
     serverConf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://notAValidDPMURL");
     serverConf.set(WebServerTask.DPM_REGISTRATION_RETRY_ATTEMPTS, "7");
 
     WebServerTask webServerTask =
-        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet());
+        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet(),
+            true);
     webServerTask = Mockito.spy(webServerTask);
 
     RemoteSSOService ssoService = Mockito.mock(RemoteSSOService.class);

@@ -133,7 +133,7 @@ public class TestHttpAccessControl {
     conf.set(WebServerTask.AUTHENTICATION_KEY, authenticationType);
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "token");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "token");
-    conf.set(WebServerTask.DPM_ENABLED, dpmEnabled);
+    conf.set(RemoteSSOService.DPM_ENABLED, dpmEnabled);
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://localhost:" + registrationPort);
 
     Writer writer = writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
