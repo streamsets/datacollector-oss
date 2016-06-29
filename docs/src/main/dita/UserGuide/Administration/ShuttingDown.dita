@@ -24,14 +24,14 @@
             configuration file, environment configuration file, or user logins. <p>To use the
                 command line for shutdown when <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> is started as a service, use following
+                /> is started as a service, use the following
                 command:</p><codeblock>service sdc stop </codeblock><p>To use the command line for
                 shutdown when <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> is started manually, use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> process ID in the following
-                command:<codeblock>kill -3 &lt;process ID></codeblock></p><p>To use the <ph
+                command:<codeblock>kill -15 &lt;process ID></codeblock></p><p>To use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> console for shutdown:</p></context>
         <steps id="steps_hqp_kjk_br">
