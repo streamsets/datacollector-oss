@@ -45,7 +45,6 @@ public class TestUDPMessageSerialization {
   @Test
   public void testSerDeser() throws IOException {
     UDPMessage message = createUDPMessage(100);
-
     UDPMessageSerializer serializer = new UDPMessageSerializer(1000);
     byte[] serData = serializer.serialize(message);
 
