@@ -83,7 +83,8 @@ public class TestWebServerTaskHttpHttps {
   private WebServerTask createWebServerTask(
       final String confDir,
       final Configuration conf,
-      final Set<WebAppProvider> webAppProviders
+      final Set<WebAppProvider> webAppProviders,
+      boolean isDPMEnabled
   ) throws Exception {
     runtimeInfo = new StandaloneRuntimeInfo(
         RuntimeModule.SDC_PROPERTY_PREFIX,
@@ -95,6 +96,7 @@ public class TestWebServerTaskHttpHttps {
         return confDir;
       }
     };
+    runtimeInfo.setDPMEnabled(isDPMEnabled);
     Set<ContextConfigurator> configurators = new HashSet<>();
     configurators.add(new ContextConfigurator() {
       @Override
@@ -109,7 +111,7 @@ public class TestWebServerTaskHttpHttps {
 
   @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
-    return createWebServerTask(confDir, conf, Collections.<WebAppProvider>emptySet());
+    return createWebServerTask(confDir, conf, Collections.<WebAppProvider>emptySet(), false);
   }
 
   private String createTestDir() {
@@ -402,7 +404,7 @@ public class TestWebServerTaskHttpHttps {
     int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
-    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider), false);
     try {
       ws.initTask();
       new Thread() {
@@ -505,9 +507,8 @@ public class TestWebServerTaskHttpHttps {
     };
     Configuration conf = new Configuration();
     int httpPort = NetworkUtils.getRandomPort();
-    conf.set(WebServerTask.DPM_ENABLED, true);
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
-    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider), true);
     try {
       ws.initTask();
       new Thread() {
@@ -564,7 +565,7 @@ public class TestWebServerTaskHttpHttps {
     set.add(PosixFilePermission.OWNER_WRITE);
     Files.setPosixFilePermissions(realmFile.toPath(), set);
 
-    final WebServerTask ws = createWebServerTask(confDir, conf, ImmutableSet.of(webAppProvider));
+    final WebServerTask ws = createWebServerTask(confDir, conf, ImmutableSet.of(webAppProvider), false);
     try {
       ws.initTask();
       new Thread() {

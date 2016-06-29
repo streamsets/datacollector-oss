@@ -215,6 +215,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       String name = pipelineInfo.getName();
       String rev = pipelineInfo.getLastRev();
       try {
+        if (isRemotePipeline(name, rev) && !runtimeInfo.isDPMEnabled()) {
+          LOG.info(Utils.format("Not activating remote pipeline'{}:{}' as DPM is disabled ", name, rev));
+          continue;
+        }
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         // Create runner if active
         if (pipelineState.getStatus().isActive()) {

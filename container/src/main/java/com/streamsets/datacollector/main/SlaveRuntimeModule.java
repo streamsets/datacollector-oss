@@ -85,6 +85,8 @@ public class SlaveRuntimeModule {
         ((SlaveRuntimeInfo) runtimeInfo).setRemotePipeline(Boolean.valueOf(remote));
         String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
         runtimeInfo.setAppAuthToken(appAuthToken);
+        boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
+        runtimeInfo.setDPMEnabled(isDPMEnabled);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

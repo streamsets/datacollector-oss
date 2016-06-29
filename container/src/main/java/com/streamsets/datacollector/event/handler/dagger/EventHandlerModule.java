@@ -56,7 +56,7 @@ public class EventHandlerModule {
       StageLibraryTask stageLibraryTask
   ) {
     EventHandlerTask eventHandlerTask;
-    boolean isDPMEnabled = conf.get(WebServerTask.DPM_ENABLED, WebServerTask.DPM_ENABLED_DEFAULT);
+    boolean isDPMEnabled = runtimeInfo.isDPMEnabled();
     String applicationToken = runtimeInfo.getAppAuthToken();
     if (isDPMEnabled && applicationToken != null && applicationToken.trim().length() > 0
         && !runtimeInfo.isClusterSlave()) {

@@ -46,6 +46,9 @@ public abstract class RuntimeInfo {
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
   public static final String CALLBACK_URL = "/public-rest/v1/cluster/callback";
+  private boolean DPMEnabled;
+
+
   private final static String USER_ROLE = "user";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
@@ -250,4 +253,11 @@ public abstract class RuntimeInfo {
     return appAuthToken;
   }
 
+  public void setDPMEnabled(boolean DPMEnabled) {
+    this.DPMEnabled = DPMEnabled;
+  }
+
+  public boolean isDPMEnabled() {
+    return DPMEnabled;
+  }
 }
