@@ -146,9 +146,6 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
   private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
 
-  public static final String DPM_ENABLED = "dpm.enabled";
-  public static final boolean DPM_ENABLED_DEFAULT = false;
-
   public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "dpm.registration.retry.attempts";
   public static final int DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT = 5;
 
@@ -335,7 +332,7 @@ public abstract class WebServerTask extends AbstractTask {
   ) {
     ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
-    boolean isDPMEnabled = conf.get(DPM_ENABLED, DPM_ENABLED_DEFAULT);
+    boolean isDPMEnabled = runtimeInfo.isDPMEnabled();
     if (isDPMEnabled) {
       securityHandler = configureSSO(appConf, appHandler, appContext);
     } else {

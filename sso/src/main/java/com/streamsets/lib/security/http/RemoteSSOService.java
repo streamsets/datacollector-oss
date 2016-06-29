@@ -41,6 +41,8 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final String SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "appAuthToken";
   public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
   public static final String SECURITY_SERVICE_COMPONENT_TYPE_CONFIG = CONFIG_PREFIX + "componentType";
+  public static final String DPM_ENABLED = CONFIG_PREFIX + "enabled";
+  public static final boolean DPM_ENABLED_DEFAULT = false;
 
   public static final String CONTENT_TYPE = "Content-Type";
   public static final String ACCEPT = "Accept";

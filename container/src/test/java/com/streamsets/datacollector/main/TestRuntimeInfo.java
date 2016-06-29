@@ -21,6 +21,7 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -122,6 +123,7 @@ public class TestRuntimeInfo {
     Properties props = new Properties();
     props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
+    props.setProperty(RemoteSSOService.DPM_ENABLED, "true");
     Writer writer = new FileWriter(new File(dir, "sdc.properties"));
     props.store(writer, "");
     writer.close();
@@ -130,6 +132,7 @@ public class TestRuntimeInfo {
     RuntimeInfo info = og.get(RuntimeInfo.class);
     Assert.assertEquals("HTTP", info.getBaseHttpUrl());
     Assert.assertEquals("AUTH_TOKEN", info.getAppAuthToken());
+    Assert.assertTrue(info.isDPMEnabled());
   }
 
   @Test
@@ -141,6 +144,7 @@ public class TestRuntimeInfo {
     props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
     props.setProperty(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, "true");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
+    props.setProperty(RemoteSSOService.DPM_ENABLED, "true");
     props.setProperty(Constants.SDC_ID, "MASTER_ID");
     Writer writer = new FileWriter(new File(dir, "sdc.properties"));
     props.store(writer, "");
@@ -156,6 +160,7 @@ public class TestRuntimeInfo {
     ((SlaveRuntimeInfo)info).setId("ID");
     Assert.assertEquals("ID", info.getId());
     Assert.assertTrue(info.isClusterSlave());
+    Assert.assertTrue(info.isDPMEnabled());
   }
 
   @Test
