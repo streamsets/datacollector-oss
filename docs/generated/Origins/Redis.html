@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Redis Consumer origin reads messages from Redis. When you configure Redis Consumer, you define Redis URI and the channels to read from. You can specify specific channels or provide patterns to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Redis Consumer"></meta><meta name="abstract" content="The Redis Consumer origin reads messages from Redis."></meta><meta name="description" content="The Redis Consumer origin reads messages from Redis."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Redis-ChannelPattern.html"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Redis-DataFormats.html"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Redis-Configuring.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_plr_t3v_jw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Redis Consumer</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Redis Consumer origin reads messages from Redis. When you configure Redis Consumer, you define the Redis URI and the channels to read from. You can specify specific channels or provide patterns to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Redis Consumer"></meta><meta name="abstract" content="The Redis Consumer origin reads messages from Redis."></meta><meta name="description" content="The Redis Consumer origin reads messages from Redis."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_plr_t3v_jw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Redis Consumer</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_plr_t3v_jw"><script>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -31,28 +31,492 @@
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
-
+<div class="nested0" id="concept_plr_t3v_jw">
  <h1 class="title topictitle1">Redis Consumer</h1>
 
  
  <div class="body conbody"><p class="shortdesc">The Redis Consumer origin reads messages from Redis. </p>
 
         <p class="p">When you configure Redis
-            Consumer, you define Redis URI and the channels to read from. You can specify specific
-            channels or provide patterns to subscribe to all matching channels. You can also
-            configure the connection timeout. </p>
+            Consumer, you define the Redis URI and the channels to read from. You can specify
+            specific channels or provide patterns to subscribe to all matching channels. You can
+            also configure the connection timeout. </p>
 
  </div>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Origins/Redis-ChannelPattern.html">Channels and Patterns</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
-You can specify channels and patterns to define the data that the Redis Consumer origin         processes.</li>
-<li class="link ulchildlink"><strong><a href="../Origins/Redis-DataFormats.html">Data Formats</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
-</li>
-<li class="link ulchildlink"><strong><a href="../Origins/Redis-Configuring.html">Configuring a Redis Consumer</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
-</li>
-</ul>
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_kww_cmw_jw">
+ <h2 class="title topictitle2">Channels and Patterns</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can specify channels and patterns to define the data that the Redis Consumer origin
+        processes.</p>
+
+  <p class="p">You can list individual channels and glob-style
+            patterns. When you define a pattern, the origin reads from all channels with names that
+            match the pattern. For example, the *log* pattern subscribes to any channel with "log"
+            in the channel name. </p>
+
+        <p class="p">To avoid processing duplicate messages, do not subscribe to the same channel more than
+            once. Redis allows messages to be read more than once by the same client. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_w54_kpv_jw">
+ <h2 class="title topictitle2">Data Formats </h2>
+
+ <div class="body conbody">
+        <p class="p">The Redis Consumer processes data differently
+            based on the data format. The origin can process the following types of data:</p>
+
+  <div class="p">
+            <dl class="dl">
+                
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">Generates a record for every message. </dd>
+
+                              <dd class="dd">To ensure proper data processing, indicate if the message includes
+                                    an Avro schema. </dd>
+
+                              <dd class="dd">You can use the schema associated with the message or provide an
+                                    alternate schema definition. Providing an alternate schema can
+                                    improve performance.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+
+                              <dd class="dd">When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
+
+                        
+                
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_w54_kpv_jw__d10691e398">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                                    optionally including the header information when available. </dd>
+
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
+
+                              <dd class="dd">For more information about the root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+
+                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
+
+                        
+                
+                              <dt class="dt dlterm">Log</dt>
+
+                              <dd class="dd">Generates a record for every log line. </dd>
+
+                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+
+                              <dd class="dd">You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+
+                              <dd class="dd">You can define the log format or type to be read.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">Protobuf</dt>
+
+                              <dd class="dd">Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
+
+                              <dd class="dd">Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
+
+                              <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message. </dd>
+
+                              <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">Generates a record for every record. Use to process records
+                                    generated by a <span class="ph">Data
+                  Collector</span> pipeline using the SDC Record data format.</dd>
+
+                              <dd class="dd">For error records, the origin provides the original record as read
+                                    from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+
+                              <dd class="dd">When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">Generates a record for each line of text. </dd>
+
+                              <dd class="dd">When a line exceeds the maximum line length defined for the
+                                    origin, the origin truncates the line. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+
+                        
+                
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">Generates records based on the location of the XML element that
+                                    you define as the record delimiter. If you do not define a
+                                    delimiter element, the origin treats the XML file as a single
+                                    record.</dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
+
+                        
+            </dl>
+
+        </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_tr1_spd_sr">
+ <h3 class="title topictitle3">Log Formats</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you use an origin to read log data, you define the format of the log files to be
+  read. </p>
+
+  <p class="p">You
+   can read log files that use the following log formats:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Common Log Format</dt>
+
+     <dd class="dd">A standardized text format used by web servers to generate log files. Also known as the
+      NCSA (National Center for Supercomputing Applications) Common Log format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Combined Log Format</dt>
+
+     <dd class="dd">A standardized text format based on the common log format that includes additional
+      information. Also known as the Apache/NCSA Combined Log Format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Error Log Format</dt>
+
+     <dd class="dd">The standardized error log format generated by the Apache HTTP Server 2.2.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Access Log Custom Format</dt>
+
+     <dd class="dd">A customizable access log generated by the Apache HTTP Server 2.2. Use the Apache HTTP
+      Server version 2.2 syntax to define the format of the log file. </dd>
+
+    
+    
+     <dt class="dt dlterm">Regular Expression</dt>
+
+     <dd class="dd">Use a regular expression to define the structure of log data, and then assign the field or
+      fields represented by each group.  </dd>
+
+     <dd class="dd">Use any valid regular expression.</dd>
+
+    
+    
+     <dt class="dt dlterm">Grok Pattern</dt>
+
+     <dd class="dd">Use a grok pattern to define the structure of log data. You can use the grok patterns
+      supported by <span class="ph">Data
+                  Collector</span>. You can
+      also define a custom grok pattern and then use it as part of the log format. </dd>
+
+     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">log4j</dt>
+
+     <dd class="dd">A customizable format generated by the Apache Log4j 1.2 logging utility. You can use the
+      default format or specify a custom format. Use the Apache Log4j version 1.2 syntax to define
+      the format of the log file.</dd>
+
+     <dd class="dd">You can also specify the action to take when the origin encounters an error when parsing a
+      line. You can skip the line and optionally log an error. If you know that the unparsable
+      information is part of a stack trace, you can have the origin include the unparsable
+      information as a stack trace to the previous parsable line.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_dtz_npv_jw">
+    <h2 class="title topictitle2">Configuring a Redis Consumer</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Redis Consumer to
+                read messages from Redis.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d10719e331" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d119295e431">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d119295e434">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d119295e431 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d119295e434 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d119295e431 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d119295e434 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d119295e431 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_dtz_npv_jw__d10719e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d119295e434 ">Error record handling for the stage: <ul class="ul" id="task_dtz_npv_jw__d10719e381">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Redis</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__table_zpd_gvv_jw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d119295e516">Redis Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d119295e519">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+      <td class="entry" valign="top" width="30%" headers="d119295e516 ">URI</td>
+
+      <td class="entry" valign="top" width="70%" headers="d119295e519 ">URI of the Redis server. Use the following
+        format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+<p class="p">You
+        can omit the port number or database if the server uses the default port number or default
+        database.</p>
+<div class="p">You can optionally include your password to log in to the Redis server. For
+        example:<pre class="pre codeblock">redis://:&lt;password&gt;@&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
+</div>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d119295e516 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d119295e519 ">
+                                        <div class="p">Type of data to be read. Use one of the following
+                                                options:<ul class="ul" id="task_dtz_npv_jw__ul_ybf_3gw_jw">
+                                                <li class="li">Avro</li>
+
+                                                <li class="li">Binary</li>
+
+                                                <li class="li">Delimited</li>
+
+                                                <li class="li">JSON</li>
+
+                                                <li class="li">Log</li>
+
+                                                <li class="li">Protobuf</li>
+
+                                                <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_dtz_npv_jw__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+
+                                                <li class="li">Text</li>
+
+                                                <li class="li">XML</li>
+
+                                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d119295e516 ">Channels <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
+                                            <img class="image" id="task_dtz_npv_jw__image_off_y4w_jw" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d119295e519 ">Name of the channel to use. Use the
+                                            <span class="ph uicontrol">Add</span> icon to read from additional
+                                        channels. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d119295e516 ">Pattern <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
+                                            <img class="image" id="task_dtz_npv_jw__image_up3_y4w_jw" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d119295e519 ">Glob-style pattern to use. The origin subscribes to
+                                        channels with names that match the pattern. Use the
+                                            <span class="ph uicontrol">Add</span> icon to read from additional
+                                        patterns. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d119295e516 ">Connection Timeout</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d119295e519 ">Time to wait for a connection to Redis.</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d119295e516 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_dtz_npv_jw__d10732e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d119295e519 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d119295e516 ">Max Batch Size (records)</td>
+
+       <td class="entry" valign="top" width="70%" headers="d119295e519 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+                  Collector</span> maximum
+        batch size. <p class="p">Default is 1000. The <span class="ph">Data
+                  Collector</span> default
+         is 1000.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d119295e516 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d119295e519 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
+         formats.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d119295e516 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_dtz_npv_jw__d10732e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d119295e519 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div>
