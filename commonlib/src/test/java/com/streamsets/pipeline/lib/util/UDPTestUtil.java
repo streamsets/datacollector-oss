@@ -24,8 +24,15 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
+import com.streamsets.pipeline.lib.udp.UDPMessage;
+import com.streamsets.pipeline.lib.udp.UDPMessageSerializer;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.socket.DatagramPacket;
 import org.junit.Assert;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class TestUDPUtil {
+public class UDPTestUtil {
 
   // Common Record Values
   private static final Field HOST = Field.create("ip-192-168-42-24.us-west-2.compute.internal");
@@ -184,4 +191,16 @@ public class TestUDPUtil {
     Set<Map.Entry<String, Field>> difference = Sets.difference(expected.entrySet(), actual.entrySet());
     Assert.assertEquals(true, difference.isEmpty());
   }
+
+
+  public static byte[] getUDPData(int type, byte[] data) throws IOException {
+    InetSocketAddress recipient = new InetSocketAddress("127.0.0.1", 2000);
+    InetSocketAddress sender = new InetSocketAddress("127.0.0.1", 3000);
+    ByteBuf buffer = Unpooled.wrappedBuffer(data);
+    DatagramPacket datagram = new DatagramPacket(buffer, recipient, sender);
+    UDPMessage message = new UDPMessage(type, 1, datagram);
+    UDPMessageSerializer serializer = new UDPMessageSerializer(1000000);
+    return serializer.serialize(message);
+  }
+
 }

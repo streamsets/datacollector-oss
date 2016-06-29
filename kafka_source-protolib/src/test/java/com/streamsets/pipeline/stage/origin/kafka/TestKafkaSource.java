@@ -38,10 +38,13 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.lib.udp.UDPConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
+import com.streamsets.pipeline.lib.util.UDPTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -92,6 +95,9 @@ public class TestKafkaSource {
     +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
     +"]}";
 
+  private static final String SYSLOG = "<34>Oct 11 22:14:15 mymachine su: 'su root' failed for lonvick on /dev/pts/8";
+  private static final String TEN_PACKETS = "netflow-v5-file-1";
+
   private static final int SINGLE_PARTITION = 1;
   private static final int MULTIPLE_PARTITIONS = 5;
   private static final int SINGLE_REPLICATION_FACTOR = 1;
@@ -112,7 +118,12 @@ public class TestKafkaSource {
   private static final String TOPIC14 = "TestKafkaSource14";
   private static final String TOPIC15 = "TestKafkaSource15";
   private static final String TOPIC16 = "TestKafkaSource16";
+  private static final String TOPIC17 = "TestKafkaSource17";
+  private static final String TOPIC18 = "TestKafkaSource18";
+  private static final String TOPIC19 = "TestKafkaSource19";
   private static final String CONSUMER_GROUP = "SDC";
+  public static final String COLLECTD_SIGNED_BIN = "collectd_signed.bin";
+  public static final String COLLECTD_AUTH_TXT = "collectd_auth.txt";
 
   private static Producer<String, String> producer;
   private static String zkConnect;
@@ -145,6 +156,9 @@ public class TestKafkaSource {
     sdcKafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC15, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     sdcKafkaTestUtil.createTopic(TOPIC16, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC17, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC18, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC19, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
     for (int i = 1; i <= 16 ; i++) {
       TestUtils.waitUntilMetadataIsPropagated(
@@ -1232,6 +1246,158 @@ public class TestKafkaSource {
     Assert.assertEquals(10, records.size());
 
     ProtobufTestUtil.compareProtoRecords(records, 0);
+
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testCollectdSignedMessage() throws StageException, InterruptedException, IOException {
+
+    Producer<String, byte[]> producer = createDefaultProducer();
+    producer.send(
+        new KeyedMessage<>(
+            TOPIC17,
+            "0",
+            UDPTestUtil.getUDPData(
+              UDPConstants.COLLECTD,
+              Resources.toByteArray(Resources.getResource(COLLECTD_SIGNED_BIN))
+            )
+        )
+    );
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
+
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC17;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 10;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DATAGRAM;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.datagramMode = DatagramMode.COLLECTD;
+    conf.dataFormatConfig.convertTime = false;
+    conf.dataFormatConfig.typesDbPath = null;
+    conf.dataFormatConfig.excludeInterval = false;
+    conf.dataFormatConfig.authFilePath = Resources.getResource(COLLECTD_AUTH_TXT).getPath();
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+      .addOutputLane("lane")
+      .build();
+    sourceRunner.runInit();
+
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 22, "lane", records);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+    Assert.assertEquals(22, records.size());
+
+    Record record15 = records.get(15);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.signedRecord15, record15);
+
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testSyslogMessage() throws StageException, InterruptedException, IOException {
+
+    Producer<String, byte[]> producer = createDefaultProducer();
+    producer.send(new KeyedMessage<>(TOPIC18, "0", UDPTestUtil.getUDPData(UDPConstants.SYSLOG, SYSLOG.getBytes())));
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
+
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC18;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 10;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DATAGRAM;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.datagramMode = DatagramMode.SYSLOG;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+      .addOutputLane("lane")
+      .build();
+    sourceRunner.runInit();
+
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 1, "lane", records);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    Assert.assertEquals(1, records.size());
+    Assert.assertEquals(SYSLOG, records.get(0).get("/raw").getValueAsString());
+    Assert.assertEquals("127.0.0.1:2000", records.get(0).get("/receiverAddr").getValueAsString());
+    Assert.assertEquals("127.0.0.1:3000", records.get(0).get("/senderAddr").getValueAsString());
+    Assert.assertEquals("mymachine", records.get(0).get("/host").getValueAsString());
+    Assert.assertEquals(2, records.get(0).get("/severity").getValueAsInteger());
+    Assert.assertEquals("34", records.get(0).get("/priority").getValueAsString());
+    Assert.assertEquals(4, records.get(0).get("/facility").getValueAsInteger());
+    Assert.assertEquals(1444601655000L, records.get(0).get("/timestamp").getValueAsLong());
+    Assert.assertEquals(
+      "su: 'su root' failed for lonvick on /dev/pts/8",
+      records.get(0).get("/remaining").getValueAsString()
+    );
+    Assert.assertEquals(2000, records.get(0).get("/receiverPort").getValueAsInteger());
+    Assert.assertEquals(3000, records.get(0).get("/senderPort").getValueAsInteger());
+
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testNetflowMessage() throws StageException, InterruptedException, IOException {
+
+    Producer<String, byte[]> producer = createDefaultProducer();
+    producer.send(
+        new KeyedMessage<>(
+            TOPIC19,
+            "0",
+            UDPTestUtil.getUDPData(UDPConstants.NETFLOW, Resources.toByteArray(Resources.getResource(TEN_PACKETS)))
+        )
+    );
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
+
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC19;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 10;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DATAGRAM;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.datagramMode = DatagramMode.NETFLOW;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
+      .addOutputLane("lane")
+      .build();
+    sourceRunner.runInit();
+
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 10, "lane", records);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+
+    UDPTestUtil.assertRecordsForTenPackets(records);
 
     sourceRunner.runDestroy();
   }

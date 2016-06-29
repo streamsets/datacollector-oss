@@ -22,7 +22,7 @@ package com.streamsets.pipeline.lib.parser.udp.collectd;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.util.TestUDPUtil;
+import com.streamsets.pipeline.lib.util.UDPTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -73,10 +73,10 @@ public class TestCollectdParser {
     Assert.assertEquals(23, records.size()); // 23 Value parts
 
     Record record0 = records.get(0);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecord0, record0);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecord0, record0);
 
     Record record2 = records.get(2);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecord2, record2);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecord2, record2);
 
   }
 
@@ -92,10 +92,10 @@ public class TestCollectdParser {
     Assert.assertEquals(23, records.size()); // 23 Value parts
 
     Record record0 = records.get(0);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecordNoInterval0, record0);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecordNoInterval0, record0);
 
     Record record2 = records.get(2);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecordNoInterval2, record2);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecordNoInterval2, record2);
 
   }
 
@@ -113,7 +113,7 @@ public class TestCollectdParser {
 
     Assert.assertEquals(24, records.size()); // 24 value parts
     Record record14 = records.get(14);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.encryptedRecord14, record14);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.encryptedRecord14, record14);
     LOG.info("Num records: {}", records.size());
   }
 
@@ -128,7 +128,7 @@ public class TestCollectdParser {
 
     Assert.assertEquals(22, records.size()); // 22 value parts
     Record record15 = records.get(15);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.signedRecord15, record15);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.signedRecord15, record15);
     LOG.info("Num records: {}", records.size());
   }
 

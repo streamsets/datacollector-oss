@@ -851,7 +851,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
   }
 
   private void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
-    if (!typesDbPath.isEmpty()) {
+    if (null != typesDbPath && !typesDbPath.isEmpty()) {
       File typesDbFile = new File(typesDbPath);
       if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
         issues.add(
@@ -863,7 +863,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
         );
       }
     }
-    if (!authFilePath.isEmpty()) {
+    if (null != authFilePath && !authFilePath.isEmpty()) {
       File authFile = new File(authFilePath);
       if (!authFile.canRead() || !authFile.isFile()) {
         issues.add(

@@ -23,7 +23,6 @@ import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -31,20 +30,12 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.udp.UDPConstants;
-import com.streamsets.pipeline.lib.udp.UDPMessage;
-import com.streamsets.pipeline.lib.udp.UDPMessageSerializer;
-import com.streamsets.pipeline.lib.util.TestUDPUtil;
+import com.streamsets.pipeline.lib.util.UDPTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.socket.DatagramPacket;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +76,7 @@ public class TestDatagramParser {
       r = parser.parse();
     }
 
-    TestUDPUtil.assertRecordsForTenPackets(records);
+    UDPTestUtil.assertRecordsForTenPackets(records);
     parser.close();
   }
 
@@ -161,38 +152,10 @@ public class TestDatagramParser {
     Assert.assertEquals(23, records.size()); // 23 Value parts
 
     Record record0 = records.get(0);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecord0, record0);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecord0, record0);
 
     Record record2 = records.get(2);
-    TestUDPUtil.verifyCollectdRecord(TestUDPUtil.expectedRecord2, record2);
-  }
-
-  private InputStream getData(int type) throws IOException {
-    UDPMessage message = createUDPMessage(type);
-    UDPMessageSerializer serializer = new UDPMessageSerializer(1000000);
-    byte[] serData = serializer.serialize(message);
-    return new ByteArrayInputStream(serData);
-  }
-
-  private static UDPMessage createUDPMessage(int type) throws IOException {
-    InetSocketAddress recipient = new InetSocketAddress("127.0.0.1", 2000);
-    InetSocketAddress sender = new InetSocketAddress("127.0.0.1", 3000);
-    ByteBuf buffer;
-    switch (type) {
-      case UDPConstants.SYSLOG:
-        buffer = Unpooled.wrappedBuffer(SYSLOG.getBytes());
-        break;
-      case UDPConstants.NETFLOW:
-        buffer = Unpooled.wrappedBuffer(Resources.toByteArray(Resources.getResource(TEN_PACKETS)));
-        break;
-      case UDPConstants.COLLECTD:
-        buffer = Unpooled.wrappedBuffer(Resources.toByteArray(Resources.getResource(SINGLE_PACKET)));
-        break;
-      default:
-        throw new IllegalStateException(Utils.format("Unsupported UDP type {}", type));
-    }
-    DatagramPacket datagram = new DatagramPacket(buffer, recipient, sender);
-    return new UDPMessage(type, 1, datagram);
+    UDPTestUtil.verifyCollectdRecord(UDPTestUtil.expectedRecord2, record2);
   }
 
   @Test(expected = DataParserException.class)
