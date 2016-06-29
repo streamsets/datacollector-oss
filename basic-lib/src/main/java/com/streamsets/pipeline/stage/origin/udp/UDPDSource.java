@@ -29,15 +29,17 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.lib.parser.ParserConfig;
+import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
+import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.config.DatagramModeChooserValues;
 
 import java.util.List;
 
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.AUTH_FILE_PATH;
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CHARSET;
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CONVERT_TIME;
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.EXCLUDE_INTERVAL;
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.TYPES_DB_PATH;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_PATH;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 @StageDef(
     version = 1,
@@ -73,8 +75,8 @@ public class UDPDSource extends DSource {
       group = "UDP",
       displayPosition = 20
   )
-  @ValueChooserModel(UDPDataFormatChooserValues.class)
-  public UDPDataFormat dataFormat;
+  @ValueChooserModel(DatagramModeChooserValues.class)
+  public DatagramMode dataFormat;
 
   @ConfigDef(
       required = true,

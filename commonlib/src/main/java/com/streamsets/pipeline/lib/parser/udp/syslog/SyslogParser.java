@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.syslog;
+package com.streamsets.pipeline.lib.parser.udp.syslog;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.parser.AbstractParser;
+import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import io.netty.buffer.ByteBuf;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

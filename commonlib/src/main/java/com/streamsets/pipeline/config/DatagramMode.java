@@ -17,12 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser;
+package com.streamsets.pipeline.config;
 
-public enum ParserConfigKey {
-  CHARSET,
-  CONVERT_TIME,
-  TYPES_DB_PATH,
-  EXCLUDE_INTERVAL,
-  AUTH_FILE_PATH
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
+
+/**
+ * This is just a dummy enum until the udp source supports
+ * other data formats.
+ */
+@GenerateResourceBundle
+public enum DatagramMode implements Label {
+  NETFLOW("NetFlow"),
+  SYSLOG("syslog"),
+  COLLECTD("collectd"),
+  ;
+
+  private final String label;
+
+  DatagramMode(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

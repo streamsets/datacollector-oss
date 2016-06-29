@@ -24,10 +24,14 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.parser.ParserConfig;
+import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+<<<<<<< HEAD
+=======
+import com.streamsets.pipeline.config.DatagramMode;
+>>>>>>> d66c12f... Relocate
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -45,7 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.streamsets.pipeline.lib.parser.ParserConfigKey.CHARSET;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
 
 public class TestUDPSource {
   private static final String TEN_PACKETS_RESOURCE = "netflow-v5-file-1";
@@ -59,7 +63,7 @@ public class TestUDPSource {
 
     boolean produceCalled;
 
-    public TUDPSource(List<String> ports, ParserConfig parserConfig, UDPDataFormat dataFormat, int maxBatchSize, long maxWaitTime) {
+    public TUDPSource(List<String> ports, ParserConfig parserConfig, DatagramMode dataFormat, int maxBatchSize, long maxWaitTime) {
       super(ports, parserConfig, dataFormat, maxBatchSize, maxWaitTime);
     }
 
@@ -80,8 +84,8 @@ public class TestUDPSource {
     List<AssertionError> failures = new ArrayList<>();
     for (int i = 0; i < maxRuns; i++) {
       try {
-        doBasicTest(UDPDataFormat.NETFLOW);
-        doBasicTest(UDPDataFormat.SYSLOG);
+        doBasicTest(DatagramMode.NETFLOW);
+        doBasicTest(DatagramMode.SYSLOG);
       } catch (Exception ex) {
         // we don't expect exceptions to be thrown,
         // even when udp messages are lost
@@ -103,7 +107,7 @@ public class TestUDPSource {
     List<String> ports = Lists.newArrayList("514", "10000");
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");
-    TUDPSource source = new TUDPSource(ports, parserConfig, UDPDataFormat.SYSLOG, 20, 100L);
+    TUDPSource source = new TUDPSource(ports, parserConfig, DatagramMode.SYSLOG, 20, 100L);
     SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     if (System.getProperty("user.name").equals("root")) {
@@ -113,7 +117,7 @@ public class TestUDPSource {
     }
   }
 
-  private void doBasicTest(UDPDataFormat dataFormat) throws Exception {
+  private void doBasicTest(DatagramMode dataFormat) throws Exception {
     List<String> ports = NetworkUtils.getRandomPorts(2);
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");

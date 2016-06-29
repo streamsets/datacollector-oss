@@ -17,23 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser;
+package com.streamsets.pipeline.lib.parser.udp.netflow;
 
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import io.netty.buffer.ByteBuf;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-import java.net.InetSocketAddress;
-import java.util.List;
 
-public abstract class AbstractParser {
-  protected final Stage.Context context;
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  NETFLOW_00("Invalid version: '{}'"),
+  NETFLOW_01("Corrupt packet: {}"),
+  ;
 
-  public AbstractParser(Stage.Context context) {
-    this.context = context;
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
-  public abstract List<Record> parse(ByteBuf buf, InetSocketAddress recipient, InetSocketAddress sender)
-    throws OnRecordErrorException;
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
+
 }

@@ -17,19 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.netflow;
+package com.streamsets.pipeline.lib.parser.udp.collectd;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  NETFLOW_00("Invalid version: '{}'"),
-  NETFLOW_01("Corrupt packet: {}"),
+  COLLECTD_00("Corrupt message: '{}'"),
+  COLLECTD_01("Unsupported Value type: {}"),
+  COLLECTD_02("Signature verification failed. {}"),
+  COLLECTD_03("Decryption failed: {}"),
   ;
 
   private final String msg;
+
   Errors(String msg) {
     this.msg = msg;
   }
@@ -43,5 +45,4 @@ public enum Errors implements ErrorCode {
   public String getMessage() {
     return msg;
   }
-
 }

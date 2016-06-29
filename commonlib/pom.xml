@@ -41,6 +41,7 @@
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
     <netty.version>4.0.27.Final</netty.version>
+    <joda.version>2.8</joda.version>
   </properties>
 
   <dependencies>
@@ -101,6 +102,12 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>${joda.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
