@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.kafkautils.SdcKafkaProducerPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.iq80.snappy.SnappyFramedInputStream;
@@ -106,7 +107,7 @@ public class IpcToKafkaServlet extends HttpServlet {
     poolConfig.setMinIdle(minIdle);
     poolConfig.setMaxIdle(maxIdle);
     LOG.debug("Creating Kafka producer pool with max '{}' minIdle '{}' maxIdle '{}'", max, minIdle, maxIdle);
-    kafkaProducerPool = new GenericObjectPool<>(new SdcKafkaProducerPooledObjectFactory(configs, kafkaConfigBean), poolConfig);
+    kafkaProducerPool = new GenericObjectPool<>(new SdcKafkaProducerPooledObjectFactory(kafkaConfigBean), poolConfig);
   }
 
   @Override

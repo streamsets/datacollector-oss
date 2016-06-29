@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.origin.ipctokafka;
+package com.streamsets.pipeline.stage.kafkautils;
 
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
@@ -39,7 +39,7 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
   private static final Logger LOG = LoggerFactory.getLogger(SdcKafkaProducerPooledObjectFactory.class);
   ProducerFactorySettings settings;
 
-  public SdcKafkaProducerPooledObjectFactory(RpcConfigs configs, KafkaConfigBean kafkaConfigBean) {
+  public SdcKafkaProducerPooledObjectFactory(KafkaConfigBean kafkaConfigBean) {
     LOG.debug("Kafka producer config: brokers '{}' configs '{}'",
         kafkaConfigBean.kafkaConfig.metadataBrokerList,
         kafkaConfigBean.kafkaConfig.kafkaProducerConfigs
