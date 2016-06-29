@@ -37,7 +37,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_29463324"/>
+               path="Install_Config/CMInstall-Overview.html#unique_1568233745"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -171,13 +171,13 @@
    <appContext helpID="concept_msl_yd4_fs"
                path="Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs"/>
    <appContext helpID="concept_pm4_txm_vq"
-               path="Pipeline_Configuration/ErrorHandling.html#concept_pm4_txm_vq"/>
+               path="Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq"/>
    <appContext helpID="concept_kgc_l4y_5r"
-               path="Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"/>
+               path="Pipeline_Design/ErrorHandling.html#concept_kgc_l4y_5r"/>
    <appContext helpID="concept_atr_j4y_5r"
-               path="Pipeline_Configuration/ErrorHandling.html#concept_atr_j4y_5r"/>
+               path="Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r"/>
    <appContext helpID="concept_y4z_n4y_5r"
-               path="Pipeline_Configuration/ErrorHandling.html#concept_y4z_n4y_5r"/>
+               path="Pipeline_Design/ErrorHandling.html#concept_y4z_n4y_5r"/>
    <appContext helpID="concept_qkk_mwk_br" path="Pipeline_Design/SDCRecordFormat.html"/>
    <appContext helpID="concept_uxh_nc4_45"
                path="Pipeline_Design/Protobuf-Prerequisites.html"/>
@@ -380,11 +380,15 @@
    <appContext helpID="concept_nhr_5tk_k5"
                path="Origins/RabbitMQ.html#concept_nhr_5tk_k5"/>
    <appContext helpID="task_hrz_mq1_h5" path="Origins/RabbitMQ.html#task_hrz_mq1_h5"/>
-   <appContext helpID="concept_plr_t3v_jw" path="Origins/Redis.html"/>
-   <appContext helpID="concept_kww_cmw_jw" path="Origins/Redis-ChannelPattern.html"/>
-   <appContext helpID="concept_w54_kpv_jw" path="Origins/Redis-DataFormats.html"/>
-   <appContext helpID="concept_tr1_spd_sr" path="Origins/LogFormats.html"/>
-   <appContext helpID="task_dtz_npv_jw" path="Origins/Redis-Configuring.html"/>
+   <appContext helpID="concept_plr_t3v_jw"
+               path="Origins/Redis.html#concept_plr_t3v_jw"/>
+   <appContext helpID="concept_kww_cmw_jw"
+               path="Origins/Redis.html#concept_kww_cmw_jw"/>
+   <appContext helpID="concept_w54_kpv_jw"
+               path="Origins/Redis.html#concept_w54_kpv_jw"/>
+   <appContext helpID="concept_tr1_spd_sr"
+               path="Origins/Redis.html#concept_tr1_spd_sr"/>
+   <appContext helpID="task_dtz_npv_jw" path="Origins/Redis.html#task_dtz_npv_jw"/>
    <appContext helpID="concept_agb_5c1_ct"
                path="Origins/SDC_RPCorigin.html#concept_agb_5c1_ct"/>
    <appContext helpID="task_lxh_1w2_ct"
@@ -444,6 +448,8 @@
                path="Processors/FieldRemover.html#task_c1j_btr_wq"/>
    <appContext helpID="concept_vyv_zsg_ht"
                path="Processors/FieldRenamer.html#concept_vyv_zsg_ht"/>
+   <appContext helpID="concept_ogb_bqf_lw"
+               path="Processors/FieldRenamer.html#concept_ogb_bqf_lw"/>
    <appContext helpID="task_y5g_4hh_ht"
                path="Processors/FieldRenamer.html#task_y5g_4hh_ht"/>
    <appContext helpID="concept_vlj_vph_yq"
@@ -1062,7 +1068,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_787644001"/>
+               path="Troubleshooting/Destinations.html#unique_2040505215"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
@@ -1098,10 +1104,12 @@
                path="Expression_Language/Functions.html#concept_hpn_xfk_p5"/>
    <appContext helpID="concept_ndj_43v_1r"
                path="Expression_Language/Functions.html#concept_ndj_43v_1r"/>
-   <appContext helpID="concept_ahp_f4v_1r"
-               path="Expression_Language/Functions.html#concept_ahp_f4v_1r"/>
    <appContext helpID="concept_ylk_v44_jw"
                path="Expression_Language/Functions.html#concept_ylk_v44_jw"/>
+   <appContext helpID="concept_m2m_s1f_lw"
+               path="Expression_Language/Functions.html#concept_m2m_s1f_lw"/>
+   <appContext helpID="concept_ahp_f4v_1r"
+               path="Expression_Language/Functions.html#concept_ahp_f4v_1r"/>
    <appContext helpID="concept_ddw_ld1_1s"
                path="Expression_Language/Functions.html#concept_ddw_ld1_1s"/>
    <appContext helpID="concept_ybc_ly4_yt" path="Expression_Language/Constants.html"/>

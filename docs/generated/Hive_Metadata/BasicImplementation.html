@@ -46,13 +46,13 @@
         <p class="p"><img class="image" id="concept_zzs_fkg_2w__image_ys3_ztg_2w" src="../Graphics/HiveMeta-Pipeline.png" height="186" width="438"></img></p>
 
         <p class="p">The Hive Metadata processor passes records through the first output stream - the data
-            stream. Connect the data stream to the Hadoop FS destination to write data to Hive using
+            stream. Connect the data stream to the Hadoop FS destination to write data to HDFS using
             record header attributes. </p>
 
         <p class="p">The Hive Metadata processor passes the metadata record through the second output stream -
             the metadata output stream. Connect the Hive Metastore destination to the metadata
-            output stream to enable the destination to update Hive tables. The metadata output
-            stream contains no record data. </p>
+            output stream to enable the destination to create and update Hive tables. The metadata
+            output stream contains no record data. </p>
 
     </div>
 
