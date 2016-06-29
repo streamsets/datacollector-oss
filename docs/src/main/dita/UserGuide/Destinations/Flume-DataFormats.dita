@@ -20,14 +20,9 @@
           formats<indexterm>Flume</indexterm></indexterm>The Flume destination writes data to a
       Flume source based on the data format that you select. You can use the following data formats: </p>
     <dl>
-      <dlentry>
-        <dt>Avro</dt>
-        <dd>The destination writes records based on the Avro schema that you provide. </dd>
-        <dd>You can optionally include the schema definition as part of the Flume event. Omitting
-          the schema definition can improve performance, but requires the appropriate schema
-          management to avoid losing track of the schema associated with the data.</dd>
-        <dd>You can also compress data with an Avro-supported compression codec. When using Avro
-          compression, do not use other compression available in the destination. </dd>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Avro-Flume">
+        <dt/>
+        <dd/>
       </dlentry>
       <dlentry
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormat-Binary">

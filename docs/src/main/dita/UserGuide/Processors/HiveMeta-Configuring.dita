@@ -103,25 +103,19 @@
                                     <entry>Expression that defines the partition path to use for
                                         external tables when partitions are configured. When you
                                         omit partition configuration details, you can skip this
-                                        property as well. <p>When configured, the value of the
+                                        property as well.<p>When configured, the value of the
                                             partition path template is appended to the value of the
-                                            table path template to determine where each record will
-                                            be written. </p><p>Use the following format:
+                                            table path template to determine where each record is
+                                            written. </p><p>Use the following format:
                                             <codeblock>&lt;partition column name>=&lt;partition value expression></codeblock></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Additional Hadoop Configuration</entry>
-                                    <entry>
-                                        <p>Additional properties to use. Click the
-                                                <uicontrol>Add</uicontrol> icon and define the
-                                            property name and value. </p>
-                                        <p>Use the property names and values as expected by Hadoop.
-                                        </p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D-Hive-AddConfig">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -166,10 +160,10 @@
                                         record or an expression that evaluates to different scales
                                         for different fields. <p>The default expression determines
                                             the scale based on information in the JDBC namespace
-                                            header attribute. Use only when processing data from a
-                                            JDBC Consumer with namespace headers enabled. Replace
-                                            "jdbc." with the configured JDBC header prefix when
-                                            necessary. </p></entry>
+                                            header attribute. </p><p>Use the default only when
+                                            processing data from a JDBC Consumer with namespace
+                                            headers enabled. Replace "jdbc" with the configured JDBC
+                                            header prefix when necessary. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Decimal Field Precision Expression</entry>
@@ -178,10 +172,11 @@
                                         record or an expression that evaluates to different
                                         precisions for different fields.<p>The default expression
                                             determines the precision based on information in the
-                                            JDBC namespace header attribute. Use only when
-                                            processing data from a JDBC Consumer with namespace
-                                            headers enabled. Replace "jdbc." with the configured
-                                            JDBC header prefix when necessary. </p></entry>
+                                            JDBC namespace header attribute. </p><p>Use the default
+                                            only when processing data from a JDBC Consumer with
+                                            namespace headers enabled. Replace "jdbc" with the
+                                            configured JDBC header prefix when necessary.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

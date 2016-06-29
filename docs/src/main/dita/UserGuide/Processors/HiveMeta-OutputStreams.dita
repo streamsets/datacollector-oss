@@ -21,21 +21,20 @@
             <dlentry>
                 <dt>Data output stream</dt>
                 <dd>Passes records downstream to the Hadoop FS destination. You can add additional
-                    stages between the Hive Metadata processor and the Hadoop FS destination if
-                    pipeline logic requires it, but only the Hadoop FS destination can use the
-                    generated record header attributes to write records to HDFS. </dd>
+                    stages between the Hive Metadata processor and the Hadoop FS destination when
+                    needed, but only the Hadoop FS destination can use the generated record header
+                    attributes to write records to HDFS. </dd>
             </dlentry>
             <dlentry>
                 <dt>Metadata output stream</dt>
                 <dd>Passes the metadata records downstream to the Hive Metastore destination. The
                     metadata output stream does not pass record data of any kind. <p>You can add
                         additional stages between the Hive Metadata processor and the Hive Metastore
-                        destination if pipeline logic requires it, but only the Hive Metastore
-                        destination can use the metadata record to update the Hive Metastore.
-                    </p></dd>
+                        destination when needed, but only the Hive Metastore destination can use the
+                        metadata record to update the Hive Metastore. </p></dd>
             </dlentry>
         </dl>
-        <p>The following image shows how you should connect the output streams:</p>
+        <p>The following image shows the Hive Metadata processor output streams:</p>
         <p><image href="../Graphics/HiveMeta-OutputStreams.png" id="image_gk5_zpq_fw" scale="80"
             /></p>
  </conbody>

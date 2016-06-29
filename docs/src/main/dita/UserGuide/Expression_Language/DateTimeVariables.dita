@@ -21,8 +21,10 @@
                 variables</indexterm></indexterm><indexterm>datetime variables<indexterm>in the
                     expression language</indexterm></indexterm>You can use datetime variables to
             configure a Hadoop FS, Local FS, or MapR FS destination to write records to time-based
-            directories. You can also use the variables to configure an Elasticsearch destination to
-            write records to time-based indexes. </p>
+            directories. </p>
+        <p>You can use datetime variables to configure an Elasticsearch destination to write records
+            to time-based indexes. And you can use them in the partition value expression in the
+            Hive Metadata processor.</p>
         <p>The expression language provides the following datetime variables:</p>
         <ul id="ul_obj_nf2_sv">
             <li>${YYYY()} - four digit year</li>
@@ -33,12 +35,13 @@
             <li>${mm()} - two digit minute</li>
             <li>${ss()} - two digit second</li>
         </ul>
-        <p>When you use datetime variables in an expression, use all of the datetime variables
-            between one of the year variables and the smallest variable that you want to use. For
-            example, to create directories on a daily basis for a Hadoop FS destination, use a year
-            variable, a month variable, and then a day variable. You might use one of the following
-            datetime variable
+        <p>When you use datetime variables in most stages, use all of the datetime variables between
+            one of the year variables and the smallest variable that you want to use. For example,
+            to create directories on a daily basis for a Hadoop FS destination, use a year variable,
+            a month variable, and then a day variable. You might use one of the following datetime
+            variable
             progressions:<codeblock>${YYYY()}-${MM()}-${DD()}
 ${YY()}_${MM()}_${DD()}</codeblock></p>
+        <p>In the Hive Metadata processor, you can use the datetime variables as needed.</p>
  </conbody>
 </concept>
