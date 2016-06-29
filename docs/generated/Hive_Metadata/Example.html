@@ -41,7 +41,7 @@
             processes data from several different web services, tagging each record with a "tag"
             header attribute that identifies the service that generated the data. </p>
 
-        <p class="p">Now you want a new pipeline to pass the data to Hive where it can be stored and reviewed,
+        <p class="p">Now you want a new pipeline to pass the data to HDFS where it can be stored and reviewed,
             and you'd like the data written to tables based on the web service that generated the
             data. </p>
 
@@ -49,8 +49,8 @@
             connect it to a Hive Metadata processor. The processor assesses the record structure and
             generates a metadata record that describes any required Hive metadata changes. Using the
             tag header attribute and other user-defined expressions, a Hive Metadata processor can
-            determine the database, table, and partition to use in the target directory and write
-            that information, along with the Avro schema, to the record header, including file roll
+            determine the database, table, and partition to use for the target directory and write
+            that information along with the Avro schema to the record header, including file roll
             indicator when necessary.</p>
 
         <p class="p">You connect the Hive Metadata processor metadata output stream to a Hive Metastore
@@ -58,7 +58,7 @@
             processor, creates or updates Hive tables as needed. </p>
 
         <p class="p">You connect the Hive Metadata processor data output stream to a Hadoop FS destination and
-            configure it to use information in record headers. The destination then writes each
+            configure it to use the information in record headers. The destination then writes each
             record where it wants to go using the target directory and Avro schema in the record
             header, and rolling files when needed.</p>
 
@@ -89,9 +89,9 @@
 </div>
 </li>
 
-                <li class="li">What partitions, if any, do you want to use? <div class="p">Let's partition the data by date
-                        using data in the date field. So you'd use the following the partition value
-                        expression:<pre class="pre codeblock">${record:value('/date')}</pre>
+                <li class="li">What partitions, if any, do you want to use? <div class="p">Let's create daily partitions
+                        using datetime variables for the partition value expression as
+                        follows:<pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}</pre>
 </div>
 </li>
 
@@ -100,10 +100,10 @@
 
         <p class="p"> At this point, your pipeline would look like this: </p>
 
-        <p class="p"><img class="image" id="concept_fzk_mmn_fw__image_g5b_34n_fw" src="../Graphics/HiveMeta-Ex-Processor.png" height="463" width="544"></img></p>
+        <p class="p"><img class="image" id="concept_fzk_mmn_fw__image_g5b_34n_fw" src="../Graphics/HiveMeta-Ex-Processor.png" height="331" width="614"></img></p>
 
-        <p class="p">With this configuration, Hadoop FS will write every record to the Hive table listed the
-            tag attribute and to the date partition in the dt field of the record.</p>
+        <p class="p">With this configuration, Hadoop FS writes every record to the Hive table listed in the
+            tag attribute and to the daily partition based on the time of processing.</p>
 
  </div>
 
@@ -141,9 +141,9 @@
  <h2 class="title topictitle2">The Hadoop FS Destination</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Hadoop FS is the destination that writes Avro data to HDFS using record header
-        attributes. Record header attributes contain the write details that the Hive Metadata
-        processor generates and adds to records. </p>
+ <div class="body conbody"><p class="shortdesc">Hadoop FS is the destination that writes data to HDFS using record header attributes.
+        Record header attributes contain the write details that the Hive Metadata processor
+        generates and adds to records. </p>
 
   <p class="p">So you connect the Hadoop FS destination to the data output stream of the processor. When you
             configure the destination, instead of configuring a directory template, you configure
@@ -162,8 +162,10 @@
         <p class="p">With this setup, the destination uses the information in record header attributes to
             write data to HDFS. It writes each record to the directory in the targetDirectory header
             attribute, using the Avro schema in the avroSchema header attribute. And it rolls a file
-            when it spots the roll attribute in a record header. (The destination can also use Max
-            Records in File and Max Files Size to determine when to roll files.)</p>
+            when it spots the roll attribute in a record header. </p>
+
+        <p class="p">Note that the destination can also use Max Records in File and Max Files Size to
+            determine when to roll files.</p>
 
  </div>
 
@@ -190,7 +192,7 @@
                     write the record to the updated weblog table.</li>
 
                 <li class="li">If a record has missing fields, the processor just writes information to stage
-                    attributes, and Hadoop FS writes the record to Hive with null values for the
+                    attributes, and Hadoop FS writes the record to HDFS with null values for the
                     missing fields.</li>
 
                 <li class="li">If a field has been renamed, the processor treats the field as a new field,

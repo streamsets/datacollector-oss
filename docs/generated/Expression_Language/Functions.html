@@ -45,9 +45,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="31.25%" id="d65293e40">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d65932e40">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d65293e43">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d65932e43">Functions</th>
 
       </tr>
 
@@ -55,9 +55,9 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute('&lt;attribute name&gt;') </li>
@@ -87,10 +87,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists('&lt;header&gt;') </li>
 
@@ -113,9 +113,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
          <li class="li">drift:names('&lt;field path&gt;', &lt;ignoreWhenMissing: true | false&gt;)</li>
 
@@ -132,10 +132,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -156,9 +156,51 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
+         <li class="li">base64:decodeBytes("&lt;string&gt;")</li>
+
+         <li class="li">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</li>
+
+         <li class="li">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</li>
+
+         <li class="li">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;, "&lt;charset&gt;")</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
+
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
+        <ul class="ul" id="concept_lhz_pyp_1r__ul_ntg_zhf_lw">
+         <li class="li">math:abs(&lt;number&gt;)</li>
+
+         <li class="li">math:ceil(&lt;number&gt;)</li>
+
+         <li class="li">math:floor (&lt;number&gt;)</li>
+
+         <li class="li">math:max(&lt;number1&gt;, &lt;number2&gt;)</li>
+
+         <li class="li">math:min(&lt;number1&gt;, &lt;number2&gt;)</li>
+
+         <li class="li">math:round(&lt;number&gt;)</li>
+
+        </ul>
+
+       </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:concat("&lt;string1&gt;", "&lt;string2&gt;")</li>
@@ -198,29 +240,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
-
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
-        <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
-         <li class="li">base64:decodeBytes("&lt;string&gt;")</li>
-
-         <li class="li">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</li>
-
-         <li class="li">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</li>
-
-         <li class="li">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;, "&lt;charset&gt;")</li>
-
-        </ul>
-
-       </td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d65293e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d65932e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d65293e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d65932e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">alert:info()</li>
 
@@ -679,6 +702,192 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_ylk_v44_jw">
+ <h2 class="title topictitle2">Base64 Functions</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use Base64 functions to encode or decode data using Base64.</p>
+
+  <p class="p">The expression language
+            provides the following Base64 functions:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">base64:decodeBytes("&lt;string&gt;")</dt>
+
+                <dd class="dd">Returns a decoded byte array from a Base64 encoded string.</dd>
+
+                <dd class="dd">Return type: Byte Array.</dd>
+
+                <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ylk_v44_jw__ul_jvq_sx4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:decodeBytes(record:value("/ID"))} decodes the Base64
+                    encoded string in the ID field as a byte array value.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</dt>
+
+                <dd class="dd">Returns a decoded string from a Base64 encoded string using the specified
+                    character set.</dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_ogd_ty4_jw">
+                        <li class="li">string - The Base64 encoded string to decode.</li>
+
+                        <li class="li">charset - The character set to use to decode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:decodeString(record:value("/ID"), "UTF-8")} decodes the
+                    Base64 encoded string in the ID field using the UTF-8 character set as a string
+                    value.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</dt>
+
+                <dd class="dd">Returns a Base64 encoded string value of the specified byte array.</dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_hsr_kz4_jw">
+                        <li class="li">byte array - The byte array to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:encodeBytes(record:value("/ID"), true)} uses Base64 to
+                    encode the byte array in the ID field such that the encoded data is URL
+                    safe.</dd>
+
+            
+            
+                <dt class="dt dlterm">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;,
+                    "&lt;charset&gt;")</dt>
+
+                <dd class="dd">
+                    <p class="p">Returns a Base64 encoded string value of the specified string. </p>
+
+                </dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_okr_dbp_jw">
+                        <li class="li">string - The string to encode using Base64.</li>
+
+                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
+                            sent in a URL. </li>
+
+                        <li class="li">charset - The character set to use to encode the data.</li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">For example, ${base64:encodeString(record:value("/ID"), false, "UTF-8")} uses
+                    Base64 to encode the string in the ID field using the UTF-8 character set such
+                    that the encoded data is not URL safe.</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_m2m_s1f_lw">
+ <h2 class="title topictitle2">Math Functions</h2>
+
+ <div class="body conbody">
+  <p class="p">Use math functions to
+            perform math on numeric values. You can replace any argument with a constant, or a field
+            or expression that evaluates to a number.</p>
+
+        <div class="p">You can use the following data types with math functions:<ul class="ul" id="concept_m2m_s1f_lw__ul_qz1_3bf_lw">
+                <li class="li">Double</li>
+
+                <li class="li">Float  </li>
+
+                <li class="li">Integer </li>
+
+                <li class="li">Long </li>
+
+                <li class="li">String<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data
+                  Collector</span> parses a string as a Double value if the numeric value in a String field
+                        contains a dot ( . ). Otherwise, <span class="ph">Data
+                  Collector</span> parses the string as a Long value.</div>
+</li>
+
+            </ul>
+</div>
+
+        <div class="p">The expression language provides the following math functions:<dl class="dl">
+                
+                    <dt class="dt dlterm">math:abs(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the absolute value, or positive version, of the argument. If the
+                        argument is already positive, returns the original number.</dd>
+
+                    <dd class="dd">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+                
+                
+                    <dt class="dt dlterm">math:ceil(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the smallest integer greater than or equal to the argument.</dd>
+
+                    <dd class="dd">Return type: Double.</dd>
+
+                
+                
+                    <dt class="dt dlterm">math:floor (&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the largest integer greater than or equal to the argument.</dd>
+
+                    <dd class="dd">Return type: Double.</dd>
+
+                
+                
+                    <dt class="dt dlterm">math:max(&lt;number1&gt;, &lt;number2&gt;)</dt>
+
+                    <dd class="dd">Returns the greater of two arguments.</dd>
+
+                    <dd class="dd">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+                
+                
+                    <dt class="dt dlterm">math:min(&lt;number1&gt;, &lt;number2&gt;)</dt>
+
+                    <dd class="dd">Returns the lesser of two arguments.</dd>
+
+                    <dd class="dd">Return type: Double, Float, Int, or Long, based on the data type of the
+                        argument.</dd>
+
+                
+                
+                    <dt class="dt dlterm">math:round(&lt;number&gt;)</dt>
+
+                    <dd class="dd">Returns the closest integer to the argument, rounding up for ties.</dd>
+
+                    <dd class="dd">Return type: Double or Long.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ahp_f4v_1r">
  <h2 class="title topictitle2">String Functions</h2>
 
@@ -938,107 +1147,6 @@
    </dl>
 
   </div>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_ylk_v44_jw">
- <h2 class="title topictitle2">Base64 Functions</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">Use Base64 functions to encode or decode data using Base64.</p>
-
-  <p class="p">The expression language
-            provides the following Base64 functions:</p>
-
-        <dl class="dl">
-            
-                <dt class="dt dlterm">base64:decodeBytes("&lt;string&gt;")</dt>
-
-                <dd class="dd">Returns a decoded byte array from a Base64 encoded string.</dd>
-
-                <dd class="dd">Return type: Byte Array.</dd>
-
-                <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ylk_v44_jw__ul_jvq_sx4_jw">
-                        <li class="li">string - The Base64 encoded string to decode.</li>
-
-                    </ul>
-</dd>
-
-                <dd class="dd">For example, ${base64:decodeBytes(record:value("/ID"))} decodes the Base64
-                    encoded string in the ID field as a byte array value.</dd>
-
-            
-            
-                <dt class="dt dlterm">base64:decodeString("&lt;string&gt;", "&lt;charset&gt;")</dt>
-
-                <dd class="dd">Returns a decoded string from a Base64 encoded string using the specified
-                    character set.</dd>
-
-                <dd class="dd">Return type: String.</dd>
-
-                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_ogd_ty4_jw">
-                        <li class="li">string - The Base64 encoded string to decode.</li>
-
-                        <li class="li">charset - The character set to use to decode the data.</li>
-
-                    </ul>
-</dd>
-
-                <dd class="dd">For example, ${base64:decodeString(record:value("/ID"), "UTF-8")} decodes the
-                    Base64 encoded string in the ID field using the UTF-8 character set as a string
-                    value.</dd>
-
-            
-            
-                <dt class="dt dlterm">base64:encodeBytes(&lt;byte array&gt;, &lt;urlSafe: true | false&gt;)</dt>
-
-                <dd class="dd">Returns a Base64 encoded string value of the specified byte array.</dd>
-
-                <dd class="dd">Return type: String.</dd>
-
-                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_hsr_kz4_jw">
-                        <li class="li">byte array - The byte array to encode using Base64.</li>
-
-                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
-                            sent in a URL. </li>
-
-                    </ul>
-</dd>
-
-                <dd class="dd">For example, ${base64:encodeBytes(record:value("/ID"), true)} uses Base64 to
-                    encode the byte array in the ID field such that the encoded data is URL
-                    safe.</dd>
-
-            
-            
-                <dt class="dt dlterm">base64:encodeString("&lt;string&gt;", &lt;urlSafe: true | false&gt;,
-                    "&lt;charset&gt;")</dt>
-
-                <dd class="dd">
-                    <p class="p">Returns a Base64 encoded string value of the specified string. </p>
-
-                </dd>
-
-                <dd class="dd">Return type: String.</dd>
-
-                <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ylk_v44_jw__ul_okr_dbp_jw">
-                        <li class="li">string - The string to encode using Base64.</li>
-
-                        <li class="li">urlSafe - When set to true, encodes the data so that it can be safely
-                            sent in a URL. </li>
-
-                        <li class="li">charset - The character set to use to encode the data.</li>
-
-                    </ul>
-</dd>
-
-                <dd class="dd">For example, ${base64:encodeString(record:value("/ID"), false, "UTF-8")} uses
-                    Base64 to encode the string in the ID field using the UTF-8 character set such
-                    that the encoded data is not URL safe.</dd>
-
-            
-        </dl>
 
  </div>
 
