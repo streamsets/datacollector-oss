@@ -41,6 +41,8 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
+import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.config.DatagramModeChooserValues;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
@@ -48,6 +50,7 @@ import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
+import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -83,7 +86,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
       displayPosition = 300,
       group = "#0",
       dependsOn = "dataFormat^",
-      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG", "DATAGRAM"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset = "UTF-8";
@@ -509,6 +512,8 @@ public class DataParserFormatConfig implements DataFormatConfig{
   )
   public String avroSchema = "";
 
+  // PROTOBUF
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -549,6 +554,8 @@ public class DataParserFormatConfig implements DataFormatConfig{
   )
   public boolean isDelimited = true;
 
+  // BINARY
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
@@ -563,6 +570,71 @@ public class DataParserFormatConfig implements DataFormatConfig{
       max = Integer.MAX_VALUE
   )
   public int binaryMaxObjectLen;
+
+  // DATAGRAM
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Data Format",
+    defaultValue = "SYSLOG",
+    group = "DATAGRAM",
+    displayPosition = 800,
+    dependsOn = "dataFormat^",
+    triggeredByValue = "DATAGRAM"
+  )
+  @ValueChooserModel(DatagramModeChooserValues.class)
+  public DatagramMode datagramMode;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = "TypesDB File Path",
+    description = "User-specified TypesDB file. Overrides the included version.",
+    displayPosition = 820,
+    group = "DATAGRAM",
+    dependsOn = "datagramMode",
+    triggeredByValue = "COLLECTD"
+  )
+  public String typesDbPath;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Convert Hi-Res Time & Interval",
+    description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
+    displayPosition = 830,
+    group = "DATAGRAM",
+    dependsOn = "datagramMode",
+    triggeredByValue = "COLLECTD"
+  )
+  public boolean convertTime;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Exclude Interval",
+    description = "Excludes the interval field from output records.",
+    displayPosition = 840,
+    group = "DATAGRAM",
+    dependsOn = "datagramMode",
+    triggeredByValue = "COLLECTD"
+  )
+  public boolean excludeInterval;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = "Auth File",
+    description = "",
+    displayPosition = 850,
+    group = "DATAGRAM",
+    dependsOn = "datagramMode",
+    triggeredByValue = "COLLECTD"
+  )
+  public String authFilePath;
 
   public boolean init(
       Stage.Context context,
@@ -744,6 +816,14 @@ public class DataParserFormatConfig implements DataFormatConfig{
           }
         }
         break;
+      case DATAGRAM:
+        switch (datagramMode) {
+          case COLLECTD:
+            checkCollectdParserConfigs(context, configPrefix, issues);
+            break;
+          default:
+        }
+        break;
       default:
         issues.add(
             context.createConfigIssue(
@@ -768,6 +848,33 @@ public class DataParserFormatConfig implements DataFormatConfig{
     );
 
     return valid;
+  }
+
+  private void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+    if (!typesDbPath.isEmpty()) {
+      File typesDbFile = new File(typesDbPath);
+      if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.DATAGRAM.name(),
+                configPrefix + "typesDbPath",
+                DataFormatErrors.DATA_FORMAT_400, typesDbPath
+            )
+        );
+      }
+    }
+    if (!authFilePath.isEmpty()) {
+      File authFile = new File(authFilePath);
+      if (!authFile.canRead() || !authFile.isFile()) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.DATAGRAM.name(),
+                configPrefix + "authFilePath",
+                DataFormatErrors.DATA_FORMAT_401, authFilePath
+            )
+        );
+      }
+    }
   }
 
   private boolean validateDataParser(
@@ -848,6 +955,15 @@ public class DataParserFormatConfig implements DataFormatConfig{
             .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
             .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
             .setMaxDataLen(-1);
+        break;
+      case DATAGRAM:
+        builder
+          .setConfig(DatagramParserFactory.CONVERT_TIME_KEY, convertTime)
+          .setConfig(DatagramParserFactory.EXCLUDE_INTERVAL_KEY, excludeInterval)
+          .setConfig(DatagramParserFactory.AUTH_FILE_PATH_KEY, authFilePath)
+          .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
+          .setMode(datagramMode)
+          .setMaxDataLen(-1);
         break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);

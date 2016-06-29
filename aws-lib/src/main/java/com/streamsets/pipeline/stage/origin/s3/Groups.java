@@ -35,7 +35,8 @@ public enum Groups implements Label {
   LOG("Log"),
   AVRO("Avro"),
   BINARY("Binary"),
-  PROTOBUF("Protobuf")
+  PROTOBUF("Protobuf"),
+  DATAGRAM("Datagram")
 
   ;
 

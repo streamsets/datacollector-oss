@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,16 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.udp;
+package com.streamsets.pipeline.stage.origin.redis;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-/**
- * This is just a dummy class until the udp source supports
- * other data formats.
- */
-public class UDPDataFormatChooserValues extends BaseEnumChooserValues<UDPDataFormat> {
-  public UDPDataFormatChooserValues() {
-    super(UDPDataFormat.class);
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+
+  public DataFormatChooserValues() {
+    super(
+        DataFormat.TEXT,
+        DataFormat.JSON,
+        DataFormat.LOG,
+        DataFormat.AVRO,
+        DataFormat.DELIMITED,
+        DataFormat.SDC_JSON,
+        DataFormat.XML,
+        DataFormat.PROTOBUF,
+        DataFormat.BINARY
+    );
   }
+
 }

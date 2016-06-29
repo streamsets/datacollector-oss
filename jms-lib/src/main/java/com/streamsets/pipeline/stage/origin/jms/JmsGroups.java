@@ -35,6 +35,7 @@ public enum JmsGroups implements Label {
   AVRO(DataFormat.AVRO.getLabel()),
   BINARY(DataFormat.BINARY.getLabel()),
   PROTOBUF(DataFormat.PROTOBUF.getLabel()),
+  DATAGRAM(DataFormat.DATAGRAM.getLabel()),
 
   ;
 

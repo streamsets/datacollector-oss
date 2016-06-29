@@ -33,7 +33,8 @@ public enum Groups implements Label {
   AVRO("Avro"),
   BINARY("Binary"),
   PROTOBUF("Protobuf"),
-  ADVANCED("Advanced")
+  ADVANCED("Advanced"),
+  DATAGRAM("Datagram")
   ;
 
   private final String label;

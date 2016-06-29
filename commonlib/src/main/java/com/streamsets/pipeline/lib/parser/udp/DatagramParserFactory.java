@@ -39,11 +39,11 @@ import java.util.Set;
 public class DatagramParserFactory extends DataParserFactory {
 
   private static final String KEY_PREFIX = "collectd.";
-  static final String CONVERT_TIME_KEY = KEY_PREFIX + "convertTime";
+  public static final String CONVERT_TIME_KEY = KEY_PREFIX + "convertTime";
   static final boolean CONVERT_TIME_DEFAULT = false;
-  static final String AUTH_FILE_PATH_KEY = KEY_PREFIX + "authFilePath";
-  static final String TYPES_DB_PATH_KEY = KEY_PREFIX + "typesDbPath";
-  static final String EXCLUDE_INTERVAL_KEY = KEY_PREFIX + "excludeInterval";
+  public static final String AUTH_FILE_PATH_KEY = KEY_PREFIX + "authFilePath";
+  public static final String TYPES_DB_PATH_KEY = KEY_PREFIX + "typesDbPath";
+  public static final String EXCLUDE_INTERVAL_KEY = KEY_PREFIX + "excludeInterval";
   static final boolean EXCLUDE_INTERVAL_DEFAULT = true;
 
   public static final Map<String, Object> CONFIGS;
@@ -52,8 +52,8 @@ public class DatagramParserFactory extends DataParserFactory {
   static {
     Map<String, Object> configs = new HashMap<>();
     configs.put(CONVERT_TIME_KEY, CONVERT_TIME_DEFAULT);
-    configs.put(AUTH_FILE_PATH_KEY, null);
-    configs.put(TYPES_DB_PATH_KEY, null);
+    configs.put(AUTH_FILE_PATH_KEY, "");
+    configs.put(TYPES_DB_PATH_KEY, "");
     configs.put(EXCLUDE_INTERVAL_KEY, EXCLUDE_INTERVAL_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }

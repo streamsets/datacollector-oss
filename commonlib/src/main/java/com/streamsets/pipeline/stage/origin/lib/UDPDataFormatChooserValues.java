@@ -17,34 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.devtest.rawdata;
+package com.streamsets.pipeline.stage.origin.lib;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum RawDataSourceGroups implements Label {
-  RAW("Raw Data"),
-  TEXT(DataFormat.TEXT.getLabel()),
-  JSON(DataFormat.JSON.getLabel()),
-  DELIMITED(DataFormat.DELIMITED.getLabel()),
-  XML(DataFormat.XML.getLabel()),
-  LOG(DataFormat.LOG.getLabel()),
-  AVRO(DataFormat.AVRO.getLabel()),
-  BINARY(DataFormat.BINARY.getLabel()),
-  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
-  DATAGRAM(DataFormat.DATAGRAM.getLabel())
-  ;
-
-  private final String label;
-
-  RawDataSourceGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+/**
+ * This is just a dummy class until the udp source supports
+ * other data formats.
+ */
+public class UDPDataFormatChooserValues extends BaseEnumChooserValues<UDPDataFormat> {
+  public UDPDataFormatChooserValues() {
+    super(UDPDataFormat.class);
   }
 }

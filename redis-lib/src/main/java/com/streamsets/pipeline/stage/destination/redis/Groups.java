@@ -33,6 +33,7 @@ public enum Groups implements Label {
   AVRO(DataFormat.AVRO.getLabel()),
   BINARY(DataFormat.BINARY.getLabel()),
   PROTOBUF(DataFormat.PROTOBUF.getLabel()),
+  DATAGRAM(DataFormat.DATAGRAM.getLabel()),
   ;
 
   private final String label;

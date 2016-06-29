@@ -23,9 +23,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
 
 import java.util.ArrayList;

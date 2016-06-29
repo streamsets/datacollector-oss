@@ -43,7 +43,11 @@ public enum DataFormatErrors implements ErrorCode {
 
   DATA_FORMAT_302("Input data is not Base64 for record: {}"),
 
-  DATA_FORMAT_303("Could not parse XML object '{}'")
+  DATA_FORMAT_303("Could not parse XML object '{}'"),
+
+  DATA_FORMAT_400("collectd Types DB '{}' not found"),
+  DATA_FORMAT_401("collectd Auth File '{}' not found"),
+
   ;
   private final String msg;
 

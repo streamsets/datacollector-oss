@@ -28,10 +28,7 @@ import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-<<<<<<< HEAD
-=======
 import com.streamsets.pipeline.config.DatagramMode;
->>>>>>> d66c12f... Relocate
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
