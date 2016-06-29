@@ -31,13 +31,13 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Design/RequiredFields.dita"/>
    <topicref href="../Pipeline_Design/Preconditions.dita"/></topicref>
-  <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
+  <topicref href="../Pipeline_Design/ErrorHandling.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Pipeline.dita"/>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Stage.dita"/>
-   <topicref href="../Pipeline_Configuration/ErrorHandling-Example.dita"/>
+   <topicref href="../Pipeline_Design/ErrorHandling-Pipeline.dita"/>
+   <topicref href="../Pipeline_Design/ErrorHandling-Stage.dita"/>
+   <topicref href="../Pipeline_Design/ErrorHandling-Example.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/SDCRecordFormat.dita">
    <topicmeta>

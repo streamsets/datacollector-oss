@@ -60,12 +60,9 @@
                                     <entry>Since the destination processes only metadata records,
                                         this property is not relevant.</entry>
                                 </row>
-                                <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">check with Santhosh about
-                                            what we're doing here.</draft-comment>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RecordError">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -103,14 +100,9 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Additional Hadoop Configuration</entry>
-                                    <entry>
-                                        <p>Additional properties to use. </p>
-                                        <p>To add properties, click <uicontrol>Add</uicontrol> and
-                                            define the property name and value. Use the property
-                                            names and values as expected by HDFS and Hive.</p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D-Hive-AddConfig">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -133,10 +125,13 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Stored as Avro</entry>
-                                    <entry>Indicates whether the SQL command that generates the Hive
-                                        tables includes the STORED AS AVRO clause. When selected,
-                                        the Avro schema URL is not included in the query.</entry>
+                                    <entry>Stored as Avro <xref
+                                            href="HiveMetastore-TableGen.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_lqj_pyn_lw"/></xref></entry>
+                                    <entry>Uses the Stored As Avro clause in the SQL commands that
+                                        generate Hive tables. When selected, the Avro schema URL is
+                                        not included in the query.</entry>
                                 </row>
                                 <row>
                                     <entry>Schema Folder Location</entry>
@@ -159,8 +154,7 @@
                                                 placement="inline" id="image_mfn_hwx_5r"
                                         /></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveMaxCacheSize"
-                                    />
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveMaxCacheSize"/>
                                 </row>
                             </tbody>
                         </tgroup>

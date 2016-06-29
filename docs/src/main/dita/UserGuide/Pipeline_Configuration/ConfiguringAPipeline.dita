@@ -196,7 +196,7 @@
                             <tbody>
                                 <row>
                                     <entry>Error Records <xref
-                                            href="ErrorHandling.dita#concept_pm4_txm_vq">
+                                            href="../Pipeline_Design/ErrorHandling.dita#concept_pm4_txm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>
                                     <entry>Determines how to handle records that cannot be processed

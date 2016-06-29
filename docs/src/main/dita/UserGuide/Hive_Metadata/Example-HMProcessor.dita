@@ -28,14 +28,14 @@
                         service. To use the tag attribute to write to tables, you use the following
                         expression for the table name:
                         <codeblock>${record:attribute('tag')}</codeblock></p></li>
-                <li>What partitions, if any, do you want to use? <p>Let's partition the data by date
-                        using data in the date field. So you'd use the following the partition value
-                        expression:<codeblock>${record:value('/date')}</codeblock></p></li>
+                <li>What partitions, if any, do you want to use? <p>Let's create daily partitions
+                        using datetime variables for the partition value expression as
+                        follows:<codeblock>${YYYY()}-${MM()}-${DD()}</codeblock></p></li>
             </ol></p>
         <p> At this point, your pipeline would look like this: </p>
-        <p><image href="../Graphics/HiveMeta-Ex-Processor.png" id="image_g5b_34n_fw" scale="75"
+        <p><image href="../Graphics/HiveMeta-Ex-Processor.png" id="image_g5b_34n_fw" scale="55"
             /></p>
-        <p>With this configuration, Hadoop FS will write every record to the Hive table listed the
-            tag attribute and to the date partition in the dt field of the record.</p>
+        <p>With this configuration, Hadoop FS writes every record to the Hive table listed in the
+            tag attribute and to the daily partition based on the time of processing.</p>
  </conbody>
 </concept>

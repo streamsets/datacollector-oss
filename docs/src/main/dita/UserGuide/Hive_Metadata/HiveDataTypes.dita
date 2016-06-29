@@ -21,7 +21,7 @@
                     type conversions</indexterm></indexterm>The following table lists the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             data types and the corresponding Hive data types. The Hive Metadata processor uses these
-            conversions when generating metadata records. Hive Metadata destination uses these
+            conversions when generating metadata records. The Hive Metadata destination uses these
             conversions when generating Hive CREATE TABLE and ALTER TABLE statements.</p>
   <p>
             <table frame="all" rowsep="1" colsep="1" id="table_bcm_jlm_hw">
@@ -42,37 +42,16 @@
                             <entry>Boolean</entry>
                         </row>
                         <row>
-                            <entry>Char</entry>
-                            <entry>String</entry>
-                        </row>
-                        <row>
                             <entry>Byte</entry>
                             <entry>Not supported</entry>
                         </row>
                         <row>
-                            <entry>Short</entry>
-                            <entry>Int</entry>
-                        </row>
-                        <row>
-                            <entry>Integer</entry>
-                            <entry>Int</entry>
-                        </row>
-                        <row>
-                            <entry>Long</entry>
-                            <entry>Bigint</entry>
-                        </row>
-                        <row>
-                            <entry>Float</entry>
-                            <entry>Float</entry>
-                        </row>
-                        <row>
-                            <entry>Double</entry>
-                            <entry>Double</entry>
+                            <entry>Char</entry>
+                            <entry>String</entry>
                         </row>
                         <row>
                             <entry>Date</entry>
-                            <entry>Date <draft-comment author="Loretta">special handling?
-                                    supported?</draft-comment></entry>
+                            <entry>Date </entry>
                         </row>
                         <row>
                             <entry>Datetime</entry>
@@ -83,12 +62,20 @@
                             <entry>Decimal</entry>
                         </row>
                         <row>
-                            <entry>String</entry>
-                            <entry>String</entry>
+                            <entry>Double</entry>
+                            <entry>Double</entry>
                         </row>
                         <row>
-                            <entry>Map</entry>
-                            <entry>Not supported</entry>
+                            <entry>Float</entry>
+                            <entry>Float</entry>
+                        </row>
+                        <row>
+                            <entry>Integer</entry>
+                            <entry>Int</entry>
+                        </row>
+                        <row>
+                            <entry>Long</entry>
+                            <entry>Bigint</entry>
                         </row>
                         <row>
                             <entry>List</entry>
@@ -97,6 +84,18 @@
                         <row>
                             <entry>List-Map</entry>
                             <entry>Not supported</entry>
+                        </row>
+                        <row>
+                            <entry>Map</entry>
+                            <entry>Not supported</entry>
+                        </row>
+                        <row>
+                            <entry>Short</entry>
+                            <entry>Int</entry>
+                        </row>
+                        <row>
+                            <entry>String</entry>
+                            <entry>String</entry>
                         </row>
                         <row>
                             <entry>Time</entry>

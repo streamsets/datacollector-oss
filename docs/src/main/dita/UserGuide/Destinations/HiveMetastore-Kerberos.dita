@@ -17,12 +17,15 @@
  <title>Kerberos Authentication</title>
  <conbody>
   <p><indexterm>Hive Metastore destination<indexterm>Kerberos
-            authentication</indexterm></indexterm>When you use Kerberos authentication, the Data
-            Collector uses the Kerberos principal and keytab to connect to HiveServer2. </p>
-        <p>'The Kerberos principal and keytab are defined in the Data Collector configuration
-                file,<codeph> $SDC_CONF/sdc.properties</codeph>. To use Kerberos authentication,
-            configure all Kerberos properties in the Data Collector configuration file and include
-            the Kerberos principal in the HiveServer2 JDBC URL.</p>
+            authentication</indexterm></indexterm>When you use Kerberos authentication, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses the Kerberos principal and keytab to connect to HiveServer2. </p>
+        <p>The Kerberos principal and keytab are defined in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file,<codeph> $SDC_CONF/sdc.properties</codeph>. To use Kerberos
+            authentication, configure all Kerberos properties in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file and include the Kerberos principal in the HiveServer2 JDBC URL.</p>
  </conbody>
     <related-links>
         <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>

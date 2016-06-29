@@ -291,9 +291,13 @@
        <entry>Determines the authentication type used to connect to the server:<ul
          id="ul_icm_h1l_35">
          <li>None - Performs no authentication.</li>
-         <li>Basic - Uses basic authentication. Requires username and password.</li>
-         <li>Digest - Uses digest authentication. Requires username and password.</li>
-         <li>Universal - Uses universal authentication. Requires username and password. </li>
+         <li>Basic - Uses basic authentication. Requires a username and password. <p>Use with HTTPS
+           to avoid passing unencrypted credentials.</p></li>
+         <li>Digest - Uses digest authentication. Requires a username and password.</li>
+         <li>Universal - Makes an anonymous connection, then provides authentication credentials
+          upon receiving a 401 status and a WWW-Authenticate header request. <p>Requires a username
+           and password associated with basic or digest authentication.</p><p>Use only with servers
+           that respond to this workflow.</p></li>
          <li>OAuth - Uses OAuth 1.0 authentication. Requires OAuth credentials.</li>
         </ul></entry>
       </row>
@@ -360,16 +364,16 @@
      </thead>
      <tbody>
       <row id="P-D_HiveJDBCURL">
-       <entry>Hive JDBC URL</entry>
+       <entry>JDBC URL</entry>
        <entry>JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</entry>
       </row>
       <row id="P-D_HiveJDBCdriver">
-       <entry>Hive JDBC Driver Name</entry>
+       <entry>JDBC Driver Name</entry>
        <entry>The fully-qualified JDBC driver name.</entry>
       </row>
       <row id="P-D_HiveConfigDir">
-       <entry>Configuration Directory</entry>
+       <entry>Hadoop Configuration Directory</entry>
        <entry>
         <p>Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
@@ -380,6 +384,14 @@
          </ul></p>
         <note>Properties in the configuration files are overridden by individual properties defined
          in this processor. </note>
+       </entry>
+      </row>
+      <row id="P-D-Hive-AddConfig">
+       <entry>Additional Hadoop Configuration</entry>
+       <entry>
+        <p>Additional properties to use. </p>
+        <p>To add properties, click <uicontrol>Add</uicontrol> and define the property name and
+         value. Use the property names and values as expected by HDFS and Hive.</p>
        </entry>
       </row>
       <row>

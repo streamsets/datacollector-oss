@@ -20,7 +20,7 @@
           formats<indexterm>Hadoop FS destination</indexterm></indexterm>Hadoop FS writes data to
       HDFS based on the data format that you select. You can use the following data formats: <dl>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Avro-Header">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
           <dt/>
           <dd/>
         </dlentry>
