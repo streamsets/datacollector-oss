@@ -15,12 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vyv_zsg_ht">
  <title>Field Renamer</title>
- <shortdesc>Use the Field Renamer to rename fields in a record. </shortdesc>
+ <shortdesc>Use the Field Renamer to rename fields in a record. You can specify individual fields to
+        rename or use regular expressions to rename sets of fields. </shortdesc>
     <conbody>
         <p><indexterm>Field Renamer
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
-                    Renamer</indexterm></indexterm>You can configure the Field Renamer to overwrite
-            existing fields with the same name. Fields that are not renamed or overwritten pass to
-            the next stage.</p>
+                    Renamer</indexterm></indexterm>You can configure the behavior when a source
+            field does not exist, when a target field with a matching name already exists, and when
+            a source field matches multiple source field expressions. </p>
+        <p>Fields that are not renamed or overwritten pass to the next stage.</p>
     </conbody>
 </concept>

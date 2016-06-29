@@ -207,7 +207,10 @@
                                     <entry>Optional description.</entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_z4j_byn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_mmh_bgh_hr">
                                             <li>Discard - Discards the record.</li>
@@ -256,7 +259,10 @@
                                     <entry>Library version that you want to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_gyg_4yn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_mp4_lsn_xs">
                                             <li>Discard - Discards the record.</li>
@@ -306,7 +312,10 @@
                                     <entry>Library version that you want to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ur4_4yn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_kw1_q3d_3t">
                                             <li>Discard - Discards the record.</li>
@@ -1398,7 +1407,10 @@
                                         preconditions. </entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w55_4yn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_swp_lfh_hr">
                                             <li>Discard - Discards the record.</li>
@@ -1521,7 +1533,10 @@
                                         preconditions. </entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_dpb_pyn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_fxw_4kg_j5">
                                             <li>Discard - Discards the record.</li>
@@ -1590,7 +1605,10 @@
                                         preconditions. </entry>
                                 </row>
                                 <row id="row-RecordError">
-                                    <entry>On Record Error</entry>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_lqj_pyn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_fqw_4fy_kt">
                                             <li>Discard - Discards the record.</li>
@@ -1657,6 +1675,13 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Load Schema from Header</entry>
+                                    <entry>Indicates that the Avro schema is embedded in the
+                                        avroSchema record header attribute. <p>Use only when the
+                                            avroSchema attribute is defined for all
+                                        records.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. </entry>
                                 </row>
@@ -1680,56 +1705,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Header</uicontrol> - used by
-                            <u>Hadoop FS</u> only - includes Avro header.</draft-comment>
-                </cmd>
-            </step>
-            <step id="D-AVRO-Header">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_tcc_kxg_1w">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Avro Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Avro Schema in Header <xref
-                                            href="../Destinations/HadoopFS-RecordHeaderAttributes.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_ydt_vvg_1w"/></xref></entry>
-                                    <entry>Indicates that the Avro schema is embedded in the
-                                        avroSchema header attribute. Use only when the avroSchema
-                                        attribute is defined for all records.</entry>
-                                </row>
-                                <row>
-                                    <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. The
-                                        destination includes the schema definition in each generated
-                                        file. </entry>
-                                </row>
-                                <row>
-                                    <entry>Avro Compression Codec</entry>
-                                    <entry>The Avro-supported compression type to use. <p>When you
-                                            enable Avro compression, do not enable other compression
-                                            available in the destination. </p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-File</uicontrol> - used in
-                        Amazon S3  and  other file-based destinations <u>except for Hadoop FS</u>
-                        that write avro.</draft-comment>
+                        Amazon S3 and other file-based destinations that write avro.</draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-File">
@@ -1747,6 +1724,14 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row>
+                                    <entry>Load Schema from Header </entry>
+                                    <entry>Indicates that the Avro schema is embedded in the
+                                        avroSchema record header attribute. The destination includes
+                                        the schema definition in each generated file. <p>Use only
+                                            when the avroSchema attribute is defined for all
+                                            records.</p></entry>
+                                </row>
                                 <row>
                                     <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. The
@@ -1785,6 +1770,13 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row>
+                                    <entry>Load Schema from Header</entry>
+                                    <entry>Indicates that the Avro schema is embedded in the
+                                        avroSchema record header attribute. <p>Use only when the
+                                            avroSchema attribute is defined for all
+                                        records.</p></entry>
+                                </row>
                                 <row>
                                     <entry>Avro Schema</entry>
                                     <entry>Schema definition to use when writing data. </entry>

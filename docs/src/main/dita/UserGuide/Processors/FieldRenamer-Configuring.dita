@@ -40,30 +40,53 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Field Does Not Exist</entry>
-                                    <entry>Action to take when a field to be renamed does not exist
-                                        in a record:<ul id="ul_uhd_115_jt">
-                                            <li>Continue - The processor continues processing the
-                                                record, skipping any missing fields.</li>
-                                            <li>Send to Error - The processor handles the record
-                                                based on the error handling configured for the
-                                                stage.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Overwrite Existing Fields</entry>
-                                    <entry>Overwrites any fields in the record that matches the new
-                                        field names.</entry>
-                                </row>
-                                <row>
                                     <entry>Fields to Rename</entry>
-                                    <entry>To rename fields, enter or select the field to rename and
-                                        enter the new name for the field. Click
-                                            <uicontrol>Add</uicontrol> to rename additional fields. <p>
+                                    <entry>To rename fields, enter or select the fields to rename
+                                        and enter the new name for the field. Click
+                                            <uicontrol>Add</uicontrol> to rename additional fields.
+                                            <p>You can use regex in both properties to rename sets
+                                            of fields. <xref
+                                                href="FieldRenamer-SetsofFields.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_f3b_khp_fs"/></xref></p><p>
                                             <note>When using the processor to rename fields in
                                                 records with complex structures, be sure to use the
                                                 appropriate field path.</note>
                                         </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Source Field Does Not Exist</entry>
+                                    <entry>Behavior when a source field does not exist in a
+                                            record:<ul id="ul_uhd_115_jt">
+                                            <li>Continue - Continues processing the record, ignoring
+                                                missing source fields.</li>
+                                            <li>Send to Error - Handles the record based on the
+                                                error handling configured for the stage.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Target Field Already Exists</entry>
+                                    <entry>Behavior when the record includes a field name that
+                                        matches a proposed target field:<ul id="ul_d3f_5fg_lw">
+                                            <li>Replace - Replaces the existing field with the
+                                                renamed field.</li>
+                                            <li>Append Numbers - Appends numbers to any duplicates
+                                                in the renamed fields.</li>
+                                            <li>Continue - Continues processing the record, making
+                                                no change for existing fields.</li>
+                                            <li>Send to Error - Handles the record based on the
+                                                error handling configured for the stage.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Multiple Source Field Matches</entry>
+                                    <entry>Behavior when a source field matches more than one source
+                                        field expression:<ul id="ul_csy_wnn_lw">
+                                            <li>Continue - Continues processing the record, skipping
+                                                fields with multiple matches.</li>
+                                            <li>Send to Error - Handles the record based on the
+                                                error handling configured for the stage.</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

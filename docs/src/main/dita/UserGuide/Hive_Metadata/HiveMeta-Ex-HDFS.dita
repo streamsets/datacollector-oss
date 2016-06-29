@@ -15,9 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jzr_ypn_fw">
  <title>The Hadoop FS Destination</title>
- <shortdesc>Hadoop FS is the destination that writes Avro data to HDFS using record header
-        attributes. Record header attributes contain the write details that the Hive Metadata
-        processor generates and adds to records. </shortdesc>
+ <shortdesc>Hadoop FS is the destination that writes data to HDFS using record header attributes.
+        Record header attributes contain the write details that the Hive Metadata processor
+        generates and adds to records. </shortdesc>
  <conbody>
   <p>So you connect the Hadoop FS destination to the data output stream of the processor. When you
             configure the destination, instead of configuring a directory template, you configure
@@ -32,7 +32,8 @@
         <p>With this setup, the destination uses the information in record header attributes to
             write data to HDFS. It writes each record to the directory in the targetDirectory header
             attribute, using the Avro schema in the avroSchema header attribute. And it rolls a file
-            when it spots the roll attribute in a record header. (The destination can also use Max
-            Records in File and Max Files Size to determine when to roll files.)</p>
+            when it spots the roll attribute in a record header. </p>
+        <p>Note that the destination can also use Max Records in File and Max Files Size to
+            determine when to roll files.</p>
  </conbody>
 </concept>

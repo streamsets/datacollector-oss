@@ -40,8 +40,8 @@
                             <tbody>
                                 <row>
                                     <entry>Output Field</entry>
-                                    <entry>Field to use for the response. If the field does not
-                                        exist, HTTP Client creates the field. </entry>
+                                    <entry>Field to use for the response. You can use a new or
+                                        existing field.</entry>
                                 </row>
                                 <row>
                                     <entry>Data Format</entry>

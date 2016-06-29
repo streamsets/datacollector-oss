@@ -36,7 +36,7 @@
                             <codeph>${time:now()}</codeph>. This is the default time basis. </dd>
                 </dlentry>
                 <dlentry>
-                    <dt>record time</dt>
+                    <dt>record-based time</dt>
                     <dd>When you use the time associated with a record as the time basis, you
                         specify a Date field in the record as part of the partition value
                         expression. The processor uses the datetimes associated with the records and

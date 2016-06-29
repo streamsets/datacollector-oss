@@ -20,11 +20,7 @@
                 method</indexterm></indexterm><indexterm>Expression method<indexterm>HTTP Client
                     processor</indexterm></indexterm>The Expression method allows you to write an
             expression that evaluates to a standard HTTP method. Use the Expression method to
-            generate a workflow. For example, you can use an expression performs a lookup (GET) or
-            passes data to the server (PUT) based on the data in a field. </p>
-        <p>
-            <draft-comment author="Loretta">Adam, feel free to suggest a better example writeup. And
-                if you wanted to give me an actual sample expression, I'd use it? :D</draft-comment>
-        </p>
+            generate a workflow. For example, you can use an expression that performs a lookup (GET)
+            or passes data to the server (PUT) based on the data in a field. </p>
     </conbody>
 </concept>

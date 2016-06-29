@@ -196,6 +196,11 @@
                                     <p>Includes the Kafka Consumer and Kafka Producer.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
+                            <entry>For the Cloudera distribution of Apache Kafka 2.0.1 (0.9.0).
+                                    <p>Includes the Kafka Consumer and Kafka Producer.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-elasticsearch_1_4-lib</entry>
                             <entry>For Elasticsearch 1.4.5. <p>Includes the Elasticsearch
                                     destination.</p></entry>

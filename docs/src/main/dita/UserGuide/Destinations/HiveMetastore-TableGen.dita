@@ -20,7 +20,7 @@
             generation</indexterm></indexterm>The Hive Metastore destination can generate Hive
             tables using the following methods:<dl>
                 <dlentry>
-                    <dt>With the Stored as Avro clause</dt>
+                    <dt>With the Stored As Avro clause</dt>
                     <dd>Generates the table with a query that includes the Stored As Avro clause.
                         When using the Stored As Avro clause, the destination does not need to
                         generate an Avro schema for each change in the Hive table. </dd>
@@ -28,7 +28,7 @@
                             <uicontrol>Stored As Avro</uicontrol> property to use this method.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Without the Stored as Avro clause</dt>
+                    <dt>Without the Stored As Avro clause</dt>
                     <dd>Generates the table without a Stored As Avro clause in the query. Instead,
                         the destination generates an Avro schema for each Hive table update. The
                         destination uses the following format for the schema name:
@@ -37,7 +37,7 @@
                     <dd>The destination stores the Avro schema in HDFS. You can configure where the
                         destination saves the schemas. You can specify a full path or a path
                         relative to the table directory. By default, the destination saves the
-                        schema in a .schemas sub-folder of the table directory. </dd>
+                        schema in a <filepath>.schemas</filepath> sub-folder of the table directory. </dd>
                     <dd>You can configure the destination to generate and store the schemas as a
                         specified HDFS user. <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

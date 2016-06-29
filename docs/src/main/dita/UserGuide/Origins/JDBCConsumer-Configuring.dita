@@ -210,7 +210,7 @@
                                 </row>
                                 <row>
                                     <entry>JDBC Header Prefix</entry>
-                                    <entry>Default prefix for namespace header attributes. </entry>
+                                    <entry>Prefix for namespace header attributes. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

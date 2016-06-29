@@ -581,27 +581,31 @@
                         <dlentry>
                               <dt/>
                               <dd>
-                                    <draft-comment author="Loretta"
-                                                ><uicontrol>Avro-Header</uicontrol> used by Hadoop
-                                          FS. <b>AvroFile</b> used by Local and S3, and other file
-                                          destinations. <b>AvroMess</b> used by Kafka and Kinesis
-                                          Producer and other message destinations. When making
-                                          changes to these, add updates to the Flume data formats
-                                          topic when necessary. </draft-comment>
+                                    <draft-comment author="Loretta"><uicontrol>AvroFlume</uicontrol>
+                                          is used only by Flume. <b>AvroFile</b> used by Hadoop FS,
+                                          Local and S3, and other file destinations. <b>AvroMess</b>
+                                          used by Kafka and Kinesis Producer and other message
+                                          destinations. When making changes to these, add updates to
+                                          the Flume data formats topic when necessary. </draft-comment>
                               </dd>
                         </dlentry>
-                        <dlentry id="Avro-Header">
+                        <dlentry id="Avro-Flume">
                               <dt>Avro</dt>
                               <dd>The destination writes records based on the Avro schema in the
-                                    record header or on the schema that you define in the stage. The
-                                    schema definition is included in each file.</dd>
-                              <dd>You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, avoid using other compression
+                                    avroSchema record header attribute or the Avro schema that you
+                                    provide. </dd>
+                              <dd>You can optionally include the schema definition as part of the
+                                    Flume event. Omitting the schema definition can improve
+                                    performance, but requires the appropriate schema management to
+                                    avoid losing track of the schema associated with the data.</dd>
+                              <dd>You can also compress data with an Avro-supported compression
+                                    codec. When using Avro compression, do not use other compression
                                     available in the destination. </dd>
                         </dlentry>
                         <dlentry id="DEST-DF-AvroFILE">
                               <dt>Avro</dt>
-                              <dd>The destination writes records based on the Avro schema that you
+                              <dd>The destination writes records based on the Avro schema in the
+                                    avroSchema record header attribute or the Avro schema that you
                                     provide. The schema definition is included in each file.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
@@ -609,7 +613,8 @@
                         </dlentry>
                         <dlentry id="D-DF-AvroMess">
                               <dt>Avro</dt>
-                              <dd>The destination writes records based on the Avro schema that you
+                              <dd>The destination writes records based on the Avro schema in the
+                                    avroSchema record header attribute or the Avro schema that you
                                     provide. </dd>
                               <dd>You can optionally include the schema definition as part of the
                                     message. Omitting the schema definition can improve performance,

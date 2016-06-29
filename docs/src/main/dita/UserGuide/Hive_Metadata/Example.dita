@@ -28,14 +28,14 @@
             connect it to a Hive Metadata processor. The processor assesses the record structure and
             generates a metadata record that describes any required Hive metadata changes. Using the
             tag header attribute and other user-defined expressions, a Hive Metadata processor can
-            determine the database, table, and partition to use in the target directory and write
-            that information, along with the Avro schema, to the record header, including file roll
+            determine the database, table, and partition to use for the target directory and write
+            that information along with the Avro schema to the record header, including file roll
             indicator when necessary.</p>
         <p>You connect the Hive Metadata processor metadata output stream to a Hive Metastore
             destination. The destination, upon receiving the metadata record from the Hive Metadata
             processor, creates or updates Hive tables as needed. </p>
         <p>You connect the Hive Metadata processor data output stream to a Hadoop FS destination and
-            configure it to use information in record headers. The destination then writes each
+            configure it to use the information in record headers. The destination then writes each
             record where it wants to go using the target directory and Avro schema in the record
             header, and rolling files when needed.</p>
         <p>Now let's take a closer look... </p>

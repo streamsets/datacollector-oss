@@ -19,8 +19,8 @@
  <conbody>
         <p><indexterm>origins<indexterm>Redis Consumer</indexterm></indexterm><indexterm>Redis
                 Consumer origin<indexterm>overview</indexterm></indexterm>When you configure Redis
-            Consumer, you define Redis URI and the channels to read from. You can specify specific
-            channels or provide patterns to subscribe to all matching channels. You can also
-            configure the connection timeout. </p>
+            Consumer, you define the Redis URI and the channels to read from. You can specify
+            specific channels or provide patterns to subscribe to all matching channels. You can
+            also configure the connection timeout. </p>
  </conbody>
 </concept>

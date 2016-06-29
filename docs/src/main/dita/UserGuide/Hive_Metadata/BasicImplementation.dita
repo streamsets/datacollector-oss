@@ -28,7 +28,7 @@
             record header attributes. </p>
         <p>The Hive Metadata processor passes the metadata record through the second output stream -
             the metadata output stream. Connect the Hive Metastore destination to the metadata
-            output stream to enable the destination to update Hive tables. The metadata output
-            stream contains no record data. </p>
+            output stream to enable the destination to create and update Hive tables. The metadata
+            output stream contains no record data. </p>
     </conbody>
 </concept>
