@@ -199,7 +199,7 @@ public class UDPTestUtil {
     ByteBuf buffer = Unpooled.wrappedBuffer(data);
     DatagramPacket datagram = new DatagramPacket(buffer, recipient, sender);
     UDPMessage message = new UDPMessage(type, 1, datagram);
-    UDPMessageSerializer serializer = new UDPMessageSerializer(1000000);
+    UDPMessageSerializer serializer = new UDPMessageSerializer();
     return serializer.serialize(message);
   }
 

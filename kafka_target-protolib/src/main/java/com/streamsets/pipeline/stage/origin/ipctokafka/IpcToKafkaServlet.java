@@ -26,6 +26,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.kafkautils.SdcKafkaProducerPooledObjectFactory;
@@ -49,7 +50,6 @@ import java.util.concurrent.TimeUnit;
 public class IpcToKafkaServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(IpcToKafkaServlet.class);
 
-  private final Stage.Context context;
   private final RpcConfigs configs;
   private final KafkaConfigBean kafkaConfigBean;
   private final BlockingQueue<Exception> errorQueue;
@@ -73,7 +73,6 @@ public class IpcToKafkaServlet extends HttpServlet {
       int kafkaMaxMessageSize,
       BlockingQueue<Exception> errorQueue
   ) {
-    this.context = context;
     this.configs = configs;
     this.kafkaConfigBean = kafkaConfigBean;
     this.errorQueue = errorQueue;
@@ -107,7 +106,10 @@ public class IpcToKafkaServlet extends HttpServlet {
     poolConfig.setMinIdle(minIdle);
     poolConfig.setMaxIdle(maxIdle);
     LOG.debug("Creating Kafka producer pool with max '{}' minIdle '{}' maxIdle '{}'", max, minIdle, maxIdle);
-    kafkaProducerPool = new GenericObjectPool<>(new SdcKafkaProducerPooledObjectFactory(kafkaConfigBean), poolConfig);
+    kafkaProducerPool = new GenericObjectPool<>(
+        new SdcKafkaProducerPooledObjectFactory(kafkaConfigBean.kafkaConfig, DataFormat.SDC_JSON),
+        poolConfig
+    );
   }
 
   @Override

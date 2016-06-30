@@ -45,7 +45,7 @@ public class TestUDPMessageSerialization {
   @Test
   public void testSerDeser() throws IOException {
     UDPMessage message = createUDPMessage(100);
-    UDPMessageSerializer serializer = new UDPMessageSerializer(1000);
+    UDPMessageSerializer serializer = new UDPMessageSerializer();
     byte[] serData = serializer.serialize(message);
 
     UDPMessageDeserializer deserializer = new UDPMessageDeserializer();
@@ -56,14 +56,6 @@ public class TestUDPMessageSerialization {
     Assert.assertEquals(message.getDatagram().sender(), got.getDatagram().sender());
     Assert.assertEquals(message.getDatagram().recipient(), got.getDatagram().recipient());
     Assert.assertArrayEquals(message.getDatagram().content().array(), got.getDatagram().content().array());
-  }
-
-  @Test(expected = IOException.class)
-  public void testSerOverflow() throws IOException {
-    UDPMessage message = createUDPMessage(1000);
-
-    UDPMessageSerializer serializer = new UDPMessageSerializer(100);
-    serializer.serialize(message);
   }
 
 }

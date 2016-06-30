@@ -25,7 +25,7 @@ import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -39,17 +39,14 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
   private static final Logger LOG = LoggerFactory.getLogger(SdcKafkaProducerPooledObjectFactory.class);
   ProducerFactorySettings settings;
 
-  public SdcKafkaProducerPooledObjectFactory(KafkaConfigBean kafkaConfigBean) {
+  public SdcKafkaProducerPooledObjectFactory(KafkaTargetConfig kafkaTargetConfig, DataFormat dataFormat) {
     LOG.debug("Kafka producer config: brokers '{}' configs '{}'",
-        kafkaConfigBean.kafkaConfig.metadataBrokerList,
-        kafkaConfigBean.kafkaConfig.kafkaProducerConfigs
+        kafkaTargetConfig.metadataBrokerList,
+        kafkaTargetConfig.kafkaProducerConfigs
     );
-    settings = new ProducerFactorySettings(kafkaConfigBean.kafkaConfig.kafkaProducerConfigs == null
-        ? Collections.<String, Object>emptyMap()
-        : new HashMap<String, Object>(kafkaConfigBean.kafkaConfig.kafkaProducerConfigs),
-        PartitionStrategy.ROUND_ROBIN,
-      kafkaConfigBean.kafkaConfig.metadataBrokerList,
-        DataFormat.SDC_JSON
+    settings = new ProducerFactorySettings(kafkaTargetConfig.kafkaProducerConfigs == null
+        ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>(kafkaTargetConfig.kafkaProducerConfigs),
+        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.metadataBrokerList, dataFormat
     );
   }
 

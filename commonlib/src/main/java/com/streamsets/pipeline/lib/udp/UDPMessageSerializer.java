@@ -26,7 +26,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+// this class is not thread safe
 public class UDPMessageSerializer {
+
+  public static final int MAX_UDP_PACKAGE_SIZE = 64 * 1024;
 
   static class ByRefByteArrayOutputStream extends ByteArrayOutputStream {
     public byte[] getInternalBuffer() {
@@ -34,11 +37,9 @@ public class UDPMessageSerializer {
     }
   }
 
-  private final int maxSize;
   private final ByRefByteArrayOutputStream baos;
 
-  public UDPMessageSerializer(int maxSize) {
-    this.maxSize = maxSize;
+  public UDPMessageSerializer() {
     baos = new ByRefByteArrayOutputStream();
   }
 
@@ -53,12 +54,15 @@ public class UDPMessageSerializer {
     oos.writeInt(datagram.sender().getPort());
     oos.writeUTF(datagram.recipient().getAddress().getHostAddress());
     oos.writeInt(datagram.recipient().getPort());
+    if (datagram.content().readableBytes() > MAX_UDP_PACKAGE_SIZE) {
+      throw new IOException(Utils.format("Message size '{}' exceeds maximum size '{}'",
+          baos.size(),
+          MAX_UDP_PACKAGE_SIZE
+      ));
+    }
     oos.writeInt(datagram.content().readableBytes());
     datagram.content().readBytes(oos, datagram.content().readableBytes());
     oos.close();
-    if (baos.size() > maxSize) {
-      throw new IOException(Utils.format("Message size '{}' exceeds maximum size '{}'", baos.size(), maxSize));
-    }
     byte[] buffer = new byte[baos.size()];
     System.arraycopy(baos.getInternalBuffer(), 0, buffer, 0, baos.size());
     return buffer;
