@@ -22,15 +22,9 @@ package com.streamsets.pipeline.stage.origin.mongodb;
 import com.mongodb.CursorType;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientException;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.MongoException;
 import com.mongodb.MongoQueryException;
-import com.mongodb.ReadPreference;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -38,11 +32,14 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
+import com.streamsets.pipeline.stage.common.mongodb.Groups;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -50,96 +47,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class MongoDBSource extends BaseSource {
-  private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
-  public static final String _ID = "_id";
 
-  private final String mongoConnectionString;
-  private final String mongoDatabaseName;
-  private final String mongoCollectionName;
-  private final boolean isCapped;
-  private final String offsetField;
-  private final String initialOffset;
-  private final int batchSize;
-  private final long maxBatchWaitTime;
-  private final AuthenticationType authenticationType;
-  private final String username;
-  private final String password;
-  private final ReadPreference readPreference;
+  private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
+  private static final String _ID = "_id";
+
+  private final MongoSourceConfigBean configBean;
 
   private ObjectId initialObjectId;
   private ErrorRecordHandler errorRecordHandler;
   private MongoClient mongoClient;
-  private MongoDatabase mongoDatabase;
   private MongoCollection<Document> mongoCollection;
   private MongoCursor<Document> cursor;
 
-  public MongoDBSource(
-      String mongoConnectionString,
-      String mongoDatabaseName,
-      String mongoCollectionName,
-      boolean isCapped,
-      String offsetField,
-      String initialOffset,
-      int batchSize,
-      long maxBatchWaitTime,
-      AuthenticationType authenticationType,
-      String username,
-      String password,
-      ReadPreference readPreference
-  ) {
-    this.mongoConnectionString = mongoConnectionString;
-    this.mongoDatabaseName = mongoDatabaseName;
-    this.mongoCollectionName = mongoCollectionName;
-    this.isCapped = isCapped;
-    this.offsetField = offsetField;
-    this.initialOffset = initialOffset;
-    this.batchSize = batchSize;
-    this.maxBatchWaitTime = maxBatchWaitTime * 1000; // Convert from seconds to milliseconds
-    this.authenticationType = authenticationType;
-    this.username = username;
-    this.password = password;
-    this.readPreference = readPreference;
+  public MongoDBSource(MongoSourceConfigBean configBean) {
+    this.configBean = configBean;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     try {
-      initialObjectId = new ObjectId(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(initialOffset));
+      initialObjectId = new ObjectId(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(configBean.initialOffset));
     } catch (ParseException e) {
-      issues.add(getContext()
-              .createConfigIssue(
-                  Groups.MONGODB.name(),
-                  "initialOffset",
-                  Errors.MONGODB_05,
-                  initialOffset
-              )
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.MONGODB.name(),
+              MongoDBConfig.CONFIG_PREFIX + "initialOffset",
+              Errors.MONGODB_05,
+              configBean.initialOffset
+          )
       );
     }
 
-    if (createMongoClient(issues)) {
-      if (checkMongoDatabase(issues)) {
-        if (checkMongoCollection(issues)) {
-          checkCursor(issues);
-        }
-      }
-      mongoClient.close();
-      mongoClient = null;
+    configBean.mongoConfig.init(getContext(), issues, configBean.readPreference.getReadPreference(), null);
+    if (!issues.isEmpty()) {
+      return issues;
     }
+
+    // since no issue was found in validation, the followings must not be null at this point.
+    Utils.checkNotNull(configBean.mongoConfig.getMongoDatabase(), "MongoDatabase");
+    mongoClient = Utils.checkNotNull(configBean.mongoConfig.getMongoClient(), "MongoClient");
+    mongoCollection = Utils.checkNotNull(configBean.mongoConfig.getMongoCollection(), "MongoCollection");
+
+    checkCursor(issues);
 
     return issues;
   }
@@ -158,16 +118,16 @@ public class MongoDBSource extends BaseSource {
     String nextSourceOffset = lastSourceOffset;
     int numRecords = 0;
 
-    prepareCursor(maxBatchSize, offsetField, lastSourceOffset);
-    long batchWaitTime = System.currentTimeMillis() + maxBatchWaitTime;
+    prepareCursor(maxBatchSize, configBean.offsetField, lastSourceOffset);
+    long batchWaitTime = System.currentTimeMillis() + (configBean.maxBatchWaitTime * 1000);
 
     try {
-      while (numRecords < Math.min(batchSize, maxBatchSize) && System.currentTimeMillis() < batchWaitTime) {
+      while (numRecords < Math.min(configBean.batchSize, maxBatchSize) && System.currentTimeMillis() < batchWaitTime) {
         LOG.trace("Trying to get next doc from cursor");
         Document doc = cursor.tryNext();
         if (null == doc) {
           LOG.trace("Doc was null");
-          if (!isCapped) {
+          if (!configBean.isCapped) {
             LOG.trace("Collection is not capped.");
             // If this is not a capped collection, then this means we've reached the end of the data.
             // and should get a new cursor.
@@ -203,13 +163,13 @@ public class MongoDBSource extends BaseSource {
         }
 
         if (!doc.containsKey(_ID)) {
-          errorRecordHandler.onError(Errors.MONGODB_11, offsetField, doc.toString());
+          errorRecordHandler.onError(Errors.MONGODB_11, configBean.offsetField, doc.toString());
           continue;
         }
-        nextSourceOffset = doc.getObjectId(offsetField).toHexString();
+        nextSourceOffset = doc.getObjectId(configBean.offsetField).toHexString();
 
-        final String recordContext = mongoConnectionString + "::" +
-            mongoDatabaseName + "::" + mongoCollectionName + "::" +
+        final String recordContext = configBean.mongoConfig.connectionString + "::" +
+            configBean.mongoConfig.database + "::" + configBean.mongoConfig.collection + "::" +
             nextSourceOffset;
 
         Record record = getContext().createRecord(recordContext);
@@ -224,8 +184,6 @@ public class MongoDBSource extends BaseSource {
   }
 
   private void prepareCursor(int maxBatchSize, String offsetField, String lastSourceOffset) {
-    createMongoClient();
-
     ObjectId offset;
     if (null == cursor) {
       if (null == lastSourceOffset || lastSourceOffset.isEmpty()) {
@@ -234,7 +192,7 @@ public class MongoDBSource extends BaseSource {
         offset = new ObjectId(lastSourceOffset);
       }
       LOG.debug("Getting new cursor with params: {} {} {}", maxBatchSize, offsetField, offset);
-      if (isCapped) {
+      if (configBean.isCapped) {
         cursor = mongoCollection
             .find()
             .filter(Filters.gt(offsetField, offset))
@@ -253,104 +211,16 @@ public class MongoDBSource extends BaseSource {
     }
   }
 
-  private List<MongoCredential> createCredentials() {
-    List<MongoCredential> credentials = new ArrayList<>(1);
-    MongoCredential credential = null;
-    switch (authenticationType) {
-      case USER_PASS:
-        credential = MongoCredential.createCredential(username, mongoDatabaseName, password.toCharArray());
-        break;
-      case NONE:
-      default:
-        break;
-    }
-
-    if (null != credential) {
-      credentials.add(credential);
-    }
-    return credentials;
-  }
-
-  private void createMongoClient() {
-    List<ConfigIssue> issues = new ArrayList<>();
-    if (createMongoClient(issues)) {
-      if (checkMongoDatabase(issues)) {
-        checkMongoCollection(issues);
-      }
-    }
-  }
-
-  private boolean createMongoClient(List<ConfigIssue> issues) {
-    if (null == mongoClient) {
-      List<ServerAddress> servers = new ArrayList<>();
-
-      MongoClientURI mongoURI = new MongoClientURI(mongoConnectionString);
-      List<MongoCredential> credentials = createCredentials();
-
-      if (!validateServerList(mongoURI.getHosts(), servers, issues)) {
-        return false;
-      }
-
-      try {
-        mongoClient = new MongoClient(servers, credentials, mongoURI.getOptions());
-      } catch (MongoException e) {
-        issues.add(getContext().createConfigIssue(
-            Groups.MONGODB.name(),
-            "mongoClientURI",
-            Errors.MONGODB_01,
-            e.toString()
-        ));
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private boolean checkMongoDatabase(List<ConfigIssue> issues) {
-    boolean isOk = true;
-    try {
-      mongoDatabase = mongoClient.getDatabase(mongoDatabaseName).withReadPreference(readPreference);
-    } catch (MongoClientException e) {
-      issues.add(getContext().createConfigIssue(
-          Groups.MONGODB.name(),
-          "database",
-          Errors.MONGODB_02,
-          mongoDatabaseName,
-          e.toString()
-      ));
-      isOk = false;
-    }
-    return isOk;
-  }
-
-  private boolean checkMongoCollection(List<ConfigIssue> issues) {
-    boolean isOk = true;
-    try {
-      mongoCollection = mongoDatabase.getCollection(mongoCollectionName).withReadPreference(readPreference);
-    } catch (MongoClientException e) {
-      issues.add(getContext().createConfigIssue(
-          Groups.MONGODB.name(),
-          "collection",
-          Errors.MONGODB_03,
-          mongoCollectionName,
-          e.toString()
-      ));
-      isOk = false;
-    }
-    return isOk;
-  }
-
   private void checkCursor(List<ConfigIssue> issues) {
-    if (isCapped) {
+    if (configBean.isCapped) {
       try {
         mongoCollection.find().cursorType(CursorType.TailableAwait).batchSize(1).limit(1).iterator().close();
       } catch (MongoQueryException e) {
         issues.add(getContext().createConfigIssue(
             Groups.MONGODB.name(),
-            "collection",
+            MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
             Errors.MONGODB_04,
-            mongoDatabaseName,
+            configBean.mongoConfig.database,
             e.toString()
         ));
       }
@@ -360,52 +230,12 @@ public class MongoDBSource extends BaseSource {
       } catch (MongoQueryException e) {
         issues.add(getContext().createConfigIssue(
             Groups.MONGODB.name(),
-            "collection",
+            MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
             Errors.MONGODB_06,
-            mongoDatabaseName,
+            configBean.mongoConfig.database,
             e.toString()
         ));
       }
     }
-  }
-
-  private boolean validateServerList(List<String> hosts, List<ServerAddress> servers, List<ConfigIssue> issues) {
-    // Validate each host in the connection string is valid. MongoClient will not tell us
-    // if something is wrong when we try to open it.
-    boolean isOk = true;
-    for (String host : hosts) {
-      String[] hostport = host.split(":");
-      if (hostport.length != 2) {
-        issues.add(getContext().createConfigIssue(
-            Groups.MONGODB.name(),
-            "mongoClientURI",
-            Errors.MONGODB_07,
-            host
-        ));
-        isOk = false;
-      } else {
-        try {
-          InetAddress.getByName(hostport[0]);
-          servers.add(new ServerAddress(hostport[0], Integer.parseInt(hostport[1])));
-        } catch (UnknownHostException e) {
-          issues.add(getContext().createConfigIssue(
-              Groups.MONGODB.name(),
-              "mongoClientURI",
-              Errors.MONGODB_09,
-              hostport[0]
-          ));
-          isOk = false;
-        } catch (NumberFormatException e) {
-          issues.add(getContext().createConfigIssue(
-              Groups.MONGODB.name(),
-              "mongoClientURI",
-              Errors.MONGODB_08,
-              hostport[1]
-          ));
-          isOk = false;
-        }
-      }
-    }
-    return isOk;
   }
 }

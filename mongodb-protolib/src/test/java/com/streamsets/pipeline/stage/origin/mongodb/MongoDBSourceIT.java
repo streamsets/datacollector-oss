@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.origin.mongodb;
 
 import com.mongodb.MongoClient;
-import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
@@ -29,6 +28,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -91,20 +92,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidInitialOffset() throws StageException {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
-        DATABASE_NAME,
-        CAPPED_COLLECTION,
-        true,
-        "_id",
-        "0",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = CAPPED_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = true;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "0";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -118,20 +121,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidHostname() throws StageException {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://localhostsdfsd:" + mongoContainerMappedPort,
-        DATABASE_NAME,
-        CAPPED_COLLECTION,
-        true,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://localhostsdfsd:" + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = CAPPED_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = true;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -144,20 +149,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidHostPort() throws StageException {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp,
-        DATABASE_NAME,
-        CAPPED_COLLECTION,
-        true,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = CAPPED_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = true;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -170,20 +177,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidPort() throws StageException {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp + ":abcd",
-        DATABASE_NAME,
-        CAPPED_COLLECTION,
-        true,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":abcd";
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = CAPPED_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = true;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -196,20 +205,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadCappedCollection() throws Exception {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
-        DATABASE_NAME,
-        CAPPED_COLLECTION,
-        true,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = CAPPED_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = true;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -252,20 +263,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadCollection() throws Exception {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
-        DATABASE_NAME,
-        COLLECTION,
-        false,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = false;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -310,20 +323,22 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadUUIDType() throws Exception {
-    MongoDBSource origin = new MongoDBSource(
-        "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort,
-        DATABASE_NAME,
-        UUID_COLLECTION,
-        false,
-        "_id",
-        "2015-06-01 00:00:00",
-        100,
-        1,
-        AuthenticationType.NONE,
-        null,
-        null,
-        ReadPreference.nearest()
-    );
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = UUID_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = false;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 1;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSource(configBean);
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")

@@ -17,14 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.mongodb;
+package com.streamsets.pipeline.stage.common.mongodb;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  MONGODB("MongoDB")
+  MONGODB("MongoDB"),
+  CREDENTIALS("Credentials"),
+  ADVANCED("Advanced"),
   ;
 
   private final String label;
@@ -33,6 +35,7 @@ public enum Groups implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

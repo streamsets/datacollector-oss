@@ -20,11 +20,9 @@
 package com.streamsets.pipeline.stage.destination.mongodb;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.DeleteOneModel;
 import com.mongodb.client.model.InsertOneModel;
 import com.mongodb.client.model.ReplaceOneModel;
@@ -35,6 +33,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -43,6 +42,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
+import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,10 +65,10 @@ public class MongoDBTarget extends BaseTarget {
   public static final int DEFAULT_CAPACITY = 1024;
 
   private final MongoTargetConfigBean mongoTargetConfigBean;
-  private MongoCollection<Document> coll;
+  private MongoClient mongoClient;
+  private MongoCollection<Document> mongoCollection;
   private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
-  private MongoClient mongoClient;
 
   public MongoDBTarget(MongoTargetConfigBean mongoTargetConfigBean) {
     this.mongoTargetConfigBean = mongoTargetConfigBean;
@@ -77,20 +77,28 @@ public class MongoDBTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    MongoClientURI connectionString = new MongoClientURI(mongoTargetConfigBean.mongoClientURI);
-    mongoClient = new MongoClient(connectionString);
-    MongoDatabase db = mongoClient.getDatabase(mongoTargetConfigBean.database);
-    coll = db.getCollection(mongoTargetConfigBean.collection).
-        withWriteConcern(mongoTargetConfigBean.writeConcern.getWriteConcern());
+
+    mongoTargetConfigBean.mongoConfig.init(
+        getContext(),
+        issues,
+        null,
+        mongoTargetConfigBean.writeConcern.getWriteConcern()
+    );
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
+    // since no issue was found in validation, the followings must not be null at this point.
+    Utils.checkNotNull(mongoTargetConfigBean.mongoConfig.getMongoDatabase(), "MongoDatabase");
+    mongoClient = Utils.checkNotNull(mongoTargetConfigBean.mongoConfig.getMongoClient(), "MongoClient");
+    mongoCollection = Utils.checkNotNull(mongoTargetConfigBean.mongoConfig.getMongoCollection(), "MongoCollection");
 
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(
         getContext(),
         DataFormat.JSON.getGeneratorFormat()
     );
     builder.setCharset(StandardCharsets.UTF_8);
-
     builder.setMode(JsonMode.MULTIPLE_OBJECTS);
     generatorFactory = builder.build();
 
@@ -99,10 +107,7 @@ public class MongoDBTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if (mongoClient != null) {
-      mongoClient.close();
-      mongoClient = null;
-    }
+    IOUtils.closeQuietly(mongoClient);
     super.destroy();
   }
 
@@ -182,7 +187,7 @@ public class MongoDBTarget extends BaseTarget {
 
     if (!documentList.isEmpty()) {
       try {
-        BulkWriteResult bulkWriteResult = coll.bulkWrite(documentList);
+        BulkWriteResult bulkWriteResult = mongoCollection.bulkWrite(documentList);
         if (bulkWriteResult.wasAcknowledged()) {
           LOG.trace(
               "Wrote batch with {} inserts, {} updates and {} deletes",
@@ -205,8 +210,6 @@ public class MongoDBTarget extends BaseTarget {
       }
     }
   }
-
-
 
   private void validateUniqueKey(String operation, Record record) throws OnRecordErrorException {
     if(mongoTargetConfigBean.uniqueKeyField == null || mongoTargetConfigBean.uniqueKeyField.isEmpty()) {

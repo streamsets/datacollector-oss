@@ -29,7 +29,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import de.flapdoodle.embed.mongo.MongodExecutable;
+import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -75,11 +76,15 @@ public class MongoDBTargetIT {
 
   @Test
   public void testWrite() throws StageException, IOException {
-
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
-    mongoTargetConfigBean.mongoClientURI = "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
-    mongoTargetConfigBean.collection = TEST_WRITE_COLLECTION;
-    mongoTargetConfigBean.database = DATABASE_NAME;
+    mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
+    mongoTargetConfigBean.mongoConfig.connectionString =
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+    mongoTargetConfigBean.mongoConfig.collection = TEST_WRITE_COLLECTION;
+    mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
+    mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    mongoTargetConfigBean.mongoConfig.username = null;
+    mongoTargetConfigBean.mongoConfig.password = null;
     mongoTargetConfigBean.uniqueKeyField = "/name";
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.JOURNALED;
 
@@ -133,12 +138,16 @@ public class MongoDBTargetIT {
 
   @Test
   public void testRecordDoesNotContainUniqueKeyException() throws StageException, IOException {
-
     MongoTargetConfigBean mongoTargetConfigBean = new MongoTargetConfigBean();
+    mongoTargetConfigBean.mongoConfig = new MongoDBConfig();
     // wrong port
-    mongoTargetConfigBean.mongoClientURI = "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
-    mongoTargetConfigBean.collection = UNIQUE_KEY_EXCEPTION_COLLECTION;
-    mongoTargetConfigBean.database = DATABASE_NAME;
+    mongoTargetConfigBean.mongoConfig.connectionString =
+        "mongodb://" + mongoContainer.getContainerIpAddress() + ":" + mongoContainer.getMappedPort(MONGO_PORT);
+    mongoTargetConfigBean.mongoConfig.collection = UNIQUE_KEY_EXCEPTION_COLLECTION;
+    mongoTargetConfigBean.mongoConfig.database = DATABASE_NAME;
+    mongoTargetConfigBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    mongoTargetConfigBean.mongoConfig.username = null;
+    mongoTargetConfigBean.mongoConfig.password = null;
     mongoTargetConfigBean.uniqueKeyField = "/randomUniqueKeyField";
     mongoTargetConfigBean.writeConcern = WriteConcernLabel.NORMAL;
 

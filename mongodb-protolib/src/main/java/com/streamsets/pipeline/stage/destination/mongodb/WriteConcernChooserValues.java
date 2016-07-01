@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.destination.mongodb;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.stage.origin.mongodb.ReadPreferenceLabel;
 
 public class WriteConcernChooserValues extends BaseEnumChooserValues {
 

@@ -25,23 +25,25 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.stage.common.mongodb.Groups;
 
 @StageDef(
-  version = 1,
-  label = "MongoDB",
-  description = "Writes data to MongoDB",
-  icon="mongodb.png",
-  onlineHelpRefUrl = "index.html#Destinations/MongoDB.html#task_mrc_k5n_4v"
+    version = 2,
+    label = "MongoDB",
+    description = "Writes data to MongoDB",
+    icon="mongodb.png",
+    onlineHelpRefUrl = "index.html#Destinations/MongoDB.html#task_mrc_k5n_4v",
+    upgrader = MongoDBTargetUpgrader.class
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class MongoDBDTarget extends DTarget {
 
   @ConfigDefBean()
-  public MongoTargetConfigBean mongoTargetConfigBean;
+  public MongoTargetConfigBean configBean;
 
   @Override
   protected Target createTarget() {
-    return new MongoDBTarget(mongoTargetConfigBean);
+    return new MongoDBTarget(configBean);
   }
 }

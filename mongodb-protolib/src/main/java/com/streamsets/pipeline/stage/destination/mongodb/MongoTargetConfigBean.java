@@ -20,58 +20,35 @@
 package com.streamsets.pipeline.stage.destination.mongodb;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 
 public class MongoTargetConfigBean {
 
-  // Available options for client URI - http://api.mongodb.org/java/3.0/?com/mongodb/MongoClientURI.html
-  @ConfigDef(
-    type = ConfigDef.Type.STRING,
-    label = "Connection String",
-    description = "Use format mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]",
-    required = true,
-    group = "MONGODB",
-    displayPosition = 10
-  )
-  public String mongoClientURI;
+  @ConfigDefBean(groups = {"MONGODB", "CREDENTIALS", "ADVANCED"})
+  public MongoDBConfig mongoConfig;
 
   @ConfigDef(
-    type = ConfigDef.Type.STRING,
-    label = "Database",
-    required = true,
-    group = "MONGODB",
-    displayPosition = 20
-  )
-  public String database;
-
-  @ConfigDef(
-    type = ConfigDef.Type.STRING,
-    label = "Collection",
-    required = true,
-    group = "MONGODB",
-    displayPosition = 30
-  )
-  public String collection;
-
-  @ConfigDef(
-    type = ConfigDef.Type.MODEL,
-    label = "Unique Key Field",
-    description = "Unique key field is required for upserts and optional for inserts and deletes",
-    required = false,
-    group = "MONGODB",
-    displayPosition = 40
+      type = ConfigDef.Type.MODEL,
+      label = "Unique Key Field",
+      description = "Unique key field is required for upserts and optional for inserts and deletes",
+      required = false,
+      displayPosition = 1000,
+      group = "MONGODB"
   )
   @FieldSelectorModel(singleValued = true)
   public String uniqueKeyField;
 
   @ConfigDef(
-    type = ConfigDef.Type.MODEL,
-    label = "Write Concern",
-    defaultValue = "JOURNALED",
-    required = true,
-    group = "MONGODB",
-    displayPosition = 50
+      type = ConfigDef.Type.MODEL,
+      label = "Write Concern",
+      description = "Sets the write concern",
+      defaultValue = "JOURNALED",
+      required = true,
+      displayPosition = 1001,
+      group = "MONGODB"
   )
   @ValueChooserModel(WriteConcernChooserValues.class)
   public WriteConcernLabel writeConcern = WriteConcernLabel.JOURNALED;

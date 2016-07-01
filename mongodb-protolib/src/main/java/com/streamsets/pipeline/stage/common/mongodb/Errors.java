@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
+  MONGODB_00("Failed to create MongoClientURI: {}"),
   MONGODB_01("Failed to create MongoClient: {}"),
   MONGODB_02("Failed to get database: '{}'. {}"),
   MONGODB_03("Failed to get collection: '{}'. {}"),
