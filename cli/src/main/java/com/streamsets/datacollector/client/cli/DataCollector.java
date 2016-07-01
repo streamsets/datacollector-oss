@@ -55,6 +55,7 @@ import com.streamsets.datacollector.client.cli.command.store.UpdatePipelineRules
 import com.streamsets.datacollector.client.cli.command.system.ConfigurationCommand;
 import com.streamsets.datacollector.client.cli.command.system.CurrentUserCommand;
 import com.streamsets.datacollector.client.cli.command.system.DirectoriesCommand;
+import com.streamsets.datacollector.client.cli.command.system.EnableDPMCommand;
 import com.streamsets.datacollector.client.cli.command.system.InfoCommand;
 import com.streamsets.datacollector.client.cli.command.system.ServerTimeCommand;
 import com.streamsets.datacollector.client.cli.command.system.ShutdownCommand;
@@ -130,7 +131,8 @@ public class DataCollector {
         CurrentUserCommand.class,
         ServerTimeCommand.class,
         ShutdownCommand.class,
-        ThreadsCommand.class
+        ThreadsCommand.class,
+        EnableDPMCommand.class
       );
 
     builder.withGroup("preview")

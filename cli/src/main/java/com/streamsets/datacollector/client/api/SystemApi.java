@@ -24,13 +24,17 @@ import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.Configuration;
 import com.streamsets.datacollector.client.Pair;
 import com.streamsets.datacollector.client.TypeRef;
+import com.streamsets.datacollector.client.model.DPMInfoJson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(
+    value = "class io.swagger.codegen.languages.JavaClientCodegen",
+    date = "2015-09-11T14:51:29.367-07:00"
+)
 public class SystemApi {
   private ApiClient apiClient;
 
@@ -68,12 +72,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -86,16 +84,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -115,12 +106,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -133,16 +118,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -162,12 +140,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -180,16 +152,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -209,12 +174,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -227,16 +186,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -256,12 +208,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -274,16 +220,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -303,12 +242,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -321,16 +254,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -354,11 +280,6 @@ public class SystemApi {
 
     queryParams.addAll(apiClient.parameterToPairs("", "endingOffset", endingOffset));
 
-
-
-
-
-
     final String[] accepts = {
       "text/plain"
     };
@@ -371,15 +292,8 @@ public class SystemApi {
 
     String[] authNames = new String[] {  };
 
-
-
-
-
-    apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
-
-
-
-
+    apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
   }
 
   /**
@@ -399,12 +313,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -417,16 +325,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<List<Map<String, Object>>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -457,11 +358,6 @@ public class SystemApi {
 
     queryParams.addAll(apiClient.parameterToPairs("", "attachment", attachment));
 
-
-
-
-
-
     final String[] accepts = {
       "text/plain"
     };
@@ -474,16 +370,9 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<String>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
   }
 
   /**
@@ -503,12 +392,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -521,15 +404,8 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
-    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
-
-
-
-
+    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
   }
 
   /**
@@ -549,12 +425,6 @@ public class SystemApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -567,16 +437,48 @@ public class SystemApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<List<Map<String, Object>>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
 
 
+  /**
+   * Enables DPM by getting application token from DPM
+   *
+   * @return void
+   */
+  public void enableDPM (DPMInfoJson dpmInfo) throws ApiException {
+    Object postBody = dpmInfo;
+    byte[] postBinaryBody = null;
 
+    // verify the required parameter 'dpmInfo' is set
+    if (dpmInfo == null) {
+      throw new ApiException(400, "Missing the required parameter 'dpmInfo' when calling enableDPM");
+    }
 
+    // create path and map variables
+    String path = "/v1/system/enableDPM".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
   }
 
 }
