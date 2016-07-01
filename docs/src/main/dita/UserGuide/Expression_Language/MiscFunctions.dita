@@ -129,6 +129,26 @@
           with the time of processing.</dd>
         <dd>Return type: Date.</dd>
       </dlentry>
+      <dlentry>
+        <dt>vault:read("&lt;path>", "&lt;key>")</dt>
+        <dd>Returns the value for the key on the specified path. </dd>
+        <dd>Return type: String.</dd>
+        <dd>Uses the following arguments:<ul id="ul_yd1_4gc_mw">
+            <li>path - The path in Vault to read.</li>
+            <li>key - The key for the value that you want returned.</li>
+          </ul></dd>
+      </dlentry>
+      <dlentry>
+        <dt>vault:readWithDelay("&lt;path>", "&lt;key>", &lt;delay>)</dt>
+        <dd>Returns the value for the key on the specified path after waiting the specified amount
+          of time. Use when you want a delayed response to allow time for external processing.</dd>
+        <dd>Return type: String.</dd>
+        <dd>Uses the following arguments:<ul id="ul_cc4_rgc_mw">
+            <li>path - The path in Vault to read.</li>
+            <li>key - The key for the value that you want returned.</li>
+            <li>delay - Milliseconds to wait before returning the value.</li>
+          </ul></dd>
+      </dlentry>
   </dl>
  </conbody>
   <related-links>

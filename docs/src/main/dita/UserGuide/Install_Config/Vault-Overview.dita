@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bmq_gl1_mw">
+ <title>Accessing Hashicorp Vault Information</title>
+ <shortdesc>You can access information stored in Hashicorp Vault, such as user credentials, from the
+        pipeline.</shortdesc>
+ <conbody>
+        <p>To access to Vault data, you must authenticate <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            with Vault. After authentication, you can use expressions in the pipeline that access
+            Vault at run time.</p>
+        <p>To securely handle Vault information, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            must use HTTPS. </p>
+  <p>To access information stored in Vault, perform the following steps:<ol id="ol_ahx_z41_mw">
+                <li>Configure the Vault properties file.</li>
+                <li>Discover the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> ID.</li>
+                <li>Configure Vault to authenticate <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</li>
+                <li>In the pipeline, use an expression to access Vault information.</li>
+            </ol></p>
+        <p>
+            <note>This documentation includes details about Hashicorp Vault to simplify the
+                installation and configuration process. For more information, see the Vault
+                documentation. </note>
+        </p>
+ </conbody>
+</concept>
