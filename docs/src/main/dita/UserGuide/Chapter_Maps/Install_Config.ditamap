@@ -116,5 +116,14 @@
    <topicref href="../Install_Config/JMXMetrics-ViewExternalTools.dita"/>
    <topicref href="../Install_Config/JMXMetrics-Custom.dita"/>
   </topicref>
+  <topicref href="../Install_Config/Vault-Overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/Vault-Step1-VaultProps.dita"/>
+   <topicref href="../Install_Config/Vault-Step2-UserID.dita"/>
+   <topicref href="../Install_Config/Vault-Step3-ConfigVault.dita"/>
+   <topicref href="../Install_Config/Vault-Step4-CallingVault.dita"/>
+  </topicref>
  </topicref>
 </map>
