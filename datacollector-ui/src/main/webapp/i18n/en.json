@@ -11,7 +11,7 @@
       },
       "admin": {
         "configuration": "Configuration",
-        "generateApplicationToken": "Application Token",
+        "enableDPM": "Enable DPM",
         "jvmMetrics": "JVM Metrics",
         "logs": "Logs",
         "main": "Administration",
@@ -165,6 +165,17 @@
       "generatingTokenMessage": "Generating Application Token ...",
       "onlyOrgAdminMessage": "Only Organization Administrator can generate Application Token. Contact your Administrator for the assigning the role.",
       "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt'. Restart the Data Collector to register Application Token."
+    },
+    "enableDPM": {
+      "dpmBaseURL": "DPM Base URL",
+      "dpmBaseURLPlaceholder": "Enter DPM Base URL",
+      "dpmUserName": "DPM User Name",
+      "dpmUserNamePlaceholder": "Enter DPM User Name",
+      "dpmUserPassword": "DPM User Password",
+      "dpmUserPasswordPlaceholder": "Enter DPM User Password",
+      "headerLabel": "Enable DPM",
+      "isEnableInProgress": "Enabling DPM...",
+      "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt' and 'etc/dpm.properties'. Restart the Data Collector to register Application Token."
     },
     "createPipeline": "Create New Pipeline",
     "commitPipelineHistory": {
