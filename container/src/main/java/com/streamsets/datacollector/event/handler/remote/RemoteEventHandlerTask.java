@@ -77,7 +77,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final Logger LOG = LoggerFactory.getLogger(RemoteEventHandlerTask.class);
   private static final Long DEFAULT_PING_FREQUENCY = Long.valueOf(5000);
   private static final String REMOTE_CONTROL = AbstractSSOService.CONFIG_PREFIX + "remote.control.";
-  private static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
+  public static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
   private static final String REMOTE_URL_PING_INTERVAL = REMOTE_CONTROL  + "ping.frequency";
   private static final String DEFAULT_REMOTE_JOB_LABELS = "";
   private static final String REMOTE_CONTROL_EVENTS_RECIPIENT = REMOTE_CONTROL + "events.recipient";

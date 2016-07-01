@@ -67,6 +67,8 @@
     <commons-codec.version>1.10</commons-codec.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
+    <commons-configuration.version>2.0</commons-configuration.version>
+    <commons-beanutils.version>1.9.2</commons-beanutils.version>
     <jps-api.version>2.0</jps-api.version>
     <commons-el.version>1.0</commons-el.version>
     <javax.inject.version>1</javax.inject.version>
@@ -600,6 +602,16 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>${commons-io.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-configuration2</artifactId>
+        <version>${commons-configuration.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>${commons-beanutils.version}</version>
       </dependency>
       <dependency>
         <groupId>org.glassfish.jersey.media</groupId>

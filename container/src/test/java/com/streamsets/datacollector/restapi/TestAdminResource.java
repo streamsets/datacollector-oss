@@ -19,8 +19,9 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import org.apache.commons.io.IOUtils;
+import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -30,13 +31,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 public class TestAdminResource extends JerseyTest {
@@ -44,25 +44,46 @@ public class TestAdminResource extends JerseyTest {
   private static File confDir;
 
   @Test
-  public void testUpdateAppToken() throws IOException {
-    Response response = target("/v1/system/appToken").request().header("X-Requested-By", "SDC").post(Entity.text("ola"));
-    Assert.assertEquals(200, response.getStatus());
+  public void testEnableDPM() throws IOException {
+    DPMInfoJson dpmInfo = new DPMInfoJson();
+    dpmInfo.setBaseURL("http://dpmbaseURL");
+    dpmInfo.setUserID("admin@admin");
+    dpmInfo.setUserPassword("admin@admin");
+    dpmInfo.setOrganization("admin");
+    dpmInfo.setLabels(ImmutableList.of("l1", "l2"));
+    boolean exceptionTriggered = false;
+    Response response = null;
+    try {
+      response = target("/v1/system/enableDPM")
+          .request()
+          .header("X-Requested-By", "SDC")
+          .post(Entity.json(dpmInfo));
+    } catch (Exception e) {
+      exceptionTriggered = true;
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+    Assert.assertTrue(exceptionTriggered);
 
-    // read contents of application-token.txt
-    File appTokenFIle = new File(confDir, "application-token.txt");
-    Assert.assertTrue(appTokenFIle.exists());
-    List<String> strings = IOUtils.readLines(new FileInputStream(appTokenFIle));
-    Assert.assertEquals(1, strings.size());
-    Assert.assertEquals("ola", strings.get(0));
-
-    response = target("/v1/system/appToken").request().header("X-Requested-By", "SDC").post(Entity.text("como esta"));
-    Assert.assertEquals(200, response.getStatus());
-
-    // read contents of application-token.txt
-    appTokenFIle = new File(confDir, "application-token.txt");
-    strings = IOUtils.readLines(new FileInputStream(appTokenFIle));
-    Assert.assertEquals(1, strings.size());
-    Assert.assertEquals("como esta", strings.get(0));
+    // test for null check
+    exceptionTriggered = false;
+    response = null;
+    try {
+      response = target("/v1/system/enableDPM")
+          .request()
+          .header("X-Requested-By", "SDC")
+          .post(null);
+    } catch (ProcessingException e) {
+      Assert.assertTrue(e.getCause().getMessage().contains("DPMInfo cannot be null"));
+      exceptionTriggered = true;
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+    Assert.assertTrue(exceptionTriggered);
   }
 
   @Override
