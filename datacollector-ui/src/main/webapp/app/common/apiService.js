@@ -168,6 +168,19 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+      /**
+       * Enable DPM
+       * @param dpmInfo
+       */
+      enableDPM: function(dpmInfo) {
+        var url = apiBase + '/system/enableDPM';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: dpmInfo
+        });
+      },
+
 
       /**
        * logout
