@@ -45,6 +45,19 @@
                         </thead>
                         <tbody>
                             <row>
+                                <entry>sdc.base.http.url </entry>
+                                <entry>Data Collector URL that is included in emails sent for metric
+                                    and data alerts. <p>Default is
+                                            <codeph>http://&lt;hostname>:&lt;http.port></codeph>
+                                        where <codeph>&lt;hostname></codeph> is the value defined in
+                                        the http.bindHost property. If the host name is not defined
+                                        in http.bindHost, <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> runs the following command to determine the host name:
+                                            <codeph>hostname -f</codeph></p><p>Be sure to uncomment
+                                        the property if you change the value.</p></entry>
+                            </row>
+                            <row>
                                 <entry>http.bindHost</entry>
                                 <entry>Host name or IP address that <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -174,6 +187,16 @@
                                     </ul></entry>
                             </row>
                             <row>
+                                <entry>http.digest.realm</entry>
+                                <entry>Realm used for HTTP authentication. Use basic-realm,
+                                    digest-realm, or form-realm. The associated realm.properties
+                                    file must be located in the <codeph>$SDC_CONF</codeph>
+                                        directory.<p>Default is
+                                            <codeph>&lt;http.authentication>-realm</codeph>. Be sure
+                                        to uncomment the property if you change the
+                                    value.</p></entry>
+                            </row>
+                            <row>
                                 <entry>http.realm.file.permission.check</entry>
                                 <entry>Checks the permissions for the realm.properties file in
                                         use:<ul id="ul_aff_bwr_g5">
@@ -292,7 +315,7 @@
                                     /> console next to the StreamSets logo.</entry>
                             </row>
                             <row>
-                                <entry>ui.help.base.url</entry>
+                                <entry>ui.local.help.base.url</entry>
                                 <entry>Base URL for the online help installed with <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />.<p>Do not change this value.</p></entry>
