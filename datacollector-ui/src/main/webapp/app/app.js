@@ -166,12 +166,12 @@ angular.module('dataCollectorApp')
         },
 
         /**
-         * Open the Generate Application Token Modal Dialog
+         * Open the Enable DPM Modal Dialog
          */
-        generateApplicationToken: function() {
+        onEnableDPMClick: function() {
           $modal.open({
-            templateUrl: 'common/administration/applicationToken/applicationToken.tpl.html',
-            controller: 'ApplicationTokenModalInstanceController',
+            templateUrl: 'common/administration/enableDPM/enableDPM.tpl.html',
+            controller: 'EnableDPMModalInstanceController',
             size: '',
             backdrop: 'static'
           });
