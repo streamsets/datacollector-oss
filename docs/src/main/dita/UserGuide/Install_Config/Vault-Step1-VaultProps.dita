@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_c4b_5bb_mw">
+ <title>Step 1. Configure Vault Properties</title>
+ <shortdesc>Configure the Vault properties file, $SDC_CONF/vault.properties, to provide Vault
+        details to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
+ <conbody>
+        <p>The Vault server URL and App ID are required properties. Configure other properties as
+            needed.</p>
+  <p>The file includes the following properties. Uncomment any properties that you want to
+                use:<draft-comment author="Loretta">Adam: little help with some of these?
+                </draft-comment><table frame="all" rowsep="1" colsep="1" id="table_exr_mcb_mw">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Vault Property</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>vault.addr</entry>
+                            <entry>Required. Vault server URL.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.app.id</entry>
+                            <entry>Required. App ID for <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />. Use a UUID to ensure better security.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.lease.renewal.interval.sec</entry>
+                            <entry>Number of seconds to extend a lease renewal.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.lease.expiration.buffer.sec</entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>vault.open.timeout</entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>vault.proxy.address</entry>
+                            <entry>Vault proxy address. </entry>
+                        </row>
+                        <row>
+                            <entry>vault.proxy.port</entry>
+                            <entry>Vault proxy port. </entry>
+                        </row>
+                        <row>
+                            <entry>vault.proxy.username</entry>
+                            <entry>Vault proxy username.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.proxy.password</entry>
+                            <entry>Vault proxy password. </entry>
+                        </row>
+                        <row>
+                            <entry>vault.read.timeout</entry>
+                            <entry>Timeout for reads.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.ssl.enabled.protocols</entry>
+                            <entry>SSL enabled protocols</entry>
+                        </row>
+                        <row>
+                            <entry>vault.ssl.truststore.file</entry>
+                            <entry>Location of an optional truststore file.</entry>
+                        </row>
+                        <row>
+                            <entry>vault.ssl.truststore.password</entry>
+                            <entry>Password for the truststore file. </entry>
+                        </row>
+                        <row>
+                            <entry>vault.ssl.verify</entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>vault.ssl.timeout</entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>vault.timeout</entry>
+                            <entry/>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+ </conbody>
+</concept>
