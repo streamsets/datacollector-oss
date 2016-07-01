@@ -74,7 +74,9 @@ public class AvroTypeUtil {
   public static Schema parseSchema(String schema) {
     return new Schema.Parser()
       .setValidate(true)
-      .setValidateDefaults(true)
+      //.setValidateDefaults(true)  -> we cannot use this api because 1.7.3 avro version does
+        //not contain this api and MAPR hive jars uses 1.7.3 (even though streamsets use avro 1.7.7) and
+        //We load the jar from mapr stage libs automatically -> this api i believe is kind of nice to have.
       .parse(schema);
   }
 
