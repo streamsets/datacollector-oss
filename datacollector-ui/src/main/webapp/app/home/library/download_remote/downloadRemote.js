@@ -24,8 +24,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DownloadRemoteModalInstanceController', function ($scope, $modalInstance, api, authService, $q) {
+  .controller('DownloadRemoteModalInstanceController', function ($scope, $modalInstance, api, authService) {
     angular.extend($scope, {
+      remoteBaseUrl: authService.getRemoteBaseUrl(),
       common: {
         errors: []
       },

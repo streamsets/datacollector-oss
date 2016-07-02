@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location,
+  .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location, authService,
                                            pipelineService, pipelineConstant, $modal, $q, $route) {
 
 
@@ -328,8 +328,8 @@ angular
           .then(
             function(metadata) {
               $rootScope.common.successList.push({
-                message: 'Successfully Published Pipeline. New Pipeline Commit Version - ' +
-                metadata['dpm.pipeline.version']
+                message: 'Successfully Published Pipeline to DPM Pipeline Repository: ' +
+                authService.getRemoteBaseUrl() + ' New Pipeline Commit Version - ' + metadata['dpm.pipeline.version']
               });
               $scope.clearUndoRedoArchive();
               $route.reload();
