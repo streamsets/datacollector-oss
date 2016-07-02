@@ -24,9 +24,10 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CommitHistoryModalInstanceController', function ($scope, $modalInstance, api, authService, $q,
+  .controller('CommitHistoryModalInstanceController', function ($scope, $modalInstance, api, authService,
                                                                 pipelineInfo, metadata) {
     angular.extend($scope, {
+      remoteBaseUrl: authService.getRemoteBaseUrl(),
       common: {
         errors: []
       },

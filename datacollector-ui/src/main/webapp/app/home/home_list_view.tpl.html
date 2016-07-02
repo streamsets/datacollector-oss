@@ -64,6 +64,8 @@
 
         <div class="pipeline-name">
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.name}}</span></a>
+          <span class="version-text"
+                ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}})</span>
           <span class="pipeline-label"
                 ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
                 ng-repeat="label in pipeline.metadata.labels">{{label}}</span>
@@ -76,13 +78,11 @@
 
         <span class="pipeline-status {{common.pipelineStatusMap[pipeline.name].status}}">{{common.pipelineStatusMap[pipeline.name].status}}</span>
 
-
         <span class="pipeline-uptime"
               ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
           <span class="time-update" translate="home.header.uptime">Uptime</span>
           <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.name].timeStamp"></span>
         </span>
-
 
         <div class="action-menu pull-right" dropdown>
               <span class="dropdown-toggle" dropdown-toggle
