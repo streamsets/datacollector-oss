@@ -26,6 +26,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('PublishModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q, authService) {
     angular.extend($scope, {
+      remoteBaseUrl: authService.getRemoteBaseUrl(),
       publishing: false,
       common: {
         errors: []

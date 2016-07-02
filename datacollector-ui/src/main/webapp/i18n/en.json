@@ -504,7 +504,8 @@
     },
     "publish": {
       "headerLabel" : "Publish Pipeline",
-      "listHeaderLabel": "Publish Pipelines"
+      "listHeaderLabel": "Publish Pipelines",
+      "pipelineRepository": "DPM Pipeline Repository"
     },
     "resetOffset": {
       "title": "Reset Origin",
