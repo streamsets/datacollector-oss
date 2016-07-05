@@ -33,6 +33,9 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -601,8 +604,6 @@ public class TestFieldRenamer {
       map.put("a|b", Field.create(Field.Type.STRING, "foo4"));
       map.put("a@b", Field.create(Field.Type.STRING, "foo5"));
 
-
-
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(Field.Type.MAP, map));
 
@@ -635,14 +636,19 @@ public class TestFieldRenamer {
   }
 
   @Test
-  public void testRename() throws StageException {
+  public void testRenameSimpleAndComplexType() throws StageException {
     // Straightforward rename -- existing source, non-existing target
     FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
     renameConfig1.fromFieldExpression = "/existing";
     renameConfig1.toFieldExpression = "/nonExisting";
+
     FieldRenamerConfig renameConfig2 = new FieldRenamerConfig();
     renameConfig2.fromFieldExpression = "/listOfMaps[0]/existing";
     renameConfig2.toFieldExpression = "/listOfMaps[0]/nonExisting";
+
+    FieldRenamerConfig renameConfig3 = new FieldRenamerConfig();
+    renameConfig3.fromFieldExpression = "/mapOfMaps/(*)/existing";
+    renameConfig3.toFieldExpression = "/mapOfMaps/$1/nonExisting";
 
     FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
     errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
@@ -650,7 +656,7 @@ public class TestFieldRenamer {
     errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
 
     FieldRenamerProcessor processor =
-        new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renameConfig2),  errorHandler);
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renameConfig2, renameConfig3),  errorHandler);
 
     // Test non-existent source with existing target field
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
@@ -662,6 +668,18 @@ public class TestFieldRenamer {
       map.put("existing", Field.create(Field.Type.STRING, "foo"));
       map.put("listOfMaps", Field.create(ImmutableList.of(Field.create(ImmutableMap.of("existing",
           Field.create(Field.Type.STRING, "foo"))))));
+      map.put("mapOfMaps",
+          Field.create(
+              ImmutableMap.of(
+                  "innerMap",
+                  Field.create(
+                      Field.Type.MAP,
+                      ImmutableMap.of("existing", Field.create(Field.Type.STRING, "foo")
+                      )
+                  )
+              )
+          )
+      );
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -669,17 +687,306 @@ public class TestFieldRenamer {
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertEquals(String.valueOf(result), 2, result.size());
+      Assert.assertEquals(String.valueOf(result), 3, result.size());
       Assert.assertTrue(result.containsKey("nonExisting"));
       Assert.assertFalse(result.containsKey("existing"));
       Assert.assertTrue(result.containsKey("listOfMaps"));
+      Assert.assertTrue(result.containsKey("mapOfMaps"));
       Assert.assertEquals("foo", result.get("nonExisting").getValue());
-      result = result.get("listOfMaps").getValueAsList().get(0).getValueAsMap();
-      Assert.assertTrue(result.containsKey("nonExisting"));
-      Assert.assertFalse(result.containsKey("existing"));
-      Assert.assertEquals("foo", result.get("nonExisting").getValue());
+      Map<String, Field> listResult = result.get("listOfMaps").getValueAsList().get(0).getValueAsMap();
+      Assert.assertTrue(listResult.containsKey("nonExisting"));
+      Assert.assertFalse(listResult.containsKey("existing"));
+      Assert.assertEquals("foo", listResult.get("nonExisting").getValue());
+      Assert.assertTrue(result.get("mapOfMaps").getValueAsMap().containsKey("innerMap"));
+      Map<String, Field> mapResult= result.get("mapOfMaps").getValueAsMap().get("innerMap").getValueAsMap();
+      Assert.assertFalse(mapResult.containsKey("existing"));
+      Assert.assertTrue(mapResult.containsKey("nonExisting"));
+      Assert.assertEquals("foo", mapResult.get("nonExisting").getValueAsString());
     } finally {
       runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRenameMultipleListElementsWithConstIdxExpr() throws StageException {
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/listOfInts[0]";
+    renameConfig1.toFieldExpression = "/nonExisting0";
+
+    FieldRenamerConfig renameConfig2 = new FieldRenamerConfig();
+    renameConfig2.fromFieldExpression = "/listOfInts[1]";
+    renameConfig2.toFieldExpression = "/nonExisting1";
+
+    FieldRenamerConfig renameConfig3 = new FieldRenamerConfig();
+    renameConfig3.fromFieldExpression = "/listOfInts[2]";
+    renameConfig3.toFieldExpression = "/nonExisting2";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    //Reverse order in configuration so as to preserve array indices
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig3, renameConfig2, renameConfig1),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("listOfInts",
+          Field.create(
+              ImmutableList.of(
+                  Field.create(Field.Type.INTEGER, 1),
+                  Field.create(Field.Type.INTEGER, 2),
+                  Field.create(Field.Type.INTEGER, 3)
+              )
+          )
+      );
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Map<String, Field> result = output.getRecords().get("a").get(0).get().getValueAsMap();
+      Assert.assertTrue(result.containsKey("listOfInts"));
+      Assert.assertTrue(result.get("listOfInts").getValueAsList().isEmpty());
+      Assert.assertTrue(result.containsKey("nonExisting0"));
+      Assert.assertTrue(result.containsKey("nonExisting1"));
+      Assert.assertTrue(result.containsKey("nonExisting2"));
+      Assert.assertEquals(1, result.get("nonExisting0").getValueAsInteger());
+      Assert.assertEquals(2, result.get("nonExisting1").getValueAsInteger());
+      Assert.assertEquals(3, result.get("nonExisting2").getValueAsInteger());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
+  public void testRenameMultipleListElementsWithConstIdxExprAndGrp() throws StageException {
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/listOfInts[(0)]";
+    renameConfig1.toFieldExpression = "/nonExisting$1";
+
+    FieldRenamerConfig renameConfig2 = new FieldRenamerConfig();
+    renameConfig2.fromFieldExpression = "/listOfInts[(1)]";
+    renameConfig2.toFieldExpression = "/nonExisting$1";
+
+    FieldRenamerConfig renameConfig3 = new FieldRenamerConfig();
+    renameConfig3.fromFieldExpression = "/listOfInts[(2)]";
+    renameConfig3.toFieldExpression = "/nonExisting$1";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    //Reverse order in configuration so as to preserve array indices
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig3, renameConfig2, renameConfig1),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("listOfInts",
+          Field.create(
+              ImmutableList.of(
+                  Field.create(Field.Type.INTEGER, 1),
+                  Field.create(Field.Type.INTEGER, 2),
+                  Field.create(Field.Type.INTEGER, 3)
+              )
+          )
+      );
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Map<String, Field> result = output.getRecords().get("a").get(0).get().getValueAsMap();
+      Assert.assertTrue(result.containsKey("listOfInts"));
+      Assert.assertTrue(result.get("listOfInts").getValueAsList().isEmpty());
+      Assert.assertTrue(result.containsKey("nonExisting0"));
+      Assert.assertTrue(result.containsKey("nonExisting1"));
+      Assert.assertTrue(result.containsKey("nonExisting2"));
+      Assert.assertEquals(1, result.get("nonExisting0").getValueAsInteger());
+      Assert.assertEquals(2, result.get("nonExisting1").getValueAsInteger());
+      Assert.assertEquals(3, result.get("nonExisting2").getValueAsInteger());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRenameMultipleListElementsWithRegexGroupExpr() throws StageException {
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/listOfInts[(*)]";
+    renameConfig1.toFieldExpression = "/nonExisting$1";
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig1),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("listOfInts",
+          Field.create(
+              ImmutableList.of(
+                  Field.create(Field.Type.INTEGER, 1),
+                  Field.create(Field.Type.INTEGER, 2),
+                  Field.create(Field.Type.INTEGER, 3)
+              )
+          )
+      );
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Map<String, Field> result = output.getRecords().get("a").get(0).get().getValueAsMap();
+      Assert.assertTrue(result.containsKey("listOfInts"));
+      Assert.assertTrue(result.get("listOfInts").getValueAsList().isEmpty());
+      Assert.assertTrue(result.containsKey("nonExisting0"));
+      Assert.assertTrue(result.containsKey("nonExisting1"));
+      Assert.assertTrue(result.containsKey("nonExisting2"));
+      Assert.assertEquals(1, result.get("nonExisting0").getValueAsInteger());
+      Assert.assertEquals(2, result.get("nonExisting1").getValueAsInteger());
+      Assert.assertEquals(3, result.get("nonExisting2").getValueAsInteger());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRenameWithMultipleMapElementsExpr() throws StageException {
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/oe1/(*)";
+    renameConfig1.toFieldExpression = "/oe1/irename_$1";
+
+    FieldRenamerConfig renameConfig2 = new FieldRenamerConfig();
+    renameConfig2.fromFieldExpression = "/oe2/(*)";
+    renameConfig2.toFieldExpression = "/oe2/irename_$1";
+
+    FieldRenamerConfig renameConfig3 = new FieldRenamerConfig();
+    renameConfig3.fromFieldExpression = "/oe3/(*)";
+    renameConfig3.toFieldExpression = "/oe3/irename_$1";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig1, renameConfig2, renameConfig3),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> innerMap = new HashMap<>();
+      innerMap.put("ie1", Field.create("ie1"));
+      innerMap.put("ie2", Field.create("ie2"));
+      innerMap.put("ie3", Field.create("ie3"));
+
+
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("oe1", Field.create(new HashMap<>(innerMap)));
+      map.put("oe2", Field.create(new HashMap<>(innerMap)));
+      map.put("oe3", Field.create(new HashMap<>(innerMap)));
+
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Map<String, Field> result = output.getRecords().get("a").get(0).get().getValueAsMap();
+      Assert.assertTrue(result.containsKey("oe1"));
+      Assert.assertTrue(result.containsKey("oe2"));
+      Assert.assertTrue(result.containsKey("oe3"));
+
+      Map<String, Field> outerResult = result.get("oe1").getValueAsMap();
+      Assert.assertTrue(outerResult.containsKey("irename_ie1"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie2"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie3"));
+      Assert.assertEquals("ie1", outerResult.get("irename_ie1").getValueAsString());
+      Assert.assertEquals("ie2", outerResult.get("irename_ie2").getValueAsString());
+      Assert.assertEquals("ie3", outerResult.get("irename_ie3").getValueAsString());
+
+      outerResult = result.get("oe2").getValueAsMap();
+      Assert.assertTrue(outerResult.containsKey("irename_ie1"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie2"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie3"));
+      Assert.assertEquals("ie1", outerResult.get("irename_ie1").getValueAsString());
+      Assert.assertEquals("ie2", outerResult.get("irename_ie2").getValueAsString());
+      Assert.assertEquals("ie3", outerResult.get("irename_ie3").getValueAsString());
+
+
+      outerResult = result.get("oe3").getValueAsMap();
+      Assert.assertTrue(outerResult.containsKey("irename_ie1"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie2"));
+      Assert.assertTrue(outerResult.containsKey("irename_ie3"));
+      Assert.assertEquals("ie1", outerResult.get("irename_ie1").getValueAsString());
+      Assert.assertEquals("ie2", outerResult.get("irename_ie2").getValueAsString());
+      Assert.assertEquals("ie3", outerResult.get("irename_ie3").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRenameOrderingComparator() throws StageException {
+    List<String> fieldPaths = Arrays.asList(
+        "/elementPrim",
+        "/elementList1[2]",
+        "/elementList1[1]",
+        "/elementList1[0]",
+        "/elementList2[0]",
+        "/elementList2[1]",
+        "/elementList2[2]",
+        "/elementList[2]/elementMap/elementList[0]/elementPrim",
+        "/elementList[1]/elementMap/elementList[2]/elementPrim",
+        "/elementList[0]/elementMap/elementList[1]/elementPrim",
+        "/elementList[1]/elementMap/elementList[1]/elementPrim",
+        "/elementList[0]/elementMap/elementList[0]/elementPrim",
+        "/elementList[2]/elementMap/elementList[2]/elementPrim",
+        "/elementList[0]/elementMap/elementList[2]/elementPrim",
+        "/elementList[2]/elementMap/elementList[1]/elementPrim",
+        "/elementList[1]/elementMap/elementList[0]/elementPrim"
+        );
+    Collections.sort(fieldPaths, new FieldRenamerProcessor.FieldRenamerPathComparator());
+    List<String> expectedOrder = Arrays.asList(
+        "/elementPrim",
+        "/elementList1[2]",
+        "/elementList1[1]",
+        "/elementList1[0]",
+        "/elementList2[2]",
+        "/elementList2[1]",
+        "/elementList2[0]",
+        "/elementList[2]/elementMap/elementList[2]/elementPrim",
+        "/elementList[2]/elementMap/elementList[1]/elementPrim",
+        "/elementList[2]/elementMap/elementList[0]/elementPrim",
+        "/elementList[1]/elementMap/elementList[2]/elementPrim",
+        "/elementList[1]/elementMap/elementList[1]/elementPrim",
+        "/elementList[1]/elementMap/elementList[0]/elementPrim",
+        "/elementList[0]/elementMap/elementList[2]/elementPrim",
+        "/elementList[0]/elementMap/elementList[1]/elementPrim",
+        "/elementList[0]/elementMap/elementList[0]/elementPrim"
+        );
+
+    for (int i =0 ;i < expectedOrder.size(); i++) {
+      Assert.assertEquals(expectedOrder.get(i), fieldPaths.get(i));
     }
   }
 }
