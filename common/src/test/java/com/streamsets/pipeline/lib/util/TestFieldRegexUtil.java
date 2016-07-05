@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TestFieldRegexUtil {
-
   @Test
   public void testFieldRegexUtil(){
     Assert.assertTrue(FieldRegexUtil.hasWildCards("USA/*/CA"));
@@ -32,5 +31,16 @@ public class TestFieldRegexUtil {
     Assert.assertFalse(FieldRegexUtil.hasWildCards("USA/CA"));
   }
 
+  @Test
+  public void testPatchUpFieldPathRegex() {
+    //Array
+    Assert.assertEquals("/array\\[0\\]", FieldRegexUtil.patchUpFieldPathRegex("/array[0]"));
+    Assert.assertEquals("/array\\[(1)\\]", FieldRegexUtil.patchUpFieldPathRegex("/array[(1)]"));
+    Assert.assertEquals("/array\\[\\d+\\]", FieldRegexUtil.patchUpFieldPathRegex("/array[*]"));
+    Assert.assertEquals("/array\\[(\\d+)\\]", FieldRegexUtil.patchUpFieldPathRegex("/array[(*)]"));
 
+    //Map
+    Assert.assertEquals("/map/[^\\/\\[]+/field", FieldRegexUtil.patchUpFieldPathRegex("/map/*/field"));
+    Assert.assertEquals("/map/([^\\/\\[]+)/field", FieldRegexUtil.patchUpFieldPathRegex("/map/(*)/field"));
+  }
 }

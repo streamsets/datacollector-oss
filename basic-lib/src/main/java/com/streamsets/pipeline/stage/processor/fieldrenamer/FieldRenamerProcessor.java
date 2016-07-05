@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -37,6 +37,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -59,6 +61,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
   private final List<FieldRenamerConfig> renameMapping;
   private final FieldRenamerProcessorErrorHandler errorHandler;
   private final Map<Pattern, String> fromPatternToFieldExpMapping;
+  private final FieldRenamerPathComparator comparator;
 
   public FieldRenamerProcessor(
       List<FieldRenamerConfig> renameMapping,
@@ -67,6 +70,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     this.renameMapping = Utils.checkNotNull(renameMapping, "Rename mapping cannot be null");
     this.errorHandler = errorHandler;
     this.fromPatternToFieldExpMapping = new LinkedHashMap<>();
+    this.comparator = new FieldRenamerPathComparator();
   }
 
   @Override
@@ -91,6 +95,36 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     return issues;
   }
 
+  static class FieldRenamerPathComparator implements Comparator<String> {
+    //Reverse order for array indices so they get selected/deleted correctly (we should delete from the highest index).
+    //rest ordering is incoming order.
+    // (We actually do care about incoming order as user can write them in a a particular logic)
+    @Override
+    public int compare(String o1, String o2) {
+      boolean isO1ArrayField = o1.contains("[") && o1.contains("]");
+      boolean isO2ArrayField = o2.contains("[") && o2.contains("]");
+      if (isO1ArrayField && isO2ArrayField) {
+        int i = 0;
+        for (; i < o1.length() && i < o2.length() && o1.charAt(i) == o2.charAt(i); i++);
+        //Matched the longest common prefix.
+        if (i != o1.length() && i != o2.length() && o1.charAt(i-1) == '[') {
+          int o1ArrayIndexEnd = i, o2ArrayIndexEnd = i;
+          for (;o1.charAt(o1ArrayIndexEnd) != ']'; o1ArrayIndexEnd++);
+          for (;o2.charAt(o2ArrayIndexEnd) != ']'; o2ArrayIndexEnd++);
+          return Integer.valueOf(
+              Integer.parseInt(o2.substring(i, o2ArrayIndexEnd))
+          ).compareTo(
+              Integer.parseInt(o1.substring(i, o1ArrayIndexEnd))
+          );
+        }
+        //if any of the string length is crossed or only some word prefix is matched (i.e last match  is not [)
+        //We will use the incoming order as is.
+      }
+      //This will make sure the incoming order is preserved
+      return 1;
+    }
+  }
+
   private void populateFromAndToFieldsMap(
       Pattern fromFieldPattern,
       String toFieldExpression,
@@ -101,6 +135,9 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       Map<String, String> fromFieldToFieldMap
   ) {
     boolean hasSourceFieldsMatching = false;
+    //Making sure array fields  matched by regular expressions
+    //are always sorted in descending order so as to preserve ordering
+    Map<String, String> tobeAdded  = new TreeMap<>(comparator);
     for(String existingFieldPath : fieldPaths) {
       Matcher matcher = fromFieldPattern.matcher(existingFieldPath);
       if (matcher.matches()) {
@@ -115,11 +152,12 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
           patterns.add(matchedByRegularExpression.get(existingFieldPath));
           multipleRegexMatchingSameFields.put(existingFieldPath, patterns);
         } else {
-          fromFieldToFieldMap.put(existingFieldPath, toFieldPath);
+          tobeAdded.put(existingFieldPath, toFieldPath);
           matchedByRegularExpression.put(existingFieldPath, fromFieldPattern.pattern());
         }
       }
     }
+    fromFieldToFieldMap.putAll(tobeAdded);
     if (!hasSourceFieldsMatching) {
       fieldsThatDoNotExist.add(fromFieldPattern.pattern());
     }
