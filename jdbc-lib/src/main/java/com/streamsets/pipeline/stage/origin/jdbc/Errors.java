@@ -43,6 +43,7 @@ public enum Errors implements ErrorCode {
   JDBC_14("Parsed record had {} columns but SDC expected {}."),
   JDBC_15("Invalid JDBC Namespace prefix, should end with '.'"),
   JDBC_16("Unsupported type {} for column {}"),
+  JDBC_17("Query must include '{}' clause."),
   ;
   private final String msg;
 

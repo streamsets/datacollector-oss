@@ -322,6 +322,7 @@ public class TestJdbcSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("Query must include 'WHERE' clause."));
   }
 
   @Test
@@ -353,6 +354,7 @@ public class TestJdbcSource {
       LOG.info(issue.toString());
     }
     assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("Query must include 'ORDER BY' clause."));
   }
 
   @Test
@@ -380,7 +382,7 @@ public class TestJdbcSource {
         .build();
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
-    assertEquals(1, issues.size());
+    assertEquals(2, issues.size());
   }
 
   @Test

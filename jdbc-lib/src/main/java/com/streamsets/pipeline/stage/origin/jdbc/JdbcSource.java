@@ -164,7 +164,17 @@ public class JdbcSource extends BaseSource {
         )
     );
 
-    if (!offsetColumnInWhereAndOrderByClause.matcher(query.toUpperCase()).matches()) {
+    String upperCaseQuery = query.toUpperCase();
+    boolean checkOffsetColumnInWhereOrder = true;
+    if(!upperCaseQuery.contains("WHERE")) {
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_17, "WHERE"));
+      checkOffsetColumnInWhereOrder = false;
+    }
+    if(!upperCaseQuery.contains("ORDER BY")) {
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_17, "ORDER BY"));
+      checkOffsetColumnInWhereOrder = false;
+    }
+    if(checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_05, offsetColumn));
     }
 
