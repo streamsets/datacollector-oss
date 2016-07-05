@@ -154,6 +154,10 @@
                 "value" : "streamsets.keytab"
               },
               {
+                "key" : "clouderaManager.managed",
+                "value" : "true"
+              },
+              {
                 "key" : "ui.local.help.base.url",
                 "value" : "/docs"
               },
