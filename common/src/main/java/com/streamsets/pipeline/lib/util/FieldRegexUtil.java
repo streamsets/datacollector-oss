@@ -27,8 +27,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldRegexUtil {
-  private static final Pattern ARRAY_IDX_REGEX_PATTERN = Pattern.compile("\\[(\\(?)(\\*|\\d+)(\\)?)\\]");
-  private static final String ARRAY_IDX_REPLACE_STRING = "\\\\[$1\\\\d+$3\\\\]";
+  //This will handle list Fields with wild card. For ex:/list[*]
+  //(We do not need to support /list[\\d+]) as * will cover for it (as array indices are just numbers)
+  //replace it with /list\[\d+\].
+  //We currently won't support selectively selecting some array indices with regex. For EX: /list[([0-9])]
+  //Move the first 10 indices.
+  private static final Pattern ARRAY_IDX_WILD_CARD_REGEX_PATTERN = Pattern.compile("\\[(\\(?)(\\*)(\\)?)\\]");
+  private static final String ARRAY_IDX_WILD_CARD_REPLACE_STRING = "\\\\[$1\\\\d+$3\\\\]";
+  //This will handle list element specified with constant index /list[0], /list[1], /list[(0)], /list[(1)]
+  //and replace it with just escaping the array index bracket, /list\[0\], /list\[1\], /list\[(0\], /list\[(1\]
+  //respectively.
+  private static final Pattern ARRAY_IDX_CONST_NUM_REGEX_PATTERN = Pattern.compile("\\[(\\(?)(\\d+)(\\)?)\\]");
+  private static final String ARRAY_IDX_CONST_NUM_REPLACE_STRING = "\\\\[$1$2$3\\\\]";
+  //This will handle map fields with wild card. For ex: /map/*/field, /map/(*)/field
+  //And replace it with /map/[^\/[]+/field and  /map/([^\/[]+)/field respectively.
   private static final Pattern MAP_WILDCARD_FIELD_PATTERN = Pattern.compile("(\\/\\(?)\\*(\\)?)");
   private static final String MAP_WILD_CARD_REPLACEMENT = "$1[^\\\\/\\\\[]+$2";
 
@@ -76,8 +88,13 @@ public class FieldRegexUtil {
     String returnPath = fieldPath;
     returnPath = patchUpSpecialCases(
         returnPath,
-        ARRAY_IDX_REGEX_PATTERN,
-        ARRAY_IDX_REPLACE_STRING
+        ARRAY_IDX_WILD_CARD_REGEX_PATTERN,
+        ARRAY_IDX_WILD_CARD_REPLACE_STRING
+    );
+    returnPath = patchUpSpecialCases(
+        returnPath,
+        ARRAY_IDX_CONST_NUM_REGEX_PATTERN,
+        ARRAY_IDX_CONST_NUM_REPLACE_STRING
     );
     returnPath = patchUpSpecialCases(
         returnPath,
