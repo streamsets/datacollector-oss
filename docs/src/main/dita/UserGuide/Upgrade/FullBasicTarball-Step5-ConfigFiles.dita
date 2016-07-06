@@ -26,9 +26,9 @@
  <conbody>
         <p>Compare the previous and new versions of the configuration files, and update the new
             files as needed with the same customized property values.</p>
-  <p>For example, compare the files in the <codeph>/etc/sdc1302</codeph> directory with the files in
+  <p>For example, compare the files in the <codeph>/etc/sdc1400</codeph> directory with the files in
             the <codeph>/etc/sdc</codeph> directory. Update the new files in the
                 <codeph>/etc/sdc</codeph> directory with any customizations made in the previous
-            files in the <codeph>/etc/sdc1302</codeph> directory.</p>
+            files in the <codeph>/etc/sdc1400</codeph> directory.</p>
  </conbody>
 </concept>
