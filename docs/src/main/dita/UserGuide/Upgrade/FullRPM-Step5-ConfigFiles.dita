@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_lkl_wk5_xv">
-    <title>Step 4. Update the Configuration Files</title>
+    <title>Step 5. Update the Configuration Files</title>
     <shortdesc>A new <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version can include new properties and configuration files required for <ph

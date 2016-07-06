@@ -28,10 +28,11 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/FullRPM-Step1-Shutdown.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step2-Install.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step3-EnvConfig.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step4-ConfigFiles.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step5-Start.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step2-BackupEnvConfig.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step3-Install.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step4-EnvConfig.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step5-ConfigFiles.dita"/>
+   <topicref href="../Upgrade/FullRPM-Step6-Start.dita"/>
   </topicref>
   <topicref href="../Upgrade/CMUpgrade.dita" chunk="to-content">
    <topicmeta>

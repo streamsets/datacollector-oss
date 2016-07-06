@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_krt_sj5_xv">
-    <title>Step 3. Update the Environment Configuration File</title>
+    <title>Step 4. Update the Environment Configuration File</title>
     <shortdesc>Each RPM installation uses the same default values as the previous version for all of
         the directory environment variables. If the previous version used the default values, the
         new version is configured to use the same working directories.</shortdesc>
@@ -26,13 +26,20 @@
         </context>
         <steps>
             <step>
-                <cmd>In the new version of <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, open the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file.</cmd>
+                <cmd>Open the environment configuration file that you backed up in the previous
+                    version.</cmd>
+                <info>For example, open the <codeph>$SDC_DIST/libexec/sdcd-env-1400.sh</codeph>
+                    file.</info>
             </step>
             <step>
-                <cmd>Manually update the new environment configuration file with any customized
-                    property values that you defined in the previous version.</cmd>
+                <cmd>In the new version of <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />, open the <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file.</cmd>
+            </step>
+            <step>
+                <cmd>Compare the previous and new versions of the environment configuration file,
+                    and update the new file as needed with the same customized property
+                    values.</cmd>
             </step>
         </steps>
     </taskbody>
