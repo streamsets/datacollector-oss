@@ -159,13 +159,6 @@
   },
   "home": {
     "ago": "ago",
-    "applicationToken": {
-      "headerLabel": "Generate Application Token",
-      "confirmationMessage": "Are you sure you want to generate remote Application Token and update the file 'etc/application-token.txt' ?",
-      "generatingTokenMessage": "Generating Application Token ...",
-      "onlyOrgAdminMessage": "Only Organization Administrator can generate Application Token. Contact your Administrator for the assigning the role.",
-      "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt'. Restart the Data Collector to register Application Token."
-    },
     "enableDPM": {
       "dpmBaseURL": "DPM Base URL",
       "dpmBaseURLPlaceholder": "Enter DPM Base URL",
@@ -175,7 +168,8 @@
       "dpmUserPasswordPlaceholder": "Enter DPM User Password",
       "headerLabel": "Enable DPM",
       "isEnableInProgress": "Enabling DPM...",
-      "successMessage": "Successfully generated application token and updated the file 'etc/application-token.txt' and 'etc/dpm.properties'. Restart the Data Collector to register Application Token."
+      "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the DPM console to enable Data Collector to work with DPM.",
+      "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
     },
     "createPipeline": "Create New Pipeline",
     "commitPipelineHistory": {
