@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,80 +35,75 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
+  private final boolean convertByTypes;
   private final List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
+  private final List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
 
   public FieldTypeConverterProcessor(
-      List<FieldTypeConverterConfig> fieldTypeConverterConfigs) {
+      boolean convertByTypes,
+      List<FieldTypeConverterConfig> fieldTypeConverterConfigs,
+      List<WholeTypeConverterConfig> wholeTypeConverterConfigs
+  ) {
+    this.convertByTypes = convertByTypes;
     this.fieldTypeConverterConfigs = fieldTypeConverterConfigs;
+    this.wholeTypeConverterConfigs = wholeTypeConverterConfigs;
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+    if(convertByTypes) {
+      Field rootField = record.get();
+      if(rootField != null) {
+        record.set(processByType("", rootField));
+      }
+      batchMaker.addRecord(record);
+    } else {
+      processByField(record, batchMaker);
+    }
+  }
+
+  private Field processByType(String matchingPath, Field rootField) throws StageException {
+    switch (rootField.getType()) {
+      case MAP:
+      case LIST_MAP:
+        for (Map.Entry<String, Field> entry : rootField.getValueAsMap().entrySet()) {
+          entry.setValue(processByType(matchingPath + "/" + entry.getKey(), entry.getValue()));
+        }
+        break;
+      case LIST:
+        List<Field> fields = rootField.getValueAsList();
+        for(int i = 0; i < fields.size(); i++) {
+          fields.set(i, processByType(matchingPath + "[" + i + "]", fields.get(i)));
+        }
+        break;
+      default:
+        for(WholeTypeConverterConfig converterConfig : wholeTypeConverterConfigs) {
+          if(converterConfig.sourceType == rootField.getType()) {
+            rootField = convertField(matchingPath, rootField, converterConfig);
+          }
+        }
+    }
+
+    // Return original field
+    return rootField;
+  }
+
+  private void processByField(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
         for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, fieldPaths)) {
           Field field = record.get(matchingField);
-          if (field == null) {
-            LOG.warn("Record {} does not have field {}. Ignoring conversion.", record.getHeader().getSourceId(),
-              matchingField);
+          if(field == null) {
+            LOG.warn("Record does not have field {}. Ignoring conversion.", matchingField);
           } else {
-            if (field.getType() == Field.Type.STRING) {
-              if (field.getValue() == null) {
-                LOG.warn("Field {} in record {} has null value. Converting the type of field to '{}' with null value.",
-                  matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
-                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
-              } else {
-                try {
-                  String dateMask = null;
-                  if (fieldTypeConverterConfig.targetType == Field.Type.DATE ||
-                    fieldTypeConverterConfig.targetType == Field.Type.DATETIME ||
-                    fieldTypeConverterConfig.targetType == Field.Type.TIME) {
-                    dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
-                      ? fieldTypeConverterConfig.dateFormat.getFormat()
-                      : fieldTypeConverterConfig.otherDateFormat;
-                  }
-                  record.set(matchingField, convertStringToTargetType(field, fieldTypeConverterConfig.targetType,
-                    fieldTypeConverterConfig.getLocale(), dateMask));
-                } catch (ParseException | NumberFormatException e) {
-                  throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
-                    fieldTypeConverterConfig.targetType.name(), e.toString(), e);
-
-                }
-              }
-            } else if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE || field.getType() == Field.Type.TIME) &&
-                (fieldTypeConverterConfig.targetType == Field.Type.LONG ||
-                    fieldTypeConverterConfig.targetType == Field.Type.STRING)) {
-              if (field.getValue() == null) {
-                LOG.warn("Field {} in record {} has null value. Converting the type of field to '{}' with null value.",
-                    matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
-                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
-              } else if(fieldTypeConverterConfig.targetType == Field.Type.LONG) {
-                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType,
-                    field.getValueAsDatetime().getTime()));
-              } else if(fieldTypeConverterConfig.targetType == Field.Type.STRING) {
-                String dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
-                    ? fieldTypeConverterConfig.dateFormat.getFormat()
-                    : fieldTypeConverterConfig.otherDateFormat;
-                java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
-                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType,
-                    dateFormat.format(field.getValueAsDatetime())));
-              }
-            } else {
-              //use the built in type conversion provided by TypeSupport
-              try {
-                //use the built in type conversion provided by TypeSupport
-                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
-              } catch (IllegalArgumentException e) {
-                throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
-                    fieldTypeConverterConfig.targetType.name(), e.toString(), e);
-              }
-            }
+            record.set(matchingField, convertField(matchingField, field, fieldTypeConverterConfig));
           }
         }
       }
@@ -117,7 +111,51 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  public Field convertStringToTargetType(Field field, Field.Type targetType, Locale dataLocale, String dateMask)
+  private Field convertField(String matchingField, Field field, BaseConverterConfig converterConfig) throws StageException {
+    if (field.getType() == Field.Type.STRING) {
+      if (field.getValue() == null) {
+        LOG.warn("Field {} has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
+        return Field.create(converterConfig.targetType, null);
+      } else {
+        try {
+          String dateMask = null;
+          if (converterConfig.targetType == Field.Type.DATE ||
+            converterConfig.targetType == Field.Type.DATETIME ||
+            converterConfig.targetType == Field.Type.TIME
+            ) {
+            dateMask = converterConfig.getDateMask();
+          }
+          return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask);
+        } catch (ParseException | NumberFormatException e) {
+          throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(), converterConfig.targetType.name(), e.toString(), e);
+        }
+      }
+    }
+
+    if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE || field.getType() == Field.Type.TIME) &&
+        (converterConfig.targetType == Field.Type.LONG || converterConfig.targetType == Field.Type.STRING)) {
+      if (field.getValue() == null) {
+        LOG.warn("Field {} in record has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
+        return Field.create(converterConfig.targetType,null);
+      } else if(converterConfig.targetType == Field.Type.LONG) {
+        return Field.create(converterConfig.targetType, field.getValueAsDatetime().getTime());
+      } else if(converterConfig.targetType == Field.Type.STRING) {
+        String dateMask = converterConfig.getDateMask();
+        java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+        return Field.create(converterConfig.targetType, dateFormat.format(field.getValueAsDatetime()));
+      }
+    }
+
+    // Use the built in type conversion provided by TypeSupport
+    try {
+      // Use the built in type conversion provided by TypeSupport
+      return Field.create(converterConfig.targetType, field.getValue());
+    } catch (IllegalArgumentException e) {
+      throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(), converterConfig.targetType.name(), e.toString(), e);
+    }
+  }
+
+  private Field convertStringToTargetType(Field field, Field.Type targetType, Locale dataLocale, String dateMask)
     throws ParseException {
     String stringValue = field.getValueAsString();
     switch(targetType) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,23 +20,27 @@
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.DateFormat;
+import com.streamsets.pipeline.config.LocaleChooserValues;
+import com.streamsets.pipeline.config.DateFormatChooserValues;
+import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
 
-import java.util.List;
+import java.util.Locale;
 
 /**
- * Describe what fields (by name) should be converted to what type.
+ * Describe what types (all fields of given type) should be converted to what type.
  */
-public class FieldTypeConverterConfig extends BaseConverterConfig {
-
+public class WholeTypeConverterConfig extends BaseConverterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "Fields to Convert",
-      description = "You can convert multiple fields to the same type",
+      defaultValue="INTEGER",
+      label = "Source type",
+      description = "Converts all fields of given type",
       displayPosition = 10
   )
-  @FieldSelectorModel
-  public List<String> fields;
+  @ValueChooserModel(PrimitiveFieldTypeChooserValues.class)
+  public Field.Type sourceType;
 }

@@ -32,8 +32,8 @@ import java.util.List;
 
 @StageDef(
     version=1,
-    label="Field Converter",
-    description = "Converts the data type of a field",
+    label="Field Type Converter",
+    description = "Converts the data type of a field(s)",
     icon="converter.png",
     onlineHelpRefUrl = "index.html#Processors/FieldConverter.html#task_g23_2tq_wq"
 )
@@ -42,19 +42,50 @@ import java.util.List;
 public class FieldTypeConverterDProcessor extends DProcessor {
 
   @ConfigDef(
+      required = true,
+      type = Type.BOOLEAN,
+      defaultValue="false",
+      label = "Convert by types",
+      description = "Rather then converting individual fields by name, apply conversion to all fields of a given type.",
+      displayPosition = 5,
+      group = "TYPE_CONVERSION"
+  )
+  public boolean convertByTypes;
+
+  @ConfigDef(
       required = false,
       type = Type.MODEL,
       defaultValue="",
-      label = "",
-      description = "",
+      label = "Convert fields",
+      description = "Configures field by names that should be converted",
       displayPosition = 10,
-      group = "TYPE_CONVERSION"
+      group = "TYPE_CONVERSION",
+      dependsOn = "convertByTypes",
+      triggeredByValue = "false"
   )
   @ListBeanModel
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
+  @ConfigDef(
+      required = false,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Convert type",
+      description = "Configure types that should be converted. All fields of given type in a record will be converted.",
+      displayPosition = 10,
+      group = "TYPE_CONVERSION",
+      dependsOn = "convertByTypes",
+      triggeredByValue = "true"
+  )
+  @ListBeanModel
+  public List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
+
   @Override
   protected Processor createProcessor() {
-    return new FieldTypeConverterProcessor((fieldTypeConverterConfigs));
+    return new FieldTypeConverterProcessor(
+      convertByTypes,
+      fieldTypeConverterConfigs,
+      wholeTypeConverterConfigs
+    );
   }
 }
