@@ -28,6 +28,7 @@
         <p>To upgrade a full installation from the RPM package, perform the following steps:</p>
      <ol id="ol_x5s_qpr_5v">
          <li>Shut down the previous version.</li>
+            <li>Back up the environment configuration file in the previous version.</li>
          <li>Install the new version.</li>
          <li>Manually update the environment configuration file.</li>
          <li>Manually update the configuration files.</li>

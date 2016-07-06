@@ -40,9 +40,9 @@
                     />, rename the directory defined by the <codeph>$SDC_CONF</codeph> environment
                     variable.</cmd>
                 <info>
-                    <p>For example, if you are upgrading version 1.3.0.2 and if
+                    <p>For example, if you are upgrading version 1.4.0.0 and if
                             <codeph>$SDC_CONF</codeph> is defined as <codeph>/etc/sdc</codeph>,
-                        rename the directory to <codeph>/etc/sdc1302</codeph>.</p>
+                        rename the directory to <codeph>/etc/sdc1400</codeph>.</p>
                 </info>
             </step>
             <step>
@@ -81,7 +81,7 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <codeph>/etc/sdc1302</codeph>,
+                                        configuration directory to <codeph>/etc/sdc1400</codeph>,
                                         use the value <codeph>/etc/sdc</codeph>.</entry>
                                 </row>
                                 <row>

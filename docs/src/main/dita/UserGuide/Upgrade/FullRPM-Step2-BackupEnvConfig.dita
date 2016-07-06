@@ -13,11 +13,13 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_n35_s55_xv">
- <title>Step 5. Start the New Version of Data Collector</title>
+<concept id="concept_nzl_hkb_mw">
+ <title>Step 2. Back Up the Environment Configuration File</title>
+ <shortdesc>Before you install the new version, create a backup of the environment configuration
+        file, <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>, so that the file is not overwritten
+        when you install the new version. </shortdesc>
  <conbody>
-        <p>Use the following command to start the new version of <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />:<codeblock>service sdc start</codeblock></p>
-    </conbody>
+  <p>For example, if you are upgrading version 1.4.0.0, you might create a backup by renaming the
+            file as follows: <codeph>sdcd-env-1400.sh</codeph>.</p>
+ </conbody>
 </concept>
