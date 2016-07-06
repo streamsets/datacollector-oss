@@ -169,6 +169,13 @@ angular.module('dataCollectorApp')
          * Open the Enable DPM Modal Dialog
          */
         onEnableDPMClick: function() {
+          if (configuration.isManagedByClouderaManager()) {
+            $translate('home.enableDPM.isManagedByClouderaManager').then(function(translation) {
+              $rootScope.common.errors = [translation];
+            });
+            return;
+          }
+
           $modal.open({
             templateUrl: 'common/administration/enableDPM/enableDPM.tpl.html',
             controller: 'EnableDPMModalInstanceController',
