@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="home.connectionLost.headerLabel">Connection to server lost</h3>
+</div>
+<div class="modal-body">
+
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <p ng-if="!isRetryingInProgress"
+     translate="home.connectionLost.retryingInSeconds"
+     translate-values="{retryCountDown: retryCountDown}"></p>
+
+  <p ng-if="isRetryingInProgress">{{'home.connectionLost.retrying' | translate}}</p>
+
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-default" ng-click="refreshBrowser()" ng-disabled="isRetryingInProgress"
+          translate="home.connectionLost.refreshBrowser">Refresh Browser</button>
+  <button type="submit" class="btn btn-primary" ng-click="retryNow()" ng-disabled="isRetryingInProgress"
+          translate="home.connectionLost.retryNow">Retry Now</button>
+</div>

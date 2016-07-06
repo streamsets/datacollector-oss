@@ -178,6 +178,13 @@
       "headerLabel": "Pipeline Commit History",
       "noCommits": "No Commits to view."
     },
+    "connectionLost": {
+      "headerLabel": "Connection Lost",
+      "refreshBrowser": "Refresh Browser",
+      "retryNow": "Retry Now",
+      "retrying": "Retrying...",
+      "retryingInSeconds": "Retrying {{retryCountDown}} seconds..."
+    },
     "downloadRemotePipeline": "Download Remote Pipeline",
     "downloadRemote": {
       "actions": "Actions",
