@@ -23,22 +23,23 @@
  */
 angular.module('dataCollectorApp.common')
   .service('configuration', function($rootScope, api, $q) {
-    var self = this,
-      UI_HEADER_TITLE = 'ui.header.title',
-      REFRESH_INTERVAL = 'ui.refresh.interval.ms',
-      JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
-      UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
-      UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url',
-      UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
-      UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket',
-      HTTP_AUTHENTICATION = 'http.authentication',
-      PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode',
-      CALLBACK_SERVER_URL = 'callback.server.url',
-      UI_UNDO_LIMIT = 'ui.undo.limit',
-      METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable',
-      MONITOR_MEMORY = 'monitor.memory',
-      DPM_ENABLED = 'dpm.enabled',
-      DPM_BASE_URL = 'dpm.base.url';
+    var self = this;
+    var UI_HEADER_TITLE = 'ui.header.title';
+    var REFRESH_INTERVAL = 'ui.refresh.interval.ms';
+    var JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms';
+    var UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url';
+    var UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url';
+    var UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection';
+    var UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket';
+    var HTTP_AUTHENTICATION = 'http.authentication';
+    var PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode';
+    var CALLBACK_SERVER_URL = 'callback.server.url';
+    var UI_UNDO_LIMIT = 'ui.undo.limit';
+    var METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable';
+    var MONITOR_MEMORY = 'monitor.memory';
+    var DPM_ENABLED = 'dpm.enabled';
+    var DPM_BASE_URL = 'dpm.base.url';
+    var CLOUDERA_MANAGER_MANAGED = 'clouderaManager.managed';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -230,6 +231,17 @@ angular.module('dataCollectorApp.common')
     this.isDPMEnabled = function() {
       if (self.config && self.config[DPM_ENABLED] !== undefined) {
         return self.config[DPM_ENABLED] === 'true';
+      }
+      return false;
+    };
+
+    /*
+     * Returns clouderaManager.managed flag value
+     * @returns {*}
+     */
+    this.isManagedByClouderaManager = function() {
+      if (self.config && self.config[CLOUDERA_MANAGER_MANAGED] !== undefined) {
+        return self.config[CLOUDERA_MANAGER_MANAGED] === 'true';
       }
       return false;
     };
