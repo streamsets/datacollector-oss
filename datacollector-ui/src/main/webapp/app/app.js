@@ -51,15 +51,9 @@ angular.module('dataCollectorApp')
     uiSelectConfig.theme = 'bootstrap';
 
     //Reload the page when the server is down.
-    $httpProvider.interceptors.push(function($q) {
+    $httpProvider.interceptors.push(function($q, $rootScope) {
       return {
         response: function(response) {
-          if(response && response.data && typeof response.data.indexOf == 'function' &&
-            response.data.indexOf('container login-container') !== -1) {
-            //Return response is login.html page content due to invalid session
-            //window.location.reload();
-            return;
-          }
           return response;
         },
         responseError: function(rejection) {
@@ -72,8 +66,9 @@ angular.module('dataCollectorApp')
             if (rejection.config && rejection.config.headers && rejection.config.headers['X-SS-User-Auth-Token']) {
               rejection.data = 'Failed to connect to Remote Service';
             } else {
-              window.location.reload();
-              return;
+              // window.location.reload();
+              $rootScope.common.openConnectionLostModal();
+              rejection.data = 'Connection to server lost';
             }
           }
           return $q.reject(rejection);
@@ -89,7 +84,7 @@ angular.module('dataCollectorApp')
     AnalyticsProvider.delayScriptTag(true);
 
   })
-  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
+  .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $modalStack,
                  $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http) {
 
     var defaultTitle = 'StreamSets Data Collector',
@@ -110,7 +105,8 @@ angular.module('dataCollectorApp')
       webSocketStatusURL = webSocketBaseURL + 'rest/v1/webSocket?type=status',
       statusWebSocket,
       webSocketAlertsURL = webSocketBaseURL + 'rest/v1/webSocket?type=alerts',
-      alertsWebSocket;
+      alertsWebSocket,
+      isConnectionLostModalDisplayed;
 
     editableOptions.theme = 'bs3';
 
@@ -352,6 +348,24 @@ angular.module('dataCollectorApp')
 
         ignoreCodeMirrorEnterKey: function() {
           //console.log('onCodeMirrorEnterKey');
+        },
+
+        openConnectionLostModal: function () {
+          if (!isConnectionLostModalDisplayed) {
+            isConnectionLostModalDisplayed = true;
+            $modalStack.dismissAll();
+            $modal.open({
+              templateUrl: 'common/administration/connectionLost/connectionLost.tpl.html',
+              controller: 'ConnectionLostModalInstanceController',
+              size: '',
+              backdrop: 'static',
+              keyboard: false
+            });
+          }
+        },
+
+        closeConnectionLostModal: function() {
+          isConnectionLostModalDisplayed = false;
         }
       };
 
