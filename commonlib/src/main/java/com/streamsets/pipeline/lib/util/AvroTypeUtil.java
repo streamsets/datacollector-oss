@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.avro.Errors;
+import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Schema;
 import org.apache.avro.UnresolvedUnionException;
 import org.apache.avro.generic.GenericData;
@@ -265,12 +266,12 @@ public class AvroTypeUtil {
         try {
           int typeIndex = GenericData.get().resolveUnion(schema, object);
           schema = schema.getTypes().get(typeIndex);
-        } catch (UnresolvedUnionException e) {
+        } catch (AvroRuntimeException e) {
           //Avro could not resolve schema. Make a best effort resolve
           Schema match = bestEffortResolve(schema, field, object);
           if(match == null) {
             String objectType = object == null ? "null" : object.getClass().getName();
-            throw new StageException(CommonError.CMN_0106, objectType, field.getType().name(), e.toString(),
+            throw new StageException(CommonError.CMN_0106, avroFieldPath, field.getType().name(), objectType, e.toString(),
               e);
           } else {
             schema = match;

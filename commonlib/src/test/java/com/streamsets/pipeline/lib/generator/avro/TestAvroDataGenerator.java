@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
+import com.streamsets.pipeline.lib.util.CommonError;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -518,6 +519,81 @@ public class TestAvroDataGenerator {
 
     Assert.assertEquals(16801, readRecord.get("d"));
     Assert.assertFalse(dataFileReader.hasNext());
+  }
+
+  @Test
+  public void testAvroGeneratorShortType() throws Exception {
+    final String SCHEMA_JSON = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"WithDecimal\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"short\", \"type\": \"int\"}"
+    +"]}";
+    final Schema SCHEMA = new Schema.Parser().parse(SCHEMA_JSON);
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("short", Field.create(Field.Type.SHORT, (short)1));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      SCHEMA,
+      new HashMap<String, Object>()
+    );
+    gen.write(record);
+    gen.close();
+
+    //reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Object retrievedField = readRecord.get("short");
+    Assert.assertEquals(1, retrievedField);
+
+    Assert.assertFalse(dataFileReader.hasNext());
+  }
+
+  @Test
+  public void testAvroGeneratorUnionWithShortType() throws Exception {
+    final String SCHEMA_JSON = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"WithDecimal\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"short\", \"type\": [\"int\", \"null\"]}"
+    +"]}";
+    final Schema SCHEMA = new Schema.Parser().parse(SCHEMA_JSON);
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("short", Field.create(Field.Type.SHORT, (short)1));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+      false,
+      baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+      SCHEMA,
+      new HashMap<String, Object>()
+    );
+
+    try {
+      gen.write(record);
+      Assert.fail("Expected exception when writing SHORT into union");
+    } catch(DataGeneratorException e) {
+      Assert.assertNotNull(e);
+      Assert.assertEquals(CommonError.CMN_0106, e.getErrorCode());
+      Assert.assertTrue(e.getMessage().contains("Error resolving union for field '/short' of SDC Type SHORT (java class java.lang.Short)"));
+    } finally {
+      gen.close();
+    }
   }
 
 }
