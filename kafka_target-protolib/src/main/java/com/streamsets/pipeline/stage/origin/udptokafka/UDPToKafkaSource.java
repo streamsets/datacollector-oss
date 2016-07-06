@@ -29,7 +29,6 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +38,10 @@ import java.util.concurrent.BlockingQueue;
 public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(UDPToKafkaSource.class);
 
-  public final UDPConfigBean udpConfigs;
+  private final UDPConfigBean udpConfigs;
 
   public final KafkaTargetConfig kafkaConfigBean;
 
-  private final List<InetSocketAddress> addresses;
-  private boolean privilegedPortUsage = false;
   KafkaUDPConsumer udpConsumer;
   private UDPConsumingServer udpServer;
   private long counter;
@@ -54,7 +51,6 @@ public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
   public UDPToKafkaSource(UDPConfigBean udpConfigs, KafkaTargetConfig kafkaConfigBean) {
     this.udpConfigs = udpConfigs;
     this.kafkaConfigBean = kafkaConfigBean;
-    this.addresses = new ArrayList<>();
   }
 
   @Override
@@ -63,39 +59,14 @@ public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
     issues.addAll(udpConfigs.init(getContext()));
     kafkaConfigBean.init(getContext(), DataFormat.BINARY, issues);
 
-    for (String candidatePort : udpConfigs.ports) {
-      try {
-        int port = Integer.parseInt(candidatePort.trim());
-        if (port > 0 && port < 65536) {
-          if (port < 1024) {
-            privilegedPortUsage = true; // only for error handling purposes
-          }
-          addresses.add(new InetSocketAddress(port));
-        } else {
-          issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_KAFKA_ORIG_00, port));
-        }
-      } catch (NumberFormatException ex) {
-        issues.add(getContext().createConfigIssue(Groups.UDP.name(),
-            "ports",
-            Errors.UDP_KAFKA_ORIG_00,
-            candidatePort
-        ));
-      }
-    }
-    if (addresses.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_KAFKA_ORIG_03));
-    }
-    if (udpConfigs.concurrency < 1 || udpConfigs.concurrency > 2048) {
-      issues.add(getContext().createConfigIssue(Groups.UDP.name(), "concurrency", Errors.UDP_KAFKA_ORIG_04));
-    }
     if (issues.isEmpty()) {
       errorQueue = new ArrayBlockingQueue<>(100);
       errorList = new ArrayList<>(100);
 
-      if (!addresses.isEmpty()) {
+      if (!udpConfigs.getAddresses().isEmpty()) {
         udpConsumer = new KafkaUDPConsumer(getContext(), udpConfigs, kafkaConfigBean, errorQueue);
         udpConsumer.init();
-        udpServer = new UDPConsumingServer(addresses, udpConsumer);
+        udpServer = new UDPConsumingServer(udpConfigs.acceptThreads, udpConfigs.getAddresses(), udpConsumer);
         try {
           udpServer.listen();
           udpServer.start();
@@ -103,7 +74,7 @@ public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
           udpServer.destroy();
           udpServer = null;
 
-          if (ex instanceof SocketException && privilegedPortUsage) {
+          if (ex instanceof SocketException && udpConfigs.isPrivilegedPortUsage()) {
             issues.add(getContext().createConfigIssue(Groups.UDP.name(),
                 "ports",
                 Errors.UDP_KAFKA_ORIG_01,
@@ -115,7 +86,7 @@ public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
             issues.add(getContext().createConfigIssue(null,
                 null,
                 Errors.UDP_KAFKA_ORIG_02,
-                addresses.toString(),
+                udpConfigs.getAddresses().toString(),
                 ex.toString(),
                 ex
             ));

@@ -29,6 +29,7 @@ public enum Errors implements ErrorCode {
   UDP_KAFKA_ORIG_02("Cannot bind to port {}: {}"),
   UDP_KAFKA_ORIG_03("No valid ports specified"),
   UDP_KAFKA_ORIG_04("Concurrency out of range, it must be between 1 and 2048"),
+  UDP_KAFKA_ORIG_05("Accept Threads out of range, it must be between 1 and 32"),
   ;
 
   private final String msg;

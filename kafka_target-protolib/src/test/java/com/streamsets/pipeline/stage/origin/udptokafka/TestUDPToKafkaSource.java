@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TestUDPToKafkaSource {
+  public class TestUDPToKafkaSource {
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
 
@@ -97,6 +97,7 @@ public class TestUDPToKafkaSource {
     UDPConfigBean udpConfigBean = new UDPConfigBean();
     udpConfigBean.ports = ImmutableList.of("" + udpPort);
     udpConfigBean.dataFormat = UDPDataFormat.NETFLOW;
+    udpConfigBean.acceptThreads = 1;
     udpConfigBean.concurrency = 10;
     KafkaTargetConfig kafkaTargetConfig = new KafkaTargetConfig();
     kafkaTargetConfig.kafkaProducerConfigs = new HashMap<>();

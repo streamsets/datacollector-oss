@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.origin.lib.UDPDataFormat;
 import com.streamsets.pipeline.stage.origin.lib.UDPDataFormatChooserValues;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,15 +54,70 @@ public class UDPConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Concurrency",
-      defaultValue = "50",
+      label = "Accept Threads",
+      description = "It should be based on the CPU cores expected to be dedicated to the pipeline",
+      defaultValue = "1",
+      min = 1,
+      max = 32,
       group = "ADVANCED",
-      displayPosition = 10)
+      displayPosition = 30)
+  public int acceptThreads;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Write Concurrency",
+      description = "it determines the number of Kafka clients to use to write to Kafka",
+      defaultValue = "50",
+      min = 1,
+      max = 2048,
+      group = "ADVANCED",
+      displayPosition = 30)
   public int concurrency;
 
+  private List<InetSocketAddress> addresses;
+  private boolean privilegedPortUsage = false;
+
   public List<Stage.ConfigIssue> init(Stage.Context context) {
-    return new ArrayList<>();
-    //TODO
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+    addresses = new ArrayList<>();
+    for (String candidatePort : ports) {
+      try {
+        int port = Integer.parseInt(candidatePort.trim());
+        if (port > 0 && port < 65536) {
+          if (port < 1024) {
+            privilegedPortUsage = true; // only for error handling purposes
+          }
+          addresses.add(new InetSocketAddress(port));
+        } else {
+          issues.add(context.createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_KAFKA_ORIG_00, port));
+        }
+      } catch (NumberFormatException ex) {
+        issues.add(context.createConfigIssue(Groups.UDP.name(),
+            "ports",
+            Errors.UDP_KAFKA_ORIG_00,
+            candidatePort
+        ));
+      }
+    }
+    if (addresses.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_KAFKA_ORIG_03));
+    }
+    if (acceptThreads < 1 || acceptThreads > 32) {
+      issues.add(context.createConfigIssue(Groups.UDP.name(), "acceptThreads", Errors.UDP_KAFKA_ORIG_05));
+    }
+    if (concurrency < 1 || concurrency > 2048) {
+      issues.add(context.createConfigIssue(Groups.UDP.name(), "concurrency", Errors.UDP_KAFKA_ORIG_04));
+    }
+    return issues;
+  }
+
+  public List<InetSocketAddress> getAddresses() {
+    return addresses;
+  }
+
+  public boolean isPrivilegedPortUsage() {
+    return privilegedPortUsage;
   }
 
   public void destroy() {
