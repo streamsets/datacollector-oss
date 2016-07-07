@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @FixMethodOrder
 public abstract class PipelineOperationsBaseIT {
@@ -87,19 +88,19 @@ public abstract class PipelineOperationsBaseIT {
       Thread.sleep(200);
       status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
     }
-    String snapShotName = "mySnapShot";
+    final String snapshotName = UUID.randomUUID().toString();
 
-    VerifyUtils.captureSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapShotName, 10);
-    VerifyUtils.waitForSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
+    VerifyUtils.captureSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapshotName, 10);
+    VerifyUtils.waitForSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapshotName);
 
     Map<String, List<List<Map<String, Object>>>> snapShot =
-      VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
+      VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapshotName);
     List<Map<String, Object>> stageOutputs = snapShot.get("snapshotBatches").get(0);
     List<Map<String, Object>> records = getRecords(stageOutputs);
     while (records == null) {
       Thread.sleep(500);
       LOG.debug("Got empty records from stageOutput of snaphot, retrying again");
-      snapShot = VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
+      snapShot = VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapshotName);
       stageOutputs = snapShot.get("snapshotBatches").get(0);
       records = getRecords(stageOutputs);
     }
