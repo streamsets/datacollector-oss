@@ -87,7 +87,7 @@ public class TestClassLoaderStageLibraryTask {
     File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     ClassLoader cl = new SDCClassLoader("library", "lib", Collections.<URL>emptyList(), getClass().getClassLoader(),
                                         new String[0], new SystemPackage(new String[0]),
-                                        new ApplicationPackage(new TreeSet<String>()), false, false);
+                                        new ApplicationPackage(new TreeSet<String>()), false, false, false);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
