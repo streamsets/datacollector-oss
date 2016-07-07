@@ -26,6 +26,8 @@ import javax.script.ScriptEngine;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import com.streamsets.pipeline.stage.processor.scripting.ScriptTypedNullObject;
 import sun.org.mozilla.javascript.internal.NativeObject;
 import sun.org.mozilla.javascript.internal.NativeArray;
 
@@ -91,7 +93,11 @@ public class Java7JavaScriptObjectFactory extends ScriptObjectFactory {
     } else if (scriptObject instanceof byte[]) {
       field = Field.create((byte[]) scriptObject);
     } else {
-      field = Field.create(scriptObject.toString());
+      field = ScriptTypedNullObject.getTypedNullField(scriptObject);
+      if (field == null) {
+        // unable to find field type from scriptObject. Return null String.
+        field = Field.create(scriptObject.toString());
+      }
     }
     return field;
   }

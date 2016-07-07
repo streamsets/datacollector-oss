@@ -33,9 +33,11 @@ import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestU
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedList;
 
 public class TestJavaScriptProcessor {
 
@@ -364,5 +366,68 @@ public class TestJavaScriptProcessor {
             ""
     );
     ScriptingProcessorTestUtil.verifyListMapOrder(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  public void testNewFieldWithTypedNull() throws Exception {
+    // initial data in record is empty
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    record.set(Field.create(map));
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  records[i].value.null_int = NULL_INTEGER;\n" +
+            "  records[i].value.null_long = NULL_LONG;\n" +
+            "  records[i].value.null_float = NULL_FLOAT;\n" +
+            "  records[i].value.null_double = NULL_DOUBLE;\n" +
+            "  records[i].value.null_date = NULL_DATE;\n" +
+            "  records[i].value.null_datetime = NULL_DATETIME;\n" +
+            "  records[i].value.null_boolean = NULL_BOOLEAN;\n" +
+            "  records[i].value.null_decimal = NULL_DECIMAL;\n" +
+            "  records[i].value.null_byteArray = NULL_BYTE_ARRAY;\n" +
+            "  records[i].value.null_string = NULL_STRING;\n" +
+            "  output.write(records[i]);\n" +
+        "}"
+    );
+
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptProcessor.class, processor, record);
+  }
+
+  @Test
+  public void testChangeFieldToTypedNull() throws Exception {
+    // initial data in record
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("null_int", Field.create("this is string field"));
+    map.put("null_string", Field.create(123L));
+    map.put("null_date", Field.create(true));
+    map.put("null_decimal", Field.createDate(null));
+    // add list field
+    List<Field> list1 = new LinkedList<>();
+    list1.add(Field.create("dummy field list"));
+    map.put("null_list", Field.create(list1));
+    // add map field
+    Map<String, Field> map1 = new HashMap<>();
+    map1.put("dummy", Field.create("dummy field map"));
+    map.put("null_map", Field.create(map1));
+
+
+    record.set(Field.create(map));
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  records[i].value.null_int = NULL_INTEGER;\n" +
+            "  records[i].value.null_date = NULL_DATE;\n" +
+            "  records[i].value.null_decimal = NULL_DECIMAL;\n" +
+            "  records[i].value.null_string = NULL_STRING;\n" +
+            "  records[i].value.null_list = NULL_LIST;\n" +
+            "  records[i].value.null_map = NULL_MAP;\n" +
+            "  output.write(records[i]);\n" +
+            "}"
+    );
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptProcessor.class, processor,record);
   }
 }

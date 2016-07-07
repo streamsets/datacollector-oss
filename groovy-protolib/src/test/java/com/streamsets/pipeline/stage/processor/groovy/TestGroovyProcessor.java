@@ -25,9 +25,17 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class TestGroovyProcessor {
 
@@ -184,5 +192,39 @@ public class TestGroovyProcessor {
     final String script = Resources.toString(Resources.getResource("ChangeFieldTypeScript.groovy"), Charsets.UTF_8);
     Processor processor = new GroovyProcessor(ProcessingMode.BATCH,script);
     ScriptingProcessorTestUtil.verifyChangedTypeFromScripting(GroovyProcessor.class, processor);
+  }
+
+  @Test
+  public void testNewFieldWithTypedNull() throws Exception {
+    // initial data in record is empty
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    record.set(Field.create(map));
+
+    final String script = Resources.toString(Resources.getResource("AssignTypedNullField.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH,script);
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(GroovyProcessor.class, processor, record);
+  }
+
+  @Test
+  public void testChangeFieldToTypedNull() throws Exception {
+    // initial data in record
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("null_int", Field.create("this is string field"));
+    map.put("null_string", Field.create(123L));
+    map.put("null_date", Field.create(true));
+    map.put("null_decimal", Field.createDate(null));
+    map.put("null_short", Field.create((short)1000));
+    map.put("null_char", Field.create('c'));
+    // add a list field
+    List<Field> list1 = new LinkedList<>();
+    list1.add(Field.create("dummy field list"));
+    map.put("null_list", Field.create(list1));
+    record.set(Field.create(map));
+
+    final String script = Resources.toString(Resources.getResource("AssignTypedNullField.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(GroovyProcessor.class, processor, record);
   }
 }

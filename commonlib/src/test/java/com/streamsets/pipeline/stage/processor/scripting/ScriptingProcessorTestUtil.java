@@ -531,4 +531,85 @@ public class ScriptingProcessorTestUtil {
     Assert.assertEquals(Field.Type.MAP, outRec.get().getValueAsMap().get("row2").getType());
     Assert.assertNull(outRec.get().getValueAsMap().get("row2").getValue());
   }
+
+  public static <C extends Processor> void verifyTypedFieldWithNullValue(
+      Class<C> clazz,
+      Processor processor,
+      Record record
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    Record outRec = output.getRecords().get("lane").get(0);
+    Assert.assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
+    Map<String, Field> outMap = outRec.get().getValueAsMap();
+    for(Map.Entry<String, Field> entry : outMap.entrySet()) {
+      assertNullFieldUtil(entry.getKey(), entry.getValue());
+    }
+  }
+
+  static void assertNullFieldUtil(String fieldName, Field field){
+    Field.Type expectedType = null;
+
+    switch(fieldName){
+      case "null_boolean":
+        expectedType = Field.Type.BOOLEAN;
+        break;
+      case "null_char":
+        expectedType = Field.Type.CHAR;
+        break;
+      case "null_byte":
+        expectedType = Field.Type.BYTE;
+        break;
+      case "null_short":
+        expectedType = Field.Type.SHORT;
+        break;
+      case "null_int":
+        expectedType = Field.Type.INTEGER;
+        break;
+      case "null_long":
+        expectedType = Field.Type.LONG;
+        break;
+      case "null_float":
+        expectedType = Field.Type.FLOAT;
+        break;
+      case "null_double":
+        expectedType = Field.Type.DOUBLE;
+        break;
+      case "null_date":
+        expectedType = Field.Type.DATE;
+        break;
+      case "null_datetime":
+        expectedType = Field.Type.DATETIME;
+        break;
+      case "null_time":
+        expectedType = Field.Type.TIME;
+        break;
+      case "null_decimal":
+        expectedType = Field.Type.DECIMAL;
+        break;
+      case "null_byteArray":
+        expectedType =  Field.Type.BYTE_ARRAY;
+        break;
+      case "null_string":
+        expectedType = Field.Type.STRING;
+        break;
+      case "null_list":
+        expectedType = Field.Type.LIST;
+        break;
+      case "null_map":
+        expectedType = Field.Type.MAP;
+        break;
+    }
+    Assert.assertEquals(expectedType, field.getType());
+    Assert.assertNull(field.getValue());
+  }
 }

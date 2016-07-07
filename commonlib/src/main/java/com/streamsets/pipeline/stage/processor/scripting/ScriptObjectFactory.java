@@ -205,7 +205,11 @@ public class ScriptObjectFactory {
     } else if (scriptObject instanceof byte[]) {
       field = Field.create((byte[]) scriptObject);
     } else {
-      field = Field.create(scriptObject.toString());
+      field = ScriptTypedNullObject.getTypedNullField(scriptObject);
+      if (field == null) {
+        // unable to find field type from scriptObject. Return null String.
+        field = Field.create(scriptObject.toString());
+      }
     }
     return field;
   }

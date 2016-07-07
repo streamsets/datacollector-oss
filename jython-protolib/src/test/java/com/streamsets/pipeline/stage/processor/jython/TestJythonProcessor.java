@@ -22,9 +22,18 @@ package com.streamsets.pipeline.stage.processor.jython;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Field;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Date;
 
 public class TestJythonProcessor {
 
@@ -264,5 +273,70 @@ public class TestJythonProcessor {
             "output.write(records[0])\n" +
             "");
     ScriptingProcessorTestUtil.verifyListMapOrder(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testNewFieldWithTypedNull() throws Exception {
+    // initial data in record is empty
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    record.set(Field.create(map));
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        "for record in records:\n" +
+            "  record.value['null_int'] = NULL_INTEGER\n" +
+            "  record.value['null_long'] = NULL_LONG\n" +
+            "  record.value['null_float'] = NULL_FLOAT\n" +
+            "  record.value['null_double'] = NULL_DOUBLE\n" +
+            "  record.value['null_date'] = NULL_DATE\n" +
+            "  record.value['null_datetime'] = NULL_DATETIME\n" +
+            "  record.value['null_boolean'] = NULL_BOOLEAN\n" +
+            "  record.value['null_decimal'] = NULL_DECIMAL\n" +
+            "  record.value['null_byteArray'] = NULL_BYTE_ARRAY\n" +
+            "  record.value['null_string'] = NULL_STRING\n" +
+            "  record.value['null_list'] = NULL_LIST\n" +
+            "  record.value['null_map'] = NULL_MAP\n" +
+            "  record.value['null_time'] = NULL_TIME\n" +
+            "  output.write(record)\n"
+    );
+
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JythonDProcessor.class, processor, record);
+  }
+
+  @Test
+  public void testChangeFieldToTypedNull() throws Exception {
+    // initial data in record
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("null_int", Field.create("this is string field"));
+    map.put("null_string", Field.create(123L));
+    map.put("null_date", Field.create(true));
+    map.put("null_decimal", Field.createDate(null));
+    map.put("null_time", Field.createTime(new Date()));
+    // add list field
+    List<Field> list1 = new LinkedList<>();
+    list1.add(Field.create("dummy field list"));
+    map.put("null_list", Field.create(list1));
+    // add map field
+    Map<String, Field> map1 = new HashMap<>();
+    map1.put("dummy", Field.create("dummy field map"));
+    map.put("null_map", Field.create(map1));
+
+    record.set(Field.create(map));
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        "for record in records:\n" +
+            "  record.value['null_int'] = NULL_INTEGER\n" +
+            "  record.value['null_date'] = NULL_DATE\n" +
+            "  record.value['null_decimal'] = NULL_DECIMAL\n" +
+            "  record.value['null_string'] = NULL_STRING\n" +
+            "  record.value['null_time'] = NULL_TIME\n" +
+            "  record.value['null_list'] = NULL_LIST\n" +
+            "  record.value['null_map'] = NULL_MAP\n" +
+            "  output.write(record)\n"
+    );
+    ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JythonDProcessor.class, processor,record);
   }
 }

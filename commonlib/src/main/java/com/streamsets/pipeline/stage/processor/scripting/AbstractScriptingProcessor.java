@@ -181,6 +181,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put("error", err);
     bindings.put("state", state);
     bindings.put("log", log);
+    ScriptTypedNullObject.fillNullTypes(bindings);
+
     try {
       runScript(bindings);
     } catch (ScriptException ex) {

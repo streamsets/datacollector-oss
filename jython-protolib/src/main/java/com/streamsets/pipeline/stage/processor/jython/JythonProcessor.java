@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
+import com.streamsets.pipeline.stage.processor.scripting.ScriptTypedNullObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
 import org.python.core.PyObject;
@@ -259,7 +260,11 @@ public class JythonProcessor extends AbstractScriptingProcessor {
       } else if (scriptObject instanceof byte[]) {
         field = Field.create((byte[]) scriptObject);
       } else {
-        field = Field.create(scriptObject.toString());
+        field = ScriptTypedNullObject.getTypedNullField(scriptObject);
+        if (field == null) {
+          // unable to find field type from scriptObject. Return null String.
+          field = Field.create(scriptObject.toString());
+        }
       }
       return field;
     }
