@@ -141,6 +141,7 @@ public abstract class WebServerTask extends AbstractTask {
   private static final boolean REALM_FILE_PERMISSION_CHECK_DEFAULT = true;
 
   public static final String HTTP_AUTHENTICATION_LOGIN_MODULE = "http.authentication.login.module";
+  public static final String FILE = "file";
   private static final String HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT = "file";
 
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
@@ -156,6 +157,10 @@ public abstract class WebServerTask extends AbstractTask {
   private static final Set<String> LOGIN_MODULES = ImmutableSet.of("file", "ldap");
 
   private static final Logger LOG = LoggerFactory.getLogger(WebServerTask.class);
+  public static final String LDAP_LOGIN_CONF = "ldap-login.conf";
+  public static final String JAVA_SECURITY_AUTH_LOGIN_CONFIG = "java.security.auth.login.config";
+  public static final String LDAP = "ldap";
+  public static final String LDAP_LOGIN_MODULE_NAME = "ldap.login.module.name";
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
@@ -342,10 +347,10 @@ public abstract class WebServerTask extends AbstractTask {
           break;
         case "digest":
         case "basic":
-          securityHandler = configureDigestBasic(server, auth);
+          securityHandler = configureDigestBasic(appConf, server, auth);
           break;
         case "form":
-          securityHandler = configureForm(server, auth);
+          securityHandler = configureForm(appConf, server, auth);
           break;
         default:
           throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
@@ -427,8 +432,8 @@ public abstract class WebServerTask extends AbstractTask {
     return security;
   }
 
-  private ConstraintSecurityHandler configureDigestBasic(Server server, String mode) {
-    LoginService loginService = getLoginService(mode);
+  private ConstraintSecurityHandler configureDigestBasic(Configuration conf, Server server, String mode) {
+    LoginService loginService = getLoginService(conf, mode);
     server.addBean(loginService);
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
@@ -447,10 +452,10 @@ public abstract class WebServerTask extends AbstractTask {
     return security;
   }
 
-  private ConstraintSecurityHandler configureForm(Server server, String mode) {
+  private ConstraintSecurityHandler configureForm(Configuration conf, Server server, String mode) {
     ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 
-    LoginService loginService = getLoginService(mode);
+    LoginService loginService = getLoginService(conf, mode);
     server.addBean(loginService);
     securityHandler.setLoginService(loginService);
 
@@ -690,24 +695,38 @@ public abstract class WebServerTask extends AbstractTask {
     }
   }
 
-  private LoginService getLoginService(String mode) {
+  private LoginService getLoginService(Configuration conf, String mode) {
     LoginService loginService = null;
     String loginModule = this.conf.get(HTTP_AUTHENTICATION_LOGIN_MODULE, HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT);
     switch (loginModule) {
-      case "file":
+      case FILE:
         String realm = conf.get(DIGEST_REALM_KEY, mode + REALM_POSIX_DEFAULT);
         File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
         validateRealmFile(realmFile);
         loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
         break;
-      case "ldap":
-        File ldapConfigFile = new File(runtimeInfo.getConfigDir(), "ldap-login.conf").getAbsoluteFile();
-        System.setProperty("java.security.auth.login.config", ldapConfigFile.getAbsolutePath());
+      case LDAP:
+        // If “java.security.auth.login.config” system property is set then use that config file.
+        // This will allow users to include sdc ldap entry in their existing ldap login config file.
+        // If not, pick up login config file from location ${SDC_DIST}/etc/ldap-login.conf
+        String ldapConfigFileName = System.getProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG, null);
+        if (null == ldapConfigFileName) {
+          File ldapConfigFile = new File(runtimeInfo.getConfigDir(), LDAP_LOGIN_CONF).getAbsoluteFile();
+          System.setProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG, ldapConfigFile.getAbsolutePath());
+        }
 
         roleMapping = parseRoleMapping(conf.get(HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING,
             HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT));
 
-        loginService = new JAASLoginService("ldap");
+        // Look up the login module name from sdc.properties file. Assume "ldap" if none specified.
+        // This helps to be backward compatible and allows for overriding the login module name if the jaas config
+        // file contains multiple entries
+        String loginModuleName = conf.get(LDAP_LOGIN_MODULE_NAME, LDAP);
+        if (loginModuleName.trim().isEmpty()) {
+          loginModuleName = LDAP;
+        }
+        loginService = new JAASLoginService(loginModuleName);
+
         loginService.setIdentityService(new DefaultIdentityService() {
           @Override
           public UserIdentity newUserIdentity(Subject subject, Principal userPrincipal, String[] roles) {

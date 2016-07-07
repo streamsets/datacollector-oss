@@ -299,6 +299,13 @@
           "default": ""
         },
         {
+          "name": "ldap.login.module.name",
+          "label": "LDAP Login Module Name",
+          "description": "The login module name that identifies the login module to use for data collector. Assumes "ldap" if none specified.",
+          "type": "string",
+          "default": ""
+        },
+        {
           "name": "datacollector.users",
           "label": "Data Collector Users",
           "description": "Users that should have access to Data Collectors. Only used for file-based authentication. Users are specified in the format  &ltuser&gt: MD5:&ltpassword_hash&gt,user[,&ltrole&gt,&ltrole&gt,...]. Supported roles are: admin, manager, creator, guest.",
