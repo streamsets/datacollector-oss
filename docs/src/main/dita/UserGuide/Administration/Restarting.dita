@@ -24,7 +24,12 @@
             configuration file, environment configuration file, or user logins. During the restart
             process, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            shuts down and then automatically restarts.</context>
+            shuts down and then automatically restarts.<note>If you installed <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> through Cloudera Manager, you must use Cloudera Manager to restart <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />. For information about how to restart a service through Cloudera Manager, see the
+                Cloudera documentation.</note></context>
         <steps>
             <step>
                 <cmd>Click <menucascade>
