@@ -84,9 +84,13 @@ angular
         .success(function(res) {
           window.location.reload();
         })
-        .error(function(res) {
-          $scope.isRetryingInProgress = false;
-          updateRetryCountdown();
+        .error(function(res, status) {
+          if (status === 403) {
+            window.location.reload();
+          } else {
+            $scope.isRetryingInProgress = false;
+            updateRetryCountdown();
+          }
         });
     };
 
