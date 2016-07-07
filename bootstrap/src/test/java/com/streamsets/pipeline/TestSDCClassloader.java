@@ -50,7 +50,8 @@ public class TestSDCClassloader {
     public CallStoringURLClassLoader(ClassLoader parent, String systemClasses, String appClasses) {
       super("test", "somecl", Arrays.<URL>asList(), parent,
         new String[0], new SystemPackage(ClassLoaderUtil.getTrimmedStrings(systemClasses)),
-        new ApplicationPackage(new TreeSet<String>(Arrays.asList(ClassLoaderUtil.getTrimmedStrings(appClasses)))), false, false);
+        new ApplicationPackage(new TreeSet<String>(Arrays.asList(ClassLoaderUtil.getTrimmedStrings(appClasses)))),
+          false, false, false);
     }
 
     @Override
@@ -161,8 +162,11 @@ public class TestSDCClassloader {
   @Test(expected = ClassFormatError.class)
   public void testDuplicateStageClassLoader() throws Exception {
     File dir = TestBlackListURLClassLoader.getBaseDir();
-    SDCClassLoader cl = SDCClassLoader.getStageClassLoader("foo", "bar", Arrays.asList(dir.toURI().toURL()),
-                                                           getClass().getClassLoader());
+    SDCClassLoader cl = SDCClassLoader.getStageClassLoader("foo",
+        "bar",
+        Arrays.asList(dir.toURI().toURL(), new File(dir, "bar.jar").toURI().toURL()),
+        getClass().getClassLoader()
+    );
     Assert.assertFalse(cl.isPrivate());
     cl = cl.duplicateStageClassLoader();
     Assert.assertTrue(cl.isPrivate());
@@ -171,21 +175,35 @@ public class TestSDCClassloader {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testBringProtoLibsToFront() throws Exception {
-    Assert.assertEquals(Collections.EMPTY_LIST, SDCClassLoader.bringProtoLibsToFront(Collections.EMPTY_LIST));
+  public void testBringStageLibAndProtoLibsToFront() throws Exception {
 
-    List<URL> urls = ImmutableList.of(new URL("file:///tmp/foo-1.jar"));
-    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+    List<URL> urls = ImmutableList.of(new URL("file:///tmp/bar-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringStageAndProtoLibsToFront("bar", urls));
 
-    urls = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"));
-    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+    urls = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"), new URL("file:///tmp/bar-1.jar"));
+    List<URL> expected = ImmutableList.of(new URL("file:///tmp/bar-1.jar"), new URL("file:///tmp/foo-protolib-1.jar"));
+    Assert.assertEquals(expected, SDCClassLoader.bringStageAndProtoLibsToFront("bar", urls));
 
-    urls = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"), new URL("file:///tmp/foo-1.jar"));
-    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+    urls = ImmutableList.of(new URL("file:///tmp/bar-1.jar"), new URL("file:///tmp/foo-protolib-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringStageAndProtoLibsToFront("bar", urls));
 
-    urls = ImmutableList.of(new URL("file:///tmp/foo-1.jar"), new URL("file:///tmp/foo-protolib-1.jar"));
-    List<URL> expected = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"), new URL("file:///tmp/foo-1.jar"));
-    Assert.assertEquals(expected, SDCClassLoader.bringProtoLibsToFront(urls));
+    urls = ImmutableList.of(
+        new URL("file:///tmp/foo-1.jar"),
+        new URL("file:///tmp/bar-1.jar"),
+        new URL("file:///tmp/foo-protolib-1.jar")
+    );
+    expected = ImmutableList.of(
+        new URL("file:///tmp/bar-1.jar"),
+        new URL("file:///tmp/foo-protolib-1.jar"),
+        new URL("file:///tmp/foo-1.jar")
+    );
+    Assert.assertEquals(expected, SDCClassLoader.bringStageAndProtoLibsToFront("bar", urls));
 
+  }
+
+  @Test(expected = ExceptionInInitializerError.class)
+  public void testBringMultipleStageLibsToFront() throws Exception {
+    List<URL> urls = ImmutableList.of(new URL("file:///tmp/bar-1.jar"), new URL("file:///tmp/bar-X-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringStageAndProtoLibsToFront("bar", urls));
   }
 }
