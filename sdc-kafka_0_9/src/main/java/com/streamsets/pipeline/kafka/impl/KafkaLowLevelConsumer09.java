@@ -216,7 +216,7 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
       long[] offsets = response.offsets(topic, partition);
       return offsets[0];
     } catch (Exception e) {
-      LOG.error(KafkaErrors.KAFKA_30.getMessage(), e);
+      LOG.error(KafkaErrors.KAFKA_30.getMessage(), e.toString(), e);
       throw new StageException(KafkaErrors.KAFKA_30, e.toString(), e);
     }
   }

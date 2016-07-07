@@ -22,7 +22,6 @@ package com.streamsets.pipeline.kafka.impl;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -65,7 +64,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
         partitionCount = partitionInfoList.size();
       }
     } catch (KafkaException e) {
-      LOG.error(Utils.format(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString()));
+      LOG.error(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString(), e);
       throw new StageException(KafkaErrors.KAFKA_41, topic, e.toString());
     }
     return partitionCount;
@@ -116,8 +115,8 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
           valid = false;
         }
       } catch (KafkaException e) {
-        LOG.error(Utils.format(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList, e.getMessage()));
-        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList, e.getMessage()));
+        LOG.error(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList, e.toString(), e);
+        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList, e.toString()));
         valid = false;
       }
     }

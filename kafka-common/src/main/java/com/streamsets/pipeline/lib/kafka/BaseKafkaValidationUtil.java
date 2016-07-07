@@ -21,7 +21,6 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import org.apache.zookeeper.common.PathUtils;
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public abstract class BaseKafkaValidationUtil implements SdcKafkaValidationUtil 
         try {
           PathUtils.validatePath(chrootPath);
         } catch (IllegalArgumentException e) {
-          LOG.error(Utils.format(KafkaErrors.KAFKA_09.getMessage(), connectString, e.toString()));
+          LOG.error(KafkaErrors.KAFKA_09.getMessage(), connectString, e.toString(), e);
           issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_09, connectString,
             e.toString()));
         }
@@ -114,7 +113,7 @@ public abstract class BaseKafkaValidationUtil implements SdcKafkaValidationUtil 
           kafkaBrokers.add(hostAndPort);
         }
       } catch (IllegalArgumentException e) {
-        LOG.error(Utils.format(KafkaErrors.KAFKA_09.getMessage(), connectString, e.toString()));
+        LOG.error(KafkaErrors.KAFKA_09.getMessage(), connectString, e.toString(), e);
         issues.add(
             context.createConfigIssue(
                 configGroupName,

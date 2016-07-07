@@ -83,7 +83,7 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
         throw new StageException(KafkaErrors.KAFKA_03, topic, metadataBrokerList);
       }
     } catch (IOException e) {
-      LOG.error(Utils.format(KafkaErrors.KAFKA_11.getMessage(), topic, kafkaBrokers, e.toString()));
+      LOG.error(KafkaErrors.KAFKA_11.getMessage(), topic, kafkaBrokers, e.toString(), e);
       throw new StageException(KafkaErrors.KAFKA_11, topic, kafkaBrokers, e.toString());
     }
     return topicMetadata.partitionsMetadata().size();

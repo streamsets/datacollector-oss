@@ -71,8 +71,8 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
         partitionCount = partitionInfoList.size();
       }
     } catch (KafkaException e) {
-      LOG.error(Utils.format(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString()));
-      throw new StageException(KafkaErrors.KAFKA_41, topic, e.toString());
+      LOG.error(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString(), e);
+      throw new StageException(KafkaErrors.KAFKA_41, topic, e.toString(), e);
     }
     return partitionCount;
   }
@@ -115,13 +115,7 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
           valid = false;
         }
       } catch (KafkaException e) {
-        LOG.error(
-            Utils.format(
-                MapRStreamsErrors.MAPRSTREAMS_01.getMessage(),
-                topic,
-                e.getMessage()
-            )
-        );
+        LOG.error(MapRStreamsErrors.MAPRSTREAMS_01.getMessage(), topic, e.toString(), e);
         issues.add(
             context.createConfigIssue(
                 groupName,
