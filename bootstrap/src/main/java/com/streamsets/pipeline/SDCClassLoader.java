@@ -121,14 +121,14 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   private final boolean isPrivate;
   private final ApplicationPackage applicationPackage;
 
-  private SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-      SystemPackage systemPackage, ApplicationPackage applicationPackage, String[] blacklistedPackages,
-      boolean isPrivate, boolean parentIsAPIClassLoader) {
+  public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
+      SystemPackage systemPackage, ApplicationPackage applicationPackage,
+      boolean isPrivate, boolean parentIsAPIClassLoader, boolean isStageLibClassLoader) {
     super(type, name, urls, parent, blacklistedPackages);
 
-    // we force protolib JARs to be first in the classpath, so the can override classes from its dependencies
-    // usecase: Hadoop native compression codecs replacement
-    this.urls = bringProtoLibsToFront(urls);
+    // only for stagelib classloaders, we force stagelib and protolib JARs to be first in the classpath, so they can
+    // override classes from its dependencies. Usecase: Hadoop native compression codecs replacement
+    this.urls = (isStageLibClassLoader) ? bringStageAndProtoLibsToFront(name, urls) : urls;
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemPackage);
@@ -156,9 +156,22 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     }
   }
 
-  static List<URL> bringProtoLibsToFront(List<URL> urls) {
-    List<URL> noProtoLibJars = new ArrayList<>();
-    List<URL> allJars = new ArrayList<>();
+  /**
+   * Arranges the urls in the following order:
+   * <ul>
+   *   <li>stage lib jars</li>
+   *   <li>protolib jars</li>
+   *   <li>non protolib jars</li>
+   * </ul>
+   *
+   * @param stageLibName
+   * @param urls
+   * @return
+   */
+  static List<URL> bringStageAndProtoLibsToFront(String stageLibName, List<URL> urls) {
+    List<URL> otherJars = new ArrayList<>();
+    List<URL> protolibJars = new ArrayList<>();
+    List<URL> stageLibjars = new ArrayList<>();
     for (URL url : urls) {
       String str = url.toExternalForm();
       if (str.endsWith(".jar")) {
@@ -167,27 +180,28 @@ public class SDCClassLoader extends BlackListURLClassLoader {
           String jarName = str.substring(nameIdx + 1);
           if (jarName.contains("-protolib-")) {
             // adding only protolib jars
-            allJars.add(url);
+            protolibJars.add(url);
+          } else if (jarName.contains(stageLibName)) {
+            stageLibjars.add(url);
           } else {
-            noProtoLibJars.add(url);
+            otherJars.add(url);
           }
         } else {
-          noProtoLibJars.add(url);
+          otherJars.add(url);
         }
       } else {
-        noProtoLibJars.add(url);
+        otherJars.add(url);
       }
     }
-    // adding all non-protolib jars
-    allJars.addAll(noProtoLibJars);
+    List<URL> allJars = new ArrayList<>();
+    if (stageLibjars.size() != 1) {
+      throw new ExceptionInInitializerError("Expected exactly 1 stage lib jar but found " + stageLibjars.size() +
+          " with name " + stageLibName);
+    }
+    allJars.addAll(stageLibjars);
+    allJars.addAll(protolibJars);
+    allJars.addAll(otherJars);
     return allJars;
-  }
-
-  public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                        String[] blacklistedPackages, SystemPackage systemPackage,
-                        ApplicationPackage applicationPackage, boolean isPrivate, boolean parentIsAPIClassLoader) {
-    this(type, name, urls, parent, systemPackage, applicationPackage, blacklistedPackages, isPrivate,
-      parentIsAPIClassLoader);
   }
 
   @Override
@@ -367,13 +381,13 @@ public class SDCClassLoader extends BlackListURLClassLoader {
 
   public static SDCClassLoader getAPIClassLoader(List<URL> apiURLs, ClassLoader parent) {
     return new SDCClassLoader("api-lib", "API", apiURLs, parent, null,
-      new SystemPackage(SYSTEM_API_CLASSES), ApplicationPackage.get(parent), false, false);
+      new SystemPackage(SYSTEM_API_CLASSES), ApplicationPackage.get(parent), false, false, false);
   }
 
   public static SDCClassLoader getContainerCLassLoader(List<URL> containerURLs, ClassLoader apiCL) {
     return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL,
       null, new SystemPackage(SYSTEM_API_CHILDREN_CLASSES),
-      ApplicationPackage.get(apiCL.getParent()), false, true);
+      ApplicationPackage.get(apiCL.getParent()), false, true, false);
 
   }
 
@@ -385,7 +399,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       boolean isPrivate) {
     return new SDCClassLoader(type, name, libURLs, apiCL, PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
       new SystemPackage(SYSTEM_API_CHILDREN_CLASSES), ApplicationPackage.get(apiCL.getParent()),
-      isPrivate, true);
+      isPrivate, true, true);
   }
 
   public SDCClassLoader duplicateStageClassLoader() {
