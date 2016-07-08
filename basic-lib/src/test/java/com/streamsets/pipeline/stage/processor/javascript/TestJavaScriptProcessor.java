@@ -38,6 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
+import java.util.Date;
 
 public class TestJavaScriptProcessor {
 
@@ -429,5 +430,41 @@ public class TestJavaScriptProcessor {
             "}"
     );
     ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(JavaScriptProcessor.class, processor,record);
+  }
+
+  @Test
+  public void testGetFieldNull() throws Exception {
+    // initial data in record
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("null_int", Field.create(Field.Type.INTEGER, null));
+    map.put("null_string", Field.create(Field.Type.STRING, null));
+    map.put("null_boolean", Field.create(Field.Type.BOOLEAN,null));
+    map.put("null_list", Field.create(Field.Type.LIST, null));
+    map.put("null_map", Field.create(Field.Type.MAP, null));
+    // original record has value in the field, so getFieldNull should return the value
+    map.put("null_datetime", Field.createDatetime(new Date()));
+    record.set(Field.create(map));
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        "for (var i = 0; i < records.length; i++){\n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_int') == NULL_INTEGER)\n" +
+            "    records[i].value.null_int = 123; \n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_string') == NULL_STRING)\n" +
+            "    records[i].value.null_string = 'test'; \n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_boolean') == NULL_BOOLEAN)\n" +
+            "    records[i].value.null_boolean = true; \n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_list') == NULL_LIST)\n" +
+            "    records[i].value.null_list = ['elem1', 'elem2']; \n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_map') == NULL_MAP)\n" +
+            "    records[i].value.null_map = {x: 'X', y: 'Y'}; \n" +
+            "  if(sdcFunctions.getFieldNull(records[i], '/null_datetime') == NULL_DATETIME)\n" + // this should be false
+            "    records[i].value.null_datetime = NULL_DATETIME \n" +
+            "  output.write(records[i]);\n" +
+            "}"
+    );
+
+    ScriptingProcessorTestUtil.verifyNullField(JavaScriptProcessor.class, processor,record);
   }
 }

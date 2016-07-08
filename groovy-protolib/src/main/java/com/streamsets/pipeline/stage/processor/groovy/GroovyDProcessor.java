@@ -55,7 +55,11 @@ public class GroovyDProcessor extends DProcessor {
 
   private static final String DEFAULT_SCRIPT =
       "/*\n" +
-          " * Sample Groovy code\n" +
+          " * Available constants: \n" +
+          " *   They are to assign a type to a field with a value null.\n" +
+          " *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n" +
+          " *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n" +
+          " *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n" +
           " *\n" +
           " * Available objects:\n" +
           " *   records: A collection of Records to process. Depending on the processing mode\n" +
@@ -70,8 +74,12 @@ public class GroovyDProcessor extends DProcessor {
           " *   output.write(Record): Writes a record to the processor output.\n" +
           " *\n" +
           " *   error.write(Record): Writes a record to the error pipeline.\n" +
-          " */\n" +
+          " *\n" +
+          " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
+          " *                          to check if the field is typed field with value null\n" +
+          " */ \n" +
           "\n" +
+          " * Sample Groovy code\n" +
           "for (record in records) {\n" +
           "  try {\n" +
           "    // Change record root field value to a String value.\n" +
@@ -88,6 +96,13 @@ public class GroovyDProcessor extends DProcessor {
           "    \n" +
           "    // Modify an existing list entry\n" +
           "    // record.value['myList'][0] = 5\n" +
+          "    \n" +
+          "    // Assign a integer type to a field and value null\n" +
+          "    // record.value['null_int'] = NULL_INTEGER \n" +
+          "    \n" +
+          "    // Check if the field is NULL_INTEGER. If so, assign a value \n" +
+          "    // if(sdcFunctions.getFieldNull(record, '/null_int') == NULL_INTEGER)\n" +
+          "    //    record.value['null_int'] = 123\n" +
           "    \n" +
           "    // Write a record to the processor output\n" +
           "    output.write(record)\n" +

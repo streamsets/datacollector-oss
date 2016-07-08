@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 
 import javax.script.SimpleBindings;
 
@@ -68,6 +69,23 @@ public class ScriptTypedNullObject {
   }
 
   /**
+   * Receive record and fieldPath from scripting processor.
+   * It resolves type of the field, and if value is null, it returns
+   * one of the NULL_XXX objects defined in this class.
+   * If field value is not null, it returns the value stored in the field.
+   * @param record Record
+   * @param fieldPath field Path
+   * @return One of the NULL_XXX objects if field has type but value is null.
+   */
+  public static Object getFieldNull(Record record, String fieldPath) {
+    Field f = record.get(fieldPath);
+    if (f != null ) {
+      return f.getValue() == null? getTypedNullFromField(f) : f.getValue();
+    }
+    return null;
+  }
+
+  /**
    * Receive a scriptOject and find out if the scriptObect is one of the NULL_**
    * object defined in this class. If so, create a new field with the type
    * and null value, then return the field.
@@ -76,7 +94,7 @@ public class ScriptTypedNullObject {
    * @param scriptObject: ScriptObject, this might be one of the Typed Null object.
    * @return
    */
-  public static Field getTypedNullField(Object scriptObject) {
+  public static Field getTypedNullFieldFromScript(Object scriptObject) {
     Field field;
     if(scriptObject == NULL_BOOLEAN)
       field = Field.create(Field.Type.BOOLEAN, null);
@@ -93,9 +111,9 @@ public class ScriptTypedNullObject {
     else if (scriptObject == NULL_FLOAT)
       field = Field.create(Field.Type.FLOAT, null);
     else if(scriptObject == NULL_DOUBLE)
-        field = Field.create(Field.Type.DOUBLE, null);
+      field = Field.create(Field.Type.DOUBLE, null);
     else if(scriptObject == NULL_DATE)
-        field = Field.createDate(null);
+      field = Field.createDate(null);
     else if(scriptObject == NULL_DATETIME)
       field = Field.createDatetime(null);
     else if(scriptObject == NULL_TIME)
@@ -113,5 +131,39 @@ public class ScriptTypedNullObject {
     else  //this scriptObject is not Null typed field. Return null.
       field = null;
     return field;
+  }
+
+  public static Object getTypedNullFromField(Field field) {
+    switch (field.getType()) {
+      case BOOLEAN:
+        return NULL_BOOLEAN;
+      case CHAR:
+        return NULL_CHAR;
+      case SHORT:
+        return NULL_SHORT;
+      case INTEGER:
+        return NULL_INTEGER;
+      case LONG:
+        return NULL_LONG;
+      case FLOAT:
+        return NULL_FLOAT;
+      case DOUBLE:
+        return NULL_DOUBLE;
+      case DATE:
+        return NULL_DATE;
+      case DATETIME:
+        return NULL_DATETIME;
+      case DECIMAL:
+        return NULL_DECIMAL;
+      case BYTE_ARRAY:
+        return NULL_BYTE_ARRAY;
+      case STRING:
+        return NULL_STRING;
+      case LIST:
+        return NULL_LIST;
+      case MAP:
+        return NULL_MAP;
+    }
+    return null;
   }
 }

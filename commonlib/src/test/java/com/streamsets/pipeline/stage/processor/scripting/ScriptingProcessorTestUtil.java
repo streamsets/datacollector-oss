@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.stage.processor.scripting;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
@@ -27,6 +29,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.http.annotation.Immutable;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -553,11 +556,46 @@ public class ScriptingProcessorTestUtil {
     Assert.assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
     Map<String, Field> outMap = outRec.get().getValueAsMap();
     for(Map.Entry<String, Field> entry : outMap.entrySet()) {
-      assertNullFieldUtil(entry.getKey(), entry.getValue());
+      assertFieldUtil(entry.getKey(), entry.getValue(), null);
     }
   }
 
-  static void assertNullFieldUtil(String fieldName, Field field){
+  public static <C extends Processor> void verifyNullField(
+      Class<C> clazz,
+      Processor processor,
+      Record record
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    Record outRec = output.getRecords().get("lane").get(0);
+    Assert.assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
+    Map<String, Field> outMap = outRec.get().getValueAsMap();
+
+    assertFieldUtil("null_int", outMap.get("null_int"), 123);
+    assertFieldUtil("null_string", outMap.get("null_string"), "test");
+    assertFieldUtil("null_boolean", outMap.get("null_boolean"), true);
+    assertFieldUtil("null_list", outMap.get("null_list"),
+        ImmutableList.of(Field.create("elem1"), Field.create("elem2"))
+    );
+    assertFieldUtil("null_map", outMap.get("null_map"),
+        ImmutableMap.of(
+            "x", Field.create("X"),
+            "y", Field.create("Y"))
+    );
+
+    assertFieldUtil("null_datetime", outMap.get("null_datetime"), record.get("/null_datetime").getValueAsDatetime());
+  }
+
+  static void assertFieldUtil(String fieldName, Field field, Object obj){
     Field.Type expectedType = null;
 
     switch(fieldName){
@@ -611,6 +649,9 @@ public class ScriptingProcessorTestUtil {
         break;
     }
     Assert.assertEquals(expectedType, field.getType());
-    Assert.assertNull(field.getValue());
+    if(obj == null)
+      Assert.assertNull(field.getValue());
+    else
+      Assert.assertEquals(obj, field.getValue());
   }
 }

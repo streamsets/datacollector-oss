@@ -56,7 +56,11 @@ public class JavaScriptDProcessor extends DProcessor {
 
   private static final String DEFAULT_SCRIPT =
     "/**\n" +
-    " * Sample JavaScript code\n" +
+    " * Available constants: \n" +
+    " *   They are to assign a type to a field with a value null.\n" +
+    " *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n" +
+    " *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n" +
+    " *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n" +
     " *\n" +
     " * Available Objects:\n" +
     " * \n" +
@@ -73,8 +77,11 @@ public class JavaScriptDProcessor extends DProcessor {
     " *\n" +
     " *  error.write(record, message): sends a record to error\n" +
     " *\n" +
+    " *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n" +
+    " *                            to check if the field is typed field with value null\n" +
     " */\n" +
     "\n" +
+    "* Sample JavaScript code\n" +
     "for(var i = 0; i < records.length; i++) {\n" +
     "  try {\n" +
     "    // Change record root field value to a STRING value\n" +
@@ -98,6 +105,13 @@ public class JavaScriptDProcessor extends DProcessor {
     "\n" +
     "    // Modify an existing ARRAY entry\n" +
     "    //records[i].value.A[0] = 100;\n" +
+    "\n" +
+    "    // Assign a integer type to a field and value null\n" +
+    "    // records[i].value.null_int = NULL_INTEGER \n" +
+    "\n" +
+    "    // Check if the field is NULL_INTEGER. If so, assign a value \n" +
+    "    // if(sdcFunctions.getFieldNull(records[i], '/null_int') == NULL_INTEGER)\n" +
+    "    //    records[i].value.null_int = 123\n" +
     "\n" +
     "    // Write record to procesor output\n" +
     "    output.write(records[i]);\n" +

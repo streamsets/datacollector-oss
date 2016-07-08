@@ -56,8 +56,12 @@ public class JythonDProcessor extends DProcessor {
 
   private static final String DEFAULT_SCRIPT =
     "#\n" +
-    "# Sample Jython code\n" +
-    "#\n" +
+    "# Available constants: \n" +
+    "#   They are to assign a type to a field with a value null.\n" +
+    "#   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n" +
+    "#   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n" +
+    "#   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n" +
+    "# \n" +
     "# Available Objects:\n" +
     "# \n" +
     "#  records: an array of records to process, depending on Jython processor\n" +
@@ -73,10 +77,14 @@ public class JythonDProcessor extends DProcessor {
     "#\n" +
     "#  error.write(record, message): sends a record to error\n" +
     "#\n" +
+    "#  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
+    "#                                  to check if the field is typed field with value null\n" +
+    "#\n" +
     "# Add additional module search paths:\n" +
     "#import sys\n" +
     "#sys.path.append('/some/other/dir/to/search')\n" +
     "\n" +
+    "# Sample Jython code\n" +
     "for record in records:\n" +
     "  try:\n" +
     "    # Change record root field value to a STRING value\n" +
@@ -100,6 +108,13 @@ public class JythonDProcessor extends DProcessor {
     "\n" +
     "    # Modify an existing ARRAY entry\n" +
     "    #record.value['A'][0] = 100\n" +
+    "\n" +
+    "    # Assign a integer type to a field and value null\n" +
+    "    # record.value['null_int'] = NULL_INTEGER \n" +
+    "\n" +
+    "    # Check if the field is NULL_INTEGER(Both '==' and 'is' work). If so, assign a value \n" +
+    "    # if sdcFunctions.getFieldNull(record, '/null_int') == NULL_INTEGER:\n" +
+    "    #    record.value['null_int'] = 123\n" +
     "\n" +
     "    # Write record to procesor output\n" +
     "    output.write(record)\n" +

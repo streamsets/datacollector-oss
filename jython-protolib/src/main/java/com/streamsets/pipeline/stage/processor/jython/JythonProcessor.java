@@ -260,7 +260,7 @@ public class JythonProcessor extends AbstractScriptingProcessor {
       } else if (scriptObject instanceof byte[]) {
         field = Field.create((byte[]) scriptObject);
       } else {
-        field = ScriptTypedNullObject.getTypedNullField(scriptObject);
+        field = ScriptTypedNullObject.getTypedNullFieldFromScript(scriptObject);
         if (field == null) {
           // unable to find field type from scriptObject. Return null String.
           field = Field.create(scriptObject.toString());

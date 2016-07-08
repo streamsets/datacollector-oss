@@ -54,6 +54,15 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
   }
 
+  // This class will contain functions to expose to scripting processors
+  public class SdcFunctions extends ScriptTypedNullObject {
+
+    // To access getFieldNull function through SimpleBindings
+    public Object getFieldNull(ScriptRecord scriptRecord, String fieldPath) {
+      return super.getFieldNull(getScriptObjectFactory().getRecord(scriptRecord), fieldPath);
+    }
+  }
+
   private final String scriptingEngineName;
   private final String scriptConfigGroup;
   private final String scriptConfigName;
@@ -67,6 +76,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private ScriptObjectFactory scriptObjectFactory;
   private ErrorRecordHandler errorRecordHandler;
   private Err err;
+  private SdcFunctions sdcFunc;
 
   protected ScriptEngine engine;
 
@@ -129,7 +139,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
 
     err = new Err();
-
+    sdcFunc = new SdcFunctions();
     return issues;
   }
 
@@ -182,6 +192,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put("state", state);
     bindings.put("log", log);
     ScriptTypedNullObject.fillNullTypes(bindings);
+    bindings.put("sdcFunctions", sdcFunc);
 
     try {
       runScript(bindings);

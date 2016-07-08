@@ -32,10 +32,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestGroovyProcessor {
 
@@ -227,4 +224,24 @@ public class TestGroovyProcessor {
     Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
     ScriptingProcessorTestUtil.verifyTypedFieldWithNullValue(GroovyProcessor.class, processor, record);
   }
+
+  @Test
+  public void testGetFieldNull() throws Exception {
+    // initial data in record
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("null_int", Field.create(Field.Type.INTEGER, null));
+    map.put("null_string", Field.create(Field.Type.STRING, null));
+    map.put("null_boolean", Field.create(Field.Type.BOOLEAN,null));
+    map.put("null_list", Field.create(Field.Type.LIST, null));
+    map.put("null_map", Field.create(Field.Type.MAP, null));
+    // original record has value in the field, so getFieldNull should return the value
+    map.put("null_datetime", Field.createDatetime(new Date()));
+    record.set(Field.create(map));
+
+    final String script = Resources.toString(Resources.getResource("GetFieldNullScript.groovy"), Charsets.UTF_8);
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyNullField(GroovyProcessor.class, processor,record);
+  }
+
 }
