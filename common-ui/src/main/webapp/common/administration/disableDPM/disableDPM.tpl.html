@@ -1,0 +1,41 @@
+<form class="application-modal-form" role="form" autocomplete="off" ng-submit="onDisableDPMSubmit()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.disableDPM.headerLabel">Enable DPM</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="!dpmDisabled" translate="home.disableDPM.confirmationMessage">
+
+    </div>
+
+    <div ng-if="dpmDisabled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
+         translate="home.disableDPM.successMessage">
+    </div>
+
+    <div class="alert alert-success alert-dismissible" role="alert"
+         ng-show="isRestartInProgress"
+         translate="home.restart.successMessage">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isDisableInProgress"
+            translate="global.form.cancel">Cancel</button>
+
+    <button type="submit" class="btn btn-primary" ng-if="!isDisableInProgress && !dpmDisabled"
+            translate="global.form.yes">Yes</button>
+
+    <button type="submit" class="btn btn-primary" ng-if="isDisableInProgress && !dpmDisabled" disabled
+            translate="home.disableDPM.isDisableInProgress">Disabling DPM...</button>
+
+    <button ng-if="!isDisableInProgress && dpmDisabled && !isRestartInProgress"
+            ng-click="restart()"
+            class="btn btn-primary" translate="global.form.restart">Restart</button>
+  </div>
+</form>

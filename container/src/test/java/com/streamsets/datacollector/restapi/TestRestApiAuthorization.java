@@ -195,6 +195,7 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/system/shutdown", Method.POST, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/system/threads", Method.GET, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/system/enableDPM", Method.POST, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/system/disableDPM", Method.POST, AuthzRole.ADMIN));
 
     list.add(new RestApi("/rest/v1/system/configuration/ui", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/system/configuration", Method.GET, AuthzRole.ALL_ROLES));

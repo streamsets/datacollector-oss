@@ -22,6 +22,7 @@ package com.streamsets.datacollector.restapi;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
+import com.streamsets.datacollector.util.Configuration;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -100,6 +101,7 @@ public class TestAdminResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+      bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
     }
   }
 
@@ -123,6 +125,21 @@ public class TestAdminResource extends JerseyTest {
     public void dispose(RuntimeInfo runtimeInfo) {
 
     }
+  }
+
+
+  public static class ConfigurationTestInjector implements Factory<Configuration> {
+    @Singleton
+    @Override
+    public Configuration provide() {
+      Configuration configuration = Mockito.mock(Configuration.class);
+      return configuration;
+    }
+
+    @Override
+    public void dispose(Configuration configuration) {
+    }
+
   }
 }
 

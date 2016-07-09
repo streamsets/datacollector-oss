@@ -181,6 +181,16 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+      /**
+       * Disable DPM
+       */
+      disableDPM: function() {
+        var url = apiBase + '/system/disableDPM';
+        return $http({
+          method: 'POST',
+          url: url
+        });
+      },
 
       /**
        * logout
