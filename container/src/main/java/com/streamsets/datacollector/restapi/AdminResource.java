@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -73,10 +74,12 @@ public class AdminResource {
   private static final String APP_TOKEN_FILE = "application-token.txt";
 
   private final RuntimeInfo runtimeInfo;
+  private final Configuration config;
 
   @Inject
-  public AdminResource(RuntimeInfo runtimeInfo) {
+  public AdminResource(RuntimeInfo runtimeInfo, Configuration config) {
     this.runtimeInfo = runtimeInfo;
+    this.config = config;
   }
 
   @POST
@@ -133,73 +136,79 @@ public class AdminResource {
       dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
     }
 
-    // 1. Login to DPM to get user auth token
-    Response response = null;
-    try {
-      Map<String, String> loginJson = new HashMap<>();
-      loginJson.put("userName", dpmInfo.getUserID());
-      loginJson.put("password", dpmInfo.getUserPassword());
-      response = ClientBuilder.newClient()
-          .target(dpmBaseURL + "/security/public-rest/v1/authentication/login")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(loginJson));
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
-            response.getStatus(),
-            response.readEntity(String.class)
-        ));
-      }
-    } finally {
-      if (response != null) {
-        response.close();
-      }
-    }
-
-    String userAuthToken = response.getHeaderString(SSOConstants.X_USER_AUTH_TOKEN);
-    String appAuthToken = null;
-
-    // 2. Create Data Collector application token
-    try {
-      Map<String, Object> newComponentJson = new HashMap<>();
-      newComponentJson.put("organization", dpmInfo.getOrganization());
-      newComponentJson.put("componentType", "dc");
-      newComponentJson.put("numberOfComponents", 1);
-      newComponentJson.put("active", true);
-      response = ClientBuilder.newClient()
-          .target(dpmBaseURL + "/security/rest/v1/organization/" + dpmInfo.getOrganization() + "/components")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
-          .put(Entity.json(newComponentJson));
-      if (response.getStatus() != Response.Status.CREATED.getStatusCode()) {
-        throw new RuntimeException(Utils.format("DPM Create Application Token failed, status code '{}': {}",
-            response.getStatus(),
-            response.readEntity(String.class)
-        ));
+    // Since we support enabling/Disabling DPM, first check if token already exists for the given DPM URL.
+    // If token exists skip first 3 steps
+    String currentDPMBaseURL = config.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
+    String currentAppAuthToken = config.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+    if (!currentDPMBaseURL.equals(dpmBaseURL) ||  currentAppAuthToken.length() == 0) {
+      // 1. Login to DPM to get user auth token
+      Response response = null;
+      try {
+        Map<String, String> loginJson = new HashMap<>();
+        loginJson.put("userName", dpmInfo.getUserID());
+        loginJson.put("password", dpmInfo.getUserPassword());
+        response = ClientBuilder.newClient()
+            .target(dpmBaseURL + "/security/public-rest/v1/authentication/login")
+            .register(new CsrfProtectionFilter("CSRF"))
+            .request()
+            .post(Entity.json(loginJson));
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+          throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
+              response.getStatus(),
+              response.readEntity(String.class)
+          ));
+        }
+      } finally {
+        if (response != null) {
+          response.close();
+        }
       }
 
-      List<Map<String, Object>> newComponent = response.readEntity(new GenericType<List<Map<String,Object>>>() {});
-      if (newComponent.size() > 0) {
-        appAuthToken = (String) newComponent.get(0).get("fullAuthToken");
-      } else {
-        throw new RuntimeException("DPM Create Application Token failed: No token data from DPM Server.");
+      String userAuthToken = response.getHeaderString(SSOConstants.X_USER_AUTH_TOKEN);
+      String appAuthToken = null;
+
+      // 2. Create Data Collector application token
+      try {
+        Map<String, Object> newComponentJson = new HashMap<>();
+        newComponentJson.put("organization", dpmInfo.getOrganization());
+        newComponentJson.put("componentType", "dc");
+        newComponentJson.put("numberOfComponents", 1);
+        newComponentJson.put("active", true);
+        response = ClientBuilder.newClient()
+            .target(dpmBaseURL + "/security/rest/v1/organization/" + dpmInfo.getOrganization() + "/components")
+            .register(new CsrfProtectionFilter("CSRF"))
+            .request()
+            .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+            .put(Entity.json(newComponentJson));
+        if (response.getStatus() != Response.Status.CREATED.getStatusCode()) {
+          throw new RuntimeException(Utils.format("DPM Create Application Token failed, status code '{}': {}",
+              response.getStatus(),
+              response.readEntity(String.class)
+          ));
+        }
+
+        List<Map<String, Object>> newComponent = response.readEntity(new GenericType<List<Map<String,Object>>>() {});
+        if (newComponent.size() > 0) {
+          appAuthToken = (String) newComponent.get(0).get("fullAuthToken");
+        } else {
+          throw new RuntimeException("DPM Create Application Token failed: No token data from DPM Server.");
+        }
+
+      } finally {
+        if (response != null) {
+          response.close();
+        }
       }
 
-    } finally {
-      if (response != null) {
-        response.close();
+      // 3. Update App Token file
+      DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
+      try (OutputStream os = dataStore.getOutputStream()) {
+        IOUtils.write(appAuthToken, os);
+        dataStore.commit(os);
+      } finally {
+        dataStore.release();
+        dataStore.close();
       }
-    }
-
-    // 3. Update App Token file
-    DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
-    try (OutputStream os = dataStore.getOutputStream()) {
-      IOUtils.write(appAuthToken, os);
-      dataStore.commit(os);
-    } finally {
-      dataStore.release();
-      dataStore.close();
     }
 
     // 4. Update dpm.properties file
@@ -225,6 +234,33 @@ public class AdminResource {
       throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()));
     }
 
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/disableDPM")
+  @ApiOperation(
+      value = "Disables DPM",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response disableDPM() throws IOException {
+    try {
+      FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+          new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+              .configure(new Parameters().properties()
+                  .setFileName(runtimeInfo.getConfigDir() + "/dpm.properties")
+                  .setThrowExceptionOnMissing(true)
+                  .setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
+                  .setIncludesAllowed(false));
+      PropertiesConfiguration config = null;
+      config = builder.getConfiguration();
+      config.setProperty(RemoteSSOService.DPM_ENABLED, "false");
+      builder.save();
+    } catch (ConfigurationException e) {
+      throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()));
+    }
     return Response.ok().build();
   }
 
