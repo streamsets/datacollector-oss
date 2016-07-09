@@ -181,6 +181,25 @@ angular.module('dataCollectorApp')
         },
 
         /**
+         * Open the Disable DPM Modal Dialog
+         */
+        onDisableDPMClick: function() {
+          if (configuration.isManagedByClouderaManager()) {
+            $translate('home.enableDPM.isManagedByClouderaManager').then(function(translation) {
+              $rootScope.common.errors = [translation];
+            });
+            return;
+          }
+
+          $modal.open({
+            templateUrl: 'common/administration/disableDPM/disableDPM.tpl.html',
+            controller: 'DisableDPMModalInstanceController',
+            size: '',
+            backdrop: 'static'
+          });
+        },
+
+        /**
          * Open the Shutdown Modal Dialog
          */
         shutdownCollector: function() {
