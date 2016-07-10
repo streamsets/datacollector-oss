@@ -314,8 +314,8 @@ public class TestJavaScriptProcessor {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
         "for (var i = 0; i < records.length; i++){\n" +
-            "  for( var k = 0; k < records[i].value.row1.length; k++){\n" +
-            "      records[i].value.row1.k = null;\n" +
+            "  for(var key in records[i].value.row1) {\n" +
+            "      records[i].value.row1[key] = null;\n" +
             "  }\n" +
             "  records[i].value.row2 = null;\n" +
             "  output.write(records[i]);\n" +

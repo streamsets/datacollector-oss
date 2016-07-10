@@ -352,7 +352,7 @@ public class ScriptingProcessorTestUtil {
       Assert.assertEquals(Field.Type.LONG, outRec.get("int_long").getType());
       Assert.assertEquals(Field.Type.DECIMAL, outRec.get("double_decimal").getType());
       // JavaScript fails this test because Date is Object type.
-      Assert.assertEquals(Field.Type.DATE, outRec.get("str_date").getType());
+      Assert.assertEquals(Field.Type.DATETIME, outRec.get("str_date").getType());
     }
     Assert.assertEquals(Field.Type.BOOLEAN, outRec.get("long_bool").getType());
   }
@@ -525,6 +525,7 @@ public class ScriptingProcessorTestUtil {
     // All of the values in the "row1" map are null, but type should be preserved
     Map<String, Field> row1map = outRec.get().getValueAsMap().get("row1").getValueAsMap();
     for (Map.Entry<String, Field> r1 : row1map.entrySet()){
+      Assert.assertNull(r1.getValue().getValue());
       Assert.assertEquals(r1.getValue().getType(), row1.get(r1.getKey()).getType());
     }
     // "row2" map is null, but the type should be preserved

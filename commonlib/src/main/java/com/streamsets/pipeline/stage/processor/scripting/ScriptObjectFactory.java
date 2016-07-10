@@ -197,7 +197,7 @@ public class ScriptObjectFactory {
     } else if (scriptObject instanceof Double) {
       field = Field.create((Double) scriptObject);
     } else if (scriptObject instanceof Date) {
-      field = Field.createDate((Date) scriptObject);
+      field = Field.createDatetime((Date) scriptObject);
     } else if (scriptObject instanceof BigDecimal) {
       field = Field.create((BigDecimal) scriptObject);
     } else if (scriptObject instanceof String) {
