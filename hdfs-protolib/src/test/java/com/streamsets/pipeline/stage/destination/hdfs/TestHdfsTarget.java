@@ -67,8 +67,11 @@ public class TestHdfsTarget {
   public TestName testName = new TestName();
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     File dir = new File("target/TestHdfsTarget", testName.getMethodName()).getAbsoluteFile();
+    if(dir.exists()) {
+      FileUtils.deleteDirectory(dir);
+    }
     Assert.assertTrue(dir.mkdirs());
     testDir = dir.getAbsolutePath();
   }
@@ -281,34 +284,6 @@ public class TestHdfsTarget {
     Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_20.name()));
     // late record directory should cause HADOOPFS_40 since it is relative path
     Assert.assertTrue(configIssues.get(1).toString().contains(Errors.HADOOPFS_40.name()));
-  }
-
-  /**
-    If dirPathTemplate(output directory) and late record directory contain Els,
-    we first convert Els to constant values, and do the path validation.
-  */
-  @Test
-  public void testDirWithELsValidation() throws Exception {
-    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
-      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}-${MM()}/out")
-      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-      .lateRecordsDirPathTemplate(getTestDir() + "/late_record/${YYYY()}-${MM()}") // lateRecordsDirPathTemplate contains Els
-      .build();
-
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .build();
-
-    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
-    // Check if output dir and late record dir are created with the right path
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-    String date_format = dateFormat.format(new Date());
-    File outDir = new File(testDir + "/hdfs/" + date_format + "/out");
-    File lateRecordDir = new File(testDir + "/late_record/" + date_format);
-    // Check if the output dir is created
-    Assert.assertTrue(outDir.exists());
-    // Check if the late record dir is created
-    Assert.assertTrue(lateRecordDir.exists());
   }
 
   @Test
@@ -555,4 +530,22 @@ public class TestHdfsTarget {
     }
   }
 
+  // SDC-3418
+  @Test
+  public void testDoNotCreateEmptyDirectoryOnInit() throws Exception {
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+      .dirPathTemplate(getTestDir() + "/hdfs/${record:attribute('key')}/a/b/c}")
+      .timeDriver("${time:now()}")
+      .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+      .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
+    runner.runInit();
+
+    File targetDirectory = new File(getTestDir() + "/hdfs/a/b/c");
+    Assert.assertFalse(targetDirectory.exists());
+  }
 }
