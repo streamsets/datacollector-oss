@@ -927,9 +927,22 @@ public class HdfsTargetConfigBean {
         getUGI().doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
+            // Based on whether the target directory exists or not, we'll do different check
             if (!fs.exists(dir)) {
+              // Target directory doesn't exists, we'll try to create directory a directory and then drop it
+              Path workDir = dir;
+
+              // We don't want to pollute HDFS with random directories, so we'll create exactly one directory under
+              // another already existing directory on the template path. (e.g. if template is /a/b/c/d and only /a
+              // exists, then we will create only /a/b during this test).
+              while(!fs.exists(workDir.getParent())) {
+                workDir = workDir.getParent();
+              }
+
               try {
-                if (fs.mkdirs(dir)) {
+                if (fs.mkdirs(workDir)) {
+                  LOG.info("Creating dummy directory to validate permissions {}", workDir.toString());
+                  fs.delete(workDir, true);
                   ok.set(true);
                 } else {
                   issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
@@ -941,6 +954,7 @@ public class HdfsTargetConfigBean {
                 ok.set(false);
               }
             } else {
+              // Target directory exists, we will just create empty test file and then immediately drop it
               try {
                 Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
                 fs.create(dummy).close();
