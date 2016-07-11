@@ -91,7 +91,7 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
         Field toField = record.get(toFieldName);
 
         checkValidTypes(fromField, toField);
-        if (fromField.getType().equals(Field.Type.MAP) || fromField.getType().equals(Field.Type.LIST_MAP)) {
+        if (fromField.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
           // Type is MAP
           Map<String, Field> map = fromField.getValueAsMap();
           for (Map.Entry<String, Field> entry : map.entrySet()) {

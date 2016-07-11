@@ -241,7 +241,7 @@ public class RecordImpl implements Record, Cloneable {
             next = current;
             break;
           case MAP:
-            if (current.getType() == Field.Type.MAP || current.getType() == Field.Type.LIST_MAP) {
+            if (current.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
               String name = element.getName();
               Map<String, Field> map = current.getValueAsMap();
               if (map != null) {
@@ -254,7 +254,7 @@ public class RecordImpl implements Record, Cloneable {
             }
             break;
           case LIST:
-            if (current.getType() == Field.Type.LIST || current.getType() == Field.Type.LIST_MAP) {
+            if (current.getType().isOneOf(Field.Type.LIST, Field.Type.LIST_MAP)) {
               int index = element.getIndex();
               List<Field> list = current.getValueAsList();
               if (list != null) {

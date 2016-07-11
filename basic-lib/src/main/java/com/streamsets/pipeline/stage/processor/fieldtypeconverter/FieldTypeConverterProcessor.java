@@ -119,10 +119,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       } else {
         try {
           String dateMask = null;
-          if (converterConfig.targetType == Field.Type.DATE ||
-            converterConfig.targetType == Field.Type.DATETIME ||
-            converterConfig.targetType == Field.Type.TIME
-            ) {
+          if (converterConfig.targetType.isOneOf(Field.Type.DATE, Field.Type.DATETIME, Field.Type.TIME)) {
             dateMask = converterConfig.getDateMask();
           }
           return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask);
@@ -132,8 +129,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE || field.getType() == Field.Type.TIME) &&
-        (converterConfig.targetType == Field.Type.LONG || converterConfig.targetType == Field.Type.STRING)) {
+    if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING)) {
       if (field.getValue() == null) {
         LOG.warn("Field {} in record has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
         return Field.create(converterConfig.targetType,null);
