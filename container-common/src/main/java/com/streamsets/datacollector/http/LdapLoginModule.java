@@ -377,6 +377,8 @@ public class LdapLoginModule extends AbstractLoginModule
       }
     }
 
+    LOG.debug("Found user roles: " + roleList);
+
     return roleList;
   }
 
