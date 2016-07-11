@@ -18,9 +18,14 @@
  <conbody>
         <p><indexterm>MapR FS destination<indexterm>time
                 basis</indexterm></indexterm><indexterm>time basis<indexterm>MapR
-                FS</indexterm></indexterm>The time basis helps determine when directories are
-            created and which directory MapR FS uses when writing a record. You can use the
-            following times as the time basis: </p>
+                FS</indexterm></indexterm>When using directory templates, the time basis helps
+            determine when directories are created. It also determines the directory MapR FS uses
+            when writing a record, and whether a record is late.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HLM-TimeB-targetDir"
+            />
+        </p>
+        <p>You can use the following times as the time basis: </p>
         <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TimeBasis">
             <dlentry>
                 <dt/>

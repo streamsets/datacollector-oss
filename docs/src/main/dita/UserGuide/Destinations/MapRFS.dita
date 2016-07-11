@@ -26,9 +26,11 @@
             the time basis as well.</p>
         <p>You can specify the amount of time that a record can be written to its associated
             directory and what happens to late records. </p>
+        <p>You can also use record header attributes to perform record-based writes. For more
+            information, see <xref href="RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
         <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
             files. </p>  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
         <draft-comment author="Loretta">These MapR topics are basically copied from Hadoop FS. Make
-            sure changes here go there. </draft-comment>
+            sure changes here go there. And check Local FS as needed.</draft-comment>
  </conbody>
 </concept>

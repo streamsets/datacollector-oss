@@ -43,7 +43,7 @@
                         <li>UDP Source</li>
                   </ul>
             </p>
-            <draft-comment author="Loretta">All processors except...  </draft-comment>
+            <draft-comment author="Loretta">All processors except... </draft-comment>
             <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
                         Lookup, and Redis Lookup.</ph></p>
             <p>
@@ -586,7 +586,8 @@
                                           Local and S3, and other file destinations. <b>AvroMess</b>
                                           used by Kafka and Kinesis Producer and other message
                                           destinations. When making changes to these, add updates to
-                                          the Flume data formats topic when necessary. </draft-comment>
+                                          the Flume data formats topic when necessary.
+                                    </draft-comment>
                               </dd>
                         </dlentry>
                         <dlentry id="Avro-Flume">
@@ -771,120 +772,46 @@
                   When set to "false", a missing field generates an alert for the record missing the
                   field, and for the next record that includes the field.</p>
             <p>
-                  <draft-comment author="Loretta">ul-KERBprops - Kerberos properties in Data
-                        Collector config file:</draft-comment>
+                  <draft-comment author="Loretta"><uicontrol>D-HLM-Dirtemp-targetDir</uicontrol>
+                        used in HadoopFS, LocalFS, MapR FS</draft-comment>
+            </p>
+            <p id="D-HLM-Dirtemp-targetDir">You can alternatively write records to directories based
+                  on the targetDirectory record header attribute. Using the targetDirectory
+                  attribute disables the ability to define directory templates.</p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>D-HLM-TimeB-targetDir</uicontrol> used
+                        in HadoopFS, LocalFS, MapR FS</draft-comment>
+            </p>
+            <p><ph id="D-HLM-TimeB-targetDir">When using the targetDirectory record header attribute
+                        to write records, the time basis determines only whether a record is
+                        late.</ph></p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>D-GenAttributes</uicontrol> used in
+                        Record Header Attributes for RB Writes and Generating RH
+                        Attributes</draft-comment>
+            </p>
+            <p><ph id="D-GenAttributes">The Hive Metadata processor automatically generates record
+                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
+                        For all other destinations, you can use the Expression Evaluator to add
+                        record header attributes.</ph>
             </p>
             <p>
-                  <ul id="ul-KERBprops">
-                        <li>kerberos.client.enabled</li>
-                        <li>kerberos.client.principal</li>
-                        <li>kerberos.client.keytab</li>
-                  </ul>
+                  <draft-comment author="Loretta"><uicontrol>D-P_DefineRHAttributes</uicontrol> -
+                  </draft-comment>
             </p>
-            <p>
-                  <draft-comment author="Loretta">Kafka-SSL - using this ordered list for KConsumer
-                        and KProducer</draft-comment>
-            </p>
-            <ol id="KAFKA-SSL-list">
-                  <li>To use SSL to connect, first make sure Kafka is configured for SSL as
-                        described in the Kafka documentation: <xref
-                              href="http://kafka.apache.org/documentation.html#security_ssl"
-                              format="html" scope="external"/>. </li>
-                  <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
-                        the <uicontrol>Stage Library</uicontrol> property to <uicontrol>Apache Kafka
-                              0.9.0.0</uicontrol>.</li>
-                  <li>On the <wintitle>Kafka</wintitle> tab, add the
-                              <uicontrol>security.protocol</uicontrol> Kafka configuration property
-                        and set it to <uicontrol>SSL</uicontrol>.</li>
-                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration
-                              properties:<ul id="ul_hkf_ydb_t5">
-                              <li>ssl.truststore.location</li>
-                              <li>ssl.truststore.password</li>
-                        </ul><p>When the Kafka broker requires client authentication - when the
-                              ssl.client.auth broker property is set to "required" - add and
-                              configure the following properties: <ul id="ul_y5b_rml_55">
-                                    <li>ssl.keystore.location</li>
-                                    <li>ssl.keystore.password</li>
-                                    <li>ssl.key.password</li>
-                              </ul></p><p>Some brokers might require adding the following properties
-                              as well:<ul>
-                                    <li>ssl.enabled.protocols</li>
-                                    <li>ssl.truststore.type</li>
-                                    <li>ssl.keystore.type</li>
-                              </ul></p><p>For details about these properties, see the Kafka
-                              documentation.</p></li>
-            </ol>
-            <p>
-                  <draft-comment author="Loretta">Kafka-Kerberos - using this in KConsumer and
-                        KProducer</draft-comment>
-            </p>
-            <p>
-                  <ol id="Kafka-Kerberos">
-                        <li>To use Kerberos, first make sure Kafka is configured for Kerberos as
-                              described in the Kafka documentation: <xref
-                                    href="http://kafka.apache.org/documentation.html#security_sasl"
-                                    format="html" scope="external"/>.</li>
-                        <li id="KafkaKERBsdcprops">In the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, make sure the following Kerberos properties are
-                                    configured:<ul
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
-                                    id="ul_gyj_jpf_55">
-                                    <li/>
-                              </ul></li>
-                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
-                        <li>On the <wintitle>Kafka</wintitle> tab, add the
-                                    <uicontrol>security.protocol</uicontrol> Kafka configuration
-                              property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
-                        <li id="KafkaKERBservicename">Then, add the
-                                    <uicontrol>sasl.kerberos.service.name</uicontrol> configuration
-                              property, and set it to the Kerberos principal name that Kafka runs
-                              as. </li>
-                  </ol>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">KAFKA-SSLandKerberos - used in KConsumer and
-                        KProducer</draft-comment>
-            </p>
-            <p>
-                  <ol id="KAFKA-SSLandKerberos">
-                        <li>Make sure Kafka is configured to use SSL and Kerberos (SASL) as
-                              described in the following Kafka documentation:<ul id="ul_gx4_1sk_55">
-                                    <li><xref
-                                                href="http://kafka.apache.org/documentation.html#security_ssl"
-                                                format="html" scope="external"/></li>
-                                    <li><xref
-                                                href="http://kafka.apache.org/documentation.html#security_sasl"
-                                                format="html" scope="external"/></li>
-                              </ul></li>
-                        <li conref="#concept_vhs_5tz_xp/KafkaKERBsdcprops"/>
-                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
-                        <li>On the <wintitle>Kafka</wintitle> tab, add the
-                                    <uicontrol>security.protocol</uicontrol> property and set it to
-                                    <uicontrol>SASL_SSL</uicontrol>.</li>
-                        <li conref="#concept_vhs_5tz_xp/KafkaKERBservicename"/>
-                        <li conref="#concept_vhs_5tz_xp/KafkaSSLprops"/>
-                  </ol>
-            </p>
-            <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
-                  as a disclaimer:</draft-comment>
-            <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>
-            <p>
-                  <draft-comment author="Loretta">MapR-Prereq - Using in all MapR stages to make
-                        sure they configure SDC.</draft-comment>
-            </p>
-            <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
-                  additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
-                  process MapR data. For more information, see <xref
-                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
-            <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive
-                  Streaming destination for MapR library to make sure they configure
-                  SDC.</draft-comment>
-            <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
-                  library in a pipeline, you must perform additional steps to enable <ph
-                        conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For more
-                  information, see <xref
-                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
+            <p id="D-P_DefineRHAttributes">To define a record header attribute in the Expression
+                  Evaluator, perform the following steps:<ol id="ol_jww_k31_cw">
+                        <li>On the <wintitle>Expressions</wintitle> tab of the Expression Evaluator,
+                              specify the <uicontrol>Header Attribute</uicontrol> name. <p>To
+                                    generate a target directory, use
+                                          <codeph>targetDirectory</codeph>. </p><p>To generate an
+                                    Avro schema, use <codeph>avroSchema</codeph>.</p><p>You can use
+                                    any name for a roll indicator header attribute.</p></li>
+                        <li>For the <uicontrol>Header Attribute Expression</uicontrol>, define the
+                              expression that evaluates to the information you want the destination
+                              to use. </li>
+                  </ol></p>
+            <p/>
             <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
                   and MapR FS destinations</draft-comment>
             <p id="DirectoryTemplate_Intro">When you define a directory template, you can use a mix
@@ -910,14 +837,12 @@
                                     For example, if the smallest variable is hours, then the
                                     directories are created for every hour of the day that receives
                                     output records.</dd>
-                              <dd>When you use datetime variables in an expression, use all of
-                                  the datetime variables between one of the year variables
-                                  and the smallest variable that you want to use. For
-                                  example, to create directories on a daily basis for a
-                                  Hadoop FS destination, use a year variable, a month
-                                  variable, and then a day variable. You might use one of
-                                  the following datetime variable progressions:
-                              </dd>
+                              <dd>When you use datetime variables in an expression, use all of the
+                                    datetime variables between one of the year variables and the
+                                    smallest variable that you want to use. For example, to create
+                                    directories on a daily basis for a Hadoop FS destination, use a
+                                    year variable, a month variable, and then a day variable. You
+                                    might use one of the following datetime variable progressions: </dd>
                               <dd>
                                     <codeblock>${YYYY()}-${MM()}-${DD()}
 ${YY()}_${MM()}_${DD()}</codeblock>
@@ -1026,7 +951,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   files remain open and idle for too long, thus delaying another system from
                   processing the files.</p>
             <p id="IdleTimeoutReasons">Output files might remain idle for too long for the following
-                  reasons:            <ul>
+                  reasons: <ul id="ul_pcq_5l3_mw">
                         <li>You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -1044,11 +969,226 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     However, when records arrive in chronological order, no records
                                     that belong in the 02 directory arrive after the 03 directory is
                                     created. </p></li>
-            </ul></p>
-
+                  </ul></p>
             <p id="IdleTimeoutSummary">In either situation, configure an idle timeout so that other
                   systems can process the files sooner, instead of waiting for the configured
                   maximum records, maximum file size, or late records conditions to occur. </p>
+            <p>
+                  <draft-comment author="Loretta">Record Header Attributes - Hadoop FS, Local FS,
+                        MapR FS. But Local and MapR FS don't have full functionality yet
+                        7/6</draft-comment>
+            </p>
+            <p><ph id="D-HLM-Attributes1">To use record header attributes for record-based writes,
+                        you configure the destination to use the header attribute, and you ensure
+                        that the record headers include the header attribute.</ph>
+            </p>
+            <p id="D-HLM-Attributes2">Use the Expression Evaluator processor to add stage attributes
+                  to record headers. </p>
+            <p>
+                  <draft-comment author="Loretta">** there were 2 versions, but now there's just the
+                        one in Record Header Attributes. Delete or keep as conref for some reason?
+                        LC, 7/6 ** Two versions of this, first for Hadoop FS, 2nd for Local &amp;
+                        MapR FS. This is so we don't forget to update Hadoop FS when updating the
+                        others? </draft-comment>
+            </p>
+            <p>
+                  <dl id="D-HadoopFS-AttrDL">
+                        <dlentry>
+                              <dt>targetDirectory</dt>
+                              <dd>The targetDirectory header attribute defines the directory where
+                                    the record is written. If the directory does not exist, the
+                                    destination creates the directory. The targetDirectory header
+                                    attribute replaces the Directory Template property in the
+                                    destination.</dd>
+                              <dd>When you use targetDirectory to provide the directory, the time
+                                    basis configured for the destination is used only for
+                                    determining whether a record is late. Time basis is not used to
+                                    determine the output directories to create or to write records
+                                    to directories.</dd>
+                              <dd>To use the targetDirectory header attribute, on the
+                                          <wintitle>Output</wintitle> tab, select
+                                          <uicontrol>Directory in Header</uicontrol>.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>avroSchema</dt>
+                              <dd>The avroSchema header attribute defines the Avro schema for the
+                                    record. When you use this header attribute, you cannot define an
+                                    Avro schema to use in the destination. </dd>
+                              <dd>To use the avroSchema header attribute, on the
+                                          <wintitle>Avro</wintitle> tab, select <uicontrol>Load
+                                          Schema from Header</uicontrol>.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>roll</dt>
+                              <dd>The roll attribute, when present in the record header, triggers a
+                                    roll of the file. </dd>
+                              <dd>You can define the name of the roll header attribute. When you use
+                                    the Hive Metadata processor to generate the roll header
+                                    attribute, use the default "roll" attribute name.</dd>
+                              <dd>To use a roll header attribute, on the <wintitle>Output</wintitle>
+                                    tab, select <uicontrol>Use Roll Attribute</uicontrol> and define
+                                    the name of the attribute. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>D-LocalMapRFS-AttrDL</uicontrol> Local
+                        FS and MapR FS versions – NOT USED? DELETE?</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry>
+                              <dt>targetDirectory</dt>
+                              <dd>The targetDirectory header attribute defines the directory where
+                                    the record is written. If the directory does not exist, the
+                                    destination creates the directory. The targetDirectory header
+                                    attribute replaces the Directory Template property in the
+                                    destination.</dd>
+                              <dd>When you use targetDirectory to provide the directory, the time
+                                    basis configured for the destination is used only for
+                                    determining whether a record is late. Time basis is not used to
+                                    determine the output directories to create or to write records
+                                    to directories.</dd>
+                              <dd>To use the targetDirectory header attribute, on the
+                                          <wintitle>Output</wintitle> tab, select
+                                          <uicontrol>Directory in Header</uicontrol>.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>avroSchema</dt>
+                              <dd>The avroSchema header attribute defines the Avro schema for the
+                                    record. When you use this header attribute, you cannot define an
+                                    Avro schema to use in the destination. </dd>
+                              <dd>To use the avroSchema header attribute, on the
+                                          <wintitle>Avro</wintitle> tab, select <uicontrol>Load
+                                          Schema from Header</uicontrol>.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>roll</dt>
+                              <dd>The roll attribute, when present in the record header, triggers a
+                                    roll of the file. </dd>
+                              <dd>You can define the name of the roll header attribute. When you use
+                                    the Hive Metadata processor to generate the roll header
+                                    attribute, use the default "roll" attribute name.</dd>
+                              <dd>To use a roll header attribute, on the <wintitle>Output</wintitle>
+                                    tab, select <uicontrol>Use Roll Attribute</uicontrol> and define
+                                    the name of the attribute. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">ul-KERBprops - Kerberos properties in Data
+                        Collector config file:</draft-comment>
+            </p>
+            <p>
+                  <ul id="ul-KERBprops">
+                        <li>kerberos.client.enabled</li>
+                        <li>kerberos.client.principal</li>
+                        <li>kerberos.client.keytab</li>
+                  </ul>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">Kafka-SSL - using this ordered list for KConsumer
+                        and KProducer</draft-comment>
+            </p>
+            <ol id="KAFKA-SSL-list">
+                  <li>To use SSL to connect, first make sure Kafka is configured for SSL as
+                        described in the Kafka documentation: <xref
+                              href="http://kafka.apache.org/documentation.html#security_ssl"
+                              format="html" scope="external"/>. </li>
+                  <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
+                        the <uicontrol>Stage Library</uicontrol> property to <uicontrol>Apache Kafka
+                              0.9.0.0</uicontrol>.</li>
+                  <li>On the <wintitle>Kafka</wintitle> tab, add the
+                              <uicontrol>security.protocol</uicontrol> Kafka configuration property
+                        and set it to <uicontrol>SSL</uicontrol>.</li>
+                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration
+                              properties:<ul id="ul_hkf_ydb_t5">
+                              <li>ssl.truststore.location</li>
+                              <li>ssl.truststore.password</li>
+                        </ul><p>When the Kafka broker requires client authentication - when the
+                              ssl.client.auth broker property is set to "required" - add and
+                              configure the following properties: <ul id="ul_y5b_rml_55">
+                                    <li>ssl.keystore.location</li>
+                                    <li>ssl.keystore.password</li>
+                                    <li>ssl.key.password</li>
+                              </ul></p><p>Some brokers might require adding the following properties
+                              as well:<ul>
+                                    <li>ssl.enabled.protocols</li>
+                                    <li>ssl.truststore.type</li>
+                                    <li>ssl.keystore.type</li>
+                              </ul></p><p>For details about these properties, see the Kafka
+                              documentation.</p></li>
+            </ol>
+            <p>
+                  <draft-comment author="Loretta">Kafka-Kerberos - using this in KConsumer and
+                        KProducer</draft-comment>
+            </p>
+            <p>
+                  <ol id="Kafka-Kerberos">
+                        <li>To use Kerberos, first make sure Kafka is configured for Kerberos as
+                              described in the Kafka documentation: <xref
+                                    href="http://kafka.apache.org/documentation.html#security_sasl"
+                                    format="html" scope="external"/>.</li>
+                        <li id="KafkaKERBsdcprops">In the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, make
+                              sure the following Kerberos properties are configured:<ul
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
+                                    id="ul_gyj_jpf_55">
+                                    <li/>
+                              </ul></li>
+                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
+                        <li>On the <wintitle>Kafka</wintitle> tab, add the
+                                    <uicontrol>security.protocol</uicontrol> Kafka configuration
+                              property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
+                        <li id="KafkaKERBservicename">Then, add the
+                                    <uicontrol>sasl.kerberos.service.name</uicontrol> configuration
+                              property, and set it to the Kerberos principal name that Kafka runs
+                              as. </li>
+                  </ol>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">KAFKA-SSLandKerberos - used in KConsumer and
+                        KProducer</draft-comment>
+            </p>
+            <p>
+                  <ol id="KAFKA-SSLandKerberos">
+                        <li>Make sure Kafka is configured to use SSL and Kerberos (SASL) as
+                              described in the following Kafka documentation:<ul id="ul_gx4_1sk_55">
+                                    <li><xref
+                                                href="http://kafka.apache.org/documentation.html#security_ssl"
+                                                format="html" scope="external"/></li>
+                                    <li><xref
+                                                href="http://kafka.apache.org/documentation.html#security_sasl"
+                                                format="html" scope="external"/></li>
+                              </ul></li>
+                        <li conref="#concept_vhs_5tz_xp/KafkaKERBsdcprops"/>
+                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
+                        <li>On the <wintitle>Kafka</wintitle> tab, add the
+                                    <uicontrol>security.protocol</uicontrol> property and set it to
+                                    <uicontrol>SASL_SSL</uicontrol>.</li>
+                        <li conref="#concept_vhs_5tz_xp/KafkaKERBservicename"/>
+                        <li conref="#concept_vhs_5tz_xp/KafkaSSLprops"/>
+                  </ol>
+            </p>
+            <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
+                  as a disclaimer:</draft-comment>
+            <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>
+            <p>
+                  <draft-comment author="Loretta">MapR-Prereq - Using in all MapR stages to make
+                        sure they configure SDC.</draft-comment>
+            </p>
+            <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
+                  additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
+                  process MapR data. For more information, see <xref
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
+            <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive Streaming
+                  destination for MapR library to make sure they configure SDC.</draft-comment>
+            <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
+                  library in a pipeline, you must perform additional steps to enable <ph
+                        conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For more
+                  information, see <xref
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
             <draft-comment author="alisontaylor">Lookup Cache - used for Redis Lookup and HBase
                   Lookup processors</draft-comment>
             <p id="LookupCacheOverview">The processor caches key-value pairs until the cache reaches

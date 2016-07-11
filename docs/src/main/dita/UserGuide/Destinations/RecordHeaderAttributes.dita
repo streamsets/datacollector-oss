@@ -15,23 +15,31 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lmn_gdc_1w">
     <title>Record Header Attributes for Record-Based Writes</title>
-    <shortdesc>Hadoop FS can use record header attributes to determine the directory to write a
-        record to, the Avro schema to use, and when to roll a file. </shortdesc>
     <conbody>
         <p><indexterm>Hadoop FS destination<indexterm>record header attributes for record-based
                     writes</indexterm></indexterm><indexterm>record header
-                    attributes<indexterm>Hadoop FS destination record-based
-                writes</indexterm></indexterm>The Hive Metadata processor generates record header
-            attributes that Hadoop FS can use as part of the Hive Drift Solution. Or, you can use an
-            Expression Evaluator to add the targetDirectory record header attribute. </p>
-        <p>To use record header attributes, ensure that the records include the header attributes
-            and configure the destination to use the header attribute.</p>
-        <p>You can use the following record header attributes in Hadoop FS:<dl>
+                    attributes<indexterm>record-based writes</indexterm></indexterm><indexterm>Local
+                FS destination<indexterm>record header attributes for record-based
+                    writes</indexterm></indexterm><indexterm>MapR FS destination<indexterm>record
+                    header attributes for record-based
+                    writes</indexterm></indexterm><indexterm>destinations<indexterm>record based
+                    writes</indexterm></indexterm>Destinations can use information in record header
+            attributes to write data. Destinations that write Avro data can use Avro schemas in the
+            record header. The Hadoop FS, MapR FS, and Local FS destinations can use record header
+            attributes to determine the directory to write to and when to roll a file. </p>
+        <p>To use a record header attribute, configure the destination to use the header attribute
+            and ensure that the records include the header attribute.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-GenAttributes"
+            />
+        </p>
+        <p>You can use the following record header attributes in destinations:
+            <dl>
                 <dlentry>
-                    <dt>targetDirectory</dt>
-                    <dd>The targetDirectory header attribute defines the directory where the record
-                        is written. If the directory does not exist, the destination creates the
-                        directory. The targetDirectory header attribute replaces the Directory
+                    <dt>targetDirectory attribute in the Hadoop FS, Local FS, and MapR FS
+                        destinations</dt>
+                    <dd>The targetDirectory record header attribute defines the directory where the
+                        record is written. If the directory does not exist, the destination creates
+                        the directory. The targetDirectory header attribute replaces the Directory
                         Template property in the destination.</dd>
                     <dd>When you use targetDirectory to provide the directory, the time basis
                         configured for the destination is used only for determining whether a record
@@ -42,7 +50,7 @@
                             Header</uicontrol>.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>avroSchema</dt>
+                    <dt>avroSchema attribute in destinations that write Avro data</dt>
                     <dd>The avroSchema header attribute defines the Avro schema for the record. When
                         you use this header attribute, you cannot define an Avro schema to use in
                         the destination. </dd>
@@ -50,20 +58,17 @@
                         tab, select <uicontrol>Load Schema from Header</uicontrol>.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>roll</dt>
+                    <dt>roll attribute in the Hadoop FS, Local FS, and MapR FS destinations</dt>
                     <dd>The roll attribute, when present in the record header, triggers a roll of
                         the file. </dd>
                     <dd>You can define the name of the roll header attribute. When you use the Hive
                         Metadata processor to generate the roll header attribute, use the default
-                        "roll" attribute name.</dd>
+                        "roll" attribute name. When you use an Expression Evaluator, use the name of
+                        the roll attribute that you defined in the processor.</dd>
                     <dd>To use a roll header attribute, on the <wintitle>Output</wintitle> tab,
                         select <uicontrol>Use Roll Attribute</uicontrol> and define the name of the
                         attribute. </dd>
                 </dlentry>
             </dl></p>
     </conbody>
-    <related-links>
-        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
-        <link href="../Processors/HiveMetadata.dita#concept_rz5_nft_zv"/>
-    </related-links>
 </concept>
