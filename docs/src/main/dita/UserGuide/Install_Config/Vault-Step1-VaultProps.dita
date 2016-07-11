@@ -81,7 +81,8 @@
                         </row>
                         <row>
                             <entry>vault.read.timeout</entry>
-                            <entry>HTTP read timeout. <p>Default is 0 for no limit. </p></entry>
+                            <entry>Milliseconds to wait for data before timing out. <p>Default is 0
+                                    for no limit. </p></entry>
                         </row>
                         <row>
                             <entry>vault.ssl.enabled.protocols</entry>

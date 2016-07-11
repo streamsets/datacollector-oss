@@ -122,7 +122,7 @@
    </topicmeta>
    <topicref href="../Install_Config/Vault-Step1-VaultProps.dita"/>
    <topicref href="../Install_Config/Vault-Step2-AuthorizeDC.dita"/>
-   <topicref href="../Install_Config/Vault-Step3-CallingVault.dita"/>
+   <topicref href="../Install_Config/Vault-Step3-CallVault.dita"/>
   </topicref>
  </topicref>
 </map>

@@ -795,23 +795,6 @@
                         For all other destinations, you can use the Expression Evaluator to add
                         record header attributes.</ph>
             </p>
-            <p>
-                  <draft-comment author="Loretta"><uicontrol>D-P_DefineRHAttributes</uicontrol> -
-                  </draft-comment>
-            </p>
-            <p id="D-P_DefineRHAttributes">To define a record header attribute in the Expression
-                  Evaluator, perform the following steps:<ol id="ol_jww_k31_cw">
-                        <li>On the <wintitle>Expressions</wintitle> tab of the Expression Evaluator,
-                              specify the <uicontrol>Header Attribute</uicontrol> name. <p>To
-                                    generate a target directory, use
-                                          <codeph>targetDirectory</codeph>. </p><p>To generate an
-                                    Avro schema, use <codeph>avroSchema</codeph>.</p><p>You can use
-                                    any name for a roll indicator header attribute.</p></li>
-                        <li>For the <uicontrol>Header Attribute Expression</uicontrol>, define the
-                              expression that evaluates to the information you want the destination
-                              to use. </li>
-                  </ol></p>
-            <p/>
             <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
                   and MapR FS destinations</draft-comment>
             <p id="DirectoryTemplate_Intro">When you define a directory template, you can use a mix
