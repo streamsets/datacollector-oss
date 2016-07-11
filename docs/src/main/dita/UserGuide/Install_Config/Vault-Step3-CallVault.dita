@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h54_skb_mw">
-    <title>Step 3. Calling from the Pipeline</title>
+    <title>Step 3. Call Vault from the Pipeline</title>
     <conbody>
         <p><indexterm>Vault<indexterm>functions</indexterm></indexterm>After enabling <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
@@ -26,19 +26,21 @@
             provides the following functions to access Vault secrets:<dl>
                 <dlentry>
                     <dt>vault:read()</dt>
-                    <dd>Use to return the value for the path and key that you provide. Typically,
-                        you'll use this function to access secrets.</dd>
+                    <dd>Use to return the value for the Vault path and key that you provide.
+                        Typically, you'll use this function to access secrets.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>vault:readWithDelay()</dt>
-                    <dd>Use to return the value for the specified path and key with a delay. Use
-                        this function to incorporate a delay in the response to allow time for other
-                        processes to complete. </dd>
+                    <dd>Use to return the value for the specified Vault path and key with a delay.
+                        Use this function to incorporate a delay in the response to allow time for
+                        other processes to complete. </dd>
                     <dd>For example, you should use this function when using the Vault AWS secret
                         backend to generate AWS access credentials based on IAM policies. According
                         to Vault documentation, you might need a delay of 10 seconds or more before
                         the credentials can be used successfully.</dd>
                 </dlentry>
             </dl></p>
+        <p>For more information, see <xref
+                href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"/>.</p>
     </conbody>
 </concept>
