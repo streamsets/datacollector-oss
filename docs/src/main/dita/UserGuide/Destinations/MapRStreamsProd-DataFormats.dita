@@ -21,7 +21,7 @@
             Streams Producer processes data differently based on the data format. MapR Streams
             Producer can process the following types of data:<dl>
                 <dlentry
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroMess">
                     <dt/>
                     <dd/>
                 </dlentry>

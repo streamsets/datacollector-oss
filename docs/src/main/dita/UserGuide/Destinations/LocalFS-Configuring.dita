@@ -57,15 +57,9 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FilePrefix">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Directory Template
-                                        <xref
-                                            href="LocalFS-DirectoryTemplates.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_br8_fgs_3r"/></xref>
-                                    </entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-DirectoryTemplate"/>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryinHeader">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DataTimeZone">
@@ -98,6 +92,13 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttri">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttrName">
+                                    <entry/>
+                                </row><row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
                                     <entry/>
                                 </row>

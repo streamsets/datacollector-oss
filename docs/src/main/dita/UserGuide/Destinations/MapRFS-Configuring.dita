@@ -135,6 +135,10 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FilePrefix">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryinHeader">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Directory Template
                                         <xref
@@ -181,6 +185,11 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-CompressionType">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttri"
+                                    conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttrName">
                                     <entry/>
                                 </row>
 

@@ -20,8 +20,7 @@
     <conbody>
         <p>When possible, use the Hive Metastore processor to generate stage attributes. The Hive
             Metastore processor, Hive Metastore destination, and Hadoop FS work together as part of
-            the Hive-Avro drift solution. For more information, see <xref
-                href="../Hive_Metadata/HiveMetadata-Overview.dita#concept_phk_bdf_2w"/>. </p>
+            the Hive-Avro drift solution.</p>
         <p>However, you can use the Expression Evaluator to generate targetDirectory stage
             attributes that Hadoop FS can use to write to HDFS.</p>
         <p>When processing the targetDirectory attribute, Hadoop FS uses the directory exactly as
