@@ -748,11 +748,14 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>.<p>For information
-                                            about generating the descriptor file, see <xref
+                                        /> resources directory,
+                                            <codeph>$SDC_RESOURCES</codeph>.<p>For information about
+                                            generating the descriptor file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
-                                            />. For more information about environment variables, see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
+                                            />. For more information about environment variables,
+                                            see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p></entry>
                                 </row>
                                 <row id="row-MessageType">
                                     <entry>Message Type</entry>
@@ -800,9 +803,12 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>. <p>For more information about environment variables, see <xref
-                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>. For information
-                                            about generating the descriptor file, see <xref
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
+                                            <p>For more information about environment variables, see
+                                                <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />. For information about generating the descriptor
+                                            file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -1675,7 +1681,11 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header</entry>
+                                    <entry>Load Schema from Header <xref
+                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_qn5_tlt_nw"/></xref>
+                                    </entry>
                                     <entry>Indicates that the Avro schema is embedded in the
                                         avroSchema record header attribute. <p>Use only when the
                                             avroSchema attribute is defined for all
@@ -1725,7 +1735,11 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header </entry>
+                                    <entry>Load Schema from Header <xref
+                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_tfb_1ql_gw"/></xref>
+                                    </entry>
                                     <entry>Indicates that the Avro schema is embedded in the
                                         avroSchema record header attribute. The destination includes
                                         the schema definition in each generated file. <p>Use only
@@ -1771,7 +1785,11 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header</entry>
+                                    <entry>Load Schema from Header <xref
+                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_fvp_srs_nw"/></xref>
+                                    </entry>
                                     <entry>Indicates that the Avro schema is embedded in the
                                         avroSchema record header attribute. <p>Use only when the
                                             avroSchema attribute is defined for all
@@ -1981,9 +1999,12 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>. <p>For more information about environment variables, see <xref
-                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>. For information
-                                            about generating the descriptor file, see <xref
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
+                                            <p>For more information about environment variables, see
+                                                <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />. For information about generating the descriptor
+                                            file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -2008,9 +2029,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>FS-OutputFiles</uicontrol> - Local FS
-                        and MapR FS conref the entire table. Hadoop FS conrefs each
-                        row</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>FS-OutputFiles</uicontrol> - Hadoop
+                        FS, Local FS and MapR FS conref rows/partial rows in the table </draft-comment>
                 </cmd>
             </step>
             <step id="FS-OutputFiles">
@@ -2066,6 +2086,16 @@
                                             ID is stored in the following file:
                                                 <filepath>$SDC_DATA/sdc.id</filepath>. For more information about environment variables, see <xref
                                                     href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
+                                </row>
+                                <row id="row-DirectoryinHeader">
+                                    <entry>Directory in Header <xref
+                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ydt_vvg_1w"/></xref>
+                                    </entry>
+                                    <entry>Indicates that the target directory is defined in record
+                                        headers. Use only when the targetDirectory header attribute
+                                        is defined for all records. </entry>
                                 </row>
                                 <row id="row-DirectoryTemplate">
                                     <entry>Directory Template <xref
@@ -2140,6 +2170,21 @@
                                             <li>Block Compression</li>
                                             <li>Record Compression</li>
                                         </ul></entry>
+                                </row>
+                                <row id="row-RollAttri">
+                                    <entry>Use Roll Attribute <xref
+                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref>
+                                    </entry>
+                                    <entry>Checks the record header for the roll header attribute
+                                        and closes the current file when the roll attribute exists.
+                                    </entry>
+                                </row>
+                                <row id="row-RollAttrName">
+                                    <entry>Roll Attribute Name</entry>
+                                    <entry>Name of the roll header attribute.<p>Default is
+                                        roll.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2680,8 +2725,10 @@
                                         a self-signed certificate.<p>Must be stored in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory,
-                                            <filepath>$SDC_RESOURCES</filepath>. For more information about environment variables, see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
+                                                <filepath>$SDC_RESOURCES</filepath>. For more
+                                            information about environment variables, see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p></entry>
                                 </row>
                                 <row id="row-TSpass">
                                     <entry>Truststore Password</entry>

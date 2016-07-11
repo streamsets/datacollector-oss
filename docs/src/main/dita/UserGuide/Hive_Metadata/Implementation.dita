@@ -56,9 +56,8 @@
                         <li>To write records using the avroSchema header attribute, on the
                                 <wintitle>Avro</wintitle> tab, select <uicontrol>Load Schema From
                                 Header</uicontrol>.</li>
-                    </ul><p>For more information about using record header attributes with the
-                        Hadoop FS destination, see <xref
-                            href="../Destinations/HadoopFS-RecordHeaderAttributes.dita#concept_lmn_gdc_1w"
+                    </ul><p>For more information about using record header attributes, see <xref
+                            href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"
                         />.</p></li>
             </ol></p>
  </conbody>
