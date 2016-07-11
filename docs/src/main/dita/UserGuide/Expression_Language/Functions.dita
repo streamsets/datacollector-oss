@@ -153,6 +153,8 @@
          <li>sdc:hostname()</li>
          <li>sdc:id()</li>
          <li>time:now()</li>
+         <li>vault:read("&lt;path>", "&lt;key>")</li>
+         <li>vault:readWithDelay("&lt;path>", "&lt;key>", &lt;delay>)</li>
         </ul>
        </entry>
       </row>

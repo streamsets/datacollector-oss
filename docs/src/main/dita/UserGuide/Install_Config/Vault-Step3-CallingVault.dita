@@ -14,17 +14,20 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h54_skb_mw">
- <title>Step 4. Calling from the Pipeline</title>
- <shortdesc>After enabling <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        access Vault, you can use expressions in pipeline and stage properties. </shortdesc>
- <conbody>
-  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
-            the following functions to access sensitive information in Vault:<dl>
+    <title>Step 3. Calling from the Pipeline</title>
+    <conbody>
+        <p><indexterm>Vault<indexterm>functions</indexterm></indexterm>After enabling <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            access Vault and authorizing <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            with Vault, you can use expressions in pipeline and stage properties to access Vault
+            secrets.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            provides the following functions to access Vault secrets:<dl>
                 <dlentry>
                     <dt>vault:read()</dt>
                     <dd>Use to return the value for the path and key that you provide. Typically,
-                        you'll use this function to access data in Vault.</dd>
+                        you'll use this function to access secrets.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>vault:readWithDelay()</dt>
@@ -32,12 +35,10 @@
                         this function to incorporate a delay in the response to allow time for other
                         processes to complete. </dd>
                     <dd>For example, you should use this function when using the Vault AWS secret
-                        backend to manage Amazon web service credentials. With AWS secret backend,
-                        Vault generates temporary AWS keys that are expire with the Vault lease. But
-                        it can take time for AWS to propagate the changes throughout the deployment,
-                        so using vault:readWithDelay with a 5 second delay or more is advisable. For
-                        more information, see the Vault documentation.</dd>
+                        backend to generate AWS access credentials based on IAM policies. According
+                        to Vault documentation, you might need a delay of 10 seconds or more before
+                        the credentials can be used successfully.</dd>
                 </dlentry>
             </dl></p>
- </conbody>
+    </conbody>
 </concept>
