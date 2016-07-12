@@ -45,14 +45,22 @@
                                         and enter the new name for the field. Click
                                             <uicontrol>Add</uicontrol> to rename additional fields.
                                             <p>You can use regex in both properties to rename sets
-                                            of fields. <xref
-                                                href="FieldRenamer-SetsofFields.dita">
+                                            of fields. <xref href="FieldRenamer-SetsofFields.dita">
                                                 <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_f3b_khp_fs"/></xref></p><p>
-                                            <note>When using the processor to rename fields in
-                                                records with complex structures, be sure to use the
-                                                appropriate field path.</note>
-                                        </p></entry>
+                                                  scale="10" id="image_f3b_khp_fs"/></xref>
+                                        </p><p>To rename an array or map, you can specify a single
+                                            array index or map element, or you can use the asterisk
+                                            wildcard to represent all array indices and map
+                                            elements. <xref
+                                                href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                                                  ><image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10"/>
+                                            </xref></p><note>You cannot use regex to select a subset
+                                            of array indices and map elements. For example, if the
+                                            Division array contains 20 indices, you cannot use the
+                                            following regex to rename the field path for the first
+                                            10
+                                        indices:<codeblock>/Division[0-9]</codeblock></note></entry>
                                 </row>
                                 <row>
                                     <entry>Source Field Does Not Exist</entry>
