@@ -25,12 +25,15 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +75,29 @@ public class ELUtils {
       ELVars variables,
       String expression,
       Batch batch
-  ) {
+  ) throws OnRecordErrorException {
+    return partitionBatchByExpression(
+        elEvaluator,
+        variables,
+        expression,
+        null,
+        null,
+        null,
+        null,
+        batch
+    );
+  }
+
+  public static Multimap<String, Record> partitionBatchByExpression(
+      ELEval elEvaluator,
+      ELVars variables,
+      String expression,
+      ELEval timeDriverEvaluator,
+      ELVars timeDriverVariables,
+      String timeDriverExpression,
+      Calendar calendar,
+      Batch batch
+  ) throws OnRecordErrorException {
     Multimap<String, Record> partitions = ArrayListMultimap.create();
 
     Iterator<Record> batchIterator = batch.getRecords();
@@ -80,16 +105,45 @@ public class ELUtils {
     while (batchIterator.hasNext()) {
       Record record = batchIterator.next();
       RecordEL.setRecordInContext(variables, record);
+      // The expression may not include time EL in which case time driver parameters will be null.
+      if (timeDriverEvaluator != null) {
+        Date recordTime = getRecordTime(
+            timeDriverEvaluator,
+            timeDriverVariables,
+            timeDriverExpression,
+            record
+        );
+        calendar.setTime(recordTime);
+        TimeEL.setCalendarInContext(variables, calendar);
+        TimeNowEL.setTimeNowInContext(variables, recordTime);
+      }
+
       try {
         String partitionName = elEvaluator.eval(variables, expression, String.class);
         LOG.debug("Expression '{}' is evaluated to '{}' : ", expression, partitionName);
         partitions.put(partitionName, record);
       } catch (ELEvalException e) {
         LOG.error("Failed to evaluate expression '{}' : ", expression, e.toString(), e);
+        throw new OnRecordErrorException(record, e.getErrorCode(), e.getParams());
       }
     }
 
     return partitions;
   }
 
+  private static Date getRecordTime(
+      ELEval elEvaluator,
+      ELVars variables,
+      String expression,
+      Record record
+  ) throws OnRecordErrorException {
+    try {
+      TimeNowEL.setTimeNowInContext(variables, new Date());
+      RecordEL.setRecordInContext(variables, record);
+      return elEvaluator.eval(variables, expression, Date.class);
+    } catch (ELEvalException e) {
+      LOG.error("Failed to evaluate expression '{}' : ", expression, e.toString(), e);
+      throw new OnRecordErrorException(record, e.getErrorCode(), e.getParams());
+    }
+  }
 }

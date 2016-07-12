@@ -48,9 +48,9 @@ public class TestAmazonS3TargetUpgrader {
     configs.add(new Config("s3TargetConfigBean.binaryFieldPath", "/binaryField"));
 
     AmazonS3TargetUpgrader amazonS3TargetUpgrader = new AmazonS3TargetUpgrader();
-    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 5, configs);
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 6, configs);
 
-    Assert.assertEquals(15, configs.size());
+    Assert.assertEquals(17, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -100,6 +100,9 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertEquals("", configValues.get("s3TargetConfigBean.partitionTemplate"));
 
     Assert.assertEquals("false", configValues.get("s3TargetConfigBean.sseConfig.useSSE"));
+
+    Assert.assertEquals("UTC", configValues.get("s3TargetConfigBean.timeZoneID"));
+    Assert.assertEquals("${time:now()}", configValues.get("s3TargetConfigBean.timeDriverTemplate"));
 
     //renamed configs
 

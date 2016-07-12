@@ -34,6 +34,8 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -44,8 +46,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.zip.GZIPOutputStream;
 
 public class AmazonS3Target extends BaseTarget {
@@ -55,17 +60,23 @@ public class AmazonS3Target extends BaseTarget {
   private static final String EL_PREFIX = "${";
   private static final String GZIP_EXTENSION = ".gz";
   private static final String PARTITION_TEMPLATE = "partitionTemplate";
+  private static final String TIME_DRIVER_TEMPLATE = "timeDriverTemplate";
 
   private final S3TargetConfigBean s3TargetConfigBean;
   private final String partitionTemplate;
+  private final String timeDriverTemplate;
   private ErrorRecordHandler errorRecordHandler;
   private ELEval partitionEval;
   private ELVars partitionVars;
+  private ELEval timeDriverEval;
+  private ELVars timeDriverVars;
+  private Calendar calendar;
   private int fileCount = 0;
 
   public AmazonS3Target(S3TargetConfigBean s3TargetConfigBean) {
     this.s3TargetConfigBean = s3TargetConfigBean;
     this.partitionTemplate = s3TargetConfigBean.partitionTemplate == null ? "" : s3TargetConfigBean.partitionTemplate;
+    this.timeDriverTemplate = s3TargetConfigBean.timeDriverTemplate == null ? "" : s3TargetConfigBean.timeDriverTemplate;
   }
 
   @Override
@@ -73,9 +84,16 @@ public class AmazonS3Target extends BaseTarget {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
     partitionVars = getContext().createELVars();
+    timeDriverEval = getContext().createELEval(TIME_DRIVER_TEMPLATE);
+    timeDriverVars = getContext().createELVars();
+    calendar = Calendar.getInstance(TimeZone.getTimeZone(s3TargetConfigBean.timeZoneID));
 
     List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init());
+
     if (partitionTemplate.contains(EL_PREFIX)) {
+      TimeEL.setCalendarInContext(partitionVars, calendar);
+      TimeNowEL.setTimeNowInContext(partitionVars, new Date());
+
       ELUtils.validateExpression(
           partitionEval,
           partitionVars,
@@ -85,6 +103,23 @@ public class AmazonS3Target extends BaseTarget {
           S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + PARTITION_TEMPLATE,
           Errors.S3_03,
           String.class,
+          issues
+      );
+    }
+
+    if (timeDriverTemplate.contains(EL_PREFIX)) {
+      TimeEL.setCalendarInContext(timeDriverVars, calendar);
+      TimeNowEL.setTimeNowInContext(timeDriverVars, new Date());
+
+      ELUtils.validateExpression(
+          timeDriverEval,
+          timeDriverVars,
+          timeDriverTemplate,
+          getContext(),
+          Groups.S3.getLabel(),
+          S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + TIME_DRIVER_TEMPLATE,
+          Errors.S3_04,
+          Date.class,
           issues
       );
     }
@@ -103,6 +138,10 @@ public class AmazonS3Target extends BaseTarget {
         partitionEval,
         partitionVars,
         partitionTemplate,
+        timeDriverEval,
+        timeDriverVars,
+        timeDriverTemplate,
+        calendar,
         batch
     );
 

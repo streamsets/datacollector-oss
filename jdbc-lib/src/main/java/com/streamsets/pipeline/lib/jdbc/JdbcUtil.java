@@ -571,7 +571,8 @@ public class JdbcUtil {
       LoadingCache<String, JdbcRecordWriter> recordWriters,
       ErrorRecordHandler errorRecordHandler
   ) throws StageException {
-    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(tableNameEval,
+    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(
+        tableNameEval,
         tableNameVars,
         tableNameTemplate,
         batch

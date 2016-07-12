@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -93,6 +94,32 @@ public class S3TargetConfigBean {
     group = "S3"
   )
   public boolean compress;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use to resolve partition prefix",
+      displayPosition = 220,
+      group = "S3"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "${time:now()}",
+      label = "Time Basis",
+      description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
+          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
+      displayPosition = 230,
+      group = "S3"
+  )
+  public String timeDriverTemplate;
 
   @ConfigDefBean(groups = {"S3"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;

@@ -50,6 +50,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -123,5 +126,10 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
   private void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_SEE_CONFIG_PREFIX + "useSSE", "false"));
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeZoneID", "UTC"));
+    configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeDriverTemplate", "${time:now()}"));
   }
 }
