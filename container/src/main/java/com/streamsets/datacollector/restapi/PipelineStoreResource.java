@@ -71,8 +71,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 
 import java.net.URI;
@@ -151,12 +153,19 @@ public class PipelineStoreResource {
       responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE
   })
-  public Response deletePipelines(List<String> pipelineNames) throws PipelineException {
+  public Response deletePipelines(
+      List<String> pipelineNames,
+      @Context SecurityContext context
+  ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
     for(String pipelineName: pipelineNames) {
-      if (store.isRemotePipeline(pipelineName, "0")) {
+      if (store.isRemotePipeline(pipelineName, "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
+          !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
         throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_PIPELINE", pipelineName);
       }
       store.delete(pipelineName);
@@ -268,10 +277,12 @@ public class PipelineStoreResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response deletePipeline(
-      @PathParam("pipelineName") String name)
-      throws URISyntaxException, PipelineException {
+      @PathParam("pipelineName") String name,
+      @Context SecurityContext context
+  ) throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
-    if (store.isRemotePipeline(name, "0")) {
+    if (store.isRemotePipeline(name, "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
+        !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_PIPELINE", name);
     }
     store.delete(name);
