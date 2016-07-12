@@ -198,6 +198,20 @@ public class AdminResource {
         if (response != null) {
           response.close();
         }
+        // Logout from DPM
+        try {
+          response = ClientBuilder.newClient()
+              .target(dpmBaseURL + "/security/_logout")
+              .register(new CsrfProtectionFilter("CSRF"))
+              .request()
+              .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+              .cookie(SSOConstants.AUTHENTICATION_COOKIE_PREFIX + "LOGIN", userAuthToken)
+              .get();
+        } finally {
+          if (response != null) {
+            response.close();
+          }
+        }
       }
 
       // 3. Update App Token file
