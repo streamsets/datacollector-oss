@@ -2179,7 +2179,8 @@
                                     </entry>
                                     <entry>Checks the record header for the roll header attribute
                                         and closes the current file when the roll attribute exists.
-                                    </entry>
+                                            <p>Can be used with Max Records in a File and Max File
+                                            Size to close files.</p></entry>
                                 </row>
                                 <row id="row-RollAttrName">
                                     <entry>Roll Attribute Name</entry>

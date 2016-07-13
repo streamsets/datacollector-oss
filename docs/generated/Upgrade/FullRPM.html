@@ -50,6 +50,8 @@
      <ol class="ol" id="concept_ws4_vq5_xv__ol_x5s_qpr_5v">
          <li class="li">Shut down the previous version.</li>
 
+            <li class="li">Back up the environment configuration file in the previous version.</li>
+
          <li class="li">Install the new version.</li>
 
          <li class="li">Manually update the environment configuration file.</li>
@@ -93,8 +95,22 @@
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_nzl_hkb_mw">
+ <h2 class="title topictitle2">Step 2. Back Up the Environment Configuration File</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the environment configuration
+        file, <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten
+        when you install the new version. </p>
+
+  <p class="p">For example, if you are upgrading version 1.4.0.0, you might create a backup by renaming the
+            file as follows: <samp class="ph codeph">sdcd-env-1400.sh</samp>.</p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_ofc_2zl_5v">
-    <h2 class="title topictitle2">Step 2. Install the New Version</h2>
+    <h2 class="title topictitle2">Step 3. Install the New Version</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Install the new version of the RPM package.</p>
@@ -121,7 +137,7 @@
 
 </div>
 <div class="topic task nested1" id="task_krt_sj5_xv">
-    <h2 class="title topictitle2">Step 3. Update the Environment Configuration File</h2>
+    <h2 class="title topictitle2">Step 4. Update the Environment Configuration File</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Each RPM installation uses the same default values as the previous version for all of
@@ -135,13 +151,20 @@
 
         </div>
 
-        <ol class="ol steps"><li class="li step">
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the environment configuration file that you backed up in the previous
+                    version.</span>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-1400.sh</samp>
+                    file.</div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">In the new version of <span class="ph">Data
                   Collector</span>, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file.</span>
             </li>
-<li class="li step">
-                <span class="ph cmd">Manually update the new environment configuration file with any customized
-                    property values that you defined in the previous version.</span>
+<li class="li step stepexpand">
+                <span class="ph cmd">Compare the previous and new versions of the environment configuration file,
+                    and update the new file as needed with the same customized property
+                    values.</span>
             </li>
 </ol>
 
@@ -153,7 +176,7 @@
 </div>
 </div>
 <div class="topic task nested1" id="task_lkl_wk5_xv">
-    <h2 class="title topictitle2">Step 4. Update the Configuration Files</h2>
+    <h2 class="title topictitle2">Step 5. Update the Configuration Files</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">A new <span class="ph">Data
@@ -203,7 +226,7 @@
 
 </div>
 <div class="topic concept nested1" id="concept_n35_s55_xv">
- <h2 class="title topictitle2">Step 5. Start the New Version of Data Collector</h2>
+ <h2 class="title topictitle2">Step 6. Start the New Version of Data Collector</h2>
 
  <div class="body conbody">
         <div class="p">Use the following command to start the new version of <span class="ph">Data
