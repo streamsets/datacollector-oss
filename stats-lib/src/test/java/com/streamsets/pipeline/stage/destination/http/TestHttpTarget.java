@@ -19,96 +19,54 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
-import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
-import com.streamsets.datacollector.util.AggregatorUtil;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.testing.NetworkUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
-import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.ServletDeploymentContext;
 import org.glassfish.jersey.test.TestProperties;
-import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
-import org.glassfish.jersey.test.spi.TestContainerException;
-import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.iq80.snappy.SnappyFramedInputStream;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.ext.ReaderInterceptor;
+import javax.ws.rs.ext.ReaderInterceptorContext;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
 
-public class TestHttpTarget extends JerseyTest {
-  private static List<SDCMetricsJson> records = new ArrayList<>();
+import static com.streamsets.pipeline.stage.destination.http.HttpTarget.CONTENT_ENCODING;
+import static com.streamsets.pipeline.stage.destination.http.HttpTarget.SNAPPY;
 
-  @Path("/send/records")
-  @Consumes(MediaType.APPLICATION_JSON)
-  public static class MockServer {
-
-    @POST
-    public Response saveMetrics(List<SDCMetricsJson> json) throws IOException {
-      records.addAll(json);
-      return Response.ok().build();
-    }
-  }
-
-  @Test
-  public void testHttpTarget() throws StageException, IOException {
-    HttpTarget httpTarget = new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0);
-    TargetRunner targetRunner = new TargetRunner.Builder(HttpTarget.class, httpTarget)
-      .build();
-    targetRunner.runInit();
-    targetRunner.runWrite(createRecords());
-
-    for (int i = 0; i < 20; i++) {
-      SDCMetricsJson record = records.get(i);
-      Assert.assertEquals(String.valueOf(i), record.getSdcId());
-      Assert.assertEquals("a", record.getMetadata().entrySet().iterator().next().getKey());
-      Assert.assertEquals("b", record.getMetadata().entrySet().iterator().next().getValue());
-      Assert.assertEquals("masterSDC", record.getMasterSdcId());
-      Assert.assertEquals("x", record.getMetadata().get(HttpTarget.DPM_PIPELINE_COMMIT_ID));
-      Assert.assertEquals("y", record.getMetadata().get(HttpTarget.DPM_JOB_ID));
-      Assert.assertTrue(record.isAggregated());
-    }
-  }
-
-  public List<Record> createRecords() throws IOException {
-    List<Record> list = new ArrayList<>();
-    for (int i = 0; i < 20; i++) {
-      Map<String, Object> m = new HashMap<>();
-      m.put("a", "b");
-      Record record = AggregatorUtil.createMetricJsonRecord(String.valueOf(i), "masterSDC", m, true, "{}");
-      list.add(record);
-    }
-    return list;
-  }
+public class TestHttpTarget extends BaseHttpTargetTest {
 
   @Override
-  protected Application configure() {
-    forceSet(TestProperties.CONTAINER_PORT, "0");
-    return new ResourceConfig(MockServer.class);
-  }
-
-  @Override
-  protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
-    return new GrizzlyWebTestContainerFactory();
+  protected HttpTarget createHttpTarget() {
+    return new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0, true);
   }
 
   @Override
   protected DeploymentContext configureDeployment() {
+    try {
+      forceSet(TestProperties.CONTAINER_PORT, String.valueOf(NetworkUtils.getRandomPort()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    ResourceConfig resourceConfig = new ResourceConfig(MockServer.class);
+    resourceConfig.register(SnappyReaderInterceptor.class);
     return ServletDeploymentContext.forServlet(
-      new ServletContainer(new ResourceConfig(MockServer.class))
+      new ServletContainer(resourceConfig)
     ).build();
   }
 
+  static class SnappyReaderInterceptor implements ReaderInterceptor {
+
+    @Override
+    public Object aroundReadFrom(ReaderInterceptorContext context)  throws IOException, WebApplicationException {
+      if (context.getHeaders().containsKey(CONTENT_ENCODING) &&
+        context.getHeaders().get(CONTENT_ENCODING).contains(SNAPPY)) {
+        InputStream originalInputStream = context.getInputStream();
+        context.setInputStream(new SnappyFramedInputStream(originalInputStream, true));
+      }
+      return context.proceed();
+    }
+  }
 }
