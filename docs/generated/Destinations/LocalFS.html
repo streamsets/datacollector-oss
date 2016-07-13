@@ -45,80 +45,15 @@
         <p class="p">You can specify the amount of time that a record can be written to its associated
             directory and what happens to late records. </p>
 
+        <p class="p">You can also use record header attributes to perform record-based writes. For more
+            information, see <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">Record Header Attributes for Record-Based Writes</a>.</p>
+
         <p class="p">You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
             files. </p>
 
     </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_lww_3b3_kr">
- <h2 class="title topictitle2">Data Formats</h2>
-
- <div class="body conbody">
-  <div class="p">Local FS writes data based
-      on the data format that you select. You can use the following data formats: <dl class="dl">
-        
-                              <dt class="dt dlterm">Avro</dt>
-
-                              <dd class="dd">The destination writes records based on the Avro schema in the
-                                    avroSchema record header attribute or the Avro schema that you
-                                    provide. The schema definition is included in each file.</dd>
-
-                              <dd class="dd">You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, avoid using other compression
-                                    available in the destination. </dd>
-
-                        
-        
-                              <dt class="dt dlterm">Delimited</dt>
-
-                              <dd class="dd">The destination writes records as delimited data. When you use
-                                    this data format, the root field must be list or list-map.</dd>
-
-                        
-        
-                              <dt class="dt dlterm">JSON</dt>
-
-                              <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1848e900">
-                                          <li class="li">Array - Each file includes a single array. In the
-                                                array, each element is a JSON representation of each
-                                                record.</li>
-
-                                          <li class="li">Multiple objects - Each file includes multiple JSON
-                                                objects. Each object is a JSON representation of a
-                                                record. </li>
-
-                                    </ul>
-</dd>
-
-                        
-        
-                        <dt class="dt dlterm">Protobuf</dt>
-
-                        <dd class="dd">Writes a batch of messages in each file. </dd>
-
-                        <dd class="dd">Uses the user-defined message type and the definition of the message
-                              type in the descriptor file to generate the messages in the file. </dd>
-
-                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
-
-                  
-        
-                              <dt class="dt dlterm">Text</dt>
-
-                              <dd class="dd">The destination writes a single text field of a record. When you
-                                    configure the stage, you select the field to use. When
-                                    necessary, merge record data into the field earlier in the
-                                    pipeline. </dd>
-
-                        
-      </dl>
-</div>
-
- </div>
-
-</div>
 <div class="topic concept nested1" id="concept_cvc_skd_br">
  <h2 class="title topictitle2">Directory Templates</h2>
 
@@ -126,6 +61,10 @@
   <p class="p">The Local FS destination uses directory templates to create output and
    late record directories. Local FS writes records to the directories based on the configured time
    basis.</p>
+
+    <p class="p">You can alternatively write records to directories based
+                  on the targetDirectory record header attribute. Using the targetDirectory
+                  attribute disables the ability to define directory templates.</p>
 
   <p class="p">When you define a directory template, you can use a mix
                   of constants, field values, and datetime variables. You can use the
@@ -157,14 +96,12 @@
                                     directories are created for every hour of the day that receives
                                     output records.</dd>
 
-                              <dd class="dd">When you use datetime variables in an expression, use all of
-                                  the datetime variables between one of the year variables
-                                  and the smallest variable that you want to use. For
-                                  example, to create directories on a daily basis for a
-                                  Hadoop FS destination, use a year variable, a month
-                                  variable, and then a day variable. You might use one of
-                                  the following datetime variable progressions:
-                              </dd>
+                              <dd class="dd">When you use datetime variables in an expression, use all of the
+                                    datetime variables between one of the year variables and the
+                                    smallest variable that you want to use. For example, to create
+                                    directories on a daily basis for a Hadoop FS destination, use a
+                                    year variable, a month variable, and then a day variable. You
+                                    might use one of the following datetime variable progressions: </dd>
 
                               <dd class="dd">
                                     <pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}
@@ -226,9 +163,16 @@ ${YY()}_${MM()}_${DD()}</pre>
  <h2 class="title topictitle2">Time Basis</h2>
 
  <div class="body conbody">
-  <p class="p">The time basis helps determine when directories
-   are created and which directory Local FS uses when writing a record. You can use the following
-   times as the time basis:</p>
+  <p class="p">When using directory templates, the time basis
+   helps determine when directories are created. It also determines the directory Local FS uses when
+   writing a record, and whether a record is late.</p>
+
+  <p class="p"><span class="ph">When using the targetDirectory record header attribute
+                        to write records, the time basis determines only whether a record is
+                        late.</span>
+  </p>
+
+  <p class="p">You can use the following times as the time basis:</p>
 
   <dl class="dl">
                   
@@ -330,7 +274,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                   processing the files.</p>
 
         <div class="p">Output files might remain idle for too long for the following
-                  reasons:            <ul class="ul">
+                  reasons: <ul class="ul" id="concept_gp5_wcp_vv__d1850e1457">
                         <li class="li">You configured the maximum number of records to be written to output
                               files or the maximum size of output files, but records have stopped
                               arriving. An output file that has not reached the maximum number of
@@ -351,12 +295,80 @@ ${YY()}_${MM()}_${DD()}</pre>
                                     created. </p>
 </li>
 
-            </ul>
+                  </ul>
 </div>
 
         <p class="p">In either situation, configure an idle timeout so that other
                   systems can process the files sooner, instead of waiting for the configured
                   maximum records, maximum file size, or late records conditions to occur. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lww_3b3_kr">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <div class="p">Local FS writes data based
+      on the data format that you select. You can use the following data formats: <dl class="dl">
+        
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema in the
+                                    avroSchema record header attribute or the Avro schema that you
+                                    provide. The schema definition is included in each file.</dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
+
+                        
+        
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                        
+        
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1850e900">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+        
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes a batch of messages in each file. </dd>
+
+                        <dd class="dd">Uses the user-defined message type and the definition of the message
+                              type in the descriptor file to generate the messages in the file. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+        
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
+      </dl>
+</div>
 
  </div>
 
@@ -381,9 +393,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e465">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e483">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e468">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e486">Description</th>
 
                                 </tr>
 
@@ -391,24 +403,24 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e465 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e483 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e468 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e465 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d47416e468 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d48016e486 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e465 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d48016e483 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d48016e486 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d48016e483 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_e33_3v5_1r__d1735e2776" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e468 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d48016e486 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -416,10 +428,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e465 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d48016e483 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_e33_3v5_1r__d1735e2790" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e468 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d48016e486 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -427,10 +439,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e465 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                    <td class="entry" valign="top" width="30%" headers="d48016e483 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
                                             <img class="image" id="task_e33_3v5_1r__d1735e2805" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e468 ">Error record handling for the stage: <ul class="ul" id="task_e33_3v5_1r__d1735e2809">
+                                    <td class="entry" valign="top" width="70%" headers="d48016e486 ">Error record handling for the stage: <ul class="ul" id="task_e33_3v5_1r__d1735e2809">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -460,9 +472,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d47416e587">Output Files Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d48016e605">Output Files Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d47416e590">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d48016e608">Description</th>
 
                                 </tr>
 
@@ -470,11 +482,11 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Idle Timeout (secs) <a class="xref" href="LocalFS.html#concept_gp5_wcp_vv">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Idle Timeout (secs) <a class="xref" href="LocalFS.html#concept_gp5_wcp_vv">
                                             <img class="image" id="task_e33_3v5_1r__image_m3p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Maximum time that an output file
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Maximum time that an output file
                                         can remain idle. After no records are written to a file for
                                         this amount of time, the destination closes the file. Enter
                                         a time in seconds or use the <samp class="ph codeph">MINUTES</samp> or
@@ -487,10 +499,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Data Format</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Format of data to be written. Use one of the following
-                                            options:<ul class="ul" id="task_e33_3v5_1r__d1735e3724">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Format of data to be written. Use one of the following
+                                            options:<ul class="ul" id="task_e33_3v5_1r__d1735e3736">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Delimited</li>
@@ -507,9 +519,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p class="p">Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
                                             to sdc-&lt;Data Collector ID&gt;. </p>
@@ -521,37 +533,34 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Directory Template
-                                        <a class="xref" href="LocalFS.html#concept_cvc_skd_br">
-                                            <img class="image" id="task_e33_3v5_1r__image_br8_fgs_3r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Directory in Header <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
+                                            <img class="image" id="task_e33_3v5_1r__d1735e3779" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Template for creating output directories. You can use
-                                        constants, field values, and datetime variables. <p class="p">Output
-                                            directories are created based on the smallest datetime
-                                            variable in the template.</p>
-</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Indicates that the target directory is defined in record
+                                        headers. Use only when the targetDirectory header attribute
+                                        is defined for all records. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Time zone for the destination system. Used to resolve
                                         datetimes in the directory template and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Time Basis
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Time Basis
                                         <a class="xref" href="LocalFS.html#concept_gkz_smd_br">
                                             <img class="image" id="task_e33_3v5_1r__image_bh5_fgs_9r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Time basis to use for creating output directories and
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
-                                            expressions:<ul class="ul" id="task_e33_3v5_1r__d1735e3795">
+                                            expressions:<ul class="ul" id="task_e33_3v5_1r__d1735e3820">
                                             <li class="li">${time:now()} - Uses the processing time as the time
                                                 basis. </li>
 
@@ -564,9 +573,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Max Records in a File</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Max Records in a File</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Maximum number of records to be written to an output
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p class="p">Use 0
                                             to opt out of this property.</p>
 </td>
@@ -574,9 +583,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Maximum size of an output file. Additional records are
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Maximum size of an output file. Additional records are
                                         written to a new file. <p class="p">Use 0 to opt out of this
                                             property.</p>
 </td>
@@ -584,9 +593,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Compression Codec</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Compression type for output files:<ul class="ul" id="task_e33_3v5_1r__d1735e3834">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Compression type for output files:<ul class="ul" id="task_e33_3v5_1r__d1735e3859">
                                             <li class="li">None </li>
 
                                             <li class="li">gzip</li>
@@ -605,17 +614,38 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Compression Codec Class</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Compression Codec Class</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Full class name of the other compression codec that you
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Full class name of the other compression codec that you
                                         want to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d47416e587 ">Charset</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Use Roll Attribute <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
+                                            <img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d47416e590 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Checks the record header for the roll header attribute
+                                        and closes the current file when the roll attribute exists.
+                                            <p class="p">Can be used with Max Records in a File and Max File
+                                            Size to close files.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Roll Attribute Name</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Name of the roll header attribute.<p class="p">Default is
+                                        roll.</p>
+</td>
+
+                                </tr>
+<tr class="row">
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d48016e605 ">Charset</td>
+
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d48016e608 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
 </td>
 
       </tr>
@@ -636,17 +666,17 @@ ${YY()}_${MM()}_${DD()}</pre>
                         record time limit to one second.</div>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e4281" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e4332" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e843">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
-                                            <img class="image" id="task_e33_3v5_1r__d1735e4297" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <th class="entry" valign="top" width="30%" id="d48016e886">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br">
+                                            <img class="image" id="task_e33_3v5_1r__d1735e4348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a>
                                     </th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e852">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e895">Description</th>
 
                                 </tr>
 
@@ -654,9 +684,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e843 ">Late Record Time Limit (secs)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e886 ">Late Record Time Limit (secs)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e852 ">Time limit for output directories to accept data. <p class="p">You
+                                    <td class="entry" valign="top" width="70%" headers="d48016e895 ">Time limit for output directories to accept data. <p class="p">You
                                             can enter a time in seconds, or use the expression to
                                             enter a time in hours. You can also use MINUTES in the
                                             default expression to define the time in minutes.
@@ -666,9 +696,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e843 ">Late Record Handling</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e886 ">Late Record Handling</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e852 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d1735e4326">
+                                    <td class="entry" valign="top" width="70%" headers="d48016e895 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d1735e4377">
                                             <li class="li">Send to error - Sends the record to the stage for
                                                 error handling. </li>
 
@@ -681,10 +711,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e843 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
-                                            <img class="image" id="task_e33_3v5_1r__d1735e4342" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e886 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br">
+                                            <img class="image" id="task_e33_3v5_1r__d1735e4393" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e852 ">Template for creating late record directories. You can
+                                    <td class="entry" valign="top" width="70%" headers="d48016e895 ">Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.
                                             <p class="p">Output directories are created based on the smallest
                                             datetime variable in the template.</p>
@@ -704,14 +734,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3125" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3129" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e929">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e972">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e932">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e975">Description</th>
 
                                 </tr>
 
@@ -719,9 +749,11 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e929 ">Load Schema from Header </td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e972 ">Load Schema from Header <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
+                                            <img class="image" id="task_e33_3v5_1r__d1735e3157" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e932 ">Indicates that the Avro schema is embedded in the
+                                    <td class="entry" valign="top" width="70%" headers="d48016e975 ">Indicates that the Avro schema is embedded in the
                                         avroSchema record header attribute. The destination includes
                                         the schema definition in each generated file. <p class="p">Use only
                                             when the avroSchema attribute is defined for all
@@ -731,18 +763,18 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e929 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e972 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e932 ">Schema definition to use when writing data. The
+                                    <td class="entry" valign="top" width="70%" headers="d48016e975 ">Schema definition to use when writing data. The
                                         destination includes the schema definition in each generated
                                         file. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e929 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e972 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e932 ">The Avro-supported compression type to use. <p class="p">When you
+                                    <td class="entry" valign="top" width="70%" headers="d48016e975 ">The Avro-supported compression type to use. <p class="p">When you
                                             enable Avro compression, do not enable other compression
                                             available in the destination. </p>
 </td>
@@ -761,14 +793,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3294" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3306" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e997">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e1045">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e1000">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e1048">Description</th>
 
                                 </tr>
 
@@ -776,9 +808,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Format for delimited data:<ul class="ul" id="task_e33_3v5_1r__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Format for delimited data:<ul class="ul" id="task_e33_3v5_1r__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -802,16 +834,16 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -819,9 +851,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -830,9 +862,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -847,9 +879,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -858,9 +890,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e997 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1045 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1000 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1048 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -880,14 +912,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3429" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3441" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e1150">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e1198">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e1153">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e1201">Description</th>
 
                                 </tr>
 
@@ -895,9 +927,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e1150 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1198 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1153 ">Determines how JSON data is written:<ul class="ul" id="task_e33_3v5_1r__d1735e3458">
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1201 ">Determines how JSON data is written:<ul class="ul" id="task_e33_3v5_1r__d1735e3470">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -923,14 +955,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3564" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3576" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e1204">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e1252">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e1207">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e1255">Description</th>
 
                                 </tr>
 
@@ -938,20 +970,22 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e1204 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1252 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1207 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1255 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
-                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>. <p class="p">For more information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information
-                                            about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                            <p class="p">For more information about environment variables, see
+                                                <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
+                                            file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e1204 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1252 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1207 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1255 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -972,14 +1006,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3494" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1735e3506" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d47416e1309">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d48016e1357">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d47416e1312">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d48016e1360">Description</th>
 
                                 </tr>
 
@@ -987,17 +1021,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e1309 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1357 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1312 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1360 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d47416e1309 ">Empty Line If No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d48016e1357 ">Empty Line If No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d47416e1312 ">Creates an empty line when a record does not include the
+                                    <td class="entry" valign="top" width="70%" headers="d48016e1360 ">Creates an empty line when a record does not include the
                                         text field specified above. <p class="p">When not selected, records
                                             without the specified text field are
                                         discarded.</p>
