@@ -143,6 +143,203 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_lmn_gdc_1w">
+    <h2 class="title topictitle2">Record Header Attributes for Record-Based Writes</h2>
+
+    <div class="body conbody">
+        <p class="p">Destinations can use information in record header
+            attributes to write data. Destinations that write Avro data can use Avro schemas in the
+            record header. The Hadoop FS, MapR FS, and Local FS destinations can use record header
+            attributes to determine the directory to write to and when to roll a file. </p>
+
+        <p class="p">To use a record header attribute, configure the destination to use the header attribute
+            and ensure that the records include the header attribute.</p>
+
+        <p class="p"><span class="ph">The Hive Metadata processor automatically generates record
+                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
+                        For all other destinations, you can use the Expression Evaluator to add
+                        record header attributes.</span>
+        </p>
+
+        <div class="p">You can use the following record header attributes in destinations:
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">targetDirectory attribute in the Hadoop FS, Local FS, and MapR FS
+                        destinations</dt>
+
+                    <dd class="dd">The targetDirectory record header attribute defines the directory where the
+                        record is written. If the directory does not exist, the destination creates
+                        the directory. The targetDirectory header attribute replaces the Directory
+                        Template property in the destination.</dd>
+
+                    <dd class="dd">When you use targetDirectory to provide the directory, the time basis
+                        configured for the destination is used only for determining whether a record
+                        is late. Time basis is not used to determine the output directories to
+                        create or to write records to directories.</dd>
+
+                    <dd class="dd">To use the targetDirectory header attribute, on the
+                            <span class="keyword wintitle">Output</span> tab, select <span class="ph uicontrol">Directory in
+                            Header</span>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">avroSchema attribute in destinations that write Avro data</dt>
+
+                    <dd class="dd">The avroSchema header attribute defines the Avro schema for the record. When
+                        you use this header attribute, you cannot define an Avro schema to use in
+                        the destination. </dd>
+
+                    <dd class="dd">To use the avroSchema header attribute, on the <span class="keyword wintitle">Avro</span>
+                        tab, select <span class="ph uicontrol">Load Schema from Header</span>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">roll attribute in the Hadoop FS, Local FS, and MapR FS destinations</dt>
+
+                    <dd class="dd">The roll attribute, when present in the record header, triggers a roll of
+                        the file. </dd>
+
+                    <dd class="dd">You can define the name of the roll header attribute. When you use the Hive
+                        Metadata processor to generate the roll header attribute, use the default
+                        "roll" attribute name. When you use an Expression Evaluator, use the name of
+                        the roll attribute that you defined in the processor.</dd>
+
+                    <dd class="dd">To use a roll header attribute, on the <span class="keyword wintitle">Output</span> tab,
+                        select <span class="ph uicontrol">Use Roll Attribute</span> and define the name of the
+                        attribute. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_th5_3zj_mw">
+    <h3 class="title topictitle3">Generating Record Header Attributes</h3>
+
+    <div class="body conbody">
+        <p class="p">You can
+            use the Hive Metadata processor or the Expression Evaluator to generate record header
+            attributes for record-based writes. <span class="ph">The Hive Metadata processor automatically generates record
+                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
+                        For all other destinations, you can use the Expression Evaluator to add
+                        record header attributes.</span></p>
+
+        <div class="p">To use the Expression Evaluator, you must generate record header attributes as expected
+            by the destination. Use the following guidelines to generate record header attributes
+            with the Expression Evaluator:<dl class="dl">
+                
+                    <dt class="dt dlterm">Generating the target directory with the Expression Evaluator</dt>
+
+                    <dd class="dd">When using the Expression Evaluator to generate the target directory, note
+                        the following details:</dd>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_th5_3zj_mw__ul_i1l_xyj_mw">
+                            <li class="li">The destination expects the directory in a header attribute named
+                                "targetDirectory".</li>
+
+                            <li class="li">
+                                <p class="p">The destination uses the directory exactly as written in the
+                                    targetDirectory header attribute. Unlike directory templates,
+                                    the directory specified in the targetDirectory attribute should
+                                    not include any components that require evaluation, such as
+                                    constants, variables, or runtime properties. </p>
+
+                            </li>
+
+                            <li class="li">
+                                <p class="p">When you define the expression that evaluates to a directory, you
+                                    can use any valid component, including expressions that evaluate
+                                    data in the record. </p>
+
+                            </li>
+
+                        </ul>
+
+                    </dd>
+
+                    <dd class="dd">
+                        <p class="p">For example, you want to write records to different directories based on
+                            the <span class="ph">Data
+                  Collector</span> that runs the pipeline, and the region and store ID where the
+                            transaction took place. You can set up a runtime resource named DIR that
+                            defines the base for the directory and define DIR for each <span class="ph">Data
+                  Collector</span> that runs the pipeline. Then, you can use the following expression in
+                            the Expression Evaluator to define the targetDirectory attribute: </p>
+
+                        <pre class="pre">${runtime:conf('DIR')/transactions/${record.value('/region')}/${record.value('/storeID')}</pre>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Generating the Avro schema with the Expression Evaluator</dt>
+
+                    <dd class="dd">When using the Expression Evaluator to generate the Avro schema, note the
+                        following details: <ul class="ul" id="concept_th5_3zj_mw__ul_kx1_4ql_nw">
+                            <li class="li">The destination expects the Avro schema in a header attribute named
+                                "avroSchema".</li>
+
+                            <li class="li">Use the standard Avro schema format, for example:
+                                <pre class="pre codeblock">{"type":"record","name":"table_name","namespace":"database_name",
+"fields":[{"name":"int_val","type":["null","int"],"default":null},
+{"name":"str_val","type":["null","string"],"default":null}]}</pre>
+</li>
+
+                            <li class="li">The database name and table name must be included in the Avro
+                                schema.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">
+                        <div class="note tip"><span class="tiptitle">Tip:</span> You might use an Avro schema generator to help generate the
+                            Avro schema. </div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Generating the roll attribute with the Expression Evaluator</dt>
+
+                    <dd class="dd">When using the Expression Evaluator to generate the roll attribute, note the
+                        following details: <ul class="ul" id="concept_th5_3zj_mw__ul_a23_hnc_pw">
+                            <li class="li">Use any name for the attribute and specify the attribute name in the
+                                destination. </li>
+
+                            <li class="li">Configure an expression that defines when to roll
+                                    files.</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+        <div class="p">To define a record header attribute in the Expression Evaluator, perform the following
+                steps:<ol class="ol" id="concept_th5_3zj_mw__ol_jww_k31_cw">
+                <li class="li">On the <span class="keyword wintitle">Expressions</span> tab of the Expression Evaluator, specify
+                    the <span class="ph uicontrol">Header Attribute</span> name. <p class="p">To generate a target
+                        directory, use <samp class="ph codeph">targetDirectory</samp>. </p>
+<p class="p">To generate an Avro
+                        schema, use <samp class="ph codeph">avroSchema</samp>.</p>
+<p class="p">You can use any name for a
+                        roll indicator header attribute.</p>
+</li>
+
+                <li class="li">For the <span class="ph uicontrol">Header Attribute Expression</span>, define the
+                    expression that evaluates to the information you want the destination to use.
+                </li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+</div>
 </div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div>
