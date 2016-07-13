@@ -74,6 +74,7 @@
       <excludes>
         <exclude>*-password.txt</exclude>
         <exclude>*-realm.properties</exclude>
+        <exclude>vault.properties</exclude>
         <exclude>sdc-keystore.jks</exclude>
         <exclude>sdc-log4j.properties</exclude>
       </excludes>
@@ -95,6 +96,7 @@
         <include>*-password.txt</include>
         <include>*-realm.properties</include>
         <include>sdc-keystore.jks</include>
+        <include>vault.properties</include>
       </includes>
       <fileMode>0600</fileMode>
     </fileSet>
