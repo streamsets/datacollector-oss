@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.sdcipc;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 
@@ -54,6 +55,7 @@ public class Configs {
       label = "SDC RPC ID",
       description = "User-defined ID. Must match the SDC RPC ID used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "RPC"
   )
   public String appId;
@@ -101,6 +103,7 @@ public class Configs {
       defaultValue = "",
       label = "Keystore Password",
       displayPosition = 60,
+      elDefs = VaultEL.class,
       group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"

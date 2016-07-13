@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class HttpProxyConfigBean {
@@ -40,6 +41,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String username = "";
@@ -51,6 +53,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 30,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String password = ""; // NOSONAR

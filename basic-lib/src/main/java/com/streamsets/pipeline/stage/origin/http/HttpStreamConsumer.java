@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.base.Optional;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -63,6 +64,7 @@ class HttpStreamConsumer implements Runnable {
   private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
   private static final String REQUEST_BODY_CONFIG_NAME = "requestData";
   private static final String HEADER_CONFIG_NAME = "headers";
+  private static final String VAULT_EL_PREFIX = "${" + VaultEL.PREFIX;
 
   private final HttpClientConfigBean conf;
   private final Client client;
@@ -130,8 +132,14 @@ class HttpStreamConsumer implements Runnable {
 
       WebTarget resource = client.target(resolvedUrl);
 
+      // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
+      if (requestContainsSensitiveInfo() && !resource.getUri().getScheme().toLowerCase().startsWith("https")) {
+        error = Optional.of((Exception) new StageException(Errors.HTTP_07));
+        return;
+      }
+
       for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
-        LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
+        LOG.debug("Config: {}, {}", entry.getKey(), entry.getValue());
       }
 
       final AsyncInvoker asyncInvoker = resource.request()
@@ -141,6 +149,7 @@ class HttpStreamConsumer implements Runnable {
       Future<Response> responseFuture;
       if (conf.requestData != null && !conf.requestData.isEmpty() && conf.httpMethod != HttpMethod.GET) {
         final String requestBody = bodyEval.eval(bodyVars, conf.requestData, String.class);
+
         responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
       } else {
         responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
@@ -191,6 +200,22 @@ class HttpStreamConsumer implements Runnable {
         client.close();
       }
     }
+  }
+
+  private boolean requestContainsSensitiveInfo() {
+    boolean sensitive = false;
+    for (Map.Entry<String, String> header : conf.headers.entrySet()) {
+      if (header.getKey().contains(VAULT_EL_PREFIX) || header.getValue().contains(VAULT_EL_PREFIX)) {
+        sensitive = true;
+        break;
+      }
+    }
+
+    if (conf.requestData != null && conf.requestData.contains(VAULT_EL_PREFIX)) {
+      sensitive = true;
+    }
+
+    return sensitive;
   }
 
   public void stop() {

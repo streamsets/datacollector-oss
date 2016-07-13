@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -77,6 +78,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String HEADER_CONFIG_NAME = "headers";
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
+  private static final String VAULT_EL_PREFIX = "${" + VaultEL.PREFIX;
 
   private HttpProcessorConfig conf;
   private AccessToken authToken;
@@ -178,7 +180,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       String resolvedUrl = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
       WebTarget target = client.target(resolvedUrl);
 
-      // from HttpStreamConsumer
+      // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
+      if (requestContainsSensitiveInfo() && !target.getUri().getScheme().toLowerCase().startsWith("https")) {
+        throw new StageException(Errors.HTTP_07);
+      }
+
+
+        // from HttpStreamConsumer
       final AsyncInvoker asyncInvoker = target.request()
           .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
           .headers(resolveHeaders(record))
@@ -279,5 +287,21 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
     RecordEL.setRecordInContext(methodVars, record);
     return HttpMethod.valueOf(methodEval.eval(methodVars, conf.methodExpression, String.class));
+  }
+
+  private boolean requestContainsSensitiveInfo() {
+    boolean sensitive = false;
+    for (Map.Entry<String, String> header : conf.headers.entrySet()) {
+      if (header.getKey().contains(VAULT_EL_PREFIX) || header.getValue().contains(VAULT_EL_PREFIX)) {
+        sensitive = true;
+        break;
+      }
+    }
+
+    if (conf.requestBody != null && conf.requestBody.contains(VAULT_EL_PREFIX)) {
+      sensitive = true;
+    }
+
+    return sensitive;
   }
 }

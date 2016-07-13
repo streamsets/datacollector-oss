@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
@@ -87,6 +88,7 @@ public class HttpProcessorConfig {
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 30,
+      elDefs = {RecordEL.class, VaultEL.class},
       group = "HTTP"
   )
   public Map<String, String> headers = new HashMap<>();
@@ -127,7 +129,7 @@ public class HttpProcessorConfig {
       displayPosition = 60,
       lines = 2,
       dependsOn = "httpMethod",
-      elDefs = RecordEL.class,
+      elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       triggeredByValue = { "POST", "PUT", "DELETE", "EXPRESSION" },
       group = "HTTP"

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -73,6 +74,7 @@ public class Configs {
       label = "SDC RPC ID",
       description = "User-defined ID. Must match the SDC RPC ID used in the SDC RPC origin of the destination pipeline.",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "RPC"
   )
   public String appId;
@@ -107,6 +109,7 @@ public class Configs {
       defaultValue = "",
       label = "Truststore Password",
       displayPosition = 50,
+      elDefs = VaultEL.class,
       group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"

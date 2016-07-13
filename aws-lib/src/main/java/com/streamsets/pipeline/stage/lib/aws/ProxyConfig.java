@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
@@ -70,6 +71,7 @@ public class ProxyConfig {
       displayPosition = 5030,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      elDefs = VaultEL.class,
       group = "ADVANCED"
   )
   public String proxyUser;
@@ -82,6 +84,7 @@ public class ProxyConfig {
       displayPosition = 5040,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      elDefs = VaultEL.class,
       group = "ADVANCED"
   )
   public String proxyPassword;

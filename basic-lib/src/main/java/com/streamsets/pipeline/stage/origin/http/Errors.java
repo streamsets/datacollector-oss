@@ -31,6 +31,7 @@ public enum Errors implements ErrorCode {
   HTTP_04("The file '{}' does not exist or is inaccessible."),
   HTTP_05("Password is required for Key Store/Trust Store."),
   HTTP_06("Error evaluating expression: {}"),
+  HTTP_07("Vault EL is only available when the resource scheme is https."),
   ;
 
   private final String msg;

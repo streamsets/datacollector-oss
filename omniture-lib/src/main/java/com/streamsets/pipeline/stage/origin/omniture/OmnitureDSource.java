@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -134,6 +135,7 @@ public class OmnitureDSource extends DSource {
       label = "Username",
       description = "Omniture Username",
       displayPosition = 45,
+      elDefs = VaultEL.class,
       group = "OMNITURE"
   )
   public String username;
@@ -144,6 +146,7 @@ public class OmnitureDSource extends DSource {
       label = "Shared Secret",
       description = "Omniture Shared Secret",
       displayPosition = 50,
+      elDefs = VaultEL.class,
       group = "OMNITURE"
   )
   public String sharedSecret;
@@ -172,7 +175,9 @@ public class OmnitureDSource extends DSource {
     config.setResourceUrl(resourceUrl);
     config.setSharedSecret(sharedSecret);
     config.setUsername(username);
-    if (useProxy) config.setProxySettings(proxySettings);
+    if (useProxy) {
+      config.setProxySettings(proxySettings);
+    }
 
     return new OmnitureSource(config);
   }
