@@ -135,4 +135,9 @@ public class StageDefinitionJson {
   public String getOnlineHelpRefUrl() {
     return stageDefinition.getOnlineHelpRefUrl();
   }
+
+  @JsonProperty("producingEvents")
+  public boolean isProducingEvents() {
+    return stageDefinition.isProducingEvents();
+  }
 }

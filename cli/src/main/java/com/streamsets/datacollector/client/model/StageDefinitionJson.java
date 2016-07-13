@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// This class was originally generated, however it's now maintained manually
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen",
   date = "2015-09-11T14:51:29.367-07:00")
@@ -91,6 +92,7 @@ public class StageDefinitionJson   {
   private Boolean onRecordError = null;
   private Boolean preconditions = null;
   private Boolean resetOffset = null;
+  private Boolean producingEvents = null;
 
 
   /**
@@ -355,6 +357,16 @@ public class StageDefinitionJson   {
     this.resetOffset = resetOffset;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("producingEvents")
+  public Boolean getProducingEvents() {
+    return producingEvents;
+  }
+  public void setProducingEvents(Boolean producingEvents) {
+    this.producingEvents = producingEvents;
+  }
 
   @Override
   public String toString()  {
@@ -382,6 +394,7 @@ public class StageDefinitionJson   {
     sb.append("    icon: ").append(StringUtil.toIndentedString(icon)).append("\n");
     sb.append("    onRecordError: ").append(StringUtil.toIndentedString(onRecordError)).append("\n");
     sb.append("    preconditions: ").append(StringUtil.toIndentedString(preconditions)).append("\n");
+    sb.append("    producingEvents: ").append(StringUtil.toIndentedString(producingEvents)).append("\n");
     sb.append("}");
     return sb.toString();
   }
