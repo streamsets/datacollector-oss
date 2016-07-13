@@ -24,10 +24,12 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 
 public class VaultEL {
+  public static final String PREFIX = "vault";
+
   private VaultEL() {}
 
   @ElFunction(
-      prefix = "vault",
+      prefix = PREFIX,
       name = "read",
       description = "Retrieves the value of the specified path in Vault."
   )
@@ -36,7 +38,7 @@ public class VaultEL {
   }
 
   @ElFunction(
-      prefix = "vault",
+      prefix = PREFIX,
       name = "readWithDelay",
       description = "Retrieves the value of the specified path in Vault and waits for delay milliseconds." +
           "Primarily for AWS since generated credentials can take 5-10 seconds before they are ready for use."

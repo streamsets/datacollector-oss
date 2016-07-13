@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
@@ -59,6 +60,7 @@ public class SSEConfigBean {
       description = "ID of the AWS KMS master encryption key that was used for the object",
       defaultValue = "",
       displayPosition = 30,
+      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
       group = "#0"
@@ -71,6 +73,7 @@ public class SSEConfigBean {
       label = "Encryption Context",
       description = "Set of key-value pairs that you can pass to AWS KMS",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
       group = "#0"
@@ -84,6 +87,7 @@ public class SSEConfigBean {
       description = "256-bit, base64-encoded encryption key for Amazon S3 to use to encrypt or decrypt your data",
       defaultValue = "",
       displayPosition = 50,
+      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"
@@ -97,6 +101,7 @@ public class SSEConfigBean {
       description = "Base64-encoded 128-bit MD5 digest of the encryption key according to RFC 1321",
       defaultValue = "",
       displayPosition = 60,
+      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.mongodb;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -144,7 +145,8 @@ public class MongoDBDSource extends DSource {
       dependsOn = "authenticationType",
       triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
-      displayPosition = 90
+      displayPosition = 90,
+      elDefs = VaultEL.class
   )
   public String username;
 
@@ -155,7 +157,8 @@ public class MongoDBDSource extends DSource {
       dependsOn = "authenticationType",
       triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
-      displayPosition = 90
+      displayPosition = 90,
+      elDefs = VaultEL.class
   )
   public String password;
 

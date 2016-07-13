@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class PasswordAuthConfigBean {
@@ -27,6 +28,7 @@ public class PasswordAuthConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Username",
       displayPosition = 10,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }
@@ -38,6 +40,7 @@ public class PasswordAuthConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Password",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = { "BASIC", "DIGEST", "UNIVERSAL" }

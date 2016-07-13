@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class HttpProxyConfigBean {
@@ -38,6 +39,7 @@ public class HttpProxyConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Username",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "useProxy^",
       triggeredByValue = "true"
@@ -49,6 +51,7 @@ public class HttpProxyConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Password",
       displayPosition = 30,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "useProxy^",
       triggeredByValue = "true"

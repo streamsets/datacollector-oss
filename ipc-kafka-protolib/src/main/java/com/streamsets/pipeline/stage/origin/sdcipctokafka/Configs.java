@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.sdcipctokafka;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -69,6 +70,7 @@ public class Configs {
       label = "SDC RPC ID",
       description = "User-defined ID. Must match the SDC RPC ID used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "RPC"
   )
   public String appId;
@@ -116,6 +118,7 @@ public class Configs {
       defaultValue = "",
       label = "Keystore Password",
       displayPosition = 60,
+      elDefs = VaultEL.class,
       group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
@@ -139,7 +142,7 @@ public class Configs {
       type = ConfigDef.Type.STRING,
       label = "Topic",
       displayPosition = 20,
-      elDefs = {RecordEL.class},
+      elDefs = {RecordEL.class, VaultEL.class},
       group = "KAFKA",
       triggeredByValue = "true"
   )
@@ -165,6 +168,7 @@ public class Configs {
       label = "Kafka Configuration",
       description = "Additional Kafka properties to pass to the underlying Kafka producer",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "KAFKA"
   )
   public Map<String, String> kafkaProducerConfigs;
