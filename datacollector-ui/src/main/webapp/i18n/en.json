@@ -11,8 +11,8 @@
       },
       "admin": {
         "configuration": "Configuration",
-        "enableDPM": "Enable DPM",
-        "disableDPM": "Disable DPM",
+        "enableDPM": "Log into StreamSets Enterprise",
+        "disableDPM": "Log out of StreamSets Enterprise",
         "jvmMetrics": "JVM Metrics",
         "logs": "Logs",
         "main": "Administration",
@@ -161,13 +161,14 @@
   "home": {
     "ago": "ago",
     "enableDPM": {
+      "contactMessage": "Contact <a href=\"mailto:enteprise@streamsets.com\" target=\"_top\">enteprise@streamsets.com</a> for StreamSets Enterprise account",
       "dpmBaseURL": "DPM Base URL",
       "dpmBaseURLPlaceholder": "Enter DPM Base URL",
       "dpmUserName": "DPM User Name",
       "dpmUserNamePlaceholder": "Enter DPM User Name",
       "dpmUserPassword": "DPM User Password",
       "dpmUserPasswordPlaceholder": "Enter DPM User Password",
-      "headerLabel": "Enable DPM",
+      "headerLabel": "Log into StreamSets Enterprise",
       "isEnableInProgress": "Enabling DPM...",
       "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the DPM console to enable Data Collector to work with DPM.",
       "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
@@ -187,7 +188,7 @@
       "retryingInSeconds": "Retrying in {{retryCountDown}} seconds..."
     },
     "disableDPM": {
-      "headerLabel": "Disable DPM",
+      "headerLabel": "Log out of StreamSets Enterprise",
       "isDisableInProgress": "Disabling DPM...",
       "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the DPM console to disable DPM.",
       "confirmationMessage": "Are you sure you want to disable DPM?",
