@@ -19,21 +19,11 @@
  */
 package com.streamsets.datacollector.json;
 
-import com.codahale.metrics.MetricFilter;
-import com.codahale.metrics.json.MetricsModule;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.streamsets.datacollector.metrics.ExtendedMeter;
 import com.streamsets.datacollector.record.FieldDeserializer;
 import com.streamsets.datacollector.restapi.bean.FieldJson;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-
-import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
 
 public class ObjectMapperFactory {
 
@@ -43,20 +33,11 @@ public class ObjectMapperFactory {
   private ObjectMapperFactory() {}
 
   private static ObjectMapper create(boolean indent) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    // This will cause the objectmapper to not close the underlying output stream
-    objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-    objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-    objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
+    ObjectMapper objectMapper = MetricsObjectMapperFactory.create(indent);
     SimpleModule module = new SimpleModule();
     module.addDeserializer(FieldJson.class, new FieldDeserializer());
-    module.addSerializer(ExtendedMeter.class, new ExtendedMeterSerializer(TimeUnit.SECONDS));
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
-    module.addSerializer(BigDecimal.class, new ToStringSerializer());
     objectMapper.registerModule(module);
-    if (indent) {
-      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
     return objectMapper;
   }
 
