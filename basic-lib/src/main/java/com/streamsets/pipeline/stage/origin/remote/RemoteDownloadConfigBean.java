@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.remote;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -62,6 +63,7 @@ public class RemoteDownloadConfigBean {
       label = "Username",
       description = "Username to use to login to the remote server",
       displayPosition = 15,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "auth",
       triggeredByValue = {"PASSWORD", "PRIVATE_KEY"}
@@ -74,6 +76,7 @@ public class RemoteDownloadConfigBean {
       label = "Password",
       description = "Password to use to login to the remote server. If private key is specified, that is used.",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "auth",
       triggeredByValue = {"PASSWORD"}
@@ -98,6 +101,7 @@ public class RemoteDownloadConfigBean {
       label = "Private Key Passphrase",
       description = "Passphrase to use to open the private key file.",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "auth",
       triggeredByValue = {"PRIVATE_KEY"}

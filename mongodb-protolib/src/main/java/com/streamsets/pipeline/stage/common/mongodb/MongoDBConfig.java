@@ -30,6 +30,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -53,7 +54,7 @@ public class MongoDBConfig {
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       label = "Connection String",
-      description = "Use format mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]]" +
+      description = "Use format mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]]" +
           "[/[database][?options]]",
       required = true,
       group = "MONGODB",
@@ -97,7 +98,8 @@ public class MongoDBConfig {
       dependsOn = "authenticationType",
       triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
-      displayPosition = 50
+      displayPosition = 50,
+      elDefs = VaultEL.class
   )
   public String username;
 
@@ -108,7 +110,8 @@ public class MongoDBConfig {
       dependsOn = "authenticationType",
       triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
-      displayPosition = 60
+      displayPosition = 60,
+      elDefs = VaultEL.class
   )
   public String password;
 

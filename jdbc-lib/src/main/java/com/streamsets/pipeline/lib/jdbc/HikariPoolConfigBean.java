@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -86,6 +87,7 @@ public class HikariPoolConfigBean {
       triggeredByValue = "true",
       label = "Username",
       displayPosition = 110,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
   public String username;
@@ -97,6 +99,7 @@ public class HikariPoolConfigBean {
       triggeredByValue = "true",
       label = "Password",
       displayPosition = 120,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
   public String password;
@@ -108,6 +111,7 @@ public class HikariPoolConfigBean {
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
       displayPosition = 999,
+      elDefs = VaultEL.class,
       group = "JDBC"
   )
   public Map<String, String> driverProperties = new HashMap<>();

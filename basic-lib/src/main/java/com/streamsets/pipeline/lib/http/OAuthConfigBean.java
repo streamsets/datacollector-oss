@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class OAuthConfigBean {
@@ -28,6 +29,7 @@ public class OAuthConfigBean {
       label = "Consumer Key",
       description = "OAuth Consumer Key",
       displayPosition = 10,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -40,6 +42,7 @@ public class OAuthConfigBean {
       label = "Consumer Secret",
       description = "OAuth Consumer Secret",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -52,6 +55,7 @@ public class OAuthConfigBean {
       label = "Token",
       description = "OAuth Consumer Token",
       displayPosition = 30,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -64,6 +68,7 @@ public class OAuthConfigBean {
       label = "Token Secret",
       description = "OAuth Token Secret",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"

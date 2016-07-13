@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Source;
@@ -73,6 +74,7 @@ public class HttpClientConfigBean {
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 11,
+      elDefs = VaultEL.class,
       group = "HTTP"
   )
   public Map<String, String> headers = new HashMap<>();
@@ -96,6 +98,7 @@ public class HttpClientConfigBean {
       description = "Data that should be included as a part of the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 13,
+      elDefs = VaultEL.class,
       lines = 2,
       dependsOn = "httpMethod",
       triggeredByValue = { "POST", "PUT", "DELETE" },

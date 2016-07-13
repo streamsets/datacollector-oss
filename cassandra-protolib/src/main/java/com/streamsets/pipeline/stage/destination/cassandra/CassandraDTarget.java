@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -115,6 +116,7 @@ public class CassandraDTarget extends DTarget {
       label = "Username",
       defaultValue = "",
       displayPosition = 10,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "useCredentials",
       triggeredByValue = "true"
@@ -127,6 +129,7 @@ public class CassandraDTarget extends DTarget {
       label = "Password",
       defaultValue = "",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "useCredentials",
       triggeredByValue = "true"

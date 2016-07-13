@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.lib;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class CredentialsConfig {
@@ -40,6 +41,7 @@ public class CredentialsConfig {
     triggeredByValue = "true",
     label = "Username",
     displayPosition = 10,
+    elDefs = VaultEL.class,
     group = "CREDENTIALS"
   )
   public String username = "";
@@ -51,6 +53,7 @@ public class CredentialsConfig {
     triggeredByValue = "true",
     label = "Password",
     displayPosition = 20,
+    elDefs = VaultEL.class,
     group = "CREDENTIALS"
   )
   public String password = "";

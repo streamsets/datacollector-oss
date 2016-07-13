@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
@@ -34,6 +35,7 @@ public class AWSConfig {
       description = "",
       defaultValue = "",
       displayPosition = -110,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String awsAccessKeyId;
@@ -45,6 +47,7 @@ public class AWSConfig {
       description = "",
       defaultValue = "",
       displayPosition = -100,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String awsSecretAccessKey;

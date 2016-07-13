@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.origin.http.Errors;
@@ -42,6 +43,7 @@ public class SslConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Password",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String trustStorePassword = "";
@@ -60,6 +62,7 @@ public class SslConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Password",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String keyStorePassword = "";

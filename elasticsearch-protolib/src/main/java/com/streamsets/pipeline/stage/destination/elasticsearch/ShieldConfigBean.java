@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class ShieldConfigBean {
@@ -34,6 +35,7 @@ public class ShieldConfigBean {
       dependsOn = "useShield^",
       triggeredByValue = "true",
       displayPosition = 10,
+      elDefs = VaultEL.class,
       group = "SHIELD"
   )
   public String shieldUser;
@@ -73,6 +75,7 @@ public class ShieldConfigBean {
       dependsOn = "useShield^",
       triggeredByValue = "true",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "SHIELD"
   )
   public String sslKeystorePassword;
@@ -99,6 +102,7 @@ public class ShieldConfigBean {
       dependsOn = "useShield^",
       triggeredByValue = "true",
       displayPosition = 60,
+      elDefs = VaultEL.class,
       group = "SHIELD"
   )
   public String sslTruststorePassword;
