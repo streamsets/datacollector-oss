@@ -50,11 +50,12 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, remove the MapR
                 stage library that you want to use from the
-                    <uicontrol>system.stagelibs.blacklist</uicontrol> property.<p
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/StageLibsBlacklist"
-                    /><p>To use the MapR version 5.1, remove the version 5.1 stage library from the
-                    property as
-                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></p><note
+                    <uicontrol>system.stagelibs.blacklist</uicontrol> property.<p>For example, the
+                        <uicontrol>system.stagelibs.blacklist</uicontrol> property is defined as
+                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib</codeblock></p><p>To
+                    use the MapR version 5.1, remove the version 5.1 stage library from the property
+                    as
+                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib</codeblock></p><note
                     type="warning">You can use only one version of the MapR library at a time.
                 </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
