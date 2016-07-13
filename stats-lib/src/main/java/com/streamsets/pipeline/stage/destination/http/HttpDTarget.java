@@ -104,8 +104,27 @@ public class HttpDTarget extends DTargetOffsetCommitTrigger {
   )
   public int waitTimeBetweenUpdates;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Compress Requests",
+    description = "If enabled, compresses the request body using snappy",
+    displayPosition = 70,
+    group = "HTTP"
+  )
+  public boolean compressRequests;
+
   @Override
   protected Target createTarget() {
-    return new HttpTarget(targetUrl, authToken, sdcId, pipelineCommitId, jobId, waitTimeBetweenUpdates);
+    return new HttpTarget(
+        targetUrl,
+        authToken,
+        sdcId,
+        pipelineCommitId,
+        jobId,
+        waitTimeBetweenUpdates,
+        compressRequests
+    );
   }
 }

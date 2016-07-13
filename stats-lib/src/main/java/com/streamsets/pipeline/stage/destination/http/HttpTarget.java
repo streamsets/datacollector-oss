@@ -36,16 +36,20 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
-import org.glassfish.jersey.message.GZipEncoder;
+import org.iq80.snappy.SnappyFramedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.WriterInterceptor;
+import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,6 +71,8 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   static final String DPM_PIPELINE_COMMIT_ID = "dpm.pipeline.commitId";
   @VisibleForTesting
   static final String DPM_JOB_ID = "dpm.job.id";
+  public static final String CONTENT_ENCODING = "Content-Encoding";
+  public static final String SNAPPY = "snappy";
 
   private final String targetUrl;
   private final String sdcAuthToken;
@@ -74,6 +80,7 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   private final String pipelineCommitId;
   private final String jobId;
   private final int waitTimeBetweenUpdates;
+  private final boolean compressRequests;
   private final Map<String, Record> sdcIdToRecordMap;
 
   private Client client;
@@ -88,7 +95,8 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       String appComponentId,
       String pipelineCommitId,
       String jobId,
-      int waitTimeBetweenUpdates
+      int waitTimeBetweenUpdates,
+      boolean compressRequests
   ) {
     this.targetUrl = targetUrl;
     this.sdcAuthToken = authToken;
@@ -96,6 +104,7 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     this.pipelineCommitId = pipelineCommitId;
     this.jobId = jobId;
     this.waitTimeBetweenUpdates = waitTimeBetweenUpdates;
+    this.compressRequests = compressRequests;
     sdcIdToRecordMap = new LinkedHashMap<>();
   }
 
@@ -125,7 +134,9 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     super.init();
     client = ClientBuilder.newBuilder().build();
     client.register(new CsrfProtectionFilter("CSRF"));
-    client.register(GZipEncoder.class);
+    if (compressRequests) {
+      client.register(SnappyWriterInterceptor.class);
+    }
     target = client.target(targetUrl);
     stopwatch = Stopwatch.createStarted();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
@@ -216,4 +227,14 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     }
   }
 
+  static class SnappyWriterInterceptor implements WriterInterceptor {
+
+    @Override
+    public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
+      context.getHeaders().add(CONTENT_ENCODING, SNAPPY);
+      final OutputStream outputStream = context.getOutputStream();
+      context.setOutputStream(new SnappyFramedOutputStream(outputStream));
+      context.proceed();
+    }
+  }
 }
