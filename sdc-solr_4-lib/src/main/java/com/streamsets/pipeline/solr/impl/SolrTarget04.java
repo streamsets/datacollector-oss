@@ -91,6 +91,7 @@ public class SolrTarget04 implements SdcSolrTarget {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void add(List<Map<String, Object>> fieldMaps) throws StageException {
     List<SolrInputDocument> documents = new ArrayList();
     for(Map<String, Object> fieldMap : fieldMaps) {
@@ -105,6 +106,7 @@ public class SolrTarget04 implements SdcSolrTarget {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private SolrInputDocument createDocument(Map<String, Object> fieldMap) {
     SolrInputDocument document = new SolrInputDocument();
     for(String key : fieldMap.keySet()) {

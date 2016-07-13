@@ -110,6 +110,7 @@ public class SolrTarget extends BaseTarget {
     return issues;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();

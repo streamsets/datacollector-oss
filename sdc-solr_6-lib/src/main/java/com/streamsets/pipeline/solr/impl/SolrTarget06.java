@@ -82,6 +82,7 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void add(Map<String, Object> fieldMap) throws StageException {
     SolrInputDocument document = createDocument(fieldMap);
     try {
@@ -91,6 +92,7 @@ public class SolrTarget06 implements SdcSolrTarget {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void add(List<Map<String, Object>> fieldMaps) throws StageException {
     List<SolrInputDocument> documents = new ArrayList();
     for(Map<String, Object> fieldMap : fieldMaps) {

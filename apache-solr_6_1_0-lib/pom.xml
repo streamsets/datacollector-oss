@@ -26,7 +26,7 @@
     </parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-apache-solr_6_1_0-lib</artifactId>
-    <version>${parent.version}</version>
+    <version>1.6.0.0-SNAPSHOT</version>
     <description>StreamSets Data Collector Apache Solr 6.1.0 Lib</description>
     <name>StreamSets Data Collector Apache Solr 6.1.0 Lib</name>
     <packaging>jar</packaging>

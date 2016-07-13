@@ -76,6 +76,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     sdcSolrTestUtil.destroy();
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testValidations() throws Exception {
     String solrURI = jetty.getBaseUrl().toString() + "/" + "collection1";
@@ -125,7 +126,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     return new SolrTarget(InstanceTypeOptions.SINGLE_NODE, solrURI, null, ProcessingMode.BATCH, fieldNamesMap, null);
   }
 
-
+  @SuppressWarnings("unchecked")
   @Test
   public void testWriteRecords() throws Exception {
     Target target = createTarget();
@@ -196,7 +197,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     }
   }
 
-
+  @SuppressWarnings("unchecked")
   @Test
   public void testWriteRecordsOnErrorDiscard() throws Exception {
     Target target = createTarget();
@@ -236,6 +237,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testWriteRecordsOnErrorToError() throws Exception {
     Target target = createTarget();
@@ -275,6 +277,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testWriteRecordsOnErrorToErrorDuringIndexing() throws Exception {
 

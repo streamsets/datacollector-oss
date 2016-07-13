@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.solr;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
+@SuppressWarnings("unchecked")
 public class InstanceTypeOptionsChooserValues extends BaseEnumChooserValues {
 
   public InstanceTypeOptionsChooserValues() {

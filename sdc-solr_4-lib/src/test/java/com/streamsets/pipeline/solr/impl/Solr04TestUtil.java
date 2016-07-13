@@ -39,6 +39,7 @@ public class Solr04TestUtil implements SdcSolrTestUtil {
     solrServer.deleteByQuery(q);
   }
 
+  @SuppressWarnings("unchecked")
   public List<Map<String,Object>> query(Map<String, String> q) throws Exception {
     SolrQuery parameters = new SolrQuery();
     for(String key : q.keySet()) {
