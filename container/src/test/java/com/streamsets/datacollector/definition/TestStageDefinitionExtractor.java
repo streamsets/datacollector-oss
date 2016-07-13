@@ -228,6 +228,14 @@ public class TestStageDefinitionExtractor {
     }
   }
 
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "", producesEvents = true)
+  public static class ProducesEventsTarger extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
   private static final StageLibraryDefinition MOCK_LIB_DEF =
       new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties(),
                                  null, null, null);
@@ -256,6 +264,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
     Assert.assertFalse(def.getRecordsByRef());
     Assert.assertTrue(def.getUpgrader() instanceof StageUpgrader.Default);
+    Assert.assertFalse(def.isProducingEvents());
   }
 
   @Test
@@ -280,6 +289,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
     Assert.assertTrue(def.getUpgrader() instanceof Source2Upgrader);
+    Assert.assertFalse(def.isProducingEvents());
   }
 
   @Test
@@ -355,6 +365,17 @@ public class TestStageDefinitionExtractor {
 
     StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
     Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER_BATCH),def.getExecutionModes());
+  }
+
+  @Test
+  public void testProducesEvents() {
+    Properties props = new Properties();
+    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + ProducesEventsTarger.class.getName(), "CLUSTER_BATCH");
+    StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
+                                                               "mock", "MOCK", props, null, null, null);
+
+    StageDefinition def = StageDefinitionExtractor.get().extract(libDef, ProducesEventsTarger.class, "x");
+    Assert.assertTrue(def.isProducingEvents());
   }
 
 }

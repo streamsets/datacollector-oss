@@ -100,6 +100,7 @@ public class TestStageDefinitionLocalization {
         false,
         "",
         false,
+        false,
         false
     );
     return def;

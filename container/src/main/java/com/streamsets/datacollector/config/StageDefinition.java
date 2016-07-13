@@ -70,6 +70,7 @@ public class StageDefinition {
   private final boolean resetOffset;
   private final String onlineHelpRefUrl;
   private final boolean offsetCommitTrigger;
+  private final boolean producesEvents;
 
   // localized version
   private StageDefinition(
@@ -99,7 +100,8 @@ public class StageDefinition {
       boolean resetOffset,
       String onlineHelpRefUrl,
       boolean statsAggregatorStage,
-      boolean offsetCommitTrigger
+      boolean offsetCommitTrigger,
+      boolean producesEvents
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -142,6 +144,7 @@ public class StageDefinition {
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
     this.offsetCommitTrigger = offsetCommitTrigger;
+    this.producesEvents = producesEvents;
   }
 
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
@@ -178,6 +181,7 @@ public class StageDefinition {
     onlineHelpRefUrl = def.onlineHelpRefUrl;
     statsAggregatorStage = def.statsAggregatorStage;
     offsetCommitTrigger = def.offsetCommitTrigger;
+    producesEvents = def.producesEvents;
   }
 
   public StageDefinition(
@@ -206,7 +210,8 @@ public class StageDefinition {
       boolean resetOffset,
       String onlineHelpRefUrl,
       boolean statsAggregatorStage,
-      boolean offsetCommitTrigger
+      boolean offsetCommitTrigger,
+      boolean producesEvents
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -248,6 +253,7 @@ public class StageDefinition {
     this.resetOffset = resetOffset;
     this.statsAggregatorStage = statsAggregatorStage;
     this.offsetCommitTrigger = offsetCommitTrigger;
+    this.producesEvents = producesEvents;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -518,7 +524,8 @@ public class StageDefinition {
         resetOffset,
         onlineHelpRefUrl,
         statsAggregatorStage,
-        offsetCommitTrigger
+        offsetCommitTrigger,
+        producesEvents
     );
   }
 
@@ -550,6 +557,10 @@ public class StageDefinition {
 
   public String getOnlineHelpRefUrl() {
     return onlineHelpRefUrl;
+  }
+
+  public boolean isProducingEvents() {
+    return producesEvents;
   }
 }
 

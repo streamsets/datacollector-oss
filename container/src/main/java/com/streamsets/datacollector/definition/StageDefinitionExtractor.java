@@ -262,6 +262,7 @@ public abstract class StageDefinitionExtractor {
 
         boolean offsetCommitController = (type == StageType.TARGET) &&
           OffsetCommitTrigger.class.isAssignableFrom(klass);
+        boolean producesEvents = sDef.producesEvents();
 
         return new StageDefinition(
             libraryDef,
@@ -289,7 +290,8 @@ public abstract class StageDefinitionExtractor {
             resetOffset,
             onlineHelpRefUrl,
             statsAggregatorStage,
-            offsetCommitController
+            offsetCommitController,
+            producesEvents
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
