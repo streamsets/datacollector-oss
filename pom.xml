@@ -192,6 +192,7 @@
     <module>sdc-solr-api</module>
     <module>sdc-solr_4-lib</module>
     <module>sdc-solr_6-lib</module>
+    <module>cloudera-integration</module>
   </modules>
 
   <build>
@@ -339,15 +340,6 @@
       </activation>
       <modules>
         <module>docs</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>cloudera</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>cloudera-integration</module>
       </modules>
     </profile>
     <profile>

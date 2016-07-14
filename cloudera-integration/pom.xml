@@ -44,7 +44,6 @@
   </licenses>
 
   <modules>
-    <module>parcel</module>
     <module>csd</module>
   </modules>
 
@@ -54,6 +53,18 @@
     </dist.target-dir>
     <dist.version>${project.version}</dist.version>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>cloudera</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <module>parcel</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>
