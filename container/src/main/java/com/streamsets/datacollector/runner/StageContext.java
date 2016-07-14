@@ -33,6 +33,7 @@ import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
 import com.streamsets.datacollector.util.ContainerError;
@@ -380,8 +381,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public EventRecord createEventRecord(String type, int version) {
-    // Stub to be implemented as part of SDC-3421
-    return null;
+    return new EventRecordImpl(type, version, instanceName, Utils.format("event:{}:{}:{}:{}", type, version, instanceName, System.currentTimeMillis()), null, null);
   }
 
   @Override

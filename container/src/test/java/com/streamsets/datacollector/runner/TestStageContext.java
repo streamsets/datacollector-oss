@@ -32,6 +32,7 @@ import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -246,6 +247,28 @@ public class TestStageContext {
         Mockito.eq("SUBJECT"),
         Mockito.eq("BODY"));
 
+  }
+
+  @Test
+  public void testEventRecordCreation() throws StageException, EmailException {
+    StageContext context = new StageContext(
+      "stage",
+      StageType.SOURCE,
+      false,
+      OnRecordError.TO_ERROR,
+      Collections.EMPTY_LIST,
+      Collections.EMPTY_MAP,
+      Collections.<String, Object> emptyMap(),
+      ExecutionMode.STANDALONE,
+      null,
+      new EmailSender(new Configuration())
+    );
+
+    EventRecord event = context.createEventRecord("custom_type", 2);
+    Assert.assertNotNull(event);
+    Assert.assertEquals("custom_type", event.getHeader().getAttribute(EventRecord.TYPE));
+    Assert.assertEquals("2", event.getHeader().getAttribute(EventRecord.VERSION));
+    Assert.assertNotNull(event.getHeader().getAttribute(EventRecord.CREATION_TIMESTAMP));
   }
 
 }
