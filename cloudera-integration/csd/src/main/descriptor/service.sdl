@@ -301,7 +301,7 @@
         {
           "name": "ldap.login.module.name",
           "label": "LDAP Login Module Name",
-          "description": "The login module name that identifies the login module to use for data collector. Assumes "ldap" if none specified.",
+          "description": "The login module name that identifies the login module to use for data collector. Assumes 'ldap' if none specified.",
           "type": "string",
           "default": ""
         },
