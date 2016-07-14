@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ezk_btx_pw">
+    <title>Batch Request Size, Kafka Message Size, and Kafka Configuration</title>
+    <shortdesc>Configure the SDC RPC to Kafka maximum batch request size and message size properties
+        in relationship to each other and to the Kafka configuration for maximum message
+        size.</shortdesc>
+    <conbody>
+        <p>The <uicontrol>Max Batch Request Size (MB) </uicontrol> property determines the maximum
+            size of the batch of data that the origin accepts from each SDC RPC destination. Upon
+            receiving a batch of data, the origin immediately writes the data to Kafka.</p>
+        <p>To promote peak performance, the origin writes as many records as possible into a single
+            Kafka message. The <uicontrol>Max Message Size (KB)</uicontrol> property determines the
+            maximum size of the message that it creates. </p>
+        <note>The maximum message size specified in the origin must be smaller than the maximum
+            message size configured in Kafka. By default, the maximum message size in Kafka -
+            currently defined by the message.max.bytes property - is 1 MB.</note>
+        <p>For example, say the origin uses the default 100 MB for the maximum batch request size
+            and the default 900 KB for the maximum message size, and Kakfa uses the 1 MB default for
+            message.max.bytes. </p>
+        <p>When the origin requests a batch of data, it receives up to 100 MB of data at a time.
+            When the origin writes to Kafka it groups records into as few messages as possible,
+            including up to 900 KB of records in each message. Since the message size is less than
+            the Kafka 1 MB requirement, the origin successfully writes all messages to Kafka.</p>
+        <p>If a record happens to be larger than the 900 KB maximum message size, the origin
+            generates an error and does not write it to Kafka. The SDC RPC destination that provided
+            the record processes the record based on stage error record handling. <draft-comment
+                author="Loretta">Tucu/Hari: Does the origin also show an error message for that
+                record, as doc'd above? Or no error in the origin, and the destination has the only
+                indication there was a problem? </draft-comment></p>
+    </conbody>
+</concept>

@@ -52,12 +52,9 @@
                                             <li/>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>Broker URI</entry>
-                                    <entry>Connection string for the Kafka broker. Use the following
-                                        format: <codeph>&lt;host>:&lt;port></codeph>. <p>To ensure a
-                                            connection, enter a comma-separated list of additional
-                                            broker URI.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-KafkaBrokerURI">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>ZooKeeper URI</entry>
@@ -90,19 +87,9 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Kafka Configuration <xref
-                                            href="KConsumer_AdditionalKProp.dita#concept_d5f_n2g_vq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_mwv_b52_zq"/></xref>
-                                    </entry>
-                                    <entry>Additional Kafka configuration properties to use. To add
-                                        properties, click <uicontrol>Add</uicontrol> and define the
-                                        Kafka property name and value. <p>Use the property names and
-                                            values as expected by Kafka.</p><p>For information about
-                                            enabling secure connections to Kafka, see <xref
-                                                href="KConsumer-EnablingSecurity.dita"
-                                        />.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-KafkaConfig">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">

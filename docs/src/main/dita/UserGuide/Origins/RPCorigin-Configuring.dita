@@ -39,42 +39,29 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>RPC Listening Port</entry>
-                                    <entry>Port number to listen to for data. Must match one of the
-                                        port numbers associated with the SDC RPC destination that
-                                        provides the data.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCListPort">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>RPC ID</entry>
-                                    <entry>User-defined ID. Must match the RPC ID defined in the SDC
-                                        RPC destination.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPC-ID">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>TLS Enabled <xref
-                                            href="../RPC_Pipelines/EnablingEncryption.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_a5x_jzn_vs"
-                                        /></xref></entry>
-                                    <entry>Enables the secure transfer of data using TLS. <p>To use
-                                            encryption, both the origin and destination must be
-                                            enabled for TLS.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-TLSenabled">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Keystore File</entry>
-                                    <entry>Keystore file for SSL. <p>Must be stored in the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> resources directory,
-                                        <filepath>$SDC_RESOURCES</filepath>. For more information about environment variables, see <xref
-                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystoreFile">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Keystore Password</entry>
-                                    <entry>Password for the keystore file.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystorePass">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

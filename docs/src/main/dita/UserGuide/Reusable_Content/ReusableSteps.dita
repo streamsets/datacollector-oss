@@ -906,6 +906,9 @@
                 
            <step>     
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>ORIGIN-MIXED REUSE - </uicontrol>The
+                        following handful of steps are for origin/origin, origin/processor or
+                        possibly origin/destination reuse. In alphabetical order.</draft-comment>
                     <draft-comment author="Loretta"><uicontrol>HTTPClient-Credentials</uicontrol> -
                         The following steps are used in HTTP Client origin and processor Configuring
                         topics:</draft-comment>
@@ -1040,8 +1043,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following steps are used in JDBC Consumer
-                        &amp; Producer config topics.</draft-comment>
+                    <draft-comment author="Loretta">The following steps are used in <uicontrol>JDBC
+                            Consumer &amp; Producer </uicontrol>config topics.</draft-comment>
                 </cmd>
             </step>
             <step id="JDBC-Credentials">
@@ -1104,6 +1107,57 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Rows in this table are used by Kafka Consumer
+                        and SDC RPC to Kafka origins</draft-comment>
+                </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pzz_wtr_pw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Misc Kafka Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="O-KafkaBrokerURI">
+                                    <entry>Broker URI</entry>
+                                    <entry>Connection string for the Kafka broker. Use the following
+                                        format: <codeph>&lt;host>:&lt;port></codeph>. <p>To ensure a
+                                            connection, enter a comma-separated list of additional
+                                            broker URI.</p></entry>
+                                </row>
+                                <row id="O-KafkaTopic">
+                                    <entry>Topic</entry>
+                                    <entry>Kafka topic to read.</entry>
+                                </row>
+                                <row id="O-KafkaConfig">
+                                    <entry>Kafka Configuration <xref
+                                            href="../Origins/KConsumer_AdditionalKProp.dita#concept_d5f_n2g_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mwv_b52_zq"/></xref>
+                                    </entry>
+                                    <entry id="entry-KafkaConfig">Additional Kafka configuration
+                                        properties to use. To add properties, click
+                                            <uicontrol>Add</uicontrol> and define the Kafka property
+                                        name and value. <p>Use the property names and values as
+                                            expected by Kafka.</p><p>For information about enabling
+                                            secure connections to Kafka, see <xref
+                                                href="../Origins/KConsumer-EnablingSecurity.dita"
+                                            />.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd/>
             </step>
             <step>
                 <cmd>
@@ -1357,6 +1411,67 @@
                             </tbody>
                         </tgroup>
                     </table></info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following is used for SDC RPC origins
+                    </draft-comment>
+                </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_uq4_2rr_pw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Misc SDC RPC Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-RPCListPort">
+                                    <entry>RPC Listening Port</entry>
+                                    <entry id="entry-RPCListPort">Port number to listen to for data.
+                                        Must match one of the port numbers associated with the SDC
+                                        RPC destination that provides the data.</entry>
+                                </row>
+                                <row id="row-RPC-ID">
+                                    <entry>RPC ID</entry>
+                                    <entry id="entry-RPC-ID">User-defined ID. Must match the RPC ID
+                                        defined in the SDC RPC destination.</entry>
+                                </row>
+                                <row id="O-RPC-TLSenabled">
+                                    <entry>TLS Enabled <xref
+                                            href="../RPC_Pipelines/EnablingEncryption.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_b2n_wrr_pw"
+                                        /></xref></entry>
+                                    <entry>Enables the secure transfer of data using TLS. <p>To use
+                                            encryption, both the origin and SDC RPC destination must
+                                            be enabled for TLS.</p></entry>
+                                </row>
+                                <row id="O-RPC-KeystoreFile">
+                                    <entry>Keystore File</entry>
+                                    <entry>Keystore file for SSL. <p>Must be stored in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory,
+                                                <filepath>$SDC_RESOURCES</filepath>. For more
+                                            information about environment variables, see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p></entry>
+                                </row>
+                                <row id="O-RPC-KeystorePass">
+                                    <entry>Keystore Password</entry>
+                                    <entry>Password for the keystore file.</entry>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step id="PROCESSORS">
                 <cmd>
@@ -2673,7 +2788,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>RPCdest</uicontrol> - Used for Config
-                        RPC Dest and pipeline error handling > Write to pipeline </draft-comment>
+                        RPC Dest and pipeline error handling > Write to pipeline.</draft-comment>
                 </cmd>
             </step>
             <step id="RPCdest">
