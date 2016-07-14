@@ -42,12 +42,13 @@ public class StageConfiguration implements Serializable {
   //wiring with other components
   private final List<String> inputLanes;
   private final List<String> outputLanes;
+  private final List<String> eventLanes;
 
   private boolean systemGenerated;
 
   public StageConfiguration(String instanceName, String library, String stageName, int stageVersion,
       List<Config> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
-      List<String> outputLanes) {
+      List<String> outputLanes, List<String> eventLanes) {
     this.instanceName = instanceName;
     this.library = library;
     this.stageName = stageName;
@@ -55,6 +56,7 @@ public class StageConfiguration implements Serializable {
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
+    this.eventLanes = eventLanes;
     this.configuration = new ArrayList<>();
     this.configurationMap = new HashMap<>();
     setConfig(configuration);
@@ -102,6 +104,10 @@ public class StageConfiguration implements Serializable {
 
   public List<String> getOutputLanes() {
     return outputLanes;
+  }
+
+  public List<String> getEventLanes() {
+    return eventLanes;
   }
 
   public Config getConfig(String name) {

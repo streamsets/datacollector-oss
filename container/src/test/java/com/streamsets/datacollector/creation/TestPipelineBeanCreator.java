@@ -435,6 +435,7 @@ public class TestPipelineBeanCreator {
     StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
                                                           Collections.<String, Object>emptyMap(),
                                                           Collections.<String>emptyList(),
+                                                          Collections.<String>emptyList(),
                                                           Collections.<String>emptyList());
 
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
@@ -476,6 +477,7 @@ public class TestPipelineBeanCreator {
     );
     StageConfiguration stageConf = new StageConfiguration("i", "l", "n", 1, configConfs,
                                                           Collections.<String, Object>emptyMap(),
+                                                          Collections.<String>emptyList(),
                                                           Collections.<String>emptyList(),
                                                           Collections.<String>emptyList());
 
@@ -525,13 +527,13 @@ public class TestPipelineBeanCreator {
 
     StageConfiguration stageConf = new StageConfiguration("si", "l", "s", 1,
         ImmutableList.of(new Config("list", ImmutableList.of("S"))),
-        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
         ImmutableList.of(new Config("list", ImmutableList.of("E"))),
-        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     StageConfiguration aggStageConf = new StageConfiguration("ai", "l", "a", 1,
       ImmutableList.of(new Config("list", ImmutableList.of("A"))),
-      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
@@ -578,6 +580,7 @@ public class TestPipelineBeanCreator {
         new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
                                Collections.<String, Object>emptyMap(),
                                Collections.<String>emptyList(),
+                               Collections.<String>emptyList(),
                                Collections.<String>emptyList());
 
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
@@ -616,13 +619,13 @@ public class TestPipelineBeanCreator {
 
     StageConfiguration stageConf = new StageConfiguration("si", "l", "s", 1,
         ImmutableList.of(new Config("list", ImmutableList.of("S"))),
-        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
          ImmutableList.of(new Config("list", ImmutableList.of("E"))),
-         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     StageConfiguration aggStageConf = new StageConfiguration("ai", "l", "a", 1,
       ImmutableList.of(new Config("list", ImmutableList.of("A"))),
-      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,

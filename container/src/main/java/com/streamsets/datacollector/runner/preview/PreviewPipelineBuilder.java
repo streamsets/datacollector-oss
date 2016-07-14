@@ -47,7 +47,8 @@ public class PreviewPipelineBuilder {
     StageConfiguration stageConf = new StageConfiguration(PreviewStageLibraryTask.NAME + UUID.randomUUID().toString(),
                                                           PreviewStageLibraryTask.LIBRARY, PreviewStageLibraryTask.NAME,
                                                           PreviewStageLibraryTask.VERSION, Collections.EMPTY_LIST,
-                                                          Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST);
+                                                          Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST,
+                                                          Collections.EMPTY_LIST);
     stageConf.setSystemGenerated();
     return stageConf;
   }

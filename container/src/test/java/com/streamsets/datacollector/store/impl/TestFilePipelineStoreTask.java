@@ -383,7 +383,7 @@ public class TestFilePipelineStoreTask {
 
       // add a stage to pipeline
       pc.getStages().add(new StageConfiguration("i", "l", "n", 1, Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-                                                Collections.EMPTY_LIST, Collections.EMPTY_LIST));
+                                                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST));
 
       // set some uiInfo at pipeline and stage level and dave
       pc.getUiInfo().put("a", "A");

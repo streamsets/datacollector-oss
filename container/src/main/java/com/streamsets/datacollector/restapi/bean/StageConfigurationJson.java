@@ -40,9 +40,11 @@ public class StageConfigurationJson {
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
     @JsonProperty("inputLanes") List<String> inputLanes,
-    @JsonProperty("outputLanes") List<String> outputLanes) {
+    @JsonProperty("outputLanes") List<String> outputLanes,
+    @JsonProperty("eventLanes") List<String> eventLanes) {
     this.stageConfiguration = new com.streamsets.datacollector.config.StageConfiguration(instanceName, library, stageName,
-      convertVersion(stageVersion), BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, inputLanes, outputLanes);
+      convertVersion(stageVersion), BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, inputLanes, outputLanes,
+      eventLanes);
   }
 
   private static int convertVersion(String version) {
@@ -83,6 +85,10 @@ public class StageConfigurationJson {
 
   public List<String> getOutputLanes() {
     return stageConfiguration.getOutputLanes();
+  }
+
+  public List<String> getEventLanes() {
+    return stageConfiguration.getEventLanes();
   }
 
   public ConfigConfigurationJson getConfig(String name) {

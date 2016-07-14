@@ -54,7 +54,7 @@ public class TestBatchMakerImpl {
                                                                    Collections.EMPTY_LIST,
                                                                    Collections.EMPTY_MAP,
                                                                    ImmutableList.of("i"),
-                                                                   outputs);
+                                                                   outputs, Collections.EMPTY_LIST);
     StageDefinition stageDef = Mockito.mock(StageDefinition.class);
     Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
     StageRuntime stageRuntime = Mockito.mock(StageRuntime.class);
@@ -231,7 +231,8 @@ public class TestBatchMakerImpl {
                                                                    Collections.EMPTY_LIST,
                                                                    Collections.EMPTY_MAP,
                                                                    Collections.EMPTY_LIST,
-                                                                   ImmutableList.of("o"));
+                                                                   ImmutableList.of("o"),
+                                                                   Collections.EMPTY_LIST);
     StageDefinition stageDef = Mockito.mock(StageDefinition.class);
     Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
     Source.Context context = Mockito.mock(Source.Context.class);
