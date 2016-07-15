@@ -46,7 +46,7 @@ public class MetricsHelper {
     Timer timer = MetricsConfigurator.createTimer(metrics, timerName, pipelineName, revision);
     if (metricRegistryJson != null) {
       Map<String, TimerJson> timers = metricRegistryJson.getTimers();
-      if (timers.containsKey(timerName + MetricsConfigurator.TIMER_SUFFIX)) {
+      if (null != timers && timers.containsKey(timerName + MetricsConfigurator.TIMER_SUFFIX)) {
         TimerJson timerJson = timers.get(timerName + MetricsConfigurator.TIMER_SUFFIX);
         timer.update(timerJson.getCount(), TimeUnit.MILLISECONDS);
       }
@@ -64,7 +64,7 @@ public class MetricsHelper {
     Histogram histogram5Min = MetricsConfigurator.createHistogram5Min(metrics, histogramName, pipelineName, revision);
     if (metricRegistryJson != null) {
       Map<String, HistogramJson> histograms = metricRegistryJson.getHistograms();
-      if (histograms.containsKey(histogramName + MetricsConfigurator.HISTOGRAM_M5_SUFFIX)) {
+      if (null != histograms && histograms.containsKey(histogramName + MetricsConfigurator.HISTOGRAM_M5_SUFFIX)) {
         HistogramJson histogramJson = histograms.get(histogramName + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
         histogram5Min.update(histogramJson.getCount());
       }
@@ -82,7 +82,7 @@ public class MetricsHelper {
     Meter meter = MetricsConfigurator.createMeter(metrics, meterName, pipelineName, revision);
     if (metricRegistryJson != null) {
       Map<String, MeterJson> meters = metricRegistryJson.getMeters();
-      if (meters.containsKey(meterName + MetricsConfigurator.METER_SUFFIX)) {
+      if (null != meters && meters.containsKey(meterName + MetricsConfigurator.METER_SUFFIX)) {
         MeterJson meterJson = meters.get(meterName + MetricsConfigurator.METER_SUFFIX);
         meter.mark(meterJson.getCount());
       }
@@ -100,7 +100,7 @@ public class MetricsHelper {
     Counter counter = MetricsConfigurator.createCounter(metrics, counterName, pipelineName, revision);
     if (metricRegistryJson != null) {
       Map<String, CounterJson> counters = metricRegistryJson.getCounters();
-      if (counters.containsKey(counterName + MetricsConfigurator.COUNTER_SUFFIX)) {
+      if (null != counters && counters.containsKey(counterName + MetricsConfigurator.COUNTER_SUFFIX)) {
         CounterJson counterJson = counters.get(counterName + MetricsConfigurator.COUNTER_SUFFIX);
         counter.inc(counterJson.getCount());
       }

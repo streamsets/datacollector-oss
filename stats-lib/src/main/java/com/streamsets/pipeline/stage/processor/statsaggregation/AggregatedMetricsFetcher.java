@@ -138,6 +138,12 @@ public class AggregatedMetricsFetcher {
     timerJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_PROCESSING + MetricsConfigurator.TIMER_SUFFIX, null);
     countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_COUNT + MetricsConfigurator.COUNTER_SUFFIX, null);
 
+    countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_COUNT + MetricsConfigurator.COUNTER_SUFFIX, null);
+    countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_INPUT_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+    countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_OUTPUT_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+    countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_ERROR_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+    countersJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_ERROR_MESSAGES + MetricsConfigurator.COUNTER_SUFFIX, null);
+
     meterJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_COUNT + MetricsConfigurator.METER_SUFFIX, null);
     meterJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_INPUT_RECORDS + MetricsConfigurator.METER_SUFFIX, null);
     meterJsonMap.put(MetricAggregationConstants.PIPELINE_BATCH_OUTPUT_RECORDS + MetricsConfigurator.METER_SUFFIX, null);
@@ -154,6 +160,11 @@ public class AggregatedMetricsFetcher {
       String metricsKey = MetricAggregationConstants.STAGE_PREFIX + stageInstanceName;
 
       timerJsonMap.put( metricsKey + MetricAggregationConstants.BATCH_PROCESSING + MetricsConfigurator.TIMER_SUFFIX, null);
+
+      countersJsonMap.put(metricsKey + MetricAggregationConstants.INPUT_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+      countersJsonMap.put(metricsKey + MetricAggregationConstants.OUTPUT_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+      countersJsonMap.put(metricsKey + MetricAggregationConstants.ERROR_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
+      countersJsonMap.put(metricsKey + MetricAggregationConstants.STAGE_ERRORS + MetricsConfigurator.COUNTER_SUFFIX, null);
 
       meterJsonMap.put(metricsKey + MetricAggregationConstants.INPUT_RECORDS + MetricsConfigurator.METER_SUFFIX, null);
       meterJsonMap.put(metricsKey + MetricAggregationConstants.OUTPUT_RECORDS + MetricsConfigurator.METER_SUFFIX, null);

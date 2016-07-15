@@ -55,6 +55,10 @@ public class MetricRuleHandler {
   // each stage within a pipeline has the following metrics.
   // The below maps maintain the stage instance name to metric mapping
   private Map<String, Timer> stageProcessingTimer;
+  private Map<String, Counter> inputRecordsCounter;
+  private Map<String, Counter> outputRecordsCounter;
+  private Map<String, Counter> errorRecordsCounter;
+  private Map<String, Counter> stageErrorCounter;
   private Map<String, Meter> inputRecordsMeter;
   private Map<String, Meter> outputRecordsMeter;
   private Map<String, Meter> errorRecordsMeter;
@@ -68,6 +72,7 @@ public class MetricRuleHandler {
 
   // pipeline batch timer, meter and histogram
   private Timer batchProcessingTimer;
+  private Counter batchCountCounter;
   private Meter batchCountMeter;
   private Histogram batchInputRecordsHistogram;
   private Histogram batchOutputRecordsHistogram;
@@ -77,6 +82,10 @@ public class MetricRuleHandler {
   private Meter batchOutputRecordsMeter;
   private Meter batchErrorRecordsMeter;
   private Meter batchErrorMessagesMeter;
+  private Counter batchInputRecordsCounter;
+  private Counter batchOutputRecordsCounter;
+  private Counter batchErrorRecordsCounter;
+  private Counter batchErrorMessagesCounter;
 
   private final String pipelineName;
   private final String revision;
@@ -108,23 +117,28 @@ public class MetricRuleHandler {
       record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.PIPELINE_BATCH_DURATION).getValueAsLong(),
       TimeUnit.MILLISECONDS
     );
+    batchCountCounter.inc();
     batchCountMeter.mark();
 
     int batchInputRecords = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.BATCH_INPUT_RECORDS).getValueAsInteger();
     batchInputRecordsHistogram.update(batchInputRecords);
     batchInputRecordsMeter.mark(batchInputRecords);
+    batchInputRecordsCounter.inc(batchInputRecords);
 
     int batchOutputRecords = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.BATCH_OUTPUT_RECORDS).getValueAsInteger();
     batchOutputRecordsHistogram.update(batchOutputRecords);
     batchOutputRecordsMeter.mark(batchOutputRecords);
+    batchOutputRecordsCounter.inc(batchOutputRecords);
 
     int batchErrorRecords = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.BATCH_ERROR_RECORDS).getValueAsInteger();
     batchErrorRecordsHistogram.update(batchErrorRecords);
     batchErrorRecordsMeter.mark(batchErrorRecords);
+    batchErrorRecordsCounter.inc(batchErrorRecords);
 
     int batchErrors = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.BATCH_ERRORS).getValueAsInteger();
     batchErrorsHistogram.update(batchErrors);
     batchErrorMessagesMeter.mark(batchErrors);
+    batchErrorMessagesCounter.inc(batchErrors);
 
     Map<String, Field> stageBatchMetrics = record.get(MetricAggregationConstants.ROOT_FIELD + AggregatorUtil.STAGE_BATCH_METRICS)
       .getValueAsListMap();
@@ -144,6 +158,7 @@ public class MetricRuleHandler {
       field = stageMetrics.get(AggregatorUtil.INPUT_RECORDS);
       if (field.getValue() != null) {
         int inputRecords = field.getValueAsInteger();
+        inputRecordsCounter.get(stageInstanceName).inc(inputRecords);
         inputRecordsMeter.get(stageInstanceName).mark(inputRecords);
         inputRecordsHistogram.get(stageInstanceName).update(inputRecords);
       }
@@ -151,6 +166,7 @@ public class MetricRuleHandler {
       field = stageMetrics.get(AggregatorUtil.OUTPUT_RECORDS);
       if (field.getValue() != null) {
         int outputRecords = field.getValueAsInteger();
+        outputRecordsCounter.get(stageInstanceName).inc(outputRecords);
         outputRecordsMeter.get(stageInstanceName).mark(outputRecords);
         outputRecordsHistogram.get(stageInstanceName).update(outputRecords);
       }
@@ -158,6 +174,7 @@ public class MetricRuleHandler {
       field = stageMetrics.get(AggregatorUtil.ERROR_RECORDS);
       if (field.getValue() != null) {
         int errorRecords = field.getValueAsInteger();
+        errorRecordsCounter.get(stageInstanceName).inc(errorRecords);
         errorRecordsMeter.get(stageInstanceName).mark(errorRecords);
         errorRecordsHistogram.get(stageInstanceName).update(errorRecords);
       }
@@ -166,6 +183,7 @@ public class MetricRuleHandler {
       field = stageMetrics.get(AggregatorUtil.STAGE_ERROR);
       if (field.getValue() != null) {
         int stageErrors = field.getValueAsInteger();
+        stageErrorCounter.get(stageInstanceName).inc(stageErrors);
         stageErrorMeter.get(stageInstanceName).mark(stageErrors);
         stageErrorsHistogram.get(stageInstanceName).update(stageErrors);
       }
@@ -270,6 +288,13 @@ public class MetricRuleHandler {
       pipelineName,
       revision
     );
+    batchCountCounter = MetricsHelper.createAndInitCounter(
+      metricRegistryJson,
+      metrics,
+      MetricAggregationConstants.PIPELINE_BATCH_COUNT,
+      pipelineName,
+      revision
+    );
     batchCountMeter = MetricsHelper.createAndInitMeter(
       metricRegistryJson,
       metrics,
@@ -305,7 +330,6 @@ public class MetricRuleHandler {
       pipelineName,
       revision
     );
-
     batchInputRecordsMeter = MetricsHelper.createAndInitMeter(
       metricRegistryJson,
       metrics,
@@ -334,9 +358,41 @@ public class MetricRuleHandler {
       pipelineName,
       revision
     );
+    batchInputRecordsCounter = MetricsHelper.createAndInitCounter(
+      metricRegistryJson,
+      metrics,
+      MetricAggregationConstants.PIPELINE_BATCH_INPUT_RECORDS,
+      pipelineName,
+      revision
+    );
+    batchOutputRecordsCounter = MetricsHelper.createAndInitCounter(
+      metricRegistryJson,
+      metrics,
+      MetricAggregationConstants.PIPELINE_BATCH_OUTPUT_RECORDS,
+      pipelineName,
+      revision
+    );
+    batchErrorRecordsCounter = MetricsHelper.createAndInitCounter(
+      metricRegistryJson,
+      metrics,
+      MetricAggregationConstants.PIPELINE_BATCH_ERROR_RECORDS,
+      pipelineName,
+      revision
+    );
+    batchErrorMessagesCounter = MetricsHelper.createAndInitCounter(
+      metricRegistryJson,
+      metrics,
+      MetricAggregationConstants.PIPELINE_BATCH_ERROR_MESSAGES,
+      pipelineName,
+      revision
+    );
 
     // create metric for stages
     stageProcessingTimer = new HashMap<>();
+    inputRecordsCounter = new HashMap<>();
+    outputRecordsCounter = new HashMap<>();
+    errorRecordsCounter = new HashMap<>();
+    stageErrorCounter = new HashMap<>();
     inputRecordsMeter = new HashMap<>();
     outputRecordsMeter = new HashMap<>();
     errorRecordsMeter = new HashMap<>();
@@ -357,6 +413,46 @@ public class MetricRuleHandler {
           metricRegistryJson,
           metrics,
           metricsKey + MetricAggregationConstants.BATCH_PROCESSING,
+          pipelineName,
+          revision
+        )
+      );
+      inputRecordsCounter.put(
+        stageInstanceName,
+        MetricsHelper.createAndInitCounter(
+          metricRegistryJson,
+          metrics,
+          metricsKey + MetricAggregationConstants.INPUT_RECORDS,
+          pipelineName,
+          revision
+        )
+      );
+      outputRecordsCounter.put(
+        stageInstanceName,
+        MetricsHelper.createAndInitCounter(
+          metricRegistryJson,
+          metrics,
+          metricsKey + MetricAggregationConstants.OUTPUT_RECORDS,
+          pipelineName,
+          revision
+        )
+      );
+      errorRecordsCounter.put(
+        stageInstanceName,
+        MetricsHelper.createAndInitCounter(
+          metricRegistryJson,
+          metrics,
+          metricsKey + MetricAggregationConstants.ERROR_RECORDS,
+          pipelineName,
+          revision
+        )
+      );
+      stageErrorCounter.put(
+        stageInstanceName,
+        MetricsHelper.createAndInitCounter(
+          metricRegistryJson,
+          metrics,
+          metricsKey + MetricAggregationConstants.STAGE_ERRORS,
           pipelineName,
           revision
         )

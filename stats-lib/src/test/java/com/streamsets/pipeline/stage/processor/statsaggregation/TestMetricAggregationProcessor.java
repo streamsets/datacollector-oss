@@ -80,16 +80,16 @@ public class TestMetricAggregationProcessor {
     MetricRegistry metrics = metricAggregationProcessor.getMetrics();
     SortedMap<String, Timer> timers = metrics.getTimers();
 
-    Assert.assertEquals(5, timers.size()); // 1 each for 4 stages, 1 for pipeline 
+    Assert.assertEquals(5, timers.size()); // 1 each for 4 stages, 1 for pipeline
 
     SortedMap<String, Counter> counters = metrics.getCounters();
-    Assert.assertEquals(3, counters.size()); // one for each output lane in pipeline 
+    Assert.assertEquals(24, counters.size()); // 4 each for 4 stages, 5 for pipeline, one each for 3 output lanes
 
     SortedMap<String, Meter> meters = metrics.getMeters();
-    Assert.assertEquals(24, meters.size()); // 4 each for 4 stages, 5 for pipeline, one each for 3 output lanes 
+    Assert.assertEquals(24, meters.size()); // 4 each for 4 stages, 5 for pipeline, one each for 3 output lanes
 
     SortedMap<String, Histogram> histograms = metrics.getHistograms();
-    Assert.assertEquals(20, histograms.size()); // 4 each for 4 stages, 4 for pipeline 
+    Assert.assertEquals(20, histograms.size()); // 4 each for 4 stages, 4 for pipeline
   }
 
   @Test
