@@ -30,6 +30,10 @@
   <name>StreamSets Data Collector Container Common</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <snappy.version>0.4</snappy.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -173,6 +177,14 @@
       <version>${jersey.version}</version>
     </dependency>
     <!-- End Jersey artifacts -->
+
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>${snappy.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
@@ -182,6 +194,13 @@
       <artifactId>mail</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>${snappy.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.icegreen</groupId>
       <artifactId>greenmail</artifactId>
