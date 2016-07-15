@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Map;
 
 public abstract class DataParserFactory extends DataFactory {
 
@@ -68,6 +70,14 @@ public abstract class DataParserFactory extends DataFactory {
   public abstract DataParser getParser(String id, InputStream is, String offset) throws DataParserException;
 
   public abstract DataParser getParser(String id, Reader reader, long offset) throws DataParserException;
+
+  public DataParser getParser(
+      String id,
+      Map<String, Object> metadata,
+      FileRef fileRef
+  ) throws DataParserException {
+    throw new UnsupportedOperationException();
+  }
 
   protected OverrunReader createReader(InputStream is) {
     Reader bufferedReader = new BufferedReader(new InputStreamReader(is, getSettings().getCharset()));

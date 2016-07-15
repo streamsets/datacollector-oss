@@ -36,6 +36,7 @@ public enum DataFormat implements Label {
   BINARY("Binary", DataParserFormat.BINARY, DataGeneratorFormat.BINARY),
   PROTOBUF("Protobuf", DataParserFormat.PROTOBUF, DataGeneratorFormat.PROTOBUF),
   DATAGRAM("Datagram", DataParserFormat.DATAGRAM, null),
+  WHOLE_FILE("Whole File", DataParserFormat.WHOLE_FILE, DataGeneratorFormat.WHOLE_FILE),
   ;
 
   private final String label;

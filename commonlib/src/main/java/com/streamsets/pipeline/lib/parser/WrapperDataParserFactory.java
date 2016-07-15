@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Map;
 
 public class WrapperDataParserFactory extends DataParserFactory {
   private final DataParserFactory factory;
@@ -69,6 +71,15 @@ public class WrapperDataParserFactory extends DataParserFactory {
   @Override
   public DataParser getParser(String id, Reader reader, long offset) throws DataParserException {
     return new WrapperDataParser(factory.getParser(id, reader, offset));
+  }
+
+  @Override
+  public DataParser getParser(
+      String id,
+      Map<String, Object> metadata,
+      FileRef fileRef
+  ) throws DataParserException {
+    return new WrapperDataParser(factory.getParser(id, metadata, fileRef));
   }
 
 

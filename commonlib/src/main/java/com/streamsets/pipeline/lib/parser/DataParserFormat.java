@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.sdcrecord.SdcRecordDataParserFactory;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
+import com.streamsets.pipeline.lib.parser.wholefile.WholeFileDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 
 import java.lang.reflect.Constructor;
@@ -50,7 +51,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
   BINARY(BinaryDataParserFactory.class, BinaryDataParserFactory.MODES, BinaryDataParserFactory.CONFIGS),
   PROTOBUF(ProtobufDataParserFactory.class, ProtobufDataParserFactory.MODES, ProtobufDataParserFactory.CONFIGS),
   DATAGRAM(DatagramParserFactory.class, DatagramParserFactory.MODES, DatagramParserFactory.CONFIGS),
-
+  WHOLE_FILE(WholeFileDataParserFactory.class, WholeFileDataParserFactory.MODES, WholeFileDataParserFactory.CONFIGS),
   ;
 
   private final Class<? extends DataParserFactory> klass;

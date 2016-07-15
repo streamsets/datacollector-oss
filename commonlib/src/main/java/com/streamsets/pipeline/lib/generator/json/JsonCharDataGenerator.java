@@ -89,6 +89,8 @@ public class JsonCharDataGenerator implements DataGenerator {
     Object obj;
     if (field == null || field.getValue() == null) {
       obj = null;
+    } else if(field.getType() == Field.Type.FILE_REF) {
+       throw new DataGeneratorException(Errors.JSON_GENERATOR_01, field);
     } else if (field.getType() == Field.Type.LIST) {
       List<Field> list = field.getValueAsList();
       List<Object> toReturn = new ArrayList<>(list.size());

@@ -51,6 +51,7 @@ import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
+import com.streamsets.pipeline.lib.parser.wholefile.WholeFileDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -662,6 +663,22 @@ public class DataParserFormatConfig implements DataFormatConfig{
   )
   public String authFilePath;
 
+  //Whole File
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1024",
+      label = "Max Buffer Size (bytes)",
+      description = "Size of the Buffer used to copy the file.",
+      displayPosition = 900,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int wholeFileMaxObjectLen = 1024;
+
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,
@@ -850,6 +867,18 @@ public class DataParserFormatConfig implements DataFormatConfig{
           default:
         }
         break;
+      case WHOLE_FILE:
+        if (wholeFileMaxObjectLen < 1) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.WHOLE_FILE.name(),
+                  configPrefix + "wholeFileMaxObjectLen",
+                  DataFormatErrors.DATA_FORMAT_01
+              )
+          );
+          valid = false;
+        }
+        break;
       default:
         issues.add(
             context.createConfigIssue(
@@ -992,6 +1021,9 @@ public class DataParserFormatConfig implements DataFormatConfig{
           .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
           .setMode(datagramMode)
           .setMaxDataLen(-1);
+        break;
+      case WHOLE_FILE:
+        builder.setMaxDataLen(wholeFileMaxObjectLen);
         break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);

@@ -33,7 +33,8 @@ public enum MapRStreamsSourceGroups implements Label {
   AVRO("Avro"),
   BINARY("Binary"),
   PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram")
+  DATAGRAM("Datagram"),
+  WHOLE_FILE("Whole File"),
   ;
 
   private final String label;

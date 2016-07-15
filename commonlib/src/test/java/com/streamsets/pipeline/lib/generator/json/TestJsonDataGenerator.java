@@ -28,22 +28,28 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class TestJsonDataGenerator {
 
@@ -184,5 +190,32 @@ public class TestJsonDataGenerator {
     Assert.assertFalse(it.hasNext());
     Assert.assertTrue(obj instanceof LinkedHashMap);
     Assert.assertEquals(2, ((LinkedHashMap) obj).size());
+  }
+
+  @Test
+  public void testFileRefTypeError() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString());
+    testDir.mkdirs();
+    try {
+      FileRefTestUtil.writePredefinedTextToFile(testDir);
+      Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
+      Record record = context.createRecord("id");
+      Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
+      Map<String, Field> fieldMap = new HashMap<>();
+      fieldMap.put(
+          "fileRef",
+          Field.create(FileRefTestUtil.getLocalFileRef(testDir, false, null, null))
+      );
+      fieldMap.put("fileInfo", FileRefTestUtil.createFieldForMetadata(metadata));
+      record.set(Field.create(fieldMap));
+
+      DataGenerator gen = new JsonCharDataGenerator(new StringWriter(), JsonMode.MULTIPLE_OBJECTS);
+      gen.write(record);
+      Assert.fail("Json should not process FileRef field");
+    } catch (DataGeneratorException e) {
+      Assert.assertEquals(Errors.JSON_GENERATOR_01, e.getErrorCode());
+    } finally {
+      testDir.delete();
+    }
   }
 }

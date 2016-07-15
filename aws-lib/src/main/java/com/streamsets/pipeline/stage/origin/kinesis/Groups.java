@@ -34,7 +34,8 @@ public enum Groups implements Label {
   BINARY("Binary"),
   PROTOBUF("Protobuf"),
   ADVANCED("Advanced"),
-  DATAGRAM("Datagram")
+  DATAGRAM("Datagram"),
+  WHOLE_FILE("Whole File"),
   ;
 
   private final String label;

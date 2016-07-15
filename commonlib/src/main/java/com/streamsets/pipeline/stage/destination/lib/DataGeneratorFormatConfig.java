@@ -317,7 +317,6 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public String messageType;
 
-
   private boolean validateDataGenerator (
       Stage.Context context,
       DataFormat dataFormat,
@@ -420,6 +419,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
           .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
         break;
+      case WHOLE_FILE:
+        break;
       default:
         // no action needed
         break;
@@ -474,6 +475,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case DELIMITED:
       case SDC_JSON:
       case AVRO:
+      case WHOLE_FILE:
         //no-op
         break;
       case PROTOBUF:

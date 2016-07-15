@@ -17,34 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.lib.generator.wholefile;
 
-package com.streamsets.pipeline.stage.destination.redis;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
+import java.util.Set;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  REDIS("Redis"),
-  TEXT(DataFormat.TEXT.getLabel()),
-  JSON(DataFormat.JSON.getLabel()),
-  DELIMITED(DataFormat.DELIMITED.getLabel()),
-  AVRO(DataFormat.AVRO.getLabel()),
-  BINARY(DataFormat.BINARY.getLabel()),
-  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
-  DATAGRAM(DataFormat.DATAGRAM.getLabel()),
-  WHOLE_FILE(DataFormat.WHOLE_FILE.getLabel()),
-  ;
+public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
+  public static final Map<String, Object> CONFIGS = ImmutableMap.of();
+  public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
+  public WholeFileDataGeneratorFactory(Settings settings) {
+    super(settings);
   }
 
   @Override
-  public String getLabel() {
-    return this.label;
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
+    return new WholeFileDataGenerator(getSettings().getContext(), os);
   }
 }

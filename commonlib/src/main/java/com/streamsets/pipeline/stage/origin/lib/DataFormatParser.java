@@ -204,6 +204,17 @@ public class DataFormatParser {
           }
         }
         break;
+      case WHOLE_FILE:
+        if (dataFormatConfig.wholeFileMaxObjectLen < 1) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.XML.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "maxWholeFileObjectLen",
+                  ParserErrors.PARSER_04
+              )
+          );
+        }
+        break;
       default:
         issues.add(
             context.createConfigIssue(
@@ -276,6 +287,9 @@ public class DataFormatParser {
           .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, dataFormatConfig.messageType)
           .setConfig(ProtobufConstants.DELIMITED_KEY, dataFormatConfig.isDelimited)
           .setMaxDataLen(-1);
+        break;
+      case WHOLE_FILE:
+        builder.setMaxDataLen(dataFormatConfig.wholeFileMaxObjectLen);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));
