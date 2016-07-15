@@ -102,6 +102,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   private final Timer batchProcessingTimer;
   private final Meter batchCountMeter;
+  private final Counter batchCountCounter;
   private final Histogram batchInputRecordsHistogram;
   private final Histogram batchOutputRecordsHistogram;
   private final Histogram batchErrorRecordsHistogram;
@@ -110,6 +111,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final Meter batchOutputRecordsMeter;
   private final Meter batchErrorRecordsMeter;
   private final Meter batchErrorMessagesMeter;
+  private final Counter batchInputRecordsCounter;
+  private final Counter batchOutputRecordsCounter;
+  private final Counter batchErrorRecordsCounter;
+  private final Counter batchErrorMessagesCounter;
   private final Counter memoryConsumedCounter;
   private MetricRegistryJson metricRegistryJson;
   private Long rateLimit;
@@ -158,6 +163,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     MetricsConfigurator.registerPipeline(pipelineName, revision);
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount", pipelineName, revision);
+    batchCountCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchCount", pipelineName, revision);
     batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch",
       pipelineName, revision);
     batchOutputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.outputRecordsPerBatch",
@@ -173,6 +179,14 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchErrorRecordsMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorRecords", pipelineName,
       revision);
     batchErrorMessagesMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchErrorMessages", pipelineName,
+      revision);
+    batchInputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchInputRecords", pipelineName,
+      revision);
+    batchOutputRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchOutputRecords", pipelineName,
+      revision);
+    batchErrorRecordsCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchErrorRecords", pipelineName,
+      revision);
+    batchErrorMessagesCounter = MetricsConfigurator.createCounter(metrics, "pipeline.batchErrorMessages", pipelineName,
       revision);
     memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed", pipelineName,
       revision);
@@ -198,12 +212,16 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchErrorsHistogram.update(errorPerBatchHistogramJson.getCount());
     MeterJson batchInputRecords = metricRegistryJson.getMeters().get("pipeline.batchInputRecords" + MetricsConfigurator.METER_SUFFIX);
     batchInputRecordsMeter.mark(batchInputRecords.getCount());
+    batchInputRecordsCounter.inc(batchInputRecords.getCount());
     MeterJson batchOutputRecords = metricRegistryJson.getMeters().get("pipeline.batchOutputRecords" + MetricsConfigurator.METER_SUFFIX);
     batchOutputRecordsMeter.mark(batchOutputRecords.getCount());
+    batchOutputRecordsCounter.inc(batchOutputRecords.getCount());
     MeterJson batchErrorRecords = metricRegistryJson.getMeters().get("pipeline.batchErrorRecords" + MetricsConfigurator.METER_SUFFIX);
     batchErrorRecordsMeter.mark(batchErrorRecords.getCount());
+    batchErrorRecordsCounter.inc(batchErrorRecords.getCount());
     MeterJson batchErrorMessagesRecords = metricRegistryJson.getMeters().get("pipeline.batchErrorMessages" + MetricsConfigurator.METER_SUFFIX);
     batchErrorMessagesMeter.mark(batchErrorMessagesRecords.getCount());
+    batchErrorMessagesCounter.inc(batchErrorMessagesRecords.getCount());
     CounterJson memoryConsumer = metricRegistryJson.getCounters().get("pipeline.memoryConsumed" + MetricsConfigurator.COUNTER_SUFFIX);
     memoryConsumedCounter.inc(memoryConsumer.getCount());
   }
@@ -424,6 +442,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     long batchDuration = System.currentTimeMillis() - start;
     batchProcessingTimer.update(batchDuration, TimeUnit.MILLISECONDS);
+    batchCountCounter.inc();
     batchCountMeter.mark();
     batchInputRecordsHistogram.update(pipeBatch.getInputRecords());
     batchOutputRecordsHistogram.update(pipeBatch.getOutputRecords());
@@ -433,6 +452,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
     batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
     batchErrorMessagesMeter.mark(pipeBatch.getErrorMessages());
+    batchInputRecordsCounter.inc(pipeBatch.getInputRecords());
+    batchOutputRecordsCounter.inc(pipeBatch.getOutputRecords());
+    batchErrorRecordsCounter.inc(pipeBatch.getErrorRecords());
+    batchErrorMessagesCounter.inc(pipeBatch.getErrorMessages());
 
     if (isStatsAggregationEnabled()) {
       Map<String, Object> pipelineBatchMetrics = new HashMap<>();

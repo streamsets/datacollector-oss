@@ -61,6 +61,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Meter outputRecordsMeter;
   private Meter errorRecordsMeter;
   private Meter stageErrorMeter;
+  private Counter inputRecordsCounter;
+  private Counter outputRecordsCounter;
+  private Counter errorRecordsCounter;
+  private Counter stageErrorCounter;
   private Histogram inputRecordsHistogram;
   private Histogram outputRecordsHistogram;
   private Histogram errorRecordsHistogram;
@@ -107,6 +111,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords", name, rev);
       errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords", name, rev);
       stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors", name, rev);
+      inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords", name, rev);
+      outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords", name, rev);
+      errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords", name, rev);
+      stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors", name, rev);
       inputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".inputRecords", name, rev);
       outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords", name, rev);
       errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords", name, rev);
@@ -126,6 +134,18 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         MeterJson stageErrorMeterJson =
           metricRegistryJson.getMeters().get(metricsKey + ".stageErrors" + MetricsConfigurator.METER_SUFFIX);
         stageErrorMeter.mark(stageErrorMeterJson.getCount());
+        CounterJson inputRecordsCounterJson =
+          metricRegistryJson.getCounters().get(metricsKey + ".inputRecords" + MetricsConfigurator.COUNTER_SUFFIX);
+        inputRecordsCounter.inc(inputRecordsCounterJson.getCount());
+        CounterJson outputRecordsCounterJson =
+          metricRegistryJson.getCounters().get(metricsKey + ".outputRecords" + MetricsConfigurator.COUNTER_SUFFIX);
+        outputRecordsCounter.inc(outputRecordsCounterJson.getCount());
+        CounterJson errorRecordsCounterJson =
+          metricRegistryJson.getCounters().get(metricsKey + ".errorRecords" + MetricsConfigurator.COUNTER_SUFFIX);
+        errorRecordsCounter.inc(errorRecordsCounterJson.getCount());
+        CounterJson stageErrorCounterJson =
+          metricRegistryJson.getCounters().get(metricsKey + ".stageErrors" + MetricsConfigurator.COUNTER_SUFFIX);
+        stageErrorCounter.inc(stageErrorCounterJson.getCount());
         HistogramJson metricHistrogramJson =
           metricRegistryJson.getHistograms()
             .get(metricsKey + ".inputRecords" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
@@ -218,10 +238,12 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     processingTimer.update(processingTime, TimeUnit.MILLISECONDS);
 
     int batchSize = batchImpl.getSize();
+    inputRecordsCounter.inc(batchSize);
     inputRecordsMeter.mark(batchSize);
     inputRecordsHistogram.update(batchSize);
 
     int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
+    errorRecordsCounter.inc(stageErrorRecordCount);
     errorRecordsMeter.mark(stageErrorRecordCount);
     errorRecordsHistogram.update(stageErrorRecordCount);
 
@@ -231,11 +253,13 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       //Records are sent to destination or to the error sink.
       outputRecordsCount = batchSize - stageErrorRecordCount;
     }
+    outputRecordsCounter.inc(outputRecordsCount);
     outputRecordsMeter.mark(outputRecordsCount);
     outputRecordsHistogram.update(outputRecordsCount);
 
 
     int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
+    stageErrorCounter.inc(stageErrorsCount);
     stageErrorMeter.mark(stageErrorsCount);
     stageErrorsHistogram.update(stageErrorsCount);
 

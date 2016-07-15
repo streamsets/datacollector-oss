@@ -1397,6 +1397,26 @@ angular.module('dataCollectorApp.common')
             {
               value: 'pipeline.memoryConsumed.counter',
               label: 'Pipeline Memory Consumption Counter (MB)'
+            },
+            {
+              value: 'pipeline.batchCount.counter',
+              label: 'Pipeline Batch Counter'
+            },
+            {
+              value: 'pipeline.batchInputRecords.counter',
+              label: 'Pipeline Batch Input Records Counter'
+            },
+            {
+              value: 'pipeline.batchOutputRecords.counter',
+              label: 'Pipeline Batch Output Records Counter '
+            },
+            {
+              value: 'pipeline.batchErrorRecords.counter',
+              label: 'Pipeline Batch Error Records Counter'
+            },
+            {
+              value: 'pipeline.batchErrorMessages.counter',
+              label: 'Pipeline Batch Stage Errors Counter'
             }
         ],
         HISTOGRAM: [
@@ -1456,6 +1476,22 @@ angular.module('dataCollectorApp.common')
           {
             value: 'stage.' + instanceName + '.memoryConsumed.counter',
             label: label + ' Heap Memory Usage Counter (MB)'
+          },
+          {
+            value: 'stage.' + instanceName + '.inputRecords.counter',
+            label: label + ' Input Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.outputRecords.counter',
+            label: label + ' Output Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.errorRecords.counter',
+            label: label + ' Error Records Counter'
+          },
+          {
+            value: 'stage.' + instanceName + '.stageErrors.counter',
+            label: label + ' Stage Errors Counter'
           }
         ]);
 
