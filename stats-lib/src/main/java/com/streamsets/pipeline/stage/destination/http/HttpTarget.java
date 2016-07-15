@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
+import com.streamsets.datacollector.http.SnappyWriterInterceptor;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.SDCMetricsJson;
@@ -36,20 +37,15 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
-import org.iq80.snappy.SnappyFramedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,8 +67,6 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   static final String DPM_PIPELINE_COMMIT_ID = "dpm.pipeline.commitId";
   @VisibleForTesting
   static final String DPM_JOB_ID = "dpm.job.id";
-  public static final String CONTENT_ENCODING = "Content-Encoding";
-  public static final String SNAPPY = "snappy";
 
   private final String targetUrl;
   private final String sdcAuthToken;
@@ -224,17 +218,6 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     while(records.hasNext()) {
       record = records.next();
       sdcIdToRecordMap.put(record.get("/" + AggregatorUtil.SDC_ID).getValueAsString(), record);
-    }
-  }
-
-  static class SnappyWriterInterceptor implements WriterInterceptor {
-
-    @Override
-    public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-      context.getHeaders().add(CONTENT_ENCODING, SNAPPY);
-      final OutputStream outputStream = context.getOutputStream();
-      context.setOutputStream(new SnappyFramedOutputStream(outputStream));
-      context.proceed();
     }
   }
 }

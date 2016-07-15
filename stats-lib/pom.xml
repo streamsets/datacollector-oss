@@ -44,7 +44,6 @@
     <xerces.version>2.11.0</xerces.version>
     <bouncycastle.version>1.46</bouncycastle.version>
     <jetty.version>9.2.17.v20160517</jetty.version>
-    <snappy.version>0.4</snappy.version>
   </properties>
 
   <dependencies>

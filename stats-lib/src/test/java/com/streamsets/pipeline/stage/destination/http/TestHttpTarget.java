@@ -33,9 +33,6 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.streamsets.pipeline.stage.destination.http.HttpTarget.CONTENT_ENCODING;
-import static com.streamsets.pipeline.stage.destination.http.HttpTarget.SNAPPY;
-
 public class TestHttpTarget extends BaseHttpTargetTest {
 
   @Override
@@ -61,8 +58,8 @@ public class TestHttpTarget extends BaseHttpTargetTest {
 
     @Override
     public Object aroundReadFrom(ReaderInterceptorContext context)  throws IOException, WebApplicationException {
-      if (context.getHeaders().containsKey(CONTENT_ENCODING) &&
-        context.getHeaders().get(CONTENT_ENCODING).contains(SNAPPY)) {
+      if (context.getHeaders().containsKey("Content-Encoding") &&
+        context.getHeaders().get("Content-Encoding").contains("snappy")) {
         InputStream originalInputStream = context.getInputStream();
         context.setInputStream(new SnappyFramedInputStream(originalInputStream, true));
       }
