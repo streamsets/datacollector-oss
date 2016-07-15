@@ -92,12 +92,12 @@ import java.util.Map;
 public class PipelineStoreResource {
   private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
   private static final String HIGH_BAD_RECORDS_TEXT = "High incidence of Error Records";
-  private static final String HIGH_BAD_RECORDS_METRIC_ID = "pipeline.batchErrorRecords.meter";
+  private static final String HIGH_BAD_RECORDS_METRIC_ID = "pipeline.batchErrorRecords.counter";
   private static final String HIGH_BAD_RECORDS_CONDITION = "${value() > 100}";
 
   private static final String HIGH_STAGE_ERRORS_ID = "stageErrorAlertID";
   private static final String HIGH_STAGE_ERRORS_TEXT = "High incidence of Stage Errors";
-  private static final String HIGH_STAGE_ERRORS_METRIC_ID = "pipeline.batchErrorMessages.meter";
+  private static final String HIGH_STAGE_ERRORS_METRIC_ID = "pipeline.batchErrorMessages.counter";
   private static final String HIGH_STAGE_ERRORS_CONDITION = "${value() > 100}";
 
   private static final String PIPELINE_IDLE_ID = "idleGaugeID";
@@ -237,11 +237,11 @@ public class PipelineStoreResource {
     long timestamp = System.currentTimeMillis();
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_BAD_RECORDS_ID, HIGH_BAD_RECORDS_TEXT,
-      HIGH_BAD_RECORDS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_BAD_RECORDS_CONDITION, false,
+      HIGH_BAD_RECORDS_METRIC_ID, MetricType.COUNTER, MetricElement.COUNTER_COUNT, HIGH_BAD_RECORDS_CONDITION, false,
       false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_STAGE_ERRORS_ID, HIGH_STAGE_ERRORS_TEXT,
-      HIGH_STAGE_ERRORS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_STAGE_ERRORS_CONDITION, false,
+      HIGH_STAGE_ERRORS_METRIC_ID, MetricType.COUNTER, MetricElement.COUNTER_COUNT, HIGH_STAGE_ERRORS_CONDITION, false,
       false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(PIPELINE_IDLE_ID, PIPELINE_IDLE_TEXT,
