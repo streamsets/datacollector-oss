@@ -29,7 +29,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import org.apache.http.annotation.Immutable;
 import org.junit.Assert;
 
 import java.util.ArrayList;
