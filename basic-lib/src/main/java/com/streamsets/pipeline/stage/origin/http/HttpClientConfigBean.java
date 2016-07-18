@@ -94,8 +94,8 @@ public class HttpClientConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.TEXT,
-      label = "Request Data",
-      description = "Data that should be included as a part of the request",
+      label = "Request Body",
+      description = "Data that should be included as the body of the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 13,
       elDefs = VaultEL.class,
@@ -104,7 +104,7 @@ public class HttpClientConfigBean {
       triggeredByValue = { "POST", "PUT", "DELETE" },
       group = "HTTP"
   )
-  public String requestData;
+  public String requestBody;
 
   @ConfigDef(
       required = true,
@@ -205,7 +205,7 @@ public class HttpClientConfigBean {
    */
   public void init(Source.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
 
-    List<String> elConfigs = ImmutableList.of("resourceUrl", "headers", "requestData");
+    List<String> elConfigs = ImmutableList.of("resourceUrl", "headers", "requestBody");
     for (String configName : elConfigs) {
       ELVars vars = context.createELVars();
       ELEval eval = context.createELEval(configName);

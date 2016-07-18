@@ -20,53 +20,91 @@
 
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.base.Optional;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.Groups;
+import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.glassfish.jersey.client.ChunkedInput;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.oauth1.AccessToken;
+import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.AsyncInvoker;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class HttpClientSource extends BaseSource implements OffsetCommitter {
+public class HttpClientSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
+  private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
+  private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
+  private static final String HEADER_CONFIG_NAME = "headers";
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
-
-  public static final String BASIC_CONFIG_PREFIX = "conf.basic.";
+  private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
+  private static final String VAULT_EL_PREFIX = "${" + VaultEL.PREFIX;
 
   private final HttpClientConfigBean conf;
+  private static final HashFunction hf = Hashing.sha256();
+  private Hasher hasher;
 
-  private ExecutorService executorService;
-  private ScheduledExecutorService safeExecutor;
+  private AccessToken authToken;
+  private Client client;
+  private Response response;
+  private ChunkedInput<String> chunkedInput;
+  private int recordCount;
+  private long lastRequestCompletedTime = -1;
 
-  private long recordCount;
+  // Used for record id generation
+  private String resolvedUrl;
+  private String currentParameterHash;
+
+  private ELVars resourceVars;
+  private ELVars bodyVars;
+  private ELVars headerVars;
+  private ELEval resourceEval;
+  private ELEval bodyEval;
+  private ELEval headerEval;
+
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
-
-  private BlockingQueue<String> entityQueue;
-  private HttpStreamConsumer httpConsumer;
 
   /**
    * @param conf Configuration object for the HTTP client
@@ -83,51 +121,55 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
     conf.init(getContext(), Groups.HTTP.name(), "conf.", issues);
-    conf.sslConfig.init(getContext(), Groups.SSL.name(), "conf.sslConfig.", issues);
+    conf.sslConfig.init(getContext(), Groups.SSL.name(), SSL_CONFIG_PREFIX, issues);
 
-    // Queue may not be empty at shutdown, but because we can't rewind,
-    // the dropped entities are not recoverable anyway. In the case
-    // that the pipeline is restarted we'll resume with any entities still enqueued.
-    entityQueue = new ArrayBlockingQueue<>(2 * conf.basic.maxBatchSize);
+    resourceVars = getContext().createELVars();
+    resourceEval = getContext().createELEval(RESOURCE_CONFIG_NAME);
 
-    parserFactory = conf.dataFormatConfig.getParserFactory();
+    bodyVars = getContext().createELVars();
+    bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
 
-    httpConsumer = new HttpStreamConsumer(conf, getContext(), entityQueue);
+    headerVars = getContext().createELVars();
+    headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
 
-    switch (conf.httpMode) {
-      case STREAMING:
-        createStreamingConsumer();
-        break;
-      case POLLING:
-        createPollingConsumer();
-        break;
-      default:
-        throw new IllegalStateException("Unrecognized httpMode " + conf.httpMode);
+    // Validation succeeded so configure the client.
+    if (issues.isEmpty()) {
+      configureClient();
     }
+
     return issues;
   }
 
-  private void createPollingConsumer() {
-    safeExecutor = new SafeScheduledExecutorService(1, getClass().getName());
-    LOG.info("Scheduling consumer at polling period {}.", conf.pollingInterval);
-    safeExecutor.scheduleAtFixedRate(httpConsumer, 0L, conf.pollingInterval, TimeUnit.MILLISECONDS);
-  }
+  private void configureClient() {
+    ClientConfig clientConfig = new ClientConfig()
+        .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
+        .property(ClientProperties.READ_TIMEOUT, conf.requestTimeoutMillis)
+        .connectorProvider(new GrizzlyConnectorProvider());
 
-  private void createStreamingConsumer() {
-    executorService = Executors.newFixedThreadPool(1);
-    executorService.execute(httpConsumer);
+    ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
+
+    configureAuth(clientBuilder);
+
+    if (conf.useProxy) {
+      JerseyClientUtil.configureProxy(conf.proxy, clientBuilder);
+    }
+
+    JerseyClientUtil.configureSslContext(conf.sslConfig, clientBuilder);
+
+    client = clientBuilder.build();
+
+    parserFactory = conf.dataFormatConfig.getParserFactory();
   }
 
   @Override
   public void destroy() {
-    if (httpConsumer != null) {
-      httpConsumer.stop();
-      httpConsumer = null;
-      if (conf.httpMode == HttpClientMode.STREAMING) {
-        executorService.shutdownNow();
-      } else if (conf.httpMode == HttpClientMode.POLLING) {
-        safeExecutor.shutdownNow();
-      }
+    if (chunkedInput != null && !chunkedInput.isClosed()) {
+      chunkedInput.close();
+      chunkedInput = null;
+    }
+    if (response != null) {
+      response.close();
+      response = null;
     }
     super.destroy();
   }
@@ -136,57 +178,78 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
-    while (((System.currentTimeMillis() - start) < conf.basic.maxWaitTime) && (entityQueue.size() < chunksToFetch)) {
-      try {
-        Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
-      } catch (InterruptedException ex) {
-        Thread.currentThread().interrupt();
-      }
+    Optional<String> newSourceOffset = Optional.absent();
+    recordCount = 0;
+
+    resolvedUrl = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
+    WebTarget target = client.target(resolvedUrl);
+
+    // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
+    if (requestContainsSensitiveInfo() && !target.getUri().getScheme().toLowerCase().startsWith("https")) {
+      throw new StageException(Errors.HTTP_07);
     }
 
-    // Check for an error and propagate to the user
-    if (httpConsumer.getError().isPresent()) {
-      Exception e = httpConsumer.getError().get();
-      if (e instanceof StageException) {
-        throw (StageException) e;
+    Future<Response> responseFuture;
+    while (((System.currentTimeMillis() - start) < conf.basic.maxWaitTime) && (recordCount < chunksToFetch)) {
+      if (shouldMakeRequest(start)) {
+        responseFuture = makeRequest(target);
+        newSourceOffset = processResponse(responseFuture, chunksToFetch, batchMaker);
+      } else if (chunkedInput != null) {
+        // We already have a chunkedInput that we haven't finished reading.
+        newSourceOffset = readChunks(chunksToFetch, batchMaker);
       } else {
-        throw new StageException(Errors.HTTP_03, e.getMessage(), e);
-      }
-    }
-
-    List<String> chunks = new ArrayList<>(chunksToFetch);
-
-    // We didn't receive any new data within the time allotted for this batch.
-    if (entityQueue.isEmpty()) {
-      return getOffset();
-    }
-    entityQueue.drainTo(chunks, chunksToFetch);
-
-    Response.StatusType lastResponseStatus = httpConsumer.getLastResponseStatus();
-    if (lastResponseStatus.getFamily() == Response.Status.Family.SUCCESSFUL) {
-      for (String chunk : chunks) {
-        String sourceId = getOffset();
-        try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
-          parseChunk(parser, batchMaker);
-        } catch (IOException | DataParserException e) {
-          errorRecordHandler.onError(Errors.HTTP_00, sourceId, e.toString(), e);
+        // In polling mode, waiting for the next polling interval.
+        if (!ThreadUtil.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS)) {
+          break;
         }
       }
-    } else {
-      // If http response status != 2xx
-      errorRecordHandler.onError(Errors.HTTP_01, lastResponseStatus.getStatusCode(), lastResponseStatus.getReasonPhrase());
     }
 
-    return getOffset();
+    if (newSourceOffset.isPresent()) {
+      return newSourceOffset.get();
+    } else {
+      return lastSourceOffset;
+    }
   }
 
-  private void parseChunk(DataParser parser, BatchMaker batchMaker) throws IOException, DataParserException {
+  private Future<Response> makeRequest(WebTarget target) throws StageException {
+    Future<Response> responseFuture;
+    hasher = hf.newHasher();
+
+    final AsyncInvoker asyncInvoker = target
+        .request()
+        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
+        .headers(resolveHeaders())
+        .async();
+
+    if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
+      final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+      hasher.putString(requestBody, Charset.forName(conf.dataFormatConfig.charset));
+      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
+    } else {
+      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
+    }
+
+    // Calculate request parameter hash
+    currentParameterHash = hasher.hash().toString();
+    return responseFuture;
+  }
+
+  private boolean shouldMakeRequest(long start) {
+    return chunkedInput == null && start > lastRequestCompletedTime + conf.pollingInterval;
+  }
+
+  private String parseChunk(String chunk, BatchMaker batchMaker) throws IOException, DataParserException {
+    // Paging support will be added in SDC-3352
+    String newSourceOffset = "url::" + resolvedUrl + "::page::0::params::" + currentParameterHash + "::time::" +
+        System.currentTimeMillis();
+    DataParser parser = parserFactory.getParser(newSourceOffset, chunk);
     if (conf.dataFormat == DataFormat.JSON) {
       // For JSON, a chunk only contains a single record, so we only parse it once.
       Record record = parser.parse();
       if (record != null) {
         batchMaker.addRecord(record);
-        recordCount++;
+        ++recordCount;
       }
       if (null != parser.parse()) {
         throw new DataParserException(Errors.HTTP_02);
@@ -196,18 +259,105 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       Record record = parser.parse();
       while (record != null) {
         batchMaker.addRecord(record);
-        recordCount++;
+        ++recordCount;
         record = parser.parse();
       }
     }
+    LOG.debug("Read record with ID, count: '{}', '{}'", newSourceOffset, recordCount);
+    return newSourceOffset;
   }
 
-  private String getOffset() {
-    return Long.toString(recordCount);
+  private void configureAuth(ClientBuilder clientBuilder) {
+    if (conf.authType == AuthenticationType.OAUTH) {
+      authToken = JerseyClientUtil.configureOAuth1(conf.oauth, clientBuilder);
+    } else if (conf.authType != AuthenticationType.NONE) {
+      JerseyClientUtil.configurePasswordAuth(conf.authType, conf.basicAuth, clientBuilder);
+    }
   }
 
-  @Override
-  public void commit(String offset) throws StageException {
-    // NO-OP
+  private boolean requestContainsSensitiveInfo() {
+    boolean sensitive = false;
+    for (Map.Entry<String, String> header : conf.headers.entrySet()) {
+      if (header.getKey().contains(VAULT_EL_PREFIX) || header.getValue().contains(VAULT_EL_PREFIX)) {
+        sensitive = true;
+        break;
+      }
+    }
+
+    if (conf.requestBody != null && conf.requestBody.contains(VAULT_EL_PREFIX)) {
+      sensitive = true;
+    }
+
+    return sensitive;
+  }
+
+  private MultivaluedMap<String, Object> resolveHeaders() throws StageException {
+    MultivaluedMap<String, Object> requestHeaders = new MultivaluedHashMap<>();
+    for (Map.Entry<String, String> entry : conf.headers.entrySet()) {
+      List<Object> header = new ArrayList<>(1);
+      Object resolvedValue = headerEval.eval(headerVars, entry.getValue(), String.class);
+      header.add(resolvedValue);
+      requestHeaders.put(entry.getKey(), header);
+      hasher.putString(entry.getKey(), Charset.forName(conf.dataFormatConfig.charset));
+      hasher.putString(entry.getValue(), Charset.forName(conf.dataFormatConfig.charset));
+    }
+
+    return requestHeaders;
+  }
+
+  private Optional<String> processResponse(Future<Response> responseFuture, int maxRecords, BatchMaker batchMaker) throws
+      StageException {
+    Optional<String> newSourceOffset = Optional.absent();
+    try {
+      response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+
+      // Response was not in the OK range, so treat as an error
+      if (response.getStatus() < 200 || response.getStatus() >= 300) {
+        errorRecordHandler.onError(
+            Errors.HTTP_01,
+            response.getStatus(),
+            response.getStatusInfo().getReasonPhrase()
+        );
+        lastRequestCompletedTime = System.currentTimeMillis();
+        response.close();
+        response = null;
+        return newSourceOffset;
+      }
+
+      if (response.hasEntity()) {
+        chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {
+        });
+        chunkedInput.setParser(ChunkedInput.createParser(conf.entityDelimiter));
+        newSourceOffset = readChunks(maxRecords, batchMaker);
+      }
+    } catch (InterruptedException | TimeoutException | ExecutionException e) {
+      LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
+      errorRecordHandler.onError(Errors.HTTP_03, e.toString());
+    }
+
+    return newSourceOffset;
+  }
+
+  private Optional<String> readChunks(int maxRecords, BatchMaker batchMaker) throws StageException {
+    String chunk = null;
+    Optional<String> newSourceOffset = Optional.absent();
+    try {
+      while (recordCount < maxRecords && (chunk = chunkedInput.read()) != null) {
+        newSourceOffset = Optional.of(parseChunk(chunk, batchMaker));
+      }
+    } catch (IOException e) {
+      errorRecordHandler.onError(Errors.HTTP_00, chunk, e.toString(), e);
+    } finally {
+      // This was the end of the chunked input
+      // If there's more to read we can't close the response in this batch.
+      if (chunk == null) {
+        chunkedInput.close();
+        chunkedInput = null;
+        response.close();
+        response = null;
+        lastRequestCompletedTime = System.currentTimeMillis();
+      }
+    }
+    return newSourceOffset;
   }
 }

@@ -41,7 +41,7 @@ public class TestHttpClientSourceUpgrader {
     configs.add(new Config("dataFormat", DataFormat.JSON));
     configs.add(new Config("resourceUrl", "stream.twitter.com/1.1/statuses/sample.json"));
     configs.add(new Config("httpMethod", HttpMethod.GET));
-    configs.add(new Config("requestData", ""));
+    configs.add(new Config("requestBody", ""));
     configs.add(new Config("requestTimeoutMillis", 1000L));
     configs.add(new Config("httpMode", HttpClientMode.STREAMING));
     configs.add(new Config("pollingInterval", 5000L));
@@ -55,10 +55,12 @@ public class TestHttpClientSourceUpgrader {
     configs.add(new Config("jsonMode", JsonMode.MULTIPLE_OBJECTS));
     configs.add(new Config("entityDelimiter", "\n"));
 
+    Assert.assertEquals(16, configs.size());
+
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(21, configs.size());
+    Assert.assertEquals(17, configs.size());
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
 
@@ -71,8 +73,8 @@ public class TestHttpClientSourceUpgrader {
     Assert.assertTrue(configValues.containsKey("conf.httpMethod"));
     Assert.assertEquals(HttpMethod.GET, configValues.get("conf.httpMethod"));
 
-    Assert.assertTrue(configValues.containsKey("conf.requestData"));
-    Assert.assertEquals("", configValues.get("conf.requestData"));
+    Assert.assertTrue(configValues.containsKey("conf.requestBody"));
+    Assert.assertEquals("", configValues.get("conf.requestBody"));
 
     Assert.assertTrue(configValues.containsKey("conf.requestTimeoutMillis"));
     Assert.assertEquals(1000L, configValues.get("conf.requestTimeoutMillis"));
@@ -157,6 +159,20 @@ public class TestHttpClientSourceUpgrader {
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
     Assert.assertTrue(configValues.containsKey("conf.headers"));
+  }
+
+  @Test
+  public void testV5ToV6() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("conf.requestData", ""));
+
+    HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
+    upgrader.upgrade("a", "b", "c", 5, 6, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    Assert.assertTrue(configValues.containsKey("conf.requestBody"));
+    Assert.assertFalse(configValues.containsKey("conf.requestData"));
+    Assert.assertEquals(1, configs.size());
   }
 
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {

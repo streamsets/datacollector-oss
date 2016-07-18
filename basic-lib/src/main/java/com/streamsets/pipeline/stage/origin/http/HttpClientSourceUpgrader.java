@@ -47,15 +47,30 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
-        break;
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
       case 3:
         upgradeV3ToV4(configs);
-        break;
+        if (toVersion == 4) {
+          break;
+        }
+        // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -69,7 +84,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         case "dataFormat":
         case "resourceUrl":
         case "httpMethod":
-        case "requestData":
+        case "requestBody":
         case "requestTimeoutMillis":
         case "httpMode":
         case "pollingInterval":
@@ -136,5 +151,17 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
   private void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config("conf.headers", new HashMap<String, String>()));
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    for (Config config : configs) {
+      if (joiner.join(CONF, "requestData").equals(config.getName())) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(joiner.join(CONF, "requestBody"), config.getValue()));
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

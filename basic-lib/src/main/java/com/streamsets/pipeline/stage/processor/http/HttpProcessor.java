@@ -185,8 +185,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         throw new StageException(Errors.HTTP_07);
       }
 
-
-        // from HttpStreamConsumer
+      // from HttpStreamConsumer
       final AsyncInvoker asyncInvoker = target.request()
           .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
           .headers(resolveHeaders(record))

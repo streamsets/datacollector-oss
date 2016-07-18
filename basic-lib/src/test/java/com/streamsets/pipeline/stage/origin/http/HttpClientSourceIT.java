@@ -195,6 +195,18 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/unauthorized")
+  @Singleton
+  public static class AlwaysUnauthorized {
+    @GET
+    public Response get() {
+      return Response
+          .status(401)
+          .header("WWW-Authenticate", "Basic realm=\"WallyWorld\"")
+          .build();
+    }
+  }
+
   @Override
   protected Application configure() {
     forceSet(TestProperties.CONTAINER_PORT, "0");
@@ -205,7 +217,9 @@ public class HttpClientSourceIT extends JerseyTest {
             TextStreamResource.class,
             XmlStreamResource.class,
             PreemptiveAuthResource.class,
-            AuthResource.class
+            AuthResource.class,
+            HeaderRequired.class,
+            AlwaysUnauthorized.class
         )
     );
   }
@@ -227,7 +241,8 @@ public class HttpClientSourceIT extends JerseyTest {
                     XmlStreamResource.class,
                     PreemptiveAuthResource.class,
                     AuthResource.class,
-                    HeaderRequired.class
+                    HeaderRequired.class,
+                    AlwaysUnauthorized.class
                 )
             )
         )
@@ -286,7 +301,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.POST;
-    conf.requestData = "adam";
+    conf.requestBody = "adam";
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
@@ -435,7 +450,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
   @Test
   public void testNoAuthorizeHttpOnSendToError() throws Exception {
-    HttpClientSource origin = getTwitterHttpClientSource();
+    HttpClientSource origin = getUnauthorizedClientSource();
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.TO_ERROR)
@@ -453,7 +468,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
   @Test
   public void testNoAuthorizeHttpOnStopPipeline() throws Exception {
-    HttpClientSource origin = getTwitterHttpClientSource();
+    HttpClientSource origin = getUnauthorizedClientSource();
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -479,7 +494,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
   @Test
   public void testNoAuthorizeHttpOnDiscard() throws Exception {
-    HttpClientSource origin = getTwitterHttpClientSource();
+    HttpClientSource origin = getUnauthorizedClientSource();
 
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
       .addOutputLane("lane")
@@ -508,11 +523,11 @@ public class HttpClientSourceIT extends JerseyTest {
     return v;
   }
 
-  private HttpClientSource getTwitterHttpClientSource() {
+  private HttpClientSource getUnauthorizedClientSource() {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = "https://stream.twitter.com/1.1/statuses/sample.json";
+    conf.resourceUrl = getBaseUri() + "unauthorized";
     conf.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
@@ -664,7 +679,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.POST;
-    conf.requestData = "${invalid:el()}";
+    conf.requestBody = "${invalid:el()}";
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
@@ -691,7 +706,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.POST;
-    conf.requestData = "${str:trim('abcdef ')}";
+    conf.requestBody = "${str:trim('abcdef ')}";
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 

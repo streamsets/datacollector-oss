@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.http.Groups;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",
