@@ -43,7 +43,6 @@ import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -130,43 +129,36 @@ public class PipelineConfigurationValidator {
     Preconditions.checkState(!validated, "Already validated");
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
-    if (validSchemaVersion()) {
-      canPreview = resolveLibraryAliases();
-      canPreview &= upgradePipeline();
-      canPreview &= addMissingConfigs();
-      canPreview &= sortStages();
-      canPreview &= checkIfPipelineIsEmpty();
-      canPreview &= loadAndValidatePipelineConfig();
-      canPreview &= validatePipelineMemoryConfiguration();
-      canPreview &= validateStageConfiguration();
-      canPreview &= validatePipelineLanes();
-      canPreview &= validateErrorStage();
-      canPreview &= validateStatsAggregatorStage();
-      canPreview &= validateStagesExecutionMode(pipelineConfiguration);
-      canPreview &= validateCommitTriggerStage(pipelineConfiguration);
+    canPreview = resolveLibraryAliases();
+    canPreview &= upgradePipeline();
+    canPreview &= addMissingConfigs();
+    canPreview &= sortStages();
+    canPreview &= checkIfPipelineIsEmpty();
+    canPreview &= loadAndValidatePipelineConfig();
+    canPreview &= validatePipelineMemoryConfiguration();
+    canPreview &= validateStageConfiguration();
+    canPreview &= validatePipelineLanes();
+    canPreview &= validateErrorStage();
+    canPreview &= validateStatsAggregatorStage();
+    canPreview &= validateStagesExecutionMode(pipelineConfiguration);
+    canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
-      if (LOG.isTraceEnabled() && issues.hasIssues()) {
-        for (Issue issue : issues.getPipelineIssues()) {
-          LOG.trace("Pipeline '{}', {}", name, issue);
-        }
-        for (Issue issue : issues.getIssues()) {
-          LOG.trace("Pipeline '{}', {}", name, issue);
-        }
+    if (LOG.isTraceEnabled() && issues.hasIssues()) {
+      for (Issue issue : issues.getPipelineIssues()) {
+        LOG.trace("Pipeline '{}', {}", name, issue);
       }
-      LOG.debug(
-          "Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}",
-          name,
-          !issues.hasIssues(),
-          canPreview,
-          issues.getIssueCount()
-      );
-    } else {
-      LOG.debug(
-          "Pipeline '{}' validation. Unsupported pipeline schema '{}'",
-          name,
-          pipelineConfiguration.getSchemaVersion()
-      );
+      for (Issue issue : issues.getIssues()) {
+        LOG.trace("Pipeline '{}', {}", name, issue);
+      }
     }
+    LOG.debug(
+        "Pipeline '{}' validation. valid={}, canPreview={}, issuesCount={}",
+        name,
+        !issues.hasIssues(),
+        canPreview,
+        issues.getIssueCount()
+    );
+
     pipelineConfiguration.setValidation(this);
     return pipelineConfiguration;
   }
@@ -383,18 +375,6 @@ public class PipelineConfigurationValidator {
       }
     }
     return canPreview;
-  }
-
-  //TODO eventually, this should trigger a schema upgrade
-  public boolean validSchemaVersion() {
-    if (pipelineConfiguration.getSchemaVersion() != PipelineStoreTask.SCHEMA_VERSION) {
-      issues.add(
-          IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConfiguration.getSchemaVersion())
-      );
-      return false;
-    } else {
-      return true;
-    }
   }
 
   public boolean canPreview() {

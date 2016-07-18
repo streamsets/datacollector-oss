@@ -567,7 +567,8 @@ angular.module('dataCollectorApp.common')
             stageType: stage.type
           },
           inputLanes: [],
-          outputLanes: []
+          outputLanes: [],
+          eventLanes: []
         };
 
       if (firstOpenLane && firstOpenLane.laneName) {

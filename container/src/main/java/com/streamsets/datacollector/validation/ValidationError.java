@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 // we have a hardcoded 'datacollector-resource-bundles.json' file in resources
 @GenerateResourceBundle
 public enum ValidationError implements ErrorCode {
-  VALIDATION_0000("Unsupported pipeline schema '{}'"),
+  VALIDATION_0000("Unsupported pipeline schema version '{}'"),
 
   VALIDATION_0001("The pipeline is empty"),
   VALIDATION_0002("The pipeline includes unconnected stages. Cannot reach the following stages: {}"),

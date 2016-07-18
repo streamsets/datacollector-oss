@@ -121,6 +121,7 @@ angular
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
                     newPipelineObject.stages = jsonConfigObj.stages;
                     newPipelineObject.version = jsonConfigObj.version;
+                    newPipelineObject.schemaVersion = jsonConfigObj.schemaVersion;
                     newPipelineObject.metadata = jsonConfigObj.metadata;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })

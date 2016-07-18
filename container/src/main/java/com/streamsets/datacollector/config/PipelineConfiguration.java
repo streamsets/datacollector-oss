@@ -91,6 +91,10 @@ public class PipelineConfiguration implements Serializable{
     return schemaVersion;
   }
 
+  public void setSchemaVersion(int schemaVersion) {
+    this.schemaVersion = schemaVersion;
+  }
+
   public void setVersion(int version) {
     this.version = version;
   }

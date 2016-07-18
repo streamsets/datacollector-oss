@@ -28,6 +28,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -41,6 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -327,6 +329,7 @@ public class TestPipelineConfigurationUpgrader {
 
     Assert.assertNotNull(pipelineConf);
     Assert.assertTrue(issues.isEmpty());
+    Assert.assertEquals(PipelineStoreTask.SCHEMA_VERSION, pipelineConf.getSchemaVersion());
     Assert.assertEquals(SOURCE2_V2_DEF.getVersion(), pipelineConf.getErrorStage().getStageVersion());
     Assert.assertEquals(SOURCE2_V2_DEF.getVersion(), pipelineConf.getStages().get(0).getStageVersion());
     Assert.assertEquals(SOURCE2_V2_DEF.getVersion(), pipelineConf.getStages().get(1).getStageVersion());
@@ -341,13 +344,25 @@ public class TestPipelineConfigurationUpgrader {
   }
 
   @Test
-  public void testUpgradeIfNecessaryPipelineNoNeedTo() throws Exception {
-    PipelineConfigurationUpgrader up = PipelineConfigurationUpgrader.get();
+  public void testUpgradeSchemaVersion1to2() throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineToUpgrade();
+    PipelineConfigurationUpgrader up = getPipelineV2Upgrader();
 
     List<Issue> issues = new ArrayList<>();
-    PipelineConfiguration pipelineConf = getPipelineToUpgrade();
-    PipelineConfiguration pipelineConf2 = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF), pipelineConf, issues);
-    Assert.assertSame(pipelineConf, pipelineConf2);
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF), pipelineConf, issues);
+
+    Assert.assertNotNull(pipelineConf);
+    Assert.assertTrue(issues.isEmpty());
+    Assert.assertEquals(PipelineStoreTask.SCHEMA_VERSION, pipelineConf.getSchemaVersion());
+    Assert.assertEquals(2, pipelineConf.getStages().size());
+
+    for(StageConfiguration stage : pipelineConf.getStages()) {
+      Assert.assertNotNull(stage.getEventLanes());
+      Assert.assertEquals(0, stage.getEventLanes().size());
+    }
+
+    Assert.assertNotNull(pipelineConf.getErrorStage().getEventLanes());
+    Assert.assertEquals(0, pipelineConf.getErrorStage().getEventLanes().size());
   }
 
 }

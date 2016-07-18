@@ -42,7 +42,7 @@ public class StageConfiguration implements Serializable {
   //wiring with other components
   private final List<String> inputLanes;
   private final List<String> outputLanes;
-  private final List<String> eventLanes;
+  private List<String> eventLanes;
 
   private boolean systemGenerated;
 
@@ -108,6 +108,10 @@ public class StageConfiguration implements Serializable {
 
   public List<String> getEventLanes() {
     return eventLanes;
+  }
+
+  public void setEventLanes(List<String> eventLanes) {
+    this.eventLanes = eventLanes;
   }
 
   public Config getConfig(String name) {

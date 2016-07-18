@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface PipelineStoreTask extends Task {
-  public static final int SCHEMA_VERSION = 1;
+  // Provide upgrade path in PipelineConfigurationUpgrader when increasing
+  public static final int SCHEMA_VERSION = 2;
 
   public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException;
 

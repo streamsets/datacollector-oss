@@ -19,14 +19,17 @@
  */
 package com.streamsets.datacollector.configupgrade;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 
@@ -34,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PipelineConfigurationUpgrader {
@@ -49,16 +53,66 @@ public class PipelineConfigurationUpgrader {
   protected PipelineConfigurationUpgrader() {
   }
 
-  public PipelineConfiguration upgradeIfNecessary(StageLibraryTask library, PipelineConfiguration pipelineConf,
-      List<Issue> issues) {
-    List<Issue> ownIssues = new ArrayList<>();
-    boolean upgrade = needsUpgrade(library, pipelineConf, ownIssues);
-    if (upgrade && ownIssues.isEmpty()) {
-      //we try to upgrade only if we have all defs for the pipelineConf
-      pipelineConf = upgrade(library, pipelineConf, ownIssues);
+  public PipelineConfiguration upgradeIfNecessary(StageLibraryTask library, PipelineConfiguration pipelineConf, List<Issue> issues) {
+    Preconditions.checkArgument(issues.size() == 0, "Given list of issues must be empty.");
+    boolean upgrade;
+
+    // Firstly upgrading schema if needed, then data
+    upgrade = needsSchemaUpgrade(pipelineConf, issues);
+    if(upgrade && issues.isEmpty()) {
+      pipelineConf = upgradeSchema(pipelineConf, issues);
     }
-    issues.addAll(ownIssues);
-    return (ownIssues.isEmpty()) ? pipelineConf : null;
+
+    // Something went wrong with the schema upgrade
+    if(!issues.isEmpty()) {
+      return null;
+    }
+
+    // Upgrading data if needed
+    upgrade = needsUpgrade(library, pipelineConf, issues);
+    if (upgrade && issues.isEmpty()) {
+      //we try to upgrade only if we have all defs for the pipelineConf
+      pipelineConf = upgrade(library, pipelineConf, issues);
+    }
+    return (issues.isEmpty()) ? pipelineConf : null;
+  }
+
+  private boolean needsSchemaUpgrade(PipelineConfiguration pipelineConf, List<Issue> ownIssues) {
+    return pipelineConf.getSchemaVersion() != PipelineStoreTask.SCHEMA_VERSION;
+  }
+
+  private PipelineConfiguration upgradeSchema(PipelineConfiguration pipelineConf, List<Issue> issues) {
+    LOG.debug("Upgrading schema from version {} on pipeline {}", pipelineConf.getSchemaVersion(), pipelineConf.getUuid());
+    switch (pipelineConf.getSchemaVersion()) {
+      case 1:
+        upgradeSchema1to2(pipelineConf, issues);
+        break;
+      default:
+        issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConf.getSchemaVersion()));
+    }
+
+    pipelineConf.setSchemaVersion(PipelineStoreTask.SCHEMA_VERSION);
+    return issues.isEmpty() ? pipelineConf : null;
+  }
+
+  private void upgradeSchema1to2(PipelineConfiguration pipelineConf, List<Issue> issues) {
+    // Version 1 did not have any eventLanes configuration so this will be null and we need to convert it
+    // to empty list instead for all stages.
+
+    // Normal stages
+    for(StageConfiguration stage: pipelineConf.getStages()) {
+      convertEventLaneNullToEmptyList(stage);
+    }
+
+    // Extra stages
+    convertEventLaneNullToEmptyList(pipelineConf.getErrorStage());
+    convertEventLaneNullToEmptyList(pipelineConf.getStatsAggregatorStage());
+  }
+
+  private void convertEventLaneNullToEmptyList(StageConfiguration stage) {
+    if(stage != null && stage.getEventLanes() == null) {
+      stage.setEventLanes(Collections.<String>emptyList());
+    }
   }
 
   public StageDefinition getPipelineDefinition() {
