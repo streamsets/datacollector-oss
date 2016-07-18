@@ -72,7 +72,7 @@ public class BinaryDataParser extends AbstractDataParser {
   }
 
   public byte[] getDataToParse() throws IOException, DataParserException {
-    byte[] bytes = ByteStreams.toByteArray(ByteStreams.limit(is, maxDataLength));
+    byte[] bytes = ByteStreams.toByteArray(new LimitedInputStream(is, maxDataLength));
     if(maxDataLength == bytes.length) {
       //check if there is more data in the stream than 'maxDataLength'.
       //If yes, the record must be sent to error.
