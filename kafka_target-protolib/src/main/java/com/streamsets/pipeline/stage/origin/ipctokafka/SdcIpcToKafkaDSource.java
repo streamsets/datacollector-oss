@@ -86,7 +86,7 @@ public class SdcIpcToKafkaDSource extends DSourceOffsetCommitter {
     displayPosition = 30,
     group = "KAFKA",
     min = 1,
-    max = 100
+    max = 10000
   )
   public int kafkaMaxMessageSize;
 
