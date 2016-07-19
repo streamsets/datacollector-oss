@@ -81,7 +81,7 @@ public class JavaScriptDProcessor extends DProcessor {
     " *                            to check if the field is typed field with value null\n" +
     " */\n" +
     "\n" +
-    "* Sample JavaScript code\n" +
+    "// Sample JavaScript code\n" +
     "for(var i = 0; i < records.length; i++) {\n" +
     "  try {\n" +
     "    // Change record root field value to a STRING value\n" +

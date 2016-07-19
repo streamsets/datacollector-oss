@@ -79,7 +79,7 @@ public class GroovyDProcessor extends DProcessor {
           " *                          to check if the field is typed field with value null\n" +
           " */ \n" +
           "\n" +
-          " * Sample Groovy code\n" +
+          " // Sample Groovy code\n" +
           "for (record in records) {\n" +
           "  try {\n" +
           "    // Change record root field value to a String value.\n" +
