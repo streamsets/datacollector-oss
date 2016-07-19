@@ -59,11 +59,27 @@ public class ListPivotDProcessor extends DProcessor {
       group = "PIVOT",
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Copy Other Fields",
-      description = "Copy all other fields to each resulting record.",
+      label = "Copy All Fields",
+      description = "Copy all fields (including the original list) to each resulting record. " +
+          "If this is not set, then the pivoted value is set as the root field of the record.",
       displayPosition = 20
   )
   public boolean copyFields;
+
+  @ConfigDef(
+      required = false,
+      group = "PIVOT",
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      dependsOn = "copyFields",
+      triggeredByValue = "true",
+      label = "Pivoted Items Path",
+      description = "Path in the new record where the pivoted list items are written to. Each record will contain one" +
+          "item from the original list at this path. If this is not specified, the path of the original list is used. " +
+          "If there is data at this field path, it will be overwritten.",
+      displayPosition = 30
+  )
+  public String newPath;
 
   @ConfigDef(
       required = true,
@@ -71,7 +87,7 @@ public class ListPivotDProcessor extends DProcessor {
       defaultValue = "TO_ERROR",
       label = "Field Does Not Exist",
       description="Action for data that does not contain the specified fields",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "PIVOT"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -81,6 +97,7 @@ public class ListPivotDProcessor extends DProcessor {
   protected Processor createProcessor() {
     return new ListPivotProcessor(
         listPath,
+        newPath,
         copyFields,
         onStagePreConditionFailure
     );

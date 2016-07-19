@@ -39,7 +39,7 @@ public class TestListPivot {
 
   @Test
   public void testListPivot() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", false, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -69,7 +69,7 @@ public class TestListPivot {
 
   @Test
   public void testListPivotMap() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", false, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -104,7 +104,7 @@ public class TestListPivot {
 
   @Test
   public void testCopyFields() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", true, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, true, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -132,6 +132,45 @@ public class TestListPivot {
 
       field = output.getRecords().get("a").get(1).get();
       newListField = field.getValueAsMap().get("list_field");
+      Assert.assertTrue(newListField.getValueAsMap().containsKey("b"));
+      Assert.assertTrue(!newListField.getValueAsMap().containsKey("a"));
+      Assert.assertEquals("rval", field.getValueAsMap().get("copied").getValueAsString());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testCopyFieldsNewPath() throws StageException {
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", "/op", true, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      List<Field> listField = ImmutableList.of(
+          Field.create(ImmutableMap.of("a", Field.create("aval"))),
+          Field.create(ImmutableMap.of("b", Field.create("bval"))));
+      map.put("list_field", Field.create(listField));
+      map.put("copied", Field.create("rval"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(2, output.getRecords().get("a").size());
+
+      Field field = output.getRecords().get("a").get(0).get();
+      Field newListField = field.getValueAsMap().get("op");
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Assert.assertTrue(newListField.getValueAsMap().containsKey("a"));
+      Assert.assertTrue(!newListField.getValueAsMap().containsKey("b"));
+      Assert.assertEquals("rval", field.getValueAsMap().get("copied").getValueAsString());
+
+      field = output.getRecords().get("a").get(1).get();
+      newListField = field.getValueAsMap().get("op");
       Assert.assertTrue(newListField.getValueAsMap().containsKey("b"));
       Assert.assertTrue(!newListField.getValueAsMap().containsKey("a"));
       Assert.assertEquals("rval", field.getValueAsMap().get("copied").getValueAsString());

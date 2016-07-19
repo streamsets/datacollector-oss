@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -32,15 +33,18 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
 
   private final boolean copyFields;
   private final String listPath;
+  private final String newPath;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
 
   public ListPivotProcessor(
       String listPath,
+      String newPath,
       boolean copyFields,
       OnStagePreConditionFailure onStagePreConditionFailure
   ) {
     this.listPath = listPath;
     this.copyFields = copyFields;
+    this.newPath = (StringUtils.isNotEmpty(newPath) && copyFields) ? newPath : listPath;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
   }
 
@@ -67,7 +71,7 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
       Record newRec;
       if (copyFields) {
         newRec = getContext().cloneRecord(record);
-        newRec.set(listPath, field);
+        newRec.set(newPath, field);
       } else {
         newRec = getContext().createRecord(record);
         newRec.set(field);
