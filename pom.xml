@@ -53,7 +53,6 @@
 
   <properties>
     <rat-plugin.version>0.12</rat-plugin.version>
-    <ipc-kafka-apache-kafka_0_8_1-lib>none</ipc-kafka-apache-kafka_0_8_1-lib>
     <cdh_5_2-lib>none</cdh_5_2-lib>
     <cdh_5_3-lib>none</cdh_5_3-lib>
     <cdh_5_4-lib>none</cdh_5_4-lib>
@@ -107,8 +106,6 @@
   </dependencyManagement>
 
   <modules>
-    <module>ipc-kafka-protolib</module>
-    <module>ipc-kafka-apache-kafka_0_8_1-lib</module>
     <module>rbgen-maven-plugin</module>
     <module>root-proto</module>
     <module>root</module>
@@ -438,7 +435,6 @@
         </property>
       </activation>
       <properties>
-        <ipc-kafka-apache-kafka_0_8_1-lib>ipc-kafka-apache-kafka_0_8_1-lib</ipc-kafka-apache-kafka_0_8_1-lib>
         <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
@@ -465,7 +461,6 @@
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
       </properties>
       <modules>
-        <module>ipc-kafka-apache-kafka_0_8_1-lib</module>
         <module>cdh_5_2-lib</module>
         <module>cdh_5_3-lib</module>
         <module>cdh_5_4-lib</module>
@@ -503,7 +498,6 @@
       </activation>
       <properties>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
-        <ipc-kafka-apache-kafka_0_8_1-lib>ipc-kafka-apache-kafka_0_8_1-lib</ipc-kafka-apache-kafka_0_8_1-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
@@ -523,7 +517,6 @@
       </properties>
       <modules>
         <module>hdp_2_4-lib</module>
-        <module>ipc-kafka-apache-kafka_0_8_1-lib</module>
         <module>cdh_5_7-lib</module>
         <module>mapr_5_1-lib</module>
         <module>jython_2_7-lib</module>
