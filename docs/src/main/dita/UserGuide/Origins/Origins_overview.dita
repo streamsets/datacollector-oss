@@ -41,6 +41,8 @@
           writes it to Kafka.</li>
         <li>SFTP/FTP Client - Reads files from an SFTP or FTP server.</li>
         <li>UDP Source - Reads messages from one or more UDP ports. </li>
+        <li>UDP to Kafka - Reads messages from one or more UDP ports and writes the data to
+          Kafka.</li>
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
         <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>

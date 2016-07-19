@@ -13,15 +13,8 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_znr_b3c_rw">
- <title>Enabling Security</title>
-    <conbody>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P1"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"
-        />
-    </conbody>
+<concept id="concept_wnp_gfc_rw">
+ <title>Additional Kafka Properties</title>
+    <conbody
+        conref="../Reusable_Content/Reusable_Topics/KafkaWrites-AdditionalKProperties.dita#concept_tjp_v5l_zq/conbody"/>
 </concept>

@@ -16,13 +16,15 @@
 <concept id="concept_yg3_k31_t5">
  <title>Enabling Security</title>
     <conbody>
-        <p><indexterm>enabling security<indexterm>Kafka Consumer</indexterm></indexterm>When using
-                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
-            />, you can configure the Kafka Consumer and the Kafka Producer to connect securely
-            through SSL, Kerberos, or both.</p>
-        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            provides features to support secure connections through SSL and Kerberos (SASL). The
-            Kafka community considers these features beta quality. </p>
-        <p>Earlier versions of Kafka do not include security. </p>
+        <p><indexterm>Kafka Consumer origin<indexterm>enabling
+                security</indexterm></indexterm><indexterm>enabling security<indexterm>Kafka
+                    Consumer</indexterm></indexterm>When using <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>,
+            you can configure the Kafka Consumer origin to connect securely through SSL, Kerberos,
+            or both. </p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"/>
     </conbody>
 </concept>

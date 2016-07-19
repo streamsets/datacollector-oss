@@ -13,18 +13,18 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_mzz_g4l_pw">
+<concept id="concept_flq_twg_qw">
  <title>Pipeline Configuration</title>
- <shortdesc>When you use an SDC RPC to Kafka origin in a pipeline, connect the origin to a Trash
+ <shortdesc>When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash
         destination. </shortdesc>
  <conbody>
-  <p><indexterm>SDC RPC to Kafka origin<indexterm>pipeline configuration</indexterm></indexterm>The
-            SDC RPC to Kafka origin writes records directly to Kafka. <ph
+        <p><indexterm>UDP to Kafka origin<indexterm>pipeline
+            configuration</indexterm></indexterm>The UDP to Kafka origin writes records directly to
+            Kafka. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-PipeConfig"
             /></p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-p-PipeConfig"/>
-        <p>A pipeline with the SDC RPC to Kafka origin should look like this:</p>
-        <p><image href="../Graphics/SDCRPCtoKafka-pipeline.png" id="image_wws_ykr_pw" scale="70"
-            /></p>
- </conbody>
+        <p>A pipeline with the UDP to Kafka origin should look like this:</p>
+        <image href="../Graphics/UDPKafka-Pipeline.png" id="image_z34_gdh_qw" scale="70"/>
+    </conbody>
 </concept>

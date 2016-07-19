@@ -145,11 +145,16 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
    <topicref href="../Origins/SDCRPCtoKafka-PipelineConfig.dita"/>
    <topicref href="../Origins/SDCPRCtoKafka-ConRequests.dita"/>
    <topicref href="../Origins/SDCRPCtoKafka-RequestMessageSize.dita"/>
+   <topicref href="../Origins/SDCRPCtoKafka-AddKafkaProps.dita"/>
+   <topicref href="../Origins/SDCRPCtoKafka-EnablingKSecurity.dita">
+    <topicref href="../Origins/SDCRPCtoKafka-EnableSSL.dita"/>
+    <topicref href="../Origins/SDCRPCtoKafka-EnableKerberos.dita"/>
+    <topicref href="../Origins/SDCRPCtoKafka-EnableSSLKerb.dita"/>
+   </topicref>
    <topicref href="../Origins/SDCRPCtoKafka-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/SFTP.dita" chunk="to-content">
@@ -159,8 +164,18 @@
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Origins/UDPtoKafka.dita" chunk="to-content">
+   <topicref href="../Origins/UDPtoKafka-PipelineConfig.dita"/>
+   <topicref href="../Origins/UDPtoKafka-WriteConcurrency.dita"/>
+   <topicref href="../Origins/UDPtoKafka-AddKafkaProps.dita"/>
+   <topicref href="../Origins/UDPtoKafka-EnablingKSecurity.dita">
+    <topicref href="../Origins/UDPtoKafka-EnableSSL.dita"/>
+    <topicref href="../Origins/UDPtoKafka-EnableKerberos.dita"/>
+    <topicref href="../Origins/UDPtoKafka-EnableSSLKerb.dita"/>
+   </topicref>
+   <topicref href="../Origins/UDPtoKafka-Configuring.dita"/>
   </topicref>
  </topicref>
 </map>

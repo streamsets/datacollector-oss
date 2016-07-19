@@ -143,8 +143,9 @@
                   </xref>
             </p>
             <p>
-                  <draft-comment author="Loretta">DataFormats-ALL - used in Kafka Consumer, MapR
-                        Streams Consumer, possibly others.</draft-comment>
+                  <draft-comment author="Loretta">DataFormats-ALL  - no longer all. As of 7/14,
+                        Kafka Consumer has datagram, but no one else does.  Used in MapR Streams
+                        Consumer, possibly others.</draft-comment>
             </p>
             <p>
                   <ul id="DataFormats-ALL">
@@ -162,6 +163,29 @@
                         <li>XML</li>
                   </ul>
             </p>
+            <p/>
+            <p>
+                  <draft-comment author="Loretta">DataFormats-Kafka - used in Kafka
+                        Consumer</draft-comment>
+            </p>
+            <p>
+                  <ul id="DataFormats-Kafka">
+                        <li>Avro</li>
+                        <li>Binary</li>
+                        <li>Datagram</li>
+                        <li>Delimited</li>
+                        <li>JSON</li>
+                        <li>Log</li>
+                        <li>Text</li>
+                        <li>Protobuf</li>
+                        <li>SDC Record <xref
+                                    href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                          id="image_drz_1nf_qw"/></xref></li>
+                        <li>XML</li>
+                  </ul>
+            </p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">ORIGIN DATA FORMATS</draft-comment>
             </p>
@@ -443,6 +467,20 @@
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta">UDP to Kafka origin and SDC RPC to Kafka origins
+                        use the following text in the Pipeline Configuration topics.
+                              <uicontrol>O-ph-PipeConfig</uicontrol> and </draft-comment>
+            </p>
+            <p><ph id="O-ph-PipeConfig">The origin does not pass records to its output port, so you
+                        cannot perform additional processing or write the data to other destination
+                        systems.</ph>
+            </p>
+            <p id="O-p-PipeConfig">However, since a pipeline requires a destination, you should
+                  connect the origin to the Trash destination to satisfy pipeline validation
+                  requirements.</p>
+            <p/>
+            <p/>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
             </p>
@@ -1082,91 +1120,6 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <li>kerberos.client.principal</li>
                         <li>kerberos.client.keytab</li>
                   </ul>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">Kafka-SSL - using this ordered list for KConsumer
-                        and KProducer</draft-comment>
-            </p>
-            <ol id="KAFKA-SSL-list">
-                  <li>To use SSL to connect, first make sure Kafka is configured for SSL as
-                        described in the Kafka documentation: <xref
-                              href="http://kafka.apache.org/documentation.html#security_ssl"
-                              format="html" scope="external"/>. </li>
-                  <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
-                        the <uicontrol>Stage Library</uicontrol> property to <uicontrol>Apache Kafka
-                              0.9.0.0</uicontrol>.</li>
-                  <li>On the <wintitle>Kafka</wintitle> tab, add the
-                              <uicontrol>security.protocol</uicontrol> Kafka configuration property
-                        and set it to <uicontrol>SSL</uicontrol>.</li>
-                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration
-                              properties:<ul id="ul_hkf_ydb_t5">
-                              <li>ssl.truststore.location</li>
-                              <li>ssl.truststore.password</li>
-                        </ul><p>When the Kafka broker requires client authentication - when the
-                              ssl.client.auth broker property is set to "required" - add and
-                              configure the following properties: <ul id="ul_y5b_rml_55">
-                                    <li>ssl.keystore.location</li>
-                                    <li>ssl.keystore.password</li>
-                                    <li>ssl.key.password</li>
-                              </ul></p><p>Some brokers might require adding the following properties
-                              as well:<ul>
-                                    <li>ssl.enabled.protocols</li>
-                                    <li>ssl.truststore.type</li>
-                                    <li>ssl.keystore.type</li>
-                              </ul></p><p>For details about these properties, see the Kafka
-                              documentation.</p></li>
-            </ol>
-            <p>
-                  <draft-comment author="Loretta">Kafka-Kerberos - using this in KConsumer and
-                        KProducer</draft-comment>
-            </p>
-            <p>
-                  <ol id="Kafka-Kerberos">
-                        <li>To use Kerberos, first make sure Kafka is configured for Kerberos as
-                              described in the Kafka documentation: <xref
-                                    href="http://kafka.apache.org/documentation.html#security_sasl"
-                                    format="html" scope="external"/>.</li>
-                        <li id="KafkaKERBsdcprops">In the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                              /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, make
-                              sure the following Kerberos properties are configured:<ul
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
-                                    id="ul_gyj_jpf_55">
-                                    <li/>
-                              </ul></li>
-                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
-                        <li>On the <wintitle>Kafka</wintitle> tab, add the
-                                    <uicontrol>security.protocol</uicontrol> Kafka configuration
-                              property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
-                        <li id="KafkaKERBservicename">Then, add the
-                                    <uicontrol>sasl.kerberos.service.name</uicontrol> configuration
-                              property, and set it to the Kerberos principal name that Kafka runs
-                              as. </li>
-                  </ol>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">KAFKA-SSLandKerberos - used in KConsumer and
-                        KProducer</draft-comment>
-            </p>
-            <p>
-                  <ol id="KAFKA-SSLandKerberos">
-                        <li>Make sure Kafka is configured to use SSL and Kerberos (SASL) as
-                              described in the following Kafka documentation:<ul id="ul_gx4_1sk_55">
-                                    <li><xref
-                                                href="http://kafka.apache.org/documentation.html#security_ssl"
-                                                format="html" scope="external"/></li>
-                                    <li><xref
-                                                href="http://kafka.apache.org/documentation.html#security_sasl"
-                                                format="html" scope="external"/></li>
-                              </ul></li>
-                        <li conref="#concept_vhs_5tz_xp/KafkaKERBsdcprops"/>
-                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
-                        <li>On the <wintitle>Kafka</wintitle> tab, add the
-                                    <uicontrol>security.protocol</uicontrol> property and set it to
-                                    <uicontrol>SASL_SSL</uicontrol>.</li>
-                        <li conref="#concept_vhs_5tz_xp/KafkaKERBservicename"/>
-                        <li conref="#concept_vhs_5tz_xp/KafkaSSLprops"/>
-                  </ol>
             </p>
             <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
                   as a disclaimer:</draft-comment>

@@ -122,11 +122,11 @@
    <topicref href="../Destinations/KProducer_BrokerList.dita"/>
    <topicref href="../Destinations/KProducer-RuntimeResolution.dita"/>
    <topicref href="../Destinations/KProducer-PartitionStrategy.dita"/>
-   <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
+   <topicref href="../Destinations/KProducer-AddKafkaProps.dita"/>
    <topicref href="../Destinations/KProducer-EnablingSecurity.dita">
     <topicref href="../Destinations/KProducer-EnablingSSL.dita"/>
     <topicref href="../Destinations/KProducer-EnablingKerberos.dita"/>
-    <topicref href="../Destinations/KProducer-EnablingSSLandKerb.dita"/>
+    <topicref href="../Destinations/KProducer-EnablingSSLKerb.dita"/>
    </topicref>
    <topicref href="../Destinations/KProducer-DataFormat.dita"/>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>

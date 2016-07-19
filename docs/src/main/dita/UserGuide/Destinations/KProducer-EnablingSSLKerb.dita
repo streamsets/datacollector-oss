@@ -13,15 +13,12 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_znr_b3c_rw">
- <title>Enabling Security</title>
-    <conbody>
+<concept id="concept_ksm_svc_rw">
+ <title>Enabling SSL and Kerberos</title>
+ <conbody>
         <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P1"/>
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita#concept_d3x_v5k_55/P1"/>
         <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"
-        />
-    </conbody>
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita#concept_d3x_v5k_55/P2"/>
+ </conbody>
 </concept>

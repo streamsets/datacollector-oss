@@ -40,8 +40,12 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
-                            <entry>For Kafka version 0.9.0.0.<p>Includes the Kafka Consumer and
-                                    Kafka Producer.</p></entry>
+                            <entry>For Kafka version 0.9.0.0.<p>Includes:<ul id="ul_hpb_htg_qw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kudu-0_7-lib</entry>
@@ -184,10 +188,14 @@
                         <row>
                             <entry>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</entry>
                             <entry>
-                                <p>For the Cloudera version 5.7.0 distribution of Apache Kafka
-                                    2.0.1. </p>
-                                <p>Includes the Kafka Consumer origin for cluster mode pipelines and
-                                    the Kafka Producer.</p>
+                                <p>For the Cloudera version 5.7.1 distribution of Apache Kafka
+                                    2.0.1.</p>
+                                <p>Includes: <ul id="ul_fpd_ktg_qw">
+                                        <li>Kafka Consumer origin for cluster mode pipelines</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p>
                             </entry>
                         </row>
                         <row>
@@ -203,7 +211,12 @@
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 2.0.1 (0.9.0).
-                                    <p>Includes the Kafka Consumer and Kafka Producer.</p></entry>
+                                    <p>Includes: <ul id="ul_kjf_ntg_qw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-elasticsearch_1_4-lib</entry>

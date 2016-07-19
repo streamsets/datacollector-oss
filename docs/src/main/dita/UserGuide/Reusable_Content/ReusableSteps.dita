@@ -475,6 +475,64 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-Datagram</uicontrol> - just Kafka
+                        Consumer right now.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-Datagram">
+                <cmd>For datagram data, on the <wintitle>Datagram</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qrx_zqz_pw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Datagram Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UDPdataformat">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TypesDBname"/>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-TypesDBinfo"
+                                            /><p>For collectd data only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-HiRestitle"/>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-HiResinfo"
+                                            /><p>For collectd data only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Exludename"/>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Excludeinfo"
+                                            /><p>For collectd data only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Authname"/>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Authinfo"
+                                            /><p>For collectd data only.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> -
                         Directory, Hadoop FS, JMS Consumer, Kafka Consumer, Kinesis
                         Consumer</draft-comment>
@@ -1111,7 +1169,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Rows in this table are used by Kafka Consumer
-                        and SDC RPC to Kafka origins</draft-comment>
+                        and SDC RPC to Kafka origins, also UDP to Kafka.</draft-comment>
                 </cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_pzz_wtr_pw">
@@ -1467,6 +1525,125 @@
                                 <row>
                                     <entry/>
                                     <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-UDPprops</uicontrol> - whole step
+                        used by UDP Source. Rows in this table by UDP to Kafka. Data Format is also
+                        used by Configuring the Kafka Consumer > Datagram step.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-step-UDPprops">
+                <cmd>On the <wintitle>UDP</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ovk_ndv_1s">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>UDP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-UDPport">
+                                    <entry>Port</entry>
+                                    <entry>Port to listen to for data. To list additional ports,
+                                        click the<uicontrol> Add</uicontrol> icon.<note>To listen to
+                                            a port below 1024, <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> must be run by a user with root privileges.
+                                            Otherwise, the operating system does not allow <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> to bind to the port.</note></entry>
+                                </row>
+                                <row id="row-UDPdataformat">
+                                    <entry>Data Format</entry>
+                                    <entry>Data format passed by UDP:<ul id="ul_dfw_dqj_ks">
+                                            <li>collectd</li>
+                                            <li>NetFlow</li>
+                                            <li>syslog </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size (messages)</entry>
+                                    <entry>Maximum number of messages include in a batch and pass
+                                        through the pipeline at one time. Honors values up to the
+                                            <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> maximum batch size. <p>Default is 1000. The <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> default is 1000.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time (ms) <xref
+                                            href="../Origins/BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mgp_2q3_br" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Milliseconds to wait before sending a partial or empty
+                                        batch.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-UDP-collectd</uicontrol> - used by
+                        UDP Source and entries and ph used in Kafka Consumer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-UDP-collectd">
+                <cmd>On the <uicontrol>collectd</uicontrol> tab, define the following collectd
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>collectd Property</entry>
+                                    <entry>Properties</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry id="entry-TypesDBname">TypesDB File Path</entry>
+                                    <entry><ph id="ph-TypesDBinfo">Path to a user-provided types.db
+                                            file. Overrides the default types.db file.</ph>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry id="entry-HiRestitle">Convert Hi-Res Time &amp;
+                                        Interval</entry>
+                                    <entry><ph id="ph-HiResinfo">Converts the collectd high
+                                            resolution time format interval and timestamp to UNIX
+                                            time, in milliseconds.</ph></entry>
+                                </row>
+                                <row>
+                                    <entry id="entry-Exludename">Exclude Interval</entry>
+                                    <entry><ph id="ph-Excludeinfo">Excludes the interval field from
+                                            output record.</ph></entry>
+                                </row>
+                                <row>
+                                    <entry id="entry-Authname">Auth File</entry>
+                                    <entry><ph id="ph-Authinfo">Path to an optional authentication
+                                            file. Use an authentication file to accept signed and
+                                            encrypted data.</ph>
+                                    </entry>
+                                </row>
+                                <row id="row-Charset">
+                                    <entry>Charset</entry>
+                                    <entry>Character set of the data.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2681,7 +2858,7 @@
                                                 defined by default. You can edit or delete the
                                                 properties. </p><p>For information about enabling
                                                 secure connections to Kafka, see <xref
-                                                  href="../Destinations/KProducer-EnablingSecurity.dita"
+                                                  href="Reusable_Topics/Kafka-EnablingSecurity.dita"
                                                 />.</p></entry>
                                     </row>
                                     <row id="KP-DataFormats">

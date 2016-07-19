@@ -33,7 +33,7 @@
             providing data.</p>
         <p>You also need to configure connection information for Kafka, including the broker URI,
             topic to write to, and maximum message size. You can also add Kafka configuration
-            properties as needed. </p>
+            properties and enable Kafka security as needed. </p>
  </conbody>
     <related-links>
         <link href="../RPC_Pipelines/SDC_RPCpipeline.dita#concept_lnh_z3z_bt"/>

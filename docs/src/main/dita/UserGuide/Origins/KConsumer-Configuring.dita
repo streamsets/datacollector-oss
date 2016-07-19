@@ -47,8 +47,8 @@
                                         /></xref></entry>
                                     <entry>Type of data to be read. Use one of the following
                                             options:<ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-ALL"
-                                            id="ul_w22_2xl_2v">
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-Kafka"
+                                            id="ul_l1j_hnf_qw">
                                             <li/>
                                         </ul></entry>
                                 </row>
@@ -109,6 +109,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Binary">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Datagram">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">

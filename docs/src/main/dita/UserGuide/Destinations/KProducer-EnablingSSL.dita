@@ -3,9 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
+  
       http://www.apache.org/licenses/LICENSE-2.0
-
+      
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,21 +13,16 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_vcx_bnb_t5">
- <title>Enabling SSL</title>
- <conbody>
-  <p><indexterm>Kafka Producer destination<indexterm>enabling SSL
-            security</indexterm></indexterm>Perform the following steps to enable the Kafka Producer
-            to use SSL to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            You can use the same steps to configure a Kafka Consumer.<ol
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KAFKA-SSL-list"
-                id="ol_pqd_54b_t5">
-                <li/>
-            </ol></p>
-        <p>For example, the following Kafka Producer is configured to use SSL to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            with client authentication:</p>
-        <p><image href="../Graphics/KafkaP-SSL.png" id="image_it1_cqb_t5" scale="50"/></p>
- </conbody>
+<concept id="concept_czm_55c_rw">
+    <title>Enabling SSL</title>
+    <conbody>
+        <p conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P1"/>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P2-SSLlist"/>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P3-example"/>
+        <image
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P4-image"
+            id="image_dvs_4zc_rw"/>
+    </conbody>
 </concept>

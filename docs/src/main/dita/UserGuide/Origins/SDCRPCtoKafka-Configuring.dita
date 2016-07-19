@@ -17,8 +17,9 @@
     <title>Configuring an SDC RPC to Kafka Origin</title>
     <taskbody>
         <context>
-            <p>Configure an SDC RPC to Kafka origin to write data from multiple SDC RPC destinations
-                directly to Kafka.</p>
+            <p><indexterm>SDC RPC to Kafka
+                origin<indexterm>configuring</indexterm></indexterm>Configure an SDC RPC to Kafka
+                origin to write data from multiple SDC RPC destinations directly to Kafka.</p>
         </context>
         <steps>
             <step
@@ -127,7 +128,7 @@
                                 </row>
                                 <row>
                                     <entry>Kafka Configuration <xref
-                                            href="../Origins/KConsumer_AdditionalKProp.dita#concept_d5f_n2g_vq">
+                                            href="SDCRPCtoKafka-AddKafkaProps.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mwv_b52_zq"/></xref>
                                     </entry>

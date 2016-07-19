@@ -13,15 +13,11 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_znr_b3c_rw">
- <title>Enabling Security</title>
-    <conbody>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P1"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"
-        />
-    </conbody>
+<concept id="concept_ecn_mdh_qw">
+ <title>Write Concurrency</title>
+ <shortdesc>You can specify the maximum number of Kafka clients that the UDP to Kafka origin uses to
+        write to Kafka. </shortdesc>
+ <conbody>
+  <p><indexterm>UDP to Kafka<indexterm>write concurrency</indexterm></indexterm></p>
+ </conbody>
 </concept>
