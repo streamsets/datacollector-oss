@@ -29,7 +29,6 @@
                 <li>Directory</li>
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>
-                <li>Kinesis Consumer</li>
                 <li>MongoDB</li>
             </ul><p>For these origins, when you stop the pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
