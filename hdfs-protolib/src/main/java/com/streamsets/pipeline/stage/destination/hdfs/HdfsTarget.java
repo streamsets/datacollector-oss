@@ -163,7 +163,7 @@ public class HdfsTarget extends BaseTarget {
     return hdfsTargetConfigBean.getTimeDriverElEval().eval(variables, hdfsTargetConfigBean.getTimeDriver(), Date.class);
   }
 
-  protected void write(Record record) throws StageException {
+  private void write(Record record) throws StageException {
     try {
       Date recordTime = getRecordTime(record);
 
