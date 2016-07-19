@@ -25,7 +25,6 @@
         <li>Directory - Reads fully-written files from a directory. </li>
         <li>File Tail - Reads lines of data from an active file after reading related archived files
           in the directory. </li>
-        <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
         <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
         <li>JDBC Consumer - Reads database data through a JDBC connection.</li>
         <li>JMS Consumer - Reads messages from JMS. </li>
