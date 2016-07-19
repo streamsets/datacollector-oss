@@ -47,8 +47,8 @@
                     /> RPM package:</cmd>
                 <info>
                     <codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>
-                    <p>For example, to install version 1.5.0.0, use the following
-                        command:<codeblock>yum localinstall streamsets-datacollector-1.5.0.0-1.noarch.rpm</codeblock></p>
+                    <p>For example, to install version 1.5.1.0, use the following
+                        command:<codeblock>yum localinstall streamsets-datacollector-1.5.1.0-1.noarch.rpm</codeblock></p>
                 </info>
             </step>
             <step>

@@ -109,7 +109,7 @@
                             </row>
                             <row>
                                 <entry>https.cluster.keystore.password</entry>
-                                <entry>For cluster pipeines, the absolute path and name of the file
+                                <entry>For cluster pipelines, the absolute path and name of the file
                                     that contains the password to the keystore file on worker nodes.
                                     The file must be in the same location on each worker
                                     node.</entry>
@@ -527,7 +527,7 @@
                         </tbody>
                     </tgroup>
                 </table></p><p>The configuration file includes stage and stage library aliases to
-                enable backward compability for pipelines created with earlier versions of <ph
+                enable backward compatibility for pipelines created with earlier versions of <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />, such
                 as:<codeblock>stage.alias.streamsets-datacollector-basic-lib,

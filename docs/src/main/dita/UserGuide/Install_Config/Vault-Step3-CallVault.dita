@@ -25,7 +25,7 @@
         <p>The expression language provides Vault functions to return Vault secrets. You can use
             Vault functions in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultFunctions-Usage"
-            />.</p>
+            /></p>
         <p>You can use the following functions to access Vault secrets:<dl>
                 <dlentry>
                     <dt>vault:read()</dt>
