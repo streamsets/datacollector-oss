@@ -57,17 +57,6 @@
    <topicref href="../Destinations/Flume-DataFormats.dita"/>
    <topicref href="../Destinations/Flume-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/HBase.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Destinations/HBase-FieldMappings.dita"/>
-   <topicref href="../Destinations/HBase-Kerberos.dita"/>
-   <topicref href="../Destinations/HBase-HBaseUser.dita"/>
-   <topicref href="../Destinations/HBase-TimeBasis.dita"/>
-   <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
-   <topicref href="../Destinations/HBase-Configuring.dita"/>
-  </topicref>
   <topicref href="../Destinations/HadoopFS-destination.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -81,6 +70,17 @@
    <topicref href="../Destinations/HadoopFS-HDFSUser-dest.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/HBase.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/HBase-FieldMappings.dita"/>
+   <topicref href="../Destinations/HBase-Kerberos.dita"/>
+   <topicref href="../Destinations/HBase-HBaseUser.dita"/>
+   <topicref href="../Destinations/HBase-TimeBasis.dita"/>
+   <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
+   <topicref href="../Destinations/HBase-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/HiveMetastore.dita" chunk="to-content">
    <topicmeta>
