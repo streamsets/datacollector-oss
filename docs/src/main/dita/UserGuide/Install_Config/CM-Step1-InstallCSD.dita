@@ -17,7 +17,7 @@
     <title>Step 1. Install the StreamSets Custom Service Descriptor</title>
     <taskbody>
         <context>
-            <p><indexterm>Cloudera Manager<indexterm>installing the Streamsets
+            <p><indexterm>Cloudera Manager<indexterm>installing the StreamSets
                     CSD</indexterm></indexterm>Install the StreamSets custom service descriptor file
                 (CSD), and then restart Cloudera Manager.</p>
         </context>
