@@ -16,11 +16,12 @@
 <concept id="concept_bmq_gl1_mw">
  <title>Accessing Hashicorp Vault Secrets</title>
     <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        can access information, a.k.a. <term>secrets</term>, stored in Hashicorp Vault such as
-        database passwords or AWS keys.</shortdesc>
+        can access information, a.k.a. <term>secrets</term>, stored in Hashicorp Vault. </shortdesc>
  <conbody>
-        <p><indexterm>Vault access<indexterm>overview</indexterm></indexterm>To access to Vault
-            secrets, you must authorize <ph
+        <p><indexterm>Vault access<indexterm>overview</indexterm></indexterm>You can use Vault
+            secrets in place of username and password properties, similar properties such as AWS
+            access key IDs and secret access keys, and in HTTP headers and bodies when using HTTPS. </p>
+        <p>To access to Vault secrets, you must authorize <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             with Vault. After authorization, you can use expressions in the pipeline that access
             Vault at run time.</p>
