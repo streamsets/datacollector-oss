@@ -157,6 +157,7 @@ public class TestActiveRecordWriters {
     RecordWriter writer = writers.get(now, now, record);
     Assert.assertNotNull(writer);
     writer.write(record);
+    writer.flush();
     //writer should still be open
     Assert.assertFalse(writer.isClosed());
 
