@@ -22,8 +22,11 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             with Vault, you can use expressions in pipeline and stage properties to access Vault
             secrets.</p>
-        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            provides the following functions to access Vault secrets:<dl>
+        <p>The expression language provides Vault functions to return Vault secrets. You can use
+            Vault functions in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultFunctions-Usage"
+            />.</p>
+        <p>You can use the following functions to access Vault secrets:<dl>
                 <dlentry>
                     <dt>vault:read()</dt>
                     <dd>Use to return the value for the Vault path and key that you provide.
