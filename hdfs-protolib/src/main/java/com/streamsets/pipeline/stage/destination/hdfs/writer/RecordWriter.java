@@ -45,6 +45,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -74,7 +75,7 @@ public class RecordWriter {
   private ActiveRecordWriters writers = null;
 
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
-  private ScheduledExecutorService idleCloseExecutor = Executors.newSingleThreadScheduledExecutor(
+  private ScheduledThreadPoolExecutor idleCloseExecutor = new ScheduledThreadPoolExecutor(1,
       new ThreadFactoryBuilder().setNameFormat("Idle Close Thread").build());
 
   private RecordWriter(Path path, long timeToLiveMillis, DataGeneratorFactory generatorFactory) {
@@ -83,6 +84,7 @@ public class RecordWriter {
     this.generatorFactory = generatorFactory;
     LOG.debug("Path[{}] - Creating", path);
     this.idleTimeout = -1L;
+    idleCloseExecutor.setRemoveOnCancelPolicy(true);
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream,
@@ -164,8 +166,6 @@ public class RecordWriter {
       recordCount++;
     } finally {
       closeLock.readLock().unlock();
-      // This grabs write lock, so release read lock first
-      scheduleIdleClose();
     }
   }
 
@@ -183,6 +183,8 @@ public class RecordWriter {
       }
     } finally {
       closeLock.readLock().unlock();
+      // This grabs write lock, so release read lock first
+      scheduleIdleClose();
     }
   }
 
