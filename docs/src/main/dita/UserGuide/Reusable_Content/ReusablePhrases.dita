@@ -29,7 +29,21 @@
                   Collector</ph></p>
             <p>DPM long only: <ph id="DPM-LongOnly">Data Performance Manager</ph></p>
             <p>
-                  <draft-comment author="Loretta">List of origins tha are part of the Basic
+                  <draft-comment author="Loretta"><uicontrol>ph-VaultFunctions-Usage</uicontrol> -
+                        used in Vault-Step3-CallVault.dita</draft-comment>
+            </p>
+            <p><ph id="ph-VaultFunctions-Usage">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the functions in
+                        HTTP headers and bodies when using HTTPS.</ph></p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>ph-VaultOneFunction-Usage</uicontrol> -
+                        used in Misc Functions for each Vault function</draft-comment>
+            </p>
+            <p><ph id="ph-VaultOneFunction-Usage">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the function in
+                        HTTP headers and bodies when using HTTPS.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">List of origins that are part of the Basic
                         installation. Used in BasicInstall_Overview and BasicInstall-LibList
                         (Available Stage Libraries).</draft-comment>
             </p>
