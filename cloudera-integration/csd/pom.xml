@@ -29,6 +29,17 @@
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
+  <repositories>
+    <repository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
