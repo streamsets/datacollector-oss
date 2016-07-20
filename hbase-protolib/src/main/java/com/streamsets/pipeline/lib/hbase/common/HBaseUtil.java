@@ -19,12 +19,15 @@
  */
 package com.streamsets.pipeline.lib.hbase.common;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -144,14 +147,21 @@ public final class HBaseUtil {
       //String tableName
   ) {
     if (zookeeperQuorum == null || zookeeperQuorum.isEmpty()) {
-      issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum",
-          Errors.HBASE_04));
+      issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum", Errors.HBASE_04));
     } else {
-      try {
-        InetAddress.getByName(zookeeperQuorum);
-      } catch (UnknownHostException ex) {
-        issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum",
-            Errors.HBASE_06, ex));
+      List<String> zkQuorumList = Lists.newArrayList(Splitter.on(",").trimResults().omitEmptyStrings().split(
+          zookeeperQuorum));
+      for (String hostName : zkQuorumList) {
+        try {
+          InetAddress.getByName(hostName);
+        } catch (UnknownHostException ex) {
+          LOG.warn(Utils.format("Cannot resolve host: '{}' from zookeeper quorum '{}', error: '{}'",
+              hostName,
+              zookeeperQuorum,
+              ex
+          ), ex);
+          issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum", Errors.HBASE_39, hostName));
+        }
       }
     }
     if (zookeeperParentZnode == null || zookeeperParentZnode.isEmpty()) {

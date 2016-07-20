@@ -21,6 +21,7 @@
 package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.CharMatcher;
 import com.google.protobuf.ServiceException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -142,7 +143,11 @@ public class HBaseTarget extends BaseTarget {
     HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), hbaseConf, kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, zookeeperQuorum);
+      HBaseUtil.setIfNotNull(
+          hbaseConf,
+          HConstants.ZOOKEEPER_QUORUM,
+          CharMatcher.WHITESPACE.removeFrom(zookeeperQuorum)
+      );
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, clientPort);
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, zookeeperParentZnode);
     }

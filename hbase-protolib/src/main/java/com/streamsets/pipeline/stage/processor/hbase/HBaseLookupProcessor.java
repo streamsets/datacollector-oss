@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.hbase;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
@@ -107,7 +108,11 @@ public class HBaseLookupProcessor extends BaseProcessor {
     HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.getLabel(), hbaseConf, conf.hBaseConnectionConfig.kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
+      HBaseUtil.setIfNotNull(
+          hbaseConf,
+          HConstants.ZOOKEEPER_QUORUM,
+          CharMatcher.WHITESPACE.removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum)
+      );
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.hBaseConnectionConfig.clientPort);
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZnode);
     }

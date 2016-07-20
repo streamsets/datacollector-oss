@@ -167,15 +167,24 @@ public class HBaseTargetIT {
     assertTrue(issues.get(0).toString().contains("HBASE_07"));
 
     configure(dTarget);
-    dTarget.hBaseConnectionConfig.zookeeperQuorum = "dummyhost";
+    dTarget.hBaseConnectionConfig.zookeeperQuorum = "127.0.0.1, dummy, dummyyy ";
     target = (HBaseTarget) dTarget.createTarget();
     runner = new TargetRunner.Builder(HBaseDTarget.class, target)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
     issues = runner.runValidateConfigs();
-    Assert.assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains("HBASE_06"));
-    assertTrue(issues.get(0).toString().contains("UnknownHostException"));
+    Assert.assertEquals(2, issues.size());
+    assertTrue(issues.get(0).toString().contains("HBASE_39"));
+    assertTrue(issues.get(0).toString().contains("dummy"));
+    assertTrue(issues.get(1).toString().contains("HBASE_39"));
+    assertTrue(issues.get(1).toString().contains("dummyyy"));
+
+    dTarget.hBaseConnectionConfig.zookeeperQuorum = " 127.0.0.1, 127.0.0.1, 127.0.0.1 ";
+    target = (HBaseTarget) dTarget.createTarget();
+    runner = new TargetRunner.Builder(HBaseDTarget.class, target)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+    assertEquals(0, runner.runValidateConfigs().size());
   }
 
   @Test(timeout=60000)
