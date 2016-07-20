@@ -498,8 +498,6 @@
       </activation>
       <properties>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
-        <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
-        <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
