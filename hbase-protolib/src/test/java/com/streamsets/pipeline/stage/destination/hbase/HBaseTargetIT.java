@@ -40,9 +40,9 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.common.hbase.HBaseTestUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HConstants;
@@ -91,14 +91,11 @@ public class HBaseTargetIT {
   private static MiniZooKeeperCluster miniZK;
   private static final String tableName = "TestHBaseSink";
   private static final String familyName = "cf";
-  private static final Configuration conf = HBaseConfiguration.create();
+  private static final Configuration conf = HBaseTestUtil.getHBaseTestConfiguration();
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     try {
-      conf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, "/hbase");
-      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
-      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
       UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
       utility = new HBaseTestingUtility(conf);
       utility.startMiniCluster();

@@ -33,6 +33,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
+import com.streamsets.pipeline.stage.common.hbase.HBaseTestUtil;
 import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
@@ -72,7 +73,7 @@ public class HBaseProcessorIT {
   private static MiniZooKeeperCluster miniZK;
   private static final String tableName = "TestHBaseProcessor";
   private static final String familyName = "cf";
-  private static final Configuration conf = HBaseConfiguration.create();
+  private static final Configuration conf = HBaseTestUtil.getHBaseTestConfiguration();
   private static Processor.Context context;
 
   @Parameterized.Parameter
@@ -82,10 +83,6 @@ public class HBaseProcessorIT {
   public static void setUpBeforeClass() throws Exception {
     try {
       context = ContextInfoCreator.createProcessorContext("n", false, OnRecordError.TO_ERROR);
-      conf.set(HConstants.ZOOKEEPER_QUORUM, "127.0.0.1");
-      conf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, "/hbase");
-      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
-      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
       UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
       utility = new HBaseTestingUtility(conf);
       utility.startMiniCluster();
