@@ -112,7 +112,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT
     ));
     String labels = conf.get(REMOTE_JOB_LABELS, DEFAULT_REMOTE_JOB_LABELS);
-    labelList = Lists.newArrayList(Splitter.on(",").split(labels));
+    labelList = Lists.newArrayList(Splitter.on(",").omitEmptyStrings().split(labels));
     defaultPingFrequency = conf.get(REMOTE_URL_PING_INTERVAL, DEFAULT_PING_FREQUENCY);
     requestHeader = new HashMap<>();
     requestHeader.put("X-Requested-By", "SDC");
