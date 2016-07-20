@@ -87,26 +87,27 @@ angular.module('dataCollectorApp')
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $modalStack,
                  $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http) {
 
-    var defaultTitle = 'StreamSets Data Collector',
-      pipelineStatusTimer,
-      alertsTimer,
-      isWebSocketSupported,
-      loc = window.location,
-      httpBaseURL = ((loc.protocol === "https:") ? "https://" : "http://") + loc.hostname + (loc.port ? ":" + loc.port : ""),
-      bases = document.getElementsByTagName('base'),
-      baseHref = (bases.length > 0) ? (bases[0].href).replace(httpBaseURL, '') : '/',
-      webSocketBaseURL = ((loc.protocol === "https:") ?
-          "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port == 80) || (loc.protocol === "https:" && loc.port == 443)) ? "" : ":" + loc.port) + baseHref,
-      BACKSPACE_KEY = 8,
-      DELETE_KEY = 46,
-      Z_KEY = 90,
-      Y_KEY = 89,
-      destroyed = false,
-      webSocketStatusURL = webSocketBaseURL + 'rest/v1/webSocket?type=status',
-      statusWebSocket,
-      webSocketAlertsURL = webSocketBaseURL + 'rest/v1/webSocket?type=alerts',
-      alertsWebSocket,
-      isConnectionLostModalDisplayed;
+    var defaultTitle = 'StreamSets Data Collector';
+    var pipelineStatusTimer;
+    var alertsTimer;
+    var isWebSocketSupported;
+    var loc = window.location;
+    var httpBaseURL = ((loc.protocol === "https:") ? "https://" : "http://") + loc.hostname + (loc.port ? ":" + loc.port : "");
+    var bases = document.getElementsByTagName('base');
+    var baseHref = (bases.length > 0) ? (bases[0].href).replace(httpBaseURL, '') : '/';
+    var webSocketBaseURL = ((loc.protocol === "https:") ?
+        "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port == 80) || (loc.protocol === "https:" && loc.port == 443)) ? "" : ":" + loc.port) + baseHref;
+    var BACKSPACE_KEY = 8;
+    var DELETE_KEY = 46;
+    var D_KEY = 68;
+    var Z_KEY = 90;
+    var Y_KEY = 89;
+    var destroyed = false;
+    var webSocketStatusURL = webSocketBaseURL + 'rest/v1/webSocket?type=status';
+    var statusWebSocket;
+    var webSocketAlertsURL = webSocketBaseURL + 'rest/v1/webSocket?type=alerts';
+    var alertsWebSocket;
+    var isConnectionLostModalDisplayed;
 
     editableOptions.theme = 'bs3';
 
@@ -167,6 +168,13 @@ angular.module('dataCollectorApp')
         onEnableDPMClick: function() {
           if (configuration.isManagedByClouderaManager()) {
             $translate('home.enableDPM.isManagedByClouderaManager').then(function(translation) {
+              $rootScope.common.errors = [translation];
+            });
+            return;
+          }
+
+          if ($rootScope.common.remoteServerInfo.registrationStatus) {
+            $translate('home.enableDPM.alreadyEnabledMsg').then(function(translation) {
               $rootScope.common.errors = [translation];
             });
             return;
@@ -307,6 +315,10 @@ angular.module('dataCollectorApp')
           } else if(($event.metaKey || $event.ctrlKey) && $event.keyCode === Z_KEY) {
             //UNDO Operation
             $rootScope.$broadcast('bodyUndoKeyPressed');
+          }
+
+          if ($event.ctrlKey && $event.altKey && $event.keyCode === D_KEY) {
+            $rootScope.common.onEnableDPMClick();
           }
         },
 
