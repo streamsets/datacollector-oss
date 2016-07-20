@@ -591,6 +591,14 @@ public class MockStages {
           new StageUpgrader.Default(), Collections.<String>emptyList(), false,
             "", false, false, false);
 
+        // Event producing source
+        StageDefinition seDef = new StageDefinition(createLibraryDef(cl),
+                                                   false, MSource.class, "sourceNameEvent", 1, "sourceLabel",
+          "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
+          rawSourceDefinition, "", null, false, 1, null,
+          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
+          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, true);
+
         StageDefinition pDef = new StageDefinition(createLibraryDef(cl),
                                                    false, MProcessor.class, "processorName", 1, "sourcelabel",
           "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
@@ -733,6 +741,7 @@ public class MockStages {
           new StageDefinition[] {
               sDef,
               socDef,
+              seDef,
               pDef,
               tDef,
               targetWithReqField,
@@ -987,6 +996,119 @@ public class MockStages {
     return pipelineConfiguration;
   }
 
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsOpen() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceNameEvent", 1,
+      Collections.<Config>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("t"), Collections.<String>emptyList());
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("t"), Collections.<String>emptyList(), Collections.<String>emptyList());
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsProcessed() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration eventDest = new StageConfiguration("e", "default", "targetName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("e"), Collections.<String>emptyList(), Collections.<String>emptyList());
+    stages.add(eventDest);
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceNameEvent", 1,
+      Collections.<Config>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("t"), ImmutableList.of("e"));
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("t"), Collections.<String>emptyList(), Collections.<String>emptyList());
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetDeclaredEventLaneWithoutSupportingEvents() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceName", 1,
+      Collections.<Config>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("t"), ImmutableList.of("e"));
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("t"), Collections.<String>emptyList(), Collections.<String>emptyList());
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceProcessorTargetWithMergingEventAndDataLane() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration eventDest = new StageConfiguration("p", "default", "processorName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("e"), ImmutableList.of("eo"), Collections.<String>emptyList());
+    stages.add(eventDest);
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceNameEvent", 1,
+      Collections.<Config>emptyList(), null, Collections.<String>emptyList(), ImmutableList.of("t"), ImmutableList.of("e"));
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", 1,
+      Collections.<Config>emptyList(), null, ImmutableList.of("t", "eo"), Collections.<String>emptyList(), Collections.<String>emptyList());
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
 
   @SuppressWarnings("unchecked")
   /**

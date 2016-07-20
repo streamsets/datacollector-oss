@@ -260,4 +260,71 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals(ValidationError.VALIDATION_0092.name(), issues.get(0).getErrorCode());
   }
+
+  // Having event lane empty when source is declaring events is acceptable
+  @Test
+  public void testPipelineWithOpenEventLane() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetWithEventsOpen();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+  }
+
+  // Stages should be re-ordered such that event stages are called when all it's input are properly processed
+  @Test
+  public void testPipelineWithConnectedEventLane() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed();
+    // The pipeline should declare the event target as first
+    Assert.assertEquals("e", conf.getStages().get(0).getInstanceName());
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+
+    List<StageConfiguration> stages = conf.getStages();
+    Assert.assertNotNull(stages);
+    Assert.assertEquals(3, stages.size());
+    // Source should be ordered first (even though that the pipeline declares the event target as first)
+    Assert.assertEquals("s", stages.get(0).getInstanceName());
+  }
+
+  // Stage having event lane without declaring support for event is an error
+  @Test
+  public void testPipelineDeclaredEvetnLaneWithoutSupportingEvents() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetDeclaredEventLaneWithoutSupportingEvents();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(2, issues.size());
+    // Event lane declared on stage that doesn't produce events
+    Assert.assertEquals(ValidationError.VALIDATION_0102.name(), issues.get(0).getErrorCode());
+    // The definition contains open lane "e" that is not connected anywhere
+    Assert.assertEquals(ValidationError.VALIDATION_0011.name(), issues.get(1).getErrorCode());
+  }
+
+  // Stage having event lane without declaring support for event is an error
+  @Test
+  public void testPipelineMergingEventAndDataLanes() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTargetWithMergingEventAndDataLane();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0103.name(), issues.get(0).getErrorCode());
+  }
 }

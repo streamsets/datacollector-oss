@@ -51,6 +51,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +106,7 @@ public class PipelineConfigurationValidator {
       while (it.hasNext()) {
         StageConfiguration stage = it.next();
         if (producedOutputs.containsAll(stage.getInputLanes())) {
-          producedOutputs.addAll(stage.getOutputLanes());
+          producedOutputs.addAll(stage.getOutputEventLanes());
           it.remove();
           sorted.add(stage);
         }
@@ -138,6 +139,7 @@ public class PipelineConfigurationValidator {
     canPreview &= validatePipelineMemoryConfiguration();
     canPreview &= validateStageConfiguration();
     canPreview &= validatePipelineLanes();
+    canPreview &= validateEventAndDataLanesDoNotCross();
     canPreview &= validateErrorStage();
     canPreview &= validateStatsAggregatorStage();
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
@@ -489,6 +491,22 @@ public class PipelineConfigurationValidator {
           preview = false;
         }
       }
+      for (String lane : stageConf.getEventLanes()) {
+        if (!TextUtils.isValidName(lane)) {
+          // stage instance output lane has an invalid name (it must match '[0-9A-Za-z_]+')
+          issues.add(
+              issueCreator.create(
+                  stageConf.getInstanceName(),
+                  ValidationError.VALIDATION_0100,
+                  lane,
+                  TextUtils.VALID_NAME
+              )
+          );
+          preview = false;
+        }
+      }
+
+      // Validate proper input/output lane configuration
       switch (stageDef.getType()) {
         case SOURCE:
           if (!stageConf.getInputLanes().isEmpty()) {
@@ -577,6 +595,27 @@ public class PipelineConfigurationValidator {
         default:
           throw new IllegalStateException("Unexpected stage type " + stageDef.getType());
       }
+
+      // Validate proper event configuration
+      if(stageConf.getEventLanes().size() > 1) {
+        issues.add(
+          issueCreator.create(
+            stageConf.getInstanceName(),
+            ValidationError.VALIDATION_0101
+          )
+        );
+        preview = false;
+      }
+      if(!stageDef.isProducingEvents() && stageConf.getEventLanes().size() > 0) {
+        issues.add(
+          issueCreator.create(
+            stageConf.getInstanceName(),
+            ValidationError.VALIDATION_0102
+          )
+        );
+        preview = false;
+      }
+
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         Config config = stageConf.getConfig(confDef.getName());
         if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {
@@ -1070,12 +1109,12 @@ public class PipelineConfigurationValidator {
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
-      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputLanes());
+      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputEventLanes());
       for (int j = i + 1; j < stagesConf.size(); j++) {
         StageConfiguration downStreamStageConf = stagesConf.get(j);
         Set<String> duplicateOutputs = Sets.intersection(
-            new HashSet<>(stageConf.getOutputLanes()),
-            new HashSet<>(downStreamStageConf.getOutputLanes())
+            new HashSet<>(stageConf.getOutputEventLanes()),
+            new HashSet<>(downStreamStageConf.getOutputEventLanes())
         );
         if (!duplicateOutputs.isEmpty()) {
           // there is more than one stage defining the same output lane
@@ -1101,6 +1140,57 @@ public class PipelineConfigurationValidator {
       }
     }
     return preview;
+  }
+
+  @VisibleForTesting
+  boolean validateEventAndDataLanesDoNotCross() {
+    // We know that the pipeline is sorted at this point (e.g. all stages that are producing data for a given stage
+    // appear before that stage in the list).
+    List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
+    if(stagesConf.size() < 1) {
+      return true; // We have nothing to validate
+    }
+    Set<String> eventLanes = new HashSet<>();
+    Set<String> dataLanes = new HashSet<>();
+
+    // First stage is always on the data path
+    eventLanes.addAll(stagesConf.get(0).getEventLanes());
+    dataLanes.addAll(stagesConf.get(0).getOutputLanes());
+
+    for (int i = 1; i < stagesConf.size(); i++) {
+      StageConfiguration stageConf = stagesConf.get(i);
+
+      boolean isEventStage = false;
+      boolean isDataStage = false;
+      for(String inputStage : stageConf.getInputLanes()) {
+        if(eventLanes.contains(inputStage)) {
+          isEventStage = true;
+        }
+        if(dataLanes.contains(inputStage)) {
+          isDataStage = true;
+        }
+      }
+
+      Preconditions.checkState(isEventStage || isDataStage, Utils.format("Stage '{}' is not in event part nor in data path.", stageConf.getStageName()));
+      if(isEventStage && isDataStage) {
+        issues.add(IssueCreator.getPipeline().create(
+          ValidationError.VALIDATION_0103,
+          stageConf.getInstanceName()
+        ));
+        return false;
+      }
+
+      if(isEventStage) {
+        eventLanes.addAll(stageConf.getOutputLanes());
+      } else {
+        dataLanes.addAll(stageConf.getOutputLanes());
+      }
+
+      // Event lane always feeds records to event part of the pipeline
+      eventLanes.addAll(stageConf.getEventLanes());
+    }
+
+    return true;
   }
 
   @VisibleForTesting

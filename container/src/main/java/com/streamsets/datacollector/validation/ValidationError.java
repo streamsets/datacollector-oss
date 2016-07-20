@@ -106,6 +106,12 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0090("Encountered exception while validating configuration : {}"),
   VALIDATION_0091("Found more than one Target stage that triggers offset commit"),
   VALIDATION_0092("Delivery Guarantee can only be {} if pipeline contains a Target that triggers offset commit"),
+
+  // Event related validations
+  VALIDATION_0100("Invalid event stream name '{}'. Streams can include the following characters '{}'"),
+  VALIDATION_0101("Stage have more then one event lane."),
+  VALIDATION_0102("Stage have configured event lane even though that it doesn't produce events."),
+  VALIDATION_0103("Stage '{}' have merged input from both data and event part of the pipeline."),
   ;
 
   private final String msg;
