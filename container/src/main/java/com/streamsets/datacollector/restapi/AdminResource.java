@@ -241,6 +241,8 @@ public class AdminResource {
       config.setProperty(RemoteSSOService.DPM_BASE_URL_CONFIG, dpmBaseURL);
       if (dpmInfo.getLabels() != null && dpmInfo.getLabels().size() > 0) {
         config.setProperty(RemoteEventHandlerTask.REMOTE_JOB_LABELS, StringUtils.join(dpmInfo.getLabels(), ','));
+      } else {
+        config.setProperty(RemoteEventHandlerTask.REMOTE_JOB_LABELS, "");
       }
 
       builder.save();
