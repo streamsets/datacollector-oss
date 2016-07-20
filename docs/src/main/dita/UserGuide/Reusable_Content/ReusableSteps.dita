@@ -1200,14 +1200,18 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry id="entry-KafkaConfig">Additional Kafka configuration
-                                        properties to use. To add properties, click
-                                            <uicontrol>Add</uicontrol> and define the Kafka property
-                                        name and value. <p>Use the property names and values as
-                                            expected by Kafka.</p><p>For information about enabling
-                                            secure connections to Kafka, see <xref
+                                    <entry>
+                                        <p id="p-KafkaConfig1">Additional Kafka configuration
+                                            properties to use. To add properties, click
+                                                <uicontrol>Add</uicontrol> and define the Kafka
+                                            property name and value.</p>
+                                        <p id="p-KafkaConfig2">Use the property names and values as
+                                            expected by Kafka.</p>
+                                        <p id="p-KafkaConfig3">For information about enabling secure
+                                            connections to Kafka, see <xref
                                                 href="../Origins/KConsumer-EnablingSecurity.dita"
-                                            />.</p></entry>
+                                            />.</p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

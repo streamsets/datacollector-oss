@@ -35,8 +35,6 @@
             resources during spikes in volume. Or, if the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             has no resource issues and you want it to process data as quickly as possible, you can
-            set the maximum to 90 or 100. <draft-comment author="Loretta">Tucu / Hari: Let me know
-                what numbers you think I should use in the example above. Those are just
-                placeholders!</draft-comment></p>
+            set the maximum to 90 or 100. </p>
  </conbody>
 </concept>

@@ -168,7 +168,6 @@
   </topicref>
   <topicref href="../Origins/UDPtoKafka.dita" chunk="to-content">
    <topicref href="../Origins/UDPtoKafka-PipelineConfig.dita"/>
-   <topicref href="../Origins/UDPtoKafka-WriteConcurrency.dita"/>
    <topicref href="../Origins/UDPtoKafka-AddKafkaProps.dita"/>
    <topicref href="../Origins/UDPtoKafka-EnablingKSecurity.dita">
     <topicref href="../Origins/UDPtoKafka-EnableSSL.dita"/>

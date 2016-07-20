@@ -41,10 +41,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>SDC RPC to Kafka Listening Port<draft-comment
-                                            author="Loretta">SDC-3446 requests renaming to Listening
-                                            Port or RPC Listening Port (as in SDC RPC
-                                            origin)</draft-comment></entry>
+                                    <entry>RPC Listening Port</entry>
                                     <entry
                                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-RPCListPort"/>
                                 </row>
@@ -58,18 +55,16 @@
                                         time.</entry>
                                 </row>
                                 <row>
-                                    <entry>SDC RPC ID</entry>
+                                    <entry>RPC ID</entry>
                                     <entry
                                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-RPC-ID"/>
                                 </row>
                                 <row>
-                                    <entry>Max RPC Request Size (MB) <xref
+                                    <entry>Max Batch Request Size (MB) <xref
                                             href="SDCRPCtoKafka-RequestMessageSize.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_xvk_nky_pw"
-                                            /></xref><draft-comment author="Loretta">same bug asks
-                                            for "Max Batch Request Size
-                                        (MB)"</draft-comment></entry>
+                                        /></xref></entry>
                                     <entry>Maximum amount of data to be requested and processed at
                                         one time. <p>Default is 100 MB.</p></entry>
                                 </row>
@@ -132,8 +127,16 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-KafkaConfig"/>
+                                    <entry>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig1"/>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig2"/>
+                                        <p>For information about enabling secure connections to
+                                            Kafka, see <xref
+                                                href="SDCRPCtoKafka-EnablingKSecurity.dita#concept_vhx_2jc_rw"
+                                            />.</p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

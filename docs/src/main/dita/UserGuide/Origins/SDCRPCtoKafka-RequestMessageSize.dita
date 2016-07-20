@@ -38,8 +38,8 @@
         <p>If a record happens to be larger than the 900 KB maximum message size, the origin
             generates an error and does not write it to Kafka. The SDC RPC destination that provided
             the record processes the record based on stage error record handling. <draft-comment
-                author="Loretta">Tucu/Hari: Does the origin also show an error message for that
-                record, as doc'd above? Or no error in the origin, and the destination has the only
-                indication there was a problem? </draft-comment></p>
+                author="Loretta">Email out to Tucu verifying the above. He mentioned he created
+                SDC-3452 after he read this, but can't tell from the bug if this is
+                correct.</draft-comment></p>
     </conbody>
 </concept>

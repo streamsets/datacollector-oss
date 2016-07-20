@@ -54,8 +54,7 @@
             </step>
             <step>
                 <cmd>On the <wintitle>Kafka</wintitle> tab, configure the following
-                        properties:<draft-comment author="Loretta">update the last
-                        row?</draft-comment></cmd>
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_khc_klz_pw">
                         <tgroup cols="2">
@@ -81,8 +80,16 @@
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-KafkaConfig"/>
+                                    <entry>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig1"/>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig2"/>
+                                        <p>For information about enabling secure connections to
+                                            Kafka, see <xref
+                                                href="UDPtoKafka-EnablingKSecurity.dita#concept_kn3_tjc_rw"
+                                            />.</p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -113,13 +120,11 @@
                                             />.<p>Default is 1.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Write Concurrency <xref
-                                            href="UDPtoKafka-WriteConcurrency.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_xrr_thc_rw"/></xref>
-                                    </entry>
+                                    <entry>Write Concurrency</entry>
                                     <entry>Maximum number of Kafka clients that the origin can use
-                                        to write to Kafka. </entry>
+                                        to write to Kafka. <p>When configuring this property,
+                                            consider the number of Kafka brokers, partitions, and
+                                            volume of data to be written.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
