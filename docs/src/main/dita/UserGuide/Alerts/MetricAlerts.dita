@@ -30,7 +30,7 @@
     <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"/></p>
     <p>You can view the number of error records in these statistics. However, you might want to be
       notified when the number of error records reaches a certain threshold. You can enable the
-      default rule for the Pipeline Batch Error Records Meter metric to send an alert when the
+      default rule for the Pipeline Batch Error Records Counter metric to send an alert when the
       pipeline encounters more than 100 error records. When you enable the metric rule and the alert
       triggers, the alert displays in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console as

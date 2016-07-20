@@ -23,8 +23,7 @@
             for the rule. By default, none of the rules are enabled. Select
                 <uicontrol>Active</uicontrol> to enable a rule. </p>
         <p><indexterm>metric rules and alerts<indexterm>default</indexterm></indexterm>Data
-            Collector provides the following default metric rules:<draft-comment
-                author="alisontaylor">redo screenshot</draft-comment></p>
+            Collector provides the following default metric rules:</p>
         <image href="../Graphics/MetricDefaultRules.png" scale="40" id="image_gjs_zlf_qv"/>
     </conbody>
 </concept>
