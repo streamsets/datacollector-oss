@@ -144,7 +144,7 @@ public class S3Config {
     }
     try {
       //check if the credentials are right by trying to list an object in the common prefix
-      s3Client.listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1));
+      s3Client.listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1).withEncodingType("url"));
     } catch (AmazonS3Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
       issues.add(
