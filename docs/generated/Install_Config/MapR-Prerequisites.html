@@ -81,12 +81,11 @@
                 stage library that you want to use from the
                     <span class="ph uicontrol">system.stagelibs.blacklist</span> property.<div class="p">For example, the
                         <span class="ph uicontrol">system.stagelibs.blacklist</span> property is defined as
-                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib</pre>
+                  follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib,streamsets-datacollector-apache-solr_6_1_0-lib</pre>
 </div>
-<div class="p">To
-                    use the MapR version 5.1, remove the version 5.1 stage library from the property
-                    as
-                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib</pre>
+<div class="p">To use the MapR version 5.1, remove the version 5.1 stage library from the
+                    property as
+                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-apache-solr_6_1_0-lib</pre>
 </div>
 <div class="note warning"><span class="warningtitle">Warning:</span> You can use only one version of the MapR library at a time.
                 </div>

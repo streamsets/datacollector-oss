@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Data Collector can access information, a.k.a. secrets , stored in Hashicorp Vault such as database passwords or AWS keys. To access to Vault secrets, you must authorize Data Collector with Vault. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Accessing Hashicorp Vault Secrets"></meta><meta name="abstract" content="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault such as database passwords or AWS keys."></meta><meta name="description" content="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault such as database passwords or AWS keys."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bmq_gl1_mw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Accessing Hashicorp Vault Secrets</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Data Collector can access information, a.k.a. secrets , stored in Hashicorp Vault. You can use Vault secrets in place of username and password properties, similar properties such as AWS access key IDs ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Accessing Hashicorp Vault Secrets"></meta><meta name="abstract" content="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault."></meta><meta name="description" content="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bmq_gl1_mw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Accessing Hashicorp Vault Secrets</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -37,11 +37,13 @@
     
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data
                   Collector</span>
-        can access information, a.k.a. <dfn class="term">secrets</dfn>, stored in Hashicorp Vault such as
-        database passwords or AWS keys.</p>
+        can access information, a.k.a. <dfn class="term">secrets</dfn>, stored in Hashicorp Vault. </p>
 
-        <p class="p">To access to Vault
-            secrets, you must authorize <span class="ph">Data
+        <p class="p">You can use Vault
+            secrets in place of username and password properties, similar properties such as AWS
+            access key IDs and secret access keys, and in HTTP headers and bodies when using HTTPS. </p>
+
+        <p class="p">To access to Vault secrets, you must authorize <span class="ph">Data
                   Collector</span>
             with Vault. After authorization, you can use expressions in the pipeline that access
             Vault at run time.</p>
@@ -87,9 +89,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d85225e106">Vault Property</th>
+                            <th class="entry" valign="top" width="30%" id="d85430e109">Vault Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d85225e109">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d85430e112">Description</th>
 
                         </tr>
 
@@ -97,35 +99,35 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.addr</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.addr</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Required. Vault server URL. Use HTTPS to avoid unencrypted
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Required. Vault server URL. Use HTTPS to avoid unencrypted
                                 communication.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.app.id</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.app.id</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Required. App ID for <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Required. App ID for <span class="ph">Data
                   Collector</span>. The App ID must exist in in Vault and should be a UUID or a
                                 similarly complex string to ensure better security.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.lease.renewal.interval.sec</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.lease.renewal.interval.sec</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Seconds to wait before checking for leases that need renewal.
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Seconds to wait before checking for leases that need renewal.
                                     <p class="p">Default is 60. </p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.lease.expiration.buffer.sec</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.lease.expiration.buffer.sec</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Buffer for expiring leases. <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Buffer for expiring leases. <span class="ph">Data
                   Collector</span> renews leases that expire in less than the specified number of
                                     seconds.<p class="p">Default is 120. </p>
 </td>
@@ -133,73 +135,73 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.proxy.address</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.proxy.address</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Optional proxy URL. Configure to use a proxy to access Vault.
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Optional proxy URL. Configure to use a proxy to access Vault.
                             </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.proxy.port</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.proxy.port</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Optional proxy port. Configure to use a proxy to access Vault.
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Optional proxy port. Configure to use a proxy to access Vault.
                             </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.proxy.username</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.proxy.username</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Optional proxy username. Configure to use a proxy to access
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Optional proxy username. Configure to use a proxy to access
                                 Vault. </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.proxy.password</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.proxy.password</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Optional proxy password. Configure to use a proxy to access
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Optional proxy password. Configure to use a proxy to access
                                 Vault. </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.read.timeout</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.read.timeout</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Milliseconds to wait for data before timing out. <p class="p">Default is 0
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Milliseconds to wait for data before timing out. <p class="p">Default is 0
                                     for no limit. </p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.ssl.enabled.protocols</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.ssl.enabled.protocols</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">SSL enabled protocols. Versions TLSv1.2 or later are
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">SSL enabled protocols. Versions TLSv1.2 or later are
                                 recommended.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.ssl.truststore.file</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.ssl.truststore.file</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Path to a Java TrustStore file. Required when using a private CA
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Path to a Java TrustStore file. Required when using a private CA
                                 or certificates not trusted by the Java default TrustStore. </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.ssl.truststore.password</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.ssl.truststore.password</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Password for the TrustStore file. </td>
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Password for the TrustStore file. </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.ssl.verify</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.ssl.verify</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Whether to verify that the Vault server hostname matches its
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Whether to verify that the Vault server hostname matches its
                                     certificate.<p class="p">Default is true. False is not
                                 recommended.</p>
 </td>
@@ -207,18 +209,18 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.ssl.timeout</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.ssl.timeout</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Timeout for the SSL handshake in milliseconds. <p class="p">Default is 0
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Timeout for the SSL handshake in milliseconds. <p class="p">Default is 0
                                     for no limit. </p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d85225e106 ">vault.open.timeout</td>
+                            <td class="entry" valign="top" width="30%" headers="d85430e109 ">vault.open.timeout</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d85225e109 ">Connection timeout for requests to Vault in milliseconds.
+                            <td class="entry" valign="top" width="70%" headers="d85430e112 ">Connection timeout for requests to Vault in milliseconds.
                                     <p class="p">Default is 0 for no limit. </p>
 </td>
 
@@ -270,9 +272,12 @@
             with Vault, you can use expressions in pipeline and stage properties to access Vault
             secrets.</p>
 
-        <div class="p"><span class="ph">Data
-                  Collector</span>
-            provides the following functions to access Vault secrets:<dl class="dl">
+        <p class="p">The expression language provides Vault functions to return Vault secrets. You can use
+            Vault functions in <span class="ph">username, password, and similar properties such as
+                        AWS access key IDs and secret access keys. You can also use the functions in
+                        HTTP headers and bodies when using HTTPS.</span></p>
+
+        <div class="p">You can use the following functions to access Vault secrets:<dl class="dl">
                 
                     <dt class="dt dlterm">vault:read()</dt>
 
