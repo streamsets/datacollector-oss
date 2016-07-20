@@ -136,7 +136,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d17323e795">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d17405e820">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -258,14 +258,14 @@ The
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d17261e2509" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d17343e2509" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d154104e355">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154309e355">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154104e358">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154309e358">Description</th>
 
                                 </tr>
 
@@ -273,24 +273,24 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154309e355 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d154309e358 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2555" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d154309e355 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d154309e358 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d154309e355 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d17343e2555" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d154309e358 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -298,10 +298,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2569" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d154309e355 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d17343e2569" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d154309e358 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -309,10 +309,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2584" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d154309e355 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_fty_jwx_nr__d17343e2584" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d17261e2588">
+                                    <td class="entry" valign="top" width="70%" headers="d154309e358 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d17343e2588">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -343,9 +343,9 @@ The
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d154104e477">Jython Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d154309e477">Jython Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d154104e480">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d154309e480">Description</th>
 
                                 </tr>
 
@@ -353,9 +353,9 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154104e477 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154309e477 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154104e480 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154309e480 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -369,9 +369,9 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154104e477 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154309e477 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154104e480 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154309e480 ">Jython code to use in the processor.</td>
 
                                 </tr>
 
