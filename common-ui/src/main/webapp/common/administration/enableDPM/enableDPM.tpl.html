@@ -31,7 +31,7 @@
                ng-disabled="isEnableInProgress"
                name="dpmUserID"
                class="form-control"
-               ng-required
+               required
                pattern="[a-zA-Z_0-9\.]+@[a-zA-Z_0-9\.]+$"
                title="User ID must be <ID>@<Organization ID>, IDs must be a alphanumeric characters, underscores and dots"
                placeholder="{{'home.enableDPM.dpmUserNamePlaceholder' | translate}}"
@@ -45,7 +45,7 @@
                ng-disabled="isEnableInProgress"
                name="dpmUserPassword"
                class="form-control"
-               ng-required
+               required
                placeholder="{{'home.enableDPM.dpmUserPasswordPlaceholder' | translate}}"
                ng-model="dpmInfoModel.userPassword">
       </div>
@@ -93,7 +93,7 @@
     <button type="submit" class="btn btn-primary" ng-if="!isEnableInProgress && !dpmEnabled"
             translate="global.form.save">Save</button>
 
-    <button type="submit" class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
+    <button class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
             translate="home.enableDPM.isEnableInProgress">Enabling DPM...</button>
 
     <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"

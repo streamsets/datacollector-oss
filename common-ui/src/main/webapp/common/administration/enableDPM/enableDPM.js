@@ -32,8 +32,8 @@ angular
       isRemoteUserOrgAdmin: authService.isRemoteUserOrgAdmin(),
       dpmInfoModel: {
         baseURL: 'http://localhost:18631',
-        userID: null,
-        userPassword: null,
+        userID: '',
+        userPassword: '',
         labels: ['label1', 'label2']
       },
       isEnableInProgress: false,
