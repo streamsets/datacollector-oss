@@ -26,7 +26,7 @@
                 <dt>value()</dt>
                 <dd>Returns the value of the current metric selected in the metric rule. Use in
                     conditions for any type of metric rule.<p>For example, the default rule for the
-                        Pipeline Batch Error Records Meter metric includes the following
+                        Pipeline Batch Error Records Counter metric includes the following
                         condition:<codeblock>${value() > 100}</codeblock></p><p>The alert is
                         tiggered when the pipeline encounters more than 100 error records.</p></dd>
             </dlentry>
