@@ -31,7 +31,7 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_1-lib </entry>
                             <entry>For Kafka version 0.8.1.<p>Includes the Kafka Consumer origin and
-                                    Kafka Producer destination</p></entry>
+                                    Kafka Producer destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_2-lib </entry>
