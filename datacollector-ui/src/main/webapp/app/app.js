@@ -180,6 +180,7 @@ angular.module('dataCollectorApp')
             return;
           }
 
+          $modalStack.dismissAll();
           $modal.open({
             templateUrl: 'common/administration/enableDPM/enableDPM.tpl.html',
             controller: 'EnableDPMModalInstanceController',
