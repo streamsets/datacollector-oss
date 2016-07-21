@@ -50,7 +50,7 @@ angular
     });
 
     var nextRetryInSeconds = 1;
-    var maxAttempts = 5;
+    var maxAttempts = 50;
     var attempts = 0;
     var retryCountDownTimer;
     var updateRetryCountdown = function() {
