@@ -376,7 +376,7 @@ public class JdbcUtil {
           field = Field.create(Field.Type.TIME, rs.getObject(columnIndex));
           break;
         case Types.TIMESTAMP:
-          field = Field.create(Field.Type.DATETIME, rs.getObject(columnIndex));
+          field = Field.create(Field.Type.DATETIME, rs.getTimestamp(columnIndex));
           break;
         case Types.ARRAY:
         case Types.DATALINK:
