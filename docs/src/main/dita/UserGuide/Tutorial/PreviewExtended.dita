@@ -59,13 +59,13 @@
             </ol></dd>
         </dlentry>
         <dlentry>
-          <dt>Field Converter</dt>
-          <dd>The Field Converter changes the data type of a few fields. We'll take a look at that
-            stage and try changing stage configuration. <ol id="ol_ajx_pmm_qs">
-              <li>Instead of selecting the Field Converter in the pipeline, click the
+          <dt>Field Type Converter</dt>
+          <dd>The Field Type Converter changes the data type of a few fields. We'll take a look at
+            that stage and try changing stage configuration. <ol id="ol_ajx_pmm_qs">
+              <li>Instead of selecting the Field Type Converter in the pipeline, click the
                   <uicontrol>Next Stage</uicontrol> icon: <image
                   href="../Graphics/icon_PrevNextStage.png" id="image_i41_ssd_5s"/> and select
-                  <uicontrol>Field Converter</uicontrol>.<p>You might notice a red message that
+                  <uicontrol>Field Type Converter</uicontrol>.<p>You might notice a red message that
                   indicates the first record has an unparsable date - it shows that the date data
                   includes invalid characters at the end. </p><p>So what happens to this bad record?
                   It depends on how the stage is configured. We used the default configuration, but

@@ -34,8 +34,8 @@
       <codeblock>CASSANDRA_06 - Could not prepare record 'sdk:': 
 Invalid type for value 0 of CQL type varchar, expecting class java.lang.String but class java.lang. 
 Integer provided`</codeblock></dd>
-     <dd>To correct the problem, you might use a Field Converter processor to convert field data
-      types. In this case, you would convert the integer data to string.</dd>
+     <dd>To correct the problem, you might use a Field Type Converter processor to convert field
+      data types. In this case, you would convert the integer data to string.</dd>
     </dlentry>
    </dl>
   </p>

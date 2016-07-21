@@ -25,13 +25,13 @@
         <li>Base64 Field Encoder - Encodes binary data using Base64.</li>
         <li>Expression Evaluator - Performs calculations on data. Can also add or modify record
           header attributes.</li>
-        <li>Field Converter - Converts the data type of a field.</li>
         <li>Field Hasher - Uses an algorithm to encode sensitive data.</li>
         <li>Field Masker - Masks sensitive string data.</li>
         <li>Field Merger - Merges fields in complex lists or maps.</li>
         <li>Field Remover - Removes fields from a record.</li>
         <li>Field Renamer - Renames fields in a record. </li>
         <li>Field Splitter - Splits the string values in a field into different fields.</li>
+        <li>Field Type Converter - Converts the data types of fields.</li>
         <li>Geo IP- Provides geographic location information based on an IP address. </li>
         <li>Groovy Evaluator - Processes records based on custom Groovy code.</li>
         <li>HBase Lookup - Performs key-value lookups in HBase.</li>

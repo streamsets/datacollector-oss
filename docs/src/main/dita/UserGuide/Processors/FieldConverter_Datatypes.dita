@@ -31,7 +31,7 @@
      </thead>
      <tbody>
       <row>
-       <entry><indexterm>Field Converter processor<indexterm>valid
+       <entry><indexterm>Field Type Converter processor<indexterm>valid
          conversions</indexterm></indexterm><indexterm>data type
           conversions<indexterm>valid</indexterm></indexterm>Boolean</entry>
        <entry>Byte, Decimal, Double, Float, Integer, Long, Short, String</entry>

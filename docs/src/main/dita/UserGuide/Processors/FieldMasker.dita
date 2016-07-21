@@ -24,8 +24,8 @@
      Masker</indexterm></indexterm>Use the Field Masker to mask sensitive string data. For example,
    you might use a custom mask to mask the last four digits of a phone number.</p>
   <p>
-   <note type="tip">To mask non-string data, you might use the Field Converter processor to convert
-    non-string data to String, then pass the data to the Field Masker. </note>
+   <note type="tip">To mask non-string data, you might use the Field Type Converter processor to
+        convert non-string data to String, then pass the data to the Field Masker. </note>
   </p>
  </conbody>
 </concept>

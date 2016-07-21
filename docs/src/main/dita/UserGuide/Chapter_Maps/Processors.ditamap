@@ -33,13 +33,6 @@
    <topicref href="../Processors/Expression-HeaderAttributeExp.dita"/>
    <topicref href="../Processors/Expression-Configuring.dita"/>
   </topicref>
-  <topicref href="../Processors/FieldConverter.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
-   <topicref href="../Processors/FieldConverter-Configuring.dita"/>
-  </topicref>
   <topicref href="../Processors/FieldHasher.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldHasher-Methods.dita"/>
@@ -66,6 +59,13 @@
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/FieldTypeConverter.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
+   <topicref href="../Processors/FieldTypeConverter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/GeoIP.dita" chunk="to-content"> 
    <topicmeta>

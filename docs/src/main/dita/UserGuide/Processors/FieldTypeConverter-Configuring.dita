@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_g23_2tq_wq">
-    <title>Configuring a Field Converter</title>
+    <title>Configuring a Field Type Converter</title>
     <taskbody>
-        <context><indexterm>Field Converter
-            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Converter to
-            convert the data type of a field. </context>
+        <context><indexterm>Field Type Converter
+                processor<indexterm>configuring</indexterm></indexterm>Configure a Field Type
+            Converter to convert the data types of fields. </context>
         <steps id="steps_fdt_ttq_wq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
@@ -35,16 +35,27 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Field Converter Property</entry>
+                                    <entry>Field Type Converter Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Convert by Types</entry>
+                                    <entry>Specifies whether to convert the data type of all fields
+                                        with the specified type.</entry>
+                                </row>
+                                <row>
                                     <entry>Fields to Convert</entry>
-                                    <entry>One or more fields to convert to the same data type. <p
+                                    <entry>One or more fields to convert to the same data type. Used
+                                        when converting by field name only.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
                                         /></entry>
+                                </row>
+                                <row>
+                                    <entry>Source Type</entry>
+                                    <entry>Data type of the fields that you want to convert. Used
+                                        when converting by data type only.</entry>
                                 </row>
                                 <row>
                                     <entry>Convert to Type <xref
@@ -57,7 +68,7 @@
                                 </row>
                                 <row>
                                     <entry>Data Locale </entry>
-                                    <entry>Locale of field data. <p>Can determine how the Field
+                                    <entry>Locale of field data. <p>Can determine how the Field Type
                                             Converter formats converted data, such as a comma or
                                             period as a decimal separator. </p><p>Available for
                                             types affected by locale. </p></entry>
@@ -85,6 +96,8 @@
             <step>
                 <cmd>To configure additional type conversions, click the <uicontrol>Add</uicontrol>
                     icon and then repeat the previous step.  </cmd>
+                <info>You can configure additional conversions by field name or additional
+                    conversions by data type. You cannot use both methods in the same stage. </info>
             </step>
         </steps>
     </taskbody>

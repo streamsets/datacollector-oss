@@ -54,8 +54,8 @@
                     <row>
                         <entry>${record:type('/ID')=STRING}</entry>
                         <entry>In the Stream Selector, routes records where the ID is a String to a
-                            branch that includes a Field Converter to convert the field to a numeric
-                            data type.</entry>
+                            branch that includes a Field Type Converter to convert the field to a
+                            numeric data type.</entry>
                     </row>
                 </tbody>
             </tgroup>

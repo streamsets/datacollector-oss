@@ -22,7 +22,7 @@
   <p>You can write to a real destination instead of the Trash destination. The Trash destination
       allows you to run the pipeline without writing to a real destination system. </p>
     <p>The extended tutorial continues with the following steps:<ol id="ol_m23_hhk_ps">
-        <li>Configure a Field Converter to convert field types.</li>
+        <li>Configure a Field Type Converter to convert field types.</li>
         <li>Manipulate data with the Expression Evaluator.</li>
         <li>Use data preview to test and update pipeline configuration.</li>
         <li>Complete the pipeline with the placeholder Trash destination.</li>

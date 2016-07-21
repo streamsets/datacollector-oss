@@ -18,8 +18,8 @@
  <conbody>
     <p><indexterm>Cassandra destination<indexterm>supported data types</indexterm></indexterm>Due to
       Cassandra requirements, the data types of the incoming fields must match the data types of the
-      corresponding Cassandra columns. When appropriate, use a Field Converter processor earlier in
-      the pipeline to convert data types.</p>
+      corresponding Cassandra columns. When appropriate, use a Field Type Converter processor
+      earlier in the pipeline to convert data types.</p>
   <p>For details about the conversion of Java data types to Cassandra data types, see the Cassandra
       documentation. </p>
   <p>The Cassandra destination supports the following Cassandra data types:<ul id="ul_qjk_2t3_ms">

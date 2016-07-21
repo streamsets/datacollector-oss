@@ -14,15 +14,15 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_kxl_tvk_ps">
-    <title>Convert Types with a Field Converter</title>
+    <title>Convert Types with a Field Type Converter</title>
     <shortdesc>Since the sample data is read from a file, the fields are all String. Let's use a
-        Field Converter to convert some data types.</shortdesc>
+        Field Type Converter to convert some data types.</shortdesc>
     <taskbody>
         <context>Let's convert datetime fields to Datetime, and convert monetary fields as well as
             the longitude and latitude fields to Double. </context>
         <steps id="steps_wx1_xvk_ps">
             <step>
-                <cmd>Add a <uicontrol>Field Converter</uicontrol> to the canvas.</cmd>
+                <cmd>Add a <uicontrol>Field Type Converter</uicontrol> to the canvas.</cmd>
             </step>
             <step>
                 <cmd>To route all data from the pipeline through the new stage, connect the Field
@@ -42,7 +42,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2.51*"/>
                             <thead>
                                 <row>
-                                    <entry>Field Converter Property</entry>
+                                    <entry>Field Type Converter Property</entry>
                                     <entry>Datetime Conversion</entry>
                                 </row>
                             </thead>
@@ -82,7 +82,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2.17*"/>
                             <thead>
                                 <row>
-                                    <entry>Field Converter Property</entry>
+                                    <entry>Field Type Converter Property</entry>
                                     <entry>Double Conversion</entry>
                                 </row>
                             </thead>
@@ -115,7 +115,7 @@
                 </info>
             </step>
         </steps>
-        <result>The pipeline and Field Converter should look like this:<p><image
+        <result>The pipeline and Field Type Converter should look like this:<p><image
                     href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="65"
                 /></p></result>
     </taskbody>

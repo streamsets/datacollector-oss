@@ -25,7 +25,7 @@
    Evaluator includes an expression that treats string data as integers. When the field includes
    integer or valid numeric data, the expression language coerces the data type. If the field
    includes a date, that record is written to the error records file.</p>
-  <p>To avoid coercion errors, you can use the Field Converter earlier in the pipeline to convert
-   data to the appropriate data type.</p>
+  <p>To avoid coercion errors, you can use the Field Type Converter earlier in the pipeline to
+   convert data to the appropriate data type.</p>
  </conbody>
 </concept>

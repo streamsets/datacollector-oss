@@ -38,12 +38,13 @@
             </step>
         </steps>
         <result>The console goes into monitor mode and the data alert triggers again. Before long,
-            you'll see some error records in the Jython Evaluator and the Field Converter. <p>For
-                each stage, you can see the error messages for latest error records. </p><p>To look
-                at all the error records, you can review the error record files in the directory
-                that you specified. Error records are written in the SDC Record data format so you
-                can create an error pipeline to process error records. We'll show you how to create
-                an error pipeline to process these error records in a future tutorial.</p><p>That's
-                it for this tutorial. Hope you found it helpful! </p></result>
+            you'll see some error records in the Jython Evaluator and the Field Type Converter.
+                <p>For each stage, you can see the error messages for latest error records.
+                </p><p>To look at all the error records, you can review the error record files in
+                the directory that you specified. Error records are written in the SDC Record data
+                format so you can create an error pipeline to process error records. We'll show you
+                how to create an error pipeline to process these error records in a future
+                tutorial.</p><p>That's it for this tutorial. Hope you found it helpful!
+            </p></result>
     </taskbody>
 </task>

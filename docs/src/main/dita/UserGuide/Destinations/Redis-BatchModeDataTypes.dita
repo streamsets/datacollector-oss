@@ -17,14 +17,16 @@
  <title>Data Types for Batch Mode</title>
  <shortdesc>When you configure the destination for batch mode, you select the incoming fields to use
         as the Redis key and value. You also select the data type of the Redis value. If needed, the
-        Redis destination converts the Data Collector data type of the incoming value field to the
-        selected Redis data type. </shortdesc>
+        Redis destination converts the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> data
+        type of the incoming value field to the selected Redis data type. </shortdesc>
  <conbody>
   <p><indexterm>Redis destination<indexterm>data types</indexterm></indexterm><indexterm>data
                     types<indexterm>Redis destination</indexterm></indexterm>When appropriate, use a
-            Field Converter processor earlier in the pipeline to convert data types.</p>
-        <p>The following table lists the Data Collector data types that can be converted to Redis
-            data types:</p>
+            Field Type Converter processor earlier in the pipeline to convert data types.</p>
+        <p>The following table lists the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types that can be converted to Redis data types:</p>
         <p>
             <table frame="all" rowsep="1" colsep="1" id="table_bpz_r4h_jw">
                 <tgroup cols="2">
@@ -53,6 +55,8 @@
                 </tgroup>
             </table>
         </p>
-        <note>The remaining Data Collector and Redis data types are not supported. </note>
+        <note>The remaining <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            and Redis data types are not supported. </note>
  </conbody>
 </concept>

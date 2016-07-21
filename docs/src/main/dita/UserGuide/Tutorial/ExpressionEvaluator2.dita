@@ -22,7 +22,7 @@
         <steps id="steps_dzt_j3q_ps">
             <step>
                 <cmd>Add an <uicontrol>Expression Evaluator</uicontrol> to the canvas and connect
-                    the Field Converter to the stage. </cmd>
+                    the Field Type Converter to the stage. </cmd>
             </step>
             <step>
                 <cmd>On the <uicontrol>Expressions</uicontrol> tab, click the
