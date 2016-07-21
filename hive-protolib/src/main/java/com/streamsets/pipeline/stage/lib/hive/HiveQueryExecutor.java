@@ -303,7 +303,7 @@ public final class HiveQueryExecutor {
     ){
       return rs.next();
     } catch (Exception e) {
-      LOG.error("SQL Exception happened when creating table: {}", e);
+      LOG.error("SQL Exception happened during show create table: {}", qualifiedTableName, e);
       throw new StageException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
