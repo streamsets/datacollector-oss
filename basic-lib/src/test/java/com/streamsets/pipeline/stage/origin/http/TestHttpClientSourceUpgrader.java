@@ -219,6 +219,25 @@ public class TestHttpClientSourceUpgrader {
     }
   }
 
+  @Test
+  public void testV7ToV8() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("conf.entityDelimiter", "\\r\\n"));
+    configs.add(new Config("conf.client.requestTimeoutMillis", "1000"));
+
+    HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 7, 8, configs);
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    assertTrue(configValues.containsKey("conf.client.readTimeoutMillis"));
+    assertTrue(configValues.containsKey("conf.client.connectTimeoutMillis"));
+    assertTrue(configValues.containsKey("conf.pagination.mode"));
+    assertTrue(configValues.containsKey("conf.pagination.startAt"));
+    assertTrue(configValues.containsKey("conf.pagination.resultFieldPath"));
+    assertTrue(configValues.containsKey("conf.pagination.rateLimit"));
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

@@ -32,10 +32,12 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -53,6 +55,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Category(SingleForkNoReuseTest.class)
 public class HttpProcessorIT extends JerseyTest {
 
   private static String getBody(String path) {

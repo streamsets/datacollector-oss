@@ -26,11 +26,16 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** {@inheritDoc} */
 public class HttpProcessorUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
+  private static final String CLIENT = "client";
+
+  private final List<Config> configsToRemove = new ArrayList<>();
+  private final List<Config> configsToAdd = new ArrayList<>();
 
   private static final Joiner joiner = Joiner.on(".");
 
@@ -45,6 +50,12 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -57,5 +68,23 @@ public class HttpProcessorUpgrader implements StageUpgrader {
     // Default for upgrades is different so that we don't accidentally clobber possibly pre-existing attributes.
     configs.add(new Config(joiner.join(CONF, "headerAttributePrefix"), "http-"));
     configs.add(new Config(joiner.join(CONF, "headerOutputField"), ""));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configsToAdd.clear();
+    configsToRemove.clear();
+
+    for (Config config : configs) {
+      if (joiner.join(CONF, CLIENT, "requestTimeoutMillis").equals(config.getName())) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "readTimeoutMillis"), config.getValue()));
+      }
+    }
+
+    configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "connectTimeoutMillis"), "0"));
+    configsToAdd.add(new Config(joiner.join(CONF, "maxRequestCompletionSecs"), "60"));
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

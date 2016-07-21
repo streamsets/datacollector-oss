@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -26,52 +26,56 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.glassfish.jersey.client.ChunkedInput;
+import org.apache.http.client.config.RequestConfig;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
-import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+/**
+ * HTTP Client Origin implementation supporting streaming, polled, and paginated HTTP resources.
+ */
 public class HttpClientSource extends BaseSource {
+  static final String START_AT = "startAt";
+
   private static final Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
+
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
   private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
@@ -79,16 +83,15 @@ public class HttpClientSource extends BaseSource {
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
   private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
-  private static final String VAULT_EL_PREFIX = "${" + VaultEL.PREFIX;
+  private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":";
+  private static final HashFunction HF = Hashing.sha256();
 
   private final HttpClientConfigBean conf;
-  private static final HashFunction hf = Hashing.sha256();
   private Hasher hasher;
 
   private AccessToken authToken;
   private Client client;
   private Response response;
-  private ChunkedInput<String> chunkedInput;
   private int recordCount;
   private long lastRequestCompletedTime = -1;
 
@@ -99,12 +102,17 @@ public class HttpClientSource extends BaseSource {
   private ELVars resourceVars;
   private ELVars bodyVars;
   private ELVars headerVars;
+
   private ELEval resourceEval;
   private ELEval bodyEval;
   private ELEval headerEval;
 
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
+
+  private Link next;
+  private boolean haveMorePages;
+  private DataParser parser = null;
 
   /**
    * @param conf Configuration object for the HTTP client
@@ -113,6 +121,7 @@ public class HttpClientSource extends BaseSource {
     this.conf = conf;
   }
 
+  /** {@inheritDoc} */
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
@@ -132,6 +141,9 @@ public class HttpClientSource extends BaseSource {
     headerVars = getContext().createELVars();
     headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
 
+    next = null;
+    haveMorePages = false;
+
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
       configureClient();
@@ -140,12 +152,19 @@ public class HttpClientSource extends BaseSource {
     return issues;
   }
 
+  /**
+   * Helper method to apply Jersey client configuration properties.
+   */
   private void configureClient() {
+    RequestConfig requestConfig = RequestConfig.custom()
+        .setConnectionRequestTimeout(conf.client.connectTimeoutMillis)
+        .setSocketTimeout(conf.client.readTimeoutMillis)
+        .build();
+
     ClientConfig clientConfig = new ClientConfig()
-        .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
-        .property(ClientProperties.READ_TIMEOUT, conf.client.requestTimeoutMillis)
         .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-        .connectorProvider(new GrizzlyConnectorProvider());
+        .property(ApacheClientProperties.REQUEST_CONFIG, requestConfig)
+        .connectorProvider(new ApacheConnectorProvider());
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
@@ -162,25 +181,42 @@ public class HttpClientSource extends BaseSource {
     parserFactory = conf.dataFormatConfig.getParserFactory();
   }
 
+  /**
+   * Helper to apply authentication properties to Jersey client.
+   *
+   * @param clientBuilder Jersey Client builder to configure
+   */
+  private void configureAuth(ClientBuilder clientBuilder) {
+    if (conf.client.authType == AuthenticationType.OAUTH) {
+      authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
+    } else if (conf.client.authType != AuthenticationType.NONE) {
+      JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
+    }
+  }
+
+  /** {@inheritDoc} */
   @Override
   public void destroy() {
-    if (chunkedInput != null && !chunkedInput.isClosed()) {
-      chunkedInput.close();
-      chunkedInput = null;
-    }
     if (response != null) {
       response.close();
       response = null;
     }
+    if (client != null) {
+      client.close();
+      client = null;
+    }
     super.destroy();
   }
 
+  /** {@inheritDoc} */
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
     Optional<String> newSourceOffset = Optional.absent();
     recordCount = 0;
+
+    setPageOffset(lastSourceOffset);
 
     resolvedUrl = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
     WebTarget target = client.target(resolvedUrl);
@@ -190,19 +226,28 @@ public class HttpClientSource extends BaseSource {
       throw new StageException(Errors.HTTP_07);
     }
 
-    Future<Response> responseFuture;
-    while (((System.currentTimeMillis() - start) < conf.basic.maxWaitTime) && (recordCount < chunksToFetch)) {
-      if (shouldMakeRequest(start)) {
-        responseFuture = makeRequest(target);
-        newSourceOffset = processResponse(responseFuture, chunksToFetch, batchMaker);
-      } else if (chunkedInput != null) {
-        // We already have a chunkedInput that we haven't finished reading.
-        newSourceOffset = readChunks(chunksToFetch, batchMaker);
+    boolean uninterrupted = true;
+
+    while (!waitTimeExpired(start) && uninterrupted && (recordCount < chunksToFetch)) {
+      if (parser != null) {
+        // We already have an response that we haven't finished reading.
+        newSourceOffset = Optional.of(parseResponse(chunksToFetch, batchMaker));
+      } else if (shouldMakeRequest()) {
+
+        if (conf.pagination.mode != PaginationMode.NONE) {
+          target = client.target(resolveNextPageUrl(newSourceOffset.orNull()));
+          // Pause between paging requests so we don't get rate limited.
+          uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
+        }
+
+        makeRequest(target);
+        newSourceOffset = processResponse(chunksToFetch, batchMaker);
+      } else if (conf.httpMode == HttpClientMode.BATCH) {
+        // We are done.
+        return null;
       } else {
         // In polling mode, waiting for the next polling interval.
-        if (!ThreadUtil.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS)) {
-          break;
-        }
+        uninterrupted = ThreadUtil.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
       }
     }
 
@@ -213,64 +258,242 @@ public class HttpClientSource extends BaseSource {
     }
   }
 
-  private Future<Response> makeRequest(WebTarget target) throws StageException {
-    Future<Response> responseFuture;
-    hasher = hf.newHasher();
+  /**
+   * Returns the URL of the next page to fetch when paging is enabled. Otherwise
+   * returns the previously configured URL.
+   *
+   * @param sourceOffset current source offset
+   * @return next URL to fetch
+   * @throws ELEvalException if the resource expression cannot be evaluated
+   */
+  private String resolveNextPageUrl(String sourceOffset) throws ELEvalException {
+    String url;
+    if (conf.pagination.mode == PaginationMode.LINK_HEADER && next != null) {
+      url = next.getUri().toString();
+    } else if (conf.pagination.mode == PaginationMode.BY_OFFSET || conf.pagination.mode == PaginationMode.BY_PAGE) {
+      if (sourceOffset != null) {
+        setPageOffset(sourceOffset);
+      }
+      url = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
+    } else {
+      url = resolvedUrl;
+    }
+    return url;
+  }
 
-    final AsyncInvoker asyncInvoker = target
+  /**
+   * Sets the startAt EL variable in scope for the resource and request body.
+   * If the source offset is null (origin was reset) then the initial value
+   * from the user provided configuration is used.
+   *
+   * @param sourceOffset source offset to parse for startAt variable.
+   */
+  private void setPageOffset(String sourceOffset) {
+    if (conf.pagination.mode == PaginationMode.NONE) {
+      return;
+    }
+
+    int startAt = conf.pagination.startAt;
+    if (sourceOffset != null) {
+      startAt = HttpSourceOffset.fromString(sourceOffset).getStartAt();
+    }
+    resourceVars.addVariable(START_AT, startAt);
+    bodyVars.addVariable(START_AT, startAt);
+  }
+
+  /**
+   * Returns true if the batchWaitTime has expired and we should return from produce
+   *
+   * @param start the time in milliseconds at which this produce call began
+   * @return whether or not to return the batch as-is
+   */
+  private boolean waitTimeExpired(long start) {
+    return (System.currentTimeMillis() - start) > conf.basic.maxWaitTime;
+  }
+
+  /**
+   * Helper method to construct an HTTP request and fetch a response.
+   *
+   * @param target the target url to fetch.
+   * @throws StageException if an unhandled error is encountered
+   */
+  private void makeRequest(WebTarget target) throws StageException {
+    hasher = HF.newHasher();
+
+    final Invocation.Builder invocationBuilder = target
         .request()
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
-        .headers(resolveHeaders())
-        .async();
+        .headers(resolveHeaders());
 
     if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
       final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
       hasher.putString(requestBody, Charset.forName(conf.dataFormatConfig.charset));
-      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
+      response = invocationBuilder.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
     } else {
-      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
+      response = invocationBuilder.method(conf.httpMethod.getLabel());
     }
 
     // Calculate request parameter hash
     currentParameterHash = hasher.hash().toString();
-    return responseFuture;
   }
 
-  private boolean shouldMakeRequest(long start) {
-    return chunkedInput == null && start > lastRequestCompletedTime + conf.pollingInterval;
+  /**
+   * Determines whether or not we should continue making additional HTTP requests
+   * in the current produce() call or whether to return the current batch.
+   *
+   * @return true if we should make additional HTTP requests for this batch
+   */
+  private boolean shouldMakeRequest() {
+    boolean shouldMakeRequest = lastRequestCompletedTime == -1;
+    shouldMakeRequest |= next != null;
+    shouldMakeRequest |= (haveMorePages && conf.pagination.mode != PaginationMode.LINK_HEADER);
+    shouldMakeRequest |= System.currentTimeMillis() > lastRequestCompletedTime + conf.pollingInterval &&
+        conf.httpMode == HttpClientMode.POLLING;
+
+    return shouldMakeRequest;
   }
 
-  private String parseChunk(String chunk, BatchMaker batchMaker) throws IOException, DataParserException {
-    // Paging support will be added in SDC-3352
-    String newSourceOffset = "url::" + resolvedUrl + "::page::0::params::" + currentParameterHash + "::time::" +
-        System.currentTimeMillis();
-    DataParser parser = parserFactory.getParser(newSourceOffset, chunk);
-    if (conf.dataFormat == DataFormat.JSON) {
-      // For JSON, a chunk only contains a single record, so we only parse it once.
+  /**
+   * Parses the response of a completed request into records and adds them to the batch.
+   * If more records are available in the response than we can add to the batch, the
+   * response is not closed and parsing will continue on the next batch.
+   *
+   * @param maxRecords maximum number of records to add to the batch.
+   * @param batchMaker batch to add records to.
+   * @return the next source offset to commit
+   * @throws StageException if an unhandled error is encountered
+   */
+  private String parseResponse(int maxRecords, BatchMaker batchMaker) throws StageException {
+    HttpSourceOffset sourceOffset = new HttpSourceOffset(
+        resolvedUrl,
+        currentParameterHash,
+        System.currentTimeMillis(),
+        getCurrentPage()
+    );
+    InputStream in = null;
+    if (parser == null) {
+      // Only get a new parser if we are done with the old one.
+      in = response.readEntity(InputStream.class);
+      parser = parserFactory.getParser(sourceOffset.toString(), in, "0");
+    }
+    try {
       Record record = parser.parse();
-      if (record != null) {
-        addResponseHeaders(record.getHeader());
-        batchMaker.addRecord(record);
-        ++recordCount;
-      }
-      if (null != parser.parse()) {
-        throw new DataParserException(Errors.HTTP_02);
-      }
-    } else {
-      // For text and xml, a chunk may contain multiple records.
-      Record record = parser.parse();
-      while (record != null) {
-        addResponseHeaders(record.getHeader());
-        batchMaker.addRecord(record);
-        ++recordCount;
+      int subRecordCount = 0;
+      while (record != null && recordCount <= maxRecords) {
+        if (conf.pagination.mode != PaginationMode.NONE && record.has(conf.pagination.resultFieldPath)) {
+          subRecordCount = parsePaginatedResult(batchMaker, sourceOffset.toString(), record);
+          recordCount += subRecordCount;
+        } else {
+          addResponseHeaders(record.getHeader());
+          batchMaker.addRecord(record);
+          ++recordCount;
+        }
         record = parser.parse();
       }
+
+      if (record == null) {
+        // Done reading this response
+        cleanupResponse(in);
+        incrementSourceOffset(sourceOffset, subRecordCount);
+      }
+    } catch (IOException e) {
+      errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
     }
-    LOG.debug("Read record with ID, count: '{}', '{}'", newSourceOffset, recordCount);
-    return newSourceOffset;
+    return sourceOffset.toString();
   }
 
+  /**
+   * Increments the current source offset's startAt portion by the specified amount.
+   * This is the number of records parsed when paging BY_OFFSET or 1 if incrementing
+   * BY_PAGE.
+   *
+   * @param sourceOffset the source offset
+   * @param increment the amount to increment the offset by
+   */
+  private void incrementSourceOffset(HttpSourceOffset sourceOffset, int increment) {
+    if (conf.pagination.mode == PaginationMode.BY_PAGE) {
+      sourceOffset.incrementStartAt(1);
+    } else if (conf.pagination.mode == PaginationMode.BY_OFFSET) {
+      sourceOffset.incrementStartAt(increment);
+    }
+  }
+
+  /**
+   * Cleanup the {@link DataParser}, response's {@link InputStream} and the {@link Response} itself.
+   * @param in the InputStream we are finished with
+   * @throws IOException If a resource is not closed properly
+   */
+  private void cleanupResponse(InputStream in) throws IOException {
+    LOG.debug("Cleanup after request processing complete.");
+    parser.close();
+    parser = null;
+    if (in != null) {
+      in.close();
+    }
+    lastRequestCompletedTime = System.currentTimeMillis();
+    response.close();
+    response = null;
+  }
+
+  /**
+   * Returns the most recently requested page number or page offset requested.
+   *
+   * @return page number or offset
+   */
+  private int getCurrentPage() {
+    // Body params take precedence, but usually only one or the other should be used.
+    if (bodyVars.hasVariable(START_AT)) {
+      return (int) bodyVars.getVariable(START_AT);
+    } else if (resourceVars.hasVariable(START_AT)) {
+      return (int) resourceVars.getVariable(START_AT);
+    }
+    return 0;
+  }
+
+  /**
+   * Parses a paginated result from the configured field.
+   *
+   * @param batchMaker batch to add records to
+   * @param sourceOffset to use as a base when creating records
+   * @param record the source record containing an array to be converted to records
+   * @return number of records parsed
+   * @throws StageException if an unhandled error is encountered
+   */
+  private int parsePaginatedResult(BatchMaker batchMaker, String sourceOffset, Record record) throws
+      StageException {
+    int numSubRecords = 0;
+
+    if (!record.has(conf.pagination.resultFieldPath)) {
+      throw new StageException(Errors.HTTP_12, conf.pagination.resultFieldPath);
+    }
+    Field resultField = record.get(conf.pagination.resultFieldPath);
+
+    if (resultField.getType() != Field.Type.LIST) {
+      throw new StageException(Errors.HTTP_08, resultField.getType());
+    }
+
+    List<Field> results = resultField.getValueAsList();
+    int subRecordIdx = 0;
+    for (Field result : results) {
+      Record r = getContext().createRecord(sourceOffset + "::" + subRecordIdx++);
+      r.set(result);
+      addResponseHeaders(r.getHeader());
+      batchMaker.addRecord(r);
+      ++numSubRecords;
+    }
+    haveMorePages = numSubRecords > 0;
+    return numSubRecords;
+  }
+
+  /**
+   * Adds the HTTP response headers to the record header.
+   * @param header an SDC record header to populate
+   */
   private void addResponseHeaders(Record.Header header) {
+    if (response.getStringHeaders() == null) {
+      return;
+    }
+
     for (Map.Entry<String, List<String>> entry : response.getStringHeaders().entrySet()) {
       if (!entry.getValue().isEmpty()) {
         String firstValue = entry.getValue().get(0);
@@ -279,14 +502,10 @@ public class HttpClientSource extends BaseSource {
     }
   }
 
-  private void configureAuth(ClientBuilder clientBuilder) {
-    if (conf.client.authType == AuthenticationType.OAUTH) {
-      authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
-    } else if (conf.client.authType != AuthenticationType.NONE) {
-      JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
-    }
-  }
-
+  /**
+   * Returns true if the presence of an Vault EL function is detected.
+   * @return true if the request headers or body contain a Vault EL function
+   */
   private boolean requestContainsSensitiveInfo() {
     boolean sensitive = false;
     for (Map.Entry<String, String> header : conf.headers.entrySet()) {
@@ -303,6 +522,11 @@ public class HttpClientSource extends BaseSource {
     return sensitive;
   }
 
+  /**
+   * Resolves any expressions in the Header value entries of the request.
+   * @return map of evaluated headers to add to the request
+   * @throws StageException if an unhandled error is encountered
+   */
   private MultivaluedMap<String, Object> resolveHeaders() throws StageException {
     MultivaluedMap<String, Object> requestHeaders = new MultivaluedHashMap<>();
     for (Map.Entry<String, String> entry : conf.headers.entrySet()) {
@@ -317,59 +541,43 @@ public class HttpClientSource extends BaseSource {
     return requestHeaders;
   }
 
-  private Optional<String> processResponse(Future<Response> responseFuture, int maxRecords, BatchMaker batchMaker) throws
+  /**
+   * Verifies that the response was a successful one and has data and continues to parse the response.
+   * @param maxRecords maximum number of records to add to the batch
+   * @param batchMaker batch of records to populate
+   * @return a new source offset if the response was successful
+   * @throws StageException if an unhandled error is encountered
+   */
+  private Optional<String> processResponse(int maxRecords, BatchMaker batchMaker) throws
       StageException {
     Optional<String> newSourceOffset = Optional.absent();
-    try {
-      response = responseFuture.get(conf.client.requestTimeoutMillis, TimeUnit.MILLISECONDS);
 
-      // Response was not in the OK range, so treat as an error
-      if (response.getStatus() < 200 || response.getStatus() >= 300) {
-        errorRecordHandler.onError(
-            Errors.HTTP_01,
-            response.getStatus(),
-            response.getStatusInfo().getReasonPhrase()
-        );
-        lastRequestCompletedTime = System.currentTimeMillis();
-        response.close();
-        response = null;
-        return newSourceOffset;
-      }
+    // Response was not in the OK range, so treat as an error
+    int status = response.getStatus();
+    if (status < 200 || status >= 300) {
+      lastRequestCompletedTime = System.currentTimeMillis();
+      String reason = response.getStatusInfo().getReasonPhrase();
+      String respString = response.readEntity(String.class);
+      response.close();
+      response = null;
 
-      if (response.hasEntity()) {
-        chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {
-        });
-        chunkedInput.setParser(ChunkedInput.createParser(conf.entityDelimiter));
-        newSourceOffset = readChunks(maxRecords, batchMaker);
-      }
-    } catch (InterruptedException | TimeoutException | ExecutionException e) {
-      LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
-      errorRecordHandler.onError(Errors.HTTP_03, e.toString());
+      errorRecordHandler.onError(Errors.HTTP_01, status, reason + " : " + respString);
+
+      return newSourceOffset;
     }
 
-    return newSourceOffset;
-  }
-
-  private Optional<String> readChunks(int maxRecords, BatchMaker batchMaker) throws StageException {
-    String chunk = null;
-    Optional<String> newSourceOffset = Optional.absent();
-    try {
-      while (recordCount < maxRecords && (chunk = chunkedInput.read()) != null) {
-        newSourceOffset = Optional.of(parseChunk(chunk, batchMaker));
-      }
-    } catch (IOException e) {
-      errorRecordHandler.onError(Errors.HTTP_00, chunk, e.toString(), e);
-    } finally {
-      // This was the end of the chunked input
-      // If there's more to read we can't close the response in this batch.
-      if (chunk == null) {
-        chunkedInput.close();
-        chunkedInput = null;
-        response.close();
-        response = null;
-        lastRequestCompletedTime = System.currentTimeMillis();
+    if (conf.pagination.mode == PaginationMode.LINK_HEADER) {
+      next = response.getLink("next");
+      if (next == null) {
+        haveMorePages = false;
       }
     }
+
+
+    if (response.hasEntity() && response.bufferEntity()) {
+      newSourceOffset = Optional.of(parseResponse(maxRecords, batchMaker));
+    }
+
     return newSourceOffset;
   }
 }

@@ -104,4 +104,19 @@ public class TestHttpProcessorUpgrader {
     }
     return map;
   }
+
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("conf.client.requestTimeoutMillis", "1000"));
+
+    HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 3, 4, configs);
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    assertTrue(configValues.containsKey("conf.client.readTimeoutMillis"));
+    assertTrue(configValues.containsKey("conf.client.connectTimeoutMillis"));
+    assertTrue(configValues.containsKey("conf.maxRequestCompletionSecs"));
+  }
 }

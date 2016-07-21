@@ -29,15 +29,14 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.lib.http.Groups;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",
     execution = ExecutionMode.STANDALONE,
+    resetOffset = true,
     recordsByRef = true,
     upgrader = HttpClientSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
@@ -52,7 +51,6 @@ public class HttpClientDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    conf.entityDelimiter = StringEscapeUtils.unescapeJava(conf.entityDelimiter);
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS; // Only mode that is currently supported.
     return new HttpClientSource(conf);
   }

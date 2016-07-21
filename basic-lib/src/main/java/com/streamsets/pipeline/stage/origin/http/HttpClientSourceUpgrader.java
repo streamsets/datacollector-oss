@@ -33,10 +33,12 @@ import java.util.List;
 
 public class HttpClientSourceUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
+  private static final String CLIENT = "client";
   private static final String BASIC = "basic";
   private static final String AUTH_TYPE = "authType";
   private static final String OAUTH = "oauth";
-  private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
+  private static final String DATA_FORMAT_CONFIG = "dataFormatConfig";
+  private static final String PAGINATION_CONFIG = "pagination";
 
   private static final Joiner joiner = Joiner.on(".");
 
@@ -78,6 +80,12 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 6:
         JerseyClientUtil.upgradeToJerseyConfigBean(configs);
+        if (toVersion == 7) {
+          break;
+        }
+        // fall through
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -86,6 +94,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
+    configsToRemove.clear();
+    configsToAdd.clear();
+
     for (Config config : configs) {
       switch (config.getName()) {
         case "dataFormat":
@@ -144,6 +155,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV3ToV4(List<Config> configs) {
+    configsToRemove.clear();
+    configsToAdd.clear();
+
     for (Config config : configs) {
       if (joiner.join(CONF, AUTH_TYPE)
           .equals(config.getName()) && AuthenticationType.BASIC.name() == config.getValue()) {
@@ -161,6 +175,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV5ToV6(List<Config> configs) {
+    configsToRemove.clear();
+    configsToAdd.clear();
+
     for (Config config : configs) {
       if (joiner.join(CONF, "requestData").equals(config.getName())) {
         configsToRemove.add(config);
@@ -171,4 +188,32 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
   }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    configsToRemove.clear();
+    configsToAdd.clear();
+
+    for (Config config : configs) {
+      if (joiner.join(CONF, "entityDelimiter").equals(config.getName())) {
+        configsToRemove.add(config);
+      }
+
+      if (joiner.join(CONF, CLIENT, "requestTimeoutMillis").equals(config.getName())) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "readTimeoutMillis"), config.getValue()));
+      }
+    }
+
+    configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "connectTimeoutMillis"), "0"));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "mode"), "NONE"));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "startAt"), "0"));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "resultFieldPath"), ""));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "rateLimit"), "2000"));
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+
+    // Pagination config bean should be added automatically as its initialized.
+  }
+
 }

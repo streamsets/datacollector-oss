@@ -48,7 +48,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class GeolocationProcessor extends SingleLaneRecordProcessor {
+public class  GeolocationProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GeolocationProcessor.class);
   private static final InetAddress KNOWN_GOOD_ADDRESS;
   static {

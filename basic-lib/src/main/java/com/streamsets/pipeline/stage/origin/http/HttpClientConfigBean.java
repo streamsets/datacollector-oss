@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -42,6 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.stage.origin.http.HttpClientSource.START_AT;
+
 public class HttpClientConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HttpClientConfigBean.class);
 
@@ -56,7 +58,7 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Resource URL",
       defaultValue = "https://stream.twitter.com/1.1/statuses/sample.json",
-      description = "Specify the streaming HTTP resource URL",
+      description = "Specify the HTTP resource URL",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "HTTP"
@@ -100,7 +102,7 @@ public class HttpClientConfigBean {
       triggeredByValue = { "POST", "PUT", "DELETE" },
       group = "HTTP"
   )
-  public String requestBody;
+  public String requestBody = "";
 
   @ConfigDefBean
   public JerseyClientConfigBean client = new JerseyClientConfigBean();
@@ -139,16 +141,8 @@ public class HttpClientConfigBean {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Http Stream Delimiter",
-      defaultValue = "\\r\\n",
-      description = "Http stream may be delimited by a user-defined string. Common values are \\r\\n and \\n",
-      displayPosition = 50,
-      group = "HTTP"
-  )
-  public String entityDelimiter = "\\r\\n";
+  @ConfigDefBean(groups = "PAGINATION")
+  public PaginationConfigBean pagination = new PaginationConfigBean();
 
   /**
    * Validates the parameters for this config bean.
@@ -159,15 +153,29 @@ public class HttpClientConfigBean {
    */
   public void init(Source.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
 
-    List<String> elConfigs = ImmutableList.of("resourceUrl", "headers", "requestBody");
+    // Validate the ELs for string configs
+    List<String> elConfigs = ImmutableList.of("resourceUrl", "requestBody");
     for (String configName : elConfigs) {
       ELVars vars = context.createELVars();
+      vars.addVariable(START_AT, 0);
       ELEval eval = context.createELEval(configName);
       try {
-        eval.eval(vars, resourceUrl, String.class);
+        eval.eval(vars, (String)getClass().getField(configName).get(this), String.class);
+      } catch (ELEvalException | NoSuchFieldException | IllegalAccessException e) {
+        LOG.error(Errors.HTTP_06.getMessage(), e.toString(), e);
+        issues.add(context.createConfigIssue(groupName, prefix + configName, Errors.HTTP_06, e.toString()));
+      }
+    }
+
+    // Validate the EL for each header entry
+    ELVars headerVars = context.createELVars();
+    ELEval headerEval = context.createELEval("headers");
+    for (String headerValue : headers.values()) {
+      try {
+        headerEval.eval(headerVars, headerValue, String.class);
       } catch (ELEvalException e) {
         LOG.error(Errors.HTTP_06.getMessage(), e.toString(), e);
-        issues.add(context.createConfigIssue(groupName, prefix + "resourceUrl", Errors.HTTP_06, e.toString()));
+        issues.add(context.createConfigIssue(groupName, prefix + "headers", Errors.HTTP_06, e.toString()));
       }
     }
   }

@@ -31,7 +31,7 @@ public class JerseyClientConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      label = "Transfer Encoding",
+      label = "Request Transfer Encoding",
       defaultValue = "CHUNKED",
       displayPosition = 100,
       group = "#0"
@@ -42,13 +42,24 @@ public class JerseyClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Request Timeout",
-      defaultValue = "1000",
-      description = "HTTP request timeout in milliseconds.",
-      displayPosition = 110,
+      label = "Connect Timeout",
+      defaultValue = "0",
+      description = "HTTP connection timeout in milliseconds. 0 means no timeout.",
+      displayPosition = 120,
       group = "HTTP"
   )
-  public long requestTimeoutMillis = 1000;
+  public int connectTimeoutMillis = 0;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Read Timeout",
+      defaultValue = "0",
+      description = "HTTP read timeout in milliseconds. 0 means no timeout.",
+      displayPosition = 130,
+      group = "HTTP"
+  )
+  public int readTimeoutMillis = 0;
 
   @ConfigDef(
       required = true,
@@ -56,7 +67,7 @@ public class JerseyClientConfigBean {
       label = "Maximum parallel requests",
       defaultValue = "10",
       description = "Maximum number of requests to make in parallel.",
-      displayPosition = 120,
+      displayPosition = 140,
       group = "HTTP"
   )
   public int numThreads = 10;
@@ -66,7 +77,7 @@ public class JerseyClientConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Authentication Type",
       defaultValue = "NONE",
-      displayPosition = 130,
+      displayPosition = 150,
       group = "HTTP"
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
@@ -83,7 +94,7 @@ public class JerseyClientConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Proxy",
       defaultValue = "false",
-      displayPosition = 140,
+      displayPosition = 160,
       group = "HTTP"
   )
   public boolean useProxy = false;

@@ -38,7 +38,7 @@
     <guava.version>18.0</guava.version>
     <h2.version>1.4.187</h2.version>
     <jackson.version>2.4.3</jackson.version>
-    <jersey.version>2.22.2</jersey.version>
+    <jersey.version>2.23.1</jersey.version>
     <joda.version>2.8</joda.version>
     <xerces.version>2.11.0</xerces.version>
     <jetty.version>9.2.17.v20160517</jetty.version>
@@ -130,13 +130,6 @@
       <version>${jersey.version}</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.connectors</groupId>
-      <artifactId>jersey-grizzly-connector</artifactId>
-      <version>${jersey.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.glassfish.jersey.security</groupId>
       <artifactId>oauth1-client</artifactId>

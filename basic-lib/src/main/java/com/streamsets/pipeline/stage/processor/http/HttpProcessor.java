@@ -41,11 +41,14 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.http.Errors;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.glassfish.jersey.apache.connector.ApacheClientProperties;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
-import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +87,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private HttpProcessorConfig conf;
   private AccessToken authToken;
-  private Client client;
+  private Client client = null;
 
   private ELVars resourceVars;
   private ELVars bodyVars;
@@ -143,11 +146,19 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
+
+      RequestConfig requestConfig = RequestConfig.custom()
+          .setConnectionRequestTimeout(conf.client.connectTimeoutMillis)
+          .setSocketTimeout(conf.client.readTimeoutMillis)
+          .build();
+
+      PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+      connectionManager.setMaxTotal(conf.client.numThreads);
       ClientConfig clientConfig = new ClientConfig()
-          .property(ClientProperties.ASYNC_THREADPOOL_SIZE, conf.client.numThreads)
-          .property(ClientProperties.READ_TIMEOUT, conf.client.requestTimeoutMillis)
+          .property(ApacheClientProperties.CONNECTION_MANAGER, connectionManager)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-          .connectorProvider(new GrizzlyConnectorProvider());
+          .property(ApacheClientProperties.REQUEST_CONFIG, requestConfig)
+          .connectorProvider(new ApacheConnectorProvider());
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
@@ -170,7 +181,9 @@ public class HttpProcessor extends SingleLaneProcessor {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
-    client.close();
+    if (client != null) {
+      client.close();
+    }
     super.destroy();
   }
 
@@ -210,7 +223,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     records = batch.getRecords();
     int recordNum = 0;
     while (records.hasNext()) {
-      batchMaker.addRecord(processResponse(records.next(), responses.get(recordNum)));
+      batchMaker.addRecord(processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs));
       ++recordNum;
     }
   }
@@ -242,15 +255,16 @@ public class HttpProcessor extends SingleLaneProcessor {
    *
    * @param record the current record to set in context for any expression evaluation
    * @param responseFuture the async HTTP request future
+   * @param maxWaitSeconds maximum time to wait for request completion (start to finish)
    * @return parsed record from the request
    * @throws StageException if the request fails, times out, or cannot be parsed
    */
-  private Record processResponse(Record record, Future<Response> responseFuture) throws
+  private Record processResponse(Record record, Future<Response> responseFuture, long maxRequestCompletionSecs) throws
       StageException {
 
     Response response;
     try {
-      response = responseFuture.get(conf.client.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+      response = responseFuture.get(maxRequestCompletionSecs, TimeUnit.SECONDS);
       String responseBody = "";
       if (response.hasEntity()) {
         responseBody = response.readEntity(String.class);
@@ -297,7 +311,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         record.set(record.get("/text"));
       }
     } catch (IOException | DataParserException e) {
-      errorRecordHandler.onError(Errors.HTTP_00, "", e.toString(), e);
+      errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
     }
     return record;
   }

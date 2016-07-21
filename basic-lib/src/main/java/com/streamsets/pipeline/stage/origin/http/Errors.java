@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  HTTP_00("Cannot parse record '{}': {}"),
+  HTTP_00("Cannot parse record: {}"),
   HTTP_01("Error fetching resource. Status: {} Reason: {}"),
   HTTP_02("JSON parser found more than one record in chunk. Verify that the correct delimiter is configured."),
   HTTP_03("Error fetching resource. Reason: {}"),
@@ -32,7 +32,11 @@ public enum Errors implements ErrorCode {
   HTTP_05("Password is required for Key Store/Trust Store."),
   HTTP_06("Error evaluating expression: {}"),
   HTTP_07("Vault EL is only available when the resource scheme is https."),
+  HTTP_08("When using pagination, the results field must be a list but a {} was found"),
+  HTTP_09("Chunked transfer encoding is not supported when using pagination."),
+  HTTP_10("{} is not a supported data format when using pagination"),
   HTTP_11("Record already contains field {}, cannot write response header."),
+  HTTP_12("Record does not contain result field path '{}'"),
   ;
 
   private final String msg;

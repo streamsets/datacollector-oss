@@ -170,4 +170,14 @@ public class HttpProcessorConfig {
 
   @ConfigDefBean
   public JerseyClientConfigBean client = new JerseyClientConfigBean();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Maximum Request Time (s)",
+      description = "Maximum time to wait for each request completion.",
+      displayPosition = 999,
+      group = "HTTP"
+  )
+  public long maxRequestCompletionSecs = 60L;
 }

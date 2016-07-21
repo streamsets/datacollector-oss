@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.testing.SingleForkNoReuseTest;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -42,6 +43,7 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -64,6 +66,7 @@ import static org.junit.Assert.assertTrue;
  * Currently tests do not include basic auth because of lack of support in JerseyTest
  * so we trust that the Jersey client we use implements auth correctly.
  */
+@Category(SingleForkNoReuseTest.class)
 public class HttpClientSourceIT extends JerseyTest {
 
   @Path("/stream")
@@ -256,8 +259,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "stream";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -267,7 +269,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -296,8 +298,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "stream";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -308,7 +309,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -338,8 +339,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "nlstream";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -349,7 +349,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -379,8 +379,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "xmlstream";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -389,7 +388,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.dataFormatConfig.xmlRecordElement = "record";
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -418,8 +417,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "textstream";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -427,7 +425,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.dataFormat = DataFormat.TEXT;
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -452,7 +450,7 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testNoAuthorizeHttpOnSendToError() throws Exception {
     HttpClientSource origin = getUnauthorizedClientSource();
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
@@ -470,7 +468,7 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testNoAuthorizeHttpOnStopPipeline() throws Exception {
     HttpClientSource origin = getUnauthorizedClientSource();
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
@@ -497,7 +495,7 @@ public class HttpClientSourceIT extends JerseyTest {
   public void testNoAuthorizeHttpOnDiscard() throws Exception {
     HttpClientSource origin = getUnauthorizedClientSource();
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
       .addOutputLane("lane")
       .setOnRecordError(OnRecordError.DISCARD)
       .build();
@@ -529,8 +527,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "unauthorized";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -550,8 +547,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "auth";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 10000;
@@ -561,7 +557,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -592,8 +588,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "preemptive";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 10000;
@@ -603,7 +598,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -633,8 +628,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMode = HttpClientMode.STREAMING;
     conf.headers.put("abcdef", "ghijkl");
     conf.resourceUrl = getBaseUri() + "headers";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -644,7 +638,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
     runner.runInit();
@@ -660,8 +654,8 @@ public class HttpClientSourceIT extends JerseyTest {
 
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("x-test-header"));
-        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("x-list-header"));
+        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("X-Test-Header"));
+        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("X-List-Header"));
         assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
@@ -676,8 +670,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMode = HttpClientMode.POLLING;
     conf.headers.put("abcdef", "${invalid:el()}");
     conf.resourceUrl = getBaseUri() + "${invalid:el()}";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -688,7 +681,7 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
 
@@ -703,8 +696,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMode = HttpClientMode.POLLING;
     conf.headers.put("abcdef", "${str:trim('abcdef ')}");
     conf.resourceUrl = getBaseUri() + "${str:trim('abcdef ')}";
-    conf.client.requestTimeoutMillis = 1000;
-    conf.entityDelimiter = "\r\n";
+    conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
@@ -715,11 +707,11 @@ public class HttpClientSourceIT extends JerseyTest {
 
     HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
         .addOutputLane("lane")
         .build();
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
-    assertEquals(3, issues.size());
+    assertEquals(0, issues.size());
   }
 }
