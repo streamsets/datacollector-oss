@@ -1,5 +1,6 @@
 
 // Auto generated index for searching.
+w["primarily"]="202*0";
 w["primary"]="110*2,115*5,202*1";
 w["principal"]="33*1,50*3,51*3,53*2,56*4,61*3,62*3,94*0,95*6,109*3,112*4,171*3,173*2";
 w["printing"]="83*0";
