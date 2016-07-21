@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-root-lib</artifactId>
-        <version>1.5.0.0</version>
+        <version>1.5.1.0</version>
         <relativePath>../root-lib</relativePath>
     </parent>
     <groupId>com.streamsets</groupId>
