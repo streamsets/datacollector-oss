@@ -40,6 +40,7 @@ public class StageConfigurationJson   {
   private Map<String, Object> uiInfo = new HashMap<String, Object>();
   private List<String> inputLanes = new ArrayList<String>();
   private List<String> outputLanes = new ArrayList<String>();
+  private List<String> eventLanes = new ArrayList<String>();
 
 
   /**
@@ -138,6 +139,18 @@ public class StageConfigurationJson   {
   }
 
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("eventLanes")
+  public List<String> getEventLanes() {
+    return eventLanes;
+  }
+  public void setEventLanes(List<String> eventLanes) {
+    this.eventLanes = eventLanes;
+  }
+
+
 
   @Override
   public String toString()  {
@@ -152,6 +165,7 @@ public class StageConfigurationJson   {
     sb.append("    uiInfo: ").append(StringUtil.toIndentedString(uiInfo)).append("\n");
     sb.append("    inputLanes: ").append(StringUtil.toIndentedString(inputLanes)).append("\n");
     sb.append("    outputLanes: ").append(StringUtil.toIndentedString(outputLanes)).append("\n");
+    sb.append("    eventLanes: ").append(StringUtil.toIndentedString(eventLanes)).append("\n");
     sb.append("}");
     return sb.toString();
   }
