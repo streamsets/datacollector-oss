@@ -84,9 +84,9 @@ public class HBaseDTarget extends DTarget {
   @ConfigDef(required = false,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
-    label = "Ignore Missing Field Path",
-    description = "If set, when a mapped field path is not present in the record then it will not be "
-      + "treated as error record",
+    label = "Ignore Missing Field",
+    description = "If set, the record will not be treated as error record when a field path is not present in the " +
+        "record or if the field value is null",
     displayPosition = 80,
     group = "HBASE")
   public boolean ignoreMissingFieldPath;

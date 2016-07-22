@@ -81,7 +81,7 @@ public class HBaseTarget extends BaseTarget {
   private final String hbaseConfDir;
   private final String hbaseUser;
   private final boolean implicitFieldMapping;
-  private final boolean ignoreMissingFieldPath;
+  private final boolean ignoreMissingField;
   private final boolean ignoreInvalidColumn;
   private final String timeDriver;
   private Configuration hbaseConf;
@@ -102,7 +102,7 @@ public class HBaseTarget extends BaseTarget {
     Map<String, String> hbaseConfigs,
     String hbaseUser,
     boolean implicitFieldMapping,
-    boolean ignoreMissingFieldPath,
+    boolean ignoreMissingField,
     boolean ignoreInvalidColumn,
     String timeDriver
   ) {
@@ -118,7 +118,7 @@ public class HBaseTarget extends BaseTarget {
     this.hbaseConfDir = hbaseConfDir;
     this.hbaseUser = hbaseUser;
     this.implicitFieldMapping = implicitFieldMapping;
-    this.ignoreMissingFieldPath = ignoreMissingFieldPath;
+    this.ignoreMissingField = ignoreMissingField;
     this.ignoreInvalidColumn = ignoreInvalidColumn;
     this.timeDriver = timeDriver;
   }
@@ -260,13 +260,13 @@ public class HBaseTarget extends BaseTarget {
 
   private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException, ELEvalException {
     Put p = new Put(rowKeyBytes);
-    StringBuilder errorMsgBuilder = new StringBuilder();
-    doExplicitFieldMapping(p, record, errorMsgBuilder);
+    doExplicitFieldMapping(p, record);
     if (implicitFieldMapping) {
+      StringBuilder errorMsgBuilder = new StringBuilder();
       doImplicitFieldMapping(p, record, errorMsgBuilder, columnMappings.keySet());
-    }
-    if (p.isEmpty()) { // no columns in the Put; throw exception will all messages
-      throw new OnRecordErrorException(record, Errors.HBASE_30,  errorMsgBuilder.toString());
+      if (p.isEmpty()) { // no columns in the Put; throw exception will all messages
+        throw new OnRecordErrorException(record, Errors.HBASE_30, errorMsgBuilder.toString());
+      }
     }
     return p;
   }
@@ -296,14 +296,12 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private void doExplicitFieldMapping(Put p, Record record, StringBuilder errorBuilder) throws OnRecordErrorException {
+  private void doExplicitFieldMapping(Put p, Record record) throws OnRecordErrorException {
     Date recordTime = getRecordTime(record);
     for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
       HBaseColumn hbaseColumn = mapEntry.getValue().hbaseColumn;
-      byte[] value = getBytesForValue(record, mapEntry.getKey(), mapEntry.getValue().storageType, errorBuilder);
-      if (value != null) {
-        addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
-      }
+      byte[] value = getBytesForValue(record, mapEntry.getKey(), mapEntry.getValue().storageType);
+      addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
     }
   }
 
@@ -339,7 +337,7 @@ public class HBaseTarget extends BaseTarget {
         }
         HBaseColumn hbaseColumn = getColumn(fieldPathColumn.replace("'", ""));
         if (hbaseColumn != null) {
-          byte[] value = getValueImplicitTypeMapping(record, fieldPath);
+          byte[] value = getBytesForValue(record, fieldPath, null);
           addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
         } else {
           if (ignoreInvalidColumn) {
@@ -352,43 +350,6 @@ public class HBaseTarget extends BaseTarget {
         }
       }
     }
-  }
-
-  private byte[] getValueImplicitTypeMapping(Record record, String fieldPath) throws OnRecordErrorException {
-    Field field = record.get(fieldPath);
-    byte[] value;
-    switch (field.getType()) {
-      case BYTE_ARRAY:
-        value = field.getValueAsByteArray();
-        break;
-      case BOOLEAN:
-      case BYTE:
-      case CHAR:
-      case DATE:
-      case TIME:
-      case DATETIME:
-      case DECIMAL:
-      case DOUBLE:
-      case FLOAT:
-      case INTEGER:
-      case LONG:
-      case SHORT:
-      case STRING:
-        value = Bytes.toBytes(field.getValueAsString());
-        break;
-      case LIST:
-      case LIST_MAP:
-      case MAP:
-        try {
-          value = JsonUtil.jsonRecordToBytes(record, field);
-        } catch (StageException se) {
-          throw new OnRecordErrorException(record, Errors.HBASE_31, field.getType(), StorageType.JSON_STRING.getLabel(), se);
-        }
-        break;
-      default:
-        throw new IllegalArgumentException("This shouldn't happen: " + "Conversion not defined for " + field.getType());
-    }
-    return value;
   }
 
   private byte[] getBytesForRowKey(Record record) throws OnRecordErrorException {
@@ -491,18 +452,53 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private byte[] getBytesForValue(Record record, String fieldPath, StorageType columnStorageType, StringBuilder errorMsgBuilder) throws OnRecordErrorException {
+  private StorageType getColumnStorageType(Field.Type fieldType) {
+    StorageType storageType;
+    switch (fieldType) {
+      case BOOLEAN:
+      case CHAR:
+      case BYTE:
+      case SHORT:
+      case INTEGER:
+      case LONG:
+      case FLOAT:
+      case DOUBLE:
+      case DATE:
+      case DATETIME:
+      case TIME:
+      case DECIMAL:
+      case STRING:
+        storageType = StorageType.TEXT;
+        break;
+      case BYTE_ARRAY:
+        storageType = StorageType.BINARY;
+        break;
+      case MAP:
+      case LIST:
+      case LIST_MAP:
+        storageType = StorageType.JSON_STRING;
+        break;
+      default:
+        throw new RuntimeException(Utils.format("Conversion not defined for: {} ", fieldType));
+    }
+    return storageType;
+  }
+
+  private byte[] getBytesForValue(
+      Record record, String fieldPath, StorageType columnStorageType
+  ) throws OnRecordErrorException {
     byte[] value;
     Field field = record.get(fieldPath);
-    if (field == null) {
-      if (!ignoreMissingFieldPath) {
+    if (field == null || field.getValue() == null) {
+      if (!ignoreMissingField) {
         throw new OnRecordErrorException(record, Errors.HBASE_25, fieldPath);
       } else {
-        String errorMessage = Utils.format(Errors.HBASE_25.getMessage(), fieldPath);
-        LOG.warn(errorMessage);
-        errorMsgBuilder.append(errorMessage);
         return null;
       }
+    }
+    // column storage type is null for implicit field mapping
+    if (columnStorageType == null) {
+      columnStorageType = getColumnStorageType(field.getType());
     }
     // Figure the storage type and convert appropriately
     if (columnStorageType == (StorageType.TEXT)) {

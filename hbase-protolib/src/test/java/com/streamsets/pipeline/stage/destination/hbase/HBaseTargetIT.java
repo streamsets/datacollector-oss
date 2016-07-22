@@ -251,6 +251,38 @@ public class HBaseTargetIT {
   }
 
   @Test(timeout = 600000)
+  public void testImplicitFieldMappingNullField() throws Exception {
+    String rowKeyFieldPath = "/row_key";
+    String rowKey = "testImplicitFieldMappingNullField";
+    TargetRunner targetRunner = buildRunner(
+        new ArrayList<HBaseFieldMappingConfig>(),
+        StorageType.TEXT,
+        OnRecordError.DISCARD,
+        "",
+        true,
+        rowKeyFieldPath,
+        true,
+        false
+    );
+    Record record = RecordCreator.create();
+    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
+    map.put("cf:a", Field.create(Type.STRING, null));
+    map.put("cf:b", Field.create("value_b"));
+    map.put(rowKeyFieldPath.substring(1), Field.create(rowKey));
+    Field mapField = Field.createListMap(map);
+    record.set(mapField);
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+    targetRunner.runDestroy();
+    HTable htable = new HTable(conf, tableName);
+    Get g = new Get(Bytes.toBytes(rowKey));
+    Result r = htable.get(g);
+    Assert.assertEquals("", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
+    assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
+  }
+
+  @Test(timeout = 600000)
   public void testOnlyImplicitFieldMapping() throws Exception {
     String rowKeyFieldPath = "/row_key";
     String rowKey = "testOnlyImplicitFieldMapping";
