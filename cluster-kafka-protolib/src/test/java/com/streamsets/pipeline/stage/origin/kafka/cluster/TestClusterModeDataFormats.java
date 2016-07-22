@@ -30,6 +30,8 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -38,15 +40,7 @@ import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaSourceFactory;
-import kafka.admin.AdminUtils;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
 import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -60,21 +54,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 
 public class TestClusterModeDataFormats {
   private static final Logger LOG = LoggerFactory.getLogger(TestClusterModeDataFormats.class);
 
-  private static List<KafkaServer> kafkaServers;
-  private static ZkClient zkClient;
-  private static EmbeddedZookeeper zkServer;
-  private static int port;
   private static String zkConnect;
-
-  private static final String HOST = "localhost";
-  private static final int BROKER_1_ID = 0;
   private static final int SINGLE_PARTITION = 1;
   private static final int SINGLE_REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "TestKafkaSource1";
@@ -82,6 +68,7 @@ public class TestClusterModeDataFormats {
 
   private static String metadataBrokerList;
   private static String originalTmpDir;
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -90,34 +77,23 @@ public class TestClusterModeDataFormats {
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir.mkdirs());
     System.setProperty("java.io.tmpdir", testDir.getAbsolutePath());
-
-    zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
-
-    LOG.info("ZooKeeper log dir : " + zkServer.logDir().getAbsolutePath());
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-    // setup Broker
-    port = TestUtils.choosePort();
-    kafkaServers = new ArrayList<>(3);
-    Properties props1 = TestUtilsBridge.createBrokerConfig(BROKER_1_ID, port, true, false);
-
-    kafkaServers.add(TestUtils.createServer(new KafkaConfig(props1), new MockTime()));
-    // create topic
-    AdminUtils.createTopic(zkClient, TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), TOPIC1, 0, TIME_OUT);
-
-    metadataBrokerList = "localhost:" + port;
-
+    sdcKafkaTestUtil.startZookeeper();
+    zkConnect = sdcKafkaTestUtil.getZkConnect();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
+    sdcKafkaTestUtil.createTopic(TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    TestUtils.waitUntilMetadataIsPropagated(
+        scala.collection.JavaConversions.asScalaBuffer(sdcKafkaTestUtil.getKafkaServers()),
+        TOPIC1,
+        0,
+        TIME_OUT
+    );
+    metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
   }
 
   @AfterClass
   public static void tearDown() {
-    for(KafkaServer kafkaServer : kafkaServers) {
-      kafkaServer.shutdown();
-    }
-    zkClient.close();
-    zkServer.shutdown();
     System.setProperty("java.io.tmpdir", originalTmpDir);
+    sdcKafkaTestUtil.shutdown();
   }
 
   private BaseKafkaSource createSource(KafkaConfigBean conf) {

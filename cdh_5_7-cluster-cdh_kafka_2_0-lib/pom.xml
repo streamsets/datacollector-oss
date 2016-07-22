@@ -80,6 +80,14 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka_2.10</artifactId>
+      <version>${kafka.version}</version>
+      <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>${scala.version}</version>
@@ -94,23 +102,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.scala-lang</groupId>
-          <artifactId>scala-library</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-   <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
@@ -150,14 +141,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.10</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
       <scope>test</scope>
     </dependency>
 
@@ -210,19 +193,6 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java</artifactId>
-      <version>${protobuf.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -262,8 +232,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/../kafka_source-protolib/src/test/java</source>
-                <source>${basedir}/../kafka_target-protolib/src/test/java</source>
+                <source>${basedir}/../cluster-kafka-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -276,12 +245,9 @@
             <configuration>
               <resources>
                 <resource>
-                  <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
+                  <directory>${basedir}/../cluster-kafka-protolib/src/test/resources</directory>
                 </resource>
-                <resource>
-                  <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
-                </resource>
-             </resources>
+              </resources>
             </configuration>
           </execution>
         </executions>
