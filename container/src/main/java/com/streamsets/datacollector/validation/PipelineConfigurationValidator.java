@@ -1171,7 +1171,9 @@ public class PipelineConfigurationValidator {
         }
       }
 
-      Preconditions.checkState(isEventStage || isDataStage, Utils.format("Stage '{}' is not in event part nor in data path.", stageConf.getStageName()));
+      // We're ignoring state where the stage is not on event nor on data path - that means that the component is not
+      // connected anywhere and that means that previous checks already flagged this scenario.
+
       if(isEventStage && isDataStage) {
         issues.add(IssueCreator.getPipeline().create(
           ValidationError.VALIDATION_0103,
