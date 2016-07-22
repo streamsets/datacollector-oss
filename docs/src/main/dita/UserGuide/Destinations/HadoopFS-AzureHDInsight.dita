@@ -23,14 +23,13 @@
             FS destination to write directly to Azure HDInsight. </p>
         <p>To write to Azure HDInsight, perform the following tasks:<ol id="ol_kvn_mnf_sw">
                 <li>Configure the Hadoop FS destination to use the HDP 2.4  stage library. </li>
-                <li>Configure Azure credentials. <p>You can configure the credentials in
-                        core-site.xml. For more information, see the Apache documentation: <xref
-                            href="https://hadoop.apache.org/docs/stable2/hadoop-azure/index.html#Configuring_Credentials"
-                            format="html" scope="external"/>. </p><p>Or you can add the following
-                        Hadoop configuration property to the destination:
-                        <codeblock>fs.azure.account.key.&lt;account name>.blob.core.windows.net</codeblock></p><p>Use
-                        the appropriate account name, and set the property to the required access
-                        key.</p></li>
+                <li>Configure Azure credentials:<ul id="ul_hzr_q2g_sw">
+                        <li>Add the following Hadoop configuration property to the destination:
+                                <codeblock>fs.azure.account.key.&lt;account name>.blob.core.windows.net</codeblock><p>Use
+                                the appropriate account name in the property name.</p></li>
+                        <li>Define the property using the account key for the Blob storage
+                            account.</li>
+                    </ul></li>
                 <li>In the destination, configure the <uicontrol>Hadoop FS URI</uicontrol> property
                     using "wasbs" or "wasb" instead of "hdfs", as
                     follows:<codeblock>wasbs://&lt;URI></codeblock></li>
