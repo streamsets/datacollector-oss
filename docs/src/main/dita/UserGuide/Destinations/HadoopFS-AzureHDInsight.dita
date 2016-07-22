@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_n42_z2f_sw">
+    <title>Writing to Azure HDInsight</title>
+    <conbody>
+        <p><indexterm>Hadoop FS destination<indexterm>writing to Azure
+                HDInsight</indexterm></indexterm><indexterm>Azure HDInsight<indexterm>using the
+                    Hadoop FS destination</indexterm></indexterm>You can use the HDP 2.4 stage
+            library to write to Azure Blob storage using the WASB protocol. This enables the Hadoop
+            FS destination to write directly to Azure HDInsight. </p>
+        <p>To write to Azure HDInsight, perform the following tasks:<ol id="ol_kvn_mnf_sw">
+                <li>Configure the Hadoop FS destination to use the HDP 2.4  stage library. </li>
+                <li>Configure Azure credentials. <p>You can configure the credentials in
+                        core-site.xml. For more information, see the Apache documentation: <xref
+                            href="https://hadoop.apache.org/docs/stable2/hadoop-azure/index.html#Configuring_Credentials"
+                            format="html" scope="external"/>. </p><p>Or you can add the following
+                        Hadoop configuration property to the destination:
+                        <codeblock>fs.azure.account.key.&lt;account name>.blob.core.windows.net</codeblock></p><p>Use
+                        the appropriate account name, and set the property to the required access
+                        key.</p></li>
+                <li>In the destination, configure the <uicontrol>Hadoop FS URI</uicontrol> property
+                    using "wasbs" or "wasb" instead of "hdfs", as
+                    follows:<codeblock>wasbs://&lt;URI></codeblock></li>
+            </ol></p>
+    </conbody>
+</concept>
