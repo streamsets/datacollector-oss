@@ -1173,5 +1173,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p id="StageLibsBlacklist">For example, the
                         <uicontrol>system.stagelibs.blacklist</uicontrol> property is defined as
                   follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib,streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></p>
+            <draft-comment author="alisontaylor">Used in Field Type Converter chapter and in Data
+                  Preview chapter.</draft-comment>
+            <note id="PreviewDateFormat">Data preview displays date, datetime, and time data using
+                  the default format of the browser locale. For example, if the browser uses the
+                  en_US locale, preview displays dates using the following format: MMM d, y h:mm:ss
+                  a.</note>
       </conbody>
 </concept>

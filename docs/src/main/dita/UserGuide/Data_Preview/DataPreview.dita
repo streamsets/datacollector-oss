@@ -29,5 +29,6 @@
             edit preview data to test and tune pipeline configuration. </p>
         <p>You can preview data for one stage at a time or for a group of stages. You can view the
             data in list or table view. You can also refresh the preview data.</p>
+        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PreviewDateFormat"/>
   </conbody>
 </concept>

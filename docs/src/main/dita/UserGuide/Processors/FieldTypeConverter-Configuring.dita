@@ -75,10 +75,13 @@
                                 </row>
                                 <row>
                                     <entry>Date Format </entry>
-                                    <entry>Format of the date or datetime data to be converted. For
-                                        conversions to Date or Datetime. Or for converting date or
-                                        datetime data to String. <p>Select the format to use or
-                                            create a custom format. </p></entry>
+                                    <entry>Format of the date, datetime, or time data to be
+                                        converted. For conversions to Date, Datetime, or Time. Or
+                                        for converting date, datetime, or time data to String.
+                                            <p>Select the format to use or create a custom format.
+                                                <note
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PreviewDateFormat"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Other Date Format</entry>
