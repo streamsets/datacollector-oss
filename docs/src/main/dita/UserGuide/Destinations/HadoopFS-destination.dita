@@ -29,6 +29,7 @@
         <p>You can define a file prefix, the data time zone, and properties that define when the
             destination closes a file. You can specify the amount of time that a record can be
             written to its associated directory and what happens to late records.</p>
+        <p>You can configure the destination to write to Azure HDInsight.</p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
     <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output files.
                 <draft-comment author="Loretta">Make sure changes in Hadoop FS topics go into MapR
