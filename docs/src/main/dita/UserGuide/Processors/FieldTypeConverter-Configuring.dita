@@ -41,9 +41,9 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Convert by Types</entry>
-                                    <entry>Specifies whether to convert the data type of all fields
-                                        with the specified type.</entry>
+                                    <entry>Conversion Method</entry>
+                                    <entry>Specifies whether to convert data types by field name or
+                                        by data type.</entry>
                                 </row>
                                 <row>
                                     <entry>Fields to Convert</entry>

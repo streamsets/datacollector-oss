@@ -25,14 +25,14 @@
       following methods to convert data types:</p>
     <dl>
       <dlentry>
-        <dt>Convert by field name</dt>
+        <dt>By Field Name</dt>
         <dd>
           <p>Convert the data type of a field with the specified name. For example, you can convert
             a field named dropoff_datetime with the String data type to the Date data type. </p>
         </dd>
       </dlentry>
       <dlentry>
-        <dt>Convert by data type</dt>
+        <dt>By Data Type</dt>
         <dd>
           <p>Convert the data type of all fields with the specified type. For example, you can
             convert all fields with the Decimal data type to the String data type.</p>
