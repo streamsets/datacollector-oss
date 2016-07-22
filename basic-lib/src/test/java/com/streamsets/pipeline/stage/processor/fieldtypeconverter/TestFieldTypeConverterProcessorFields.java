@@ -52,7 +52,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -101,7 +101,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -149,7 +149,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -188,7 +188,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -227,7 +227,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -267,7 +267,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -316,7 +316,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -366,7 +366,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -415,7 +415,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -465,7 +465,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -514,7 +514,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -563,7 +563,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -612,7 +612,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -661,7 +661,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -710,7 +710,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -759,7 +759,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -808,7 +808,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -889,7 +889,7 @@ public class TestFieldTypeConverterProcessorFields {
     expertConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(beginnerConfig, advancedConfig,
         intermediateConfig, skilledConfig, expertConfig))
       .addOutputLane("a").build();
@@ -975,7 +975,7 @@ public class TestFieldTypeConverterProcessorFields {
 
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1017,7 +1017,7 @@ public class TestFieldTypeConverterProcessorFields {
 
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-        .addConfiguration("convertByTypes", false)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
         .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
         .addOutputLane("a").build();
     runner.runInit();
@@ -1054,7 +1054,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1084,7 +1084,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1114,7 +1114,7 @@ public class TestFieldTypeConverterProcessorFields {
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1152,7 +1152,7 @@ public class TestFieldTypeConverterProcessorFields {
     longToByte.targetType = Field.Type.BYTE;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(decimalToInteger, floatToShort, longToByte))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1283,7 +1283,7 @@ public class TestFieldTypeConverterProcessorFields {
     stringToInt.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(stringToInt))
       .addOutputLane("a").build();
     runner.runInit();
@@ -1353,7 +1353,7 @@ public class TestFieldTypeConverterProcessorFields {
     date1.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", false)
+      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
       .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(date1, date2, date3, date4, date5, date6, date7))
       .addOutputLane("a").build();
     runner.runInit();

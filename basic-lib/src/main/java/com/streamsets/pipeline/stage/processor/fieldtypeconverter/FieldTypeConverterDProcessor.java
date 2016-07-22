@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
@@ -43,25 +44,26 @@ public class FieldTypeConverterDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = Type.BOOLEAN,
-      defaultValue="false",
-      label = "Convert by types",
-      description = "Rather then converting individual fields by name, apply conversion to all fields of a given type.",
+      type = Type.MODEL,
+      defaultValue="BY_FIELD",
+      label = "Conversion Method",
+      description = "Select type of conversion that will be performed.",
       displayPosition = 5,
       group = "TYPE_CONVERSION"
   )
-  public boolean convertByTypes;
+  @ValueChooserModel(ConvertByChooserValues.class)
+  public ConvertBy convertBy;
 
   @ConfigDef(
       required = false,
       type = Type.MODEL,
       defaultValue="",
-      label = "Convert fields",
+      label = "",
       description = "Configures field by names that should be converted",
       displayPosition = 10,
       group = "TYPE_CONVERSION",
-      dependsOn = "convertByTypes",
-      triggeredByValue = "false"
+      dependsOn = "convertBy",
+      triggeredByValue = "BY_FIELD"
   )
   @ListBeanModel
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
@@ -70,12 +72,12 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       required = false,
       type = Type.MODEL,
       defaultValue="",
-      label = "Convert type",
+      label = "",
       description = "Configure types that should be converted. All fields of given type in a record will be converted.",
       displayPosition = 10,
       group = "TYPE_CONVERSION",
-      dependsOn = "convertByTypes",
-      triggeredByValue = "true"
+      dependsOn = "convertBy",
+      triggeredByValue = "BY_TYPE"
   )
   @ListBeanModel
   public List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
@@ -83,7 +85,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
   @Override
   protected Processor createProcessor() {
     return new FieldTypeConverterProcessor(
-      convertByTypes,
+      convertBy,
       fieldTypeConverterConfigs,
       wholeTypeConverterConfigs
     );

@@ -41,30 +41,35 @@ import java.util.Set;
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
 
-  private final boolean convertByTypes;
+  private final ConvertBy convertBy;
   private final List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
   private final List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
 
   public FieldTypeConverterProcessor(
-      boolean convertByTypes,
+      ConvertBy convertBy,
       List<FieldTypeConverterConfig> fieldTypeConverterConfigs,
       List<WholeTypeConverterConfig> wholeTypeConverterConfigs
   ) {
-    this.convertByTypes = convertByTypes;
+    this.convertBy = convertBy;
     this.fieldTypeConverterConfigs = fieldTypeConverterConfigs;
     this.wholeTypeConverterConfigs = wholeTypeConverterConfigs;
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    if(convertByTypes) {
-      Field rootField = record.get();
-      if(rootField != null) {
-        record.set(processByType("", rootField));
-      }
-      batchMaker.addRecord(record);
-    } else {
-      processByField(record, batchMaker);
+    switch(convertBy) {
+      case BY_TYPE:
+        Field rootField = record.get();
+        if(rootField != null) {
+          record.set(processByType("", rootField));
+        }
+        batchMaker.addRecord(record);
+        break;
+      case BY_FIELD:
+        processByField(record, batchMaker);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown convert by type: " + convertBy);
     }
   }
 

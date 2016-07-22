@@ -53,7 +53,7 @@ public class TestFieldTypeConverterProcessorTypes {
     converterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", true)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
       .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -76,7 +76,7 @@ public class TestFieldTypeConverterProcessorTypes {
     converterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", true)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
       .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -130,7 +130,7 @@ public class TestFieldTypeConverterProcessorTypes {
     converterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", true)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
       .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -179,7 +179,7 @@ public class TestFieldTypeConverterProcessorTypes {
     converterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", true)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
       .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
       .addOutputLane("a").build();
     runner.runInit();
@@ -244,7 +244,7 @@ public class TestFieldTypeConverterProcessorTypes {
     converterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertByTypes", true)
+      .addConfiguration("convertBy", ConvertBy.BY_TYPE)
       .addConfiguration("wholeTypeConverterConfigs", ImmutableList.of(converterConfig))
       .addOutputLane("a").build();
     runner.runInit();
