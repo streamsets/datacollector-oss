@@ -48,51 +48,29 @@ public class TestAmazonS3TargetUpgrader {
     configs.add(new Config("s3TargetConfigBean.binaryFieldPath", "/binaryField"));
 
     AmazonS3TargetUpgrader amazonS3TargetUpgrader = new AmazonS3TargetUpgrader();
-    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 6, configs);
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 7, configs);
 
-    Assert.assertEquals(17, configs.size());
+    Assert.assertEquals(20, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
       configValues.put(c.getName(), c.getValue());
     }
 
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.charset"));
     Assert.assertEquals("UTF-8", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.charset"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvFileFormat"));
     Assert.assertEquals(CsvMode.EXCEL, configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvFileFormat"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvHeader"));
     Assert.assertEquals(CsvHeader.WITH_HEADER, configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvHeader"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines"));
     Assert.assertEquals(false, configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.jsonMode"));
     Assert.assertEquals(JsonMode.ARRAY_OBJECTS, configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.jsonMode"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.textFieldPath"));
     Assert.assertEquals("/myField", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.textFieldPath"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull"));
     Assert.assertEquals(true, configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.avroSchema"));
     Assert.assertEquals("hello!!", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.avroSchema"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.binaryFieldPath"));
     Assert.assertEquals("/binaryField", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.binaryFieldPath"));
 
     //newly added configs
 
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter"));
     Assert.assertEquals('|', configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape"));
     Assert.assertEquals('\\', configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape"));
-
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
     Assert.assertEquals('\"', configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
 
     Assert.assertEquals("NULL", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression"));
@@ -104,6 +82,10 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertEquals("UTC", configValues.get("s3TargetConfigBean.timeZoneID"));
     Assert.assertEquals("${time:now()}", configValues.get("s3TargetConfigBean.timeDriverTemplate"));
 
+    Assert.assertEquals("10", configValues.get("s3TargetConfigBean.tmConfig.threadPoolSize"));
+    Assert.assertEquals("5242880", configValues.get("s3TargetConfigBean.tmConfig.minimumUploadPartSize"));
+    Assert.assertEquals("268435456", configValues.get("s3TargetConfigBean.tmConfig.multipartUploadThreshold"));
+
     //renamed configs
 
     configs = new ArrayList<>();
@@ -111,18 +93,19 @@ public class TestAmazonS3TargetUpgrader {
     configs.add(new Config("s3TargetConfigBean.s3Config.secretAccessKey", "MY_ACCESS_KEY"));
     configs.add(new Config("s3TargetConfigBean.s3Config.folder", "MY_COMMON_PREFIX"));
 
-    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 4, configs);
+    configs.add(new Config("s3TargetConfigBean.advancedConfig.useProxy", "false"));
+
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 7, configs);
 
     configValues = new HashMap<>();
     for (Config c : configs) {
       configValues.put(c.getName(), c.getValue());
     }
 
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId"));
     Assert.assertEquals("MY_KEY_ID", configValues.get("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId"));
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey"));
     Assert.assertEquals("MY_ACCESS_KEY", configValues.get("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey"));
-    Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.s3Config.commonPrefix"));
     Assert.assertEquals("MY_COMMON_PREFIX", configValues.get("s3TargetConfigBean.s3Config.commonPrefix"));
+
+    Assert.assertEquals("false", configValues.get("s3TargetConfigBean.proxyConfig.useProxy"));
   }
 }

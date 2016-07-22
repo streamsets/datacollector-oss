@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
+import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class S3TargetConfigBean {
   public static final String S3_TARGET_CONFIG_BEAN_PREFIX = "s3TargetConfigBean.";
   public static final String S3_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "s3Config.";
   public static final String S3_SEE_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "sseConfig.";
+  public static final String S3_TM_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "tmConfig.";
 
   @ConfigDefBean(groups = "S3")
   public S3Config s3Config;
@@ -49,7 +51,10 @@ public class S3TargetConfigBean {
   public SSEConfigBean sseConfig;
 
   @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig advancedConfig;
+  public ProxyConfig proxyConfig;
+
+  @ConfigDefBean(groups = "ADVANCED")
+  public TransferManagerConfig tmConfig;
 
   @ConfigDef(
       required = false,
@@ -125,7 +130,7 @@ public class S3TargetConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues);
 
     if(s3Config.bucket == null || s3Config.bucket.isEmpty()) {
       issues.add(

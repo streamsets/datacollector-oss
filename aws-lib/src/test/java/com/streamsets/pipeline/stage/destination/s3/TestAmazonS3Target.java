@@ -38,6 +38,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
+import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -100,7 +101,7 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteTextData() throws Exception {
 
-    String prefix = "textPrefix";
+    String prefix = "testWriteTextData";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
@@ -133,7 +134,7 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteTextDataWithPartitionPrefix() throws Exception {
 
-    String prefix = "textPrefix";
+    String prefix = "testWriteTextDataWithPartitionPrefix";
     //partition by the record id
     String partition = "${record:id()}";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, partition, false);
@@ -162,7 +163,7 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteTextDataWithCompression() throws Exception {
 
-    String prefix = "textPrefixrCompression";
+    String prefix = "testWriteTextDataWithCompression";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, true);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
@@ -197,7 +198,7 @@ public class TestAmazonS3Target {
   @Test
   public void testWriteEmptyBatch() throws Exception {
 
-    String prefix = "textPrefix";
+    String prefix = "testWriteEmptyBatch";
     AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
@@ -236,9 +237,13 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.dataFormat = DataFormat.TEXT;
     s3TargetConfigBean.partitionTemplate = partition;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
+    s3TargetConfigBean.timeDriverTemplate = "${time:now()}";
+    s3TargetConfigBean.timeZoneID = "UTC";
     s3TargetConfigBean.s3Config = s3Config;
     s3TargetConfigBean.sseConfig = new SSEConfigBean();
-    s3TargetConfigBean.advancedConfig = new ProxyConfig();
+    s3TargetConfigBean.proxyConfig = new ProxyConfig();
+    s3TargetConfigBean.tmConfig = new TransferManagerConfig();
+    s3TargetConfigBean.tmConfig.threadPoolSize = 3;
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = null;

@@ -20,10 +20,15 @@
 package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.event.ProgressEvent;
+import com.amazonaws.event.ProgressListener;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.SSEAlgorithm;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
+import com.amazonaws.services.s3.transfer.Upload;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -46,11 +51,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.Executors;
 import java.util.zip.GZIPOutputStream;
 
 public class AmazonS3Target extends BaseTarget {
@@ -66,6 +73,7 @@ public class AmazonS3Target extends BaseTarget {
   private final String partitionTemplate;
   private final String timeDriverTemplate;
   private ErrorRecordHandler errorRecordHandler;
+  private TransferManager transferManager;
   private ELEval partitionEval;
   private ELVars partitionVars;
   private ELEval timeDriverEval;
@@ -81,6 +89,8 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public List<ConfigIssue> init() {
+    List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init());
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
     partitionVars = getContext().createELVars();
@@ -88,7 +98,14 @@ public class AmazonS3Target extends BaseTarget {
     timeDriverVars = getContext().createELVars();
     calendar = Calendar.getInstance(TimeZone.getTimeZone(s3TargetConfigBean.timeZoneID));
 
-    List<ConfigIssue> issues = s3TargetConfigBean.init(getContext(), super.init());
+    transferManager = new TransferManager(
+        s3TargetConfigBean.s3Config.getS3Client(),
+        Executors.newFixedThreadPool(s3TargetConfigBean.tmConfig.threadPoolSize)
+    );
+    TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
+    transferManagerConfiguration.setMinimumUploadPartSize(s3TargetConfigBean.tmConfig.minimumUploadPartSize);
+    transferManagerConfiguration.setMultipartUploadThreshold(s3TargetConfigBean.tmConfig.multipartUploadThreshold);
+    transferManager.setConfiguration(transferManagerConfiguration);
 
     if (partitionTemplate.contains(EL_PREFIX)) {
       TimeEL.setCalendarInContext(partitionVars, calendar);
@@ -128,7 +145,9 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public void destroy() {
-    s3TargetConfigBean.destroy();
+    s3TargetConfigBean.s3Config.destroy();
+    // don't shut down s3 client again since it's already closed by s3Config.destroy().
+    transferManager.shutdownNow(false);
     super.destroy();
   }
 
@@ -145,24 +164,26 @@ public class AmazonS3Target extends BaseTarget {
         batch
     );
 
-    for (String partition : partitions.keySet()) {
-      // commonPrefix always ends with a delimiter, so no need to append one to the end
-      String keyPrefix = s3TargetConfigBean.s3Config.commonPrefix;
-      // partition is optional
-      if (!partition.isEmpty()) {
-        keyPrefix += partition;
-        if (!partition.endsWith(s3TargetConfigBean.s3Config.delimiter)) {
-          keyPrefix += s3TargetConfigBean.s3Config.delimiter;
+    try {
+      List<Upload> uploads = new ArrayList<>();
+
+      for (String partition : partitions.keySet()) {
+        // commonPrefix always ends with a delimiter, so no need to append one to the end
+        String keyPrefix = s3TargetConfigBean.s3Config.commonPrefix;
+        // partition is optional
+        if (!partition.isEmpty()) {
+          keyPrefix += partition;
+          if (!partition.endsWith(s3TargetConfigBean.s3Config.delimiter)) {
+            keyPrefix += s3TargetConfigBean.s3Config.delimiter;
+          }
         }
-      }
-      keyPrefix += s3TargetConfigBean.fileNamePrefix + "-" + System.currentTimeMillis() + "-";
+        keyPrefix += s3TargetConfigBean.fileNamePrefix + "-" + System.currentTimeMillis() + "-";
 
-      Iterator<Record> records = partitions.get(partition).iterator();
-      int writtenRecordCount = 0;
-      DataGenerator generator;
-      Record currentRecord;
+        Iterator<Record> records = partitions.get(partition).iterator();
+        int writtenRecordCount = 0;
+        DataGenerator generator;
+        Record currentRecord;
 
-      try {
         ByRefByteArrayOutputStream bOut = new ByRefByteArrayOutputStream();
         OutputStream out = bOut;
 
@@ -204,7 +225,7 @@ public class AmazonS3Target extends BaseTarget {
           fileCount++;
           StringBuilder fileName = new StringBuilder();
           fileName = fileName.append(keyPrefix).append(fileCount);
-          if(s3TargetConfigBean.compress) {
+          if (s3TargetConfigBean.compress) {
             fileName = fileName.append(GZIP_EXTENSION);
           }
 
@@ -253,19 +274,42 @@ public class AmazonS3Target extends BaseTarget {
             }
           }
 
-          PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket,
-              fileName.toString(), byteArrayInputStream, metadata);
-
-          LOG.debug("Uploading object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
-              s3TargetConfigBean.s3Config.delimiter + fileName);
-          s3TargetConfigBean.s3Config.getS3Client().putObject(putObjectRequest);
-          LOG.debug("Successfully uploaded object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
-              s3TargetConfigBean.s3Config.delimiter + fileName);
+          final PutObjectRequest putObjectRequest = new PutObjectRequest(
+              s3TargetConfigBean.s3Config.bucket,
+              fileName.toString(),
+              byteArrayInputStream,
+              metadata
+          );
+          final String object = s3TargetConfigBean.s3Config.bucket + s3TargetConfigBean.s3Config.delimiter + fileName;
+          Upload upload = transferManager.upload(putObjectRequest);
+          upload.addProgressListener(
+              new ProgressListener() {
+                public void progressChanged(ProgressEvent progressEvent) {
+                  switch (progressEvent.getEventType()) {
+                    case TRANSFER_STARTED_EVENT:
+                      LOG.debug("Started uploading object {} into Amazon S3", object);
+                      break;
+                    case TRANSFER_COMPLETED_EVENT:
+                      LOG.debug("Completed uploading object {} into Amazon S3", object);
+                      break;
+                    case TRANSFER_FAILED_EVENT:
+                      LOG.debug("Failed uploading object {} into Amazon S3", object);
+                      break;
+                  }
+                }
+              }
+          );
+          uploads.add(upload);
         }
-      } catch (AmazonClientException | IOException e) {
-        LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
-        throw new StageException(Errors.S3_21, e.toString(), e);
       }
+
+      // Wait for all the uploads to complete before moving on to the next batch
+      for (Upload upload : uploads) {
+        upload.waitForCompletion();
+      }
+    } catch (AmazonClientException | IOException | InterruptedException e) {
+      LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
+      throw new StageException(Errors.S3_21, e.toString(), e);
     }
   }
 

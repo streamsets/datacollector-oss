@@ -53,6 +53,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 5:
         upgradeV5ToV6(configs);
+        // fall through
+      case 6:
+        upgradeV6ToV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -131,5 +134,35 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
   private void upgradeV5ToV6(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeZoneID", "UTC"));
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeDriverTemplate", "${time:now()}"));
+  }
+
+  private void upgradeV6ToV7(List<Config> configs) {
+    // rename advancedConfig to proxyConfig
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "advancedConfig.useProxy":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "advancedConfig.proxyHost":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPort":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "advancedConfig.proxyUser":
+        case S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPassword":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(config.getName().replace("advancedConfig", "proxyConfig"), config.getValue()));
+          break;
+        default:
+          // no upgrade needed
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+
+    // add transfer manager configs
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "threadPoolSize", "10"));
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "minimumUploadPartSize", "5242880"));
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "multipartUploadThreshold", "268435456"));
   }
 }

@@ -37,20 +37,19 @@ import java.util.List;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 public class S3ConfigBean {
-
   public static final String S3_CONFIG_BEAN_PREFIX = "s3ConfigBean.";
-  private static final String S3_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3Config.";
-  private static final String S3_DATA_FROMAT_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
-  private static final String BASIC_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "basicConfig.";
-  private static final String POST_PROCESSING_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "postProcessingConfig.";
-  private static final String ERROR_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "errorConfig.";
+  public static final String S3_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3Config.";
+  public static final String S3_DATA_FORMAT_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+  public static final String S3_FILE_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3FileConfig.";
+  public static final String BASIC_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "basicConfig.";
+  public static final String POST_PROCESSING_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "postProcessingConfig.";
+  public static final String ERROR_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "errorConfig.";
 
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
 
-
   @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig advancedConfig;
+  public ProxyConfig proxyConfig;
 
   @ConfigDef(
     required = true,
@@ -84,14 +83,14 @@ public class S3ConfigBean {
         context,
         dataFormat,
         Groups.S3.name(),
-        S3_DATA_FROMAT_CONFIG_PREFIX,
+        S3_DATA_FORMAT_CONFIG_PREFIX,
         s3FileConfig.overrunLimit,
         issues
     );
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
-    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues);
 
     if(errorConfig.errorPrefix != null && !errorConfig.errorPrefix.isEmpty() &&
       !errorConfig.errorPrefix.endsWith(s3Config.delimiter)) {

@@ -1,4 +1,6 @@
 /**
+ * Copyright 2016 StreamSets Inc.
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -39,6 +41,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -47,14 +52,14 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("s3ConfigBean.advancedConfig.useProxy", false));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyHost", ""));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyPort", 0));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyUser", ""));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyPassword", ""));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.compression", Compression.NONE));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.filePatternInArchive", "*"));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.csvSkipStartLines", 0));
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.useProxy", false));
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyHost", ""));
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPort", 0));
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyUser", ""));
+    configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPassword", ""));
+    configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "compression", Compression.NONE));
+    configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "filePatternInArchive", "*"));
+    configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "csvSkipStartLines", 0));
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
@@ -67,31 +72,31 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
     for (Config config : configs) {
       switch (config.getName()) {
-        case "s3ConfigBean.s3Config.folder":
-          configsToAdd.add(new Config("s3ConfigBean.s3Config.commonPrefix", config.getValue()));
+        case S3ConfigBean.S3_CONFIG_PREFIX + "folder":
+          configsToAdd.add(new Config(S3ConfigBean.S3_CONFIG_PREFIX + "commonPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
-        case "s3ConfigBean.s3FileConfig.filePattern":
-          configsToAdd.add(new Config("s3ConfigBean.s3FileConfig.prefixPattern", config.getValue()));
+        case S3ConfigBean.S3_FILE_CONFIG_PREFIX + "filePattern":
+          configsToAdd.add(new Config(S3ConfigBean.S3_FILE_CONFIG_PREFIX + "prefixPattern", config.getValue()));
           configsToRemove.add(config);
           break;
-        case "s3ConfigBean.errorConfig.errorFolder":
-          configsToAdd.add(new Config("s3ConfigBean.errorConfig.errorPrefix", config.getValue()));
+        case S3ConfigBean.ERROR_CONFIG_PREFIX + "errorFolder":
+          configsToAdd.add(new Config(S3ConfigBean.ERROR_CONFIG_PREFIX + "errorPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
-        case "s3ConfigBean.errorConfig.archivingOption":
+        case S3ConfigBean.ERROR_CONFIG_PREFIX + "archivingOption":
           if ("MOVE_TO_DIRECTORY".equals(config.getValue())) {
-            configsToAdd.add(new Config("s3ConfigBean.errorConfig.archivingOption", "MOVE_TO_PREFIX"));
+            configsToAdd.add(new Config(S3ConfigBean.ERROR_CONFIG_PREFIX + "archivingOption", "MOVE_TO_PREFIX"));
             configsToRemove.add(config);
           }
           break;
-        case "s3ConfigBean.postProcessingConfig.postProcessFolder":
-          configsToAdd.add(new Config("s3ConfigBean.postProcessingConfig.postProcessPrefix", config.getValue()));
+        case S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "postProcessFolder":
+          configsToAdd.add(new Config(S3ConfigBean.ERROR_CONFIG_PREFIX + "postProcessPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
-        case "s3ConfigBean.postProcessingConfig.archivingOption":
+        case S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "archivingOption":
           if ("MOVE_TO_DIRECTORY".equals(config.getValue())) {
-            configsToAdd.add(new Config("s3ConfigBean.postProcessingConfig.archivingOption", "MOVE_TO_PREFIX"));
+            configsToAdd.add(new Config(S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "archivingOption", "MOVE_TO_PREFIX"));
             configsToRemove.add(config);
           }
           break;
@@ -102,5 +107,30 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    // rename advancedConfig to proxyConfig
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.useProxy":
+        case S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyHost":
+        case S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPort":
+        case S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyUser":
+        case S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPassword":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(config.getName().replace("advancedConfig", "proxyConfig"), config.getValue()));
+          break;
+        default:
+          // no upgrade needed
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

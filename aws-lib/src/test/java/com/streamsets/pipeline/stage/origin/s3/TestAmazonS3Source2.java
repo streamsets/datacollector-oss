@@ -326,7 +326,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
-    s3ConfigBean.advancedConfig = new ProxyConfig();
+    s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -363,7 +363,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
-    s3ConfigBean.advancedConfig = new ProxyConfig();
+    s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -400,7 +400,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
-    s3ConfigBean.advancedConfig = new ProxyConfig();
+    s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -437,7 +437,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
-    s3ConfigBean.advancedConfig = new ProxyConfig();
+    s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
