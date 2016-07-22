@@ -48,9 +48,11 @@ public class TestTimeNewEL {
   @Test
   public void testTrimDate() throws Exception {
     Date output = eval.eval(variables, "${time:trimDate(time:now())}", Date.class);
-    Assert.assertEquals(1900, output.getYear());
+    Assert.assertEquals(70, output.getYear());
     Assert.assertEquals(0, output.getMonth());
     Assert.assertEquals(1, output.getDate());
+
+    Assert.assertNull(eval.eval(variables, "${time:trimDate(null)}", Date.class));
   }
 
   @Test
@@ -59,6 +61,8 @@ public class TestTimeNewEL {
     Assert.assertEquals(0, output.getHours());
     Assert.assertEquals(0, output.getMinutes());
     Assert.assertEquals(0, output.getSeconds());
+
+    Assert.assertNull(eval.eval(variables, "${time:trimTime(null)}", Date.class));
   }
 
 }

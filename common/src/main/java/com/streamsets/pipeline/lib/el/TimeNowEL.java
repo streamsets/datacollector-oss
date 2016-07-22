@@ -45,8 +45,12 @@ public class TimeNowEL {
 
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "trimDate", description = "Set date portion of datetime expression to January 1, 1970")
   public static Date trimDate(@ElParam("datetime") Date in) {
+    if(in == null) {
+      return null;
+    }
+
     Date ret = new Date(in.getTime());
-    ret.setYear(1900);
+    ret.setYear(70);
     ret.setMonth(0);
     ret.setDate(1);
     return ret;
@@ -54,6 +58,10 @@ public class TimeNowEL {
 
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "trimTime", description = "Set time portion of datetime expression to 00:00:00")
   public static Date trimTime(@ElParam("datetime") Date in) {
+    if(in == null) {
+      return null;
+    }
+
     Date ret = new Date(in.getTime());
     ret.setHours(0);
     ret.setMinutes(0);
