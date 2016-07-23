@@ -21,22 +21,14 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
-import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
-import com.streamsets.datacollector.runner.BatchMakerImpl;
-import com.streamsets.datacollector.runner.LaneResolver;
-import com.streamsets.datacollector.runner.StageContext;
-import com.streamsets.datacollector.runner.StagePipe;
-import com.streamsets.datacollector.runner.StageRuntime;
-import com.streamsets.pipeline.api.Field;
+import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageDef;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,11 +42,10 @@ public class TestBatchMakerImpl {
 
   @SuppressWarnings("unchecked")
   private StagePipe createStagePipe(List<String> outputs) {
-    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", 1,
-                                                                   Collections.EMPTY_LIST,
-                                                                   Collections.EMPTY_MAP,
-                                                                   ImmutableList.of("i"),
-                                                                   outputs, Collections.EMPTY_LIST);
+    StageConfiguration stageConfiguration = new StageConfigurationBuilder("i",  "n")
+      .withOutputLanes("i")
+      .withOutputLanes(outputs)
+      .build();
     StageDefinition stageDef = Mockito.mock(StageDefinition.class);
     Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
     StageRuntime stageRuntime = Mockito.mock(StageRuntime.class);
@@ -227,12 +218,9 @@ public class TestBatchMakerImpl {
 
   @Test
   public void testRecordByRef() {
-    StageConfiguration stageConfiguration = new StageConfiguration("i", "l", "n", 1,
-                                                                   Collections.EMPTY_LIST,
-                                                                   Collections.EMPTY_MAP,
-                                                                   Collections.EMPTY_LIST,
-                                                                   ImmutableList.of("o"),
-                                                                   Collections.EMPTY_LIST);
+    StageConfiguration stageConfiguration = new StageConfigurationBuilder("i","n")
+      .withOutputLanes("o")
+      .build();
     StageDefinition stageDef = Mockito.mock(StageDefinition.class);
     Mockito.when(stageDef.getType()).thenReturn(StageType.SOURCE);
     Source.Context context = Mockito.mock(Source.Context.class);
