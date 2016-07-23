@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +72,12 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 5:
         upgradeV5ToV6(configs);
+        if (toVersion == 6) {
+          break;
+        }
+        // fall through
+      case 6:
+        JerseyClientUtil.upgradeToJerseyConfigBean(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));

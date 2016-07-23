@@ -121,7 +121,7 @@ public class HttpClientSource extends BaseSource {
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
     conf.init(getContext(), Groups.HTTP.name(), "conf.", issues);
-    conf.sslConfig.init(getContext(), Groups.SSL.name(), SSL_CONFIG_PREFIX, issues);
+    conf.client.sslConfig.init(getContext(), Groups.SSL.name(), SSL_CONFIG_PREFIX, issues);
 
     resourceVars = getContext().createELVars();
     resourceEval = getContext().createELEval(RESOURCE_CONFIG_NAME);
@@ -143,18 +143,19 @@ public class HttpClientSource extends BaseSource {
   private void configureClient() {
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
-        .property(ClientProperties.READ_TIMEOUT, conf.requestTimeoutMillis)
+        .property(ClientProperties.READ_TIMEOUT, conf.client.requestTimeoutMillis)
+        .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
         .connectorProvider(new GrizzlyConnectorProvider());
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
     configureAuth(clientBuilder);
 
-    if (conf.useProxy) {
-      JerseyClientUtil.configureProxy(conf.proxy, clientBuilder);
+    if (conf.client.useProxy) {
+      JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
     }
 
-    JerseyClientUtil.configureSslContext(conf.sslConfig, clientBuilder);
+    JerseyClientUtil.configureSslContext(conf.client.sslConfig, clientBuilder);
 
     client = clientBuilder.build();
 
@@ -268,10 +269,10 @@ public class HttpClientSource extends BaseSource {
   }
 
   private void configureAuth(ClientBuilder clientBuilder) {
-    if (conf.authType == AuthenticationType.OAUTH) {
-      authToken = JerseyClientUtil.configureOAuth1(conf.oauth, clientBuilder);
-    } else if (conf.authType != AuthenticationType.NONE) {
-      JerseyClientUtil.configurePasswordAuth(conf.authType, conf.basicAuth, clientBuilder);
+    if (conf.client.authType == AuthenticationType.OAUTH) {
+      authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
+    } else if (conf.client.authType != AuthenticationType.NONE) {
+      JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
     }
   }
 
@@ -309,7 +310,7 @@ public class HttpClientSource extends BaseSource {
       StageException {
     Optional<String> newSourceOffset = Optional.absent();
     try {
-      response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+      response = responseFuture.get(conf.client.requestTimeoutMillis, TimeUnit.MILLISECONDS);
 
       // Response was not in the OK range, so treat as an error
       if (response.getStatus() < 200 || response.getStatus() >= 300) {

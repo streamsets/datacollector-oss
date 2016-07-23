@@ -252,10 +252,10 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingHttp() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "stream";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -292,10 +292,10 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingPost() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "stream";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -334,10 +334,10 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingHttpWithNewlineOnly() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "nlstream";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -375,10 +375,10 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingHttpWithXml() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "xmlstream";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -414,10 +414,10 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingHttpWithText() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "textstream";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -525,10 +525,10 @@ public class HttpClientSourceIT extends JerseyTest {
 
   private HttpClientSource getUnauthorizedClientSource() {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + "unauthorized";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -536,7 +536,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
-    conf.useProxy = false;
+    conf.client.useProxy = false;
 
     return new HttpClientSource(conf);
   }
@@ -544,12 +544,12 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testUniversalAuth() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.UNIVERSAL;
-    conf.basicAuth.username = "foo";
-    conf.basicAuth.password = "bar";
+    conf.client.authType = AuthenticationType.UNIVERSAL;
+    conf.client.basicAuth.username = "foo";
+    conf.client.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "auth";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -586,12 +586,12 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testNoWWWAuthenticate() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.BASIC;
-    conf.basicAuth.username = "foo";
-    conf.basicAuth.password = "bar";
+    conf.client.authType = AuthenticationType.BASIC;
+    conf.client.basicAuth.username = "foo";
+    conf.client.basicAuth.password = "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "preemptive";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -628,11 +628,11 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testStreamingHttpWithHeader() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.headers.put("abcdef", "ghijkl");
     conf.resourceUrl = getBaseUri() + "headers";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -669,11 +669,11 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testInvalidELs() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.POLLING;
     conf.headers.put("abcdef", "${invalid:el()}");
     conf.resourceUrl = getBaseUri() + "${invalid:el()}";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;
@@ -696,11 +696,11 @@ public class HttpClientSourceIT extends JerseyTest {
   @Test
   public void testValidELs() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
-    conf.authType = AuthenticationType.NONE;
+    conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.POLLING;
     conf.headers.put("abcdef", "${str:trim('abcdef ')}");
     conf.resourceUrl = getBaseUri() + "${str:trim('abcdef ')}";
-    conf.requestTimeoutMillis = 1000;
+    conf.client.requestTimeoutMillis = 1000;
     conf.entityDelimiter = "\r\n";
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = 1000;

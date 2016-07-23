@@ -118,7 +118,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         issues
     );
 
-    conf.sslConfig.init(
+    conf.client.sslConfig.init(
         getContext(),
         Groups.SSL.name(),
         SSL_CONFIG_PREFIX,
@@ -141,19 +141,20 @@ public class HttpProcessor extends SingleLaneProcessor {
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
       ClientConfig clientConfig = new ClientConfig()
-          .property(ClientProperties.ASYNC_THREADPOOL_SIZE, conf.numThreads)
-          .property(ClientProperties.READ_TIMEOUT, conf.requestTimeoutMillis)
+          .property(ClientProperties.ASYNC_THREADPOOL_SIZE, conf.client.numThreads)
+          .property(ClientProperties.READ_TIMEOUT, conf.client.requestTimeoutMillis)
+          .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
           .connectorProvider(new GrizzlyConnectorProvider());
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
       configureAuth(clientBuilder);
 
-      if (conf.useProxy) {
-        JerseyClientUtil.configureProxy(conf.proxy, clientBuilder);
+      if (conf.client.useProxy) {
+        JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
       }
 
-      JerseyClientUtil.configureSslContext(conf.sslConfig, clientBuilder);
+      JerseyClientUtil.configureSslContext(conf.client.sslConfig, clientBuilder);
 
       client = clientBuilder.build();
 
@@ -228,7 +229,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     Response response;
     try {
-      response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+      response = responseFuture.get(conf.client.requestTimeoutMillis, TimeUnit.MILLISECONDS);
       String responseBody = "";
       if (response.hasEntity()) {
         responseBody = response.readEntity(String.class);
@@ -273,10 +274,10 @@ public class HttpProcessor extends SingleLaneProcessor {
   }
 
   private void configureAuth(ClientBuilder clientBuilder) {
-    if (conf.authType == AuthenticationType.OAUTH) {
-      authToken = JerseyClientUtil.configureOAuth1(conf.oauth, clientBuilder);
-    } else if (conf.authType != AuthenticationType.NONE) {
-      JerseyClientUtil.configurePasswordAuth(conf.authType, conf.basicAuth, clientBuilder);
+    if (conf.client.authType == AuthenticationType.OAUTH) {
+      authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
+    } else if (conf.client.authType != AuthenticationType.NONE) {
+      JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
     }
   }
 

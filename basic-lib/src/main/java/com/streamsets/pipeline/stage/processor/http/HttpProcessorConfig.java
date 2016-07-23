@@ -26,14 +26,9 @@ import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.http.HttpMethod;
-import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
-import com.streamsets.pipeline.lib.http.OAuthConfigBean;
-import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
-import com.streamsets.pipeline.lib.http.SslConfigBean;
-import com.streamsets.pipeline.stage.origin.http.AuthenticationTypeChooserValues;
+import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.HashMap;
@@ -136,58 +131,6 @@ public class HttpProcessorConfig {
   )
   public String requestBody = "";
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Request Timeout",
-      defaultValue = "1000",
-      description = "HTTP request timeout in milliseconds.",
-      displayPosition = 70,
-      group = "HTTP"
-  )
-  public long requestTimeoutMillis = 1000;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Maximum parallel requests",
-      defaultValue = "10",
-      description = "Maximum number of requests to make in parallel.",
-      displayPosition = 80,
-      group = "HTTP"
-  )
-  public int numThreads = 10;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Authentication Type",
-      defaultValue = "NONE",
-      displayPosition = 90,
-      group = "HTTP"
-  )
-  @ValueChooserModel(AuthenticationTypeChooserValues.class)
-  public AuthenticationType authType = AuthenticationType.NONE;
-
-  @ConfigDefBean(groups = "CREDENTIALS")
-  public OAuthConfigBean oauth = new OAuthConfigBean();
-
-  @ConfigDefBean(groups = "CREDENTIALS")
-  public PasswordAuthConfigBean basicAuth = new PasswordAuthConfigBean();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Proxy",
-      defaultValue = "false",
-      displayPosition = 100,
-      group = "HTTP"
-  )
-  public boolean useProxy = false;
-
-  @ConfigDefBean(groups = "PROXY")
-  public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
-
-  @ConfigDefBean(groups = "SSL")
-  public SslConfigBean sslConfig = new SslConfigBean();
+  @ConfigDefBean
+  public JerseyClientConfigBean client = new JerseyClientConfigBean();
 }

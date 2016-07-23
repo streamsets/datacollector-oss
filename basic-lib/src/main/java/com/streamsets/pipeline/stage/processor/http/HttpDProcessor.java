@@ -29,11 +29,12 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.http.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "HTTP Client",
     description = "Uses an HTTP client to make arbitrary requests.",
     icon = "httpclient.png",
     recordsByRef = true,
+    upgrader = HttpProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/HTTPClient.html#task_z54_1qr_fw"
 )
 @HideConfigs(value = {"conf.dataFormatConfig.compression", "conf.dataFormatConfig.jsonContent"})

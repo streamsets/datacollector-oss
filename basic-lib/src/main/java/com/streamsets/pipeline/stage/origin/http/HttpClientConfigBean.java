@@ -30,13 +30,9 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.http.HttpMethod;
-import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
-import com.streamsets.pipeline.lib.http.OAuthConfigBean;
-import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
-import com.streamsets.pipeline.lib.http.SslConfigBean;
+import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.slf4j.Logger;
@@ -73,7 +69,7 @@ public class HttpClientConfigBean {
       label = "Headers",
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 11,
+      displayPosition = 20,
       elDefs = VaultEL.class,
       group = "HTTP"
   )
@@ -85,7 +81,7 @@ public class HttpClientConfigBean {
       label = "HTTP Method",
       defaultValue = "GET",
       description = "HTTP method to send",
-      displayPosition = 12,
+      displayPosition = 30,
       group = "HTTP"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -97,7 +93,7 @@ public class HttpClientConfigBean {
       label = "Request Body",
       description = "Data that should be included as the body of the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 13,
+      displayPosition = 40,
       elDefs = VaultEL.class,
       lines = 2,
       dependsOn = "httpMethod",
@@ -106,17 +102,8 @@ public class HttpClientConfigBean {
   )
   public String requestBody;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Request Timeout",
-      defaultValue = "1000",
-      description = "HTTP request timeout in milliseconds.",
-      displayPosition = 20,
-      group = "HTTP"
-  )
-  public long requestTimeoutMillis = 1000;
-
+  @ConfigDefBean
+  public JerseyClientConfigBean client = new JerseyClientConfigBean();
 
   @ConfigDef(
       required = true,
@@ -144,23 +131,6 @@ public class HttpClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Authentication Type",
-      defaultValue = "NONE",
-      displayPosition = 30,
-      group = "HTTP"
-  )
-  @ValueChooserModel(AuthenticationTypeChooserValues.class)
-  public AuthenticationType authType = AuthenticationType.NONE;
-
-  @ConfigDefBean(groups = "CREDENTIALS")
-  public OAuthConfigBean oauth = new OAuthConfigBean();
-
-  @ConfigDefBean(groups = "CREDENTIALS")
-  public PasswordAuthConfigBean basicAuth = new PasswordAuthConfigBean();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
       displayPosition = 40,
@@ -179,22 +149,6 @@ public class HttpClientConfigBean {
       group = "HTTP"
   )
   public String entityDelimiter = "\\r\\n";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Proxy",
-      defaultValue = "false",
-      displayPosition = 60,
-      group = "HTTP"
-  )
-  public boolean useProxy = false;
-
-  @ConfigDefBean(groups = "PROXY")
-  public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
-
-  @ConfigDefBean(groups = "SSL")
-  public SslConfigBean sslConfig = new SslConfigBean();
 
   /**
    * Validates the parameters for this config bean.

@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.http.Groups;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",
@@ -42,7 +42,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
     upgrader = HttpClientSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
 )
-@HideConfigs(value = {"conf.dataFormatConfig.compression", "conf.dataFormatConfig.jsonContent"})
+@HideConfigs(value = {"conf.dataFormatConfig.compression", "conf.dataFormatConfig.jsonContent", "conf.client.numThreads"})
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class HttpClientDSource extends DSource {
