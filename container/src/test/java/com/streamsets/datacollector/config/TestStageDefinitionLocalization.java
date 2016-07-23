@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.runner.StageDefinitionBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -48,10 +49,6 @@ public class TestStageDefinitionLocalization {
     LocaleInContext.set(null);
   }
 
-  private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(TestStageDefinitionLocalization.class.getClassLoader(), "mock", "MOCK",
-                                 new Properties(), null, null, null);
-
   @SuppressWarnings("unchecked")
   private StageDefinition createStageDefinition() {
     List<ConfigDefinition> configs = new ArrayList<>();
@@ -74,35 +71,16 @@ public class TestStageDefinitionLocalization {
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
-    StageDefinition def = new StageDefinition(
-        MOCK_LIB_DEF,
-        false,
-        TProcessor.class,
-        "stage",
-        1,
-        "StageLabel",
-        "StageDescription",
-        StageType.PROCESSOR,
-        true,
-        true,
-        true,
-        configs,
-        rawSource,
-        "",
-        configGroup,
-        false,
-        1,
-        TOutput.class.getName(),
-        Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE),
-        false,
-        new StageUpgrader.Default(),
-        Collections.<String>emptyList(),
-        false,
-        "",
-        false,
-        false,
-        false
-    );
+    StageDefinition def = new StageDefinitionBuilder(TestStageDefinitionLocalization.class.getClassLoader(), TProcessor.class, "stage")
+      .withConfig(configs)
+      .withErrorStage(true)
+      .withRawSourceDefintion(rawSource)
+      .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
+      .withConfigGroupDefintion(configGroup)
+      .withOutputStreamLabelProviderClass(TOutput.class.getName())
+      .withLabel("StageLabel")
+      .withDescription("StageDescription")
+      .build();
     return def;
   }
 

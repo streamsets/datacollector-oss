@@ -55,6 +55,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 
@@ -403,6 +404,19 @@ public class MockStages {
     }
   }
 
+  public static class OffsetControllerSource extends BaseSource implements OffsetCommitTrigger {
+
+    @Override
+    public boolean commit() {
+      return false;
+    }
+
+    @Override
+    public String produce(String s, int i, BatchMaker batchMaker) throws StageException {
+      return null;
+    }
+  }
+
   public static class ETarget implements Target {
 
     //This field is required, even though its not used, to pass validation as it tries to inject value into a field
@@ -474,15 +488,6 @@ public class MockStages {
 
   public static StageLibraryTask createStageLibrary() {
     return createStageLibrary(Thread.currentThread().getContextClassLoader());
-  }
-
-  private static final StageLibraryDefinition createLibraryDef(ClassLoader cl) {
-    return new StageLibraryDefinition(cl, "default", "", new Properties(), null, null, null) {
-      @Override
-      public List<ExecutionMode> getStageExecutionModesOverride(Class klass) {
-        return ImmutableList.copyOf(ExecutionMode.values());
-      }
-    };
   }
 
   public static class MockStageLibraryTask implements StageLibraryTask {
@@ -576,36 +581,19 @@ public class MockStages {
         RawSourceDefinition rawSourceDefinition = new RawSourceDefinition(MockRawSourcePreviewer.class.getName(), "*/*",
           Arrays.asList(brokerHostConfig, brokerPortConfig));
 
-        StageDefinition sDef = new StageDefinition(createLibraryDef(cl),
-                                                   false, MSource.class, "sourceName", 1, "sourceLabel",
-          "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
-          rawSourceDefinition, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
-
-        StageDefinition socDef = new StageDefinition(createLibraryDef(cl),
-                                                     false, MSourceOffsetCommitter.class, "sourceOffsetCommitterName", 1, "sourceOffsetCommitterLabel",
-          "sourceDesc", StageType.SOURCE, false, true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false,
-            "", false, false, false);
-
+        StageDefinition sDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withRawSourceDefintion(rawSourceDefinition)
+          .build();
+        StageDefinition socDef = new StageDefinitionBuilder(cl, MSourceOffsetCommitter.class, "sourceOffsetCommitterName")
+          .build();
         // Event producing source
-        StageDefinition seDef = new StageDefinition(createLibraryDef(cl),
-                                                   false, MSource.class, "sourceNameEvent", 1, "sourceLabel",
-          "sourceDesc", StageType.SOURCE, false,  true, true, Collections.<ConfigDefinition>emptyList(),
-          rawSourceDefinition, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, true);
+        StageDefinition seDef = new StageDefinitionBuilder(cl, MSource.class, "sourceNameEvent")
+          .withProducingEvents(true)
+          .build();
 
-        StageDefinition pDef = new StageDefinition(createLibraryDef(cl),
-                                                   false, MProcessor.class, "processorName", 1, "sourcelabel",
-          "sourceDescription", StageType.PROCESSOR, false, true, true, Collections.<ConfigDefinition>emptyList(),
-          null/*raw source definition*/, "", null,
-          false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+
+        StageDefinition pDef = new StageDefinitionBuilder(cl, MProcessor.class, "processorName")
+          .build();
 
         ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
           Collections.<String>emptyList(), null, null);
@@ -614,13 +602,10 @@ public class MockStages {
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, null);
 
-        StageDefinition tDef = new StageDefinition(createLibraryDef(cl),
-                                                   false, MTarget.class, "targetName", 1, "targetLabel",
-          "targetDesc", StageType.TARGET, false, true, true, Arrays.asList(stageReqField),
-          null/*raw source definition*/, "", null, false, 0, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH,
-            ExecutionMode.CLUSTER_MESOS_STREAMING), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition tDef = new StageDefinitionBuilder(cl, MTarget.class, "targetName")
+          .withConfig(stageReqField)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
 
         ConfigDefinition reqField = new ConfigDefinition(
           "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
@@ -628,12 +613,10 @@ public class MockStages {
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, null);
 
-        StageDefinition targetWithReqField = new StageDefinition(createLibraryDef(cl),
-          false, MTarget.class, "targetWithReqField", 1, "targetWithReqField",
-          "targetWithReqField", StageType.TARGET, false, true, true, Arrays.asList(reqField),
-          null/*raw source definition*/, "", null, false, 0, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition targetWithReqField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithReqField")
+          .withConfig(reqField)
+          .build();
+
 
         //error target configurations
         ConfigDefinition errorTargetConf = new ConfigDefinition(
@@ -642,21 +625,18 @@ public class MockStages {
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
-        StageDefinition eDef = new StageDefinition(createLibraryDef(cl),
-                                                   false, ETarget.class, "errorTarget", 1, "errorTarget",
-          "Error Target", StageType.TARGET, true, false, true,
-          Arrays.asList(errorTargetConf), null/*raw source definition*/, "", null, false, 0, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH,
-            ExecutionMode.CLUSTER_MESOS_STREAMING), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition eDef = new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
+          .withErrorStage(true)
+          .withPreconditions(false)
+          .withConfig(errorTargetConf)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
 
-        StageDefinition statsDef = new StageDefinition(createLibraryDef(cl),
-          false, StatsTarget.class, "statsAggregator", 1, "statsAggregator",
-          "Stats Aggregator", StageType.TARGET, false, false, true,
-          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH,
-            ExecutionMode.CLUSTER_MESOS_STREAMING), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", true, false, false);
+        StageDefinition statsDef = new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
+          .withPreconditions(false)
+          .withStatsAggregatorStage(true)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
 
         ConfigDefinition depConfDef = new ConfigDefinition(
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
@@ -670,34 +650,21 @@ public class MockStages {
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
-        StageDefinition swcDef = new StageDefinition(createLibraryDef(cl),
-                                                     false, MSource.class, "sourceWithConfigsName", 1, "sourceWithConfigsLabel",
-          "sourceWithConfigsDesc", StageType.SOURCE, false, true, true,
-          Lists.newArrayList(depConfDef, triggeredConfDef), null/*raw source definition*/, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
 
-        StageDefinition clusterStageDef = new StageDefinition(createLibraryDef(cl),
-                                                              false, ClusterMSource.class, "clusterSource", 1, "clusterSourceLabel",
-            "clusterSourceDesc", StageType.SOURCE, false, true, true,
-            Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
-            Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH,
-              ExecutionMode.CLUSTER_MESOS_STREAMING), false, new StageUpgrader.Default(),
-            Collections.<String> emptyList(), false, "", false, false, false);
+        StageDefinition swcDef = new StageDefinitionBuilder(cl, MSource.class, "sourceWithConfigsName")
+          .withConfig(depConfDef, triggeredConfDef)
+          .build();
 
-        StageDefinition clusterLibraryStageDef = new StageDefinition(createLibraryDef(cl),
-                                                                     false, ClusterMSource.class, "clusterLibrarySource", 1, "clusterSourceLabel",
-          "clusterSourceDesc", StageType.SOURCE, false, true, true,
-          Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition clusterStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterSource")
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
 
-        StageDefinition commonLibraryTargetDef = new StageDefinition(createLibraryDef(cl),
-                                                                     false, MTarget.class, "commonLibraryTarget", 1, "commonLibraryTargetLabel",
-          "commonLibraryTargetDesc", StageType.TARGET, false, true, true,
-          Collections.<ConfigDefinition>emptyList(), null, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition clusterLibraryStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterLibrarySource")
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH)
+          .build();
+
+        StageDefinition commonLibraryTargetDef = new StageDefinitionBuilder(cl, MTarget.class, "commonLibraryTarget")
+          .build();
 
         ConfigDefinition regularConf = new ConfigDefinition(
           "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
@@ -716,26 +683,18 @@ public class MockStages {
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, null);
 
-        StageDefinition complexStage = new StageDefinition(createLibraryDef(cl),
-                                                           false, ComplexSource.class, "complexStageName", 1, "complexStageLabel",
-          "complexStageDesc", StageType.SOURCE, false, true, true,
-          Lists.newArrayList(complexConf), null/*raw source definition*/, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+        StageDefinition complexStage = new StageDefinitionBuilder(cl,ComplexSource.class, "complexStageName")
+          .withConfig(complexConf)
+          .build();
 
-        StageDefinition offsetControlTarget = new StageDefinition(createLibraryDef(cl),
-          false, OffsetControllerTarget.class, "offsetControlTarget", 1, "tLabel",
-          "tDesc", StageType.TARGET, false, true, true,
-          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 1, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, true, false);
+        StageDefinition offsetControlTarget = new StageDefinitionBuilder(cl, OffsetControllerTarget.class, "offsetControlTarget")
+          .withOffsetCommitTrigger(true)
+          .build();
 
-        StageDefinition multiLaneSource = new StageDefinition(createLibraryDef(cl),
-          false, OffsetControllerTarget.class, "multiLaneSource", 1, "multiLaneSourceLabel",
-          "multiLaneSourceDesc", StageType.SOURCE, false, true, true,
-          Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 2, null,
-          Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH), false,
-          new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+
+        StageDefinition multiLaneSource = new StageDefinitionBuilder(cl, OffsetControllerSource.class, "multiLaneSource")
+          .withOutputStreams(2)
+          .build();
 
         StageDefinition[] stageDefs =
           new StageDefinition[] {
@@ -775,7 +734,7 @@ public class MockStages {
       public Builder overrideClass(String name, Class klass) {
         if (stages.containsKey(name)) {
           StageDefinition oldDef = stages.get(name);
-          StageDefinition newDef = new StageDefinition(createLibraryDef(klass.getClassLoader()),
+          StageDefinition newDef = new StageDefinition(StageDefinitionBuilder.createLibraryDef(klass.getClassLoader()),
                                                        false, klass, oldDef.getName(), oldDef.getVersion(), oldDef.getLabel(),
             oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasPreconditions(),
             oldDef.hasOnRecordError(), oldDef.getConfigDefinitions(),
@@ -818,24 +777,20 @@ public class MockStages {
         Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
         Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
-      StageDefinition errorTargetStageDef = new StageDefinition(createLibraryDef(cl),
-                                                 false, ETarget.class, "errorTarget", 1, "errorTarget",
-        "Error Target", StageType.TARGET, true, false, true,
-        Arrays.asList(errorTargetConf), null/*raw source definition*/, "", null, false, 0, null,
-        Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
-        new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
-      return errorTargetStageDef;
+      return new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
+        .withErrorStage(true)
+        .withPreconditions(false)
+        .withConfig(errorTargetConf)
+        .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+        .build();
     }
 
     public static StageDefinition getStatsAggStageDefinition(ClassLoader cl) {
-
-      StageDefinition errorTargetStageDef = new StageDefinition(createLibraryDef(cl),
-        false, StatsTarget.class, "statsAggregator", 1, "statsAggregator",
-        "Stats Aggregator", StageType.TARGET, false, false, true,
-        Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/, "", null, false, 0, null,
-        Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
-        new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", true, false, false);
-      return errorTargetStageDef;
+      return new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
+          .withPreconditions(false)
+          .withStatsAggregatorStage(true)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH)
+          .build();
     }
 
     public static class ClusterStreamingBuilder {
@@ -848,12 +803,12 @@ public class MockStages {
       }
 
       public ClusterStreamingBuilder(ClassLoader cl) {
-        clusterStageDef =
-          new StageDefinition(createLibraryDef(cl), false, MSource.class, "sourceName", 1, "sourceLabel", "sourceDesc",
-            StageType.SOURCE, false, true, true, Collections.<ConfigDefinition> emptyList(), getRawSourceDefinition(),
-            "", null, false, 1, null, Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_YARN_STREAMING,
-              ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_MESOS_STREAMING), false, new StageUpgrader.Default(),
-            Arrays.asList(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX), false, "", false, false, false);
+        clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .withRawSourceDefintion(getRawSourceDefinition())
+          .withLibJarsRegexp(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX)
+          .build();
+
         errorTargetStageDef = getErrorStageDefinition(cl);
         statsTargetStageDef = getStatsAggStageDefinition(cl);
       }
@@ -874,35 +829,11 @@ public class MockStages {
       }
 
       public ClusterBatchBuilder(ClassLoader cl) {
-        clusterStageDef = new StageDefinition(
-            createLibraryDef(cl),
-            false,
-            MSource.class,
-            "sourceName",
-            1,
-            "sourceLabel",
-            "sourceDesc",
-            StageType.SOURCE,
-            false,
-            true,
-            true,
-            Collections.<ConfigDefinition> emptyList(),
-            getRawSourceDefinition(),
-            "",
-            null,
-            false,
-            1,
-            null,
-            Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE),
-            false,
-            new StageUpgrader.Default(),
-            Arrays.asList(ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX),
-            false,
-            "",
-            false,
-            false,
-            false
-        );
+        clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+          .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
+          .withRawSourceDefintion(getRawSourceDefinition())
+          .withLibJarsRegexp(ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX)
+          .build();
         errorTargetStageDef = getErrorStageDefinition(cl);
         statsTargetStageDef = getStatsAggStageDefinition(cl);
       }

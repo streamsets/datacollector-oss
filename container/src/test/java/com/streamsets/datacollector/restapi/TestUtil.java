@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.StageDefinitionBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -110,9 +111,6 @@ public class TestUtil {
     }
   }
 
-  private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(TestUtil.class.getClassLoader(), "mock", "MOCK", new Properties(), null, null, null);
-
   @SuppressWarnings("unchecked")
   /**
    *
@@ -120,38 +118,30 @@ public class TestUtil {
    */
   public static StageLibraryTask createMockStageLibrary() {
     StageLibraryTask lib = Mockito.mock(StageLibraryTask.class);
-    List<ConfigDefinition> configDefs = new ArrayList<>();
-    ConfigDefinition configDef = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
+    ConfigDefinition configDef1 = new ConfigDefinition("string", ConfigDef.Type.STRING, "l1", "d1", "--", true, "g",
         "stringVar", null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT, null);
-    configDefs.add(configDef);
-    configDef = new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "",
+    ConfigDefinition configDef2 = new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT, null);
-    configDefs.add(configDef);
-    configDef = new ConfigDefinition("long", ConfigDef.Type.NUMBER, "l3", "d3", "-2", true, "g", "longVar", null, "",
+    ConfigDefinition configDef3 = new ConfigDefinition("long", ConfigDef.Type.NUMBER, "l3", "d3", "-2", true, "g", "longVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT, null);
-    configDefs.add(configDef);
-    configDef = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
+    ConfigDefinition configDef4 = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, "l4", "d4", "false", true, "g", "booleanVar",
       null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
       ConfigDef.Evaluation.IMPLICIT, null);
-    configDefs.add(configDef);
-    StageDefinition sourceDef = new StageDefinition(
-        MOCK_LIB_DEF, false, TSource.class, "source", 1, "label", "description",
-        StageType.SOURCE, false, true, true, configDefs, null/*raw source definition*/, "", null, false ,1,
-        null, Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false, new StageUpgrader.Default(),
-        Collections.<String>emptyList(), false, "", false, false, false);
-    StageDefinition targetDef = new StageDefinition(
-        MOCK_LIB_DEF, false, TTarget.class, "target", 1, "label", "description",
-        StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(), null/*raw source definition*/,
-        "TargetIcon.svg", null, false, 0, null, Arrays.asList(ExecutionMode.CLUSTER_BATCH,
-                                                              ExecutionMode.STANDALONE), false,
-        new StageUpgrader.Default(), Collections.<String>emptyList(), false, "", false, false, false);
+    StageDefinition sourceDef = new StageDefinitionBuilder(TestUtil.class.getClassLoader(), TSource.class, "source")
+      .withConfig(configDef1, configDef2, configDef3, configDef4)
+      .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
+      .build();
+    StageDefinition targetDef = new StageDefinitionBuilder(TestUtil.class.getClassLoader(), TTarget.class, "target")
+      .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
+      .build();
+
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("source"), Mockito.eq(false)))
            .thenReturn(sourceDef);
     Mockito.when(lib.getStage(Mockito.eq("library"), Mockito.eq("target"), Mockito.eq(false)))
