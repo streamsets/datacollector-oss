@@ -218,6 +218,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
+    EventSink eventSink = new EventSink();
     String previousOffset = pipeBatch.getPreviousOffset();
 
     InstanceErrorSink instanceErrorSink = new InstanceErrorSink(getStage().getInfo().getInstanceName(), errorSink);
@@ -229,7 +230,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     Batch batch = new FilterRecordBatch(batchImpl, predicates, instanceErrorSink);
 
     long start = System.currentTimeMillis();
-    String newOffset = getStage().execute(previousOffset, pipeBatch.getBatchSize(), batch, batchMaker, errorSink);
+    String newOffset = getStage().execute(previousOffset, pipeBatch.getBatchSize(), batch, batchMaker, errorSink, eventSink);
     if (isSource()) {
       pipeBatch.setNewOffset(newOffset);
     }

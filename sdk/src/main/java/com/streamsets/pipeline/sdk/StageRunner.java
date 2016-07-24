@@ -325,6 +325,14 @@ public abstract class StageRunner<S extends Stage> {
     context.getErrorSink().clear();
   }
 
+  public List<Record> getEventRecords() {
+    return context.getEventSink().getEventRecords();
+  }
+
+  public void clearEvents() {
+    context.getEventSink().clear();
+  }
+
   public static class Output {
     private final String newOffset;
     private final Map<String, List<Record>> records;

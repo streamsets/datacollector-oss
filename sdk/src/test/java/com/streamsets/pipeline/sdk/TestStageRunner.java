@@ -106,6 +106,7 @@ public class TestStageRunner {
     Assert.assertEquals(DummyStage1.class, runner.getStage().getClass());
     Assert.assertTrue(runner.getErrorRecords().isEmpty());
     Assert.assertTrue(runner.getErrors().isEmpty());
+    Assert.assertTrue(runner.getEventRecords().isEmpty());
   }
   @Test
   public void testIsPreview() {
@@ -166,6 +167,7 @@ public class TestStageRunner {
     Assert.assertEquals(stage, runner.getStage());
     Assert.assertTrue(runner.getErrorRecords().isEmpty());
     Assert.assertTrue(runner.getErrors().isEmpty());
+    Assert.assertTrue(runner.getEventRecords().isEmpty());
   }
 
   @Test

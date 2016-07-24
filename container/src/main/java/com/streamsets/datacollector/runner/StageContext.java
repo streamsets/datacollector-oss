@@ -82,6 +82,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final List<String> outputLanes;
   private final OnRecordError onRecordError;
   private ErrorSink errorSink;
+  private EventSink eventSink;
   private long lastBatchTime;
   private final Map<String, Class<?>[]> configToElDefMap;
   private final Map<String, Object> constants;
@@ -134,6 +135,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
+    eventSink = new EventSink();
     this. configToElDefMap = configToElDefMap;
     this.constants = constants;
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
@@ -280,6 +282,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.errorSink = errorSink;
   }
 
+  // for SDK
+  public EventSink getEventSink() {
+    return eventSink;
+  }
+
+  public void setEventSink(EventSink sink) {
+    this.eventSink = sink;
+  }
+
   @Override
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
   public void reportError(Exception exception) {
@@ -386,7 +397,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public void toEvent(EventRecord record) {
-    // Stub to be implemented as part of SDC-3421
+    eventSink.addEvent(record);
   }
 
   public void setStop(boolean stop) {

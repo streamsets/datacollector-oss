@@ -114,6 +114,10 @@ public class StageRuntime {
     context.setErrorSink(errorSink);
   }
 
+  public void setEventSink(EventSink sink) {
+    context.setEventSink(sink);
+  }
+
   @SuppressWarnings("unchecked")
   public <T extends Stage.Context> T getContext() {
     return (T) context;
@@ -143,7 +147,7 @@ public class StageRuntime {
   }
 
   public String execute(final String previousOffset, final int batchSize, final Batch batch,
-      final BatchMaker batchMaker, ErrorSink errorSink) throws StageException {
+      final BatchMaker batchMaker, ErrorSink errorSink, EventSink eventSink) throws StageException {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       setErrorSink(errorSink);

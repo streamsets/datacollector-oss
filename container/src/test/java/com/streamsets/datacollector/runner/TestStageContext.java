@@ -20,12 +20,14 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.StageContext;
@@ -34,6 +36,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -46,6 +49,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 public class TestStageContext {
 
@@ -269,6 +273,43 @@ public class TestStageContext {
     Assert.assertEquals("custom_type", event.getHeader().getAttribute(EventRecord.TYPE));
     Assert.assertEquals("2", event.getHeader().getAttribute(EventRecord.VERSION));
     Assert.assertNotNull(event.getHeader().getAttribute(EventRecord.CREATION_TIMESTAMP));
+  }
+
+  @Test
+  public void testToEvent() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+
+    EventSink sink = new EventSink();
+    context.setEventSink(sink);
+
+    EventRecord event = new EventRecordImpl("custom-type", 1, "local-stage", "super-secret-id", null, null);
+    event.set(Field.create(ImmutableMap.of("key", Field.create("value"))));
+    context.toEvent(event);
+    Assert.assertEquals(1, sink.getEventRecords().size());
+    Record retrieved = sink.getEventRecords().get(0);
+
+    // Header is properly propagated
+    Assert.assertEquals("custom-type", retrieved.getHeader().getAttribute(EventRecord.TYPE));
+    Assert.assertEquals("1", retrieved.getHeader().getAttribute(EventRecord.VERSION));
+
+    // Data
+    Field rootField = retrieved.get();
+    Assert.assertEquals(Field.Type.MAP, rootField.getType());
+    Map<String, Field> map = rootField.getValueAsMap();
+    Assert.assertNotNull(map);
+    Assert.assertTrue(map.containsKey("key"));
+    Assert.assertEquals("value", map.get("key").getValueAsString());
   }
 
 }
