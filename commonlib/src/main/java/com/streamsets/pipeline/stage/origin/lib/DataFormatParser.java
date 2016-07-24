@@ -251,7 +251,9 @@ public class DataFormatParser {
           .setMode(dataFormatConfig.csvRecordType)
           .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
-          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote);
+          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote)
+          .setConfig(DelimitedDataConstants.PARSE_NULL, dataFormatConfig.parseNull)
+          .setConfig(DelimitedDataConstants.NULL_CONSTANT, dataFormatConfig.nullConstant);
         break;
       case XML:
         builder.setMaxDataLen(dataFormatConfig.xmlMaxObjectLen);

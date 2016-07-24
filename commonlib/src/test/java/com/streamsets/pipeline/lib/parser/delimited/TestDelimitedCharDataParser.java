@@ -45,7 +45,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -73,7 +73,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST_MAP);
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST_MAP, false, null);
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -97,7 +97,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -117,7 +117,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST_MAP);
+      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST_MAP, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -135,7 +135,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -155,7 +155,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST_MAP);
+      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST_MAP, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -173,7 +173,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, 0, CSVFormat.DEFAULT,
-      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -193,7 +193,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, 0, CSVFormat.DEFAULT,
-      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -213,7 +213,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset2() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, 0, CSVFormat.DEFAULT,
-      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -233,7 +233,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, 0, CSVFormat.DEFAULT,
-      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -254,9 +254,28 @@ public class TestDelimitedCharDataParser {
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
-      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
+      CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST, false, null);
     parser.close();
     parser.parse();
+  }
+
+  @Test
+  public void testParseNullConstant() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,null\nnull,B"), 1000, true, false);
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST, true, "null");
+    Assert.assertEquals("0", parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertNull(record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertNull(record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
   }
 
 }

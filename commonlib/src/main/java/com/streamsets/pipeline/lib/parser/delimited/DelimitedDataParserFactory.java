@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
@@ -40,13 +41,14 @@ import java.util.Set;
 
 public class DelimitedDataParserFactory extends DataParserFactory {
 
-  public static final Map<String, Object> CONFIGS =
-      ImmutableMap.<String, Object>of(
-          DelimitedDataConstants.DELIMITER_CONFIG, '|',
-          DelimitedDataConstants.ESCAPE_CONFIG, '\\',
-          DelimitedDataConstants.QUOTE_CONFIG, '"',
-          DelimitedDataConstants.SKIP_START_LINES, 0
-      );
+  public static final Map<String, Object> CONFIGS = new HashedMap() {{
+    put(DelimitedDataConstants.DELIMITER_CONFIG, '|');
+    put(DelimitedDataConstants.ESCAPE_CONFIG, '\\');
+    put(DelimitedDataConstants.QUOTE_CONFIG, '"');
+    put(DelimitedDataConstants.SKIP_START_LINES, 0);
+    put(DelimitedDataConstants.PARSE_NULL, false);
+    put(DelimitedDataConstants.NULL_CONSTANT, "\\\\N");
+  }};
 
   public static final Set<Class<? extends Enum>> MODES =
       ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class, CsvRecordType.class);
@@ -76,15 +78,18 @@ public class DelimitedDataParserFactory extends DataParserFactory {
     }
     try {
       return new DelimitedCharDataParser(
-          getSettings().getContext(),
-          id,
-          reader,
-          offset,
-          (Integer) getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES),
-          csvFormat,
-          getSettings().getMode(CsvHeader.class),
-          getSettings().getMaxRecordLen(),
-          getSettings().getMode(CsvRecordType.class));
+        getSettings().getContext(),
+        id,
+        reader,
+        offset,
+        (Integer) getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES),
+        csvFormat,
+        getSettings().getMode(CsvHeader.class),
+        getSettings().getMaxRecordLen(),
+        getSettings().getMode(CsvRecordType.class),
+        (Boolean) getSettings().getConfig(DelimitedDataConstants.PARSE_NULL),
+        (String) getSettings().getConfig(DelimitedDataConstants.NULL_CONSTANT)
+      );
     } catch (IOException ex) {
       throw new DataParserException(Errors.DELIMITED_PARSER_00, id, offset, ex.toString(), ex);
     }

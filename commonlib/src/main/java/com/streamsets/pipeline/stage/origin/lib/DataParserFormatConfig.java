@@ -281,6 +281,32 @@ public class DataParserFormatConfig implements DataFormatConfig{
   public int csvSkipStartLines;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Parse NULLs",
+      description = "When checked, configured string constant will be converted into NULL field.",
+      displayPosition = 436,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
+  )
+  public boolean parseNull;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "\\\\N",
+      label = "NULL constant",
+      description = "String constant that should be converted to a NULL rather then passed as it is.",
+      displayPosition = 437,
+      group = "DELIMITED",
+      dependsOn = "parseNull",
+      triggeredByValue = "true"
+  )
+  public String nullConstant;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
@@ -928,7 +954,9 @@ public class DataParserFormatConfig implements DataFormatConfig{
             .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
             .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
             .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
-            .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
+            .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote)
+            .setConfig(DelimitedDataConstants.PARSE_NULL, parseNull)
+            .setConfig(DelimitedDataConstants.NULL_CONSTANT, nullConstant);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);

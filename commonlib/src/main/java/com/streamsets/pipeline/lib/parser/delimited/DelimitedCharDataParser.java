@@ -45,6 +45,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private List<Field> headers;
   private boolean eof;
   private CsvRecordType recordType;
+  private final String nullConstant;
 
   public DelimitedCharDataParser(
       Stage.Context context,
@@ -55,11 +56,14 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       CSVFormat format,
       CsvHeader header,
       int maxObjectLen,
-      CsvRecordType recordType)
+      CsvRecordType recordType,
+      boolean parseNull,
+      String nullConstant)
     throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.recordType = recordType;
+    this.nullConstant = parseNull ? nullConstant : null;
     switch (header) {
       case WITH_HEADER:
         format = format.withHeader((String[])null).withSkipHeaderRecord(true);
@@ -107,7 +111,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         if (header != null) {
           cell.put("header", header);
         }
-        Field value = Field.create(columns[i]);
+        Field value = getField(columns[i]);
         cell.put("value", value);
         row.add(Field.create(cell));
       }
@@ -122,12 +126,20 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         } else {
           key = i + "";
         }
-        listMap.put(key, Field.create(columns[i]));
+        listMap.put(key, getField(columns[i]));
       }
       record.set(Field.createListMap(listMap));
     }
 
     return record;
+  }
+
+  private Field getField(String value) {
+    if(nullConstant != null && nullConstant.equals(value)) {
+      return Field.create(Field.Type.STRING, null);
+    }
+
+    return Field.create(Field.Type.STRING, value);
   }
 
   @Override
