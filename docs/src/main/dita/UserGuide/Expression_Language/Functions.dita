@@ -66,17 +66,6 @@
        </entry>
       </row>
       <row>
-       <entry><xref href="DataDriftFunctions.dita">Data drift functions</xref></entry>
-       <entry>
-        <ul id="ul_wsq_kfk_p5">
-         <li>drift:names('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:order('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:size('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:type('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-        </ul>
-       </entry>
-      </row>
-      <row>
        <entry><xref href="ErrorFunctions.dita#concept_ndj_43v_1r">Error record
         functions</xref></entry>
        <entry>
@@ -98,6 +87,17 @@
          <li>base64:decodeString("&lt;string>", "&lt;charset>")</li>
          <li>base64:encodeBytes(&lt;byte array>, &lt;urlSafe: true | false>)</li>
          <li>base64:encodeString("&lt;string>", &lt;urlSafe: true | false>, "&lt;charset>")</li>
+        </ul>
+       </entry>
+      </row>
+      <row>
+       <entry><xref href="DataDriftFunctions.dita">Data drift functions</xref></entry>
+       <entry>
+        <ul id="ul_wsq_kfk_p5">
+         <li>drift:names('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:order('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:size('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:type('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
         </ul>
        </entry>
       </row>
@@ -138,6 +138,16 @@
        </entry>
       </row>
       <row>
+       <entry><xref href="TimeFunctions.dita#concept_qkr_trf_sw">Time functions</xref></entry>
+       <entry>
+        <ul id="ul_vrl_4rf_sw">
+         <li>time.now()</li>
+         <li>time.trimDate(&lt;datetime expression>)</li>
+         <li>time.trimTime(&lt;datetime expression>)</li>
+        </ul>
+       </entry>
+      </row>
+      <row>
        <entry><xref href="MiscFunctions.dita#concept_ddw_ld1_1s">Miscellaneous
         functions</xref></entry>
        <entry>
@@ -152,7 +162,6 @@
          <li>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</li>
          <li>sdc:hostname()</li>
          <li>sdc:id()</li>
-         <li>time:now()</li>
          <li>vault:read("&lt;path>", "&lt;key>")</li>
          <li>vault:readWithDelay("&lt;path>", "&lt;key>", &lt;delay>)</li>
         </ul>

@@ -121,15 +121,6 @@
           MapReduce.</p></dd>
       </dlentry>
       <dlentry>
-        <dt>time:now()</dt>
-        <dd>Returns the current time of the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          machine as a java.util.Date object. Use in the Expression Evaluator only. </dd>
-        <dd>For example, you might use the function in the Expression Evaluator to create a field
-          with the time of processing.</dd>
-        <dd>Return type: Date.</dd>
-      </dlentry>
-      <dlentry>
         <dt>vault:read("&lt;path>", "&lt;key>")</dt>
         <dd>Returns the value for the key on the specified path. You can use the function in <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultOneFunction-Usage"
