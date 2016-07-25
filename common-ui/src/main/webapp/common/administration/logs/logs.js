@@ -41,7 +41,7 @@ angular
     );
   }])
   .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics,
-                                          pipelineService) {
+                                          pipelineService, $timeout) {
 
     var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log',
         logWebSocket,
@@ -178,4 +178,8 @@ angular
       logWebSocket.close();
     });
 
+    $timeout(function() {
+      var $panelBody = $('.logs-page > .panel-body');
+      $panelBody.scrollTop($panelBody[0].scrollHeight);
+    }, 1000);
   });
