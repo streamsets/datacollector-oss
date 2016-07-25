@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 import com.codahale.metrics.Counter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -464,6 +465,11 @@ public class FileTailSource extends BaseSource {
         map.put("event", Field.create((event.getAction().name())));
         metadataRecord.set(Field.create(map));
         batchMaker.addRecord(metadataRecord, metadataLane);
+
+        // We're also sending the same information on event lane
+        EventRecord eventRecord = getContext().createEventRecord(event.getAction().name(), 1);
+        eventRecord.set(Field.create(map));
+        getContext().toEvent(eventRecord);
       } catch (IOException ex) {
         LOG.warn("Error while creating metadata records: {}", ex.toString(), ex);
         metadataGenerationFailure = true;
