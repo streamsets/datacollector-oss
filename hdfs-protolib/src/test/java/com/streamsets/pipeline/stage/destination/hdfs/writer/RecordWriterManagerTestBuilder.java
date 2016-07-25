@@ -25,12 +25,14 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.DefaultCodec;
 import org.junit.Assert;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -150,9 +152,9 @@ public final class RecordWriterManagerTestBuilder {
     return this;
   }
 
-  public RecordWriterManager build() {
+  public RecordWriterManager build() throws IOException {
     RecordWriterManager mgr = new RecordWriterManager(
-      hdfsUri,
+      FileSystem.get(hdfsUri, hdfsConf),
       hdfsConf,
       uniquePrefix,
       dirPathTemplateInHeader,

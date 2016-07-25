@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,7 +61,7 @@ import java.util.concurrent.TimeUnit;
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
 
-  private URI hdfsUri;
+  private FileSystem fs;
   private Configuration hdfsConf;
   private String uniquePrefix;
   private boolean dirPathTemplateInHeader;
@@ -84,12 +83,12 @@ public class RecordWriterManager {
   private final boolean rollIfHeader;
   private final String rollHeaderName;
 
-  public RecordWriterManager(URI hdfsUri, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
+  public RecordWriterManager(FileSystem fs, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
       String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
       HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
       boolean rollIfHeader, String rollHeaderName, DataGeneratorFactory generatorFactory, Target.Context context,
       String config) {
-    this.hdfsUri = hdfsUri;
+    this.fs = fs;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
     this.dirPathTemplateInHeader = dirPathTemplateInHeader;
@@ -251,7 +250,6 @@ public class RecordWriterManager {
     long writerTimeToLive = getTimeToLiveMillis(now, recordDate);
     Path tempPath = getPath(recordDate, record);
     if (writerTimeToLive >= 0) {
-      FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       if (fs.exists(tempPath)) {
         Path path = renameToFinalName(fs, tempPath);
         LOG.warn("Path[{}] - Found previous file '{}', committing it", tempPath, path);
@@ -286,7 +284,6 @@ public class RecordWriterManager {
         Thread.currentThread().interrupt();
       }
       LOG.debug("Path[{}] - Committing Writer", writer.getPath());
-      FileSystem fs = FileSystem.get(hdfsUri, hdfsConf);
       path = renameToFinalName(fs, writer.getPath());
       LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
     }

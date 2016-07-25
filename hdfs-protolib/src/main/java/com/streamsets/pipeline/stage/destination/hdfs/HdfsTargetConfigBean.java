@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
@@ -389,6 +390,7 @@ public class HdfsTargetConfigBean {
 
   private Configuration hdfsConfiguration;
   private UserGroupInformation loginUgi;
+  private FileSystem fs;
   private long lateRecordsLimitSecs;
   private long idleTimeSecs = -1;
   private ActiveRecordWriters currentWriters;
@@ -484,7 +486,7 @@ public class HdfsTargetConfigBean {
     if(hadoopFSValidated){
       try {
         // Creating RecordWriterManager for dirPathTemplate
-        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+        RecordWriterManager mgr = new RecordWriterManager(fs, hdfsConfiguration, uniquePrefix,
                 dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
                 maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
                 rollIfHeader, rollHeaderName,
@@ -525,7 +527,7 @@ public class HdfsTargetConfigBean {
       if(lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         try {
           RecordWriterManager mgr = new RecordWriterManager(
-                  new URI(hdfsUri),
+                  fs,
                   hdfsConfiguration,
                   uniquePrefix,
                   false, // Late records doesn't support "template directory" to be in header
@@ -609,7 +611,6 @@ public class HdfsTargetConfigBean {
         getUGI().doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
-            FileSystem fs = getFileSystemForInitDestroy();
             getCurrentWriters().commitOldFiles(fs);
             if (getLateWriters() != null) {
               getLateWriters().commitOldFiles(fs);
@@ -640,8 +641,8 @@ public class HdfsTargetConfigBean {
           if (lateWriters != null) {
             lateWriters.closeAll();
           }
-          if (loginUgi != null) {
-            getFileSystemForInitDestroy().close();
+          if(fs != null) {
+            fs.close();
           }
           return null;
         }
@@ -894,14 +895,7 @@ public class HdfsTargetConfigBean {
           UserGroupInformation.AuthenticationMethod.SIMPLE.name());
       }
       if (validHapoopFsUri) {
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
-            }
-            return null;
-          }
-        });
+        fs = createFileSystem();
       }
     } catch (Exception ex) {
       LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
@@ -925,7 +919,6 @@ public class HdfsTargetConfigBean {
       dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
       try {
         final Path dir = new Path(dirPathTemplate);
-        final FileSystem fs = getFileSystemForInitDestroy();
         getUGI().doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
@@ -980,12 +973,12 @@ public class HdfsTargetConfigBean {
     return ok.get();
   }
 
-  private FileSystem getFileSystemForInitDestroy() throws Exception {
+  private FileSystem createFileSystem() throws Exception {
     try {
       return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
-          return FileSystem.get(new URI(hdfsUri), hdfsConfiguration);
+          return FileSystem.newInstance(new URI(hdfsUri), hdfsConfiguration);
         }
       });
     } catch (IOException ex) {
