@@ -18,4 +18,9 @@
  <topicref href="../Reusable_Content/ReusablePhrases.dita"/>
  <topicref href="../Reusable_Content/ReusableSteps.dita"/>
  <topicref href="../Reusable_Content/ReusableTables.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/KafkaWrites-AdditionalKProperties.dita"/>
 </map>
