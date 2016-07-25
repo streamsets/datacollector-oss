@@ -255,24 +255,6 @@ public class TestFileTailSource {
       Assert.assertEquals("START", metadata.get("/event").getValueAsString());
       Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
       Assert.assertTrue(metadata.has("/inode"));
-
-      List<Record> eventRecords = runner.getEventRecords();
-      Assert.assertNotNull(eventRecords);
-      Assert.assertEquals(2, eventRecords.size());
-
-      metadata = eventRecords.get(0);
-      Assert.assertEquals(new File(fileInfo1.fileFullPath).getAbsolutePath(),
-          metadata.get("/fileName").getValueAsString());
-      Assert.assertEquals("START", metadata.get("/event").getValueAsString());
-      Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
-      Assert.assertTrue(metadata.has("/inode"));
-
-      metadata = eventRecords.get(1);
-      Assert.assertEquals(new File(fileInfo2.fileFullPath).getAbsolutePath(),
-          metadata.get("/fileName").getValueAsString());
-      Assert.assertEquals("START", metadata.get("/event").getValueAsString());
-      Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
-      Assert.assertTrue(metadata.has("/inode"));
     } finally {
       runner.runDestroy();
     }

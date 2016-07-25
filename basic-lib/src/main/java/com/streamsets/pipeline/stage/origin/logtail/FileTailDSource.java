@@ -39,7 +39,6 @@ import com.streamsets.pipeline.configurablestage.DSource;
     recordsByRef = true,
     upgrader = FileTailSourceUpgrader.class,
     resetOffset = true,
-    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/FileTail.html#task_unq_wdw_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
