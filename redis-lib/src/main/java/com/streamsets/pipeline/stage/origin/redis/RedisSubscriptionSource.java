@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import redis.clients.jedis.JedisPubSub;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,27 +55,6 @@ public class RedisSubscriptionSource extends BaseRedisSource {
 
     if (createRedisClient(issues)) {
       checkSubscribe(issues);
-
-      if (null != subscriptionChannels && !subscriptionChannels.isEmpty()) {
-        if (redisListener.isSubscribed()) {
-          redisListener.unsubscribe();
-        }
-        if (null != subscribeThread) {
-          subscribeThread.interrupt();
-        }
-      }
-      if (null != subscriptionPatterns && !subscriptionPatterns.isEmpty()) {
-        if (redisListener.isSubscribed()) {
-          redisListener.punsubscribe();
-        }
-        if (null != psubscribeThread) {
-          psubscribeThread.interrupt();
-        }
-      }
-
-      redisListener = null;
-      redisClient.disconnect();
-      redisClient.close();
     }
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
@@ -86,7 +64,6 @@ public class RedisSubscriptionSource extends BaseRedisSource {
   @Override
   public void destroy() {
     redisListener = null;
-
     super.destroy();
   }
 
@@ -95,8 +72,6 @@ public class RedisSubscriptionSource extends BaseRedisSource {
    */
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    createRedisClient();
-
     // Offsets can vary depending on the data source. Here we use an integer as an example only.
     long nextSourceOffset = 0;
     if (lastSourceOffset != null) {
@@ -126,13 +101,6 @@ public class RedisSubscriptionSource extends BaseRedisSource {
       }
     }
     return lastSourceOffset;
-  }
-
-  private void createRedisClient() {
-    List<ConfigIssue> issues = new ArrayList<>();
-    if (createRedisClient(issues)) {
-      checkSubscribe(issues);
-    }
   }
 
   private boolean checkSubscribe(final List<ConfigIssue> issues) {
