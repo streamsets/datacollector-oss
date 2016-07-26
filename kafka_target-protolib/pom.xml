@@ -38,7 +38,6 @@
     <jetty.version>9.2.14.v20151106</jetty.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-pool2.version>2.4.2</commons-pool2.version>
-    <bouncycastle.version>1.46</bouncycastle.version>
     <h2.version>1.4.187</h2.version>
   </properties>
 
@@ -178,7 +177,7 @@
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk16</artifactId>
+      <artifactId>bcprov-jdk15on</artifactId>
       <version>${bouncycastle.version}</version>
       <scope>compile</scope>
     </dependency>

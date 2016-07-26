@@ -36,7 +36,6 @@
     <scala.version>2.10.6</scala.version>
     <spark.version>1.6.0-cdh5.7.1</spark.version>
     <zookeeper.version>3.4.5-cdh5.7.1</zookeeper.version>
-    <bouncycastle.version>1.46</bouncycastle.version>
     <h2.version>1.4.187</h2.version>
   </properties>
 
@@ -206,7 +205,7 @@
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk16</artifactId>
+      <artifactId>bcprov-jdk15on</artifactId>
       <version>${bouncycastle.version}</version>
       <scope>test</scope>
     </dependency>

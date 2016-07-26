@@ -30,7 +30,7 @@
   <name>StreamSets Data Collector JMS Lib</name>
 
   <properties>
-    <activemq.version>5.7.0</activemq.version>
+    <activemq.version>5.13.4</activemq.version>
   </properties>
 
   <dependencies>
@@ -62,13 +62,25 @@
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-core</artifactId>
+      <artifactId>activemq-client</artifactId>
       <version>${activemq.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+      <version>${activemq.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-kahadb-store</artifactId>
+      <version>${activemq.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

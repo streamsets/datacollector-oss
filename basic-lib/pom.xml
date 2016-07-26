@@ -41,7 +41,6 @@
     <jersey.version>2.22.2</jersey.version>
     <joda.version>2.8</joda.version>
     <xerces.version>2.11.0</xerces.version>
-    <bouncycastle.version>1.46</bouncycastle.version>
     <jetty.version>9.2.17.v20160517</jetty.version>
     <snappy.version>0.4</snappy.version>
   </properties>
@@ -288,7 +287,7 @@
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk16</artifactId>
+      <artifactId>bcprov-jdk15on</artifactId>
       <version>${bouncycastle.version}</version>
       <scope>test</scope>
     </dependency>

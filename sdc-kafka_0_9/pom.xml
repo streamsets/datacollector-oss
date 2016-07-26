@@ -37,7 +37,6 @@
     <scala.version>2.11.7</scala.version>
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
-    <bcpkix-jdk15on.version>1.54</bcpkix-jdk15on.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <guava.version>18.0</guava.version>
     <commons.version>3.4</commons.version>
@@ -145,7 +144,7 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
-      <version>${bcpkix-jdk15on.version}</version>
+      <version>${bouncycastle.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
