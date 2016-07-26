@@ -74,7 +74,8 @@ public class RedisSubscriptionSource extends BaseRedisSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Offsets can vary depending on the data source. Here we use an integer as an example only.
     long nextSourceOffset = 0;
-    if (lastSourceOffset != null) {
+    lastSourceOffset = lastSourceOffset == null ? "" : lastSourceOffset;
+    if (!lastSourceOffset.equals("")) {
       nextSourceOffset = Long.parseLong(lastSourceOffset);
     }
 
