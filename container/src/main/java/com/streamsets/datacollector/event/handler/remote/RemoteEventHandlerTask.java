@@ -38,6 +38,7 @@ import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
+import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
@@ -213,6 +214,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         clientEventList.add(sdcInfoEvent);
       }
       try {
+        List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
         for (PipelineAndValidationStatus pipelineAndValidationStatus : remoteDataCollector.getPipelines()) {
           PipelineStatusEvent pipelineStatusEvent =
             new PipelineStatusEvent(pipelineAndValidationStatus.getName(), pipelineAndValidationStatus.getRev(),
@@ -221,9 +223,12 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelineAndValidationStatus.getValidationStatus(),
               jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
               pipelineAndValidationStatus.isClusterMode());
-          clientEventList.add(new ClientEvent(UUID.randomUUID().toString(), jobEventDestinationList, false, false,
-            EventType.STATUS_PIPELINE, pipelineStatusEvent, null));
+          pipelineStatusEventList.add(pipelineStatusEvent);
         }
+        PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
+        pipelineStatusEvents.setPipelineStatusEventList(pipelineStatusEventList);
+        clientEventList.add(new ClientEvent(UUID.randomUUID().toString(), jobEventDestinationList, false, false,
+            EventType.STATUS_MULTIPLE_PIPELINES, pipelineStatusEvents, null));
       } catch (Exception ex) {
         LOG.warn(Utils.format("Error while creating/serializing pipeline status event: '{}'", ex), ex);
       }

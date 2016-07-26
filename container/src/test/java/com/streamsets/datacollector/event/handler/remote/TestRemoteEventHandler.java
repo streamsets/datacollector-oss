@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,14 +58,12 @@ import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.StageInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
-import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.EventHandlerCallable;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
-import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
@@ -436,21 +436,20 @@ public class TestRemoteEventHandler {
       new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, null, null, -1,
           Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
-    assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
-    ClientEventJson clientEventJson = mockBaseEventSenderReceiver.clientJson.get(0);
-    PipelineStatusEventJson pipelineStatusEventJson =
-      jsonToFromDto.deserialize(clientEventJson.getPayload(), new TypeReference<PipelineStatusEventJson>() {
-      });
-    assertEquals("name1", pipelineStatusEventJson.getName());
-    assertEquals("rev1", pipelineStatusEventJson.getRev());
-    assertEquals(PipelineStatusJson.RUNNING, pipelineStatusEventJson.getPipelineStatus());
+    assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
 
-    PipelineStatusEventJson pipelineStatusEventJson1 =
-      jsonToFromDto.deserialize(mockBaseEventSenderReceiver.clientJson.get(1).getPayload(), new TypeReference<PipelineStatusEventJson>() {
+    ClientEventJson clientEventJson = mockBaseEventSenderReceiver.clientJson.get(0);
+    PipelineStatusEventsJson pipelineStatusEventsJson =
+      jsonToFromDto.deserialize(clientEventJson.getPayload(), new TypeReference<PipelineStatusEventsJson>() {
       });
-    assertEquals("name2", pipelineStatusEventJson1.getName());
-    assertEquals("rev2", pipelineStatusEventJson1.getRev());
-    assertEquals(PipelineStatusJson.CONNECTING, pipelineStatusEventJson1.getPipelineStatus());
+    List<PipelineStatusEventJson> pipelineStateInfoList = pipelineStatusEventsJson.getPipelineStatusEventList();
+    assertEquals("name1", pipelineStateInfoList.get(0).getName());
+    assertEquals("rev1", pipelineStateInfoList.get(0).getRev());
+    assertEquals(PipelineStatusJson.RUNNING, pipelineStateInfoList.get(0).getPipelineStatus());
+
+    assertEquals("name2", pipelineStateInfoList.get(1).getName());
+    assertEquals("rev2", pipelineStateInfoList.get(1).getRev());
+    assertEquals(PipelineStatusJson.CONNECTING, pipelineStateInfoList.get(1).getPipelineStatus());
   }
 
   @Test
@@ -460,7 +459,7 @@ public class TestRemoteEventHandler {
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     MockBaseEventSenderReceiver mockBaseEventSenderReceiver = new MockBaseEventSenderReceiver();
     StageInfo stageInfo = new StageInfo("stage1", 1, "stageLib");
-    List<StageInfo> stageInfoList = new ArrayList<StageInfo>();
+    List<StageInfo> stageInfoList = new ArrayList<>();
     stageInfoList.add(stageInfo);
     SDCBuildInfo sdcBuildInfo = new SDCBuildInfo("1.0", "date1", "foo", "sha1", "checksum1");
     SDCInfoEvent sdcInfoEvent =
@@ -471,8 +470,9 @@ public class TestRemoteEventHandler {
       new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, clientEvent, null,
         -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
     remoteEventHandler.callRemoteControl();
-    assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
+    assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
     assertEquals(EventType.SDC_INFO_EVENT.getValue(), mockBaseEventSenderReceiver.clientJson.get(0).getEventTypeId());
+    assertEquals(EventType.STATUS_MULTIPLE_PIPELINES.getValue(), mockBaseEventSenderReceiver.clientJson.get(1).getEventTypeId());
     assertEquals(Arrays.asList("JOB_RUNNER"), mockBaseEventSenderReceiver.clientJson.get(0).getDestinations());
     assertEquals(id1.toString(), mockBaseEventSenderReceiver.clientJson.get(0).getEventId());
     String payload = mockBaseEventSenderReceiver.clientJson.get(0).getPayload();
@@ -487,5 +487,12 @@ public class TestRemoteEventHandler {
     assertEquals(1, stageInfoListJson.get(0).getStageVersion());
     assertEquals("stageLib", stageInfoListJson.get(0).getLibraryName());
     assertEquals(Arrays.asList("label_1", "label_2"), sdcInfoJson.getLabels());
+    payload = mockBaseEventSenderReceiver.clientJson.get(1).getPayload();
+    PipelineStatusEventsJson statusEventJson = jsonToFromDto.deserialize(
+        payload,
+        new TypeReference<PipelineStatusEventsJson>() {
+        }
+    );
+    assertTrue(statusEventJson.getPipelineStatusEventList().isEmpty());
   }
 }

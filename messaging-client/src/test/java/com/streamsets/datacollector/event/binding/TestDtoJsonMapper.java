@@ -25,17 +25,19 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
+import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
+import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.WorkerInfoJson;
 import org.junit.Test;
 
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
-import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
-import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.execution.PipelineStatus;
 
 
@@ -84,16 +86,19 @@ public class TestDtoJsonMapper {
     PipelineStatusEvent pipelineStatusEvent =
       new PipelineStatusEvent("name", "rev", true, PipelineStatus.RUNNING, "message", Arrays.asList(workerInfo), null,
           null, true);
-    PipelineStatusEventJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson(pipelineStatusEvent);
-    assertEquals("name", pseJson.getName());
-    assertEquals("rev", pseJson.getRev());
-    assertTrue(pseJson.isClusterMode());
-    WorkerInfoJson workerInfoJson = pseJson.getWorkerInfos().iterator().next();
+    PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
+    pipelineStatusEvents.setPipelineStatusEventList(Arrays.asList(pipelineStatusEvent));
+    PipelineStatusEventsJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson(pipelineStatusEvents);
+    PipelineStatusEventJson pipelineStateInfoJson = pseJson.getPipelineStatusEventList().get(0);
+    assertEquals("name", pipelineStateInfoJson.getName());
+    assertEquals("rev", pipelineStateInfoJson.getRev());
+    assertTrue(pipelineStateInfoJson.isClusterMode());
+    WorkerInfoJson workerInfoJson = pipelineStateInfoJson.getWorkerInfos().iterator().next();
     assertEquals("workerURL", workerInfoJson.getWorkerURL());
     assertEquals("slaveId", workerInfoJson.getWorkerId());
 
-    pseJson.setWorkerInfos(Arrays.asList(workerInfoJson));
-    pipelineStatusEvent = MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pseJson);
+    pipelineStatusEvents = MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventsDto(pseJson);
+    pipelineStatusEvent = pipelineStatusEvents.getPipelineStatusEventList().get(0);
     assertEquals("name", pipelineStatusEvent.getName());
     assertEquals("rev", pipelineStatusEvent.getRev());
     workerInfo = pipelineStatusEvent.getWorkerInfos().iterator().next();

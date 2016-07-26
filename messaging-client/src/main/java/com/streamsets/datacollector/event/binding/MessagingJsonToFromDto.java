@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.Event;
@@ -40,6 +39,7 @@ import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
+import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
@@ -50,6 +50,7 @@ import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 
@@ -93,8 +94,8 @@ public class MessagingJsonToFromDto {
       case SAVE_RULES_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
         break;
-      case STATUS_PIPELINE:
-        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
+      case STATUS_MULTIPLE_PIPELINES:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson((PipelineStatusEvents) event);
         break;
       case ACK_EVENT:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toAckEventJson((AckEvent) event);
@@ -174,6 +175,13 @@ public class MessagingJsonToFromDto {
         };
         PipelineStatusEventJson pipelineStatusEventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventDto(pipelineStatusEventJson));
+        break;
+      }
+      case STATUS_MULTIPLE_PIPELINES:{
+        TypeReference<PipelineStatusEventsJson> typeRef = new TypeReference<PipelineStatusEventsJson>() {
+        };
+        PipelineStatusEventsJson pipelineStatusEventsJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventsDto(pipelineStatusEventsJson));
         break;
       }
       case DELETE_HISTORY_PIPELINE:
