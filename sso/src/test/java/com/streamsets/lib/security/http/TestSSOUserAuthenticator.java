@@ -177,7 +177,7 @@ public class TestSSOUserAuthenticator {
   }
 
   @Test
-  public void testReturnForbidden() throws Exception {
+  public void testreturnUnauthorized() throws Exception {
     SSOService ssoService = Mockito.mock(SSOService.class);
     ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
@@ -189,12 +189,12 @@ public class TestSSOUserAuthenticator {
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     Mockito.when(res.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnForbidden(req, res, "principal", "template"));
+    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnUnauthorized(req, res, "principal", "template"));
     Mockito.verify(authenticator).redirectToLogin(Mockito.eq(req), Mockito.eq(res));
   }
 
   @Test
-  public void testReturnForbiddenREST() throws Exception {
+  public void testreturnUnauthorizedREST() throws Exception {
     SSOService ssoService = Mockito.mock(SSOService.class);
     SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
     Mockito
@@ -206,7 +206,7 @@ public class TestSSOUserAuthenticator {
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("foo");
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     Mockito.when(res.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnForbidden(req, res, "principal", "template"));
+    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnUnauthorized(req, res, "principal", "template"));
     Mockito.verify(res).setContentType(Mockito.eq("application/json"));
   }
 
@@ -354,13 +354,13 @@ public class TestSSOUserAuthenticator {
     SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(Authentication.SEND_FAILURE).when(authenticator).returnForbidden(Mockito.eq(req), Mockito.eq
+    Mockito.doReturn(Authentication.SEND_FAILURE).when(authenticator).returnUnauthorized(Mockito.eq(req), Mockito.eq
         (res), Mockito.anyString(), Mockito.anyString());
 
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
     Mockito.verifyNoMoreInteractions(ssoService);
   }
 
@@ -372,13 +372,13 @@ public class TestSSOUserAuthenticator {
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     Mockito.doReturn("token").when(authenticator).getAuthTokenFromRequest(Mockito.eq(req));
 
-    Mockito.doReturn(Authentication.SEND_FAILURE).when(authenticator).returnForbidden(Mockito.eq(req), Mockito.eq
+    Mockito.doReturn(Authentication.SEND_FAILURE).when(authenticator).returnUnauthorized(Mockito.eq(req), Mockito.eq
         (res), Mockito.anyString(), Mockito.anyString());
 
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
     Mockito.verify(ssoService).validateUserToken(Mockito.eq("token"));
     Mockito.verifyNoMoreInteractions(ssoService);
   }

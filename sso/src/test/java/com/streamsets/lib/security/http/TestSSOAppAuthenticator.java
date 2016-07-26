@@ -64,11 +64,11 @@ public class TestSSOAppAuthenticator {
     Mockito
         .doReturn(Authentication.SEND_FAILURE)
         .when(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
   }
 
   @Test
@@ -82,11 +82,11 @@ public class TestSSOAppAuthenticator {
     Mockito
         .doReturn(Authentication.SEND_FAILURE)
         .when(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.eq("componentId"), Mockito.anyString());
   }
 
   @Test
@@ -100,11 +100,11 @@ public class TestSSOAppAuthenticator {
     Mockito
         .doReturn(Authentication.SEND_FAILURE)
         .when(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
   }
 
   @Test
@@ -120,11 +120,11 @@ public class TestSSOAppAuthenticator {
     Mockito
         .doReturn(Authentication.SEND_FAILURE)
         .when(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.validateRequest(req, res, true));
     Mockito
         .verify(authenticator)
-        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
+        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString(), Mockito.anyString());
     Mockito.verify(ssoService, Mockito.times(1)).validateAppToken(Mockito.eq("token"), Mockito.eq("componentId"));
   }
 
@@ -179,7 +179,7 @@ public class TestSSOAppAuthenticator {
 //  }
 //
 //  @Test
-//  public void testReturnForbidden() throws Exception {
+//  public void testreturnUnauthorized() throws Exception {
 //    SSOService ssoService = Mockito.mock(SSOService.class);
 //    SSOAppAuthenticator authenticator = Mockito.spy(new SSOAppAuthenticator("a", ssoService));
 //
@@ -192,13 +192,13 @@ public class TestSSOAppAuthenticator {
 //    HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
 //    Mockito.when(res.getWriter()).thenReturn(writer);
 //
-//    Authentication auth = authenticator.returnForbidden(req, res, "msg");
+//    Authentication auth = authenticator.returnUnauthorized(req, res, "msg");
 //    Assert.assertEquals(Authentication.SEND_FAILURE, auth);
 //    Mockito.verify(res).sendError(Mockito.eq(HttpServletResponse.SC_FORBIDDEN));
 //    Mockito.verify(res).setContentType(Mockito.eq("application/json"));
 //    Mockito.verify(res).sendError(Mockito.eq(HttpServletResponse.SC_FORBIDDEN));
 //    writer.close();
-//    Assert.assertEquals(SSOAppAuthenticator.FORBIDDEN_JSON_STR, stringwriter.toString().trim());
+//    Assert.assertEquals(SSOAppAuthenticator.UNAUTHORIZED_JSON_STR, stringwriter.toString().trim());
 //  }
 //
 //  @Test
@@ -259,7 +259,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //    Mockito
 //        .doReturn(null)
 //        .when(ssoService)
@@ -306,7 +306,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Authentication got = authenticator.validateToken(authToken, componentId, req, res);
 //
@@ -329,7 +329,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Authentication got = authenticator.validateToken(authToken, componentId + "1", req, res);
 //
@@ -367,7 +367,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Authentication got = authenticator.validateRequest(req, res, true);
 //    Mockito.verify(authenticator, Mockito.never()).getAppAuthToken(Mockito.eq(req));
@@ -384,7 +384,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("-");
 //    Authentication got = authenticator.validateRequest(req, res, true);
@@ -403,7 +403,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("-");
 //    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN))).thenReturn("authToken");
@@ -423,7 +423,7 @@ public class TestSSOAppAuthenticator {
 //    Mockito
 //        .doReturn(forbidden)
 //        .when(authenticator)
-//        .returnForbidden(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
+//        .returnUnauthorized(Mockito.eq(req), Mockito.eq(res), Mockito.anyString());
 //
 //    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("-");
 //    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN))).thenReturn("authToken");

@@ -58,7 +58,9 @@ angular.module('dataCollectorApp')
         },
         responseError: function(rejection) {
           console.log(rejection);
-          if ((rejection.status === 0 || rejection.status === -1 ||
+          if (rejection.status === 401) {
+            window.location.reload();
+          } else if ((rejection.status === 0 || rejection.status === -1 ||
             (rejection.data && (typeof rejection.data.indexOf == 'function') &&
             rejection.data.indexOf('login.html') !== -1))
           )  {

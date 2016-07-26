@@ -85,7 +85,7 @@ angular
           window.location.reload();
         })
         .error(function(res, status) {
-          if (status === 403) {
+          if (status === 403 || status === 401) {
             window.location.reload();
           } else {
             $scope.isRetryingInProgress = false;

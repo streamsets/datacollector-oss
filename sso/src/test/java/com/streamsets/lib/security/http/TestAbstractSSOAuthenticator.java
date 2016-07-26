@@ -108,11 +108,11 @@ public class TestAbstractSSOAuthenticator {
     PrintWriter printWriter = new PrintWriter(writer);
     Mockito.when(res.getWriter()).thenReturn(printWriter);
 
-    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnForbidden(req, res, "principal", "template"));
+    Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnUnauthorized(req, res, "principal", "template"));
 
     ArgumentCaptor<Integer> error = ArgumentCaptor.forClass(Integer.class);
     Mockito.verify(res).sendError(error.capture());
-    Assert.assertEquals(SSOUserAuthenticator.FORBIDDEN_JSON_STR, writer.toString().trim());
+    Assert.assertEquals(SSOUserAuthenticator.UNAUTHORIZED_JSON_STR, writer.toString().trim());
     Mockito.verify(res).setContentType(Mockito.eq("application/json"));
   }
 

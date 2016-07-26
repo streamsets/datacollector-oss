@@ -145,15 +145,15 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   }
 
   /*
-   * Terminates the request with an HTTP forbbidden response or redirects to login for page requests
+   * Terminates the request with an HTTP Unauthorized response or redirects to login for page requests
    */
   @Override
-  protected Authentication returnForbidden(
+  protected Authentication returnUnauthorized(
       HttpServletRequest httpReq, HttpServletResponse httpRes, String principalId, String logMessageTemplate
   ) throws ServerAuthException {
     Authentication ret;
     if (httpReq.getHeader(SSOConstants.X_REST_CALL) != null) {
-      ret = super.returnForbidden(httpReq, httpRes, null, logMessageTemplate);
+      ret = super.returnUnauthorized(httpReq, httpRes, null, logMessageTemplate);
     } else {
       redirectToLogin(httpReq, httpRes);
       ret = Authentication.SEND_FAILURE;
@@ -288,7 +288,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
           }
         }
       } else {
-        ret = returnForbidden(httpReq, httpRes, getAuthTokenForLogging(authToken), "Could not authenticate: {}");
+        ret = returnUnauthorized(httpReq, httpRes, getAuthTokenForLogging(authToken), "Could not authenticate: {}");
       }
     }
     return ret;

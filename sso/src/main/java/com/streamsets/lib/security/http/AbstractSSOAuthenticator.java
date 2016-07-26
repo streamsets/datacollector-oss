@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
@@ -36,13 +37,13 @@ import java.io.IOException;
 
 public abstract class AbstractSSOAuthenticator implements Authenticator {
 
-  protected static final String FORBIDDEN_JSON_STR;
+  protected static final String UNAUTHORIZED_JSON_STR;
 
   static {
     try {
-      FORBIDDEN_JSON_STR = new ObjectMapper().writeValueAsString(ImmutableMap.of(
+      UNAUTHORIZED_JSON_STR = new ObjectMapper().writeValueAsString(ImmutableMap.of(
           "ISSUES",
-          ImmutableList.of(ImmutableMap.of("code", "SSO_01`", "message", "Forbidden, user not authenticated"))
+          ImmutableList.of(ImmutableMap.of("code", "SSO_01`", "message", "User not authenticated"))
       ));
     } catch (Exception ex) {
       throw new RuntimeException("Shouldn't happen: " + ex.toString(), ex);
@@ -96,20 +97,21 @@ public abstract class AbstractSSOAuthenticator implements Authenticator {
   }
 
   /*
-   * Terminates the request with an HTTP forbidden response
+   * Terminates the request with an HTTP Unauthorized response
    */
-  protected Authentication returnForbidden(
+  protected Authentication returnUnauthorized(
       HttpServletRequest httpReq, HttpServletResponse httpRes, String principalId, String logMessageTemplate
   ) throws ServerAuthException {
     if (getLog().isDebugEnabled()) {
       getLog().debug(logMessageTemplate, getRequestInfoForLogging(httpReq, principalId));
     }
     try {
-      httpRes.sendError(HttpServletResponse.SC_FORBIDDEN);
+      httpRes.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "dpm");
+      httpRes.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       httpRes.setContentType("application/json");
-      httpRes.getWriter().println(FORBIDDEN_JSON_STR);
+      httpRes.getWriter().println(UNAUTHORIZED_JSON_STR);
     } catch (IOException ex) {
-      throw new ServerAuthException(Utils.format("Could send a FORBIDDEN (403) response: {}", ex.toString(), ex));
+      throw new ServerAuthException(Utils.format("Could send a Unauthorized (401) response: {}", ex.toString(), ex));
     }
     return Authentication.SEND_FAILURE;
   }
