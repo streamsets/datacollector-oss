@@ -63,6 +63,13 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_36("Column index {} is not valid."),
   JDBC_37("Unsupported type {} for column {}"),
   JDBC_38("Query must include '{}' clause."),
+  JDBC_39("Oracle SID must be specified for Oracle 12c"),
+  JDBC_40("Error while switching to container {} using given credentials"),
+  JDBC_41("Error while getting DB version"),
+  JDBC_42("Error while getting initial SCN"),
+  JDBC_43("Could not parse redo log statement: {}"),
+  JDBC_44("Error while getting changes from Oracle due to error: {}"),
+  JDBC_45("PDB is required for Oracle 12 and above.")
   ;
   private final String msg;
 
