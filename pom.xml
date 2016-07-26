@@ -145,6 +145,7 @@
     <module>rabbitmq-lib</module>
 
     <module>hdfs-protolib</module>
+    <module>mapreduce-protolib</module>
     <module>maprfs-protolib</module>
     <module>maprdb-protolib</module>
     <module>hive-protolib</module>

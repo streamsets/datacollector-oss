@@ -124,6 +124,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-mapreduce-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro-mapred</artifactId>
             <version>${avro.version}</version>
@@ -480,6 +487,7 @@
                         <configuration>
                             <sources>
                                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
+                                <source>${basedir}/../mapreduce-protolib/src/test/java</source>
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
@@ -497,6 +505,9 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../hdfs-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../hive-protolib/src/test/resources</directory>
