@@ -30,11 +30,13 @@ public abstract class Pipe<C extends Pipe.Context> {
   private final StageRuntime stage;
   private final List<String> inputLanes;
   private final List<String> outputLanes;
+  private final List<String> eventLanes;
 
-  public Pipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
+  public Pipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, List<String> eventLanes) {
     this.stage = stage;
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
+    this.eventLanes = eventLanes;
   }
 
   public StageRuntime getStage() {
@@ -47,6 +49,10 @@ public abstract class Pipe<C extends Pipe.Context> {
 
   public List<String> getOutputLanes() {
     return outputLanes;
+  }
+
+  public List<String> getEventLanes() {
+    return eventLanes;
   }
 
   public abstract List<Issue> init(C pipeContext) throws StageException;

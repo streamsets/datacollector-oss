@@ -35,7 +35,7 @@ public interface PipeBatch {
 
   BatchMakerImpl startStage(StagePipe pipe);
 
-  void completeStage(BatchMakerImpl batchMaker);
+  void completeStage(BatchMakerImpl batchMaker, EventSink eventSink);
 
   void commitOffset();
 

@@ -81,15 +81,15 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private Map<String, Object> batchMetrics;
 
   @VisibleForTesting
-  StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    this("myPipeline", "0", new Configuration(), stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
+  StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, List<String> eventLanes) {
+    this("myPipeline", "0", new Configuration(), stage, inputLanes, outputLanes, eventLanes, new ResourceControlledScheduledExecutor(0.02f),
       new MemoryUsageCollectorResourceBundle(), null);
   }
 
   public StagePipe(String name, String rev, Configuration configuration, StageRuntime stage, List<String> inputLanes,
-                   List<String> outputLanes, ResourceControlledScheduledExecutor scheduledExecutorService,
+                   List<String> outputLanes, List<String> eventLanes, ResourceControlledScheduledExecutor scheduledExecutorService,
                    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle, MetricRegistryJson metricRegistryJson) {
-    super(stage, inputLanes, outputLanes);
+    super(stage, inputLanes, outputLanes, eventLanes);
     this.name = name;
     this.rev = rev;
     this.configuration = configuration;
@@ -163,10 +163,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
       }
 
-      if (getStage().getConfiguration().getOutputLanes().size() > 0) {
+      if (getStage().getConfiguration().getOutputEventLanes().size() > 0) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
-        for (String lane : getStage().getConfiguration().getOutputLanes()) {
+        for (String lane : getStage().getConfiguration().getOutputEventLanes()) {
           Counter outputRecordsCounter =
             MetricsConfigurator.createCounter(metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
           if (metricRegistryJson != null) {
@@ -272,6 +272,13 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         outputRecordsPerLaneCounter.get(lane).inc(outputRecords);
         outputRecordsPerLaneMeter.get(lane).mark(outputRecords);
       }
+      if(getStage().getConfiguration().getEventLanes().size() > 0) {
+        String lane = getStage().getConfiguration().getEventLanes().get(0);
+        int outputRecords = eventSink.getEventRecords().size();
+        outputRecordsPerLane.put(lane, outputRecords);
+        outputRecordsPerLaneCounter.get(lane).inc(outputRecords);
+        outputRecordsPerLaneMeter.get(lane).mark(outputRecords);
+      }
     }
 
     // capture stage metrics for this batch
@@ -283,7 +290,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
     batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
 
-    pipeBatch.completeStage(batchMaker);
+    pipeBatch.completeStage(batchMaker, eventSink);
 
     //get records count to determine if this stage saw any record in this batch
     int recordsCount = batchSize;

@@ -27,7 +27,7 @@ import java.util.List;
 public class CombinerPipe extends Pipe<Pipe.Context> {
 
   public CombinerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    super(stage, inputLanes, outputLanes);
+    super(stage, inputLanes, outputLanes, Collections.<String>emptyList());
   }
 
   @Override

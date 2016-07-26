@@ -112,7 +112,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker) {
+  public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
       inputRecords += batchMaker.getSize();
@@ -132,6 +132,9 @@ public class FullPipeBatch implements PipeBatch {
     }
     if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
       outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
+    }
+    if(pipe.getEventLanes().size() == 1) {
+      fullPayload.put(pipe.getEventLanes().get(0), eventSink.getEventRecords());
     }
   }
 

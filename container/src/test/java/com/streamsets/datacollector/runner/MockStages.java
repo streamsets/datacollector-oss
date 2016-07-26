@@ -70,25 +70,40 @@ import java.util.UUID;
 
 public class MockStages {
 
-  @SuppressWarnings("unchecked")
   public static StageConfiguration createSource(String instanceName, List<String> outputs) {
-    return new StageConfigurationBuilder(instanceName, "sourceName")
-      .withOutputLanes(outputs)
-      .build();
+    return createSource(instanceName, outputs, Collections.<String>emptyList());
   }
 
   @SuppressWarnings("unchecked")
+  public static StageConfiguration createSource(String instanceName, List<String> outputs, List<String> events) {
+    return new StageConfigurationBuilder(instanceName, "sourceName")
+      .withOutputLanes(outputs)
+      .withEventLanes(events)
+      .build();
+  }
+
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
+    return createProcessor(instanceName, inputs, outputs, Collections.<String>emptyList());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "processorName")
       .withInputLanes(inputs)
       .withOutputLanes(outputs)
+      .withEventLanes(events)
       .build();
   }
 
-  @SuppressWarnings("unchecked")
   public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
+    return createTarget(instanceName, inputs, Collections.<String>emptyList());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createTarget(String instanceName, List<String> inputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "targetName")
       .withInputLanes(inputs)
+      .withEventLanes(events)
       .build();
   }
 
@@ -949,7 +964,7 @@ public class MockStages {
   }
 
   @SuppressWarnings("unchecked")
-  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsProcessed() {
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsProcessedUnsorted() {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetName")
@@ -961,6 +976,40 @@ public class MockStages {
       .withEventLanes("e")
       .build();
     stages.add(source);
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+      .withInputLanes("t")
+      .build();
+    stages.add(target);
+
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("a", "A");
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithEventsProcessed() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
+      .withOutputLanes("t")
+      .withEventLanes("e")
+      .build();
+    stages.add(source);
+    StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetName")
+      .withInputLanes("e")
+      .build();
+    stages.add(eventDest);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
       .withInputLanes("t")
       .build();
@@ -1209,6 +1258,34 @@ public class MockStages {
     stages.add(target);
     target = new StageConfigurationBuilder("t2", "targetName")
       .withInputLanes("a")
+      .build();
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
+                                     null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+  }
+
+  public static PipelineConfiguration createPipelineConfigurationSourceTwoTargetsTwoEvents() {
+    List<StageConfiguration> stages = new ArrayList<>();
+
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
+      .withOutputLanes("t")
+      .withEventLanes("e")
+      .build();
+    stages.add(source);
+    StageConfiguration target = new StageConfigurationBuilder("t1", "targetName")
+      .withInputLanes("t")
+      .build();
+    stages.add(target);
+    target = new StageConfigurationBuilder("t2", "targetName")
+      .withInputLanes("t")
+      .build();
+    stages.add(target);
+    target = new StageConfigurationBuilder("t3", "targetName")
+      .withInputLanes("e")
+      .build();
+    stages.add(target);
+    target = new StageConfigurationBuilder("t4", "targetName")
+      .withInputLanes("e")
       .build();
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),

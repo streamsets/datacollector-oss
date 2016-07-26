@@ -20,30 +20,33 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.runner.FullPipeBatch;
-import com.streamsets.datacollector.runner.MultiplexerPipe;
-import com.streamsets.datacollector.runner.PipeBatch;
-import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.PipelineRunner;
 
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
+
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+
+
 public class TestMultiplexerPipe {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testMultiplexerPipeOneLane() throws Exception {
+  public void testMultiplexerPipeOneLaneWithEvents() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
-                                             MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
+                                             MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed()).build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(Mockito.anyString(), Mockito.anyString());
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("t::o"), eq("t--t::m"));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("e::o"), eq("e--e::m"));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 
@@ -58,6 +61,21 @@ public class TestMultiplexerPipe {
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(Mockito.anyString(), Mockito.anyList());
+    Mockito.verifyNoMoreInteractions(pipeBatch);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testMultiplexerPipeTwoLaneWithTwoEventLanes() throws Exception {
+    PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(),new Configuration(), "name", "name", "0",
+                                             MockStages.createPipelineConfigurationSourceTwoTargetsTwoEvents()).build(pipelineRunner);
+    MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getPipes()[2];
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
+    pipe.process(pipeBatch);
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), (List<String>)argThat(contains("t--t1::m", "t--t2::m")));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), (List<String>)argThat(contains("e--t3::m", "e--t4::m")));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 

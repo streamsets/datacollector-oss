@@ -151,6 +151,7 @@ public class StageRuntime {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       setErrorSink(errorSink);
+      setEventSink(eventSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
 
       Callable<String> callable = new Callable<String>() {

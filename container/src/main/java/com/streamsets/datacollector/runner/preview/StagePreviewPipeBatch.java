@@ -22,6 +22,7 @@ package com.streamsets.datacollector.runner.preview;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.BatchMakerImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.StageOutput;
@@ -71,8 +72,9 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker) {
+  public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
+    // TODO: Implement even propagation in preview
   }
 
   @Override

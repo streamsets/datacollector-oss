@@ -83,6 +83,11 @@ public class StageConfigurationBuilder {
     return this;
   }
 
+  public StageConfigurationBuilder withEventLanes(List<String> lanes) {
+    this.eventLanes = lanes;
+    return this;
+  }
+
   public StageConfiguration build() {
     return new StageConfiguration(
       instanceName,

@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.datacollector.runner.StageRuntime;
@@ -34,11 +36,17 @@ import java.util.List;
 
 public class TestLaneResolver {
 
-  @SuppressWarnings("unchecked")
   public StageRuntime createMockSource(String instanceName, List<String> outputLanes) {
+    return createMockSource(instanceName, outputLanes, Collections.<String>emptyList());
+  }
+
+  @SuppressWarnings("unchecked")
+  public StageRuntime createMockSource(String instanceName, List<String> outputLanes, List<String> eventLanes) {
     StageConfiguration stageConf = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConf.getInputLanes()).thenReturn(Collections.EMPTY_LIST);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(outputLanes);
+    Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
+    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);
@@ -49,11 +57,17 @@ public class TestLaneResolver {
     return runtime;
   }
 
-  @SuppressWarnings("unchecked")
   public StageRuntime createMockTarget(String instanceName, List<String> inputLanes) {
+    return createMockTarget(instanceName, inputLanes, Collections.<String>emptyList());
+  }
+
+  @SuppressWarnings("unchecked")
+  public StageRuntime createMockTarget(String instanceName, List<String> inputLanes, List<String> eventLanes) {
     StageConfiguration stageConf = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConf.getInputLanes()).thenReturn(inputLanes);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
+    Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
+    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(eventLanes);
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);
@@ -64,11 +78,17 @@ public class TestLaneResolver {
     return runtime;
   }
 
-  @SuppressWarnings("unchecked")
   public StageRuntime createMockProcessor(String instanceName, List<String> inputLanes, List<String> outputLanes) {
+    return createMockProcessor(instanceName, inputLanes, outputLanes, Collections.<String>emptyList());
+  }
+
+  @SuppressWarnings("unchecked")
+  public StageRuntime createMockProcessor(String instanceName, List<String> inputLanes, List<String> outputLanes, List<String> eventLanes) {
     StageConfiguration stageConf = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConf.getInputLanes()).thenReturn(inputLanes);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(outputLanes);
+    Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
+    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);
@@ -725,6 +745,104 @@ public class TestLaneResolver {
     // getMatchingOutputLanes, negative test
     Assert.assertEquals(Collections.EMPTY_LIST,
                         LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(0)));
+  }
+
+  // multiple output processor (p1)
+  // s -> t    e
+  // |    |-->|
+  // |------->|
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testPipeline6() {
+    StageRuntime[] stages = {
+      createMockSource("s", ImmutableList.of("s"), ImmutableList.of("se")),
+      createMockTarget("t", ImmutableList.of("s"), ImmutableList.of("te")),
+      createMockTarget("e", ImmutableList.of("se", "te")),
+    };
+    LaneResolver resolver = new LaneResolver(stages);
+
+    // source combiner
+    Assert.assertEquals(0, resolver.getCombinerInputLanes(0).size());
+    Assert.assertEquals(0, resolver.getCombinerOutputLanes(0).size());
+
+    // source stage
+    Assert.assertEquals(0, resolver.getStageInputLanes(0).size());
+    Assert.assertEquals(1, resolver.getStageOutputLanes(0).size());
+    Assert.assertEquals(1, resolver.getStageEventLanes(0).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("s"), LaneResolver.STAGE_OUT),
+                        resolver.getStageOutputLanes(0));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("se"), LaneResolver.STAGE_OUT),
+      resolver.getStageEventLanes(0));
+
+    // source observer
+    Assert.assertEquals(2, resolver.getObserverInputLanes(0).size());
+    Assert.assertEquals(2, resolver.getObserverOutputLanes(0).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("s", "se"), LaneResolver.STAGE_OUT),
+                        resolver.getObserverInputLanes(0));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("s", "se"), LaneResolver.OBSERVER_OUT),
+                        resolver.getObserverOutputLanes(0));
+
+    // source multiplexer
+    Assert.assertEquals(2, resolver.getMultiplexerInputLanes(0).size());
+    Assert.assertEquals(2, resolver.getMultiplexerOutputLanes(0).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("s", "se"), LaneResolver.OBSERVER_OUT),
+                        resolver.getMultiplexerInputLanes(0));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
+          LaneResolver.createLane("s", "t"),
+          LaneResolver.createLane("se", "e")),
+        LaneResolver.MULTIPLEXER_OUT),
+      resolver.getMultiplexerOutputLanes(0));
+
+    // target combiner
+    Assert.assertEquals(1, resolver.getCombinerInputLanes(1).size());
+    Assert.assertEquals(1, resolver.getCombinerOutputLanes(1).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
+                            LaneResolver.createLane("s", "t")), LaneResolver.MULTIPLEXER_OUT),
+                        resolver.getCombinerInputLanes(1));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("t"), LaneResolver.COMBINER_OUT),
+                        resolver.getCombinerOutputLanes(1));
+
+    // target stage
+    Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
+    Assert.assertEquals(0, resolver.getStageOutputLanes(1).size());
+    Assert.assertEquals(1, resolver.getStageEventLanes(1).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("t"), LaneResolver.COMBINER_OUT),
+                        resolver.getStageInputLanes(1));
+
+    // target observer
+    Assert.assertEquals(1, resolver.getObserverInputLanes(1).size());
+    Assert.assertEquals(1, resolver.getObserverOutputLanes(1).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("te"), LaneResolver.STAGE_OUT),
+                        resolver.getObserverInputLanes(1));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("te"), LaneResolver.OBSERVER_OUT),
+                        resolver.getObserverOutputLanes(1));
+
+    // target multiplexer
+    Assert.assertEquals(1, resolver.getMultiplexerInputLanes(1).size());
+    Assert.assertEquals(1, resolver.getMultiplexerOutputLanes(1).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("te"), LaneResolver.OBSERVER_OUT),
+                        resolver.getMultiplexerInputLanes(1));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
+                            LaneResolver.createLane("te", "e")), LaneResolver.MULTIPLEXER_OUT),
+                        resolver.getMultiplexerOutputLanes(1));
+
+    // event combiner
+    Assert.assertEquals(2, resolver.getCombinerInputLanes(2).size());
+    Assert.assertEquals(1, resolver.getCombinerOutputLanes(2).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
+          LaneResolver.createLane("se", "e"),
+          LaneResolver.createLane("te", "e")
+        ), LaneResolver.MULTIPLEXER_OUT),
+      resolver.getCombinerInputLanes(2));
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("e"), LaneResolver.COMBINER_OUT),
+                        resolver.getCombinerOutputLanes(2));
+
+    // event stage
+    Assert.assertEquals(1, resolver.getStageInputLanes(2).size());
+    Assert.assertEquals(0, resolver.getStageOutputLanes(2).size());
+    Assert.assertEquals(0, resolver.getStageEventLanes(2).size());
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("e"), LaneResolver.COMBINER_OUT),
+                        resolver.getStageInputLanes(2));
   }
 
 }

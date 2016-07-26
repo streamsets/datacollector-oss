@@ -53,6 +53,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -153,6 +154,56 @@ public class TestPipeline {
         Assert.assertEquals(ImmutableList.of("p"), (((Processor.Context)stage.getContext()).getOutputLanes()));
       }
     }
+  }
+
+  @Test
+  public void testPipesWithEvents() throws Exception {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    List<StageConfiguration> stageDefs = ImmutableList.of(
+        MockStages.createSource("s", ImmutableList.of("s"), ImmutableList.of("se")),  // Source with normal and event output
+        MockStages.createTarget("t", ImmutableList.of("s"), ImmutableList.of("te")),  // Target with event output
+        MockStages.createTarget("e", ImmutableList.of("se", "te"))                    // Even target
+    );
+
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
+    pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION, UUID.randomUUID(),
+      null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", pipelineConf);
+
+    PipelineRunner runner = Mockito.mock(PipelineRunner.class);
+    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
+    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+
+    Pipeline pipeline = builder.build(runner);
+
+    // assert the pipes
+    Pipe[] pipes = pipeline.getPipes();
+    Assert.assertEquals(9, pipes.length);
+    Assert.assertTrue(pipes[0] instanceof StagePipe);
+    Assert.assertEquals("s", pipes[0].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[1] instanceof ObserverPipe);
+    Assert.assertEquals("s", pipes[1].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[2] instanceof MultiplexerPipe);
+    Assert.assertEquals("s", pipes[2].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[3] instanceof CombinerPipe);
+    Assert.assertEquals("t", pipes[3].getStage().getConfiguration().getInstanceName());
+
+    Assert.assertTrue(pipes[4] instanceof StagePipe);
+    Assert.assertEquals("t", pipes[4].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[5] instanceof ObserverPipe);
+    Assert.assertEquals("t", pipes[5].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[6] instanceof MultiplexerPipe);
+    Assert.assertEquals("t", pipes[6].getStage().getConfiguration().getInstanceName());
+
+    Assert.assertTrue(pipes[7] instanceof CombinerPipe);
+    Assert.assertEquals("e", pipes[7].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[8] instanceof StagePipe);
+    Assert.assertEquals("e", pipes[8].getStage().getConfiguration().getInstanceName());
   }
 
   @Test

@@ -28,7 +28,7 @@ public class ObserverPipe extends Pipe<Pipe.Context> {
   private final Observer observer;
 
   public ObserverPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, Observer observer) {
-    super(stage, inputLanes, outputLanes);
+    super(stage, inputLanes, outputLanes, Collections.<String>emptyList());
     this.observer = observer;
   }
 

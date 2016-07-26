@@ -385,7 +385,7 @@ public class Pipeline {
         switch (stage.getDefinition().getType()) {
           case SOURCE:
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
+              laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
@@ -399,7 +399,7 @@ public class Pipeline {
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-                                 laneResolver.getStageOutputLanes(idx), scheduledExecutor,
+                                 laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor,
               memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
@@ -414,8 +414,19 @@ public class Pipeline {
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
+              laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
+
+            // In case that this target is generating events, we need to add additional observer/multiplexer pipe
+            if(stage.getConfiguration().getEventLanes().size() > 0) {
+              pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
+                                      laneResolver.getObserverOutputLanes(idx), observer);
+              pipes.add(pipe);
+              pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
+                                         laneResolver.getMultiplexerOutputLanes(idx));
+              pipes.add(pipe);
+            }
+
             break;
           default:
             throw new IllegalStateException("Unexpected DefinitionType " + stage.getDefinition().getType());

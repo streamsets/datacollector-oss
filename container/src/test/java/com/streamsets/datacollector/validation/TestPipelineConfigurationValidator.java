@@ -277,7 +277,7 @@ public class TestPipelineConfigurationValidator {
   @Test
   public void testPipelineWithConnectedEventLane() {
     StageLibraryTask lib = MockStages.createStageLibrary();
-    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetWithEventsProcessedUnsorted();
     // The pipeline should declare the event target as first
     Assert.assertEquals("e", conf.getStages().get(0).getInstanceName());
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);

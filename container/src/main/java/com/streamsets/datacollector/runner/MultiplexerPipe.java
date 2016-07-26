@@ -28,7 +28,7 @@ import java.util.List;
 public class MultiplexerPipe extends Pipe<Pipe.Context> {
 
   public MultiplexerPipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    super(stage, inputLanes, outputLanes);
+    super(stage, inputLanes, outputLanes, Collections.<String>emptyList());
   }
 
   @Override
@@ -43,7 +43,7 @@ public class MultiplexerPipe extends Pipe<Pipe.Context> {
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
     for (int i = 0; i < getInputLanes().size(); i++) {
-      String inputStageLane = getStage().getConfiguration().getOutputLanes().get(i);
+      String inputStageLane = getStage().getConfiguration().getOutputEventLanes().get(i);
       String inputPipeLane = getInputLanes().get(i);
       List<String> outputLanes = LaneResolver.getMatchingOutputLanes(inputStageLane, getOutputLanes());
       if (outputLanes.size() == 1) {
