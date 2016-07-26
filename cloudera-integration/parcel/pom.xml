@@ -91,8 +91,13 @@
           </execution>
         </executions>
       </plugin>
-
-
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <configuration>
+          <suppressionFile>${basedir}/../../dependency-check-suppression.xml</suppressionFile>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

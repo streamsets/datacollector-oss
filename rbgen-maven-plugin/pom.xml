@@ -35,7 +35,7 @@
 
     <maven-compiler-plugin>3.1</maven-compiler-plugin>
 
-    <maven.dependency.version>3.0</maven.dependency.version>
+    <maven.dependency.version>3.3.9</maven.dependency.version>
     <maven.plugin-tools.version>3.4</maven.plugin-tools.version>
 
     <commons-io.version>2.4</commons-io.version>

@@ -116,6 +116,26 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.owasp</groupId>
+          <artifactId>dependency-check-maven</artifactId>
+          <version>1.4.0</version>
+          <configuration>
+            <!-- skip non-bundled jars -->
+            <skipProvidedScope>true</skipProvidedScope>
+            <skipRuntimeScope>true</skipRuntimeScope>
+            <!-- We want HTML for easy viewing, but XML for reporting via SonarQube -->
+            <format>ALL</format>
+            <suppressionFile>${basedir}/../dependency-check-suppression.xml</suppressionFile>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>aggregate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.6</version>
@@ -379,6 +399,10 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>

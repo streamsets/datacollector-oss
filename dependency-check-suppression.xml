@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2016 StreamSets Inc.
+  ~
+  ~ Licensed under the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+  <!-- Apache Hive -->
+  <suppress>
+    <notes><![CDATA[
+    False Positive as this CVE only affects Hive < 0.13
+    ]]></notes>
+    <filePath regex="true">.*\bhive-jdbc-1.[0-9]+.[0-9]+.*\.jar</filePath>
+    <cve>CVE-2014-0228</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+    Does not apply as we are not running the Hive server.
+    ]]></notes>
+    <filePath regex="true">.*\bhive-shims-.*\b1.[0-9]+.[0-9]+.*\.jar</filePath>
+    <cve>CVE-2015-7521</cve>
+  </suppress>
+  <!-- Apache Hadoop -->
+  <suppress>
+    <notes><![CDATA[
+    Does not apply as we are not running cluster services.
+    file name: hadoop-yarn-api-2.6.0.jar
+    ]]></notes>
+    <sha1>c3bcbcd82cd61b55dc5d523f26a259f8d27fc237</sha1>
+    <cve>CVE-2015-1776</cve>
+  </suppress>
+  <!-- Apache ZooKeeper -->
+  <suppress>
+    <notes><![CDATA[
+    Does not apply as it affects only ZooKeeper + FuseFabric
+    ]]></notes>
+    <cve>CVE-2014-0085</cve>
+  </suppress>
+  <!-- Other -->
+  <suppress>
+    <notes><![CDATA[
+    Affects Tomcat servers related to this transitive dependency.
+    We do not run the affected Tomcat server--this CVE does not apply.
+    file name: jasper-compiler-5.5.23.jar
+    ]]></notes>
+    <sha1>6d35bd7fb8c4fbc1f5401fb3678aa976d2e4c241</sha1>
+    <cpe>cpe:/a:apache:tomcat:5.5.23</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+    Affects Tomcat servers related to this transitive dependency.
+    We do not run the affected Tomcat server--this CVE does not apply.
+    file name: jasper-runtime-5.5.23.jar
+    ]]></notes>
+    <sha1>96ca5528a93ab47b001476b74320c644beb89dde</sha1>
+    <cpe>cpe:/a:apache:tomcat:5.5.23</cpe>
+  </suppress>
+</suppressions>
