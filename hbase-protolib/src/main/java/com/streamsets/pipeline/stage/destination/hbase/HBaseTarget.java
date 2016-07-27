@@ -106,6 +106,9 @@ public class HBaseTarget extends BaseTarget {
     boolean ignoreInvalidColumn,
     String timeDriver
   ) {
+    if (null != zookeeperQuorum) {
+      zookeeperQuorum = CharMatcher.WHITESPACE.removeFrom(zookeeperQuorum);
+    }
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -143,11 +146,7 @@ public class HBaseTarget extends BaseTarget {
     HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), hbaseConf, kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(
-          hbaseConf,
-          HConstants.ZOOKEEPER_QUORUM,
-          CharMatcher.WHITESPACE.removeFrom(zookeeperQuorum)
-      );
+      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, clientPort);
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, zookeeperParentZnode);
     }

@@ -75,6 +75,10 @@ public class HBaseLookupProcessor extends BaseProcessor {
   private HTableDescriptor hTableDescriptor = null;
 
   public HBaseLookupProcessor(HBaseLookupConfig conf) {
+    if (null != conf.hBaseConnectionConfig.zookeeperQuorum) {
+      conf.hBaseConnectionConfig.zookeeperQuorum =
+        CharMatcher.WHITESPACE.removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum);
+    }
     this.conf = conf;
   }
 
@@ -108,11 +112,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
     HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.getLabel(), hbaseConf, conf.hBaseConnectionConfig.kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(
-          hbaseConf,
-          HConstants.ZOOKEEPER_QUORUM,
-          CharMatcher.WHITESPACE.removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum)
-      );
+      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.hBaseConnectionConfig.clientPort);
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZnode);
     }
