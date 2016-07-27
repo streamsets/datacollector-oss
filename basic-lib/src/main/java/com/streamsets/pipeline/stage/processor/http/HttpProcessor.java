@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.http;
 
 import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -58,6 +59,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String HEADER_CONFIG_NAME = "headers";
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
-  private static final String VAULT_EL_PREFIX = "${" + VaultEL.PREFIX;
+  private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":read";
 
   private HttpProcessorConfig conf;
   private AccessToken authToken;
@@ -105,6 +107,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     this.conf = conf;
   }
 
+  /** {@inheritDoc} */
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
@@ -164,12 +167,14 @@ public class HttpProcessor extends SingleLaneProcessor {
     return issues;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void destroy() {
     client.close();
     super.destroy();
   }
 
+  /** {@inheritDoc} */
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
     List<Future<Response>> responses = new ArrayList<>();
@@ -210,6 +215,13 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
+  /**
+   * Evaluates any EL expressions in the headers section of the stage configuration.
+   *
+   * @param record current record in context for EL evaluation
+   * @return Map of headers that can be added to the Jersey Client request
+   * @throws StageException if an expression could not be evaluated
+   */
   private MultivaluedMap<String, Object> resolveHeaders(Record record) throws StageException {
     RecordEL.setRecordInContext(headerVars, record);
 
@@ -224,6 +236,15 @@ public class HttpProcessor extends SingleLaneProcessor {
     return requestHeaders;
   }
 
+  /**
+   * Waits for the Jersey client to complete an asynchronous request, checks the response code
+   * and continues to parse the response if it is deemed ok.
+   *
+   * @param record the current record to set in context for any expression evaluation
+   * @param responseFuture the async HTTP request future
+   * @return parsed record from the request
+   * @throws StageException if the request fails, times out, or cannot be parsed
+   */
   private Record processResponse(Record record, Future<Response> responseFuture) throws
       StageException {
 
@@ -247,6 +268,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       Record parsedResponse = parseResponse(responseBody);
       if (parsedResponse != null) {
         record.set(conf.outputField, parsedResponse.get());
+        addResponseHeaders(record, response);
       }
       return record;
     } catch (InterruptedException | ExecutionException e) {
@@ -258,6 +280,13 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
+  /**
+   * Parses the HTTP response text from a request into SDC Records
+   *
+   * @param response HTTP response
+   * @return an SDC record resulting from the response text
+   * @throws StageException if the response could not be parsed
+   */
   private Record parseResponse(String response) throws StageException {
     Record record = null;
     try (DataParser parser = parserFactory.getParser("", response)) {
@@ -273,6 +302,11 @@ public class HttpProcessor extends SingleLaneProcessor {
     return record;
   }
 
+  /**
+   * Configures the Jersey client with the appropriate authentication mechanism
+   *
+   * @param clientBuilder Jersey client builder to configure
+   */
   private void configureAuth(ClientBuilder clientBuilder) {
     if (conf.client.authType == AuthenticationType.OAUTH) {
       authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
@@ -281,6 +315,13 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
+  /**
+   * Determines the HTTP method to use for the next request. It may include an EL expression to evaluate.
+   *
+   * @param record Current record to set in context.
+   * @return the {@link HttpMethod} to use for the request
+   * @throws ELEvalException if an expression is supplied that cannot be evaluated
+   */
   private HttpMethod getHttpMethod(Record record) throws ELEvalException {
     if (conf.httpMethod != HttpMethod.EXPRESSION) {
       return conf.httpMethod;
@@ -289,6 +330,11 @@ public class HttpProcessor extends SingleLaneProcessor {
     return HttpMethod.valueOf(methodEval.eval(methodVars, conf.methodExpression, String.class));
   }
 
+  /**
+   * Returns true if the request contains potentially sensitive information such as a vault:read EL.
+   *
+   * @return whether or not the request had sensitive information detected.
+   */
   private boolean requestContainsSensitiveInfo() {
     boolean sensitive = false;
     for (Map.Entry<String, String> header : conf.headers.entrySet()) {
@@ -303,5 +349,60 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
 
     return sensitive;
+  }
+
+  /**
+   * Populates HTTP response headers to the configured location
+   *
+   * @param record current record to populate
+   * @param response HTTP response
+   * @throws StageException when writing headers to a field path that already exists
+   */
+  private void addResponseHeaders(Record record, Response response) throws StageException {
+    Record.Header header = record.getHeader();
+
+    if (conf.headerOutputLocation == HeaderOutputLocation.FIELD) {
+      writeResponseHeaderToField(record, response);
+    } else if (conf.headerOutputLocation == HeaderOutputLocation.HEADER) {
+      writeResponseHeaderToRecordHeader(response, header);
+    }
+  }
+
+  /**
+   * Writes HTTP response headers to the SDC Record at the configured field path.
+   *
+   * @param record Record to populate with response headers.
+   * @param response HTTP response
+   * @throws StageException if the field path already exists
+   */
+  private void writeResponseHeaderToField(Record record, Response response) throws StageException {
+    if (record.has(conf.headerOutputField)) {
+      throw new StageException(Errors.HTTP_11, conf.headerOutputField);
+    }
+    Map<String, Field> headers = new HashMap<>(response.getStringHeaders().size());
+
+    for (Map.Entry<String, List<String>> entry : response.getStringHeaders().entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        String firstValue = entry.getValue().get(0);
+        headers.put(entry.getKey(), Field.create(firstValue));
+      }
+    }
+
+    record.set(conf.headerOutputField, Field.create(headers));
+  }
+
+  /**
+   * Writes HTTP response headers to the SDC Record header with the configured optional prefix.
+   *
+   * @param response HTTP response
+   * @param header SDC Record header
+   */
+  private void writeResponseHeaderToRecordHeader(Response response, Record.Header header) {
+    for (Map.Entry<String, List<String>> entry : response.getStringHeaders().entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        String firstValue = entry.getValue().get(0);
+        header.setAttribute(conf.headerAttributePrefix + entry.getKey(), firstValue);
+      }
+    }
   }
 }

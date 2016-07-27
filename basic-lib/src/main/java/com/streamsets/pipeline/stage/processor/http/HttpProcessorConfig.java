@@ -55,10 +55,47 @@ public class HttpProcessorConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      label = "Header Output Location",
+      description = "Field in which to place the result of the HTTP request",
+      defaultValue = "HEADER",
+      displayPosition = 20,
+      group = "HTTP"
+  )
+  @ValueChooserModel(HeaderOutputLocationChooserValues.class)
+  public HeaderOutputLocation headerOutputLocation;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Header Attribute Prefix",
+      description = "A prefix to to the response header name to add in the record header.",
+      displayPosition = 30,
+      group = "HTTP",
+      dependsOn = "headerOutputLocation",
+      triggeredByValue = "HEADER"
+  )
+  public String headerAttributePrefix = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Header Output Field",
+      description = "Field in which to place the HTTP response headers.",
+      displayPosition = 40,
+      group = "HTTP",
+      dependsOn = "headerOutputLocation",
+      triggeredByValue = "FIELD"
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String headerOutputField;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data Format of the response. Response will be parsed before being placed in the record.",
-      displayPosition = 15,
+      displayPosition = 50,
       group = "HTTP"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -71,7 +108,7 @@ public class HttpProcessorConfig {
       description = "The HTTP resource URL",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 20,
+      displayPosition = 60,
       group = "HTTP"
   )
   public String resourceUrl = "";
@@ -82,7 +119,7 @@ public class HttpProcessorConfig {
       label = "Headers",
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 30,
+      displayPosition = 70,
       elDefs = {RecordEL.class, VaultEL.class},
       group = "HTTP"
   )
@@ -96,7 +133,7 @@ public class HttpProcessorConfig {
       description = "HTTP method to send",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 40,
+      displayPosition = 80,
       group = "HTTP"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -107,7 +144,7 @@ public class HttpProcessorConfig {
       type = ConfigDef.Type.STRING,
       label = "HTTP Method Expression",
       description = "Expression used to determine the HTTP method to use",
-      displayPosition = 50,
+      displayPosition = 90,
       dependsOn = "httpMethod",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -121,7 +158,7 @@ public class HttpProcessorConfig {
       type = ConfigDef.Type.TEXT,
       label = "Request Data",
       description = "Data that should be included as a part of the request",
-      displayPosition = 60,
+      displayPosition = 100,
       lines = 2,
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -145,7 +146,7 @@ public class HttpClientSourceIT extends JerseyTest {
           "{\"name\": \"adam\"}\r\n" +
               "{\"name\": \"joe\"}\r\n" +
               "{\"name\": \"sally\"}"
-      ).build();
+      ).header("X-Test-Header", "StreamSets").header("X-List-Header", ImmutableList.of("a", "b")).build();
     }
   }
 
@@ -659,6 +660,8 @@ public class HttpClientSourceIT extends JerseyTest {
 
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("x-test-header"));
+        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("x-list-header"));
         assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {

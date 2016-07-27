@@ -26,30 +26,36 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/** {@inheritDoc} */
 public class HttpProcessorUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
-  private static final String BASIC = "basic";
-  private static final String AUTH_TYPE = "authType";
-  private static final String OAUTH = "oauth";
-  private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
 
   private static final Joiner joiner = Joiner.on(".");
-
-  private final List<Config> configsToRemove = new ArrayList<>();
-  private final List<Config> configsToAdd = new ArrayList<>();
 
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
         JerseyClientUtil.upgradeToJerseyConfigBean(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "headerOutputLocation"), "HEADER"));
+    // Default for upgrades is different so that we don't accidentally clobber possibly pre-existing attributes.
+    configs.add(new Config(joiner.join(CONF, "headerAttributePrefix"), "http-"));
+    configs.add(new Config(joiner.join(CONF, "headerOutputField"), ""));
   }
 }

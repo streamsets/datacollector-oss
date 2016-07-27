@@ -249,6 +249,7 @@ public class HttpClientSource extends BaseSource {
       // For JSON, a chunk only contains a single record, so we only parse it once.
       Record record = parser.parse();
       if (record != null) {
+        addResponseHeaders(record.getHeader());
         batchMaker.addRecord(record);
         ++recordCount;
       }
@@ -259,6 +260,7 @@ public class HttpClientSource extends BaseSource {
       // For text and xml, a chunk may contain multiple records.
       Record record = parser.parse();
       while (record != null) {
+        addResponseHeaders(record.getHeader());
         batchMaker.addRecord(record);
         ++recordCount;
         record = parser.parse();
@@ -266,6 +268,15 @@ public class HttpClientSource extends BaseSource {
     }
     LOG.debug("Read record with ID, count: '{}', '{}'", newSourceOffset, recordCount);
     return newSourceOffset;
+  }
+
+  private void addResponseHeaders(Record.Header header) {
+    for (Map.Entry<String, List<String>> entry : response.getStringHeaders().entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        String firstValue = entry.getValue().get(0);
+        header.setAttribute(entry.getKey(), firstValue);
+      }
+    }
   }
 
   private void configureAuth(ClientBuilder clientBuilder) {

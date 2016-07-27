@@ -68,7 +68,10 @@ public class HttpProcessorIT extends JerseyTest {
   public static class TestGet {
     @GET
     public Response get() {
-      return Response.ok(getBody("http/get_response.json")).build();
+      return Response.ok(getBody("http/get_response.json"))
+          .header("x-test-header", "StreamSets")
+          .header("x-list-header", ImmutableList.of("a", "b"))
+          .build();
     }
   }
 
@@ -117,12 +120,13 @@ public class HttpProcessorIT extends JerseyTest {
   }
 
   @Test
-  public void testHttpGet() throws Exception {
+  public void testHttpGetDefaultHeaderOutput() throws Exception {
     HttpProcessorConfig conf = new HttpProcessorConfig();
     conf.httpMethod = HttpMethod.GET;
     conf.outputField = "/output";
     conf.dataFormat = DataFormat.TEXT;
     conf.resourceUrl = getBaseUri() + "test/get";
+    conf.headerOutputLocation = HeaderOutputLocation.HEADER;
 
     Record record = RecordCreator.create();
     record.set("/", Field.create(new HashMap<String, Field>()));
@@ -140,6 +144,86 @@ public class HttpProcessorIT extends JerseyTest {
       assertEquals(1, outputRecords.size());
       assertTrue(outputRecords.get(0).has("/output"));
       assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals("StreamSets", outputRecords.get(0).getHeader().getAttribute("x-test-header"));
+      assertEquals("[a, b]", outputRecords.get(0).getHeader().getAttribute("x-list-header"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testHttpGetPrefixedHeaderOutput() throws Exception {
+    HttpProcessorConfig conf = new HttpProcessorConfig();
+    conf.httpMethod = HttpMethod.GET;
+    conf.outputField = "/output";
+    conf.dataFormat = DataFormat.TEXT;
+    conf.resourceUrl = getBaseUri() + "test/get";
+    conf.headerOutputLocation = HeaderOutputLocation.HEADER;
+    conf.headerAttributePrefix = "test-prefix-";
+
+    Record record = RecordCreator.create();
+    record.set("/", Field.create(new HashMap<String, Field>()));
+
+    List<Record> records = ImmutableList.of(record);
+    Processor processor = new HttpProcessor(conf);
+    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> outputRecords = output.getRecords().get("lane");
+      assertTrue(runner.getErrorRecords().isEmpty());
+      assertEquals(1, outputRecords.size());
+      assertTrue(outputRecords.get(0).has("/output"));
+      assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals(
+          "StreamSets",
+          outputRecords.get(0).getHeader().getAttribute(conf.headerAttributePrefix + "x-test-header")
+      );
+      assertEquals(
+          "[a, b]",
+          outputRecords.get(0).getHeader().getAttribute(conf.headerAttributePrefix + "x-list-header")
+      );
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testHttpGetHeaderFieldOutput() throws Exception {
+    HttpProcessorConfig conf = new HttpProcessorConfig();
+    conf.httpMethod = HttpMethod.GET;
+    conf.outputField = "/output";
+    conf.dataFormat = DataFormat.TEXT;
+    conf.resourceUrl = getBaseUri() + "test/get";
+    conf.headerOutputLocation = HeaderOutputLocation.FIELD;
+    conf.headerOutputField = "/headers";
+
+    Record record = RecordCreator.create();
+    record.set("/", Field.create(new HashMap<String, Field>()));
+
+    List<Record> records = ImmutableList.of(record);
+    Processor processor = new HttpProcessor(conf);
+    ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> outputRecords = output.getRecords().get("lane");
+      assertTrue(runner.getErrorRecords().isEmpty());
+      assertEquals(1, outputRecords.size());
+      assertTrue(outputRecords.get(0).has("/output"));
+      assertEquals("{\"hello\":\"world!\"}", outputRecords.get(0).get("/output").getValueAsString());
+      assertEquals(
+          "StreamSets",
+          outputRecords.get(0).get(conf.headerOutputField).getValueAsMap().get("x-test-header").getValueAsString()
+      );
+      assertEquals(
+          "[a, b]",
+          outputRecords.get(0).get(conf.headerOutputField).getValueAsMap().get("x-list-header").getValueAsString()
+      );
     } finally {
       runner.runDestroy();
     }

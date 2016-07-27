@@ -76,6 +76,27 @@ public class TestHttpProcessorUpgrader {
     }
   }
 
+  @Test
+  public void testV2ToV3() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    List<String> newConfigs = ImmutableList.of(
+        "conf.headerOutputLocation",
+        "conf.headerAttributePrefix",
+        "conf.headerOutputField"
+    );
+
+    for (String config : newConfigs) {
+      boolean isPresent = configValues.containsKey(config);
+      assertTrue(isPresent);
+    }
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {
