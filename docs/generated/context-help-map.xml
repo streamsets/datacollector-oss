@@ -37,7 +37,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_990170025"/>
+               path="Install_Config/CMInstall-Overview.html#unique_1393462787"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -651,6 +651,8 @@
                path="Destinations/HadoopFS-destination.html#concept_qjs_dw3_tv"/>
    <appContext helpID="concept_lww_3b3_kr"
                path="Destinations/HadoopFS-destination.html#concept_lww_3b3_kr"/>
+   <appContext helpID="concept_n42_z2f_sw"
+               path="Destinations/HadoopFS-destination.html#concept_n42_z2f_sw"/>
    <appContext helpID="concept_xy5_4tm_vs"
                path="Destinations/HadoopFS-destination.html#concept_xy5_4tm_vs"/>
    <appContext helpID="concept_u4h_lwt_ls"
@@ -1086,7 +1088,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_879913984"/>
+               path="Troubleshooting/Destinations.html#unique_1344669514"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
