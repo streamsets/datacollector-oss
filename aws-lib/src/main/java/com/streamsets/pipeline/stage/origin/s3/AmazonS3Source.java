@@ -27,6 +27,8 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -45,6 +47,10 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   private final static Logger LOG = LoggerFactory.getLogger(AmazonS3Source.class);
   private static final long DEFAULT_FETCH_SIZE = 1 * 1024 * 1024;
+  private static final String BUCKET = "bucket";
+  private static final String OBJECT_KEY = "objectKey";
+  private static final String OWNER = "owner";
+  private static final String SIZE = "size";
 
   private ErrorRecordHandler errorRecordHandler;
   private DataParser parser;
@@ -70,25 +76,29 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
     throws StageException, BadSpoolObjectException {
     try {
       if (parser == null) {
-        //Get S3 object instead of stream because we want to call close on the object when we close the
-        // parser (and stream)
-        if(getContext().isPreview()) {
-          long fetchSize = s3Object.getSize() > DEFAULT_FETCH_SIZE ? DEFAULT_FETCH_SIZE : s3Object.getSize();
-          if(fetchSize > 0) {
-            object = AmazonS3Util.getObjectRange(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-              s3Object.getKey(), fetchSize);
-          }  else {
-            LOG.warn("Size of object with key '{}' is 0", s3Object.getKey());
-            object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-              s3Object.getKey());
-          }
-        } else {
-          object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-            s3Object.getKey());
-        }
         String recordId = s3ConfigBean.s3Config.bucket + s3ConfigBean.s3Config.delimiter + s3Object.getKey();
-        parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, object.getObjectContent(),
-          offset);
+        if (s3ConfigBean.dataFormat == DataFormat.WHOLE_FILE) {
+          handleWholeFileDataFormat(s3Object, recordId);
+        } else {
+          //Get S3 object instead of stream because we want to call close on the object when we close the
+          // parser (and stream)
+          if(getContext().isPreview()) {
+            long fetchSize = s3Object.getSize() > DEFAULT_FETCH_SIZE ? DEFAULT_FETCH_SIZE : s3Object.getSize();
+            if(fetchSize > 0) {
+              object = AmazonS3Util.getObjectRange(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
+                  s3Object.getKey(), fetchSize);
+            }  else {
+              LOG.warn("Size of object with key '{}' is 0", s3Object.getKey());
+              object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
+                  s3Object.getKey());
+            }
+          } else {
+            object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
+                s3Object.getKey());
+          }
+          parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, object.getObjectContent(),
+              offset);
+        }
         //we don't use S3 GetObject range capabilities to skip the already process offset because the parsers cannot
         // pick up from a non root doc depth in the case of a single object with records.
       }
@@ -112,8 +122,10 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           } else {
             parser.close();
             parser = null;
-            object.close();
-            object = null;
+            if (object != null) {
+              object.close();
+              object = null;
+            }
             offset = S3Constants.MINUS_ONE;
             break;
           }
@@ -181,5 +193,43 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
       }
     }
     return offset;
+  }
+
+  //For whole file we do not care whether it is a preview or not,
+  //as the record is just the metadata along with file ref.
+  private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws DataParserException, IOException {
+    S3Object partialS3ObjectForMetadata = null;
+    try {
+      //partialObject with fetchSize 1 byte.
+      //This is mostly used for extracting metadata and such.
+      partialS3ObjectForMetadata = AmazonS3Util.getObjectRange(
+          s3ConfigBean.s3Config.getS3Client(),
+          s3ConfigBean.s3Config.bucket,
+          s3ObjectSummary.getKey(),
+          1
+      );
+      S3FileRef.Builder s3FileRefBuilder = new S3FileRef.Builder()
+          .s3Client(s3ConfigBean.s3Config.getS3Client())
+          .s3ObjectSummary(s3ObjectSummary)
+          .bufferSize(s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen)
+          .createMetrics(true)
+          .totalSizeInBytes(s3ObjectSummary.getSize());
+      if (s3ConfigBean.dataFormatConfig.verifyChecksum) {
+        s3FileRefBuilder.verifyChecksum(true)
+            .checksumAlgorithm(HashingUtil.HashType.MD5)
+            //128 bit hex encoded md5 checksum.
+            .checksum(partialS3ObjectForMetadata.getObjectMetadata().getETag());
+      }
+      Map<String, Object> metadata = AmazonS3Util.getMetaData(partialS3ObjectForMetadata);
+      metadata.put(BUCKET, s3ObjectSummary.getBucketName());
+      metadata.put(OBJECT_KEY, s3ObjectSummary.getKey());
+      metadata.put(OWNER, s3ObjectSummary.getOwner());
+      metadata.put(SIZE, s3ObjectSummary.getSize());
+      parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, metadata, s3FileRefBuilder.build());
+    } finally {
+      if (partialS3ObjectForMetadata != null) {
+        partialS3ObjectForMetadata.close();
+      }
+    }
   }
 }

@@ -165,8 +165,7 @@ public class AmazonS3Util {
     metaDataMap.put(Headers.ETAG, s3Object.getObjectMetadata().getETag());
     metaDataMap.put(Headers.LAST_MODIFIED, s3Object.getObjectMetadata().getLastModified());
 
-
-    // put customer metadata
+    // put user metadata
     Map<String, String> userMetaMap = s3Object.getObjectMetadata().getUserMetadata();
     if(userMetaMap != null) {
       for (String key : userMetaMap.keySet()) {

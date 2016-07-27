@@ -679,6 +679,19 @@ public class DataParserFormatConfig implements DataFormatConfig{
   )
   public int wholeFileMaxObjectLen = 1024;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Verify Checksum",
+      description = "When checked verifies the checksum of the stream during read.",
+      displayPosition = 1000,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE"
+  )
+  public boolean verifyChecksum = false;
+
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,

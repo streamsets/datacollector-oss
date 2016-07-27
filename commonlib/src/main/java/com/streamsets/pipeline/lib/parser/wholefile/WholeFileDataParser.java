@@ -94,6 +94,9 @@ public class WholeFileDataParser extends AbstractDataParser {
   }
 
   private static Field createFieldForMetadata(Object metadataObject) {
+    if (metadataObject == null) {
+      return Field.create("");
+    }
     if (metadataObject instanceof Boolean) {
       return Field.create((Boolean) metadataObject);
     } else if (metadataObject instanceof Character) {

@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -29,6 +30,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
@@ -44,17 +46,22 @@ import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -312,6 +319,77 @@ public class TestAmazonS3SourceDataFormats {
     }
   }
 
+  public void verifyStreamCorrectness(InputStream is1, InputStream is2) throws Exception {
+    int totalBytesRead1 = 0, totalBytesRead2 = 0;
+    int a = 0, b = 0;
+    while (a != -1 || b != -1) {
+      totalBytesRead1 = ((a = is1.read()) != -1)? totalBytesRead1 + 1 : totalBytesRead1;
+      totalBytesRead2 = ((b = is2.read()) != -1)? totalBytesRead2 + 1 : totalBytesRead2;
+      Assert.assertEquals(a, b);
+    }
+    Assert.assertEquals(totalBytesRead1, totalBytesRead2);
+  }
+
+
+  @Test
+  public void testWholeFile() throws Exception {
+    AmazonS3Source source = createSourceWholeFile();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    String offset = null;
+    try {
+      Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, BUCKET_NAME).iterator();
+      Map<Pair<String, String>,S3ObjectSummary> s3ObjectSummaries = new HashMap<>();
+      while (s3ObjectSummaryIterator.hasNext()) {
+        S3ObjectSummary s3ObjectSummary = s3ObjectSummaryIterator.next();
+        s3ObjectSummaries.put(Pair.of(s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey()), s3ObjectSummary);
+      }
+      int numRecords = 0;
+      do {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 1000, batchMaker);
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        Record record = records.get(0);
+        Assert.assertTrue(record.has("/fileInfo/bucket"));
+        Assert.assertTrue(record.has("/fileInfo/objectKey"));
+        Assert.assertTrue(record.has("/fileInfo/owner"));
+        Assert.assertTrue(record.has("/fileInfo/size"));
+
+
+        String actualBucketName = record.get("/fileInfo/bucket").getValueAsString();
+        String actualObjectKey = record.get("/fileInfo/objectKey").getValueAsString();
+
+        S3ObjectSummary s3ObjectSummary = s3ObjectSummaries.get(Pair.of(actualBucketName, actualObjectKey));
+
+        Assert.assertEquals(s3ObjectSummary.getBucketName(), actualBucketName);
+        Assert.assertEquals(s3ObjectSummary.getKey(), actualObjectKey);
+
+        Assert.assertEquals(
+            s3ObjectSummary.getLastModified(),
+            record.get("/fileInfo/" + Headers.LAST_MODIFIED).getValueAsDate()
+        );
+        Assert.assertEquals(s3ObjectSummary.getOwner().toString(), record.get("/fileInfo/owner").getValueAsString());
+        Assert.assertEquals(s3ObjectSummary.getSize(), record.get("/fileInfo/size").getValueAsLong());
+        //Check file content
+        verifyStreamCorrectness(
+            AmazonS3Util.getObject(s3client, BUCKET_NAME, s3ObjectSummary.getKey()).getObjectContent(),
+            record.get("/fileRef").getValueAsFileRef().createInputStream(
+                ((Stage.Context) Whitebox.getInternalState(source, "context")),
+                InputStream.class
+            )
+        );
+        numRecords++;
+        //Current Source limitation is only one object can be listed
+        //and maxBatchSize is honored only for the current Object
+        //as a result only one record (for the file) is produced
+        //for a batch.
+      } while (numRecords < s3ObjectSummaries.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private AmazonS3Source createSourceLog() {
 
     S3ConfigBean s3ConfigBean = new S3ConfigBean();
@@ -508,6 +586,40 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 128;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.avro";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.commonPrefix = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+    s3ConfigBean.proxyConfig = new ProxyConfig();
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createSourceWholeFile() {
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.WHOLE_FILE;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen = 1024;
+    s3ConfigBean.dataFormatConfig.verifyChecksum = true;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 128;
+    s3ConfigBean.s3FileConfig.prefixPattern = "*";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
