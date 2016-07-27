@@ -1177,7 +1177,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Preview chapter.</draft-comment>
             <note id="PreviewDateFormat">Data preview displays date, datetime, and time data using
                   the default format of the browser locale. For example, if the browser uses the
-                  en_US locale, preview displays dates using the following format: MMM d, y h:mm:ss
-                  a.</note>
+                  en_US locale, preview displays datetime data using the following format: MMM d, y
+                  h:mm:ss a.</note>
       </conbody>
 </concept>
