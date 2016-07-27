@@ -115,6 +115,7 @@ module.exports = function(grunt) {
         'bower_components/angular-ui-select/dist/select.js',
         'bower_components/ngstorage/ngStorage.js',
         'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+        'bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js',
         'bower_components/codemirror/lib/codemirror.js',
         'bower_components/codemirror/mode/clike/clike.js',
         'bower_components/codemirror/mode/python/python.js',

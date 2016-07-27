@@ -107,29 +107,6 @@
              ng-click="onShowAllClick($event);">Show All...</a>
         </div>
 
-
-        <div ng-switch-when="DATE" class="clearfix">
-          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
-
-          <span class="field-value pull-left {{recordValue.type}}"
-                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
-            >{{recordValue.value + '' | date:'medium'}} </span>
-
-          <div class="dropdown pull-left"
-               ng-if="editable === true"
-               ng-init="dateRecordValue = recordValue.value">
-            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
-              <i class="fa fa-calendar"></i>
-            </a>
-            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-              <datetimepicker data-ng-model="dateRecordValue"
-                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
-                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle' }"></datetimepicker>
-            </ul>
-          </div>
-        </div>
-
-
         <div ng-switch-when="DATETIME" class="clearfix">
 
           <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
@@ -152,12 +129,12 @@
           </div>
         </div>
 
-        <div ng-switch-when="TIME" class="clearfix">
+        <div ng-switch-when="DATE" class="clearfix">
           <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
 
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
-            >{{recordValue.value + '' | date:'medium'}} </span>
+          >{{recordValue.value + '' | date:'mediumDate'}} </span>
 
           <div class="dropdown pull-left"
                ng-if="editable === true"
@@ -168,7 +145,28 @@
             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
               <datetimepicker data-ng-model="dateRecordValue"
                               data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
-                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle' }"></datetimepicker>
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle', minView: 'day' }"></datetimepicker>
+            </ul>
+          </div>
+        </div>
+
+        <div ng-switch-when="TIME" class="clearfix">
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
+
+          <span class="field-value pull-left {{recordValue.type}}"
+                ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
+            >{{recordValue.value + '' | date:'mediumTime'}} </span>
+
+          <div class="dropdown pull-left"
+               ng-if="editable === true"
+               ng-init="dateRecordValue = recordValue.value">
+            <a class="record-date-toggle dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+              <i class="fa fa-calendar"></i>
+            </a>
+            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="dateRecordValue"
+                              data-on-set-time="recordDateValueUpdated(record, recordValue, dateRecordValue)"
+                              data-datetimepicker-config="{ dropdownSelector: '.record-date-toggle', startView: 'hour' }"></datetimepicker>
             </ul>
           </div>
         </div>
