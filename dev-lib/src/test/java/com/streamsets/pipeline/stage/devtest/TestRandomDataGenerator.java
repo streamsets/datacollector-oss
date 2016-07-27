@@ -75,4 +75,32 @@ public class TestRandomDataGenerator {
       runner.runDestroy();
     }
   }
+
+
+  @Test
+  public void testLongSequence() throws StageException {
+    RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
+    seq.field = "id";
+    seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
+
+    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+      .addConfiguration("dataGenConfigs", Arrays.asList(seq))
+      .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
+      .addOutputLane("a")
+      .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      List<Record> records = output.getRecords().get("a");
+      Assert.assertTrue(records.size() > 1);
+      for(long i = 0; i < records.size(); i++) {
+        Field field = records.get((int)i).get().getValueAsMap().get("id");
+        Assert.assertNotNull(field);
+        Assert.assertEquals(Field.Type.LONG, field.getType());
+        Assert.assertEquals(i, field.getValueAsLong());
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }

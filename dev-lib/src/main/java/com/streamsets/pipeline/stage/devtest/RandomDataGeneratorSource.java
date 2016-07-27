@@ -77,6 +77,17 @@ public class RandomDataGeneratorSource extends BaseSource {
   )
   public Map<String, String> headerAttributes;
 
+  /**
+   * Counter for LONG_SEQUENCE type
+   */
+  private long counter;
+
+  @Override
+  protected List<ConfigIssue> init() {
+    counter = 0;
+    return super.init();
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     for(int i =0; i < maxBatchSize; i++) {
@@ -134,6 +145,8 @@ public class RandomDataGeneratorSource extends BaseSource {
         return Field.Type.DECIMAL;
       case BYTE_ARRAY:
         return Field.Type.BYTE_ARRAY;
+      case LONG_SEQUENCE:
+        return Field.Type.LONG;
     }
     return Field.Type.STRING;
   }
@@ -162,6 +175,8 @@ public class RandomDataGeneratorSource extends BaseSource {
         return new BigDecimal(BigInteger.valueOf(random.nextLong() % (long)Math.pow(10, config.precision)), config.scale);
       case BYTE_ARRAY:
         return "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8);
+      case LONG_SEQUENCE:
+        return counter++;
     }
     return null;
   }
@@ -254,7 +269,8 @@ public class RandomDataGeneratorSource extends BaseSource {
     TIME,
     BOOLEAN,
     DECIMAL,
-    BYTE_ARRAY
+    BYTE_ARRAY,
+    LONG_SEQUENCE
   }
 
   enum RootType {
