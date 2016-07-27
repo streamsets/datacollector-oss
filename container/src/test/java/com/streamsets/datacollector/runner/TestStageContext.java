@@ -19,6 +19,10 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.icegreen.greenmail.util.GreenMail;
@@ -49,7 +53,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class TestStageContext {
 
@@ -310,6 +316,138 @@ public class TestStageContext {
     Assert.assertNotNull(map);
     Assert.assertTrue(map.containsKey("key"));
     Assert.assertEquals("value", map.get("key").getValueAsString());
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T createMetrics(StageContext context, String metricName, Class<T> metricClass, final Object value) {
+    if (metricClass.equals(Meter.class)) {
+      Meter m = context.createMeter(metricName);
+      m.mark((long)value);
+      return (T)m;
+    } else if (metricClass.equals(Counter.class)) {
+      Counter c = context.createCounter(metricName);
+      c.inc((long)value);
+      return (T)c;
+    } else if (metricClass.equals(Timer.class)) {
+      Timer t = context.createTimer(metricName);
+      t.update((long)value, TimeUnit.NANOSECONDS);
+      return (T)t;
+    } else {
+      Gauge<Object> g = context.createGauge(metricName, new Gauge<Object>() {
+        @Override
+        public Object getValue() {
+          return value;
+        }
+      });
+      return (T)g;
+    }
+  }
+
+  @Test
+  public void testCreateAndGetMeter() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+    String metricName = "testCreateAndGetMetrics";
+    //Check non existing
+    Assert.assertNull(context.getMeter(metricName));
+    //Check existing
+    createMetrics(context, metricName, Meter.class, 1000L);
+    Meter m = context.getMeter(metricName);
+    Assert.assertNotNull(m);
+    Assert.assertEquals(1000, m.getCount());
+  }
+
+  @Test
+  public void testCreateAndGetTimer() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+
+    String metricName = "testCreateAndGetMetrics";
+    //Check non existing
+    Assert.assertNull(context.getTimer(metricName));
+    //Check existing
+    createMetrics(context, metricName, Timer.class, 1000L);
+    Timer t = context.getTimer(metricName);
+    Assert.assertNotNull(t);
+    Assert.assertEquals(1000, t.getSnapshot().getValues()[0]);
+  }
+
+  @Test
+  public void testCreateAndGetCounter() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+    String metricName = "testCreateAndGetMetrics";
+    //Check non existing
+    Assert.assertNull(context.getCounter(metricName));
+    //Check existing
+    createMetrics(context, metricName, Counter.class, 1000L);
+    Counter c = context.getCounter(metricName);
+    Assert.assertNotNull(c);
+    Assert.assertEquals(1000, c.getCount());
+  }
+
+  @Test
+  public void testCreateAndGetGauge() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+    String metricName = "testCreateAndGetMetrics";
+    //Check non existing
+    Assert.assertNull(context.getGauge(metricName));
+    //Check existing
+    Map<String, Integer> gaugeMap = new HashMap<>();
+    gaugeMap.put("1", 1);
+    gaugeMap.put("2", 2);
+    gaugeMap.put("3", 3);
+    createMetrics(context, metricName, Gauge.class, gaugeMap);
+    Gauge<Map<String, Integer>> g = context.getGauge(metricName);
+    Assert.assertNotNull(g);
+    Assert.assertEquals(gaugeMap, g.getValue());
+    Assert.assertSame(gaugeMap, g.getValue());
+    gaugeMap.remove("3");
+    g =  context.getGauge(metricName);
+    Assert.assertTrue(g.getValue().containsKey("1"));
+    Assert.assertTrue(g.getValue().containsKey("2"));
+    Assert.assertFalse(g.getValue().containsKey("3"));
   }
 
 }

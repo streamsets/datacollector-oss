@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -40,11 +41,11 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -261,16 +262,38 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
       rev);
   }
 
+  public Timer getTimer(String name) {
+    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+  }
+
   @Override
   public Meter createMeter(String name) {
     return MetricsConfigurator.createMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
       rev);
   }
 
+  public Meter getMeter(String name) {
+    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+  }
+
   @Override
   public Counter createCounter(String name) {
     return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name, pipelineName,
       rev);
+  }
+
+  public Counter getCounter(String name) {
+    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Gauge<T> createGauge(String name, Gauge<T> gauge) {
+    return MetricsConfigurator.createGauge(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, gauge, name, rev);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Gauge<T> getGauge(String name) {
+    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
   }
 
   // for SDK
