@@ -80,7 +80,7 @@ public class TestFieldHasherProcessor {
       HashType hashType,
       boolean includeRecordHeaderForHashing
   ) {
-    HashFunction hasher = HashingUtil.getHasher(hashType.getDigest());
+    HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
     Set<String> validFieldsToHash = new HashSet<>();
     for (String fieldPath : fieldsToHash) {
       Field field = record.get(fieldPath);
@@ -111,7 +111,7 @@ public class TestFieldHasherProcessor {
   }
 
   private String computeHash(Field.Type fieldType, Object value, HashType hashType) {
-    HashFunction hasher = HashingUtil.getHasher(hashType.getDigest());
+    HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
     PrimitiveSink sink = hasher.newHasher();
     switch (fieldType) {
       case BOOLEAN:

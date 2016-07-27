@@ -324,7 +324,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       boolean includeRecordHeader
   ) throws StageException {
     try {
-      HashFunction hasher = HashingUtil.getHasher(hashType.getDigest());
+      HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
       HashingUtil.RecordFunnel recordFunnel = HashingUtil.getRecordFunnel(fieldsToHash, includeRecordHeader);
       return hasher.hashObject(record, recordFunnel).toString();
     } catch (IllegalArgumentException e) {

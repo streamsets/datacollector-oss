@@ -41,18 +41,44 @@ import java.util.Set;
  */
 public final class HashingUtil {
 
-  public static HashFunction getHasher(String hashAlgorithm) {
-    switch(hashAlgorithm) {
-      case "murmur3_128":
+  public enum HashType {
+    MURMUR3_128,
+    MURMUR3_32,
+    SIPHASH24,
+    MD5,
+    SHA1,
+    SHA256,
+    SHA512,
+    ADLER32,
+    CRC32,
+    CRC32C,
+    ;
+  }
+
+  public static HashFunction getHasher(HashType hashType) {
+    switch(hashType) {
+      case MURMUR3_128:
         return Hashing.murmur3_128();
-      case "MD5":
+      case MURMUR3_32:
+        return Hashing.murmur3_32();
+      case SIPHASH24:
+        return Hashing.sipHash24();
+      case MD5:
         return Hashing.md5();
-      case "SHA-1":
+      case SHA1:
         return Hashing.sha1();
-      case "SHA-256":
+      case SHA256:
         return Hashing.sha256();
+      case SHA512:
+        return Hashing.sha512();
+      case ADLER32:
+        return Hashing.adler32();
+      case CRC32:
+        return Hashing.crc32();
+      case CRC32C:
+        return Hashing.crc32c();
       default:
-        throw new IllegalArgumentException(Utils.format("Unsupported Hashing Algorithm: {}", hashAlgorithm));
+        throw new IllegalArgumentException(Utils.format("Unsupported Hashing Algorithm: {}", hashType.name()));
     }
   }
 

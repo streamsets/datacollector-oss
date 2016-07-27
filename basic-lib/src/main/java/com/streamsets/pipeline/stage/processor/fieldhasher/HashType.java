@@ -19,16 +19,24 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
+
 public enum HashType {
-  MD5("MD5"),
-  SHA1("SHA-1"),
-  SHA2("SHA-256"),
-  MURMUR3_128("murmur3_128");
+  MD5("MD5", HashingUtil.HashType.MD5),
+  SHA1("SHA-1", HashingUtil.HashType.SHA1),
+  SHA2("SHA-256", HashingUtil.HashType.SHA256),
+  MURMUR3_128("murmur3_128", HashingUtil.HashType.MURMUR3_128),;
 
   private String digest;
+  private HashingUtil.HashType hashType;
 
-  private HashType(String digest) {
+  private HashType(String digest, HashingUtil.HashType hashType) {
     this.digest = digest;
+    this.hashType = hashType;
+  }
+
+  public HashingUtil.HashType getHashType() {
+    return hashType;
   }
 
   public String getDigest() {

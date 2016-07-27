@@ -87,7 +87,7 @@ public class DeDupProcessor extends RecordProcessor {
         //MiB to bytes conversion, use  1000 * 1000 instead of 1024 * 1024
     }
     if (issues.isEmpty()) {
-      hasher = HashingUtil.getHasher("murmur3_128");
+      hasher = HashingUtil.getHasher(HashingUtil.HashType.MURMUR3_128);
       funnel = (compareFields == SelectFields.ALL_FIELDS) ? HashingUtil.getRecordFunnel(Collections.EMPTY_LIST) :
           HashingUtil.getRecordFunnel(fieldsToCompare);
       CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
