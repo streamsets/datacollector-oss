@@ -80,7 +80,7 @@ public class ActiveRecordWriters {
   private DelayQueue<DelayedRecordWriter> cutOffQueue;
 
   public ActiveRecordWriters(RecordWriterManager manager) {
-    writers = Collections.synchronizedMap(new HashMap<String, RecordWriter>());
+    writers = new HashMap<>();
     cutOffQueue = new DelayQueue<>();
     this.manager = manager;
   }
@@ -99,7 +99,9 @@ public class ActiveRecordWriters {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Purging '{}'", delayedWriter.getWriter().getPath());
         }
-        writers.remove(delayedWriter.getWriter().getPath().toString());
+        synchronized (this) {
+          writers.remove(delayedWriter.getWriter().getPath().toString());
+        }
         manager.commitWriter(delayedWriter.getWriter());
       }
       delayedWriter = cutOffQueue.poll();
@@ -108,7 +110,10 @@ public class ActiveRecordWriters {
 
   public RecordWriter get(Date now, Date recordDate, Record record) throws StageException, IOException {
     String path = manager.getPath(recordDate, record).toString();
-    RecordWriter writer = writers.get(path);
+    RecordWriter writer = null;
+    synchronized (this) {
+      writer = writers.get(path);
+    }
 
     if(writer != null && manager.shouldRoll(record)) {
       release(writer, true);
@@ -122,7 +127,9 @@ public class ActiveRecordWriters {
           LOG.trace("Got '{}'", writer.getPath());
         }
         writer.setActiveRecordWriters(this);
-        writers.put(path, writer);
+        synchronized(this) {
+          writers.put(path, writer);
+        }
         cutOffQueue.add(new DelayedRecordWriter(writer));
       }
     }
@@ -146,7 +153,9 @@ public class ActiveRecordWriters {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Release '{}'", writer.getPath());
         }
-        writers.remove(writer.getPath().toString());
+        synchronized(this) {
+          writers.remove(writer.getPath().toString());
+        }
         manager.commitWriter(writer);
       }
     } finally {
@@ -155,7 +164,7 @@ public class ActiveRecordWriters {
     purge();
   }
 
-  public void flushAll() {
+  public synchronized void flushAll() {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Flush all '{}'", toString());
     }
@@ -171,7 +180,7 @@ public class ActiveRecordWriters {
     }
   }
 
-  public void closeAll() {
+  public synchronized void closeAll() {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Close all '{}'", toString());
     }
