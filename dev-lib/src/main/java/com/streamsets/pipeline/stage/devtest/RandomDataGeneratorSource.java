@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -49,10 +50,15 @@ import java.util.UUID;
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
   icon= "dev.png",
+  producesEvents = true,
   upgrader = RandomDataGeneratorSourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+  onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 public class RandomDataGeneratorSource extends BaseSource {
+
+  private final String EVENT_TYPE = "generated-event";
+  private final int EVENT_VERSION = 1;
+
 
   private final Random random = new Random();
 
@@ -77,6 +83,15 @@ public class RandomDataGeneratorSource extends BaseSource {
   )
   public Map<String, String> headerAttributes;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Generate events",
+    description = "If set to true, this source will generate records both on data and event lane.",
+    defaultValue = "false"
+  )
+  public boolean generateEvents;
+
   /**
    * Counter for LONG_SEQUENCE type
    */
@@ -91,24 +106,40 @@ public class RandomDataGeneratorSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     for(int i =0; i < maxBatchSize; i++) {
-      batchMaker.addRecord(createRecord(lastSourceOffset, i));
+      createRecord(i, batchMaker);
     }
     return "random";
   }
 
-  private Record createRecord(String lastSourceOffset, int batchOffset) {
-    Record record = getContext().createRecord("random:" + batchOffset);
-    if(headerAttributes != null && !headerAttributes.isEmpty()) {
-      for (Map.Entry<String, String> e : headerAttributes.entrySet()) {
-        record.getHeader().setAttribute(e.getKey(), e.getValue());
-      }
-    }
+  private void createRecord(int batchOffset, BatchMaker batchMaker) {
+    // Generate random data per configuration
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
       map.put(dataGeneratorConfig.field, Field.create(getFieldType(dataGeneratorConfig.type),
         generateRandomData(dataGeneratorConfig)));
     }
 
+    // Sent normal record
+    Record record = getContext().createRecord("random:" + batchOffset);
+    fillRecord(record, map);
+    batchMaker.addRecord(record);
+
+    if(generateEvents) {
+      EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION);
+      fillRecord(event, map);
+      getContext().toEvent(event);
+    }
+  }
+
+  private void fillRecord(Record record, LinkedHashMap map) {
+    // Fill header
+    if(headerAttributes != null && !headerAttributes.isEmpty()) {
+      for (Map.Entry<String, String> e : headerAttributes.entrySet()) {
+        record.getHeader().setAttribute(e.getKey(), e.getValue());
+      }
+    }
+
+    // Fill Data
     switch (rootFieldType) {
       case MAP:
         record.set(Field.create(map));
@@ -117,8 +148,6 @@ public class RandomDataGeneratorSource extends BaseSource {
         record.set(Field.createListMap(map));
         break;
     }
-
-    return record;
   }
 
   private Field.Type getFieldType(Type type) {
