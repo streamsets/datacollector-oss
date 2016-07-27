@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.util;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.hdfs.CompressionMode;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
@@ -62,9 +63,14 @@ public class HdfsTargetUtil {
     String idleTimeout = null;
     boolean rollIfHeader = false;
     String rollHeaderName = null;
+    String fileNameEL = "";
 
     public HdfsTarget build() {
       HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
+      Utils.checkState(
+          (dataFormat != DataFormat.WHOLE_FILE && fileNameEL.isEmpty()) || (dataFormat == DataFormat.WHOLE_FILE),
+          "FileNameEL should be set only for Whole File Data format"
+      );
       hdfsTargetConfigBean.hdfsUri = hdfsUri;
       hdfsTargetConfigBean.hdfsUser = hdfsUser;
       hdfsTargetConfigBean.hdfsKerberos = hdfsKerberos;
@@ -89,6 +95,7 @@ public class HdfsTargetUtil {
       hdfsTargetConfigBean.idleTimeout = idleTimeout;
       hdfsTargetConfigBean.rollIfHeader = rollIfHeader;
       hdfsTargetConfigBean.rollHeaderName = rollHeaderName;
+      hdfsTargetConfigBean.dataGeneratorFormatConfig.fileNameEL = fileNameEL;
       return new HdfsTarget(hdfsTargetConfigBean);
     }
 
@@ -212,5 +219,9 @@ public class HdfsTargetUtil {
       return this;
     }
 
+    public Builder fileNameEL(String fileNameEL) {
+      this.fileNameEL = fileNameEL;
+      return this;
+    }
   }
 }

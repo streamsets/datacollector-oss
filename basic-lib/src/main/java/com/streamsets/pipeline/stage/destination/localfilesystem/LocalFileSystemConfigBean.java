@@ -19,10 +19,13 @@
  */
 package com.streamsets.pipeline.stage.destination.localfilesystem;
 
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTargetConfigBean;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class LocalFileSystemConfigBean extends HdfsTargetConfigBean {
 
@@ -33,6 +36,19 @@ public class LocalFileSystemConfigBean extends HdfsTargetConfigBean {
     hdfsUser = "";
     hdfsConfigs = new HashMap<>();
     fileType = HdfsFileType.TEXT;
+  }
+
+  @Override
+  protected String getTargetConfigBeanPrefix() {
+    return "configs.";
+  }
+
+  @Override
+  protected void validateStageForWholeFileFormat(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    if (dataFormat == DataFormat.WHOLE_FILE) {
+      fileType = HdfsFileType.WHOLE_FILE;
+    }
+    super.validateStageForWholeFileFormat(context, issues);
   }
 
 }

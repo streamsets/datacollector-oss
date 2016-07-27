@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum HdfsFileType implements Label {
-  TEXT("Text files"), SEQUENCE_FILE("Sequence files");
+  TEXT("Text files"), SEQUENCE_FILE("Sequence files"), WHOLE_FILE("Whole File");
 
   private String label;
   HdfsFileType(String label) {

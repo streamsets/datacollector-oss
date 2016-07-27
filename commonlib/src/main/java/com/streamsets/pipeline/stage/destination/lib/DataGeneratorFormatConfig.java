@@ -33,7 +33,11 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
+import com.streamsets.pipeline.lib.el.MathEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
@@ -317,6 +321,22 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public String messageType;
 
+  /********  For Whole File Content  ***********/
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class, StringEL.class, MathEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "${record:value('/fileInfo/filename')}",
+      description = "File Name Expression",
+      label = "File Name Expression",
+      displayPosition = 450,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE"
+  )
+  public String fileNameEL;
+
   private boolean validateDataGenerator (
       Stage.Context context,
       DataFormat dataFormat,
@@ -475,7 +495,6 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case DELIMITED:
       case SDC_JSON:
       case AVRO:
-      case WHOLE_FILE:
         //no-op
         break;
       case PROTOBUF:
@@ -511,6 +530,18 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
             );
             valid = false;
           }
+        }
+        break;
+      case WHOLE_FILE:
+        if (fileNameEL == null || fileNameEL.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.WHOLE_FILE.name(),
+                  configPrefix + ".fileNameEL",
+                  DataFormatErrors.DATA_FORMAT_200
+              )
+          );
+          valid = false;
         }
         break;
       default:

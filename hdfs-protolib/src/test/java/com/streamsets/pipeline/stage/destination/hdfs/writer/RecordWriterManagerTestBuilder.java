@@ -55,6 +55,7 @@ public final class RecordWriterManagerTestBuilder {
   private boolean rollIfHeader = false;
   private  String rollHeaderName = "roll";
   private String config = "dirPathTemplate";
+  private String fileNameEL = "";
   private DataGeneratorFactory generatorFactory = new TestActiveRecordWriters.DummyDataGeneratorFactory(null);
   private Target.Context context;
 
@@ -152,6 +153,11 @@ public final class RecordWriterManagerTestBuilder {
     return this;
   }
 
+  public RecordWriterManagerTestBuilder fileNameEL(String fileNameEL) {
+    this.fileNameEL = fileNameEL;
+    return this;
+  }
+
   public RecordWriterManager build() throws IOException {
     RecordWriterManager mgr = new RecordWriterManager(
       FileSystem.get(hdfsUri, hdfsConf),
@@ -169,6 +175,7 @@ public final class RecordWriterManagerTestBuilder {
       keyEL,
       rollIfHeader,
       rollHeaderName,
+      fileNameEL,
       generatorFactory,
       context,
       config

@@ -44,7 +44,6 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -61,7 +60,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +72,10 @@ public class HdfsTargetConfigBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(HdfsTargetConfigBean.class);
   private static final int MEGA_BYTE = 1024 * 1024;
-  public static final String HDFS_TARGET_CONFIG_BEAN_PREFIX = "hdfsTargetConfigBean.";
+
+  protected String getTargetConfigBeanPrefix() {
+    return "hdfsTargetConfigBean.";
+  }
 
   @ConfigDef(
     required = false,
@@ -417,6 +418,7 @@ public class HdfsTargetConfigBean {
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean hadoopFSValidated = validateHadoopFS(context, issues);
+    String fileNameEL = "";
 
     lateRecordsLimitSecs =
         initTimeConfigs(context, "lateRecordsLimit", lateRecordsLimit, Groups.LATE_RECORDS,
@@ -429,7 +431,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.LATE_RECORDS.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "maxFileSize",
+              getTargetConfigBeanPrefix() + "maxFileSize",
               Errors.HADOOPFS_08
           )
       );
@@ -439,7 +441,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.LATE_RECORDS.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "maxRecordsPerFile",
+              getTargetConfigBeanPrefix() + "maxRecordsPerFile",
               Errors.HADOOPFS_09
           )
       );
@@ -453,9 +455,14 @@ public class HdfsTargetConfigBean {
         context,
         dataFormat,
         Groups.OUTPUT_FILES.name(),
-        HDFS_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig",
+        getTargetConfigBeanPrefix() + "dataGeneratorFormatConfig",
         issues
     );
+
+    if (dataFormat == DataFormat.WHOLE_FILE) {
+      validateStageForWholeFileFormat(context, issues);
+      fileNameEL = dataGeneratorFormatConfig.fileNameEL;
+    }
 
     SequenceFile.CompressionType compressionType = (seqFileCompressionType != null)
       ? seqFileCompressionType.getType() : null;
@@ -500,7 +507,7 @@ public class HdfsTargetConfigBean {
         RecordWriterManager mgr = new RecordWriterManager(fs, hdfsConfiguration, uniquePrefix,
                 dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
                 maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-                rollIfHeader, rollHeaderName,
+                rollIfHeader, rollHeaderName, fileNameEL,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
         if (idleTimeSecs > 0) {
@@ -515,13 +522,13 @@ public class HdfsTargetConfigBean {
           if (mgr.validateDirTemplate(
             Groups.OUTPUT_FILES.name(),
             "dirPathTemplate",
-            HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+            getTargetConfigBeanPrefix() + "dirPathTemplate",
             issues
           )) {
             String newDirPath = mgr.getDirPath(new Date()).toString();
             if (validateHadoopDir(       // permission check on the output directory
               context,
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+              getTargetConfigBeanPrefix() + "dirPathTemplate",
               Groups.OUTPUT_FILES.name(),
               newDirPath, issues
             )) {
@@ -553,6 +560,7 @@ public class HdfsTargetConfigBean {
                   keyEl,
                   false,
                   null,
+                  fileNameEL,
                   dataGeneratorFormatConfig.getDataGeneratorFactory(),
                   (Target.Context) context, "lateRecordsDirPathTemplate"
           );
@@ -565,7 +573,7 @@ public class HdfsTargetConfigBean {
           if (mgr.validateDirTemplate(
               Groups.OUTPUT_FILES.name(),
               "lateRecordsDirPathTemplate",
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
+              getTargetConfigBeanPrefix() + "lateRecordsDirPathTemplate",
               issues
           )) {
             String newLateRecordPath = mgr.getDirPath(new Date()).toString();
@@ -573,7 +581,7 @@ public class HdfsTargetConfigBean {
                 lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty() &&
                 validateHadoopDir(       // permission check on the late record directory
                     context,
-                    HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
+                    getTargetConfigBeanPrefix() + "lateRecordsDirPathTemplate",
                     Groups.LATE_RECORDS.name(),
                     newLateRecordPath, issues
             )) {
@@ -598,7 +606,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               Groups.OUTPUT_FILES.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "timeDriver",
+              getTargetConfigBeanPrefix() + "timeDriver",
               Errors.HADOOPFS_19,
               ex.toString(),
               ex
@@ -610,7 +618,7 @@ public class HdfsTargetConfigBean {
       issues.add(
         context.createConfigIssue(
           Groups.OUTPUT_FILES.name(),
-          HDFS_TARGET_CONFIG_BEAN_PREFIX + "rollHeaderName",
+          getTargetConfigBeanPrefix() + "rollHeaderName",
           Errors.HADOOPFS_51
         )
       );
@@ -681,7 +689,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
                 configGroup.name(),
-                HDFS_TARGET_CONFIG_BEAN_PREFIX + configName,
+                getTargetConfigBeanPrefix() + configName,
                 errorCode
             )
         );
@@ -690,7 +698,7 @@ public class HdfsTargetConfigBean {
       issues.add(
           context.createConfigIssue(
               configGroup.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + configName,
+              getTargetConfigBeanPrefix() + configName,
               Errors.HADOOPFS_06,
               configuredValue,
               ex.toString(),
@@ -779,7 +787,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                getTargetConfigBeanPrefix() + "hdfsConfDir",
                 Errors.HADOOPFS_45,
                 hdfsConfDir
             )
@@ -792,7 +800,7 @@ public class HdfsTargetConfigBean {
           issues.add(
               context.createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                  getTargetConfigBeanPrefix() + "hdfsConfDir",
                   Errors.HADOOPFS_25,
                   hadoopConfigDir.getPath()
               )
@@ -801,7 +809,7 @@ public class HdfsTargetConfigBean {
           issues.add(
               context.createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                  getTargetConfigBeanPrefix() + "hdfsConfDir",
                   Errors.HADOOPFS_26,
                   hadoopConfigDir.getPath()
               )
@@ -813,7 +821,7 @@ public class HdfsTargetConfigBean {
               issues.add(
                   context.createConfigIssue(
                       Groups.HADOOP_FS.name(),
-                      HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                      getTargetConfigBeanPrefix() + "hdfsConfDir",
                       Errors.HADOOPFS_27,
                       coreSite.getPath()
                   )
@@ -827,7 +835,7 @@ public class HdfsTargetConfigBean {
               issues.add(
                   context.createConfigIssue(
                       Groups.HADOOP_FS.name(),
-                      HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                      getTargetConfigBeanPrefix() + "hdfsConfDir",
                       Errors.HADOOPFS_27,
                       hdfsSite.getPath()
                   )
@@ -842,6 +850,54 @@ public class HdfsTargetConfigBean {
       conf.set(config.getKey(), config.getValue());
     }
     return conf;
+  }
+
+  protected void validateStageForWholeFileFormat(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    if (maxRecordsPerFile != 1) {
+      //One record is one file transfer.
+      issues.add(
+          context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              getTargetConfigBeanPrefix() + "maxRecordsPerFile",
+              Errors.HADOOPFS_53,
+              maxRecordsPerFile,
+              1
+          )
+      );
+    }
+    if (maxFileSize != 0) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              getTargetConfigBeanPrefix() + "maxFileSize",
+              Errors.HADOOPFS_53,
+              maxFileSize,
+              0
+          )
+      );
+    }
+    if (fileType != HdfsFileType.WHOLE_FILE) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              getTargetConfigBeanPrefix() + "fileType",
+              Errors.HADOOPFS_53,
+              fileType,
+              HdfsFileType.WHOLE_FILE.getLabel()
+          )
+      );
+    }
+    if (!idleTimeout.equals("-1")) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              getTargetConfigBeanPrefix() + "idleTimeout",
+              Errors.HADOOPFS_53,
+              idleTimeout,
+              "-1"
+          )
+      );
+    }
   }
 
   private boolean validateHadoopFS(Stage.Context context, List<Stage.ConfigIssue> issues) {
@@ -865,7 +921,7 @@ public class HdfsTargetConfigBean {
         issues.add(
             context.createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsUri",
+                getTargetConfigBeanPrefix() + "hdfsUri",
                 Errors.HADOOPFS_18,
                 hdfsUri
             )
@@ -893,7 +949,7 @@ public class HdfsTargetConfigBean {
           issues.add(
               context.createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsKerberos",
+                  getTargetConfigBeanPrefix() + "hdfsKerberos",
                   Errors.HADOOPFS_00,
                   loginUgi.getAuthenticationMethod(),
                   UserGroupInformation.AuthenticationMethod.KERBEROS
