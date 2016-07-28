@@ -18,8 +18,8 @@
  <conbody>
   <p><indexterm>functions<indexterm>math functions</indexterm></indexterm><indexterm>math
                     functions<indexterm>description</indexterm></indexterm>Use math functions to
-            perform math on numeric values. You can replace any argument with a constant, or a field
-            or expression that evaluates to a number.</p>
+            perform math on numeric values. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
         <p>You can use the following data types with math functions:<ul id="ul_qz1_3bf_lw">
                 <li>Double</li>
                 <li>Float  </li>
@@ -43,6 +43,7 @@
                 <dlentry>
                     <dt>math:ceil(&lt;number>)</dt>
                     <dd>Returns the smallest integer greater than or equal to the argument.</dd>
+                    <dd>For example, ${math:ceil(8.0+3.6)} returns 12.0.</dd>
                     <dd>Return type: Double.</dd>
                 </dlentry>
                 <dlentry>
@@ -53,6 +54,9 @@
                 <dlentry>
                     <dt>math:max(&lt;number1>, &lt;number2>)</dt>
                     <dd>Returns the greater of two arguments.</dd>
+                    <dd>For example, if the value of the tip_amount field is 2.5 and the value of
+                        the fare_amount field is 12.5, then ${math:max(record:value("/tip_amount"),
+                        record:value("/fare_amount"))} returns 12.5.</dd>
                     <dd>Return type: Double, Float, Int, or Long, based on the data type of the
                         argument.</dd>
                 </dlentry>

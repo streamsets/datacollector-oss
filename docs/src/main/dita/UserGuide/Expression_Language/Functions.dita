@@ -37,15 +37,15 @@
        <entry>
         <p>
          <ul id="ul_gdz_wb2_gs">
-          <li>record:attribute('&lt;attribute name>') </li>
-          <li>record:attributeOrDefault('&lt;attribute name>' , &lt;default value>)</li>
+          <li>record:attribute(&lt;attribute name>) </li>
+          <li>record:attributeOrDefault(&lt;attribute name>, &lt;default value>)</li>
           <li>record:creator()</li>
-          <li>record:exists('&lt;field path>')</li>
+          <li>record:exists(&lt;field path>)</li>
           <li>record:id()</li>
           <li>record:path()</li>
-          <li>record:type('&lt;field path>')</li>
-          <li>record:value('&lt;field path>')</li>
-          <li>record:valueOrDefault('&lt;field path>', &lt;default value>)</li>
+          <li>record:type(&lt;field path>)</li>
+          <li>record:value(&lt;field path>)</li>
+          <li>record:valueOrDefault(&lt;field path>, &lt;default value>)</li>
          </ul>
         </p>
        </entry>
@@ -55,12 +55,12 @@
          functions</xref></entry>
        <entry>
         <ul id="ul_z2x_jc2_gs">
-         <li>record:dExists('&lt;header>') </li>
+         <li>record:dExists(&lt;header>) </li>
          <li>record:dHasDupHeader() </li>
-         <li>record:dIndex('&lt;header>')</li>
-         <li>record:dIsDupHeader('&lt;header>')</li>
+         <li>record:dIndex(&lt;header>)</li>
+         <li>record:dIsDupHeader(&lt;header>)</li>
          <li>record:dToMap()</li>
-         <li>record:dValue('&lt;header>')</li>
+         <li>record:dValue(&lt;header>)</li>
          <li>record:dValueAt(&lt;header index>)</li>
         </ul>
        </entry>
@@ -83,10 +83,10 @@
        <entry><xref href="Base64Functions.dita#concept_ylk_v44_jw">Base64 functions</xref></entry>
        <entry>
         <ul id="ul_ecm_y1d_kw">
-         <li>base64:decodeBytes("&lt;string>")</li>
-         <li>base64:decodeString("&lt;string>", "&lt;charset>")</li>
+         <li>base64:decodeBytes(&lt;string>)</li>
+         <li>base64:decodeString(&lt;string>, &lt;charset>)</li>
          <li>base64:encodeBytes(&lt;byte array>, &lt;urlSafe: true | false>)</li>
-         <li>base64:encodeString("&lt;string>", &lt;urlSafe: true | false>, "&lt;charset>")</li>
+         <li>base64:encodeString(&lt;string>, &lt;urlSafe: true | false>, &lt;charset>)</li>
         </ul>
        </entry>
       </row>
@@ -94,10 +94,10 @@
        <entry><xref href="DataDriftFunctions.dita">Data drift functions</xref></entry>
        <entry>
         <ul id="ul_wsq_kfk_p5">
-         <li>drift:names('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:order('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:size('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
-         <li>drift:type('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:names(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:order(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:size(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</li>
+         <li>drift:type(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</li>
         </ul>
        </entry>
       </row>
@@ -119,20 +119,20 @@
        <entry>
         <p>
          <ul id="ul_f15_xf2_gs">
-          <li>str:concat("&lt;string1>", "&lt;string2>")</li>
-          <li>str:contains("&lt;string>", "&lt;subset>") </li>
-          <li>str:endsWith("&lt;string>", "&lt;subset>")</li>
-          <li>str:length("&lt;string>")</li>
-          <li>str:matches("&lt;string>", &lt;regEx>)</li>
-          <li>str:regexCapture("&lt;string>", &lt;regEx>, &lt;group>)</li>
-          <li>str:replace("&lt;string>", "&lt;oldChar>", "&lt;newChar>")</li>
-          <li>str:replaceAll("&lt;string>", "&lt;regEx>", "&lt;newString>")</li>
-          <li>str:startsWith("&lt;string>", "&lt;subset>")</li>
-          <li>str:substring("&lt;string>", &lt;beginIndex>, &lt;endIndex>)</li>
-          <li>str:toLower("&lt;string>")</li>
-          <li>str:toUpper("&lt;string>")</li>
-          <li>str:trim("&lt;string>")</li>
-          <li>str:truncate("&lt;string>", &lt;length>)</li>
+          <li>str:concat(&lt;string1>, &lt;string2>)</li>
+          <li>str:contains(&lt;string>, &lt;subset>) </li>
+          <li>str:endsWith(&lt;string>, &lt;subset>)</li>
+          <li>str:length(&lt;string>)</li>
+          <li>str:matches(&lt;string>, &lt;regEx>)</li>
+          <li>str:regexCapture(&lt;string>, &lt;regEx>, &lt;group>)</li>
+          <li>str:replace(&lt;string>, &lt;oldChar>, &lt;newChar>)</li>
+          <li>str:replaceAll(&lt;string>, &lt;regEx>, &lt;newString>)</li>
+          <li>str:startsWith(&lt;string>, &lt;subset>)</li>
+          <li>str:substring(&lt;string>, &lt;beginIndex>, &lt;endIndex>)</li>
+          <li>str:toLower(&lt;string>)</li>
+          <li>str:toUpper(&lt;string>)</li>
+          <li>str:trim(&lt;string>)</li>
+          <li>str:truncate(&lt;string>, &lt;length>)</li>
          </ul>
         </p>
        </entry>
@@ -158,12 +158,12 @@
          <li>every(&lt;interval>, &lt;mm() | ss()>)</li>
          <li>field:field()</li>
          <li>jvm:maxMemoryMB()</li>
-         <li>runtime:conf('&lt;runtime property>')</li>
-         <li>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</li>
+         <li>runtime:conf(&lt;runtime property>)</li>
+         <li>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</li>
          <li>sdc:hostname()</li>
          <li>sdc:id()</li>
-         <li>vault:read("&lt;path>", "&lt;key>")</li>
-         <li>vault:readWithDelay("&lt;path>", "&lt;key>", &lt;delay>)</li>
+         <li>vault:read(&lt;path>, &lt;key>)</li>
+         <li>vault:readWithDelay(&lt;path>, &lt;key>, &lt;delay>)</li>
         </ul>
        </entry>
       </row>

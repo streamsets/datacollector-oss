@@ -907,7 +907,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dd>You can use the following expression to use the value of a field
                                     and the specified default value if the field does not exist or
                                     if the field is null:
-                                    <codeblock>${record:valueOrDefault("/&lt;field name>", &lt;default value>)}</codeblock></dd>
+                                    <codeblock>${record:valueOrDefault(&lt;field path>, &lt;default value>)}</codeblock></dd>
                               <dd>For example, the following directory template creates a directory
                                     based on the product field every day, and if the product field
                                     is empty or null, uses Misc in the directory path:
@@ -1177,7 +1177,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Preview chapter.</draft-comment>
             <note id="PreviewDateFormat">Data preview displays date, datetime, and time data using
                   the default format of the browser locale. For example, if the browser uses the
-                  en_US locale, preview displays datetime data using the following format: MMM d, y
-                  h:mm:ss a.</note>
+                  en_US locale, preview displays dates using the following format: MMM d, y h:mm:ss
+                  a.</note>
+            <draft-comment author="alisontaylor">Used in the Function types sections in the
+                  Expression Language chapter.</draft-comment>
+            <p id="FunctionArgument">You can replace any argument with a literal or an expression
+                  that evaluates to the argument. String literals must be enclosed in single or
+                  double quotation marks.</p>
       </conbody>
 </concept>

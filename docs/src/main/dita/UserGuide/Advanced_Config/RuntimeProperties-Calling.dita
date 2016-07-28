@@ -21,7 +21,7 @@
  <conbody>
   <p><indexterm>runtime properties<indexterm>calling from a pipeline</indexterm></indexterm>To call
             a runtime property, use the following syntax:
-            <codeblock>runtime:conf('&lt;property name>')</codeblock></p>
+            <codeblock>runtime:conf(&lt;property name>)</codeblock></p>
     <note>If you defined the runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file, enter just <codeph>&lt;property name></codeph> and not <codeph>runtime.conf_&lt;property name></codeph>.</note>

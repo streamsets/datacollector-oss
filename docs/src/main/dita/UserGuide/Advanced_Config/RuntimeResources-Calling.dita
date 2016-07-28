@@ -21,7 +21,7 @@
  <conbody>
   <p><indexterm>runtime resources<indexterm>calling from a pipeline</indexterm></indexterm>To call a
       runtime resource, use the following syntax: </p>
-  <codeblock>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</codeblock>
+  <codeblock>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</codeblock>
   <p>For example, the following expression returns the password for a JDBC Consumer origin. The file
    is named JDBCpassword.txt and is restricted so only the owner can read the
    file:<codeblock>${runtime:loadResource("JDBCpassword.txt", true)</codeblock></p>

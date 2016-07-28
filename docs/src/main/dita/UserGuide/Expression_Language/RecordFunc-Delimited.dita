@@ -23,9 +23,10 @@
      functions<indexterm>description</indexterm></indexterm>For more information about the delimited
    data root field types, see <xref
     href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"/>.</p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
-     <dt>record:dExists('&lt;header name>')</dt>
+     <dt>record:dExists(&lt;header name>)</dt>
      <dd>Determines if the specified header name exists in the record.</dd>
      <dd>Return type: Boolean.</dd>
     </dlentry>
@@ -35,13 +36,13 @@
      <dd>Return type: Boolean.</dd>
     </dlentry>
     <dlentry>
-     <dt>record:dIndex('&lt;header name>')</dt>
+     <dt>record:dIndex(&lt;header name>)</dt>
      <dd>Returns the index associated with the specified header name. Use to find the position of a
       header in the record. </dd>
      <dd>Return type: Integer, starting with 0 for the first position.</dd>
     </dlentry>
     <dlentry>
-     <dt>record:dIsDupHeader('&lt;header name>')</dt>
+     <dt>record:dIsDupHeader(&lt;header name>)</dt>
      <dd>Determines if the specified header name is used more than once in a record. </dd>
      <dd>Return type: Boolean.</dd>
     </dlentry>
@@ -56,7 +57,7 @@
      <dd><image href="../Graphics/Delim-ConvertType.png" id="image_bg2_jhk_35" scale="50"/></dd>
     </dlentry>
     <dlentry>
-     <dt>record:dValue('&lt;header name>')</dt>
+     <dt>record:dValue(&lt;header name>)</dt>
      <dd>Returns the value associated with the specified header name. </dd>
      <dd>Return type: String.</dd>
     </dlentry>

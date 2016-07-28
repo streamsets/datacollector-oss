@@ -17,12 +17,13 @@
  <title>Base64 Functions</title>
  <shortdesc>Use Base64 functions to encode or decode data using Base64.</shortdesc>
  <conbody>
-  <p><indexterm>functions<indexterm>Base64 functions</indexterm></indexterm><indexterm>Base64
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
+        <p><indexterm>functions<indexterm>Base64 functions</indexterm></indexterm><indexterm>Base64
                     functions<indexterm>description</indexterm></indexterm>The expression language
             provides the following Base64 functions:</p>
         <dl>
             <dlentry>
-                <dt>base64:decodeBytes("&lt;string>")</dt>
+                <dt>base64:decodeBytes(&lt;string>)</dt>
                 <dd>Returns a decoded byte array from a Base64 encoded string.</dd>
                 <dd>Return type: Byte Array.</dd>
                 <dd>Uses the following argument:<ul id="ul_jvq_sx4_jw">
@@ -32,7 +33,7 @@
                     encoded string in the ID field as a byte array value.</dd>
             </dlentry>
             <dlentry>
-                <dt>base64:decodeString("&lt;string>", "&lt;charset>")</dt>
+                <dt>base64:decodeString(&lt;string>, &lt;charset>)</dt>
                 <dd>Returns a decoded string from a Base64 encoded string using the specified
                     character set.</dd>
                 <dd>Return type: String.</dd>
@@ -58,8 +59,7 @@
                     safe.</dd>
             </dlentry>
             <dlentry>
-                <dt>base64:encodeString("&lt;string>", &lt;urlSafe: true | false>,
-                    "&lt;charset>")</dt>
+                <dt>base64:encodeString(&lt;string>, &lt;urlSafe: true | false>, &lt;charset>)</dt>
                 <dd>
                     <p>Returns a Base64 encoded string value of the specified string. </p>
                 </dd>

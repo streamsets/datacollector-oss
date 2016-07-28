@@ -18,8 +18,10 @@
  <conbody>
   <p><indexterm>functions<indexterm>miscellaneous
         functions</indexterm></indexterm><indexterm>miscellaneous
-          functions<indexterm>description</indexterm></indexterm>The expression language provides
-      the following miscellaneous functions:</p>
+          functions<indexterm>description</indexterm></indexterm>In miscellaneous functions, you can
+      replace any argument with a literal or an expression that evaluates to the argument. String
+      literals must be enclosed in single or double quotation marks.</p>
+    <p>The expression language provides the following miscellaneous functions:</p>
   <dl>
       <dlentry>
         <dt>alert:info()</dt>
@@ -35,7 +37,7 @@
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>
-        <dt>every( &lt;interval>, &lt; mm() | ss() > )</dt>
+        <dt>every(&lt;interval>, &lt; mm() | ss() >)</dt>
         <dd>Represents the interval of minutes or seconds for generating output directories for the
           Hadoop FS, Local FS, or MapR FS destination. You can use the function once in the
           Directory Template property in place of the minutes or seconds datetime variables. Use the
@@ -71,7 +73,7 @@
           <codeblock>${jvm:maxMemoryMB() * 0.65}</codeblock></dd>
       </dlentry>
    <dlentry>
-    <dt>runtime:conf("&lt;runtime property>")</dt>
+    <dt>runtime:conf(&lt;runtime property>)</dt>
     <dd>Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>
     <dd>Uses the following argument:<ul id="ul_vqc_2h1_1s">
       <li>runtime configuration name - Name of the configuration property to use. The property must
@@ -82,7 +84,7 @@
             href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>.</dd>
    </dlentry>
       <dlentry>
-        <dt>runtime:loadResource("&lt;file name>", &lt;restricted: true | false>)</dt>
+        <dt>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</dt>
         <dd>Returns the value in the specified file. Use to call a runtime resource.</dd>
         <dd>Uses the following arguments:<ul id="ul_ytn_xmm_2s">
             <li>file name - Name of the file that contains the information to be loaded. The file
@@ -121,7 +123,7 @@
           MapReduce.</p></dd>
       </dlentry>
       <dlentry>
-        <dt>vault:read("&lt;path>", "&lt;key>")</dt>
+        <dt>vault:read(&lt;path>, &lt;key>)</dt>
         <dd>Returns the value for the key on the specified path. You can use the function in <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultOneFunction-Usage"
           /></dd>
@@ -132,7 +134,7 @@
           </ul></dd>
       </dlentry>
       <dlentry>
-        <dt>vault:readWithDelay("&lt;path>", "&lt;key>", &lt;delay>)</dt>
+        <dt>vault:readWithDelay(&lt;path>, &lt;key>, &lt;delay>)</dt>
         <dd>Returns the value for the key on the specified path after waiting the specified amount
           of time. Use when you want a delayed response to allow time for external processing.
             <p>You can use the function in <ph

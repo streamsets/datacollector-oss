@@ -19,8 +19,8 @@
  <conbody>
   <p><indexterm>functions<indexterm>time functions</indexterm></indexterm><indexterm>time
                     functions<indexterm>description</indexterm></indexterm>You can replace any
-            argument with a field or expression that evaluates to a datetime value. You cannot
-            replace an argument with a datetime constant.</p>
+            argument with an expression that evaluates to a datetime value. You cannot replace an
+            argument with a datetime literal.</p>
         <p>The expression language provides the following time functions:</p>
         <dl>
             <dlentry>
@@ -38,7 +38,7 @@
                     January 1, 1970.</dd>
                 <dd>For example, if the current time of the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> machine is Jul 25, 2016 5:18:05 PM, then  ${time.trimDate(time:now())}
+                    /> machine is Jul 25, 2016 5:18:05 PM, then ${time.trimDate(time:now())}
                     returns: Jan 1, 1970 5:18:05 PM.</dd>
                 <dd>Return type: Datetime. </dd>
             </dlentry>

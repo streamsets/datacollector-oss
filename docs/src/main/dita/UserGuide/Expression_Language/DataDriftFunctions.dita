@@ -18,14 +18,15 @@
  <shortdesc>Use data drift functions to create alerts when data drift occurs. You can use these
         functions in data drift rules.</shortdesc>
  <conbody>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
   <p><indexterm>functions<indexterm>data drift functions</indexterm></indexterm><indexterm>data
                 drift functions<indexterm>description</indexterm></indexterm>The expression language
             provides the following data drift functions: <dl>
                 <dlentry>
-                    <dt>drift:names('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
-                    <dd>Triggers an alert when key values change in map or list-map field. When key
-                        values are field names, triggers an alert when field names change. Use with
-                        list-map or map fields. </dd>
+                    <dt>drift:names(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</dt>
+                    <dd>Triggers an alert when key values change in a map or list-map field. When
+                        key values are field names, triggers an alert when field names change. Use
+                        with list-map or map fields. </dd>
                     <dd>
                         <p
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DRIFT-ignoreWMissing"/>
@@ -35,7 +36,7 @@
                         follows:<codeblock>${drift:names('/', true)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>drift:order('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
+                    <dt>drift:order(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</dt>
                     <dd>Triggers an alert when the field order changes for fields within a list-map
                         field. Use only with list-map fields. </dd>
                     <dd>Note that this function triggers alerts when field names change as
@@ -49,7 +50,7 @@
                         follows:<codeblock>${drift:order('/', true)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>drift:size('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
+                    <dt>drift:size(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</dt>
                     <dd>Triggers an alert when the number of fields changes within a list, list-map,
                         or map field. Use with list, list-map, or map fields.</dd>
                     <dd>
@@ -61,7 +62,7 @@
                         expression:<codeblock>${drift:size('/Depts', false)}</codeblock></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>drift:type('&lt;field path>', &lt;ignoreWhenMissing: true | false>)</dt>
+                    <dt>drift:type(&lt;field path>, &lt;ignoreWhenMissing: true | false>)</dt>
                     <dd>Triggers an alert when the data type of the specified field changes.
                         Evaluates only the specified field.</dd>
                     <dd>

@@ -18,12 +18,12 @@
  <shortdesc>Use record functions to determine information about a record, such as the stage that
   created it or whether a field exists in the record. </shortdesc>
  <conbody>
+  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
   <p><indexterm>functions<indexterm>record functions</indexterm></indexterm><indexterm>record
-     functions<indexterm>description</indexterm></indexterm>The expression language provides the
-   following general record functions:</p>
+   functions<indexterm>description</indexterm></indexterm>The expression language provides the following general record functions: </p>
   <dl>
    <dlentry>
-    <dt>record:attribute('&lt;attribute name>')</dt>
+    <dt>record:attribute(&lt;attribute name>)</dt>
     <dd>Returns the value of the specified record attribute. Use to return data, for example, for
      the "tag" attribute that you set using the File Tail origin. </dd>
     <dd>Return type: String.</dd>
@@ -31,7 +31,7 @@
      Tail origin:<codeblock>${record:attribute('tag')}</codeblock></dd>
    </dlentry>
    <dlentry>
-    <dt>record:attributeOrDefault('&lt;attribute name>' , &lt;default value>)</dt>
+    <dt>record:attributeOrDefault(&lt;attribute name> , &lt;default value>)</dt>
     <dd>Returns the value of the attribute in the appropriate data type. If the attribute does not
      exist or if the field is null, returns the default value.</dd>
     <dd>Use to provide a default value when an attribute does not exist or when the attribute is
@@ -48,13 +48,13 @@
      each record:<codeblock>${record:creator()}</codeblock></dd>
    </dlentry>
    <dlentry>
-    <dt>record:exists('&lt;field path>')</dt>
+    <dt>record:exists(&lt;field path>)</dt>
     <dd>Determines if the specified field is in a record. When the field is not in the record,
      returns 0. When the field is in the record, returns 1. </dd>
     <dd>Return type: Boolean.</dd>
     <dd>For example, the following expression returns 1 when the Name field exists in a
      record:<codeblock>${record:exists('/Name')}</codeblock></dd>
-    <dd>It returns 0 when the /Name field is not part of the record.</dd>
+    <dd>It returns 0 when the Name field is not part of the record.</dd>
    </dlentry>
    <dlentry>
     <dt>record:id()</dt>
@@ -70,7 +70,7 @@
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>
-    <dt>record:type('&lt;field path>')</dt>
+    <dt>record:type(&lt;field path>)</dt>
     <dd>Checks the data type of a field. Possible return values are: <ul id="ul_lmr_2hv_1r">
       <li>Boolean</li>
       <li>Char</li>
@@ -84,6 +84,7 @@
       <li>Datetime</li>
       <li>Decimal</li>
       <li>String</li>
+      <li>Time</li>
       <li>Byte-Array</li>
       <li>Map</li>
       <li>List</li>
@@ -91,7 +92,7 @@
     <dd>Return type: String. </dd>
    </dlentry>
    <dlentry>
-    <dt>record:value('&lt;field path>')</dt>
+    <dt>record:value(&lt;field path>)</dt>
     <dd>Returns the value of the field in the appropriate data type.</dd>
     <dd>Return type: When the field includes a value, returns the type based on the field value.
      When the field is null, the function returns no value. </dd>
@@ -102,7 +103,7 @@
     </dd>
    </dlentry>
    <dlentry>
-    <dt>record:valueOrDefault('&lt;field path>' , &lt;default value>)</dt>
+    <dt>record:valueOrDefault(&lt;field path> , &lt;default value>)</dt>
     <dd>Returns the value of the field in the appropriate data type. If the field does not exist or
      if the field is null, returns the default value.</dd>
     <dd>Use to provide a default value when a field does not exist or when a field is null. </dd>
