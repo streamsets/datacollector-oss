@@ -32,7 +32,7 @@
 BLACKLIST_PROP="system.stagelibs.blacklist"
 SDC_PROP_FILE="sdc.properties"
 SDC_POLOCY_FILE="sdc-security.policy"
-MAPR_VERSION=5.1
+MAPR_VERSION=5.1.0
 MAPR_HOME=""
 MAPR_LIB="streamsets-datacollector-mapr"
 SDC_HOME=$PWD
@@ -56,9 +56,24 @@ elif [[ $OSTYPE == "cygwin" ]];then
 fi
 
 # Input from user
-read -p "Please enter the MapR version (default 5.1): " MAPR_VERSION
-MAPR_VERSION=${MAPR_VERSION:=5.1}
+read -p "Please enter the MapR version (default 5.1.0): " MAPR_VERSION
+MAPR_VERSION=${MAPR_VERSION:=5.1.0}
+# Check if input version is valid
+if ! [[ $MAPR_VERSION =~ ^[1-9][0-9]*\.[0-9]*(\.[0-9]*)*$ ]];
+then
+  echo "Error: Invalid MapR version number"
+  exit 0
+fi
+MAPR_VERSION=`expr "$MAPR_VERSION" : '\([1-9][0-9]*\.[0-9]*\)'`
+_MAPR_VERSION=${MAPR_VERSION/"."/"_"}
+MAPR_LIB=${MAPR_LIB}_${_MAPR_VERSION}-lib
+# Check if this Data Collector support the MapR version
+if [ ! -d "$SDC_HOME/streamsets-libs/$MAPR_LIB" ]; then
+   echo "Error: StreamSets Data Collector does not support MapR version $MAPR_VERSION"
+  exit 0
+fi
 
+# Obtain MapR home
 read -p "Please enter the absolute path of MapR Home (default /opt/mapr): " MAPR_HOME
 MAPR_HOME=${MAPR_HOME:="/opt/mapr"}
 
@@ -70,8 +85,6 @@ fi
 
 # Remove MapR Version from sdc.properies file
 printf "Updating etc/sdc.properties file ...."
-_MAPR_VERSION=${MAPR_VERSION/"."/"_"}
-MAPR_LIB=${MAPR_LIB}_${_MAPR_VERSION}-lib
 original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_HOME}/etc/${SDC_PROP_FILE}")
 blacklist_property=${original_property/$MAPR_LIB,/}
 sed -i ${option} "s/${original_property}/${blacklist_property}/" "${SDC_HOME}/etc/${SDC_PROP_FILE}"
@@ -88,7 +101,7 @@ printf "Done.\n"
 
 # Add permission to sdc-security.policy file
 printf "Updating etc/sdc-security.policy file ..."
-printf "\ngrant c:wodebase \"file://${MAPR_HOME}/-\" {\n  permission java.security.AllPermission;\n};\n" >> ${SDC_HOME}/etc/${SDC_POLOCY_FILE}
+printf "\ngrant codebase \"file://${MAPR_HOME}/-\" {\n  permission java.security.AllPermission;\n};\n" >> ${SDC_HOME}/etc/${SDC_POLOCY_FILE}
 printf "Done\n"
 
 echo "Succeed"
