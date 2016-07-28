@@ -25,14 +25,14 @@
         <relativePath>../root-lib</relativePath>
     </parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+    <artifactId>streamsets-datacollector-sdc-solr_cdh_4-lib</artifactId>
     <version>1.6.0.0-SNAPSHOT</version>
     <description>StreamSets Data Collector SDC Solr 4</description>
     <name>StreamSets Data Collector SDC Solr 4</name>
     <packaging>jar</packaging>
 
     <properties>
-        <solr.version>4.4.0</solr.version>
+        <solr.version>4.4.0-cdh5.2.8</solr.version>
         <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
     </properties>
 

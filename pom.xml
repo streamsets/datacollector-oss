@@ -93,7 +93,7 @@
     <redis-lib>none</redis-lib>
     <apache-solr_6_1_0-lib>none</apache-solr_6_1_0-lib>
     <sdc-solr-api>none</sdc-solr-api>
-    <sdc-solr_4-lib>none</sdc-solr_4-lib>
+    <sdc-solr_cdh_4-lib>none</sdc-solr_cdh_4-lib>
     <sdc-solr_6-lib>none</sdc-solr_6-lib>
   </properties>
 
@@ -192,7 +192,7 @@
     <module>common-ui</module>
     <module>redis-lib</module>
     <module>sdc-solr-api</module>
-    <module>sdc-solr_4-lib</module>
+    <module>sdc-solr_cdh_4-lib</module>
     <module>sdc-solr_6-lib</module>
     <module>cloudera-integration</module>
   </modules>

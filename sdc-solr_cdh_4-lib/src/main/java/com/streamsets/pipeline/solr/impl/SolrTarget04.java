@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.solr.impl;
 
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.solr.api.Errors;
 import com.streamsets.pipeline.solr.api.SdcSolrTarget;
@@ -27,6 +26,7 @@ import com.streamsets.pipeline.solr.api.SolrInstanceAPIType;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
+import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
@@ -46,6 +46,7 @@ public class SolrTarget04 implements SdcSolrTarget {
   private String zookeeperConnect;
   private String defaultCollection;
   private String instanceType;
+  private boolean kerberosAuth;
   private static final String VERSION = "4.4.0";
 
 
@@ -53,12 +54,14 @@ public class SolrTarget04 implements SdcSolrTarget {
       String instanceType,
       String solrURI,
       String zookeeperConnect,
-      String defaultCollection
+      String defaultCollection,
+      boolean kerberosAuth
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
+    this.kerberosAuth = kerberosAuth;
   }
 
   public void init() throws Exception {
@@ -67,6 +70,11 @@ public class SolrTarget04 implements SdcSolrTarget {
   }
 
   private SolrServer getSolrClient() throws MalformedURLException {
+    if(kerberosAuth) {
+      // set kerberos before create SolrClient
+      addSecurityProperties();
+    }
+
     if (SolrInstanceAPIType.SINGLE_NODE.toString().equals(this.instanceType)) {
       return new HttpSolrServer(this.solrURI);
     } else {
@@ -74,6 +82,10 @@ public class SolrTarget04 implements SdcSolrTarget {
       cloudSolrClient.setDefaultCollection(this.defaultCollection);
       return cloudSolrClient;
     }
+  }
+
+  private void addSecurityProperties() {
+    HttpClientUtil.setConfigurer(new SdcKrb5HttpClientConfigurer());
   }
 
   public void destroy() throws IOException{

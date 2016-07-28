@@ -25,17 +25,20 @@ public class TargetFactorySettings {
   private String solrURI;
   private String zookeeperConnect;
   private String defaultCollection;
+  private boolean kerberosAuth;
 
   public TargetFactorySettings (
       String instanceType,
       String solrURI,
       String zookeeperConnect,
-      String defaultCollection
+      String defaultCollection,
+      boolean kerberosAuth
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
+    this.kerberosAuth = kerberosAuth;
   }
 
   public String getInstanceType() {
@@ -52,5 +55,9 @@ public class TargetFactorySettings {
 
   public String getDefaultCollection() {
     return defaultCollection;
+  }
+
+  public boolean getKerberosAuth() {
+    return kerberosAuth;
   }
 }

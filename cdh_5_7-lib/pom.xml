@@ -320,7 +320,7 @@
 
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+            <artifactId>streamsets-datacollector-sdc-solr_cdh_4-lib</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
             <exclusions>
@@ -332,7 +332,7 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-sdc-solr_4-lib</artifactId>
+            <artifactId>streamsets-datacollector-sdc-solr_cdh_4-lib</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>test-jar</type>

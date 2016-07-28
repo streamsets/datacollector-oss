@@ -121,9 +121,18 @@ public class SolrDTarget extends DTarget {
   @ListBeanModel
   public List<SolrFieldMappingConfig> fieldNamesMap;
 
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Kerberos Authentication",
+      displayPosition = 60,
+      group = "SOLR"
+  )
+  public boolean kerberosAuth;
+
   @Override
   protected Target createTarget() {
-    return new SolrTarget(instanceType, solrURI, zookeeperConnect, indexingMode, fieldNamesMap, defaultCollection);
+    return new SolrTarget(instanceType, solrURI, zookeeperConnect, indexingMode, fieldNamesMap, defaultCollection, kerberosAuth);
   }
 
 }

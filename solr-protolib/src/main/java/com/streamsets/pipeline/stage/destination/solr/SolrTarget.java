@@ -53,19 +53,21 @@ public class SolrTarget extends BaseTarget {
   private final String defaultCollection;
   private final ProcessingMode indexingMode;
   private final List<SolrFieldMappingConfig> fieldNamesMap;
+  private final boolean kerberosAuth;
 
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
                     final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
-                    String defaultCollection) {
+                    String defaultCollection, boolean kerberosAuth) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
     this.indexingMode = indexingMode;
     this.fieldNamesMap = fieldNamesMap;
+    this.kerberosAuth = kerberosAuth;
   }
 
   @Override
@@ -93,7 +95,8 @@ public class SolrTarget extends BaseTarget {
           instanceType.toString(),
           solrURI,
           zookeeperConnect,
-          defaultCollection
+          defaultCollection,
+          kerberosAuth
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.solr.api.SolrInstanceAPIType;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
@@ -46,19 +47,21 @@ public class SolrTarget06 implements SdcSolrTarget {
   private String zookeeperConnect;
   private String defaultCollection;
   private String instanceType;
+  private boolean kerberosAuth;
   private static final String VERSION ="6.1.0";
-
 
   public SolrTarget06(
       String instanceType,
       String solrURI,
       String zookeeperConnect,
-      String defaultCollection
+      String defaultCollection,
+      boolean kerberosAuth
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
+    this.kerberosAuth = kerberosAuth;
   }
 
   public void init() throws Exception {
@@ -67,6 +70,11 @@ public class SolrTarget06 implements SdcSolrTarget {
   }
 
   private SolrClient getSolrClient() throws MalformedURLException {
+    if(kerberosAuth) {
+      // set kerberos before create SolrClient
+      addSecurityProperties();
+    }
+
     if (SolrInstanceAPIType.SINGLE_NODE.toString().equals(this.instanceType)) {
       return new HttpSolrClient.Builder(this.solrURI).build();
     } else {
@@ -74,6 +82,10 @@ public class SolrTarget06 implements SdcSolrTarget {
       cloudSolrClient.setDefaultCollection(this.defaultCollection);
       return cloudSolrClient;
     }
+  }
+
+  private void addSecurityProperties() {
+    HttpClientUtil.setConfigurer(new SdcKrb5HttpClientConfigurer());
   }
 
   public void destroy() throws IOException{
