@@ -71,6 +71,7 @@
     <cdh_5_5-cluster-cdh_kafka_1_3-lib>none</cdh_5_5-cluster-cdh_kafka_1_3-lib>
     <cdh_5_7-cluster-cdh_kafka_2_0-lib>none</cdh_5_7-cluster-cdh_kafka_2_0-lib>
     <apache-kudu-0_7-lib>none</apache-kudu-0_7-lib>
+    <apache-kudu-0_9-lib>none</apache-kudu-0_9-lib>
     <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
     <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
@@ -510,7 +511,7 @@
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
-        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
+        <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
       </properties>
       <modules>
@@ -526,6 +527,7 @@
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
         <module>apache-kafka_0_9-lib</module>
         <module>apache-kudu-0_7-lib</module>
+        <module>apache-kudu-0_9-lib</module>
         <module>influxdb_0_9-lib</module>
         <module>redis-lib</module>
         <module>apache-solr_6_1_0-lib</module>

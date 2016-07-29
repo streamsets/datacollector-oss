@@ -219,6 +219,11 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-apache-kudu-0_9-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_8_1-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
