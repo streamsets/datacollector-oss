@@ -71,6 +71,7 @@
     <cdh_5_5-cluster-cdh_kafka_1_3-lib>none</cdh_5_5-cluster-cdh_kafka_1_3-lib>
     <cdh_5_7-cluster-cdh_kafka_2_0-lib>none</cdh_5_7-cluster-cdh_kafka_2_0-lib>
     <apache-kudu-0_7-lib>none</apache-kudu-0_7-lib>
+    <apache-kudu-0_8-lib>none</apache-kudu-0_8-lib>
     <apache-kudu-0_9-lib>none</apache-kudu-0_9-lib>
     <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
@@ -457,6 +458,8 @@
         <elasticsearch_2_0-lib>elasticsearch_2_0-lib</elasticsearch_2_0-lib>
         <elasticsearch_2_1-lib>elasticsearch_2_1-lib</elasticsearch_2_1-lib>
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
+        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
+        <apache-kudu-0_8-lib>apache-kudu-0_8-lib</apache-kudu-0_8-lib>
         <redis_lib>redis-lib</redis_lib>
         <aws-lib>aws-lib</aws-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
@@ -483,6 +486,8 @@
         <module>elasticsearch_2_0-lib</module>
         <module>elasticsearch_2_1-lib</module>
         <module>elasticsearch_2_2-lib</module>
+        <module>apache-kudu-0_7-lib</module>
+        <module>apache-kudu-0_8-lib</module>
         <module>aws-lib</module>
         <module>redis-lib</module>
         <module>apache-solr_6_1_0-lib</module>
@@ -526,7 +531,6 @@
         <module>mongodb_3-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
         <module>apache-kafka_0_9-lib</module>
-        <module>apache-kudu-0_7-lib</module>
         <module>apache-kudu-0_9-lib</module>
         <module>influxdb_0_9-lib</module>
         <module>redis-lib</module>

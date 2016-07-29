@@ -270,6 +270,10 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>${basedir}/../${apache-kudu-0_8-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>${basedir}/../${apache-kudu-0_9-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
