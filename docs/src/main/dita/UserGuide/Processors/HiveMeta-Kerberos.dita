@@ -18,7 +18,7 @@
  <conbody>
         <p><indexterm>Hive Metadata processor<indexterm>Kerberos
                 authentication</indexterm></indexterm>You can use Kerberos authentication to connect
-            to HDFS. When you use Kerberos authentication, <ph
+            to HDFS or MapR FS. When you use Kerberos authentication, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses the Kerberos principal and keytab to connect to HiveServer2. </p>
         <p>The Kerberos principal and keytab are defined in the <ph

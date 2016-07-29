@@ -19,7 +19,7 @@
         <context><indexterm>Hive Metadata
             processor<indexterm>configuring</indexterm></indexterm>Configure a Hive Metadata
             processor to evaluate Avro data and generate Hive metadata information for the Hive
-            Metastore and Hadoop FS destinations.</context>
+            Metastore, and Hadoop FS or MapR FS destinations.</context>
         <steps>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
@@ -113,9 +113,16 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D-Hive-AddConfig">
-                                    <entry/>
+                                <row>
+                                    <entry>
+                                        <p>Additional Hadoop Configuration </p>
+                                    </entry>
+                                    <entry>
+                                        <p>Additional properties to use. </p>
+                                        <p>To add properties, click Add and define the property name
+                                            and value. Use the property names and values as expected
+                                            by Hive and HDFS or MapR FS.</p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

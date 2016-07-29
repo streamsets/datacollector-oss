@@ -15,14 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rz5_nft_zv">
  <title>Hive Metadata</title>
- <shortdesc>The Hive Metadata processor works with the Hive Metastore destination and Hadoop FS
-        destination as part of the Hive Drift Solution. </shortdesc>
+ <shortdesc>The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS
+        and MapR FS destinations as part of the Hive Drift Solution. </shortdesc>
  <conbody>
         <p><indexterm>processors<indexterm>Hive Metadata</indexterm></indexterm><indexterm>Hive
                 Metadata processor<indexterm>overview</indexterm></indexterm>Use the Hive Metadata
-            processor for records to be written to HDFS when you want the Hive Metastore destination
-            to create and update tables as needed. The processor also generates record header
-            attributes that the Hadoop FS destination can use to process the data.</p>
+            processor for records to be written to HDFS or MapR FS when you want the Hive Metastore
+            destination to create and update tables as needed. The processor also generates record
+            header attributes that the Hadoop FS destination and the MapR FS destination can use to
+            process the data.</p>
   <p>When you configure the Hive Metadata processor, you define the connection information for Hive
             and the expressions that define the database, table, and partitions that the records
             require. </p>

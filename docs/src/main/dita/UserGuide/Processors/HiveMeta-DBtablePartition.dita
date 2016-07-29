@@ -16,12 +16,14 @@
 <concept id="concept_zbk_jk3_fw">
  <title> Database, Table, and Partition Expressions</title>
  <conbody>
-  <p>You can configure the following expressions in the Hive Metadata processor:<dl>
+  <p><indexterm>Hive Metadata processor<indexterm>database, table, and partition
+                    expressions</indexterm></indexterm>You can configure the following expressions
+            in the Hive Metadata processor:<dl>
                 <dlentry>
                     <dt>Database and table expressions</dt>
-                    <dd>The database expression represents the database where Hadoop FS should write
-                        the record. If you omit the database expression, the processor uses the
-                        default Hive database. </dd>
+                    <dd>The database expression represents the database where Hadoop FS or MapR FS
+                        destination should write the record. If you omit the database expression,
+                        the processor uses the default Hive database. </dd>
                     <dd>The table expression represents the table to use. If the table doesn't
                         exist, the processor generates a metadata record to create the table.</dd>
                     <dd>The database and table expressions are also incorporated into the

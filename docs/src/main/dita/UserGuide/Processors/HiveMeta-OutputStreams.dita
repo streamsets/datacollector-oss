@@ -16,14 +16,19 @@
 <concept id="concept_avd_qym_fw">
  <title>Output Streams</title>
  <conbody>
-        <p>The Hive Metadata processor includes two output streams:</p>
+        <p><indexterm>Hive Metadata processor<indexterm>output streams</indexterm></indexterm>The
+            Hive Metadata processor includes a data and a metadata output stream. The following
+            image shows the Hive Metadata processor output streams:</p>
+        <p><image href="../Graphics/HiveMeta-OutputStreams.png" id="image_gk5_zpq_fw" scale="80"
+            /></p>
         <dl>
             <dlentry>
                 <dt>Data output stream</dt>
-                <dd>Passes records downstream to the Hadoop FS destination. You can add additional
-                    stages between the Hive Metadata processor and the Hadoop FS destination when
-                    needed, but only the Hadoop FS destination can use the generated record header
-                    attributes to write records to HDFS. </dd>
+                <dd>Passes records downstream to the Hadoop FS destination or the MapR FS
+                    destination. You can add additional stages between the Hive Metadata processor
+                    and the destinations when needed, but only the Hadoop FS and MapR FS
+                    destinations can use the generated record header attributes to write
+                    records.</dd>
             </dlentry>
             <dlentry>
                 <dt>Metadata output stream</dt>
@@ -34,8 +39,5 @@
                         metadata record to update the Hive Metastore. </p></dd>
             </dlentry>
         </dl>
-        <p>The following image shows the Hive Metadata processor output streams:</p>
-        <p><image href="../Graphics/HiveMeta-OutputStreams.png" id="image_gk5_zpq_fw" scale="80"
-            /></p>
  </conbody>
 </concept>
