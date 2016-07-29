@@ -16,7 +16,7 @@
 <concept id="concept_tdk_slk_pw">
  <title>SDC RPC to Kafka</title>
  <shortdesc>The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes
-        it immediately Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline. </shortdesc>
+        it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline. </shortdesc>
  <conbody>
         <p><indexterm>SDC RPC to Kafka
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>SDC

@@ -117,9 +117,7 @@
                                     <entry>Maximum size of the message to write to Kafka. <note
                                             type="warning">Must be smaller than the maximum message
                                             size configured in Kafka.</note><p>Default is 900 KB.
-                                                <draft-comment author="Loretta">Current default is 1
-                                                KB. Same bug requests upping to 900
-                                                KB.</draft-comment></p></entry>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Kafka Configuration <xref
