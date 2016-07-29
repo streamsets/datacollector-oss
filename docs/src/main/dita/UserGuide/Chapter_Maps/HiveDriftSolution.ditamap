@@ -16,13 +16,12 @@
 <map>
  <title>Hive Drift Solution</title>
     <topicref href="../Hive_Metadata/HiveDriftSolution_title.dita">
-        <topicref href="../Hive_Metadata/HiveDrift-Overview.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
-        </topicref>
+        <topicref href="../Hive_Metadata/HiveDrift-Overview.dita"/>
         <topicref href="../Hive_Metadata/BasicImplementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Hive_Metadata/Implementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Hive_Metadata/Example.dita" chunk="to-content">
+        <topicref href="../Hive_Metadata/CaseStudy.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Hive_Metadata/Example-HMProcessor.dita"/>
             <topicref href="../Hive_Metadata/Example-HMDestination.dita"/>

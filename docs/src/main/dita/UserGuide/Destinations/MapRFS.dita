@@ -20,17 +20,18 @@
  <conbody>
         <p><indexterm>MapR FS
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MapR
-                    FS</indexterm></indexterm>When you configure a MapR FS destination, you define
-            the output directory template. The destination creates output directories based on the
-            template and the time basis. The destination writes records to the directories based on
-            the time basis as well.</p>
-        <p>You can specify the amount of time that a record can be written to its associated
-            directory and what happens to late records. </p>
-        <p>You can also use record header attributes to perform record-based writes. For more
-            information, see <xref href="RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
-        <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
-            files. </p>  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
-        <draft-comment author="Loretta">These MapR topics are basically copied from Hadoop FS. Make
-            sure changes here go there. And check Local FS as needed.</draft-comment>
+                    FS</indexterm></indexterm>When you configure a MapR FS destination, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview1"
+            /></p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-HiveSolutionOverview1"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview2"/>
+        <p>When necessary, you can use Kerberos to connect to MapR FS or use an HDFS user to connect
+            to MapR FS. You can also use HDFS configuration files and add other HDFS configuration
+            properties as needed. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
  </conbody>
+    <related-links>
+        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
+    </related-links>
 </concept>

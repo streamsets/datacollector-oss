@@ -23,7 +23,8 @@
             header attribute that identifies the service that generated the data. </p>
         <p>Now you want a new pipeline to pass the data to HDFS where it can be stored and reviewed,
             and you'd like the data written to tables based on the web service that generated the
-            data. </p>
+            data. Note that you could also write the data to MapR FS -- the steps are almost
+            identical to this case study, you'd just use a different destination.</p>
         <p>To do this, add and configure a Kafka Consumer to read the data into the pipeline, then
             connect it to a Hive Metadata processor. The processor assesses the record structure and
             generates a metadata record that describes any required Hive metadata changes. Using the
@@ -37,7 +38,7 @@
         <p>You connect the Hive Metadata processor data output stream to a Hadoop FS destination and
             configure it to use the information in record headers. The destination then writes each
             record where it wants to go using the target directory and Avro schema in the record
-            header, and rolling files when needed.</p>
+            header, and rolling files when needed. </p>
         <p>Now let's take a closer look... </p>
  </conbody>
 </concept>

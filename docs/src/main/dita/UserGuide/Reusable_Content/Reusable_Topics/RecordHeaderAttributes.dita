@@ -25,10 +25,8 @@
                     writes</indexterm></indexterm><indexterm>destinations<indexterm>record based
                     writes</indexterm></indexterm>Destinations can use information in record header
             attributes to write data. Destinations that write Avro data can use Avro schemas in the
-            record header. The Hadoop FS and MapR FS destinations can use record header attributes
-            to determine the directory to write to and when to roll a file as part of the Hive Drift
-            Solution. For more information, see <xref
-                href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>.</p>
+            record header. The Hadoop FS, MapR FS, and Local FS destinations can use record header
+            attributes to determine the directory to write to and when to roll a file. </p>
         <p>To use a record header attribute, configure the destination to use the header attribute
             and ensure that the records include the header attribute.</p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-GenAttributes"

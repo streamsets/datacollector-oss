@@ -20,23 +20,19 @@
  <conbody>
   <p><indexterm>Hadoop FS
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
-                    FS</indexterm></indexterm>When you configure a Hadoop FS destination, you can
-            define a directory template and time basis to determine the output directories that the
-            destination creates and the files where records are written. </p>
-        <p>As part of the Hive Drift Solution, you can alternatively use record header attributes to
-            perform record-based writes. You can write records to the specified directory, use the
-            defined Avro schema, and roll files based on record header attributes. </p>
-        <p>You can define a file prefix, the data time zone, and properties that define when the
-            destination closes a file. You can specify the amount of time that a record can be
-            written to its associated directory and what happens to late records.</p>
+                    FS</indexterm></indexterm>When you configure a Hadoop FS destination, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview1"
+            /></p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-HiveSolutionOverview1"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview2"/>
         <p>You can configure the destination to write to Azure HDInsight.</p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
-    <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output files.
-                <draft-comment author="Loretta">Make sure changes in Hadoop FS topics go into MapR
-                FS and probably Local FS. </draft-comment></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>
+        <draft-comment author="Loretta">Changes to Hadoop FS might need to go to Local FS and MapR
+            FS. Azure did not because it was related to the HDP stage libraries.</draft-comment>
  </conbody>
     <related-links>
-        <link href="RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>
         <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
     </related-links>
 </concept>

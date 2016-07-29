@@ -15,24 +15,28 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jzr_ypn_fw">
  <title>The Hadoop FS Destination</title>
- <shortdesc>Hadoop FS is the destination that writes data to HDFS using record header attributes.
-        Record header attributes contain the write details that the Hive Metadata processor
-        generates and adds to records. </shortdesc>
+ <shortdesc>The Hadoop FS destination can write data to HDFS using record header attributes. If you
+        wanted, you could use the MapR FS destination to write to MapR FS instead. Record header
+        attributes contain the write details that the Hive Metadata processor generates and adds to
+        records. </shortdesc>
  <conbody>
-  <p>So you connect the Hadoop FS destination to the data output stream of the processor. When you
-            configure the destination, instead of configuring a directory template, you configure
-            the destination to use the directory in the record header. Instead of configuring an
-            Avro schema, you indicate you have a schema in the record header. And you configure the
-            destination to roll files when it sees a "roll" attribute in the record header. </p>
+  <p>To write data to HDFS, you connect the Hadoop FS destination to the data output stream of the
+            processor. You could connect the data output stream to the MapR FS destination to write
+            data to MapR FS. The configuration options are essentially the same.... </p>
+        <p>When you configure the destination, instead of configuring a directory template, you
+            configure the destination to use the directory in the record header. Instead of
+            configuring an Avro schema, you indicate you have a schema in the record header. And you
+            configure the destination to roll files when it sees a "roll" attribute in the record
+            header. </p>
         <p>The Output Files tab of the destination might look something like this:</p>
         <p><image href="../Graphics/HiveMeta-Ex-HDFS.png" id="image_sbv_xrn_fw" scale="70"/></p>
         <p>And the Avro tab looks like this:</p>
         <p><image href="../Graphics/HiveMeta-Ex-HDFS-Avro.png" id="image_wzp_1sn_fw" scale="70"
             /></p>
-        <p>With this setup, the destination uses the information in record header attributes to
-            write data to HDFS. It writes each record to the directory in the targetDirectory header
-            attribute, using the Avro schema in the avroSchema header attribute. And it rolls a file
-            when it spots the roll attribute in a record header. </p>
+        <p>With this configuration, the destination uses the information in record header attributes
+            to write data to HDFS. It writes each record to the directory in the targetDirectory
+            header attribute, using the Avro schema in the avroSchema header attribute. And it rolls
+            a file when it spots the roll attribute in a record header. </p>
         <p>Note that the destination can also use Max Records in File and Max Files Size to
             determine when to roll files.</p>
  </conbody>

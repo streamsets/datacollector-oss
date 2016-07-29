@@ -43,9 +43,10 @@
                         <li>Optionally configure cache information and how tables are updated.</li>
                     </ul><p>For more information about the Hive Metastore destination, see <xref
                             href="../Destinations/HiveMetastore.dita#concept_gcr_z2t_zv"/>.</p></li>
-                <li>To write records to HDFS based on record header attributes, connect the data
-                    output of the Hive Metadata processor to the Hadoop FS destination. </li>
-                <li>Configure the Hadoop FS destination:<ul id="ul_n4p_dz3_fw">
+                <li>Connect the data output of the Hive Metadata processor to the Hadoop FS or MapR
+                    FS destination to write records to the destination system using record header
+                    attributes.</li>
+                <li>Configure the Hadoop FS or MapR FS destination:<ul id="ul_n4p_dz3_fw">
                         <li>To write records using the targetDirectory header attribute, on the
                                 <wintitle>Output Files</wintitle> tab, select <uicontrol>Directory
                                 in Header</uicontrol>.</li>

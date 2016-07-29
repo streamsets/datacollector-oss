@@ -18,9 +18,9 @@
  <conbody>
         <p><indexterm>MapR FS destination<indexterm>directory
                 templates</indexterm></indexterm><indexterm>directory templates<indexterm>MapR
-                    FS</indexterm></indexterm>The MapR FS destination uses directory templates to
-            create output and late record directories. The destination writes records to the
-            directories based on the configured time basis.</p>
+                    FS</indexterm></indexterm>By default, the MapR FS destination uses directory
+            templates to create output and late record directories. The destination writes records
+            to the directories based on the configured time basis.</p>
         <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HLM-Dirtemp-targetDir"/>
         <p

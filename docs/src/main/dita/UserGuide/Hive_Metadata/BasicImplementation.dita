@@ -17,15 +17,18 @@
     <title>Basic Implementation</title>
     <conbody>
         <p><indexterm>Hive Drift Solution<indexterm>basic implementation</indexterm></indexterm>You
-            can use the Hive Metadata processor, Hive Metastore destination, and Hadoop FS
-            destination in any pipeline where the logic is appropriate.</p>
-        <p>A basic implementation of the Hive Drift Solution includes the origin of your choice, and
-            the Hive Metadata processor writing to the Hadoop FS and Hive Metastore destinations, as
-            follows:</p>
-        <p><image href="../Graphics/HiveMeta-Pipeline.png" id="image_ys3_ztg_2w" scale="70"/></p>
+            can use the Hive Metadata processor, Hive Metastore destination for metadata processing,
+            and Hadoop FS or MapR FS destination for data processing in any pipeline where the logic
+            is appropriate.</p>
+        <p>A basic implementation of the Hive Drift Solution includes the origin of your choice and
+            the Hive Metadata processor connected to the Hive Metastore destination and either the
+            Hadoop FS or MapR FS destinations, as follows:</p>
+        <p><image href="../Graphics/HiveMeta-Pipeline.png" id="image_ys3_ztg_2w" scale="65"/></p>
+        <p><image href="../Graphics/HiveMeta-MapR-Pipeline.png" id="image_nrz_fdk_tw" scale="65"
+            /></p>
         <p>The Hive Metadata processor passes records through the first output stream - the data
-            stream. Connect the data stream to the Hadoop FS destination to write data to HDFS using
-            record header attributes. </p>
+            stream. Connect the data stream to the Hadoop FS or MapR FS destination to write data to
+            the destination system using record header attributes. </p>
         <p>The Hive Metadata processor passes the metadata record through the second output stream -
             the metadata output stream. Connect the Hive Metastore destination to the metadata
             output stream to enable the destination to create and update Hive tables. The metadata

@@ -45,7 +45,7 @@
                                     <entry>HDFS URI.</entry>
                                 </row>
                                 <row>
-                                    <entry>HDFS User <xref href="HadoopFS-HDFSUser-dest.dita">
+                                    <entry>HDFS User <xref href="MapRFS-HDFSUser.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_hqm_3fj_fv"
                                         /></xref></entry>
@@ -56,8 +56,8 @@
                                             /> user to connect to MapR FS.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Kerberos Authentication<xref
-                                            href="HadoopFS-Kerberos.dita">
+                                    <entry>Kerberos Authentication <xref
+                                            href="MapRFS-Kerberos.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_kqm_3fj_fv"
                                         /></xref></entry>
@@ -69,7 +69,7 @@
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory <xref
-                                            href="HadoopFS-HadoopProperties-dest.dita">
+                                            href="MapRFS-HadoopProps.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_nqm_3fj_fv"/></xref></entry>
                                     <entry>Location of the HDFS configuration files.<p>Use a

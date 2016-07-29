@@ -824,6 +824,30 @@
                   When set to "false", a missing field generates an alert for the record missing the
                   field, and for the next record that includes the field.</p>
             <p>
+                  <draft-comment author="Loretta"><uicontrol>D-HM-Overview1</uicontrol> - used by
+                        Hadoop FS and MapR FS overviews</draft-comment>
+            </p>
+            <p><ph id="D-HM-Overview1">you can define a directory template and time basis to
+                        determine the output directories that the destination creates and the files
+                        where records are written. </ph></p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>D-HM-HiveSolution</uicontrol>,
+                              <uicontrol>D-HM-Overview2</uicontrol>
+                        <uicontrol>D-HM-compression</uicontrol> - used by Hadoop FS and MapR FS
+                        oreviews</draft-comment>
+            </p>
+            <p id="D-HM-HiveSolutionOverview1">As part of the Hive Drift Solution, you can
+                  alternatively use record header attributes to perform record-based writes. You can
+                  write records to the specified directory, use the defined Avro schema, and roll
+                  files based on record header attributes. For more information, see <xref
+                        href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
+            <p id="D-HM-Overview2">You can define a file prefix, the data time zone, and properties
+                  that define when the destination closes a file. You can specify the amount of time
+                  that a record can be written to its associated directory and what happens to late
+                  records.</p>
+            <p id="D-HM-compression">You can use Gzip, Bzip2, Snappy, LZ4, and other compression
+                  formats to write output files. </p>
+            <p>
                   <draft-comment author="Loretta"><uicontrol>D-HLM-Dirtemp-targetDir</uicontrol>
                         used in HadoopFS, LocalFS, MapR FS</draft-comment>
             </p>
@@ -843,9 +867,9 @@
                         Attributes</draft-comment>
             </p>
             <p><ph id="D-GenAttributes">The Hive Metadata processor automatically generates record
-                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
-                        For all other destinations, you can use the Expression Evaluator to add
-                        record header attributes.</ph>
+                        header attributes for Hadoop FS and MapR FS to use as part of the Hive Drift
+                        Solution. For all other destinations, you can use the Expression Evaluator
+                        to add record header attributes.</ph>
             </p>
             <draft-comment author="alisontaylor">Directory Templates - used for Hadoop FS, Local FS,
                   and MapR FS destinations</draft-comment>
