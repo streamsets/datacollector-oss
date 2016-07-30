@@ -163,10 +163,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
       }
 
-      if (getStage().getConfiguration().getOutputEventLanes().size() > 0) {
+      if (getStage().getConfiguration().getOutputAndEventLanes().size() > 0) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
-        for (String lane : getStage().getConfiguration().getOutputEventLanes()) {
+        for (String lane : getStage().getConfiguration().getOutputAndEventLanes()) {
           Counter outputRecordsCounter =
             MetricsConfigurator.createCounter(metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
           if (metricRegistryJson != null) {

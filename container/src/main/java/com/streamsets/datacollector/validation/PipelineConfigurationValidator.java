@@ -51,7 +51,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +105,7 @@ public class PipelineConfigurationValidator {
       while (it.hasNext()) {
         StageConfiguration stage = it.next();
         if (producedOutputs.containsAll(stage.getInputLanes())) {
-          producedOutputs.addAll(stage.getOutputEventLanes());
+          producedOutputs.addAll(stage.getOutputAndEventLanes());
           it.remove();
           sorted.add(stage);
         }
@@ -1109,12 +1108,12 @@ public class PipelineConfigurationValidator {
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
-      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputEventLanes());
+      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputAndEventLanes());
       for (int j = i + 1; j < stagesConf.size(); j++) {
         StageConfiguration downStreamStageConf = stagesConf.get(j);
         Set<String> duplicateOutputs = Sets.intersection(
-            new HashSet<>(stageConf.getOutputEventLanes()),
-            new HashSet<>(downStreamStageConf.getOutputEventLanes())
+            new HashSet<>(stageConf.getOutputAndEventLanes()),
+            new HashSet<>(downStreamStageConf.getOutputAndEventLanes())
         );
         if (!duplicateOutputs.isEmpty()) {
           // there is more than one stage defining the same output lane

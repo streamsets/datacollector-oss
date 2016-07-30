@@ -117,7 +117,7 @@ public class StageConfiguration implements Serializable {
     this.outputAndEventLanes = null;
   }
 
-  public List<String> getOutputEventLanes() {
+  public List<String> getOutputAndEventLanes() {
     if(outputAndEventLanes == null) {
       outputAndEventLanes = new LinkedList<>();
       outputAndEventLanes.addAll(getOutputLanes());

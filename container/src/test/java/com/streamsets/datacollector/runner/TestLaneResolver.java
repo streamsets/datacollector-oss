@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.StageConfiguration;
-import com.streamsets.datacollector.runner.LaneResolver;
-import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.pipeline.api.Stage;
 
 import org.junit.Assert;
@@ -46,7 +44,7 @@ public class TestLaneResolver {
     Mockito.when(stageConf.getInputLanes()).thenReturn(Collections.EMPTY_LIST);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(outputLanes);
     Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
-    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
+    Mockito.when(stageConf.getOutputAndEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);
@@ -67,7 +65,7 @@ public class TestLaneResolver {
     Mockito.when(stageConf.getInputLanes()).thenReturn(inputLanes);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(Collections.EMPTY_LIST);
     Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
-    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(eventLanes);
+    Mockito.when(stageConf.getOutputAndEventLanes()).thenReturn(eventLanes);
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);
@@ -88,7 +86,7 @@ public class TestLaneResolver {
     Mockito.when(stageConf.getInputLanes()).thenReturn(inputLanes);
     Mockito.when(stageConf.getOutputLanes()).thenReturn(outputLanes);
     Mockito.when(stageConf.getEventLanes()).thenReturn(eventLanes);
-    Mockito.when(stageConf.getOutputEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
+    Mockito.when(stageConf.getOutputAndEventLanes()).thenReturn(Lists.newArrayList(Iterables.concat(outputLanes, eventLanes)));
 
     Stage.Info stageInfo = Mockito.mock(Stage.Info.class);
     Mockito.when(stageInfo.getInstanceName()).thenReturn(instanceName);

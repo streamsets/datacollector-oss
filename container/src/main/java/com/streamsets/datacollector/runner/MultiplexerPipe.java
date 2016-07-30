@@ -43,7 +43,7 @@ public class MultiplexerPipe extends Pipe<Pipe.Context> {
   @Override
   public void process(PipeBatch pipeBatch) throws PipelineRuntimeException {
     for (int i = 0; i < getInputLanes().size(); i++) {
-      String inputStageLane = getStage().getConfiguration().getOutputEventLanes().get(i);
+      String inputStageLane = getStage().getConfiguration().getOutputAndEventLanes().get(i);
       String inputPipeLane = getInputLanes().get(i);
       List<String> outputLanes = LaneResolver.getMatchingOutputLanes(inputStageLane, getOutputLanes());
       if (outputLanes.size() == 1) {

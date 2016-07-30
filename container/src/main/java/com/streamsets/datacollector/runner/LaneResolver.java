@@ -77,11 +77,11 @@ public class LaneResolver {
   }
 
   public List<String> getObserverInputLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getOutputEventLanes(), STAGE_OUT);
+    return getPostFixed(stages[idx].getConfiguration().getOutputAndEventLanes(), STAGE_OUT);
   }
 
   public List<String> getObserverOutputLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getOutputEventLanes(), OBSERVER_OUT);
+    return getPostFixed(stages[idx].getConfiguration().getOutputAndEventLanes(), OBSERVER_OUT);
   }
 
   public List<String> getMultiplexerInputLanes(int idx) {
@@ -90,7 +90,7 @@ public class LaneResolver {
 
   public List<String> getMultiplexerOutputLanes(int idx) {
     List<String> list = new ArrayList<>();
-    for (String output : stages[idx].getConfiguration().getOutputEventLanes()) {
+    for (String output : stages[idx].getConfiguration().getOutputAndEventLanes()) {
       for (int i = idx + 1; i < stages.length; i++) {
         for (String input : stages[i].getConfiguration().getInputLanes()) {
           if (input.equals(output)) {
@@ -106,7 +106,7 @@ public class LaneResolver {
     List<String> list = new ArrayList<>();
     for (String input : stages[idx].getConfiguration().getInputLanes()) {
       for (int i = 0; i < idx; i++) {
-        for (String output : stages[i].getConfiguration().getOutputEventLanes()) {
+        for (String output : stages[i].getConfiguration().getOutputAndEventLanes()) {
           if (output.equals(input)) {
             list.add(createLane(output, stages[idx].getInfo().getInstanceName()));
           }
