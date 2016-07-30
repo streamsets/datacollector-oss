@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public final class HiveMetastoreUtil {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreUtil.class.getCanonicalName());
@@ -767,7 +768,7 @@ public final class HiveMetastoreUtil {
         AVRO_SCHEMA_FILE_FORMAT,
         databaseName,
         tableName,
-        DateFormatUtils.format(new Date(System.currentTimeMillis()), "yyyy-MM-dd--HH-mm-ss")
+        UUID.randomUUID().toString()
     );
     try {
       loginUGI.doAs(new PrivilegedExceptionAction<Void>() {
