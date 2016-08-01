@@ -161,17 +161,21 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     return ret;
   }
 
-  Cookie createAuthCookie(HttpServletRequest httpReq, String authToken, int secondsToLive) {
+  Cookie createAuthCookie(HttpServletRequest httpReq, String authToken, long expiresMillis) {
     Cookie authCookie = new Cookie(getAuthCookieName(httpReq), authToken);
     authCookie.setPath("/");
-    authCookie.setMaxAge(secondsToLive);
+    // if positive it is a persistent session, else a transient one and we don't have to set the cookie age
+    if (expiresMillis > 0) {
+      int secondsToLive = (int) ((expiresMillis - System.currentTimeMillis()) / 1000);
+      authCookie.setMaxAge(secondsToLive);
+    }
     authCookie.setSecure(httpReq.isSecure() || loadBalancerSecure);
     return authCookie;
   }
 
   void setAuthCookieIfNecessary(HttpServletRequest req, HttpServletResponse res, String authToken, long expiresMillis) {
     if (!authToken.equals(getAuthTokenFromCookie(req))) {
-      res.addCookie(createAuthCookie(req, authToken, (int) (expiresMillis - System.currentTimeMillis()) / 1000));
+      res.addCookie(createAuthCookie(req, authToken, expiresMillis));
     }
   }
 

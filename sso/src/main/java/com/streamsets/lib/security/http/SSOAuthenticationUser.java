@@ -82,7 +82,7 @@ public class SSOAuthenticationUser implements Authentication.User {
   }
 
   public boolean isValid() {
-    return valid && System.currentTimeMillis() < principal.getExpires();
+    return valid && System.currentTimeMillis() < Math.abs(principal.getExpires());
   }
 
   public long getValidationTime() {

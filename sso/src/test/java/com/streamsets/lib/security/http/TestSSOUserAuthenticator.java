@@ -217,12 +217,18 @@ public class TestSSOUserAuthenticator {
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.doReturn("NAME").when(authenticator).getAuthCookieName(Mockito.eq(req));
     Mockito.when(req.isSecure()).thenReturn(true);
-    Cookie cookie = authenticator.createAuthCookie(req, "token", 1);
+
+    // persistent session
+    Cookie cookie = authenticator.createAuthCookie(req, "token", System.currentTimeMillis() + 1000000);
     Assert.assertEquals("NAME", cookie.getName());
     Assert.assertEquals("token", cookie.getValue());
     Assert.assertEquals("/", cookie.getPath());
-    Assert.assertEquals(1, cookie.getMaxAge());
+    Assert.assertTrue(cookie.getMaxAge() > 0);
     Assert.assertEquals(req.isSecure(), cookie.getSecure());
+
+    // transient session
+    cookie = authenticator.createAuthCookie(req, "token", -(System.currentTimeMillis() + 1000000));
+    Assert.assertEquals(-1, cookie.getMaxAge());
   }
 
   @Test
