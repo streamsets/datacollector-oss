@@ -189,6 +189,7 @@ public class HiveConfigBean {
     try {
       loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
     } catch (Exception e) {
+      LOG.error("Failed to connect to Hive with JDBC URL:" + hiveJDBCUrl, e);
       issues.add(
           context.createConfigIssue(
               Groups.HIVE.name(),
