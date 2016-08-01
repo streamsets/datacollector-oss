@@ -507,6 +507,14 @@
                   <ph id="P-HM-phPartitionDF">You can use the Int, Bigint, and String data formats
                         for partition data.</ph></p>
             <p>
+                  <draft-comment author="Loretta"><uicontrol>P-ListPivot-AddPivoters</uicontrol> -
+                        The following phrase is used in the List Pivoter overview &amp; generated
+                        records. </draft-comment>
+            </p>
+            <p><ph id="P-ListPivot-AddPivoters">To pivot additional list fields or nested lists, use
+                        additional List Pivoters.</ph>
+            </p>
+            <p>
                   <draft-comment author="Loretta">Scripting processors - - Groovy and Jython use
                         both, JavaScript uses Record by Record only
                               (<uicontrol>P-ProcessM-RbyR</uicontrol>).</draft-comment>

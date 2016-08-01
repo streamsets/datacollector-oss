@@ -15,8 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ekg_313_qw">
  <title>List Pivoter</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+        <p><indexterm>processors<indexterm>List Pivoter</indexterm></indexterm><indexterm>List
+                    Pivoter<indexterm>overview</indexterm></indexterm>The List Pivoter pivots data
+            in a list field and creates a record for each item in the list. </p>
+        <p>The List Pivoter processor pivots the data in one field. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ListPivot-AddPivoters"
+            /></p>
+  <p>When you configure the List Pivoter, you specify the list field to pivot and whether you want
+            the existing fields in a record incorporated in the resulting record. You can define the
+            field name for the results. You can also configure the action to take when the list
+            field does not exist. </p>
  </conbody>
 </concept>

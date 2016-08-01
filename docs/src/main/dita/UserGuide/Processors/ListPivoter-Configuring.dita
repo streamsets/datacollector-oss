@@ -15,14 +15,57 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_dn1_k13_qw">
     <title>Configuring a List Pivoter</title>
-    <shortdesc/>
+    <shortdesc>Configure a List Pivoter to pivot data in a list field and generate a record for each
+        item in the list.</shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
             <step>
-                <cmd></cmd>
+                <cmd>On the <wintitle>List Pivot</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_rx1_t1y_tw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>List Pivoter Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>List to Pivot</entry>
+                                    <entry>List field to pivot.</entry>
+                                </row>
+                                <row>
+                                    <entry>Copy All Fields <xref
+                                            href="ListPivoter-GeneratedRecords.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_f3b_khp_fs"/></xref></entry>
+                                    <entry>Includes all existing fields in the generated
+                                        records.</entry>
+                                </row>
+                                <row>
+                                    <entry>Pivoted Items Path</entry>
+                                    <entry>Field path to write the pivoted data. If the field
+                                        exists, the processor overwrites any data in the
+                                        field.</entry>
+                                </row>
+                                <row>
+                                    <entry>Field Does Not Exist</entry>
+                                    <entry>Action to take if the record does not include the
+                                        specified field to pivot.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

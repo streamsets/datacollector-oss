@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_efn_wgw_tw">
+ <title>Generated Records</title>
+ <conbody>
+        <p><indexterm>List Pivoter<indexterm>generated records</indexterm></indexterm>When you pivot
+            a field, the List Pivoter creates a new record for each first-level item in the list.
+                <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ListPivot-AddPivoters"
+            /> When pivoting, you can include the existing fields in the record or drop them, using
+            only the pivoted data in the new records.</p>
+        <p>For example, say you want to pivot the ColorList data in the following set of records so
+            you can update the unit costs based on color further down the pipeline:</p>
+        <p>
+            <simpletable frame="all" relcolwidth="1.0* 1.0* 1.0*" id="simpletable_gs4_rqz_5w">
+                <sthead>
+                    <stentry><codeph>Pen_Type</codeph></stentry>
+                    <stentry><codeph>Color_List</codeph></stentry>
+                    <stentry><codeph>Unit_Cost</codeph></stentry>
+                </sthead>
+                <strow>
+                    <stentry><codeph>ballpoint</codeph></stentry>
+                    <stentry>- <codeph>black</codeph><p>- <codeph>blue</codeph>
+                        </p><p>- <codeph>green</codeph></p><p>- <codeph>red</codeph>
+                        </p></stentry>
+                    <stentry>.<codeph>10</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>highlighter</codeph></stentry>
+                    <stentry>
+                        <p>- <codeph>light blue</codeph></p>
+                        <p>- <codeph>yellow</codeph></p>
+                    </stentry>
+                    <stentry>.<codeph>20</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>felt tip</codeph></stentry>
+                    <stentry>
+                        <p>- <codeph>black</codeph></p>
+                        <p>- <codeph>blue</codeph></p>
+                    </stentry>
+                    <stentry>.<codeph>15</codeph></stentry>
+                </strow>
+            </simpletable>
+        </p>
+  <p>When you pivot these records and keep the existing record fields, List Pivoter generates the
+            following records:</p>
+        <p>
+            <simpletable frame="all" relcolwidth="1.0* 1.0* 1.0* 1.0*" id="simpletable_kqm_qsz_5w">
+                <sthead>
+                    <stentry><codeph>Pen_Type</codeph></stentry>
+                    <stentry><codeph>Color_List</codeph></stentry>
+                    <stentry><codeph>Color</codeph></stentry>
+                    <stentry><codeph>Unit_Cost</codeph></stentry>
+                </sthead>
+                <strow>
+                    <stentry><codeph>ballpoint</codeph></stentry>
+                    <stentry>- <codeph>black</codeph><p>- <codeph>blue</codeph>
+                        </p><p>- <codeph>green</codeph></p><p>- <codeph>red</codeph>
+                        </p></stentry>
+                    <stentry><codeph>black</codeph></stentry>
+                    <stentry>.<codeph>10</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>ballpoint</codeph></stentry>
+                    <stentry>- <codeph>black</codeph><p>- <codeph>blue</codeph>
+                        </p><p>- <codeph>green</codeph></p><p>- <codeph>red</codeph>
+                        </p></stentry>
+                    <stentry><codeph>blue</codeph>
+                    </stentry>
+                    <stentry>.<codeph>10</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>ballpoint</codeph></stentry>
+                    <stentry>- <codeph>black</codeph><p>- <codeph>blue</codeph>
+                        </p><p>- <codeph>green</codeph></p><p>- <codeph>red</codeph>
+                        </p></stentry>
+                    <stentry><codeph>green</codeph></stentry>
+                    <stentry>.<codeph>10</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>ballpoint</codeph></stentry>
+                    <stentry>- <codeph>black</codeph><p>- <codeph>blue</codeph>
+                        </p><p>- <codeph>green</codeph></p><p>- <codeph>red</codeph>
+                        </p></stentry>
+                    <stentry><codeph>red</codeph>
+                    </stentry>
+                    <stentry>.<codeph>10</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>highlighter</codeph></stentry>
+                    <stentry>
+                        <p>- <codeph>light blue</codeph></p>
+                        <p>- <codeph>yellow</codeph></p>
+                    </stentry>
+                    <stentry><codeph>light blue</codeph></stentry>
+                    <stentry>.<codeph>20</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>highlighter</codeph></stentry>
+                    <stentry>
+                        <p>- <codeph>light blue</codeph></p>
+                        <p>- <codeph>yellow</codeph></p>
+                    </stentry>
+                    <stentry>
+                        <p><codeph>yellow</codeph></p>
+                    </stentry>
+                    <stentry>.<codeph>20</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>felt tip</codeph></stentry>
+                    <stentry>- <codeph>yellow</codeph></stentry>
+                    <stentry>
+                        <p><codeph>yellow</codeph></p>
+                    </stentry>
+                    <stentry>.<codeph>15</codeph></stentry>
+                </strow>
+            </simpletable>
+        </p>
+        <p>If you pivoted without including the existing fields, List Pivoter would produce records
+            with only the generated Color field. This choice doesn't make sense here, but can be
+            useful when pivoting nested lists or when you plan to enrich the data downstream.</p>
+ </conbody>
+</concept>

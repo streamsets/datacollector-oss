@@ -137,6 +137,7 @@
   </topicref>
   <topicref href="../Processors/ListPivoter.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/ListPivoter-GeneratedRecords.dita"/>
    <topicref href="../Processors/ListPivoter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/LogParser.dita" chunk="to-content">
