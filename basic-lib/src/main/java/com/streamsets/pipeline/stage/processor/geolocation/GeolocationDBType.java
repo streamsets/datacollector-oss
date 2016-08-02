@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,23 +19,8 @@
  */
 package com.streamsets.pipeline.stage.processor.geolocation;
 
-import java.util.Arrays;
-import java.util.List;
 
-public enum GeolocationField {
-  COUNTRY_NAME(GeolocationDBType.CITY, GeolocationDBType.COUNTRY),
-  COUNTRY_ISO_CODE(GeolocationDBType.CITY, GeolocationDBType.COUNTRY),
-  CITY_NAME(GeolocationDBType.CITY),
-  LONGITUDE(GeolocationDBType.CITY),
-  LATITUDE(GeolocationDBType.CITY);
-
-  List<GeolocationDBType> supportedDbTypes;
-
-  GeolocationField(GeolocationDBType... dbTypes) {
-    this.supportedDbTypes = Arrays.asList(dbTypes);
-  }
-
-  public boolean isSupported(GeolocationDBType dbType) {
-    return this.supportedDbTypes.contains(dbType);
-  }
+public enum GeolocationDBType {
+  CITY,
+  COUNTRY;
 }

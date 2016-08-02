@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,23 +19,27 @@
  */
 package com.streamsets.pipeline.stage.processor.geolocation;
 
-import java.util.Arrays;
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.util.List;
 
-public enum GeolocationField {
-  COUNTRY_NAME(GeolocationDBType.CITY, GeolocationDBType.COUNTRY),
-  COUNTRY_ISO_CODE(GeolocationDBType.CITY, GeolocationDBType.COUNTRY),
-  CITY_NAME(GeolocationDBType.CITY),
-  LONGITUDE(GeolocationDBType.CITY),
-  LATITUDE(GeolocationDBType.CITY);
-
-  List<GeolocationDBType> supportedDbTypes;
-
-  GeolocationField(GeolocationDBType... dbTypes) {
-    this.supportedDbTypes = Arrays.asList(dbTypes);
+public class GeolocationProcessorUpgrader implements StageUpgrader {
+  @Override
+  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
+    switch(fromVersion) {
+      case 1:
+        upgradeV1ToV2(configs);
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+    }
+    return configs;
   }
 
-  public boolean isSupported(GeolocationDBType dbType) {
-    return this.supportedDbTypes.contains(dbType);
+  private void upgradeV1ToV2(List<Config> configs) {
+    configs.add(new Config("geoIP2DBType", "COUNTRY"));
   }
 }

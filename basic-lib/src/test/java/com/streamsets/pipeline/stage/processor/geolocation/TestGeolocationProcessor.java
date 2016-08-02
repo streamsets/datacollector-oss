@@ -111,11 +111,22 @@ public class TestGeolocationProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", configs)
       .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+      .addConfiguration("geoIP2DBType", GeolocationDBType.CITY)
       .addOutputLane("a").build();
     List<Stage.ConfigIssue> configErrors = runner.runValidateConfigs();
     Assert.assertEquals(String.valueOf(configErrors), 1, configErrors.size());
     Assert.assertTrue(String.valueOf(configErrors.get(0)),
       String.valueOf(configErrors.get(0)).contains(Errors.GEOIP_05.name()));
+
+    runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+        .addConfiguration("geoIP2DBType", GeolocationDBType.COUNTRY)
+        .addOutputLane("a").build();
+    configErrors = runner.runValidateConfigs();
+    Assert.assertEquals(String.valueOf(configErrors), 1, configErrors.size());
+    Assert.assertTrue(String.valueOf(configErrors.get(0)),
+        String.valueOf(configErrors.get(0)).contains(Errors.GEOIP_12.name()));
   }
 
   @Test
@@ -142,6 +153,7 @@ public class TestGeolocationProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
       .addConfiguration("fieldTypeConverterConfigs", configs)
       .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+      .addConfiguration("geoIP2DBType", GeolocationDBType.COUNTRY)
       .addOutputLane("a").build();
     runner.runInit();
     try {
@@ -181,6 +193,7 @@ public class TestGeolocationProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
         .addConfiguration("fieldTypeConverterConfigs", configs)
         .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+        .addConfiguration("geoIP2DBType", GeolocationDBType.COUNTRY)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -218,6 +231,7 @@ public class TestGeolocationProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
         .addConfiguration("fieldTypeConverterConfigs", configs)
         .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+        .addConfiguration("geoIP2DBType", GeolocationDBType.COUNTRY)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -253,6 +267,7 @@ public class TestGeolocationProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+      .addConfiguration("geoIP2DBType", GeolocationDBType.COUNTRY)
       .addConfiguration("fieldTypeConverterConfigs", configs)
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addOutputLane("a").build();
