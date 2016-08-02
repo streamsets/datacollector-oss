@@ -29,6 +29,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -166,6 +167,26 @@ public class TestWebServerTask {
       webServerTask.stopTask();
     }
     Assert.assertTrue(triggeredRuntimeException);
+  }
+
+  @Test
+  public void testThreadPool() throws Exception {
+    Configuration serverConf = new Configuration();
+    serverConf.set(WebServerTask.HTTP_MAX_THREADS, 100);
+
+    WebServerTask webServerTask = createWebServerTask(new File("target").getAbsolutePath(),
+        serverConf,
+        Collections.<WebAppProvider>emptySet(),
+        true
+    );
+    try {
+      webServerTask.initTask();
+      Server server = webServerTask.getServer();
+      Assert.assertEquals(100, ((ThreadPool.SizedThreadPool)server.getThreadPool()).getMaxThreads());
+    } finally {
+      webServerTask.stopTask();
+    }
+
   }
 
 }

@@ -62,6 +62,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +114,9 @@ import java.util.Set;
 public abstract class WebServerTask extends AbstractTask {
   public static final String HTTP_BIND_HOST = "http.bindHost";
   private static final String HTTP_BIND_HOST_DEFAULT = "0.0.0.0";
+
+  public static final String HTTP_MAX_THREADS = "http.maxThreads";
+  private static final int HTTP_MAX_THREADS_DEFAULT = 200;
 
   public static final String HTTP_PORT_KEY = "http.port";
   private static final int HTTP_PORT_DEFAULT = 0;
@@ -249,6 +253,11 @@ public abstract class WebServerTask extends AbstractTask {
     });
 
 
+  }
+
+  @VisibleForTesting
+  Server getServer() {
+    return server;
   }
 
   private ServletContextHandler configureRootContext(SessionHandler sessionHandler) {
@@ -493,10 +502,18 @@ public abstract class WebServerTask extends AbstractTask {
 
     String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
 
+    QueuedThreadPool qtp = new QueuedThreadPool(conf.get(HTTP_MAX_THREADS, HTTP_MAX_THREADS_DEFAULT));
+    qtp.setName("jetty");
+    qtp.setDaemon(true);
+    Server server = new Server(qtp);
+
     if (!isSSLEnabled()) {
-      return new Server(new InetSocketAddress(hostname, port));
+      InetSocketAddress addr = new InetSocketAddress(hostname, port);
+      ServerConnector connector = new ServerConnector(server);
+      connector.setHost(addr.getHostName());
+      connector.setPort(addr.getPort());
+      server.setConnectors(new Connector[]{connector});
     } else {
-      Server server = new Server();
       //Create a connector for HTTPS
       HttpConfiguration httpsConf = new HttpConfiguration();
       httpsConf.addCustomizer(new SecureRequestCustomizer());
@@ -508,8 +525,8 @@ public abstract class WebServerTask extends AbstractTask {
       httpsConnector.setPort(port);
       httpsConnector.setHost(hostname);
       server.setConnectors(new Connector[]{httpsConnector});
-      return server;
     }
+    return server;
   }
 
   protected SslContextFactory createSslContextFactory() {
