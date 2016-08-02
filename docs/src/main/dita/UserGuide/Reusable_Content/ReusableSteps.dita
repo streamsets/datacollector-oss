@@ -445,7 +445,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by Kafka
-                        and Kinesis Consumer</draft-comment>
+                        and Kinesis Consumer, Redis Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="O-Binary">
@@ -534,8 +534,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> -
-                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer, Kinesis
-                        Consumer</draft-comment>
+                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer, Kinesis Consumer, Redis
+                        Consumer - all file &amp; message origins</draft-comment>
                 </cmd>
             </step>
             <step id="DelimFILE">
@@ -610,6 +610,15 @@
                                 <row>
                                     <entry>Lines to Skip</entry>
                                     <entry>Lines to skip before reading data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Parse NULLs</entry>
+                                    <entry>Replaces the specified null constant with a null
+                                        value.</entry>
+                                </row>
+                                <row>
+                                    <entry>NULL Constant</entry>
+                                    <entry>Null constant to replace with a null value.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
