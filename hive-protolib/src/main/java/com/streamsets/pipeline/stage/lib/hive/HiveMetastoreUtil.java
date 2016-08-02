@@ -253,7 +253,7 @@ public final class HiveMetastoreUtil {
   ) throws HiveStageCheckedException {
     List<Field> columnList = new LinkedList<>();
     for(Map.Entry<String,T> pair:  original.entrySet()) {
-      Map<String, Field> entry = new LinkedHashMap<>();
+      LinkedHashMap<String, Field> entry = new LinkedHashMap<>();
       entry.put(innerPairFirstFieldName, Field.create(pair.getKey()));
       if (isSecondFieldHiveType){
         HiveTypeInfo hiveTypeInfo = (HiveTypeInfo) pair.getValue();
@@ -264,7 +264,7 @@ public final class HiveMetastoreUtil {
       } else {
         entry.put(innerPairSecondFieldName, Field.create(pair.getValue().toString())); //stored value is "INT". need to fix this
       }
-      columnList.add(Field.create(entry));
+      columnList.add(Field.createListMap(entry));
     }
     return !columnList.isEmpty() ? Field.create(columnList) : null;
   }
@@ -492,7 +492,7 @@ public final class HiveMetastoreUtil {
             false
         )
     );
-    return Field.create(metadata);
+    return Field.createListMap(metadata);
   }
 
   /**
@@ -538,7 +538,7 @@ public final class HiveMetastoreUtil {
     }
     metadata.put(INTERNAL_FIELD, Field.create(internal));
     metadata.put(AVRO_SCHEMA, Field.create(avroSchema));
-    return Field.create(metadata);
+    return Field.createListMap(metadata);
   }
 
   /**
