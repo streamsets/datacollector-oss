@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
@@ -304,7 +305,7 @@ public final class HiveQueryExecutor {
       return rs.next();
     } catch (Exception e) {
       LOG.error("SQL Exception happened during show create table: {}", qualifiedTableName, e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -330,7 +331,7 @@ public final class HiveQueryExecutor {
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when creating table: {}", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -344,7 +345,7 @@ public final class HiveQueryExecutor {
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding columns: {}", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -380,7 +381,7 @@ public final class HiveQueryExecutor {
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -411,7 +412,7 @@ public final class HiveQueryExecutor {
       return partitionValuesSet;
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -430,7 +431,7 @@ public final class HiveQueryExecutor {
       }
     } catch (SQLException e) {
       LOG.error("SQL Exception: " + e.getMessage() + " {}", e);
-      throw new StageException(Errors.HIVE_20, "", e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, "", e.getMessage());
     }
     return typeInfo;
   }
@@ -472,7 +473,7 @@ public final class HiveQueryExecutor {
       return Pair.of(columnTypeInfo, partitionTypeInfo);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -498,7 +499,7 @@ public final class HiveQueryExecutor {
         }
       }
       if (serdeLibrary == null) {
-        throw new StageException(
+        throw new HiveStageCheckedException(
             Errors.HIVE_20,
             sql,
             Utils.format("Serde Library not found for table {}", qualifiedTableName)
@@ -540,7 +541,7 @@ public final class HiveQueryExecutor {
         }
       }
       if (location == null) {
-        throw new StageException(
+        throw new HiveStageCheckedException(
             Errors.HIVE_20,
             sql,
             Utils.format("Location information not found for partitions in table {}", qualifiedTableName)
@@ -549,7 +550,7 @@ public final class HiveQueryExecutor {
       return location;
     } catch (Exception e) {
       LOG.error("SQL Exception happened when describing partition", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 
@@ -581,7 +582,7 @@ public final class HiveQueryExecutor {
       return Pair.of(isExternal, useAsAvro);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
-      throw new StageException(Errors.HIVE_20, sql, e.getMessage());
+      throw new HiveStageCheckedException(Errors.HIVE_20, sql, e.getMessage());
     }
   }
 }
