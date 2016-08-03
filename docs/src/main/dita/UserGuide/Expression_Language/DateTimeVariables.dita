@@ -22,9 +22,9 @@
                     expression language</indexterm></indexterm>You can use datetime variables to
             configure a Hadoop FS, Local FS, or MapR FS destination to write records to time-based
             directories. </p>
-        <p>You can use datetime variables to configure an Elasticsearch destination to write records
-            to time-based indexes. And you can use them in the partition value expression in the
-            Hive Metadata processor.</p>
+        <p>You can use datetime variables to configure an Amazon S3 or Elasticsearch destination to
+            write records to a time-based partition prefix or to a time-based index. And you can use
+            them in the partition value expression in the Hive Metadata processor.</p>
         <p>The expression language provides the following datetime variables:</p>
         <ul id="ul_obj_nf2_sv">
             <li>${YYYY()} - four digit year</li>

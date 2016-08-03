@@ -41,13 +41,25 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID">
-                                    <entry/>
+                                <row>
+                                    <entry>Access Key ID
+                                        <xref
+                                            href="KinFirehose-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v53_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID"/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey">
-                                    <entry/>
+                                <row>
+                                    <entry>Secret Access Key
+                                        <xref
+                                            href="KinFirehose-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v47_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey"/>
                                 </row>
                                 <row>
                                     <entry>Destination Type</entry>

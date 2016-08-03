@@ -1224,6 +1224,64 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Expression Language chapter.</draft-comment>
             <p id="FunctionArgument">You can replace any argument with a literal or an expression
                   that evaluates to the argument. String literals must be enclosed in single or
-                  double quotation marks.</p>
+                  double quotation marks.<draft-comment author="alisontaylor">AWS Credentials for
+                        destinations: Amazon S3, Kinesis Firehose, and Kinesis
+                        Producer</draft-comment></p>
+            <dl id="AWSCredentials-Destinations">
+                  <dlentry>
+                        <dt>IAM roles</dt>
+                        <dd>When <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> runs on an Amazon EC2 instance, you can use the AWS Management
+                              Console to configure an IAM role for the EC2 instance. <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> uses the IAM instance profile credentials to automatically connect
+                              to AWS. </dd>
+                        <dd>When you use IAM roles, you do not need to specify the <uicontrol>Access
+                                    Key ID</uicontrol> and <uicontrol>Secret Access Key</uicontrol>
+                              properties in the destination. </dd>
+                        <dd>For more information about assigning an IAM role to an EC2 instance, see
+                              the Amazon EC2 documentation.</dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>AWS access key pairs</dt>
+                        <dd>
+                              <p>When <ph
+                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> does not run on an Amazon EC2 instance or when the EC2
+                                    instance doesn’t have an IAM role, you must specify the
+                                          <uicontrol>Access Key ID</uicontrol> and <uicontrol>Secret
+                                          Access Key</uicontrol> properties in the destination.</p>
+                        </dd>
+                  </dlentry>
+            </dl>
+            <draft-comment author="alisontaylor">AWS Credentials for origins: Amazon S3 and Kinesis
+                  Consumer</draft-comment>
+            <dl id="AWSCredentials-Origins">
+                  <dlentry>
+                        <dt>IAM roles</dt>
+                        <dd>When <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> runs on an Amazon EC2 instance, you can use the AWS Management
+                              Console to configure an IAM role for the EC2 instance. <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> uses the IAM instance profile credentials to automatically connect
+                              to AWS. </dd>
+                        <dd>When you use IAM roles, you do not need to specify the <uicontrol>Access
+                                    Key ID</uicontrol> and <uicontrol>Secret Access Key</uicontrol>
+                              properties in the origin.</dd>
+                        <dd>For more information about assigning an IAM role to an EC2 instance, see
+                              the Amazon EC2 documentation.</dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>AWS access key pairs</dt>
+                        <dd>When <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> does not run on an Amazon EC2 instance or when the EC2 instance
+                              doesn’t have an IAM role, you must specify the <uicontrol>Access Key
+                                    ID</uicontrol> and <uicontrol>Secret Access Key</uicontrol>
+                              properties in the origin.</dd>
+                  </dlentry>
+            </dl>
       </conbody>
 </concept>

@@ -39,13 +39,25 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID">
-                                    <entry/>
+                                <row>
+                                    <entry>Access Key ID
+                                        <xref
+                                            href="AmazonS3-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v69_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID"/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey">
-                                    <entry/>
+                                <row>
+                                    <entry>Secret Access Key
+                                        <xref
+                                            href="AmazonS3-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v84_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">
@@ -73,6 +85,35 @@
                                         use. <p>Use a specific partition prefix or define an
                                             expression that evaluates to a partition prefix.
                                         </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Time Basis <xref href="AmazonS3-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_d73_kf8_wv"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p>Time basis to use for writing to a time-based partition
+                                            prefix. Use one of the following expressions:<ul
+                                                id="ul_wbn_qdt_r5">
+                                                <li><codeph>${time:now()}</codeph> - Uses the
+                                                  processing time as the time basis.  </li>
+                                                <li>An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <codeph>${record:value(&lt;date field
+                                                  path>)}</codeph>. Uses the time associated with
+                                                  the record as the time basis. </li>
+                                            </ul></p>
+                                        <p>When the Partition Prefix definition has no time
+                                            component, you can ignore this property. </p>
+                                        <p>Default is <codeph>${time:now()}</codeph>.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Data Time Zone</entry>
+                                    <entry>
+                                        <p>Time zone for the destination system. Used to resolve
+                                            datetimes in a time-based partition prefix. </p>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>File Name Prefix <xref

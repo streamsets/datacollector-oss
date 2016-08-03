@@ -124,27 +124,23 @@
    </tgroup>
   </table>
   <p>
-   <draft-comment author="alisontaylor">The following rows are used by the AWS destinations: Amazon
-    S3, Kinesis Firehose, Kinesis Producer.</draft-comment>
+   <draft-comment author="alisontaylor">The following descriptions are used by the AWS destinations:
+    Amazon S3, Kinesis Firehose, Kinesis Producer.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vnv_ncr_mv">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <tbody>
-      <row id="AWSDest_AccessKeyID">
-       <entry>Access Key ID <xref href="../Destinations/Destinations_AWSCredentials.dita">
-        <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_zn3_b3q_kv"/></xref>
-       </entry>
-       <entry>
+      <row>
+       <entry>Access Key ID </entry>
+       <entry id="AWSDest_AccessKeyID">
         <p>AWS access key ID.</p>
         <p>Required when not using IAM roles with IAM instance profile credentials.</p>
        </entry>
       </row>
-      <row id="AWSDest_SecretAccessKey">
-       <entry>Secret Access Key <xref href="../Destinations/Destinations_AWSCredentials.dita">
-         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_tfh_pcr_mv"
-        /></xref></entry>
-       <entry>
+      <row>
+       <entry>Secret Access Key</entry>
+       <entry id="AWSDest_SecretAccessKey">
         <p>AWS secret access key. </p>
         <p>Required when not using IAM roles with IAM instance profile credentials. </p>
        </entry>
@@ -152,27 +148,23 @@
      </tbody>
     </tgroup>
    </table>
-   <draft-comment author="alisontaylor">The following rows are used by the AWS origins: Amazon S3
-    and Kinesis Consumer.</draft-comment>
+   <draft-comment author="alisontaylor">The following descriptions are used by the AWS origins:
+    Amazon S3 and Kinesis Consumer.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_lnx_51w_mv">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <tbody>
-      <row id="AWSOrigin_AccessKeyID">
-       <entry>Access Key ID <xref href="../Origins/Origins_AWSCredentials.dita">
-         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_ajd_x1w_mv"/></xref>
-       </entry>
-       <entry>
+      <row>
+       <entry>Access Key ID</entry>
+       <entry id="AWSOrigin_AccessKeyID">
         <p>AWS access key ID.</p>
         <p>Required when not using IAM roles with IAM instance profile credentials.</p>
        </entry>
       </row>
-      <row id="AWSOrigin_SecretAccessKey">
-       <entry>Secret Access Key <xref href="../Origins/Origins_AWSCredentials.dita">
-         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_sdq_x1w_mv"
-        /></xref></entry>
-       <entry>
+      <row>
+       <entry>Secret Access Key</entry>
+       <entry id="AWSOrigin_SecretAccessKey">
         <p>AWS secret access key. </p>
         <p>Required when not using IAM roles with IAM instance profile credentials. </p>
        </entry>

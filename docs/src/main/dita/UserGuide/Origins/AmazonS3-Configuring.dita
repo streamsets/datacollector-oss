@@ -39,13 +39,25 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID">
-                                    <entry/>
+                                <row>
+                                    <entry>Access Key ID
+                                        <xref
+                                            href="AmazonS3-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v94_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey">
-                                    <entry/>
+                                <row>
+                                    <entry>Secret Access Key
+                                        <xref
+                                            href="AmazonS3-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v64_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">

@@ -20,7 +20,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/Destinations_AWSCredentials.dita"/>
    <topicref href="../Destinations/RecordHeaderAttributes.dita">
     <topicref href="../Destinations/RecordHeaderAttributes-Generating.dita"/>
    </topicref>
@@ -29,10 +28,13 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/AmazonS3-AWSCredentials.dita"/>
    <topicref href="../Destinations/AmazonS3-OutputFileNames.dita"/>
-   <topicref href="../Destinations/AmazonS3-PartitionPrefix.dita"/>
-   <topicref href="../Destinations/AmazonS3-ServerSideEncryption.dita"/>
+   <topicref href="../Destinations/AmazonS3-PartitionPrefix.dita">
+    <topicref href="../Destinations/AmazonS3-TimeBasis.dita"/>
+   </topicref>
    <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
+   <topicref href="../Destinations/AmazonS3-ServerSideEncryption.dita"/>
    <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Cassandra.dita" chunk="to-content">
@@ -136,6 +138,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/KinFirehose-AWSCredentials.dita"/>
    <topicref href="../Destinations/KinFirehose-DeliveryStream.dita"/>
    <topicref href="../Destinations/KinFirehose-DataFormat.dita"/>
    <topicref href="../Destinations/KinFirehose-Configuring.dita"/>
@@ -144,6 +147,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/KinProducer-AWSCredentials.dita"/>
    <topicref href="../Destinations/KinProducer-DataFormat.dita"/>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>

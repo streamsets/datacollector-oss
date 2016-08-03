@@ -41,13 +41,25 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID">
-                                    <entry/>
+                                <row>
+                                    <entry>Access Key ID
+                                        <xref
+                                            href="KinConsumer-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v83_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey">
-                                    <entry/>
+                                <row>
+                                    <entry>Secret Access Key
+                                        <xref
+                                            href="KinConsumer-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v75_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"/>
                                 </row>
                                 <row>
                                     <entry>Region</entry>

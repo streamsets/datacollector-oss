@@ -18,13 +18,13 @@
  <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/Origins_AWSCredentials.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
    <topicref href="../Origins/FilePath_Offset.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/AmazonS3-AWSCredentials.dita"/>
    <topicref href="../Origins/AmazonS3-CommonPrefixPatterns.dita"/>
    <topicref href="../Origins/AmazonS3-FileProcessingOrder.dita"/>
    <topicref href="../Origins/AmazonS3-BufferLimit.dita"/>
@@ -105,6 +105,7 @@
   </topicref>
   <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/KinConsumer-AWSCredentials.dita"/>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
