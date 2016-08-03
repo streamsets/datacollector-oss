@@ -147,6 +147,7 @@
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>
   </topicref>
    <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
+    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/SDCRPCtoKafka-PipelineConfig.dita"/>
    <topicref href="../Origins/SDCPRCtoKafka-ConRequests.dita"/>
    <topicref href="../Origins/SDCRPCtoKafka-RequestMessageSize.dita"/>
@@ -165,9 +166,11 @@
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDPtoKafka.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDPtoKafka-PipelineConfig.dita"/>
    <topicref href="../Origins/UDPtoKafka-AddKafkaProps.dita"/>
    <topicref href="../Origins/UDPtoKafka-EnablingKSecurity.dita">

@@ -27,6 +27,9 @@
             destination in another pipeline. However, the SDC RPC to Kafka origin is optimized to
             write data from multiple pipelines directly to Kafka. When you use this origin, you
             cannot perform additional processing before writing to Kafka.</p>
+        <p>Here is an example of the recommended architecture for using the SDC RPC to Kafka
+            origin:</p>
+        <p><image href="../Graphics/SDCRPCtoKafka-arch.png" id="image_i1l_23n_vw" scale="80"/></p>
         <p>When you configure the SDC RPC to Kafka origin, you define the port that the origin
             listens to for data, the SDC RPC ID, the maximum number of concurrent requests, and
             maximum batch request size. You can optionally use TLS to connect to the SDC RPC

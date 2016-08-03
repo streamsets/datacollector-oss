@@ -20,6 +20,13 @@
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>UDP
                     to Kafka</indexterm></indexterm>The UDP to Kafka origin reads messages from one
             or more UDP ports and writes each message directly to Kafka.</p>
+        <p>Use the UDP to Kafka origin to read large volumes of data from multiple UDP ports and
+            write the data immediately to Kafka, without additional processing.</p>
+        <p>Here is an example of the recommended architecture for using the UDP to Kafka origin:</p>
+        <p><image href="../Graphics/UDPtoKafka-arch.png" id="image_jkp_jhn_vw" scale="80"/></p>
+        <p>If you need to process data before writing it to Kafka, need to write to a destination
+            system other than Kafka, or if the origin does not need to process high volumes of data,
+            use the UDP Source origin.</p>
         <p>UDP to Kafka can read syslog messages, Netflow messages from NetFlow Version 5, and
             collectd messages. When you configure UDP Source, you specify the UDP ports to use,
             Kafka configuration information, and advanced properties such as the maximum number of

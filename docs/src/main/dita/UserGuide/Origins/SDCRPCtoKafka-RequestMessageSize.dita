@@ -25,9 +25,12 @@
         <p>To promote peak performance, the origin writes as many records as possible into a single
             Kafka message. The <uicontrol>Max Message Size (KB)</uicontrol> property determines the
             maximum size of the message that it creates. </p>
-        <note>The maximum message size specified in the origin must be smaller than the maximum
-            message size configured in Kafka. By default, the maximum message size in Kafka -
-            currently defined by the message.max.bytes property - is 1 MB.</note>
+        <note type="important">The maximum message size specified in the origin must be smaller than
+            the maximum message size configured in Kafka. By default, the maximum message size in
+            Kafka - currently defined by the message.max.bytes Kafka configuration property - is 1
+            MB. If the origin receives a message greater than the maximum message size, it fails to
+            process the batch, and the destination that provided the batch processes it based on the
+            error record handling configured for the destination.</note>
         <p>For example, say the origin uses the default 100 MB for the maximum batch request size
             and the default 900 KB for the maximum message size, and Kakfa uses the 1 MB default for
             message.max.bytes. </p>
@@ -35,11 +38,9 @@
             When the origin writes to Kafka it groups records into as few messages as possible,
             including up to 900 KB of records in each message. Since the message size is less than
             the Kafka 1 MB requirement, the origin successfully writes all messages to Kafka.</p>
-        <p>If a record happens to be larger than the 900 KB maximum message size, the origin
-            generates an error and does not write it to Kafka. The SDC RPC destination that provided
-            the record processes the record based on stage error record handling. <draft-comment
-                author="Loretta">Email out to Tucu verifying the above. He mentioned he created
-                SDC-3452 after he read this, but can't tell from the bug if this is
-                correct.</draft-comment></p>
+        <p>If a record is larger than the 900 KB maximum message size, the origin generates an error
+            and does not write the record - or the batch that includes the record - to Kafka. The
+            SDC RPC destination that provided the batch with the oversized record processes the
+            batch based on stage error record handling. </p>
     </conbody>
 </concept>
