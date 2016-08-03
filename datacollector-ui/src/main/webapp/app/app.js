@@ -412,6 +412,17 @@ angular.module('dataCollectorApp')
       }
     });
 
+    api.admin.getBuildInfo().then(function(res) {
+      if (res && res.data) {
+        $timeout(
+          function() {
+            Analytics.set('sdcVersion', res.data.version);
+          },
+          1000
+        );
+      }
+    });
+
     api.admin.getRemoteServerInfo().then(function(res) {
       if (res && res.data) {
         $rootScope.common.remoteServerInfo.registrationStatus = res.data.registrationStatus;
