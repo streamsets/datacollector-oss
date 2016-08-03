@@ -22,32 +22,24 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hdfs.HdfsConfiguration;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.compress.DefaultCodec;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestActiveRecordWriters {
@@ -162,6 +154,48 @@ public class TestActiveRecordWriters {
     Assert.assertFalse(writer.isClosed());
 
     Thread.sleep(1500);
+    Assert.assertTrue(writer.isClosed());
+    File[] files = new File(getTestDir().toString()).listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("prefix");
+      }
+    });
+    Assert.assertEquals(1, files.length);
+    files = new File(getTestDir().toString()).listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("_tmp_");
+      }
+    });
+    Assert.assertEquals(0, files.length);
+  }
+  @Test
+  public void testRenameOnIdleFlushNoData() throws Exception {
+    RecordWriterManager mgr = new RecordWriterManagerTestBuilder()
+        .context(ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR, null))
+        .dirPathTemplate(getTestDir().toString())
+        .build();
+
+    mgr.setIdleTimeoutSeconds(1L);
+    ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
+
+    Date now = new Date();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> data = new HashMap<>();
+    data.put("a", Field.create("blah"));
+
+    RecordWriter writer = writers.get(now, now, record);
+    Assert.assertNotNull(writer);
+    writer.write(record);
+    writer.flush();
+    // writer should still be open
+    Assert.assertFalse(writer.isClosed());
+
+    Thread.sleep(500);
+    writer.flush();
+    Thread.sleep(900);
     Assert.assertTrue(writer.isClosed());
     File[] files = new File(getTestDir().toString()).listFiles(new FilenameFilter() {
       @Override
