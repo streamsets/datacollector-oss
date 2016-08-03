@@ -32,12 +32,11 @@
                     <dd>Generates the table without a Stored As Avro clause in the query. Instead,
                         the destination generates an Avro schema for each Hive table update. The
                         destination uses the following format for the schema name:
-                            <codeph>avro_schema_&lt;database>_&lt;table>_&lt;current
-                            time>.avsc</codeph>.</dd>
+                            <codeph>avro_schema_&lt;database>_&lt;table>_&lt;UUID>.avsc</codeph>. </dd>
                     <dd>The destination stores the Avro schema in HDFS. You can configure where the
                         destination saves the schemas. You can specify a full path or a path
                         relative to the table directory. By default, the destination saves the
-                        schema in a <filepath>.schemas</filepath> sub-folder of the table directory. </dd>
+                        schema in a <filepath>.schemas</filepath> subfolder of the table directory. </dd>
                     <dd>You can configure the destination to generate and store the schemas as a
                         specified HDFS user. <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

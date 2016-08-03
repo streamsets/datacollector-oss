@@ -16,7 +16,7 @@
 <concept id="concept_rz5_nft_zv">
  <title>Hive Metadata</title>
  <shortdesc>The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS
-        and MapR FS destinations as part of the Hive Drift Solution. </shortdesc>
+        or MapR FS destinations as part of the Hive Drift Solution. </shortdesc>
  <conbody>
         <p><indexterm>processors<indexterm>Hive Metadata</indexterm></indexterm><indexterm>Hive
                 Metadata processor<indexterm>overview</indexterm></indexterm>Use the Hive Metadata
