@@ -28,6 +28,16 @@
       "default" : "false"
     }
   ],
+  "commands" : [
+    {
+      "name" : "RegisterDPM",
+      "label" : "Register all SDCs with DPM",
+      "description" : "Registers all SDC instances in this service with DPM.",
+      "roleCommand" : "RegisterDPM",
+      "roleName" : "DATACOLLECTOR",
+      "runMode" : "all"
+    }
+  ],
   "roles": [
     {
       "name": "DATACOLLECTOR",
@@ -42,7 +52,14 @@
           "SDC_RESOURCES": "${resources.directory}",
           "CONFIGURED_USERS": "${datacollector.users}",
           "FILE_AUTH_TYPE": "${http.authentication}",
-          "LOGIN_MODULE": "${http.authentication.login.module}"
+          "LOGIN_MODULE": "${http.authentication.login.module}",
+          "DPM_TOKEN_FILE": "${dpm.token.path}",
+          "DPM_BASE_URL": "${dpm.base.url}",
+          "DPM_USER": "${dpm.user}",
+          "DPM_PASSWORD": "${dpm.password}",
+          "SDC_JAVA_OPTS": "${java.opts}",
+          "SDC_CURL_OPTS": "${curl.opts}",
+          "DEBUG": "${debug.control.script}"
         }
       },
       "kerberosPrincipals" : [
@@ -78,6 +95,26 @@
             "environmentVariables": {
               "CONFIGURED_USERS": "${datacollector.users}",
               "AUTH_TYPE": "${http.authentication}"
+            }
+          }
+        },
+        {
+          "name": "RegisterDPM",
+          "label": "Register SDC in DPM",
+          "description": "Registers SDC instance in DPM",
+          "expectedExitCodes": [0],
+          "requiredRoleState": "stopped",
+          "commandRunner": {
+            "program": "scripts/control.sh",
+            "args": ["dpm"],
+            "environmentVariables": {
+              "DPM_TOKEN_FILE": "${dpm.token.path}",
+              "DPM_BASE_URL": "${dpm.base.url}",
+              "DPM_USER": "${dpm.user}",
+              "DPM_PASSWORD": "${dpm.password}",
+              "SDC_JAVA_OPTS": "${java.opts}",
+              "SDC_CURL_OPTS": "${curl.opts}",
+              "DEBUG": "${debug.control.script}"
             }
           }
         }
@@ -141,7 +178,12 @@
               "production.maxErrorRecordsPerStage",
               "production.maxPipelineErrors",
               "ui.enable.webSocket",
-              "ui.enable.usage.data.collection"
+              "ui.enable.usage.data.collection",
+              "dpm.enabled",
+              "dpm.base.url",
+              "dpm.remote.control.job.labels",
+              "dpm.remote.control.ping.frequency",
+              "dpm.remote.control.events.recipient"
             ],
             "excludedParams": [
               "datacollector.users",
@@ -793,6 +835,94 @@
           "type": "long",
           "label": "Vault HTTP Read Timeout (secs)",
           "description": "Vault HTTP Read Timeout (secs)",
+          "required": "false"
+        },
+        {
+          "name": "dpm.enabled",
+          "type": "boolean",
+          "default": "false",
+          "label": "Enable DPM",
+          "description": "Enable StreamSets Enterprise",
+          "required": "false"
+        },
+        {
+          "name": "dpm.base.url",
+          "type": "uri",
+          "default": "",
+          "label": "DPM URL",
+          "description": "Base URL for DPM.",
+          "required": "false"
+        },
+        {
+          "name": "dpm.user",
+          "type": "string",
+          "default": "",
+          "label": "DPM Username",
+          "description": "Username of organization admin that have privileges to register new SDCs.",
+          "required": "false"
+        },
+        {
+          "name": "dpm.password",
+          "type": "password",
+          "default": "",
+          "label": "DPM Password",
+          "description": "Password of organization admin that have privileges to register new SDCs.",
+          "required": "false"
+        },
+        {
+          "name": "dpm.remote.control.job.labels",
+          "type": "string_array",
+          "label": "DPM labels",
+          "description": "Labels that will be reported to DPM.",
+          "default": ["label1", "label2"],
+          "required": "false"
+        },
+        {
+          "name": "dpm.remote.control.ping.frequency",
+          "type": "long",
+          "label": "DPM Ping Frequency",
+          "description": "Data Collector Ping Frequency to DPM (in milliseconds)",
+          "default": "5000",
+          "required": "false"
+        },
+        {
+          "name": "dpm.remote.control.events.recipient",
+          "type": "string",
+          "label": "DPM Remote control App",
+          "description": "App to send remote control events",
+          "default": "jobrunner-app",
+          "required": "false"
+        },
+        {
+          "name": "dpm.token.path",
+          "type": "string",
+          "default": "/etc/cm-sdc-dpm/applicationToken.txt",
+          "label": "DPM token location",
+          "description": "Location on each machine's local drive where DPM authentication token for SDC will be kept.",
+          "required": "false"
+        },
+        {
+          "name": "debug.control.script",
+          "type": "boolean",
+          "default": "false",
+          "label": "Debug control script",
+          "description": "When enabled the main control script will run with `set -x` and will print each executed command. This is particularly helpful during troubleshooting an issue, however can leak sensitive information and shouldn't be used if not needed.",
+          "required": "false"
+        },
+        {
+          "name": "java.opts",
+          "type": "string",
+          "default": "",
+          "label": "Java options",
+          "description": "Additional configuration for variable SDC_JAVA_OPTS that will be passed down to the JVM running data collector.",
+          "required": "false"
+        },
+        {
+          "name": "curl.opts",
+          "type": "string",
+          "default": "--tlsv1.2",
+          "label": "Curl options",
+          "description": "Additional arguments that should be passed to curl when registering data collectors with DPM.",
           "required": "false"
         }
       ]
