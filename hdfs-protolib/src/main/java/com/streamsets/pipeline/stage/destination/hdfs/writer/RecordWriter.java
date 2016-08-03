@@ -73,6 +73,7 @@ public class RecordWriter {
   private boolean idleClosed;
   private Future<Void> currentIdleCloseFuture = null;
   private ActiveRecordWriters writers = null;
+  private boolean batchContainsData = false;
 
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
   private ScheduledThreadPoolExecutor idleCloseExecutor = new ScheduledThreadPoolExecutor(1,
@@ -149,6 +150,7 @@ public class RecordWriter {
       if (IS_TRACE_ENABLED) {
         LOG.trace("Path[{}] - Writing ['{}']", path, record.getHeader().getSourceId());
       }
+      batchContainsData = true;
       if (generator != null) {
         generator.write(record);
       } else if (seqWriter != null) {
@@ -170,11 +172,17 @@ public class RecordWriter {
   }
 
   public void flush() throws IOException {
+    // This grabs write lock, so do it before getting read lock
+    scheduleIdleClose();
     closeLock.readLock().lock();
     try {
       throwIfIdleClosed();
       if (IS_TRACE_ENABLED) {
         LOG.trace("Path[{}] - Flushing", path);
+      }
+      // Don't flush if there is no data in this batch
+      if (!batchContainsData) {
+        return;
       }
       if (generator != null) {
         generator.flush();
@@ -182,9 +190,9 @@ public class RecordWriter {
         seqWriter.hflush();
       }
     } finally {
+      // reset this flag so we flush only when there is data.
+      batchContainsData = false;
       closeLock.readLock().unlock();
-      // This grabs write lock, so release read lock first
-      scheduleIdleClose();
     }
   }
 
@@ -272,6 +280,10 @@ public class RecordWriter {
     }
     closeLock.writeLock().lock();
     try {
+      // This batch had no data, so don't adjust idle close timing.
+      if (!batchContainsData) {
+        return;
+      }
       if (currentIdleCloseFuture != null && !currentIdleCloseFuture.isDone()) {
         currentIdleCloseFuture.cancel(false);
         // We don't worry about checking if it was successfully cancelled:
