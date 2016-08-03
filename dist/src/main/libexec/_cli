@@ -45,7 +45,7 @@ else
   JAVA="$JAVA_HOME/bin/java"
 fi
 
-exec ${JAVA} -jar ${CLI_JAR} "$@"
+exec ${JAVA} ${SDC_CLI_JAVA_OPTS} -jar ${CLI_JAR} "$@"
 
 status=$?
 echo "Exit: $status"
