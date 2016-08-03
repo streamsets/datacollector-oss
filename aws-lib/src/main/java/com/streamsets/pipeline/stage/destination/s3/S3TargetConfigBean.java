@@ -70,43 +70,12 @@ public class S3TargetConfigBean {
   public String partitionTemplate;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "sdc",
-    description = "Prefix for file names that will be uploaded on Amazon S3",
-    label = "File Name Prefix",
-    displayPosition = 190,
-    group = "S3"
-  )
-  public String fileNamePrefix;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    label = "Data Format",
-    displayPosition = 200,
-    group = "S3"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Compress with gzip",
-    displayPosition = 210,
-    group = "S3"
-  )
-  public boolean compress;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTC",
       label = "Data Time Zone",
-      description = "Time zone to use to resolve partition prefix",
-      displayPosition = 220,
+      description = "Time zone to use to resolve the date time of a time-based partition prefix",
+      displayPosition = 190,
       group = "S3"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -121,10 +90,41 @@ public class S3TargetConfigBean {
       label = "Time Basis",
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
-      displayPosition = 230,
+      displayPosition = 200,
       group = "S3"
   )
   public String timeDriverTemplate;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "sdc",
+    description = "Prefix for file names that will be uploaded on Amazon S3",
+    label = "File Name Prefix",
+    displayPosition = 210,
+    group = "S3"
+  )
+  public String fileNamePrefix;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Data Format",
+    displayPosition = 220,
+    group = "S3"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Compress with gzip",
+    displayPosition = 230,
+    group = "S3"
+  )
+  public boolean compress;
 
   @ConfigDefBean(groups = {"S3"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
