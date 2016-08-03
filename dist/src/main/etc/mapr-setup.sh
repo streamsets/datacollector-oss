@@ -104,4 +104,4 @@ printf "Updating etc/sdc-security.policy file ..."
 printf "\ngrant codebase \"file://${MAPR_HOME}/-\" {\n  permission java.security.AllPermission;\n};\n" >> ${SDC_HOME}/etc/${SDC_POLOCY_FILE}
 printf "Done\n"
 
-echo "Succeed"
+echo "Succeeded"
