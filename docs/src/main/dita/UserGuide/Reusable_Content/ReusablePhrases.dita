@@ -286,7 +286,7 @@
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
-                              <dd>You can also replace null constants with null values.</dd>
+                              <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
@@ -315,7 +315,7 @@
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
-                              <dd>You can also replace null constants with null values.</dd>
+                              <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The

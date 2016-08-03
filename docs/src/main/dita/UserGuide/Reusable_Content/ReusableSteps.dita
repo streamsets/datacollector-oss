@@ -613,12 +613,12 @@
                                 </row>
                                 <row>
                                     <entry>Parse NULLs</entry>
-                                    <entry>Replaces the specified null constant with a null
-                                        value.</entry>
+                                    <entry>Replaces the specified string constant with null
+                                        values.</entry>
                                 </row>
                                 <row>
                                     <entry>NULL Constant</entry>
-                                    <entry>Null constant to replace with a null value.</entry>
+                                    <entry>String constant to replace with null values.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
