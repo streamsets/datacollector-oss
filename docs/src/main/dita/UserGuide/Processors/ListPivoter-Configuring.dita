@@ -54,8 +54,10 @@
                                 <row>
                                     <entry>Pivoted Items Path</entry>
                                     <entry>Field path to write the pivoted data. If the field
-                                        exists, the processor overwrites any data in the
-                                        field.</entry>
+                                        exists, the processor overwrites any data in the field.<p>
+                                            <note>When not used, the processor writes pivoted data
+                                                to the original list field. </note>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Field Does Not Exist</entry>

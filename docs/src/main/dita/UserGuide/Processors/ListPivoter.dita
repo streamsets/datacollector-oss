@@ -22,9 +22,10 @@
         <p>The List Pivoter processor pivots the data in one field. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ListPivot-AddPivoters"
             /></p>
-  <p>When you configure the List Pivoter, you specify the list field to pivot and whether you want
-            the existing fields in a record incorporated in the resulting record. You can define the
-            field name for the results. You can also configure the action to take when the list
-            field does not exist. </p>
+  <p>When you configure the List Pivoter, you specify the list field to pivot and where to write the
+            pivoted data. By default, the processor writes the pivoted data to the original list
+            field, but you can specify another field for the data. </p>
+        <p>You can also specify whether to include the existing fields in the resulting records and
+            configure the action to take when the list field does not exist. </p>
  </conbody>
 </concept>
