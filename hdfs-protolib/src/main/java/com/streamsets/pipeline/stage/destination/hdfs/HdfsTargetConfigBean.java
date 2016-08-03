@@ -383,6 +383,17 @@ public class HdfsTargetConfigBean {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Validate HDFS Permissions",
+    description = "When checked, HDFS destination will create test file in configured target directory to verify access privileges.",
+    displayPosition = 230,
+    group = "OUTPUT_FILES"
+  )
+  public boolean hdfsPermissionCheck;
+
   @ConfigDefBean()
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
@@ -911,65 +922,71 @@ public class HdfsTargetConfigBean {
 
   private boolean validateHadoopDir(final Stage.Context context, final String configName, final String configGroup,
                             String dirPathTemplate, final List<Stage.ConfigIssue> issues) {
-    final AtomicBoolean ok = new AtomicBoolean(true);
     if (!dirPathTemplate.startsWith("/")) {
       issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_40));
-      ok.set(false);
-    } else {
-      dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
-      try {
-        final Path dir = new Path(dirPathTemplate);
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            // Based on whether the target directory exists or not, we'll do different check
-            if (!fs.exists(dir)) {
-              // Target directory doesn't exists, we'll try to create directory a directory and then drop it
-              Path workDir = dir;
-
-              // We don't want to pollute HDFS with random directories, so we'll create exactly one directory under
-              // another already existing directory on the template path. (e.g. if template is /a/b/c/d and only /a
-              // exists, then we will create only /a/b during this test).
-              while(!fs.exists(workDir.getParent())) {
-                workDir = workDir.getParent();
-              }
-
-              try {
-                if (fs.mkdirs(workDir)) {
-                  LOG.info("Creating dummy directory to validate permissions {}", workDir.toString());
-                  fs.delete(workDir, true);
-                  ok.set(true);
-                } else {
-                  issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
-                  ok.set(false);
-                }
-              } catch (IOException ex) {
-                issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_42,
-                    ex.toString()));
-                ok.set(false);
-              }
-            } else {
-              // Target directory exists, we will just create empty test file and then immediately drop it
-              try {
-                Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
-                fs.create(dummy).close();
-                fs.delete(dummy, false);
-                ok.set(true);
-              } catch (IOException ex) {
-                issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_43,
-                    ex.toString()));
-                ok.set(false);
-              }
-            }
-            return null;
-          }
-        });
-      } catch (Exception ex) {
-        issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
-          ex.toString()));
-        ok.set(false);
-      }
+      return false;
     }
+
+    // User can opt out canary write to HDFS
+    if(!hdfsPermissionCheck) {
+      return true;
+    }
+
+    final AtomicBoolean ok = new AtomicBoolean(true);
+    dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
+    try {
+      final Path dir = new Path(dirPathTemplate);
+      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+                  @Override
+                  public Void run() throws Exception {
+          // Based on whether the target directory exists or not, we'll do different check
+          if (!fs.exists(dir)) {
+            // Target directory doesn't exists, we'll try to create directory a directory and then drop it
+            Path workDir = dir;
+
+            // We don't want to pollute HDFS with random directories, so we'll create exactly one directory under
+            // another already existing directory on the template path. (e.g. if template is /a/b/c/d and only /a
+            // exists, then we will create only /a/b during this test).
+            while(!fs.exists(workDir.getParent())) {
+              workDir = workDir.getParent();
+            }
+
+            try {
+              if (fs.mkdirs(workDir)) {
+                LOG.info("Creating dummy directory to validate permissions {}", workDir.toString());
+                fs.delete(workDir, true);
+                ok.set(true);
+              } else {
+                issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
+                ok.set(false);
+              }
+            } catch (IOException ex) {
+              issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_42,
+                  ex.toString()));
+              ok.set(false);
+            }
+          } else {
+            // Target directory exists, we will just create empty test file and then immediately drop it
+            try {
+              Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
+              fs.create(dummy).close();
+              fs.delete(dummy, false);
+              ok.set(true);
+            } catch (IOException ex) {
+              issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_43,
+                  ex.toString()));
+              ok.set(false);
+            }
+          }
+          return null;
+      }
+    });
+    } catch (Exception ex) {
+      issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
+        ex.toString()));
+      ok.set(false);
+    }
+
     return ok.get();
   }
 

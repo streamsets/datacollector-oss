@@ -212,6 +212,7 @@ public class BaseHdfsTargetIT {
     dTarget.hdfsTargetConfigBean.lateRecordsDirPathTemplate = lateDir;
     dTarget.hdfsTargetConfigBean.lateRecordsAction = LateRecordsAction.SEND_TO_LATE_RECORDS_FILE;
     dTarget.hdfsTargetConfigBean.hdfsUser = "foo";
+    dTarget.hdfsTargetConfigBean.hdfsPermissionCheck = true;
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, target)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
