@@ -46,7 +46,7 @@ public class ElasticSearch2Factory extends ElasticSearchFactory {
       String sslKeystorePassword,
       String sslTruststorePath,
       String sslTruststorePassword,
-      boolean useFound
+      boolean useElasticCloud
   ) throws UnknownHostException {
     Settings.Builder settingsBuilder = Settings.settingsBuilder()
         .put("client.transport.sniff", clientSniff)
@@ -70,7 +70,7 @@ public class ElasticSearch2Factory extends ElasticSearchFactory {
         settingsBuilder = settingsBuilder.put("shield.ssl.truststore.password", sslTruststorePassword);
       }
     }
-    if (useFound) {
+    if (useElasticCloud) {
       settingsBuilder = settingsBuilder
           .put("action.bulk.compress", false) // To use Found, action.bulk.compress must be disabled
           .put("request.headers.X-Found-Cluster", clusterName);

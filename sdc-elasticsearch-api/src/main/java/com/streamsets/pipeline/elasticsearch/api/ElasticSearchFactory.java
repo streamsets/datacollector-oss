@@ -44,7 +44,7 @@ public abstract class ElasticSearchFactory {
       String sslKeystorePassword,
       String sslTruststorePath,
       String sslTruststorePassword,
-      boolean useFound
+      boolean useElasticCloud
   ) throws UnknownHostException;
 
   public abstract Settings createSettings(Map<String, Object> configs);
@@ -75,7 +75,7 @@ public abstract class ElasticSearchFactory {
       String sslKeystorePassword,
       String sslTruststorePath,
       String sslTruststorePassword,
-      boolean useFound
+      boolean useElasticCloud
   ) throws UnknownHostException {
     return factory.createClient(
         clusterName,
@@ -89,7 +89,7 @@ public abstract class ElasticSearchFactory {
         sslKeystorePassword,
         sslTruststorePath,
         sslTruststorePassword,
-        useFound
+        useElasticCloud
     );
   }
 

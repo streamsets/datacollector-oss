@@ -30,9 +30,6 @@ import java.util.Map;
 
 public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
-  private final List<Config> configsToRemove = new ArrayList<>();
-  private final List<Config> configsToAdd = new ArrayList<>();
-
   @Override
   public List<Config> upgrade(
       String library,
@@ -51,6 +48,9 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -65,6 +65,9 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
   @SuppressWarnings("unchecked")
   private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
     for (Config config : configs) {
       switch (config.getName()) {
         case "clusterName":
@@ -107,6 +110,23 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
   private static void upgradeV3ToV4(List<Config> configs) {
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "hostname:port"));
+  }
+
+  private static void upgradeV4ToV5(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    // Rename useFound to useElasticCloud.
+    for (Config config : configs) {
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useFound")) {
+        configsToAdd.add(new Config(config.getName().replace("useFound", "useElasticCloud"), config.getValue()));
+        configsToRemove.add(config);
+        break;
+      }
+    }
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 
 }

@@ -290,7 +290,7 @@ public class ElasticSearchTarget extends BaseTarget {
           conf.shieldConfigBean.sslKeystorePassword,
           conf.shieldConfigBean.sslTruststorePath,
           conf.shieldConfigBean.sslTruststorePassword,
-          conf.useFound
+          conf.useElasticCloud
       );
       elasticClient.admin().cluster().health(new ClusterHealthRequest());
     } catch (RuntimeException|UnknownHostException ex) {

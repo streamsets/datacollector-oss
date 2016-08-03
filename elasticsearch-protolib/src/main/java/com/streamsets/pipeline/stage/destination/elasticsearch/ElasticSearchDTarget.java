@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png",

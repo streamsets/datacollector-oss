@@ -34,13 +34,15 @@ public class TestElasticSearchDTargetUpgrader {
     StageUpgrader upgrader = new ElasticSearchDTargetUpgrader();
 
     List<Config> configs = new ArrayList<>();
+    configs.add(new Config("elasticSearchConfigBean.useFound", false));
 
-    upgrader.upgrade("l", "s", "i", 1, 4, configs);
+    upgrader.upgrade("l", "s", "i", 1, 5, configs);
 
-    Assert.assertEquals(3, configs.size());
+    Assert.assertEquals(4, configs.size());
     Assert.assertEquals("elasticSearchConfigBean.timeDriver", configs.get(0).getName());
     Assert.assertEquals("elasticSearchConfigBean.timeZoneID", configs.get(1).getName());
     Assert.assertEquals("elasticSearchConfigBean.httpUri", configs.get(2).getName());
+    Assert.assertEquals("elasticSearchConfigBean.useElasticCloud", configs.get(3).getName());
   }
 
 }

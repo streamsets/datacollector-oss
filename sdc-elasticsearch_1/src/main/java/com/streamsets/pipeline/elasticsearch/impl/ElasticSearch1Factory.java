@@ -46,7 +46,7 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
       String sslKeystorePassword,
       String sslTruststorePath,
       String sslTruststorePassword,
-      boolean useFound
+      boolean useElasticCloud
   ) throws UnknownHostException {
     ImmutableSettings.Builder settingsBuilder = ImmutableSettings.settingsBuilder()
         .put("client.transport.sniff", clientSniff)

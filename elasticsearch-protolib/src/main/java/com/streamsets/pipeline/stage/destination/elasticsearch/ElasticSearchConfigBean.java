@@ -87,13 +87,13 @@ public class ElasticSearchConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Elastic Found Cluster",
+      label = "Elastic Cloud Cluster",
       defaultValue = "false",
-      description = "Select this option when connecting to an Elastic Found hosted cluster",
+      description = "Select this option when connecting to an Elastic Cloud hosted cluster",
       displayPosition = 23,
       group = "ELASTIC_SEARCH"
   )
-  public boolean useFound;
+  public boolean useElasticCloud;
 
   @ConfigDef(
       required = true,
