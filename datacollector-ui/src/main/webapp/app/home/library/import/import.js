@@ -46,7 +46,7 @@ angular
       import: function () {
         var reader = new FileReader();
 
-        if($scope.createNewPipeline && !$scope.newConfig.name) {
+        if ($scope.createNewPipeline && !$scope.newConfig.name) {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
             $scope.common.errors = [translation];
           });
@@ -60,7 +60,7 @@ angular
               jsonConfigObj,
               jsonRulesObj;
 
-            if(parsedObj.pipelineConfig) {
+            if (parsedObj.pipelineConfig) {
               //It is an config and rules envelope
               jsonConfigObj = parsedObj.pipelineConfig;
               jsonRulesObj = parsedObj.pipelineRules;
@@ -68,16 +68,17 @@ angular
               jsonConfigObj = parsedObj;
             }
 
-            if(!jsonConfigObj.version) {
+            if (!jsonConfigObj.version) {
               jsonConfigObj.version = 1;
             }
 
-            if(jsonConfigObj.uuid) {
-              if(pipelineInfo && !$scope.createNewPipeline) { //If pipeline config already exists
+            if (jsonConfigObj.uuid) {
+              if (pipelineInfo && !$scope.createNewPipeline) { //If pipeline config already exists
                 jsonConfigObj.uuid = pipelineInfo.uuid;
+                jsonConfigObj.metadata = pipelineInfo.metadata;
                 api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
                   then(function(res) {
-                    if(jsonRulesObj && jsonRulesObj.uuid) {
+                    if (jsonRulesObj && jsonRulesObj.uuid) {
                       api.pipelineAgent.getPipelineRules(pipelineInfo.name).
                         then(function(res) {
                           var rulesObj = res.data;
@@ -99,12 +100,12 @@ angular
                   },function(data) {
                     $scope.common.errors = [data];
                   });
-              } else { //If no pipeline exist or create pipeline option selected
+              } else { // If no pipeline exist or create pipeline option selected
                 var newPipelineObject,
                   name,
                   description;
 
-                if($scope.createNewPipeline) {
+                if ($scope.createNewPipeline) {
                   name = $scope.newConfig.name;
                   description = $scope.newConfig.description;
                 } else {
@@ -126,7 +127,7 @@ angular
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
-                    if(jsonRulesObj && jsonRulesObj.uuid) {
+                    if (jsonRulesObj && jsonRulesObj.uuid) {
                       api.pipelineAgent.getPipelineRules(name).
                         then(function(res) {
                           var rulesObj = res.data;

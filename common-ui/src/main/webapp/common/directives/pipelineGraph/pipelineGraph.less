@@ -199,7 +199,7 @@ pipeline-graph {
             fill: #000000;
           }
         }
-        
+
         image {
           fill: #ffffff;
         }
@@ -376,6 +376,10 @@ pipeline-graph {
     stroke: @default-pipeline-graph-fill-color;
     stroke-width: 6px;
     cursor: default;
+
+    &.hidden {
+      stroke-width: 0;
+    }
   }
 
 
