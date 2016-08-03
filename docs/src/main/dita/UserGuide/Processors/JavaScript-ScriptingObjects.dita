@@ -20,8 +20,7 @@
         objects</indexterm></indexterm><indexterm>scripting objects<indexterm>JavaScript
           Evaluator</indexterm></indexterm>You can use the following scripting objects in the
       JavaScript Evaluator:<draft-comment author="Loretta">Port change to "records" over to Jython
-        Scripting Objects and Groovy Scripting Objects, as appropriate.</draft-comment>
-    <dl>
+        Scripting Objects and Groovy Scripting Objects, as appropriate.</draft-comment><dl>
         <dlentry>
           <dt>records</dt>
           <dd>A collection of records to process. The records object includes different elements

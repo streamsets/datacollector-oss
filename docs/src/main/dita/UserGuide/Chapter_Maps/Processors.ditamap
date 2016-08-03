@@ -78,6 +78,7 @@
    <topicref href="../Processors/Groovy_ProcessingMode.dita"/>
    <topicref href="../Processors/Groovy-ScriptingObjects.dita"/>
    <topicref href="../Processors/Groovy-DelimData.dita"/>
+   <topicref href="../Processors/Groovy_TypeHandling.dita"/>
    <topicref href="../Processors/Groovy-Configuring.dita"/>
    </topicref>
   <topicref href="../Processors/HBaseLookup.dita" chunk="to-content">

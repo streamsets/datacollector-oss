@@ -588,7 +588,7 @@
                                           <codeph>info()</codeph>, <codeph>warn()</codeph>,
                                           <codeph>debug()</codeph>, and <codeph>trace()</codeph>. </dd>
                               <dd>The signature of the four methods is as follows:
-                                    <codeblock>(message-template, arguments…) </codeblock>The
+                                    <codeblock>(message-template, arguments...) </codeblock>The
                                     message template can have positional variables denoted by curly
                                     brackets: { }. The arguments are replaced in the message
                                     template curly brackets in positional manner, i.e., this is the
@@ -604,6 +604,13 @@
                               <dd>An object that passes error records to the processor for error
                                     handling. Includes a <codeph>write(Record, message)</codeph>
                                     method.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>sdcFunctions</dt>
+                              <dd>An object that runs functions that evaluate or modify data.
+                                    Includes a <codeph>getFieldNull(Record, 'field path')</codeph>
+                                    method that checks if a field is assigned a constant such as
+                                    NULL_INTEGER or NULL_STRING. </dd>
                         </dlentry>
                   </dl>
             </p>

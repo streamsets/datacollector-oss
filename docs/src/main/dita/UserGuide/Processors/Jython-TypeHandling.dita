@@ -14,23 +14,51 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_szj_slw_tr">
- <title>Type Handling</title>
- <conbody>
-  <p><indexterm>Jython Evaluator processor<indexterm>type
-        handling</indexterm></indexterm><indexterm>type handling<indexterm>Jython
-          Evaluator</indexterm></indexterm>Though Jython does not use type information when
-      processing data, passing data to the rest of the pipeline requires data types. </p>
-    <p>Note the following type information before you configure the remainder of the pipeline: <ul
-        id="ul_e3h_1qc_5r">
-        <li>Null values convert to String.<p>Regardless of the original data type of a field, when a
-            null value is processed by the Jython Evaluator it returns to the pipeline as a string.
-            Because Jython does not associate nulls with a data type, the processor uses the String
-            data type.</p><note type="tip">To avoid type errors in downstream processing, you might
-            use a Type Converter to ensure that fields have data of the appropriate type.
-          </note></li>
-        <li>Non-null values that are not modified in the processor retain their original type.</li>
-        <li>Numeric data that is modified becomes a Double, other types of data retain their
-          original type.</li>
-      </ul></p>
- </conbody>
+    <title>Type Handling</title>
+    <conbody>
+        <p><indexterm>Jython Evaluator processor<indexterm>type
+                handling</indexterm></indexterm><indexterm>type handling<indexterm>Jython
+                    Evaluator</indexterm></indexterm>Though Jython does not use type information
+            when processing data, passing data to the rest of the pipeline requires data types. </p>
+        <p>Note the following type information before you configure the remainder of the pipeline: <dl>
+                <dlentry>
+                    <dt>Data type of null values</dt>
+                    <dd>The Jython Evaluator can associate null values with a data type. For
+                        example, if the Jython Evaluator assigns a null value to an Integer field,
+                        the field is returned to the pipeline as an integer with a null value.</dd>
+                    <dd>Use constants in the Jython code to create a new field of a specific data
+                        type with a null value. For example, you can create a new String field with
+                        a null value by assigning the type constant NULL_STRING to the field as
+                        follows:<codeblock>record.value['new_field'] = NULL_STRING</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Date fields</dt>
+                    <dd>Use the String data type to create a new field to store a date with a
+                        specific format. For example, the following sample code creates a new String
+                        field that stores the current date using the format
+                        YYYY-MM-dd:<codeblock># Define a date object to record the current date
+import datetime as dt
+newDate = dt.datetime.utcnow().strftime("%Y-%m-%d")
+
+for record in records:
+  try:
+    # Create a string field to store the current date with the specified format
+    record.value["date"] = newDate
+    
+    # Write record to processor output
+    output.write(record)
+
+  except Exception as e:
+    # Send record to error
+    error.write(record, str(e))</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Data type of modified values</dt>
+                    <dd>Values that are not modified in the processor retain their original
+                        type.</dd>
+                    <dd>Numeric data that is modified becomes a Double, other types of data retain
+                        their original type.</dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
 </concept>

@@ -24,28 +24,47 @@
   <p>
    <dl>
     <dlentry>
-     <dt>Null values convert to String</dt>
-     <dd>Regardless of the original data type of a field, when a null value is processed by the
-      JavaScript Evaluator it returns to the pipeline as a string. Because JavaScript does not
-      associate nulls with a data type, the processor uses the String data type. </dd>
-     <dd>To avoid type errors in downstream processing, you might use a Type Converter to ensure
-      that fields have data of the appropriate type. </dd>
+     <dt>Data type of null values</dt>
+     <dd>The processor can associate null values with a data type. For example, if the JavaScript
+      Evaluator assigns a null value to an Integer field, the field is returned to the pipeline as
+      an integer with a null value.</dd>
+     <dd>Use constants in the JavaScript code to create a new field of a specific data type with a
+            null value. For example, you can create a new String field with a null value by
+            assigning the type constant NULL_STRING to the field as
+            follows:<codeblock>records[i].value.new_field = NULL_STRING</codeblock></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Date fields</dt>
+     <dd>Use the String data type to create a new field to store a date with a specific format. For
+            example, the following sample code creates a new String field that stores the current
+            date using the format
+            YYYY-MM-dd:<codeblock> // Define a date object to record the current date
+var date = new Date()
+
+for(var i = 0; i &lt; records.length; i++) {
+  try {
+    // Create a string field to store the current date with the specified format
+    records[i].value.date = date.getFullYear()+ "-" + date.getMonth() + "-" + date.getDate()
+    
+    // Write record to the procesor output
+    output.write(records[i]);
+  } catch (e) {
+    // Send record to error
+    error.write(records[i], e);
+  }
+}</codeblock></dd>
     </dlentry>
    </dl>
    <dl>
     <dlentry>
-     <dt>For Java 7, note the following information: </dt>
-     <dd>
-      <ul id="ul_u3c_vsw_tr">
-       <li>Non-null values that are not modified in the processor retain their original type.</li>
-       <li>Numeric data that is modified becomes a Double.</li>
-       <li>Other modified data retains their original type.</li>
-      </ul>
-     </dd>
+     <dt>For Java 7, modified numeric values lose their original type</dt>
+     <dd>Numeric data that is modified becomes a Double, other types of data retain their original
+      type.</dd>
+     <dd>Values that are not modified in the processor retain their original type.</dd>
     </dlentry>
     <dlentry>
-     <dt>For Java 8, non-null values retain their original type</dt>
-     <dd>Non-null values retain their original type regardless of whether the processor modifies the
+     <dt>For Java 8, values retain their original type</dt>
+     <dd>Values retain their original type regardless of whether the processor modifies the
       value.</dd>
     </dlentry>
    </dl>
