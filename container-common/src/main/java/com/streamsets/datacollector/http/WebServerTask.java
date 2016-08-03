@@ -870,7 +870,7 @@ public abstract class WebServerTask extends AbstractTask {
           }
         } catch (ProcessingException ex) {
           String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
-          LOG.warn(msg);
+          LOG.warn(msg, ex);
           System.out.println(msg);
         } finally {
           if (response != null) {
