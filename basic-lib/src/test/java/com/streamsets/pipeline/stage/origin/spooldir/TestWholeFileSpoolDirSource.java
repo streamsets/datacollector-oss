@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.codahale.metrics.Gauge;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamStatisticsConstants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +44,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -99,6 +102,21 @@ public class TestWholeFileSpoolDirSource {
   }
 
 
+  private void initMetrics(Stage.Context context) {
+    context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+      @Override
+      public Map<String, Object> getValue() {
+        return gaugeStatistics;
+      }
+    });
+  }
+
+
   @Test
   public void testWholeFileRecords() throws Exception {
     Path sourcePath = Paths.get(testDir + "/source.txt");
@@ -127,9 +145,11 @@ public class TestWholeFileSpoolDirSource {
 
       FileRef fileRef = record.get("/fileRef").getValueAsFileRef();
       String targetFile = testDir + "/target.txt";
+      Stage.Context context = (Stage.Context) Whitebox.getInternalState(source, "context");
+      initMetrics(context);
 
       IOUtils.copy(
-          fileRef.createInputStream((Stage.Context) Whitebox.getInternalState(source, "context"), InputStream.class),
+          fileRef.createInputStream(context, InputStream.class),
           new FileOutputStream(targetFile)
       );
       //Now make sure the file is copied properly,

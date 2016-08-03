@@ -70,7 +70,7 @@ public class TestWholeFileDataParser {
     try (DataParser parser = factory.getParser(
         "id",
         metadata,
-        FileRefTestUtil.getLocalFileRef(testDir, true, null, null)
+        FileRefTestUtil.getLocalFileRef(testDir, false, null, null)
     )) {
       Assert.assertEquals("0", parser.getOffset());
       Record record = parser.parse();
@@ -97,7 +97,7 @@ public class TestWholeFileDataParser {
     try (DataParser parser = factory.getParser(
         "id",
         metadata,
-        FileRefTestUtil.getLocalFileRef(testDir, true, null, null)
+        FileRefTestUtil.getLocalFileRef(testDir, false, null, null)
     )) {
       Record record = parser.parse();
       Assert.assertNotNull(record);
@@ -115,7 +115,7 @@ public class TestWholeFileDataParser {
     DataParser parser = factory.getParser(
         "id",
         metadata,
-        FileRefTestUtil.getLocalFileRef(testDir, true, null, null)
+        FileRefTestUtil.getLocalFileRef(testDir, false, null, null)
     );
     parser.close();
     parser.parse();

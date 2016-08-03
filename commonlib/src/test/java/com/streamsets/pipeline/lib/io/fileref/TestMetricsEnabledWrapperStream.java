@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
@@ -36,6 +37,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestMetricsEnabledWrapperStream {
@@ -48,6 +51,17 @@ public class TestMetricsEnabledWrapperStream {
     testDir.mkdirs();
     FileRefTestUtil.writePredefinedTextToFile(testDir);
     context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
+    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+      @Override
+      public Map<String, Object> getValue() {
+        return gaugeStatistics;
+      }
+    });
+    context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
   }
 
   @After
@@ -158,5 +172,32 @@ public class TestMetricsEnabledWrapperStream {
       }
       checkStateAfterReadCompletion(fileSize, remainingFileSize, is);
     }
+  }
+
+  @Test
+  public void testConvertBytesToDisplayFormat() throws Exception {
+    //Bytes
+    Assert.assertEquals("1023 B", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1023d));
+    Assert.assertEquals("512 B", MetricEnabledWrapperStream.convertBytesToDisplayFormat(512d));
+    Assert.assertEquals("0 B", MetricEnabledWrapperStream.convertBytesToDisplayFormat(0d));
+
+    //KB
+    Assert.assertEquals("1 KB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1025d));
+    Assert.assertEquals("1.5 KB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1540d));
+    Assert.assertEquals("1.55 KB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1588d));
+    Assert.assertEquals("1023.99 KB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1048570d));
+
+    //MB
+    Assert.assertEquals("1 MB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1048576d));
+    Assert.assertEquals("100.98 MB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(105885205d));
+    Assert.assertEquals("1024 MB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1073741810d));
+
+    //GB
+    Assert.assertEquals("1 GB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1073741824d));
+    Assert.assertEquals("1024 GB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1099511627774d));
+
+    //TB
+    Assert.assertEquals("1 TB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1099511627776d));
+    Assert.assertEquals("1025 TB", MetricEnabledWrapperStream.convertBytesToDisplayFormat(1126999418470400d));
   }
 }

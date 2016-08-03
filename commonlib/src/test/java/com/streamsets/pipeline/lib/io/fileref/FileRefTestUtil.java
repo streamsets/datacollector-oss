@@ -64,6 +64,8 @@ public final class FileRefTestUtil {
     }
     if (createMetrics) {
       builder.createMetrics(true);
+    } else {
+      builder.createMetrics(false);
     }
     return builder.build();
   }

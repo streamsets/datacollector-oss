@@ -19,19 +19,64 @@
  */
 package com.streamsets.pipeline.lib.generator.wholefile;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamStatisticsConstants;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
   public static final Map<String, Object> CONFIGS = ImmutableMap.of();
   public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
+  private static final Map<String, Integer> GAUGE_MAP_ORDERING = ImmutableMap.of(
+      FileRefStreamStatisticsConstants.FILE_NAME, 1,
+      FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 2,
+      FileRefStreamStatisticsConstants.COPIED_BYTES, 3,
+      FileRefStreamStatisticsConstants.REMAINING_BYTES, 4
+  );
+
+  /**
+   * Creates a gauge if it is already not. This is done only once for the stage
+   * @param context the {@link com.streamsets.pipeline.api.Stage.Context} of this stage
+   */
+  @SuppressWarnings("unchecked")
+  private void initMetricsIfNeeded(Stage.Context context) {
+    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME);
+    if (gauge == null) {
+      //Concurrent because the metrics thread will access this.
+      final Map<String, Object> gaugeStatistics = new ConcurrentSkipListMap<>(new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+          return GAUGE_MAP_ORDERING.get(o1).compareTo(GAUGE_MAP_ORDERING.get(o2));
+        }
+      });
+      //File name is populated at the MetricEnabledWrapperStream.
+      gaugeStatistics.put(FileRefStreamStatisticsConstants.FILE_NAME, "");
+      gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
+      gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
+      gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
+      context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+        @Override
+        public Map<String, Object> getValue() {
+          return gaugeStatistics;
+        }
+      });
+    }
+    Meter dataTransferMeter = context.getMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    if (dataTransferMeter == null) {
+      context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    }
+  }
 
   public WholeFileDataGeneratorFactory(Settings settings) {
     super(settings);
@@ -39,6 +84,7 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
+    initMetricsIfNeeded(getSettings().getContext());
     return new WholeFileDataGenerator(getSettings().getContext(), os);
   }
 }

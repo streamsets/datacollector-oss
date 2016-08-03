@@ -27,9 +27,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public final class LocalFileRef extends AbstractFileRef {
 
@@ -71,7 +68,7 @@ public final class LocalFileRef extends AbstractFileRef {
 
   @Override
   public String toString() {
-    return "{localFile='" + filePath + "\'}";
+    return "Local File: '" + filePath + "'";
   }
 
   @Override

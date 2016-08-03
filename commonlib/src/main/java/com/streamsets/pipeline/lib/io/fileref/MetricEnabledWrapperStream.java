@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * The Implementation of {@link AbstractWrapperStream} which maintains the metrics
@@ -34,29 +36,66 @@ import java.nio.ByteBuffer;
  * @param <T> Stream implementation of {@link AutoCloseable}
  */
 final class MetricEnabledWrapperStream<T extends AutoCloseable> extends AbstractWrapperStream<T> {
-  private static final Logger LOG = LoggerFactory.getLogger(MetricEnabledWrapperStream.class.getCanonicalName());
-  private final Meter dataThroughputMeter;
+  private final Meter dataThroughputMeterForCurrentStream;
+  private final Meter dataTransferMeter;
   private final Counter remainingBytesCounter;
   private final Counter copiedBytesCounter;
+  private final Map<String, Object> gaugeStatisticsMap;
+  private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB"};
+  private static final DecimalFormat df = new DecimalFormat("#.##");
+  private static final String PER_SEC = "/s";
 
+  @SuppressWarnings("unchecked")
   MetricEnabledWrapperStream(String id, long fileSize, Stage.Context context, T stream) {
     super(stream);
-    dataThroughputMeter = context.createMeter("Data Throughput - " + id);
-    remainingBytesCounter = context.createCounter("Remaining Bytes - " + id);
-    copiedBytesCounter = context.createCounter("Copied Bytes - " + id);
+    dataThroughputMeterForCurrentStream = new Meter();
+    remainingBytesCounter = new Counter();
+    copiedBytesCounter = new Counter();
     remainingBytesCounter.inc(fileSize);
+    dataTransferMeter = context.getMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME).getValue();
+    gaugeStatisticsMap.put(FileRefStreamStatisticsConstants.FILE_NAME, id);
   }
 
   private int updateMetricsAndReturnBytesRead(int bytesRead) {
     if (bytesRead > 0) {
-      dataThroughputMeter.mark(bytesRead);
+      dataThroughputMeterForCurrentStream.mark(bytesRead);
+      //In KB
+      dataTransferMeter.mark(bytesRead);
       copiedBytesCounter.inc(bytesRead);
       remainingBytesCounter.dec(bytesRead);
-      LOG.debug("Copied Bytes: " + copiedBytesCounter.getCount());
-      LOG.debug("Remaining Bytes: " + remainingBytesCounter.getCount());
-      LOG.debug("Mean File Transfer Rate: " + dataThroughputMeter.getMeanRate());
+      //Putting one minute rate because that is the latest speed of transfer
+      gaugeStatisticsMap.put(
+          FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT,
+          convertBytesToDisplayFormat(dataThroughputMeterForCurrentStream.getOneMinuteRate()) + PER_SEC
+      );
+      gaugeStatisticsMap.put(
+          FileRefStreamStatisticsConstants.COPIED_BYTES,
+          convertBytesToDisplayFormat((double)copiedBytesCounter.getCount())
+      );
+      gaugeStatisticsMap.put(
+          FileRefStreamStatisticsConstants.REMAINING_BYTES,
+          convertBytesToDisplayFormat((double)remainingBytesCounter.getCount())
+      );
     }
     return bytesRead;
+  }
+
+  /**
+   * Convert the bytes to a human readable format upto 2 decimal places
+   * The maximum unit is TB, so anything exceeding 1024 TB will be shown
+   * with TB unit.
+   * @param bytes the number of bytes.
+   * @return human readable format of bytes in units.
+   */
+  static String convertBytesToDisplayFormat(double bytes) {
+    int unitIdx = 0;
+    double unitChangedBytes = bytes;
+    while (unitIdx < UNITS.length - 1 && Math.floor(unitChangedBytes / 1024) > 0) {
+      unitChangedBytes = unitChangedBytes / 1024;
+      unitIdx++;
+    }
+    return df.format(unitChangedBytes) + " " + UNITS[unitIdx];
   }
 
   @Override
