@@ -30,13 +30,21 @@
                     <tbody>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_1-lib </entry>
-                            <entry>For Kafka version 0.8.1.<p>Includes the Kafka Consumer origin and
-                                    Kafka Producer destination.</p></entry>
+                            <entry>For Kafka version 0.8.1.<p>Includes: <ul id="ul_hfn_3yp_vw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_2-lib </entry>
-                            <entry>For Kafka version 0.8.2.<p>Includes the Kafka Consumer origin and
-                                    Kafka Producer destination.</p></entry>
+                            <entry>For Kafka version 0.8.2.<p>Includes: <ul id="ul_jfg_jyp_vw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
@@ -50,6 +58,16 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kudu-0_7-lib</entry>
                             <entry>For Kudu version 0.7.<p>Includes the Kudu
+                                destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-apache-kudu-0_8-lib</entry>
+                            <entry>For Kudu version 0.8.<p>Includes the Kudu
+                                destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-apache-kudu-0_9-lib</entry>
+                            <entry>For Kudu version 0.9.<p>Includes the Kudu
                                 destination.</p></entry>
                         </row>
                         <row>
@@ -203,14 +221,22 @@
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_1_2-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
-                                    <p>Includes the Kafka Consumer origin and Kafka Producer
-                                    destination.</p></entry>
+                                    <p>Includes: <ul id="ul_pt3_nyp_vw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_1_3-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
-                                    <p>Includes the Kafka Consumer origin and Kafka Producer
-                                    destination.</p></entry>
+                                    <p>Includes: <ul id="ul_w1y_nyp_vw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
