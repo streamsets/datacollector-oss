@@ -50,7 +50,7 @@
     <metrics.version>3.1.0</metrics.version>
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.7</slf4j.version>
-    <protobuf.version>3.0.0-beta-1</protobuf.version>
+    <protobuf.version>3.0.0</protobuf.version>
     <surefire.version>2.19.1</surefire.version>
     <failsafe.version>2.19.1</failsafe.version>
     <junit.version>4.12</junit.version>
