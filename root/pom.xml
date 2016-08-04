@@ -21,12 +21,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-proto</artifactId>
-    <version>1.5.1.1</version>
+    <version>1.5.1.2</version>
     <relativePath>../root-proto</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-root</artifactId>
-  <version>1.5.1.1</version>
+  <version>1.5.1.2</version>
   <description>StreamSets Data Collector Root POM</description>
   <name>StreamSets Data Collector Root POM</name>
   <packaging>pom</packaging>
