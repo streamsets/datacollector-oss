@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -33,7 +34,9 @@ import com.streamsets.pipeline.common.InterfaceStability;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 @InterfaceAudience.Private
@@ -145,6 +148,34 @@ public class AmazonS3Util {
 
   static S3Object getObject(AmazonS3Client s3Client, String bucket, String objectKey) {
     return s3Client.getObject(bucket, objectKey);
+  }
+
+  static Map<String, Object> getMetaData(S3Object s3Object) {
+    Map<String, Object> metaDataMap = new HashMap<>();
+
+    // put the metadata of S3 Object
+    metaDataMap.put(Headers.CACHE_CONTROL, s3Object.getObjectMetadata().getCacheControl());
+    metaDataMap.put(Headers.CONTENT_DISPOSITION, s3Object.getObjectMetadata().getContentDisposition());
+    metaDataMap.put(Headers.CONTENT_ENCODING, s3Object.getObjectMetadata().getContentEncoding());
+    metaDataMap.put(Headers.CONTENT_LENGTH, s3Object.getObjectMetadata().getContentLength());
+    metaDataMap.put(Headers.CONTENT_RANGE, s3Object.getObjectMetadata().getInstanceLength());
+    metaDataMap.put(Headers.CONTENT_MD5, s3Object.getObjectMetadata().getContentMD5());
+    metaDataMap.put(Headers.CONTENT_TYPE, s3Object.getObjectMetadata().getContentType());
+    metaDataMap.put(Headers.EXPIRES, s3Object.getObjectMetadata().getExpirationTime());
+    metaDataMap.put(Headers.ETAG, s3Object.getObjectMetadata().getETag());
+    metaDataMap.put(Headers.LAST_MODIFIED, s3Object.getObjectMetadata().getLastModified());
+
+
+    // put customer metadata
+    Map<String, String> userMetaMap = s3Object.getObjectMetadata().getUserMetadata();
+    if(userMetaMap != null) {
+      for (String key : userMetaMap.keySet()) {
+        if (userMetaMap.get(key) != null) {
+          metaDataMap.put(key, userMetaMap.get(key));
+        }
+      }
+    }
+    return metaDataMap;
   }
 
   static S3Object getObjectRange(AmazonS3Client s3Client, String bucket, String objectKey, long range) {

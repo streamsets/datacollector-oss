@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class AmazonS3Source extends AbstractAmazonS3Source {
 
@@ -95,6 +96,17 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
         try {
           Record record = parser.parse();
           if (record != null) {
+            if(s3ConfigBean.s3Config.enableMetaData) {
+              // if metadata is enabled, set the metadata to the header
+              Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
+              for(String key : metaData.keySet()) {
+                String value = metaData.get(key) == null ? "" : metaData.get(key).toString();
+                record.getHeader().setAttribute(key, value);
+              }
+              // set file name to the header
+              record.getHeader().setAttribute("Name", object.getKey());
+            }
+
             batchMaker.addRecord(record);
             offset = parser.getOffset();
           } else {

@@ -94,6 +94,17 @@ public class S3Config {
   )
   public String delimiter;
 
+  @ConfigDef(
+      required = true,
+      label = "Include Metadata",
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      description = "Select to include object metadata in record header attributes",
+      displayPosition = 50,
+      group = "#0"
+  )
+  public boolean enableMetaData = false;
+
   //Undocumented configuration used only by the unit tests to point AmazonS3Client to the fakes3 server
   private String endPoint;
 
