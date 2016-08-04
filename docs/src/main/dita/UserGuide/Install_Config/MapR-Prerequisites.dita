@@ -21,87 +21,47 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             As a result, you must perform additional steps to enable the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine to connect to MapR.</p>
+            machine to connect to MapR. You must install the required client libraries and run a
+            MapR setup script to modify configuration files and create the required symbolic
+            links.</p>
         <note>The MapR DB destination and the Hive Streaming destination using the MapR library
-            currently only support MapR version 5.1.</note>
-        <p>To connect to a MapR cluster, install <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a node in the cluster or on a client machine. </p>
-        <p>To run <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a client machine - outside the cluster or on your local machine - the MapR client
-            package must be installed and configured on the machine. If the MapR client package is
-            not installed on the machine, download and install the following files:<ul
-                id="ul_qcz_x1m_gv">
-                <li>MapR client library - Typically named
-                        <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can download the
-                        files for your operating system
-                        here:<codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>&lt;version>/</codeblock></p></li>
-                <li>Kafka client library - Typically named
-                        <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can download the
-                        files for your operating system here:
-                        <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
-            </ul></p>
-        <p>Before using <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            connect to a MapR cluster, perform the following steps:</p>
-        <ol id="ol_ghq_zrg_2v">
-            <li>In the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, remove the MapR
-                stage library that you want to use from the
-                    <uicontrol>system.stagelibs.blacklist</uicontrol> property.<p
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/StageLibsBlacklist"
-                    /><p>To use the MapR version 5.1, remove the version 5.1 stage library from the
-                    property as
-                    follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></p><note
-                    type="warning">You can use only one version of the MapR library at a time.
-                </note></li>
-            <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
-                    <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
-                        library>/lib/</uicontrol></li>
-                    <li><uicontrol>$MAPR_HOME/hbase/hbase-&lt;version>/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
-                        library>/lib/</uicontrol></li>
-                    <li><uicontrol>$MAPR_HOME/hive/hive-&lt;version>/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
-                        library>/lib/</uicontrol></li>
-                    <li><uicontrol>$MAPR_HOME/hive/hive-&lt;version>/hcatalog/share/hcatalog/*
-                        </uicontrol> to <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR
-                            library>/lib/</uicontrol></li>
-                    <li>
-                        <uicontrol>$MAPR_HOME/lib/maprfs-&lt;version>-mapr.jar</uicontrol> to
-                            <uicontrol>$SDC_DIST/root-lib/</uicontrol></li>
-                </ul><p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the version of
-                    the StreamSets MapR library to use. The StreamSets MapR libraries are named as
-                    follows: streamsets-datacollector-mapr_&lt;version>-lib. For example:
-                    streamsets-datacollector-mapr_5_1-lib. </p><p>&lt;version> is the HBase, Hive,
-                    or MapR version.</p><p>So to use MapR version 5.1, HBase version 1.1.1, and Hive
-                    version 1.2 with <ph
+            currently only support MapR version 5.1.0. All other stages that use the MapR library
+            support MapR versions 5.0.0 and 5.1.0.</note>
+        <p>
+            <ol id="ol_o2r_nq4_vw">
+                <li>Install <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, you would create the following
-                    symlinks:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hbase/hbase-1.1.1/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hive/hive-1.2/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hive/hive-1.2/hcatalog/share/hcatalog/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</codeblock></p></li>
-            <li>In the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> security policy file, <codeph>$SDC_CONF/sdc-security.policy</codeph>, add a new
-                permissions block for $MAPR_HOME as follows:
-                    <codeblock>// MapR home directory
-grant codebase "file://&lt;MapR home directory>-" {
-    permission java.security.AllPermission;
-};</codeblock><p>For
-                    example:
-                    <codeblock>grant codebase "file:///opt/mapr/-" {
-  permission java.security.AllPermission;
-};</codeblock></p></li>
-            <li>Restart <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> and verify that you can see the MapR origins and destinations in the stage
-                library.</li>
-        </ol>
+                    /> on a node in the MapR cluster or on a client machine.<p>To run <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> on a client machine - outside the cluster or on your local machine - the
+                        MapR client package must be installed and configured on the machine. If the
+                        MapR client package is not installed on the machine, download and install
+                        the following files:<ul id="ul_qcz_x1m_gv">
+                            <li>MapR client library - Typically named
+                                    <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can
+                                    download the files for your operating system
+                                    here:<codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>&lt;version>/</codeblock></p></li>
+                            <li>Kafka client library - Typically named
+                                    <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can
+                                    download the files for your operating system here:
+                                    <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
+                        </ul></p></li>
+                <li>From the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> runtime directory, <codeph>$SDC_DIST</codeph>, use the following command to
+                    make the MapR setup script file
+                    executable:<codeblock>sudo chmod u+x etc/mapr-setup.sh</codeblock></li>
+                <li>To run the setup script, use the following
+                    command:<codeblock>etc/mapr-setup.sh</codeblock></li>
+                <li>When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
+                <li>When prompted, enter the absolute path to the MapR home directory, usually
+                        /opt/mapr.<p>The script modifies configuration files and creates the
+                        required symbolic links.</p></li>
+                <li>When the script finishes, restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> and verify that you can see the MapR origins and destinations in the stage
+                    library.</li>
+            </ol>
+        </p>
  </conbody>
 </concept>

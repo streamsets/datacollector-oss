@@ -1209,11 +1209,6 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl></p>
             <p id="LookupCacheSummary">When you stop the pipeline, the processor clears the
                   cache.</p>
-            <draft-comment author="alisontaylor">Used in MapR and Solr prerequisites. Lists the
-                  default value of system.stagelibs.blacklist.</draft-comment>
-            <p id="StageLibsBlacklist">For example, the
-                        <uicontrol>system.stagelibs.blacklist</uicontrol> property is defined as
-                  follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib,streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></p>
             <draft-comment author="alisontaylor">Used in Field Type Converter chapter and in Data
                   Preview chapter.</draft-comment>
             <note id="PreviewDateFormat">Data preview displays date, datetime, and time data using
