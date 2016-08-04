@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.generator.sdcrecord;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 
@@ -28,14 +29,19 @@ import java.io.IOException;
 public class SdcRecordDataGenerator implements DataGenerator {
 
   private final RecordWriter writer;
+  private final ContextExtensions context;
 
-  public SdcRecordDataGenerator(RecordWriter writer)
+  public SdcRecordDataGenerator(RecordWriter writer, ContextExtensions context)
       throws IOException {
     this.writer = writer;
+    this.context = context;
   }
 
   @Override
   public void write(Record record) throws IOException {
+    if (null != context.getSampler()) {
+      context.getSampler().sample(record);
+    }
     writer.write(record);
   }
 

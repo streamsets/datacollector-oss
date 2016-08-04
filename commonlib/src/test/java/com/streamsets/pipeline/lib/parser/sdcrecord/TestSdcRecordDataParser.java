@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
+import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.util.SdcRecordConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -47,6 +49,21 @@ public class TestSdcRecordDataParser {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
     RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(writer);
     Record record = RecordCreator.create();
+    record.set(Field.create("Hello"));
+    recordWriter.write(record);
+    record = RecordCreator.create();
+    record.set(Field.create("Bye"));
+    recordWriter.write(record);
+    recordWriter.close();
+    return writer.toByteArray();
+  }
+
+  private byte[] createJsonSdcRecordsWithSamplingBytes() throws Exception {
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    RecordWriter recordWriter = ((ContextExtensions)getContext()).createRecordWriter(writer);
+    Record record = RecordCreator.create();
+    record.getHeader().setAttribute(SdcRecordConstants.SDC_SAMPLED_RECORD, SdcRecordConstants.TRUE);
+    record.getHeader().setAttribute(SdcRecordConstants.SDC_SAMPLED_TIME, String.valueOf(System.currentTimeMillis()));
     record.set(Field.create("Hello"));
     recordWriter.write(record);
     record = RecordCreator.create();
@@ -110,6 +127,17 @@ public class TestSdcRecordDataParser {
     DataParser parser = new SdcRecordDataParser(getContext(), reader, 0, 100);
     parser.close();
     parser.parse();
+  }
+
+  @Test
+  public void testParseSampled() throws Exception {
+    byte[] data = createJsonSdcRecordsWithSamplingBytes();
+    InputStream reader = new ByteArrayInputStream(data);
+    Stage.Context context = getContext();
+    DataParser parser = new SdcRecordDataParser(context, reader, 0, 100);
+    parser.parse();
+    Timer timer = context.getTimer(SdcRecordConstants.EXTERNAL_SYSTEM_LATENCY);
+    Assert.assertNotNull(timer);
   }
 
 }

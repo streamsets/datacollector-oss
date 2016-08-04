@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.generator.sdcrecord;
 
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -29,6 +30,8 @@ import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.lib.sampling.RecordSampler;
+import com.streamsets.pipeline.lib.util.SdcRecordConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -67,7 +70,10 @@ public class TestSdcRecordDataGenerator {
   @Test
   public void testGenerate() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
-    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
+    DataGenerator gen = new SdcRecordDataGenerator(
+        getContextExtensions().createRecordWriter(writer),
+        getContextExtensions()
+    );
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -83,7 +89,10 @@ public class TestSdcRecordDataGenerator {
   @Test
   public void testClose() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
-    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
+    DataGenerator gen = new SdcRecordDataGenerator(
+        getContextExtensions().createRecordWriter(writer),
+        getContextExtensions()
+    );
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -94,7 +103,10 @@ public class TestSdcRecordDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
-    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
+    DataGenerator gen = new SdcRecordDataGenerator(
+        getContextExtensions().createRecordWriter(writer),
+        getContextExtensions()
+    );
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -104,11 +116,38 @@ public class TestSdcRecordDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
-    DataGenerator gen = new SdcRecordDataGenerator(getContextExtensions().createRecordWriter(writer));
+    DataGenerator gen = new SdcRecordDataGenerator(
+        getContextExtensions().createRecordWriter(writer),
+        getContextExtensions()
+    );
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
     gen.flush();
+  }
+
+  @Test
+  public void testGenerateWithSampler() throws Exception {
+    ByteArrayOutputStream writer = new ByteArrayOutputStream();
+    Configuration configuration = new Configuration();
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 0);
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 0);
+    DataGenerator gen = new SdcRecordDataGenerator(
+        getContextExtensions().createRecordWriter(writer),
+        getContextExtensions()
+    );
+
+    Record record = RecordCreator.create();
+    record.set(Field.create("Hello"));
+
+    long timeBeforeWrite = System.currentTimeMillis();
+    gen.write(record);
+    long timeAfterWrite = System.currentTimeMillis();
+    gen.close();
+
+    long sampledTime = Long.parseLong(record.getHeader().getAttribute(SdcRecordConstants.SDC_SAMPLED_TIME));
+    Assert.assertTrue(sampledTime >= timeBeforeWrite);
+    Assert.assertTrue(sampledTime <= timeAfterWrite);
   }
 
 }

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
+import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
@@ -30,11 +31,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SdcRecordDataParser extends AbstractDataParser {
+
   private final RecordReader recordReader;
   private boolean eof;
+  private final Stage.Context context;
 
   public SdcRecordDataParser(Stage.Context context, InputStream inputStream, long readerOffset, int maxObjectLen)
       throws IOException {
+    this.context = context;
     recordReader = ((ContextExtensions)context).createRecordReader(inputStream, readerOffset, maxObjectLen);
   }
 
@@ -42,6 +46,12 @@ public class SdcRecordDataParser extends AbstractDataParser {
   public Record parse() throws IOException, DataParserException {
     Record record = recordReader.readRecord();
     eof = (record == null);
+    if (null != record) {
+      Sampler sampler = ((ContextExtensions) context).getSampler();
+      if (null != sampler) {
+        sampler.sample(record);
+      }
+    }
     return record;
   }
 
@@ -54,5 +64,4 @@ public class SdcRecordDataParser extends AbstractDataParser {
   public void close() throws IOException {
     recordReader.close();
   }
-
 }

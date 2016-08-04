@@ -37,6 +37,7 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
@@ -55,9 +56,11 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
+import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +97,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final String rev;
   private volatile boolean stop;
   private final EmailSender emailSender;
-
+  private final Sampler sampler;
 
   //for SDK
   public StageContext(
@@ -143,6 +146,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
+
+    // sample all records while testing
+    Configuration configuration = new Configuration();
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 0);
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 0);
+    this.sampler = new RecordSampler(configuration, this, stageType == StageType.SOURCE);
   }
 
   public StageContext(
@@ -156,7 +165,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
       long pipelineMaxMemory,
       ExecutionMode executionMode,
       String resourcesDir,
-      EmailSender emailSender
+      EmailSender emailSender,
+      Configuration configuration
   ) {
     this.pipelineName = pipelineName;
     this.rev = rev;
@@ -173,6 +183,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
+    this.sampler = new RecordSampler(configuration, this, stageType == StageType.SOURCE);
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -229,6 +240,11 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
       LOG.error(Utils.format(ContainerError.CONTAINER_01001.getMessage(), e.toString(), e));
       throw new StageException(ContainerError.CONTAINER_01001, e.toString(), e);
     }
+  }
+
+  @Override
+  public Sampler getSampler() {
+    return sampler;
   }
 
   @Override

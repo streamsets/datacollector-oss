@@ -64,7 +64,8 @@ public class ContextInfoCreator {
       boolean isPreview,
       OnRecordError onRecordError,
       List<String> outputLanes,
-      String resourcesDir
+      String resourcesDir,
+      StageType stageType
   ) {
     Map<String, Class<?>[]> configToElDefMap;
     if(stageClass == null) {
@@ -78,7 +79,7 @@ public class ContextInfoCreator {
     }
     return new StageContext(
         instanceName,
-        StageType.SOURCE,
+        stageType,
         isPreview,
         onRecordError,
         outputLanes,
@@ -92,30 +93,46 @@ public class ContextInfoCreator {
 
   public static Source.Context createSourceContext(Class<?> stageClass, String instanceName, boolean isPreview,
       OnRecordError onRecordError, List<String> outputLanes, String resourcesDir) {
-    return createContext(stageClass, instanceName, isPreview, onRecordError, outputLanes, resourcesDir);
+    return createContext(
+        stageClass,
+        instanceName,
+        isPreview,
+        onRecordError,
+        outputLanes,
+        resourcesDir,
+        StageType.SOURCE
+    );
   }
 
   public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
                                                    List<String> outputLanes) {
-    return createContext(null, instanceName, isPreview, onRecordError, outputLanes, null);
+    return createContext(null, instanceName, isPreview, onRecordError, outputLanes, null, StageType.SOURCE);
   }
   public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
                                                    List<String> outputLanes, String resourcesDir) {
-    return createContext(null, instanceName, isPreview, onRecordError, outputLanes, resourcesDir);
+    return createContext(null, instanceName, isPreview, onRecordError, outputLanes, resourcesDir, StageType.SOURCE);
   }
 
   @SuppressWarnings("unchecked")
   public static Target.Context createTargetContext(Class<?> stageClass, String instanceName, boolean isPreview,
       OnRecordError onRecordError, String resourcesDir) {
-    return createContext(stageClass, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, resourcesDir);
+    return createContext(
+        stageClass,
+        instanceName,
+        isPreview,
+        onRecordError,
+        Collections.EMPTY_LIST,
+        resourcesDir,
+        StageType.TARGET
+    );
   }
 
   public static Target.Context createTargetContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
-    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null);
+    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null, StageType.TARGET);
   }
 
   public static Processor.Context createProcessorContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
-    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null);
+    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null, StageType.TARGET);
   }
 
   public static void setLastBatch(Stage.Context context, long lastBatch) {

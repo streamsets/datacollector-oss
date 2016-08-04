@@ -40,8 +40,10 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -278,6 +280,7 @@ public class Pipeline {
           statsAggregator = new StageRuntime(pipelineBean, pipelineBean.getStatsAggregatorStage());
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
         }
+
         setStagesContext(stages, errorStage, statsAggregator, runner);
         Pipe[] pipes = createPipes(stages, runner);
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
@@ -330,7 +333,8 @@ public class Pipeline {
                 pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
                 executionMode,
                 runner.getRuntimeInfo().getResourcesDir(),
-                new EmailSender(configuration)
+                new EmailSender(configuration),
+                configuration
             )
         );
       }
@@ -346,7 +350,8 @@ public class Pipeline {
               pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
               executionMode,
               runner.getRuntimeInfo().getResourcesDir(),
-              new EmailSender(configuration)
+              new EmailSender(configuration),
+              configuration
           )
       );
       if (statsAggregatorStage != null) {
@@ -362,7 +367,8 @@ public class Pipeline {
                 pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
                 executionMode,
                 runner.getRuntimeInfo().getResourcesDir(),
-                new EmailSender(configuration)
+                new EmailSender(configuration),
+                configuration
             )
         );
       }
