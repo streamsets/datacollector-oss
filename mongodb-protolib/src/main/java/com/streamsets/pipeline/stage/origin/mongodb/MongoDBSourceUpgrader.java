@@ -107,6 +107,27 @@ public class MongoDBSourceUpgrader implements StageUpgrader {
       }
     }
 
+    // new configs
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "connectionsPerHost", 100));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "minConnectionsPerHost", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "connectTimeout", 10000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxConnectionIdleTime", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxConnectionLifeTime", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxWaitTime", 120000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "serverSelectionTimeout", 30000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "threadsAllowedToBlockForConnectionMultiplier", 5));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatFrequency", 10000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "minHeartbeatFrequency", 500));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatConnectTimeout", 20000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatSocketTimeout", 20000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "localThreshold", 15));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "requiredReplicaSetName", ""));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "cursorFinalizerEnabled", true));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "socketKeepAlive", false));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "socketTimeout", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "sslEnabled", false));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "sslInvalidHostNameAllowed", false));
+
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
   }

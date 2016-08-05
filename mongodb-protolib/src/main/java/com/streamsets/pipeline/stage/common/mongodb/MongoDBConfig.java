@@ -262,25 +262,14 @@ public class MongoDBConfig {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      label = "Description",
-      description = "Sets the description",
-      defaultValue = "",
-      required = false,
-      group = "ADVANCED",
-      displayPosition = 140
-  )
-  public String description;
-
-  @ConfigDef(
-      type = ConfigDef.Type.STRING,
       label = "Required Replica Set Name",
       description = "Sets the required replica set name for the cluster",
       defaultValue = "",
       required = false,
       group = "ADVANCED",
-      displayPosition = 150
+      displayPosition = 140
   )
-  public String requiredReplicaSetName;
+  public String requiredReplicaSetName = "";
 
   @ConfigDef(
       type = ConfigDef.Type.BOOLEAN,
@@ -289,7 +278,7 @@ public class MongoDBConfig {
       defaultValue = "true",
       required = false,
       group = "ADVANCED",
-      displayPosition = 160
+      displayPosition = 150
   )
   public boolean cursorFinalizerEnabled = true;
 
@@ -300,7 +289,7 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 170
+      displayPosition = 160
   )
   public boolean socketKeepAlive = false;
 
@@ -311,7 +300,7 @@ public class MongoDBConfig {
       defaultValue = "0",
       required = false,
       group = "ADVANCED",
-      displayPosition = 180
+      displayPosition = 170
   )
   public int socketTimeout = 0;
 
@@ -322,7 +311,7 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 190
+      displayPosition = 180
   )
   public boolean sslEnabled = false;
 
@@ -333,21 +322,9 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 200
+      displayPosition = 190
   )
   public boolean sslInvalidHostNameAllowed = false;
-
-  @ConfigDef(
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Always Use MBeans",
-      description = "Sets whether JMX beans registered by the driver should always be MBeans, " +
-          "regardless of whether the VM is Java 6 or greater",
-      defaultValue = "false",
-      required = false,
-      group = "ADVANCED",
-      displayPosition = 210
-  )
-  public boolean alwaysUseMBeans = false;
 
   public void init(
       Stage.Context context,
@@ -387,7 +364,6 @@ public class MongoDBConfig {
       WriteConcern writeConcern
   ) {
     MongoClientOptions.Builder optionBuilder = new MongoClientOptions.Builder()
-        .alwaysUseMBeans(alwaysUseMBeans)
         .connectionsPerHost(connectionsPerHost)
         .connectTimeout(connectTimeout)
         .cursorFinalizerEnabled(cursorFinalizerEnabled)
@@ -407,10 +383,6 @@ public class MongoDBConfig {
         .sslInvalidHostNameAllowed(sslInvalidHostNameAllowed)
         .threadsAllowedToBlockForConnectionMultiplier(threadsAllowedToBlockForConnectionMultiplier);
 
-    // the default value of description is null, so it should be set only if a non-empty string is provided
-    if (!description.isEmpty()) {
-      optionBuilder = optionBuilder.description(description);
-    }
     // the default value of requiredReplicaSetName is null, so it should be set only if a non-empty string is provided
     if (!requiredReplicaSetName.isEmpty()) {
       optionBuilder = optionBuilder.requiredReplicaSetName(requiredReplicaSetName);

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 
 import java.util.ArrayList;
@@ -78,6 +79,31 @@ public class MongoDBTargetUpgrader implements StageUpgrader {
           // no op
       }
     }
+
+    // new configs
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "authenticationType", AuthenticationType.NONE));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "username", ""));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "password", ""));
+
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "connectionsPerHost", 100));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "minConnectionsPerHost", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "connectTimeout", 10000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxConnectionIdleTime", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxConnectionLifeTime", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "maxWaitTime", 120000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "serverSelectionTimeout", 30000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "threadsAllowedToBlockForConnectionMultiplier", 5));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatFrequency", 10000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "minHeartbeatFrequency", 500));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatConnectTimeout", 20000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "heartbeatSocketTimeout", 20000));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "localThreshold", 15));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "requiredReplicaSetName", ""));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "cursorFinalizerEnabled", true));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "socketKeepAlive", false));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "socketTimeout", 0));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "sslEnabled", false));
+    configsToAdd.add(new Config(MongoDBConfig.MONGO_CONFIG_PREFIX + "sslInvalidHostNameAllowed", false));
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
