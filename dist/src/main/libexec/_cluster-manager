@@ -61,13 +61,13 @@ then
     fi
     cp $MESOS_UBER_JAR_PATH .
     jar -uf $MESOS_UBER_JAR $ETC_TAR_ARCHIVE $LIBS_TAR_ARCHIVE $RESOURCES_TAR_ARCHIVE
-    if [ $? -eq 1 ]
+    if [ $? -ne 0 ]
     then 
        echo "Jar update failed"
        exit 1
     fi      
     mv $MESOS_UBER_JAR $MESOS_HOSTING_JAR_DIR
-    if [ $? -eq 1 ]
+    if [ $? -ne 0 ]
     then 
        echo "Move of Uber jar failed"
        exit 1
