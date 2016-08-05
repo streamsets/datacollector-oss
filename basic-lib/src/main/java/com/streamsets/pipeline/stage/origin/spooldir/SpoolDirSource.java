@@ -20,15 +20,16 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -43,9 +44,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
+import java.nio.file.Files;
 import java.nio.file.PathMatcher;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SpoolDirSource extends BaseSource {
@@ -465,10 +469,26 @@ public class SpoolDirSource extends BaseSource {
     String sourceFile = file.getName();
     try {
       if (parser == null) {
-        if (conf.dataFormat == DataFormat.AVRO) {
-          parser = parserFactory.getParser(file, offset);
-        } else {
-          parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
+        switch (conf.dataFormat) {
+          case AVRO:
+            parser = parserFactory.getParser(file, offset);
+            break;
+          case WHOLE_FILE:
+            String attributesToRead =
+                file.toPath().getFileSystem().supportedFileAttributeViews().contains("posix")? "posix:*" : "*";
+            Map<String, Object> metadata = new HashMap<>(Files.readAttributes(file.toPath(), attributesToRead));
+            FileRef localFileRef = new LocalFileRef.Builder()
+                .filePath(file.getAbsolutePath())
+                .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
+                .createMetrics(true)
+                .totalSizeInBytes(Files.size(file.toPath()))
+                .build();
+            metadata.put(HeaderAttributeConstants.FILE_NAME, file.getName());
+            metadata.put(HeaderAttributeConstants.FILE, file.getPath());
+            parser = parserFactory.getParser(file.getName(), metadata, localFileRef);
+            break;
+          default:
+            parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
         }
       }
       for (int i = 0; i < maxBatchSize; i++) {
