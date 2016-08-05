@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -112,6 +113,14 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
+  public void skipStage(Pipe pipe) {
+    // Fill expected stage output lanes with empty lists
+    for(String lane : (List<String>)pipe.getOutputLanes()) {
+      fullPayload.put(lane, Collections.<Record>emptyList());
+    }
+  }
+
+  @Override
   public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
@@ -133,6 +142,11 @@ public class FullPipeBatch implements PipeBatch {
     if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
       outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
     }
+    completeStage(pipe, eventSink);
+  }
+
+  @Override
+  public void completeStage(StagePipe pipe, EventSink eventSink) {
     if(pipe.getEventLanes().size() == 1) {
       fullPayload.put(pipe.getEventLanes().get(0), eventSink.getEventRecords());
     }

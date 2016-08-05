@@ -23,8 +23,6 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
-import com.streamsets.datacollector.runner.StageContext;
-import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.CreateByRef;
 
@@ -101,11 +99,13 @@ public class TestStageRuntime {
     Mockito.when(stageBean.getStage()).thenReturn(Mockito.mock(Stage.class));
     StageDefinition def = Mockito.mock(StageDefinition.class);
     Mockito.when(stageBean.getDefinition()).thenReturn(def);
+    StageContext context = Mockito.mock(StageContext.class);
 
     StageRuntime runtime = new StageRuntime(pipelineBean, stageBean);
+    runtime.setContext(context);
 
     Mockito.verify(stageBean, Mockito.never()).releaseClassLoader();
-    runtime.destroy();
+    runtime.destroy(new ErrorSink(), new EventSink());
     Mockito.verify(stageBean, Mockito.times(1)).releaseClassLoader();
   }
 

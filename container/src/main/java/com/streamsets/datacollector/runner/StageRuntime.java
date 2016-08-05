@@ -194,16 +194,21 @@ public class StageRuntime {
 
     } finally {
       setErrorSink(null);
+      setEventSink(null);
       Thread.currentThread().setContextClassLoader(cl);
     }
   }
 
-  public void destroy() {
+  public void destroy(ErrorSink errorSink, EventSink eventSink) {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
+      setErrorSink(errorSink);
+      setEventSink(eventSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       getStage().destroy();
     } finally {
+      setEventSink(null);
+      setErrorSink(null);
       //we release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
       stageBean.releaseClassLoader();
       Thread.currentThread().setContextClassLoader(cl);

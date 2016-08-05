@@ -26,19 +26,11 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.runner.CombinerPipe;
-import com.streamsets.datacollector.runner.MultiplexerPipe;
-import com.streamsets.datacollector.runner.Observer;
-import com.streamsets.datacollector.runner.ObserverPipe;
-import com.streamsets.datacollector.runner.Pipe;
-import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.PipelineRunner;
-import com.streamsets.datacollector.runner.StagePipe;
-import com.streamsets.datacollector.runner.StageRuntime;
+import com.streamsets.datacollector.runner.production.BadRecordsHandler;
+import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -53,7 +45,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -290,8 +281,6 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    Configuration conf = new Configuration();
-
     Mockito.verifyZeroInteractions(source);
     Mockito.verifyZeroInteractions(processor);
     Mockito.verifyZeroInteractions(target);
@@ -312,9 +301,7 @@ public class TestPipeline {
     // Mockito.verifyNoMoreInteractions(runner);
 
     pipeline.destroy();
-    Mockito.verify(source, Mockito.times(1)).destroy();
-    Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -346,17 +333,6 @@ public class TestPipeline {
 
     Source source = Mockito.mock(Source.class);
     Processor processor = Mockito.mock(Processor.class);
-    ErrorCode id = new ErrorCode() {
-      @Override
-      public String getCode() {
-        return "id";
-      }
-
-      @Override
-      public String getMessage() {
-        return "";
-      }
-    };
 
     // test checked exception on init
 
@@ -377,15 +353,16 @@ public class TestPipeline {
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
     pipeline.destroy();
-    Mockito.verify(source, Mockito.times(1)).destroy();
-    Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test runtime exception on init
 
     Mockito.reset(source);
     Mockito.reset(processor);
     Mockito.reset(target);
+    Mockito.reset(runner);
+    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Mockito.doThrow(new RuntimeException()).when(processor).init(Mockito.any(Stage.Info.class),
                                                                  Mockito.any(Processor.Context.class));
 
@@ -400,25 +377,23 @@ public class TestPipeline {
                                                   Mockito.any(Target.Context.class));
 
     pipeline.destroy();
-    Mockito.verify(source, Mockito.times(1)).destroy();
-    Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test exception on destroy
 
     Mockito.reset(source);
     Mockito.reset(processor);
     Mockito.reset(target);
+    Mockito.reset(runner);
+    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Mockito.doThrow(new RuntimeException()).when(processor).destroy();
 
     pipeline = builder.build(runner);
 
     pipeline.init();
     pipeline.destroy();
-    Mockito.verify(source, Mockito.times(1)).destroy();
-    Mockito.verify(processor, Mockito.times(1)).destroy();
-    Mockito.verify(target, Mockito.times(1)).destroy();
-
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
   }
 
 }

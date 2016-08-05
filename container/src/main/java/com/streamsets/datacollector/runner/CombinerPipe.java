@@ -36,7 +36,7 @@ public class CombinerPipe extends Pipe<Pipe.Context> {
   }
 
   @Override
-  public void destroy() {
+  public void destroy(PipeBatch pipeBatch) {
   }
 
   @Override

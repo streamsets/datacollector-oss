@@ -303,8 +303,13 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   }
 
   @Override
-  public void destroy() {
-    getStage().destroy();
+  public void destroy(PipeBatch pipeBatch) {
+    EventSink eventSink = new EventSink();
+    ErrorSink errorSink = pipeBatch.getErrorSink();
+
+    getStage().destroy(errorSink, eventSink);
+
+    pipeBatch.completeStage(this, eventSink);
   }
 
   public long getMemoryConsumed() {

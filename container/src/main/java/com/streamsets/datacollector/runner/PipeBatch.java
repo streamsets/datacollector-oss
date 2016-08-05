@@ -33,9 +33,25 @@ public interface PipeBatch {
 
   BatchImpl getBatch(Pipe pipe);
 
+  /**
+   * During destroy() phase, rather then running this stage, simply skip it (but still propagate empty output).
+   */
+  void skipStage(Pipe pipe);
+
+  /**
+   * Start processing stage
+   */
   BatchMakerImpl startStage(StagePipe pipe);
 
+  /**
+   * Complete stage on normal execution (while pipeline is running)
+   */
   void completeStage(BatchMakerImpl batchMaker, EventSink eventSink);
+
+  /**
+   * Complete stage on during destroy() phase.
+   */
+  void completeStage(StagePipe pipe, EventSink eventSink);
 
   void commitOffset();
 

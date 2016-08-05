@@ -43,11 +43,13 @@ import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -80,6 +82,13 @@ public class TestProductionPipeline {
   private MemoryLimitConfiguration memoryLimit;
   private RuntimeInfo runtimeInfo;
 
+  // Private enum for this testcase to figure out which pipeline should be used for test
+  private enum PipelineType {
+    DEFAULT,
+    OFFSET_COMMITTERS,
+    EVENTS
+  };
+
   @BeforeClass
   public static void beforeClass() throws Exception {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
@@ -107,7 +116,7 @@ public class TestProductionPipeline {
   @Test
   public void testStopPipeline() throws Exception {
 
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, false);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
     pipeline.stop();
     Assert.assertTrue(pipeline.wasStopped());
 
@@ -116,7 +125,7 @@ public class TestProductionPipeline {
   @Test
   public void testGetCommittedOffset() throws Exception {
 
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, false);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
@@ -127,7 +136,7 @@ public class TestProductionPipeline {
   @Test
   public void testProductionRunnerOffsetAPIs() throws Exception {
 
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, false);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
@@ -140,7 +149,7 @@ public class TestProductionPipeline {
   @Test
   public void testProductionRunAtLeastOnce() throws Exception {
 
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, true, false);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, true, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
@@ -152,7 +161,7 @@ public class TestProductionPipeline {
   @Test
   public void testProductionRunAtMostOnce() throws Exception {
 
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, false);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     //The source returns null offset the first time.
@@ -194,8 +203,7 @@ public class TestProductionPipeline {
   public void testProductionRunWithSourceOffsetCommitter() throws Exception {
     SourceOffsetCommitterCapture capture = new SourceOffsetCommitterCapture();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
-      true/*source is committer*/);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.OFFSET_COMMITTERS);
     pipeline.registerStatusListener(new MyStateListener());
     long startTime = System.currentTimeMillis();
     //Need sleep because the file system could truncate the time to the last second.
@@ -234,7 +242,7 @@ public class TestProductionPipeline {
         Assert.fail();
       }
     }
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.OFFSET_COMMITTERS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     for (String name : runtimeInfoMetrics.getNames()) {
@@ -248,8 +256,7 @@ public class TestProductionPipeline {
   public void testProductionRunWithSourceOffsetTracker() throws Exception {
     SourceOffsetTrackerCapture capture = new SourceOffsetTrackerCapture();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
-      false/*source not committer*/);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     long startTime = System.currentTimeMillis();
     //Need sleep because the file system could truncate the time to the last second.
@@ -276,8 +283,7 @@ public class TestProductionPipeline {
       }
     };
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
-      false/*source not committer*/);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
     //Need sleep because the file system could truncate the time to the last second.
     pipeline.registerStatusListener(new MyStateListener());
     Thread.sleep(15000);
@@ -316,7 +322,7 @@ public class TestProductionPipeline {
     try {
       PersistChangesStateListener listener = new PersistChangesStateListener();
       MockStages.setSourceCapture(capture);
-      ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, false);
+      ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
       pipeline.registerStatusListener(listener);
 
       try {
@@ -346,20 +352,18 @@ public class TestProductionPipeline {
   public void testIsPreview() throws Exception {
     PreviewCheckSource capture = new PreviewCheckSource();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.OFFSET_COMMITTERS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     Assert.assertFalse(capture.isPreview);
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch,
-    boolean sourceOffsetCommitter) throws Exception {
-    return createProductionPipeline(deliveryGuarantee, captureNextBatch, -1L, sourceOffsetCommitter);
+    PipelineType type) throws Exception {
+    return createProductionPipeline(deliveryGuarantee, captureNextBatch, -1L, type);
   }
 
-
-  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch, long rateLimit,
-    boolean sourceOffsetCommitter) throws Exception {
+  private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch, long rateLimit, PipelineType type) throws Exception {
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
@@ -378,9 +382,18 @@ public class TestProductionPipeline {
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);
     }
-    PipelineConfiguration pConf =
-        (sourceOffsetCommitter) ? MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget()
-            : MockStages.createPipelineConfigurationSourceProcessorTarget();
+    PipelineConfiguration pConf = null;
+    switch(type) {
+      case DEFAULT:
+        pConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+        break;
+      case OFFSET_COMMITTERS:
+        pConf =  MockStages.createPipelineConfigurationSourceOffsetCommitterProcessorTarget();
+        break;
+      case EVENTS:
+        pConf =  MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed();
+        break;
+    }
 
     ProductionPipeline pipeline =
         new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
@@ -419,7 +432,7 @@ public class TestProductionPipeline {
   public void testProductionRunWithFailedValidateConfigs() throws Exception {
     Source capture = new SourceValidateConfigFailureCapture();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.OFFSET_COMMITTERS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
   }
@@ -484,7 +497,7 @@ public class TestProductionPipeline {
     MockStages.setProcessorCapture(processor);
     ErrorStageTarget errorStage = new ErrorStageTarget();
     MockStages.setErrorStageCapture(errorStage);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.OFFSET_COMMITTERS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     Assert.assertEquals(4, errorStage.records.size());
@@ -554,8 +567,7 @@ public class TestProductionPipeline {
     final TestProducer p = new TestProducer();
     MockStages.setSourceCapture(p);
 
-    final ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, 10L,
-        false/*source not committer*/);
+    final ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, 10L, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     final Exchanger<Double> rate = new Exchanger<>();
     new Thread() {
@@ -576,4 +588,77 @@ public class TestProductionPipeline {
     // To account for the slight loss of precision, we compare the "long-ified" versions.
     Assert.assertTrue(rateAchieved.longValue() <= 10);
   }
+
+  private static class ProduceEventOnDestroySource extends BaseSource {
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      return null;
+    }
+
+    @Override
+    public void destroy() {
+      EventRecord event = getContext().createEventRecord("x", 1);
+      event.set(Field.create("event"));
+      getContext().toEvent(event);
+    }
+  }
+
+  private static class CaptureTarget extends BaseTarget {
+    List<Record> records = new ArrayList<>();
+
+    @Override
+    public void write(Batch batch) throws StageException {
+      Iterator<Record> it = batch.getRecords();
+      while(it.hasNext()) {
+        records.add(it.next());
+      }
+    }
+  }
+
+  @Test
+  // Verify that events generated on destroy are properly processed by other stages in the pipeline
+  public void testPropagatingEventsOnDestroy() throws Exception {
+    Source source = new ProduceEventOnDestroySource();
+    MockStages.setSourceCapture(source);
+    CaptureTarget target = new CaptureTarget();
+    MockStages.setTargetEventCapture(target);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.EVENTS);
+    pipeline.registerStatusListener(new MyStateListener());
+    pipeline.run();
+
+    Assert.assertEquals(1, target.records.size());
+  }
+
+  private static class ToErrorTarget extends BaseTarget {
+
+    @Override
+    public List<ConfigIssue> init(Info info, Target.Context context) {
+      return super.init(info, context);
+    }
+
+    @Override
+    public void write(Batch batch) throws StageException {
+      Iterator<Record> it = batch.getRecords();
+      while(it.hasNext()) {
+        getContext().toError(it.next(), "Sorry");
+      }
+    }
+  }
+
+  @Test
+  // Verify that event record that generates error record will get properly routed to error lane
+  public void testPropagatingEventErrorRecordsOnDestroy() throws Exception {
+    Source source = new ProduceEventOnDestroySource();
+    MockStages.setSourceCapture(source);
+    ToErrorTarget target = new ToErrorTarget();
+    MockStages.setTargetEventCapture(target);
+    ErrorStageTarget errorStage = new ErrorStageTarget();
+    MockStages.setErrorStageCapture(errorStage);
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.EVENTS);
+    pipeline.registerStatusListener(new MyStateListener());
+    pipeline.run();
+
+    Assert.assertEquals(1, errorStage.records.size());
+  }
+
 }

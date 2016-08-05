@@ -67,6 +67,10 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
+  public void skipStage(Pipe pipe) {
+  }
+
+  @Override
   public BatchMakerImpl startStage(StagePipe pipe) {
     return new BatchMakerImpl(pipe, true);
   }
@@ -75,6 +79,10 @@ public class StagePreviewPipeBatch implements PipeBatch {
   public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
     // TODO: Implement even propagation in preview
+  }
+
+  @Override
+  public void completeStage(StagePipe pipe, EventSink eventSink) {
   }
 
   @Override

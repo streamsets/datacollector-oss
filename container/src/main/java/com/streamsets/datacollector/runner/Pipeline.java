@@ -169,6 +169,12 @@ public class Pipeline {
 
   public void destroy() {
     try {
+      runner.destroy(pipes, badRecordsHandler, statsAggregationHandler);
+    } catch (StageException|PipelineRuntimeException ex) {
+      String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
+      LOG.warn(msg, ex);
+    }
+    try {
       badRecordsHandler.destroy();
     } catch (Exception ex) {
       String msg = Utils.format("Exception thrown during bad record handler destroy: {}", ex);
@@ -181,14 +187,6 @@ public class Pipeline {
     } catch (Exception ex) {
       String msg = Utils.format("Exception thrown during Stats Aggregator handler destroy: {}", ex);
       LOG.warn(msg, ex);
-    }
-    for (Pipe pipe : pipes) {
-      try {
-        pipe.destroy();
-      } catch (RuntimeException ex) {
-        String msg = Utils.format("Exception thrown during pipe '{}' destroy: {}", pipe, ex);
-        LOG.warn(msg, ex);
-      }
     }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();

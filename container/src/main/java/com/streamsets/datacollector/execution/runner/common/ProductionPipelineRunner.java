@@ -24,7 +24,6 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
@@ -330,6 +329,53 @@ public class ProductionPipelineRunner implements PipelineRunner {
       StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Since stages are allowed to produce events during destroy() phase, we handle the destroy event as simplified
+   * runBatch. We go over all the StagePipes and if it's on data path we destroy it immediately, if it's on  event path, we
+   * run it one more time. Since the stages are sorted we know that destroyed stage will never be needed again. Non
+   * stage pipes are always processed to generate required structures in PipeBatch.
+   */
+  @Override
+  public void destroy(Pipe[] pipes, BadRecordsHandler badRecordsHandler, StatsAggregationHandler statsAggregationHandler) throws StageException, PipelineRuntimeException {
+    FullPipeBatch pipeBatch = new FullPipeBatch(
+      offsetTracker,
+      configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT),
+      false
+    );
+
+    pipeBatch.setRateLimiter(rateLimiter);
+    long lastBatchTime = offsetTracker.getLastBatchTime();
+    for (Pipe pipe : pipes) {
+      // Set the last batch time in the stage context of each pipe
+      ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
+      String instanceName = pipe.getStage().getConfiguration().getInstanceName();
+
+      if(pipe instanceof StagePipe) {
+        // Stage pipes are processed only if they are in event path
+        if(pipe.getStage().getConfiguration().isInEventPath()) {
+          LOG.trace("Stage pipe {} is in event path, running last process", instanceName);
+          pipe.process(pipeBatch);
+        } else {
+          LOG.trace("Stage pipe {} is in data path, skipping it's processing.", instanceName);
+          pipeBatch.skipStage(pipe);
+        }
+      } else {
+        // Non stage pipes are executed always
+        LOG.trace("Non stage pipe {}, running last process", instanceName);
+        pipe.process(pipeBatch);
+      }
+
+      // And finally destroy the pipe
+      try {
+        LOG.trace("Running destroy for {}", instanceName);
+        pipe.destroy(pipeBatch);
+      } catch(RuntimeException e) {
+        LOG.warn("Exception throw while destroying pipe", e);
+      }
+    }
+    badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
   }
 
   @Override

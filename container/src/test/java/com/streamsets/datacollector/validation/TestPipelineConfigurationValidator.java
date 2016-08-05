@@ -291,11 +291,16 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(3, stages.size());
     // Source should be ordered first (even though that the pipeline declares the event target as first)
     Assert.assertEquals("s", stages.get(0).getInstanceName());
+
+    // Verify that event stages are marked accordingly
+    Assert.assertFalse(stages.get(0).isInEventPath());
+    Assert.assertFalse(stages.get(1).isInEventPath());
+    Assert.assertTrue(stages.get(2).isInEventPath());
   }
 
   // Stage having event lane without declaring support for event is an error
   @Test
-  public void testPipelineDeclaredEvetnLaneWithoutSupportingEvents() {
+  public void testPipelineDeclaredEventLaneWithoutSupportingEvents() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetDeclaredEventLaneWithoutSupportingEvents();
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);

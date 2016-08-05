@@ -110,6 +110,7 @@ public class MockStages {
   private static Source sourceCapture;
   private static Processor processorCapture;
   private static Target targetCapture;
+  private static Target eventTargetCapture;
   private static Target errorCapture;
 
   // it must be called after the pipeline is built
@@ -134,6 +135,10 @@ public class MockStages {
   // it must be called after the pipeline is built
   public static void setErrorStageCapture(Target t) {
     errorCapture = t;
+  }
+  // it must be called after the pipeline is built
+  public static void setTargetEventCapture(Target t) {
+    eventTargetCapture = t;
   }
 
 
@@ -381,6 +386,32 @@ public class MockStages {
     }
   }
 
+  public static class MEventTarget implements Target {
+
+    @Override
+    public List<ConfigIssue> init(Info info, Context context) {
+      if (eventTargetCapture != null) {
+        return eventTargetCapture.init(info, context);
+      } else {
+        return Collections.emptyList();
+      }
+    }
+
+    @Override
+    public void destroy() {
+      if (eventTargetCapture != null) {
+        eventTargetCapture.destroy();
+      }
+    }
+
+    @Override
+    public void write(Batch batch) throws StageException {
+      if (eventTargetCapture != null) {
+        eventTargetCapture.write(batch);
+      }
+    }
+  }
+
   public static class OffsetControllerTarget extends BaseTarget implements OffsetCommitTrigger {
 
     private boolean commit = false;
@@ -619,6 +650,11 @@ public class MockStages {
           .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
           .build();
 
+        StageDefinition tEventDef = new StageDefinitionBuilder(cl, MEventTarget.class, "targetEventName")
+          .withConfig(stageReqField)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
+
         ConfigDefinition reqField = new ConfigDefinition(
           "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
           "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
@@ -715,6 +751,7 @@ public class MockStages {
               seDef,
               pDef,
               tDef,
+              tEventDef,
               targetWithReqField,
               swcDef,
               eDef,
@@ -1006,7 +1043,7 @@ public class MockStages {
       .withEventLanes("e")
       .build();
     stages.add(source);
-    StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetName")
+    StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetEventName")
       .withInputLanes("e")
       .build();
     stages.add(eventDest);

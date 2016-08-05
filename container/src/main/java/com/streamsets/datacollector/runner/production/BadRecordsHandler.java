@@ -49,7 +49,7 @@ public class BadRecordsHandler {
   }
 
   public void destroy() {
-    errorStage.destroy();
+    errorStage.getStage().destroy();
   }
 
 }

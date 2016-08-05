@@ -50,7 +50,7 @@ public class StatsAggregationHandler {
   }
 
   public void destroy() {
-    statsAggregator.destroy();
+    statsAggregator.getStage().destroy();
   }
 
 }

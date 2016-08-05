@@ -102,14 +102,15 @@ public class TestStagePipe {
     Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
-    pipe.destroy();
+    pipe.destroy(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.any(Pipe.class));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).setNewOffset(Mockito.eq("offset2"));
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.any(EventSink.class));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getErrorSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class), Mockito.any(EventSink.class));
+    Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(produce);
   }
@@ -157,14 +158,15 @@ public class TestStagePipe {
 
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
-    pipe.destroy();
+    pipe.destroy(pipeBatch);
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.any(EventSink.class));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getErrorSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class), Mockito.any(EventSink.class));
+    Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(process);
   }
@@ -212,14 +214,15 @@ public class TestStagePipe {
 
     Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
     pipe.process(pipeBatch);
-    pipe.destroy();
+    pipe.destroy(pipeBatch);
 
     Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
     Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
     Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
     Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.any(EventSink.class));
-    Mockito.verify(pipeBatch, Mockito.times(1)).getErrorSink();
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class), Mockito.any(EventSink.class));
+    Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
     Mockito.verifyNoMoreInteractions(pipeBatch);
     Assert.assertTrue(write);
   }

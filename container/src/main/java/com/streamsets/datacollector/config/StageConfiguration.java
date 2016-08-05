@@ -48,6 +48,9 @@ public class StageConfiguration implements Serializable {
 
   private boolean systemGenerated;
 
+  // Will be set to true if this stage is in the event path
+  private boolean inEventPath;
+
   public StageConfiguration(String instanceName, String library, String stageName, int stageVersion,
       List<Config> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
       List<String> outputLanes, List<String> eventLanes) {
@@ -61,6 +64,7 @@ public class StageConfiguration implements Serializable {
     this.eventLanes = eventLanes;
     this.configuration = new ArrayList<>();
     this.configurationMap = new HashMap<>();
+    this.inEventPath = false;
     setConfig(configuration);
   }
 
@@ -154,6 +158,14 @@ public class StageConfiguration implements Serializable {
 
   public boolean isSystemGenerated() {
     return systemGenerated;
+  }
+
+  public void setInEventPath(boolean inEventPath) {
+    this.inEventPath = inEventPath;
+  }
+
+  public boolean isInEventPath() {
+    return inEventPath;
   }
 
   @Override

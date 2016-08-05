@@ -142,6 +142,15 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public void destroy(Pipe[] pipes, BadRecordsHandler badRecordsHandler, StatsAggregationHandler statsAggregationHandler) throws StageException, PipelineRuntimeException {
+    PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+    // We're not doing any special event propagation during preview destroy phase
+    for(Pipe pipe: pipes) {
+      pipe.destroy(pipeBatch);
+    }
+  }
+
+  @Override
   public List<List<StageOutput>> getBatchesOutput() {
     return batchesOutput;
   }

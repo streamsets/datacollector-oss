@@ -49,6 +49,12 @@ public interface PipelineRunner {
       StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
 
+  public void destroy(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException;
+
   public List<List<StageOutput>> getBatchesOutput();
 
   public String getSourceOffset();

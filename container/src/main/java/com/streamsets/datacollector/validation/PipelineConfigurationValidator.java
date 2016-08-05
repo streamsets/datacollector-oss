@@ -1187,6 +1187,9 @@ public class PipelineConfigurationValidator {
         dataLanes.addAll(stageConf.getOutputLanes());
       }
 
+      // Persist the information if this is event stage in it's configuration
+      stageConf.setInEventPath(isEventStage);
+
       // Event lane always feeds records to event part of the pipeline
       eventLanes.addAll(stageConf.getEventLanes());
     }

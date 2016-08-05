@@ -59,7 +59,7 @@ public abstract class Pipe<C extends Pipe.Context> {
 
   public abstract void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException;
 
-  public abstract void destroy();
+  public abstract void destroy(PipeBatch pipeBatch);
 
   public interface Context {
 
