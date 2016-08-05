@@ -140,6 +140,11 @@ function dpm_url_token_gen {
   echo ${DPM_BASE_URL}/security/rest/v1/organization/$dpmOrg/components
 }
 
+# Print out DPM's token regeneration URL
+function dpm_url_token_regen {
+  echo ${DPM_BASE_URL}/security/rest/v1/organization/$dpmOrg/components/regenerateAuthToken
+}
+
 # Print out DPM's logout URL
 function dpm_url_logout {
   echo ${DPM_BASE_URL}/security/_logout
@@ -169,7 +174,7 @@ function dpm_logout {
 # Generate new DPM application token and fill it into token variable
 function dpm_generate_token {
   log "Generating new token in session $dpmSession and in org $dpmOrg"
-  run_curl "PUT" "$(dpm_url_token_gen)" "{\"organization\": \"$dpmOrg\", \"componentType\" : \"dc\", \"numberOfComponents\" : 1, \"active\" : true}" "--header X-SS-REST-CALL:true --header X-SS-User-Auth-Token:$dpmSession"
+  run_curl "PUT" "$(dpm_url_token_gen)" "{\"organization\": \"$dpmOrg\", \"componentType\" : \"dc\", \"numberOfComponents\" : 1, \"active\" : true}" "-H X-SS-REST-CALL:true -H X-SS-User-Auth-Token:$dpmSession"
   token=$(echo $output | sed -e 's/.*"fullAuthToken":"//' -e 's/".*//')
 
   if [ -z "$token" ]; then
@@ -177,6 +182,28 @@ function dpm_generate_token {
     exit 1
   fi
 }
+
+# Regenerate existing DPM application token and fill it into token variable
+function dpm_regenerate_token {
+  log "Regenerating token in session $dpmSession and in org $dpmOrg"
+
+  sdcId=`cat $SDC_DATA/sdc.id`
+  if [ -z "$sdcId" ]; then
+    log "Can't load SDC id"
+    exit 1
+  fi
+
+  log "SDC id is $sdcId"
+
+  run_curl "POST" "$(dpm_url_token_regen)" "[ \"$sdcId\" ]" "-H X-SS-REST-CALL:true -H X-SS-User-Auth-Token:$dpmSession"
+  token=$(echo $output | sed -e 's/.*"fullAuthToken":"//' -e 's/".*//')
+
+  if [ -z "$token" ]; then
+    log "Can't generate new token"
+    exit 1
+  fi
+}
+
 
 # Validate that we have all variables that are required for DPM (to register and such)
 function dpm_verify_config {
@@ -210,21 +237,26 @@ function dpm_verify_config {
   fi
 }
 
-# Register or regenerate auth token for this SDC instance in DPM
+# Register auth token for this SDC instance in DPM
 function dpm {
-  # TODO We should enable forced update
   if [[ -f $DPM_TOKEN_FILE ]]; then
     echo "DPM token already exists, skipping for now."
     return
   fi
 
+  # Since we know that the token doesn't exists yet, this will always generate new token
+  dpm_generate_or_regenerate
+}
+
+# Either generate new or re-generate existing DPM token
+function dpm_generate_or_regenerate {
   dpm_verify_config
   dpm_login
 
   # Based on whether the token file already exists
   if [ -f $DPM_TOKEN_FILE ]; then
-    # TODO Prepared for forced update
-    echo "DPM token already exists, skipping for now."
+    dpm_regenerate_token
+    echo $token > $DPM_TOKEN_FILE
   else
     # Application token doesn't exists yet, we need to generate it
     dpm_generate_token
@@ -280,7 +312,7 @@ case $CMD in
     ;;
 
   dpm)
-    dpm
+    dpm_generate_or_regenerate
     exit 0
     ;;
 esac

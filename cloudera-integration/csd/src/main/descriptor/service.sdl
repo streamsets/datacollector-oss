@@ -30,10 +30,10 @@
   ],
   "commands" : [
     {
-      "name" : "RegisterDPM",
-      "label" : "Register all SDCs with DPM",
-      "description" : "Registers all SDC instances in this service with DPM.",
-      "roleCommand" : "RegisterDPM",
+      "name" : "DPMTokenRegen",
+      "label" : "(Re)generate DPM tokens",
+      "description" : "(Re)generate DPM tokens for all SDC instances.",
+      "roleCommand" : "DPMTokenRegen",
       "roleName" : "DATACOLLECTOR",
       "runMode" : "all"
     }
@@ -99,15 +99,16 @@
           }
         },
         {
-          "name": "RegisterDPM",
-          "label": "Register SDC in DPM",
-          "description": "Registers SDC instance in DPM",
+          "name": "DPMTokenRegen",
+          "label" : "(Re)generate DPM token",
+          "description" : "(Re)generate DPM token for this SDC instances.",
           "expectedExitCodes": [0],
           "requiredRoleState": "stopped",
           "commandRunner": {
             "program": "scripts/control.sh",
             "args": ["dpm"],
             "environmentVariables": {
+              "SDC_DATA": "${data.directory}",
               "DPM_TOKEN_FILE": "${dpm.token.path}",
               "DPM_BASE_URL": "${dpm.base.url}",
               "DPM_USER": "${dpm.user}",
