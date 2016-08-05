@@ -20,7 +20,11 @@
       runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file, <codeph>sdc.properties</codeph>, or in a separate runtime properties
-      file.</p>
+        file.<note>If you installed <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
+        Cloudera Manager, you must define runtime properties in the <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration file. </note></p>
   <p>
    <dl>
     <dlentry>
