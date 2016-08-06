@@ -240,7 +240,8 @@ public class RecordWriter {
       generator = null;
       seqWriter = null;
       closeLock.writeLock().unlock();
-      this.idleCloseExecutor.shutdownNow();
+      //Gracefully Shutdown the thread, so rename goes through without glitch.
+      idleCloseExecutor.shutdown();
     }
   }
 
