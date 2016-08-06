@@ -264,13 +264,14 @@ public class RecordWriterManager {
       } catch (IdleClosedException e) {
         LOG.info("Writer for {} was idle closed, renaming.." , writer.getPath());
       }
+
+      LOG.debug("Path[{}] - Committing Writer", writer.getPath());
+      path = renameToFinalName(fs, writer.getPath());
+      LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
       // Reset the interrupt flag back.
       if (interrupted) {
         Thread.currentThread().interrupt();
       }
-      LOG.debug("Path[{}] - Committing Writer", writer.getPath());
-      path = renameToFinalName(fs, writer.getPath());
-      LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
     }
     return path;
   }
