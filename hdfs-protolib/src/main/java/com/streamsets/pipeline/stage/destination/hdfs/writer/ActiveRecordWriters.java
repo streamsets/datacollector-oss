@@ -99,6 +99,7 @@ public class ActiveRecordWriters {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Purging '{}'", delayedWriter.getWriter().getPath());
         }
+        //We are fine no lock on writer needed.
         synchronized (this) {
           writers.remove(delayedWriter.getWriter().getPath().toString());
         }
@@ -111,6 +112,8 @@ public class ActiveRecordWriters {
   public RecordWriter get(Date now, Date recordDate, Record record) throws StageException, IOException {
     String path = manager.getPath(recordDate, record).toString();
     RecordWriter writer = null;
+
+    //We are fine no lock on writer needed.
     synchronized (this) {
       writer = writers.get(path);
     }
@@ -127,6 +130,8 @@ public class ActiveRecordWriters {
           LOG.trace("Got '{}'", writer.getPath());
         }
         writer.setActiveRecordWriters(this);
+
+        //We are fine no lock on writer needed.
         synchronized(this) {
           writers.put(path, writer);
         }
@@ -146,16 +151,20 @@ public class ActiveRecordWriters {
     return cutOffQueue.size();
   }
 
-  public void release(RecordWriter writer, boolean roll) throws IOException {
+  //The whole function is synchronized because
+  //the locks always have to taken in the following order
+  //1. ActiveRecordWriters and 2. RecordWriter (if we need both of them)
+  //or else we will get into a deadlock
+  //For Ex: idle close thread calls this method
+  //and the hdfsTarget (in the pipeline runnable thread), calls flushAll
+  public synchronized void release(RecordWriter writer, boolean roll) throws IOException {
     writer.closeLock();
     try {
       if (roll || writer.isIdleClosed() || manager.isOverThresholds(writer)) {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Release '{}'", writer.getPath());
         }
-        synchronized(this) {
-          writers.remove(writer.getPath().toString());
-        }
+        writers.remove(writer.getPath().toString());
         manager.commitWriter(writer);
       }
     } finally {
