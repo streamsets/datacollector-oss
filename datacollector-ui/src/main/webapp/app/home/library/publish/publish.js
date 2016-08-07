@@ -39,7 +39,6 @@ angular
       publish : function () {
         $scope.publishing = true;
         if ($scope.isList) {
-          console.log(pipelineInfo);
           var deferList = [];
           for (var i = 0; i < pipelineInfo.length; i++) {
             deferList.push(api.remote.publishPipeline(

@@ -488,7 +488,7 @@ angular
 
         pipelineService.publishPipelineCommand(selectedPipelineInfoList)
           .then(function() {
-            $scope.unSelectAll();
+            $scope.refreshPipelines();
           });
       },
 
