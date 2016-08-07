@@ -313,7 +313,18 @@ public class RecordWriter {
     @Override
     public Void call() {
       try {
-        close(true);
+        if (writers != null) {
+          //We are going to call close(true) which takes a lock on writers
+          //and then going to call writers.release() -> which will take a lock on
+          //ActiveRecordWriters
+          //The ordering for locking both ActiveRecordWriters and RecordWriter is
+          //1.ActiveRecordWriters 2. RecordWriter
+          synchronized (writers) {
+            close(true);
+          }
+        } else {
+          close(true);
+        }
       } catch (IOException e) {
         LOG.error("Error while attempting to close " + getPath().toString(), e);
       }
