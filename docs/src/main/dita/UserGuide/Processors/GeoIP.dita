@@ -15,17 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fch_fc3_ms">
  <title>Geo IP</title>
- <shortdesc>The Geo IP processor provides geographic location information for IP addresses. The Geo
-    IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must
-    provide your own copy of the database file. </shortdesc>
  <conbody>
   <p><indexterm>Geo IP
-          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Geo
-          IP</indexterm></indexterm>To use the Geo IP processor, you define the location of the
-      database file, specify one or more IP address input fields, name the corresponding output
-      field, and specify the geolocation information that you want. </p>
-    <p>The input field must be an Integer or String datatype with IP addresses formatted as
-        follows:<codeph> n.n.n.n.</codeph></p>
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Geo
+                    IP</indexterm></indexterm><indexterm>Geo IP processor<indexterm>supported
+                    databases</indexterm></indexterm>The Geo IP processor provides geographic
+            location information for IP addresses.</p>
+        <p> The Geo IP processor can use the MaxMind GeoIP2 City or the GeoIP2 Country database file
+            to provide geolocation information. You must provide your own copy of the database file. </p>
+        <note type="tip">MaxMind provides free versions of the GeoIP2 databases that you can
+            use.</note>
+        <p>To use the Geo IP processor, you specify the location of the database file and the
+            database type. You enter one or more IP address input fields, name the corresponding
+            output field, and specify the geolocation information that you want. </p>
+    <p>The input field must be an Integer or String datatype with IP addresses formatted as follows:
+                <codeph>n.n.n.n.</codeph></p>
   <p>Geo IP can provide the following geolocation information for each IP address:<ul
         id="ul_ptx_mg3_ms">
         <li>Country name</li>

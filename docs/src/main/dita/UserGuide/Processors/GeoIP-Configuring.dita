@@ -50,6 +50,11 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>GeoIP2 Database Type</entry>
+                                    <entry>Database type. You can use the GeoIP2 City or Country
+                                        database.</entry>
+                                </row>
+                                <row>
                                     <entry>Input Field Name</entry>
                                     <entry>Incoming field with the IP address to use. The field can
                                         be an Integer or String data type. </entry>

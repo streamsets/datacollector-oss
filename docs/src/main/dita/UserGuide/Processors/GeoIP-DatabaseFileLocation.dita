@@ -22,7 +22,7 @@
       database file in a directory local to the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or in the
         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      resources directory: <filepath>$SDC_RESOURCES</filepath>. And then define the location of the
-      database file in the processor.</p>
+      resources directory: <filepath>$SDC_RESOURCES</filepath>. </p>
+    <p>Then define the location of the database file in the processor.</p>
  </conbody>
 </concept>
