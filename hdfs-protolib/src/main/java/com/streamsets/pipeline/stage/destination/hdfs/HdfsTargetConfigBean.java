@@ -656,10 +656,13 @@ public class HdfsTargetConfigBean {
         public Void run() throws Exception {
           if (currentWriters != null) {
             currentWriters.closeAll();
+            currentWriters.getWriterManager().issueCachedEvents();
           }
           if (lateWriters != null) {
             lateWriters.closeAll();
+            lateWriters.getWriterManager().issueCachedEvents();
           }
+
           if(fs != null) {
             fs.close();
           }

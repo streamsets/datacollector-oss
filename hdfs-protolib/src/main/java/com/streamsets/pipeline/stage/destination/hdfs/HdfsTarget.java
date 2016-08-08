@@ -117,6 +117,12 @@ public class HdfsTarget extends BaseTarget {
           } else {
             emptyBatch();
           }
+
+          // Issue events that were cached from independent threads running simultaneously to this batch
+          hdfsTargetConfigBean.getCurrentWriters().getWriterManager().issueCachedEvents();
+          if(hdfsTargetConfigBean.getLateWriters() != null) {
+            hdfsTargetConfigBean.getLateWriters().getWriterManager().issueCachedEvents();
+          }
           return null;
         }
       });

@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -55,8 +58,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -84,6 +89,7 @@ public class RecordWriterManager {
   private final boolean rollIfHeader;
   private final String rollHeaderName;
   private final FsHelper fsHelper;
+  private ConcurrentLinkedQueue<Path> closedPaths;
 
   public RecordWriterManager(FileSystem fs, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
       String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
@@ -109,6 +115,7 @@ public class RecordWriterManager {
     this.rollHeaderName = rollHeaderName;
     pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
     fsHelper = getFsHelper(context, fileNameEL);
+    this.closedPaths = new ConcurrentLinkedQueue<>();
   }
 
   public boolean validateDirTemplate(
@@ -163,12 +170,40 @@ public class RecordWriterManager {
     return fsHelper.getPath(recordDate, record);
   }
 
+  /**
+   * This method should be called every time we finish writing into a file and consider it "done".
+   */
   Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException {
     Path finalPath = fsHelper.getRenamableFinalFilePath(tempPath);
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
     }
+
+    // Store closed path so that we can generate event for it later
+    closedPaths.add(finalPath);
+
     return finalPath;
+  }
+
+  private void produceCloseFileEvent(FileSystem fs, Path finalPath) throws IOException {
+    FileStatus status = fs.getFileStatus(finalPath);
+    EventRecord event = context.createEventRecord("file-closed", 1);
+    Map<String, Field> map = new ImmutableMap.Builder<String, Field>()
+      .put("filepath", Field.create(Field.Type.STRING, finalPath.toString()))
+      .put("length", Field.create(Field.Type.LONG, status.getLen()))
+      .build();
+    event.set(Field.create(map));
+    context.toEvent(event);
+  }
+
+  /**
+   * Produce events that were cached during the batch processing.
+   */
+  public void issueCachedEvents() throws IOException {
+    Path closedPath;
+    while((closedPath = closedPaths.poll()) != null) {
+      produceCloseFileEvent(fs, closedPath);
+    }
   }
 
   long getTimeToLiveMillis(Date now, Date recordDate) {

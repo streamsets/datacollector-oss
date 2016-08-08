@@ -141,7 +141,6 @@ public class ActiveRecordWriters {
     return writer;
   }
 
-  @VisibleForTesting
   public RecordWriterManager getWriterManager() {
     return manager;
   }

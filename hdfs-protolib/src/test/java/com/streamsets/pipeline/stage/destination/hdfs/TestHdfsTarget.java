@@ -123,6 +123,8 @@ public class TestHdfsTarget {
 
     runner.runWrite(records);
     runner.runDestroy();
+
+    Assert.assertEquals(4, runner.getEventRecords().size());
   }
 
   @Test
@@ -362,6 +364,7 @@ public class TestHdfsTarget {
       System.out.print(f.getName());
     }
     Assert.assertEquals(3, list.length);
+    Assert.assertEquals(3, runner.getEventRecords().size());
   }
 
   /**
@@ -397,6 +400,7 @@ public class TestHdfsTarget {
     File[] list = new File(getTestDir() + "/hdfs/").listFiles();
     Assert.assertEquals(1, list.length);
     Assert.assertEquals("{\"a\":\"x\"}\n", FileUtils.readFileToString(list[0], Charset.defaultCharset()));
+    Assert.assertEquals(1, runner.getEventRecords().size());
   }
 
   /**
@@ -523,6 +527,7 @@ public class TestHdfsTarget {
 
     File[] list = new File(getTestDir() + "/hdfs/").listFiles();
     Assert.assertEquals(2, list.length);
+    Assert.assertEquals(2, runner.getEventRecords().size());
 
     for(File file : list) {
       Assert.assertFalse("The file wasn't renamed after close: " + file.getName(), file.getName().contains("_tmp_"));
