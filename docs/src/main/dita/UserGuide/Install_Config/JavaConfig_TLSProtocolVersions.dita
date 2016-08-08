@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_txl_qyc_ww">
+ <title>TLS Protocol Versions</title>
+ <shortdesc>By default, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+        configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier
+        version of TLS, modify the <codeph>Dhttps.protocols</codeph> option in the SDC_JAVA_OPTS
+        environment variable in the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        environment configuration file.</shortdesc>
+ <conbody>
+        <p>By default, the option is defined as
+            follows:<codeblock>SDC_JAVA_OPTS="<b>-Dhttps.protocols=TLSv1.2,TLSv1.1</b> -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"</codeblock></p>
+        <p>To connect to an HTTP server that uses TLS version 1.0, set the option as
+            follows:<codeblock> SDC_JAVA_OPTS="<b>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</b> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
+</codeblock></p>
+ </conbody>
+</concept>
