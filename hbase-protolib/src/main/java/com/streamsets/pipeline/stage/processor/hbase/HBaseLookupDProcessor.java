@@ -27,11 +27,12 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "HBase Lookup",
     description = "Performs KV lookups to enrich records",
     icon = "hbase.png",
     privateClassLoader = true,
+    upgrader = HBaseProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/HBaseLookup.html#task_z25_b3q_bw"
 )
 
