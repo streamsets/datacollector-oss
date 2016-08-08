@@ -852,7 +852,8 @@
           "default": "",
           "label": "DPM URL",
           "description": "Base URL for DPM.",
-          "required": "false"
+          "required": "false",
+          "conformRegex" : "^.*[^/]$"
         },
         {
           "name": "dpm.user",
