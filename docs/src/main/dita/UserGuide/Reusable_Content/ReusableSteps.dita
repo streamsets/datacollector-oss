@@ -3176,6 +3176,76 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                     the path configured for <uicontrol>Local Parcel Repository Path</uicontrol>.
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following steps are used for the
+                        Enabling SSL topics for the MongoDB origin and destination</draft-comment>
+                </cmd>
+            </step>
+            <step id="MongoDBEnableSSL_step1">
+                <cmd>In the <uicontrol>Advanced</uicontrol> tab for the stage, select the
+                        <uicontrol>SSL Enabled</uicontrol> property.</cmd>
+            </step>
+            <step id="MongoDBEnableSSL_step2">
+                <cmd>Define the following options in the SDC_JAVA_OPTS environment variable in the
+                    Data Collector environment configuration file, <codeph>sdc-env.sh</codeph> or
+                        <codeph>sdcd-env.sh</codeph>:</cmd>
+                <choices id="choices_vwy_pg2_ww">
+                    <choice><codeph>javax.net.ssl.trustStore</codeph> - path to truststore
+                        file</choice>
+                    <choice><codeph>javax.net.ssl.trustStorePassword</codeph> - truststore
+                        password</choice>
+                </choices>
+                <info>
+                    <p>For example, define the options as
+                        follows:<codeblock>export SDC_JAVA_OPTS="<b class="+ topic/ph hi-d/b ">-Djavax.net.ssl.trustStore=&lt;path to truststore file> -Djavax.net.ssl.trustStorePassword=&lt;password></b> 
+-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"                   </codeblock></p>
+                </info>
+            </step>
+            <step id="MongoDBEnableSSL_step3">
+                <cmd>Restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to enable the changes.</cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following step is used for the MongoDB
+                        origin and destination configuring topics.</draft-comment>
+                </cmd>
+            </step>
+            <step id="MongoDB_Credentials_step">
+                <cmd>To use credentials, click the <uicontrol>Credentials</uicontrol> tab and
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bdl_csd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Authentication Type</entry>
+                                    <entry>Authentication to use. To use authentication, select
+                                        Username/Password.</entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>MongoDB user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>MongoDB password.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

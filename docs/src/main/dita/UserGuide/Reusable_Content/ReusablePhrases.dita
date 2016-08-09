@@ -27,7 +27,7 @@
                   this</draft-comment>
             <p>Full, init cap version of the product name: <ph id="pName-long">Data
                   Collector</ph></p>
-            <p>DPM long only: <ph id="DPM-LongOnly">Data Performance Manager</ph></p>
+            <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>ph-VaultFunctions-Usage</uicontrol> -
                         used in Vault-Step3-CallVault.dita</draft-comment>

@@ -122,6 +122,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MongoDB-OffsetField.dita"/>
    <topicref href="../Origins/MongoDB-ReadPreference.dita"/>
+   <topicref href="../Origins/MongoDB-EnableSSL.dita"/>
    <topicref href="../Origins/MongoDB-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Omniture.dita" chunk="to-content">

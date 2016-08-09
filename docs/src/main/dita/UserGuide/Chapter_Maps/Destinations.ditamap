@@ -208,6 +208,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Destinations/MongoDB-OperationHeader.dita"/>
+   <topicref href="../Destinations/MongoDB-EnableSSL.dita"/>
    <topicref href="../Destinations/MongoDB-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/RabbitMQ.dita" chunk="to-content">

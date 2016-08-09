@@ -28,5 +28,7 @@
         <p>Note that when performing a delete operation, the destination deletes a maximum of one
             matching document in MongoDB. It does not delete all matching documents, as is sometimes
             possible with MongoDB.</p>
+        <p>You can optionally configure advanced options that determine how the destination connects
+            to MongoDB, including enabling SSL for the destination.</p>
  </conbody>
 </concept>

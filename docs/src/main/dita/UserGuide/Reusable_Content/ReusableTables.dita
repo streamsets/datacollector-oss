@@ -617,35 +617,30 @@
      </row>
      <row>
       <entry>Kerberos Authentication </entry>
-      <entry id="entry-Kerberos">Uses Kerberos credentials to connect to HBase.<p>When
-       selected, uses the Kerberos principal and keytab defined
-       in the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-       /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </p></entry>
+      <entry id="entry-Kerberos">Uses Kerberos credentials to connect to HBase.<p>When selected,
+        uses the Kerberos principal and keytab defined in the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </p></entry>
      </row>
      <row>
       <entry>HBase User </entry>
-      <entry id="entry-HBaseUser">The HBase user to use to connect to HBase. When using
-       this property, make sure HBase is configured
-       appropriately.<p>By default, the pipeline uses the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-       /> user to connect to HBase.</p></entry>
+      <entry id="entry-HBaseUser">The HBase user to use to connect to HBase. When using this
+       property, make sure HBase is configured appropriately.<p>By default, the pipeline uses the
+         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
+        to connect to HBase.</p></entry>
      </row>
      <row>
       <entry>HBase Configuration Directory</entry>
       <entry id="entry-HBaseConfigDirectory">Location of the HDFS configuration files. <p>For a
-       Cloudera Manager installation, enter
-       <codeph>hbase-conf</codeph>. For all other
-       installations, use a directory or symlink within the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-       /> resources directory.</p><p>You can use the following
-        file with HBase:<ul
+        Cloudera Manager installation, enter <codeph>hbase-conf</codeph>. For all other
+        installations, use a directory or symlink within the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> resources
+        directory.</p><p>You can use the following file with HBase:<ul
          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
          id="ul_ezj_cvr_bt">
          <li/>
-        </ul></p><note>Properties in the configuration files are
-         overridden by individual properties defined in the
-         stage.</note></entry>
+        </ul></p><note>Properties in the configuration files are overridden by individual properties
+        defined in the stage.</note></entry>
      </row>
      <row>
       <entry>HBase Configuration</entry>
@@ -683,5 +678,114 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">MongoDB origin and destination use all rows in this table.
+   They use the description for the Enable SSL property</draft-comment>
+    <table frame="all" rowsep="1" colsep="1" id="table_xwz_jsd_3t">
+     <tgroup cols="2">
+      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+      <thead>
+       <row>
+        <entry>Advanced Property</entry>
+        <entry>Description</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row id="MongoDB_Connections_row">
+      <entry>Connections Per Host</entry>
+      <entry>Maximum number of connections for each host.<p>Default is 100.</p></entry>
+     </row>
+       <row id="MongoDB_MinConnections_row">
+      <entry>Min Connections Per Host</entry>
+      <entry>Minimum number of connections for each host.<p>Default is 0.</p></entry>
+     </row>
+       <row id="MongoDB_ConnectionTimeout_row">
+      <entry>Connection Timeout</entry>
+      <entry>Maximum time in milliseconds to wait for a connection. <p>Default is
+       10,000.</p></entry>
+     </row>
+       <row id="MongoDB_MaxConnIdleTime_row">
+      <entry>Max Connection Idle Time</entry>
+      <entry>Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+       connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
+        property.<p>Default is 0.</p></entry>
+     </row>
+       <row id="MongoDB_MaxConnLifetime_row">
+      <entry>Max Connection Lifetime</entry>
+      <entry>Maximum time in milliseconds that a pooled connection can be active. When a pooled
+       connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
+        property.<p>Default is 0.</p></entry>
+     </row>
+       <row id="MongoDB_MaxWaitTime_row">
+      <entry>Max Wait Time</entry>
+      <entry>Maximum time in milliseconds that a thread can wait for a connection to become
+       available. Use 0 to opt out of this property. Use a negative value to wait
+        indefinitely.<p>Default is 120,000.</p></entry>
+     </row>
+       <row id="MongoDB_ServerTimeout_row">
+      <entry>Server Selection Timeout</entry>
+      <entry>Maximum time in milliseconds that <ph
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> waits for a server selection
+       before throwing an exception. If you use 0, an exception is thrown immediately if no server
+       is available. Use a negative value to wait indefinitely.<p>Default is 30,000.</p></entry>
+     </row>
+       <row id="MongoDB_ThreadsAllowed_row">
+      <entry>Threads Allowed to Block for Connection Multiplier</entry>
+      <entry>Multiplier that determines the maximum number of threads that can wait for a connection
+       to become available from the pool. This number multiplied by the Connections Per Host value
+       determines the maximum number of threads.<p>Default is 5.</p></entry>
+     </row>
+       <row id="MongoDB_Heartbeat_row">
+      <entry>Heartbeat Frequency</entry>
+      <entry>The frequency in milliseconds at which <ph
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> attempts to determine the
+       current state of each server in the cluster.<p>Default is 10,000.</p></entry>
+     </row>
+       <row id="MongoDB_MinHeartbeat_row">
+      <entry>Min Heartbeat Frequency</entry>
+      <entry>Minimum heartbeat frequency in milliseconds. <ph
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> waits at least this long
+       before checking the state of each server.<p>Default is 500.</p></entry>
+     </row>
+       <row id="MongoDB_HeartbeatConn_row">
+      <entry>Heartbeat Connection Timeout</entry>
+      <entry>Maximum time in milliseconds to wait for a connection used for the cluster
+        heartbeat.<p>Default is 20,000.</p></entry>
+     </row>
+       <row id="MongoDB_HeartbeatSocket_row">
+      <entry>Heartbeat Socket Timeout</entry>
+      <entry>Maximum time in milliseconds for a socket timeout for connections used for the cluster
+        heartbeat.<p>Default is 20,000.</p></entry>
+     </row>
+       <row id="MongoDB_LocalThreshold_row">
+      <entry>Local Threshold</entry>
+      <entry>Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+       than or equal to the server with the fastest ping time plus the local threshold
+        value.<p>Default is 15.</p></entry>
+     </row>
+       <row id="MongoDB_Replica_row">
+      <entry>Required Replica Set Name</entry>
+      <entry>Required replica set name to use for the cluster.</entry>
+     </row>
+       <row id="MongoDB_Cursor_row">
+      <entry>Cursor Finalizer Enabled</entry>
+      <entry>Specifies whether to enable cursor finalizers.</entry>
+     </row>
+       <row id="MongoDB_SocketKeepAlive_row">
+      <entry>Socket Keep Alive</entry>
+      <entry>Specifies whether to enable socket keep alive. </entry>
+     </row>
+       <row id="MongoDB_SocketTimeout_row">
+      <entry>Socket Timeout</entry>
+      <entry>Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+        property.<p>Default is 0.</p></entry>
+     </row>
+       <row id="MongoDB_SSLInvalid_row">
+      <entry>SSL Invalid Host Name Allowed</entry>
+      <entry>Specifies whether invalid host names are allowed in SSL certificates.</entry>
+     </row>
+      </tbody>
+     </tgroup>
+    </table>
  </conbody>
 </concept>

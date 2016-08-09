@@ -68,6 +68,113 @@
                     </table>
                 </info>
             </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MongoDB_Credentials_step">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>Optionally, click the <uicontrol>Advanced</uicontrol> tab to configure how the
+                    destination connects to MongoDB.</cmd>
+                <info>
+                    <p>The defaults for these properties should work in most cases:<table
+                            frame="all" rowsep="1" colsep="1" id="table_ekt_wk2_ww">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                <colspec colname="c2" colnum="2" colwidth="1.94*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Advanced Property</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_Connections_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_MinConnections_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_ConnectionTimeout_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_MaxConnIdleTime_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_MaxConnLifetime_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_MaxWaitTime_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_ServerTimeout_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_ThreadsAllowed_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_Heartbeat_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_MinHeartbeat_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_HeartbeatConn_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_HeartbeatSocket_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_LocalThreshold_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_Replica_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_Cursor_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_SocketKeepAlive_row">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_SocketTimeout_row">
+                                        <entry/>
+                                    </row>
+                                    <row>
+                                        <entry>SSL Enabled</entry>
+                                        <entry>Enables SSL between <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> and MongoDB.<p>You also must define the truststore
+                                                file and password in the SDC_JAVA_OPTS environment
+                                                variable, as described in <xref
+                                                  href="MongoDB-EnableSSL.dita#task_d5l_qh2_ww"
+                                                />.</p></entry>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MongoDB_SSLInvalid_row">
+                                        <entry/>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table></p>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>
