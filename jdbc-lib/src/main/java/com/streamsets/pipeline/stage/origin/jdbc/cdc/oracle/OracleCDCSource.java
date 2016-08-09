@@ -60,6 +60,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_02;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_04;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
@@ -223,7 +225,7 @@ public class OracleCDCSource extends BaseSource {
     return nextOffset;
   }
 
-  private boolean startLogMiner(String lastSourceOffset, BigDecimal endingSCN) throws SQLException {
+  private boolean startLogMiner(String lastSourceOffset, BigDecimal endingSCN) throws SQLException, StageException {
     String startString;
     String endingSCNStr = endingSCN.toPlainString();
     if (StringUtils.isEmpty(lastSourceOffset)) {
@@ -396,7 +398,7 @@ public class OracleCDCSource extends BaseSource {
     return formattedTablesBuilder.toString();
   }
 
-  private String getInitialString() throws SQLException {
+  private String getInitialString() throws SQLException, StageException {
     switch(configBean.startValue) {
       case DATE:
         try (Statement s = connection.createStatement()) {
@@ -412,17 +414,19 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private BigDecimal getEndingSCN() {
-    BigDecimal scn = null;
+  private BigDecimal getEndingSCN() throws StageException {
     try (ResultSet rs = getLatestSCN.executeQuery()) {
-      if (rs.next()) {
-        scn = rs.getBigDecimal(1);
-        LOG.info("Current latest SCN is: " + scn.toPlainString());
+      if(!rs.next()) {
+        throw new StageException(JDBC_04, CURRENT_SCN);
       }
+
+      BigDecimal scn = rs.getBigDecimal(1);
+      LOG.info("Current latest SCN is: " + scn.toPlainString());
+      return scn;
     } catch (SQLException ex) {
-      LOG.error("Error while getting initial SCN", ex);
+      LOG.error("Error while getting ending SCN", ex);
+      throw new StageException(JDBC_02, CURRENT_SCN, ex.getMessage(), ex);
     }
-    return scn;
   }
 
   private void validateTablePresence(Statement statement, List<String> tables, List<ConfigIssue> issues) {
