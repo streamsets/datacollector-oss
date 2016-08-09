@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
+import com.google.common.annotations.VisibleForTesting;
 import plsql.plsqlBaseListener;
 import plsql.plsqlParser;
 
@@ -82,12 +83,14 @@ public class SQLListener extends plsqlBaseListener {
     }
   }
 
-  private String format(String columnName) {
+  @VisibleForTesting
+  public String format(String columnName) {
     int stripCount;
-    if (columnName.startsWith("\"") || columnName.startsWith("\'")) {
-      stripCount = 1;
-    } else if (columnName.startsWith("\"\'")) {
+
+    if (columnName.startsWith("\"\'")) {
       stripCount = 2;
+    } else if (columnName.startsWith("\"") || columnName.startsWith("\'")) {
+      stripCount = 1;
     } else {
       return columnName;
     }

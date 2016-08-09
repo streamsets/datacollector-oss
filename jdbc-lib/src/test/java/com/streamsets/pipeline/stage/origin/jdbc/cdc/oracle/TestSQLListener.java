@@ -136,4 +136,13 @@ public class TestSQLListener {
     Assert.assertEquals(expected, sqlListener.getColumns());
   }
 
+  @Test
+  public void testFormat() {
+    SQLListener listener = new SQLListener();
+
+    Assert.assertEquals("Mithrandir", listener.format("Mithrandir"));
+    Assert.assertEquals("Greyhame", listener.format("\'Greyhame\'"));
+    Assert.assertEquals("Stormcrow", listener.format("\"Stormcrow\""));
+    Assert.assertEquals("Lathspell", listener.format("\"\'Lathspell\'\""));
+  }
 }
