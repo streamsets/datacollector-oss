@@ -62,7 +62,7 @@
     <surefire.version>2.19.1</surefire.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
-    <testcontainers.version>1.0.5</testcontainers.version>
+    <testcontainers.version>1.1.3</testcontainers.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
