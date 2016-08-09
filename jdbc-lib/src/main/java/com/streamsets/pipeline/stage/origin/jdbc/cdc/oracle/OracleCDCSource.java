@@ -487,20 +487,37 @@ public class OracleCDCSource extends BaseSource {
 
   @Override
   public void destroy() {
+    // Close all statements
+    closeStatements(dateStatement, endLogMnr, startLogMnr, selectChanges, getLatestSCN);
+
+    // Connection if it exists
     try {
       if (connection != null) {
-        dateStatement.close();
-        endLogMnr.close();
-        startLogMnr.close();
-        selectChanges.close();
-        getLatestSCN.close();
         connection.close();
-      }
-      if (dataSource != null) {
-        dataSource.close();
       }
     } catch (SQLException ex) {
       LOG.warn("Error while closing connection to database", ex);
+    }
+
+    // And finally the hiraki data source
+    if(dataSource != null) {
+      dataSource.close();
+    }
+  }
+
+  private void closeStatements(Statement ...statements) {
+    if(statements == null) {
+      return;
+    }
+
+    for(Statement stmt : statements) {
+      try {
+        if(stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e) {
+        LOG.warn("Error while closing connection to database", e);
+      }
     }
   }
 
