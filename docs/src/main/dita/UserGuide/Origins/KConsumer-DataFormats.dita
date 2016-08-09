@@ -29,11 +29,9 @@
         <dt/>
         <dd/>
       </dlentry>
-      <dlentry>
-        <dt>Datagram</dt>
-        <dd>Generates a record for every message. You can use the following datagram format types:
-          collectd, NetFlow, or syslog. <draft-comment author="Loretta">do we need to say anything
-            else about how this works? </draft-comment></dd>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-DF-Datagram">
+        <dt/>
+        <dd/>
       </dlentry>
       <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
         <dt/>

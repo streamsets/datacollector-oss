@@ -56,9 +56,7 @@
                                 </row>
                                 <row>
                                     <entry>Log Format</entry>
-                                    <entry>Format of log data. Use one of the following
-                                            formats:<draft-comment author="Loretta">this is in
-                                            reusable steps, not phrases.</draft-comment><ul
+                                    <entry>Format of log data. Use one of the following formats:<ul
                                             conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ul-LogFormatList"
                                             id="ul_ith_4rw_fs">
                                             <li/>
@@ -69,8 +67,9 @@
                     </table>
                 </info>
                 <info>
-                    <draft-comment author="Loretta">copied from reusable steps.  Everything except
-                        the Log4j table/bullet point is copied from there.</draft-comment>
+                    <draft-comment author="Loretta">copied from reusable steps. Everything except
+                        the Log4j table/bullet point is copied from there. </draft-comment>
+                    <draft-comment author="Loretta">LC gotta fix these now!</draft-comment>
                     <ul>
                         <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
                             use Apache log format strings to define the <uicontrol>Custom Log

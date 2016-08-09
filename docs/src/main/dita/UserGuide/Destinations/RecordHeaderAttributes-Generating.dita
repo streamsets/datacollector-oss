@@ -90,11 +90,7 @@
                         following details: <ul id="ul_a23_hnc_pw">
                             <li>Use any name for the attribute and specify the attribute name in the
                                 destination. </li>
-                            <li>Configure an expression that defines when to roll
-                                    files.<draft-comment author="Loretta">Tech review: Do we want to
-                                    say something like: Typically you want to roll files when … (the
-                                    schema changes? something else? )  And do we want to offer a
-                                    example of an expression that could work? </draft-comment></li>
+                            <li>Configure an expression that defines when to roll files.</li>
                         </ul></dd>
                 </dlentry>
             </dl></p>

@@ -173,8 +173,7 @@
                                         realm.properties file to define user accounts. The
                                         realm.properties files are located in the
                                             <codeph>$SDC_CONF</codeph> directory.</p><p>Default is
-                                        form. <draft-comment author="Loretta">Not mentioning dpm
-                                            until they add it. </draft-comment></p></entry>
+                                        form. </p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication.login.module</entry>
@@ -366,7 +365,7 @@
                                         /> configuration in the listed order. If the same
                                         configuration property is defined in multiple files, the
                                         value defined in the last loaded file takes precedence.
-                                        </p><draft-comment author="alisontaylor">Not mentioning dpm
+                                        </p><draft-comment author="alisontaylor">Not mentioning v2
                                         until they add it.</draft-comment></entry>
                             </row>
                             <row>

@@ -19,14 +19,14 @@
         <context>
             <p><indexterm>Kudu
                         destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kudu</indexterm></indexterm>Configure
-                a Kudu destination to write to a Kudu cluster.<draft-comment author="Loretta">Doc:
-                    after 1.3.0.0 see if Stage Library comes up on this tab - first version of the
-                    release, no stage library option. </draft-comment></p>
+                a Kudu destination to write to a Kudu cluster.</p>
         </context>
         <steps>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
                 <cmd/>
             </step>
+            
             <step>
                 <cmd>On the <wintitle>Kudu</wintitle> tab, configure the following properties:</cmd>
                 <info>

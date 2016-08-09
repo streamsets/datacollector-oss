@@ -258,6 +258,19 @@
                   </dl>
             </p>
             <p>
+                  <draft-comment author="Loretta">O-DF-Datagram - Kafka Consumer only at this
+                        point.</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="O-DF-Datagram">
+                              <dt>Datagram</dt>
+                              <dd>Generates a record for every message. You can use the following
+                                    datagram format types: collectd, NetFlow, or syslog. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta"> - from Directory. DLEntries are conrefed by all
                         origins except HTTP Client. <note> Content for JSON, Text, and HTML copied
                               to HTTP Client and altered. When making changes here, check there as
@@ -1219,9 +1232,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Expression Language chapter.</draft-comment>
             <p id="FunctionArgument">You can replace any argument with a literal or an expression
                   that evaluates to the argument. String literals must be enclosed in single or
-                  double quotation marks.<draft-comment author="alisontaylor">AWS Credentials for
-                        destinations: Amazon S3, Kinesis Firehose, and Kinesis
-                        Producer</draft-comment></p>
+                  double quotation marks.</p>
+            <p>
+                  <draft-comment author="alisontaylor">AWS Credentials for destinations: Amazon S3,
+                        Kinesis Firehose, and Kinesis Producer</draft-comment>
+            </p>
             <dl id="AWSCredentials-Destinations">
                   <dlentry>
                         <dt>IAM roles</dt>
