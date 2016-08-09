@@ -101,6 +101,7 @@ angular
       customStageMeters: undefined,
       customStageTimers: undefined,
       customStageHistograms: undefined,
+      customStageGauges: undefined,
 
       getDurationLabel: function(key) {
         switch(key) {
@@ -360,6 +361,23 @@ angular
             });
           }
 
+          // Custom Gauges
+          if ($scope.customStageGauges === undefined) {
+            $scope.customStageGauges = [];
+            angular.forEach(pipelineMetrics.gauges, function(gaugeObj, gaugeKey) {
+              if (gaugeKey.indexOf('custom.' + currentSelection.instanceName) !== -1) {
+                var label = gaugeKey
+                  .replace('custom.' + currentSelection.instanceName + '.', '')
+                  .replace('.gauge', '')
+                  .replace(/([A-Z])/g, ' $1')
+                  .replace(/^./, function(str){ return str.toUpperCase(); });
+                $scope.customStageGauges.push({
+                  gaugeKey: gaugeKey,
+                  label: label
+                });
+              }
+            });
+          }
         } else {
           $scope.summaryMeters = {
             batchCount:
@@ -375,7 +393,6 @@ angular
           };
         }
       }
-
 
       //timers
       if(pipelineMetrics.timers) {
@@ -398,6 +415,7 @@ angular
         $scope.customStageMeters = undefined;
         $scope.customStageTimers = undefined;
         $scope.customStageHistograms = undefined;
+        $scope.customStageGauges = undefined;
         updateSummaryData();
       }
     });

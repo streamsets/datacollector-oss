@@ -81,6 +81,24 @@
     </div>
   </div>
 
+  <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageGauges">
+  <div class="col-sm-4" ng-repeat="customStageGauge in customStageGauges">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span>{{customStageGauge.label}}</span>
+      </div>
+      <div class="panel-body">
+        <ul class="table-properties">
+          <li ng-repeat= "(propertyKey, propertyValue) in common.pipelineMetrics.gauges[customStageGauge.gaugeKey].value">
+            <span class="properties-label">{{propertyKey}}: </span>
+            <span class="properties-value">{{propertyValue}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div>
+
   <div class="chartPanels" ng-if="summaryDataLoaded">
     <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList" src="chart.templateId">
     </ng-include>
