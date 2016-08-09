@@ -27,6 +27,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
+import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -109,6 +110,22 @@ public class AsyncRunner implements Runner, PipelineInfo {
       @Override
       public Object call() throws PipelineException {
         runner.stop();
+        return null;
+      }
+    };
+    runnerExecutor.submit(callable);
+  }
+
+  @Override
+  public void forceQuit() throws PipelineException {
+    if (getState().getStatus() != PipelineStatus.STOPPING){
+      // Should not call force quit when pipeline is not stopping. No-op
+      return;
+    }
+    Callable<Object> callable = new Callable<Object>() {
+      @Override
+      public Object call() throws PipelineException {
+        runner.forceQuit();
         return null;
       }
     };

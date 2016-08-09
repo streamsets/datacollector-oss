@@ -43,7 +43,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private volatile Thread runningThread;
   private volatile boolean nodeProcessShutdown;
   private final List<Future<?>> relatedTasks;
-  private volatile boolean isStopped;
+  private volatile boolean isStopped = false;
   private final CountDownLatch countDownLatch;
 
   public ProductionPipelineRunnable(ThreadHealthReporter threadHealthReporter,
@@ -80,36 +80,12 @@ public class ProductionPipelineRunnable implements Runnable {
       } finally {
         // set state to error
         runningThread = null;
-        //signal observer thread [which shares this object] to stop
-        for (Future<?> task : relatedTasks) {
-          LOG.info("Cancelling task " + task);
-          task.cancel(true);
-        }
-      }
-
-      //Update pipeline state accordingly
-      if (pipeline.wasStopped()) {
-        try {
-          if (this.nodeProcessShutdown) {
-            LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.DISCONNECTED);
-              pipeline.getStatusListener().stateChanged(PipelineStatus.DISCONNECTED, Utils.format("The pipeline was stopped "
-                + "because the node process was shutdown. " +
-                "The last committed source offset is {}.", pipeline.getCommittedOffset(), runner.getMetrics()), null);
-          } else {
-            LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.STOPPED);
-            pipeline.getStatusListener().stateChanged(PipelineStatus.STOPPED,
-              Utils.format("The pipeline was stopped. The last committed source offset is {}."
-                , pipeline.getCommittedOffset()), null);
-          }
-        } catch (PipelineException e) {
-          LOG.error("An exception occurred while trying to transition pipeline state, {}", e.toString(), e);
-        }
+        cancelTask();
       }
     } finally {
-      Thread.currentThread().setName(originalThreadName);
+      postStop();
       countDownLatch.countDown();
     }
-
   }
 
   public void stop(boolean nodeProcessShutdown) throws PipelineException {
@@ -129,12 +105,70 @@ public class ProductionPipelineRunnable implements Runnable {
     } catch (InterruptedException e) {
       LOG.info("Thread interrupted: {}", e.toString(), e);
     }
+
     if (!isDone) {
-      LOG.warn("Pipeline is not done yet");
+      // Comes here only when thread interrupt doesn't work due to non-interruptable issue
+      // (i.e. scripting processor has sleep, infinite loop, etc) and user waited until timeout.
+      // However this thread is still running
+      LOG.warn("Pipeline waited for 5 minutes and is terminating");
+      synchronized (relatedTasks){
+        if (runningThread != null) {
+          runningThread = null;
+          cancelTask();
+          postStop();
+        }
+      }
     } else {
+      // Comes here when thread is interrupted and run() did post-stop process, or
+      // when pipeline is stopped by force quit.
       LOG.info("Pipeline is in terminal state");
     }
+  }
 
+  /**
+   * This function is called while thread is waiting at countDownLatch.await in stop().
+   * It cancels tasks, change pipeline state and call countDown(), so that the waiting thread
+   * can proceed to terminate.
+   */
+  public void forceQuit() {
+    synchronized (relatedTasks){
+      if (runningThread != null) {
+        runningThread = null;
+        cancelTask();
+        postStop();
+      }
+    }
+    countDownLatch.countDown();
+  }
+
+  private void cancelTask(){
+    //signal observer thread [which shares this object] to stop
+    for (Future<?> task : relatedTasks) {
+      LOG.debug("Cancelling task " + task);
+      task.cancel(true);
+    }
+  }
+
+  private void postStop() {
+    Thread.currentThread().setName(Thread.currentThread().getName());
+    //Update pipeline state accordingly
+    if (pipeline.wasStopped()) {
+      try {
+        if (this.nodeProcessShutdown) {
+          LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.DISCONNECTED);
+          pipeline.getStatusListener().stateChanged(PipelineStatus.DISCONNECTED, Utils.format("The pipeline was stopped "
+              + "because the node process was shutdown. " +
+              "The last committed source offset is {}.", pipeline.getCommittedOffset(), runner.getMetrics()), null);
+        } else {
+          LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.STOPPED);
+          pipeline.getStatusListener().stateChanged(PipelineStatus.STOPPED,
+              Utils.format("The pipeline was stopped. The last committed source offset is {}."
+                  , pipeline.getCommittedOffset()), null);
+        }
+      } catch (PipelineException e) {
+        LOG.error("An exception occurred while trying to transition pipeline state, {}", e.toString(), e);
+      }
+    }
   }
 
   public String getRev() {

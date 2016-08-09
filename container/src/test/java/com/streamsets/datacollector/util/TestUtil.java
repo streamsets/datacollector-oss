@@ -231,6 +231,37 @@ public class TestUtil {
     });
   }
 
+  public static void captureMockStagesLongWait() {
+    MockStages.setSourceCapture(new BaseSource() {
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        Record record = getContext().createRecord("x");
+        record.set(Field.create(1));
+        batchMaker.addRecord(record);
+        return "1";
+      }
+    });
+
+    MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
+      @Override
+      protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
+        record.set(Field.create(2));
+        try {
+          Thread.sleep(1000000);
+        } catch (InterruptedException e) {
+          // No-op
+        }
+        batchMaker.addRecord(record);
+      }
+    });
+
+    MockStages.setTargetCapture(new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws StageException {
+      }
+    });
+  }
+
   /********************************************/
   /*************** Providers for Dagger *******/
   /********************************************/

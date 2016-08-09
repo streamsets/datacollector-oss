@@ -313,6 +313,11 @@ public class ClusterRunner extends AbstractRunner {
     stopPipeline(false);
   }
 
+  @Override
+  public synchronized void forceQuit() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+    throw new UnsupportedOperationException("ForceQuit is not supported in Cluster mode");
+  }
+
   private synchronized void stopPipeline(boolean isNodeShuttingDown) throws PipelineStoreException,
     PipelineRunnerException, PipelineRuntimeException {
     try {

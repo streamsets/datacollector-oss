@@ -116,6 +116,12 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public void forceQuit() throws PipelineException {
+    throw new UnsupportedOperationException("ForceQuit is not supported in Slave Standalone mode");
+  }
+
+
+  @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
     // no need for clear since slaves never run more than one pipeline
     MDC.put(LogConstants.USER, getUser());

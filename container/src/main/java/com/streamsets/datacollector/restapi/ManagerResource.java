@@ -193,6 +193,34 @@ public class ManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
 
+  @Path("/pipeline/{pipelineName}/forceQuit")
+  @POST
+  @ApiOperation(value = "Force Quit Pipeline", response = PipelineStateJson.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response forceQuitPipeline(
+      @PathParam("pipelineName") String pipelineName,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @Context SecurityContext context) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    if (manager.isRemotePipeline(pipelineName, rev)) {
+      if (!context.isUserInRole(AuthzRole.ADMIN) && !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+        throw new PipelineException(ContainerError.CONTAINER_01101, "FORCE_QUIT_PIPELINE", pipelineName);
+      }
+    }
+    Runner runner = manager.getRunner(user, pipelineName, rev);
+    Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
+        Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
+    runner.forceQuit();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+  }
+
   @Path("/pipeline/{pipelineName}/resetOffset")
   @POST
   @ApiOperation(value = "Reset Origin Offset", authorizations = @Authorization(value = "basic"))

@@ -341,6 +341,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
+  public void forceQuit() throws PipelineException {
+    LOG.debug("Force Quit the pipeline '{}'::'{}'", name,  rev);
+    if (pipelineRunnable != null && pipelineRunnable.isStopped() && getState().getStatus() == PipelineStatus.STOPPING ) {
+      pipelineRunnable.forceQuit();
+    }
+  }
+
+  @Override
   public Object getMetrics() throws PipelineStoreException {
     if (prodPipeline != null) {
       Object metrics = prodPipeline.getPipeline().getRunner().getMetrics();

@@ -286,6 +286,11 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public void forceQuit() throws PipelineException {
+      // No-op
+    }
+
+    @Override
     public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 

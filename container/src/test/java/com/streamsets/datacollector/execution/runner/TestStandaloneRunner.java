@@ -355,6 +355,18 @@ public class TestStandaloneRunner {
     await().until(desiredPipelineState(runner, pipelineStatus));
   }
 
+  @Test(timeout = 20000)
+  public void testPipelineStopTimeout() throws Exception {
+    TestUtil.captureMockStagesLongWait();
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner.start();
+    waitForState(runner, PipelineStatus.RUNNING);
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().forceQuit();
+    waitForState(runner, PipelineStatus.STOPPED);
+  }
+
   @Test
   public void testSnapshot() throws Exception {
     Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
