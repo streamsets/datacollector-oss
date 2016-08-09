@@ -55,35 +55,37 @@
          All dependency versions should be defined here to avoid version
          mismatches with multiple artifacts of the same logical dependency.
     -->
-    <guava.version>18.0</guava.version>
-    <dagger.version>1.2.2</dagger.version>
-    <jackson.version>2.4.3</jackson.version>
-    <jersey.version>2.22.2</jersey.version>
-    <hk2-api.version>2.4.0-b34</hk2-api.version>
-    <jaxrpc.version>2.0.1</jaxrpc.version>
-    <servlet.version>3.1.0</servlet.version>
-    <jetty.version>9.2.17.v20160517</jetty.version>
-    <javassist.version>3.19.0-GA</javassist.version>
-    <commons-codec.version>1.10</commons-codec.version>
-    <commons-io.version>2.4</commons-io.version>
-    <commons-cli.version>1.2</commons-cli.version>
-    <commons-configuration.version>2.0</commons-configuration.version>
+    <airlift.version>0.7</airlift.version>
     <commons-beanutils.version>1.9.2</commons-beanutils.version>
-    <jps-api.version>2.0</jps-api.version>
-    <commons-el.version>1.0</commons-el.version>
-    <javax.inject.version>1</javax.inject.version>
+    <commons-cli.version>1.2</commons-cli.version>
+    <commons-codec.version>1.10</commons-codec.version>
+    <commons-configuration.version>2.0</commons-configuration.version>
     <commons-csv.version>1.1</commons-csv.version>
-    <javax.mail.version>1.4.7</javax.mail.version>
+    <commons-el.version>1.0</commons-el.version>
+    <commons-io.version>2.4</commons-io.version>
+    <commons-pool.version>2.4.1</commons-pool.version>
+    <dagger.version>1.2.2</dagger.version>
+    <google.http.version>1.22.0</google.http.version>
+    <guava.version>18.0</guava.version>
+    <hk2-api.version>2.4.0-b34</hk2-api.version>
+    <httpclient.version>4.5.2</httpclient.version>
     <icegreen.version>1.4.0</icegreen.version>
-    <kryo.version>3.0.1</kryo.version>
+    <jackson.version>2.4.3</jackson.version>
+    <javassist.version>3.19.0-GA</javassist.version>
+    <javax.inject.version>1</javax.inject.version>
+    <javax.mail.version>1.4.7</javax.mail.version>
+    <jaxrpc.version>2.0.1</jaxrpc.version>
+    <jersey.version>2.22.2</jersey.version>
+    <jetty.version>9.2.17.v20160517</jetty.version>
+    <jodatime.version>2.3</jodatime.version>
+    <jps-api.version>2.0</jps-api.version>
     <jtar.version>2.2</jtar.version>
+    <kryo.version>3.0.1</kryo.version>
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
-    <swagger.version>1.5.3</swagger.version>
-    <commons-pool.version>2.4.1</commons-pool.version>
-    <jodatime.version>2.3</jodatime.version>
-    <airlift.version>0.7</airlift.version>
     <selma.version>0.13</selma.version>
+    <servlet.version>3.1.0</servlet.version>
+    <swagger.version>1.5.3</swagger.version>
   </properties>
 
   <dependencyManagement>
