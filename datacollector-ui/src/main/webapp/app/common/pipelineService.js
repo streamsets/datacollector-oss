@@ -691,7 +691,12 @@ angular.module('dataCollectorApp.common')
           if (stageInstance.instanceName.indexOf(stageName) !== -1) {
             var instanceNameArr = stageInstance.instanceName.split('_');
             if (!isNaN(instanceNameArr[instanceNameArr.length - 1])) {
-              similarStageInstancesNumber.push(instanceNameArr[instanceNameArr.length - 1]);
+              var stageNumber = instanceNameArr[instanceNameArr.length - 1];
+              if (stageNumber !== undefined && stageNumber.length > 1) {
+                similarStageInstancesNumber.push(stageNumber);
+              } else {
+                similarStageInstancesNumber.push('0' + stageNumber);
+              }
             }
           }
         });
