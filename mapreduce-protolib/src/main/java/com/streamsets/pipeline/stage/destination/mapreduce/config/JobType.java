@@ -20,9 +20,11 @@
 package com.streamsets.pipeline.stage.destination.mapreduce.config;
 
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConvertCreator;
 
 public enum JobType implements Label {
   CUSTOM("Custom", ""),
+  AVRO_PARQUET("Convert Avro to Parquet", AvroParquetConvertCreator.class.getCanonicalName()),
   ;
 
   private final String klass;

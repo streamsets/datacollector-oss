@@ -46,38 +46,13 @@ import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.UUID;
 
-public class MapreduceExecutorIT {
-  @Rule public TestName testName = new TestName();
-
-  private static String baseDir = "target/test-data/mapreduce-executor-" + UUID.randomUUID().toString();
-  private static String confDir = baseDir + "/conf/";
-  private String inputDir;
-  private String outputDir;
-
-  @BeforeClass
-  public static void setUpClass() throws Exception {
-    // Recreate working directories
-    FileUtils.deleteQuietly(new File(baseDir));
-    new File(confDir).mkdirs();
-
-    // We're using LocalJobRunner for the tests, so we just create default files on disk to pass validations
-    for(String configFile : ImmutableList.of("core-site.xml", "yarn-site.xml", "mapred-site.xml")) {
-      writeConfiguration(new Configuration(), new File(confDir, configFile));
-    }
-  }
-
-  @Before
-  public void setUp() throws Exception {
-    inputDir = baseDir + "/" + testName + "/input/";
-    outputDir = baseDir + "/" + testName + "/output/";
-
-    new File(inputDir).mkdirs();
-  }
-
+public class MapReduceExecutorIT extends BaseMapReduceIT {
 
   @Test
   public void testSimpleJobExecutionThatFails() throws Exception{
     MapReduceExecutor executor = generateExecutor(ImmutableMap.<String, String>builder()
+      .put("mapreduce.job.inputformat.class", SimpleTestInputFormat.class.getCanonicalName())
+      .put("mapreduce.output.fileoutputformat.outputdir", getOutputDir())
       .put(SimpleTestInputFormat.THROW_EXCEPTION, "true")
     .build());
 
@@ -100,8 +75,10 @@ public class MapreduceExecutorIT {
 
   @Test
   public void testSimpleJobExecution() throws Exception{
-    File validationFile = new File(inputDir, "created");
+    File validationFile = new File(getInputDir(), "created");
     MapReduceExecutor executor = generateExecutor(ImmutableMap.<String, String>builder()
+      .put("mapreduce.job.inputformat.class", SimpleTestInputFormat.class.getCanonicalName())
+      .put("mapreduce.output.fileoutputformat.outputdir", getOutputDir())
       .put(SimpleTestInputFormat.FILE_LOCATION, validationFile.getAbsolutePath())
       .put(SimpleTestInputFormat.FILE_VALUE, "secret")
     .build());
@@ -133,8 +110,10 @@ public class MapreduceExecutorIT {
 
   @Test
   public void testSimpleJobExecutionEvaluateExpression() throws Exception{
-    File validationFile = new File(inputDir, "created");
+    File validationFile = new File(getInputDir(), "created");
     MapReduceExecutor executor = generateExecutor(ImmutableMap.<String, String>builder()
+      .put("mapreduce.job.inputformat.class", SimpleTestInputFormat.class.getCanonicalName())
+      .put("mapreduce.output.fileoutputformat.outputdir", getOutputDir())
       .put(SimpleTestInputFormat.FILE_LOCATION, validationFile.getAbsolutePath())
       .put(SimpleTestInputFormat.FILE_VALUE, "${record:value('/key')}")
     .build());
@@ -163,30 +142,4 @@ public class MapreduceExecutorIT {
 
     runner.runDestroy();
   }
-
-  private MapReduceExecutor generateExecutor(Map<String, String> jobConfigs) {
-    MapReduceConfig mapReduceConfig = new MapReduceConfig();
-    mapReduceConfig.mapReduceConfDir = confDir;
-    mapReduceConfig.mapreduceConfigs = ImmutableMap.<String, String>builder()
-      .put("mapreduce.job.inputformat.class", SimpleTestInputFormat.class.getCanonicalName())
-      .put("mapreduce.output.fileoutputformat.outputdir", outputDir)
-      .build();
-    mapReduceConfig.mapreduceUser = "";
-    mapReduceConfig.kerberos = false;
-
-    JobConfig jobConfig = new JobConfig();
-    jobConfig.jobType = JobType.CUSTOM;
-    jobConfig.customJobCreator = SimpleJobCreator.class.getCanonicalName();
-    jobConfig.jobConfigs = jobConfigs;
-    jobConfig.jobName = "SDC Test Job";
-
-    return new MapReduceExecutor(mapReduceConfig, jobConfig);
-  }
-
-  private static void writeConfiguration(Configuration conf, File outputFile) throws Exception {
-    FileOutputStream outputStream = new FileOutputStream(outputFile);
-    conf.writeXml(outputStream);
-    outputStream.close();
-  }
-
 }

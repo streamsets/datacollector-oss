@@ -17,26 +17,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.mapreduce;
+package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+public class AvroParquetConstants {
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  MAPREDUCE("MapReduce"),
-  JOB("Job"),
-  AVRO_PARQUET("Avro to Parquet"),
+  /**
+   * Full path to input avro file that needs to be converted.
+   */
+  public final static String INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".input";
 
-  ;
+  /**
+   * Directory into which the converted parquet file should be stored.
+   */
+  public final static String OUTPUT_DIR = AvroParquetConstants.class.getCanonicalName() + ".output";
 
-  private final String label;
-  Groups(String label) {
-    this.label = label;
-  }
+  /**
+   * Whether or not to keep input file after the conversion is done.
+   */
+  public final static String KEEP_INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".keep_input_file";
 
-  @Override
-  public String getLabel() {
-    return label;
-  }
 }

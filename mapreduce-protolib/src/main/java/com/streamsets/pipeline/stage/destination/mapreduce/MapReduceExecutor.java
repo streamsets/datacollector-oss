@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -54,9 +56,13 @@ public class MapReduceExecutor extends BaseTarget {
   private final JobConfig jobConfig;
   private ErrorRecordHandler errorRecordHandler;
 
+  @VisibleForTesting
+  public boolean waitForCompletition;
+
   public MapReduceExecutor(MapReduceConfig mapReduceConfig, JobConfig jobConfig) {
     this.mapReduceConfig = mapReduceConfig;
     this.jobConfig = jobConfig;
+    this.waitForCompletition = false;
   }
 
   @Override
@@ -73,7 +79,9 @@ public class MapReduceExecutor extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {
     ELVars variables = getContext().createELVars();
-    ELEval eval = getContext().createELEval("jobConfigs");
+    ELEval jobConfigEval = getContext().createELEval("jobConfigs");
+    ELEval inputFileEval = getContext().createELEval("inputFile");
+    ELEval outputDirEval = getContext().createELEval("outputDirectory");
 
     Iterator<Record> it = batch.getRecords();
     while(it.hasNext()) {
@@ -85,10 +93,24 @@ public class MapReduceExecutor extends BaseTarget {
 
       // Evaluate all dynamic properties and store them in the configuration job
       for(Map.Entry<String, String> entry : jobConfig.jobConfigs.entrySet()) {
-        String key = eval.eval(variables, entry.getKey(), String.class);
-        String value = eval.eval(variables, entry.getValue(), String.class);
+        String key = jobConfigEval.eval(variables, entry.getKey(), String.class);
+        String value = jobConfigEval.eval(variables, entry.getValue(), String.class);
 
         jobConfiguration.set(key, value);
+      }
+
+      // For build-in job creators, evaluate their properties and persist them in the MR config
+      switch(jobConfig.jobType) {
+        case AVRO_PARQUET:
+          jobConfiguration.set(AvroParquetConstants.INPUT_FILE, inputFileEval.eval(variables, jobConfig.avroParquetConfig.inputFile, String.class));
+          jobConfiguration.set(AvroParquetConstants.OUTPUT_DIR, outputDirEval.eval(variables, jobConfig.avroParquetConfig.outputDirectory, String.class));
+          jobConfiguration.setBoolean(AvroParquetConstants.KEEP_INPUT_FILE, jobConfig.avroParquetConfig.keepInputFile);
+          break;
+        case CUSTOM:
+          // Nothing because custom is generic one that have no special config properties
+          break;
+        default:
+          throw new UnsupportedOperationException("Unsupported JobType: " + jobConfig.jobType);
       }
 
       try {
@@ -99,6 +121,11 @@ public class MapReduceExecutor extends BaseTarget {
             Callable<Job> jobCreator = ReflectionUtils.newInstance(jobConfig.getJobCreator(), jobConfiguration);
             Job job = jobCreator.call();
             job.submit();
+
+            // Blocking mode is only for testing
+            if(waitForCompletition) {
+              job.waitForCompletion(true);
+            }
 
             // And generate event with further job details
             EventRecord event = getContext().createEventRecord("job-created", 1);

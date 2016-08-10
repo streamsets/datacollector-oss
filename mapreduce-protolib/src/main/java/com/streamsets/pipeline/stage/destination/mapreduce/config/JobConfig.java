@@ -21,11 +21,13 @@ package com.streamsets.pipeline.stage.destination.mapreduce.config;
 
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.destination.mapreduce.Groups;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceErrors;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -81,6 +83,9 @@ public class JobConfig {
     elDefs = {RecordEL.class}
   )
   public Map<String, String> jobConfigs;
+
+  @ConfigDefBean
+  public AvroParquetConfig avroParquetConfig;
 
   private Class<Callable<Job>> jobCreator;
 
