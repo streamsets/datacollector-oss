@@ -76,6 +76,7 @@ import java.util.Map;
 public class AdminResource {
 
   private static final String APP_TOKEN_FILE = "application-token.txt";
+  private static final String APP_TOKEN_FILE_PROP_VAL = "@application-token.txt@";
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration config;
@@ -242,6 +243,7 @@ public class AdminResource {
 
       config.setProperty(RemoteSSOService.DPM_ENABLED, "true");
       config.setProperty(RemoteSSOService.DPM_BASE_URL_CONFIG, dpmBaseURL);
+      config.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, APP_TOKEN_FILE_PROP_VAL);
       if (dpmInfo.getLabels() != null && dpmInfo.getLabels().size() > 0) {
         config.setProperty(RemoteEventHandlerTask.REMOTE_JOB_LABELS, StringUtils.join(dpmInfo.getLabels(), ','));
       } else {

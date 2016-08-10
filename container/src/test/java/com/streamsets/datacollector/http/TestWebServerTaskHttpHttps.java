@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.testing.NetworkUtils;
@@ -96,6 +97,16 @@ public class TestWebServerTaskHttpHttps {
       @Override
       public String getConfigDir() {
         return confDir;
+      }
+
+      @Override
+      public String getId() {
+        return "sdcId";
+      }
+
+      @Override
+      public String getAppAuthToken() {
+        return "appAuthToken";
       }
     };
     runtimeInfo.setDPMEnabled(isDPMEnabled);
@@ -485,6 +496,8 @@ public class TestWebServerTaskHttpHttps {
   @Test
   public void testWebAppSSOServiceDelegation() throws Exception {
     final DummySSOService delegatedTo = new DummySSOService();
+    final Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "authToken");
     WebAppProvider webAppProvider = new WebAppProvider() {
       @Override
       public ServletContextHandler get() {
@@ -509,14 +522,13 @@ public class TestWebServerTaskHttpHttps {
 
       @Override
       public Configuration getAppConfiguration() {
-        return new Configuration();
+        return conf;
       }
 
       @Override
       public void postStart() {
       }
     };
-    Configuration conf = new Configuration();
     int httpPort = NetworkUtils.getRandomPort();
     conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
     final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider), true);
@@ -525,7 +537,12 @@ public class TestWebServerTaskHttpHttps {
       new Thread() {
         @Override
         public void run() {
-          ws.runTask();
+          try {
+            ws.runTask();
+          } catch (Exception ex) {
+            // Ignore Registration failure exception
+          }
+
         }
       }.start();
       waitForStart(ws);

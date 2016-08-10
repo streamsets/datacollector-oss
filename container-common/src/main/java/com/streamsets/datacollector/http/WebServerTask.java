@@ -405,30 +405,28 @@ public abstract class WebServerTask extends AbstractTask {
   private ConstraintSecurityHandler configureSSO(
       final Configuration appConf, ServletContextHandler appHandler, final String appContext
   ) {
+    final String componentId = getComponentId(appConf);
+    final String appToken = getAppAuthToken(appConf);
+    Utils.checkArgument(appToken != null && !appToken.trim().isEmpty(),
+        Utils.format("{} cannot be NULL or empty", RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG));
 
+    LOG.debug("Initializing RemoteSSOService");
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     SSOService ssoService = null;
-    if (appConf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null) != null) {
-      LOG.debug("Initializing RemoteSSOService");
-      final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
-
-      final String componentId = getComponentId(appConf);
-      final String appToken = getAppAuthToken(appConf);
-      remoteSsoService.setComponentId(componentId);
-      remoteSsoService.setApplicationAuthToken(appToken);
-      String appTokenForLogging = (appToken != null) ? (appToken + "..........").substring(0, 10) + "..." : null;
-      LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, appTokenForLogging);
-      addToPostStart(new Runnable() {
-        @Override
-        public void run() {
-          LOG.debug("Validating Application Token with SSO Remote Service");
-          remoteSsoService.register(getRegistrationAttributes());
-          runtimeInfo.setRemoteRegistrationStatus(true);
-        }
-      });
-      ssoService = remoteSsoService;
-    }
-    ssoService = new ProxySSOService(ssoService);
+    final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
+    remoteSsoService.setComponentId(componentId);
+    remoteSsoService.setApplicationAuthToken(appToken);
+    String appTokenForLogging = (appToken != null) ? (appToken + "..........").substring(0, 10) + "..." : null;
+    LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, appTokenForLogging);
+    addToPostStart(new Runnable() {
+      @Override
+      public void run() {
+        LOG.debug("Validating Application Token with SSO Remote Service");
+        remoteSsoService.register(getRegistrationAttributes());
+        runtimeInfo.setRemoteRegistrationStatus(true);
+      }
+    });
+    ssoService = new ProxySSOService(remoteSsoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
     security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, appConf));
     return security;
