@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can use the Hive Metadata processor, Hive Metastore destination, and Hadoop FS destination in any pipeline where the logic is appropriate. A basic implementation of the Hive Drift Solution ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Implementation"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Metadata/HiveDriftSolution_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zzs_fkg_2w"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Implementation</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can use the Hive Metadata processor, Hive Metastore destination for metadata processing, and Hadoop FS or MapR FS destination for data processing in any pipeline where the logic is appropriate. A ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Implementation"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Metadata/HiveDriftSolution_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zzs_fkg_2w"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Implementation</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -36,18 +36,21 @@
 
     <div class="body conbody">
         <p class="p">You
-            can use the Hive Metadata processor, Hive Metastore destination, and Hadoop FS
-            destination in any pipeline where the logic is appropriate.</p>
+            can use the Hive Metadata processor, Hive Metastore destination for metadata processing,
+            and Hadoop FS or MapR FS destination for data processing in any pipeline where the logic
+            is appropriate.</p>
 
-        <p class="p">A basic implementation of the Hive Drift Solution includes the origin of your choice, and
-            the Hive Metadata processor writing to the Hadoop FS and Hive Metastore destinations, as
-            follows:</p>
+        <p class="p">A basic implementation of the Hive Drift Solution includes the origin of your choice and
+            the Hive Metadata processor connected to the Hive Metastore destination and either the
+            Hadoop FS or MapR FS destinations, as follows:</p>
 
-        <p class="p"><img class="image" id="concept_zzs_fkg_2w__image_ys3_ztg_2w" src="../Graphics/HiveMeta-Pipeline.png" height="186" width="438"></img></p>
+        <p class="p"><img class="image" id="concept_zzs_fkg_2w__image_ys3_ztg_2w" src="../Graphics/HiveMeta-Pipeline.png" height="173" width="407"></img></p>
+
+        <p class="p"><img class="image" id="concept_zzs_fkg_2w__image_nrz_fdk_tw" src="../Graphics/HiveMeta-MapR-Pipeline.png" height="173" width="407"></img></p>
 
         <p class="p">The Hive Metadata processor passes records through the first output stream - the data
-            stream. Connect the data stream to the Hadoop FS destination to write data to HDFS using
-            record header attributes. </p>
+            stream. Connect the data stream to the Hadoop FS or MapR FS destination to write data to
+            the destination system using record header attributes. </p>
 
         <p class="p">The Hive Metadata processor passes the metadata record through the second output stream -
             the metadata output stream. Connect the Hive Metastore destination to the metadata

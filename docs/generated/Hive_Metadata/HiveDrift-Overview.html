@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody"><script>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_phk_bdf_2w"><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -31,20 +31,20 @@
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution">Hive Drift Solution</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </div></td></tr></tbody></table>
-<div class="nested0" id="concept_phk_bdf_2w">
+
     <h1 class="title topictitle1">Hive Drift Solution: Ingesting Drifting Data into Hive</h1>
 
     <div class="body conbody">
         <p class="p">The Hive Drift
             Solution detects drift in incoming data and updates corresponding Hive tables. The
             solution enables creating and updating Hive tables based on record requirements and
-            writing data to HDFS based on record header attributes. You can use the full
+            writing data to HDFS or MapR FS based on record header attributes. You can use the full
             functionality of the solution or individual pieces, as needed. </p>
 
-        <p class="p">The Hive Drift Solution supports writing only Avro data to HDFS at this time.</p>
+        <p class="p">The Hive Drift Solution supports only Avro data at this time.</p>
 
         <p class="p">The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
-            the Hadoop FS destination as follows:</p>
+            the Hadoop FS or MapR FS destination as follows:</p>
 
         <div class="p">
             <dl class="dl">
@@ -53,7 +53,8 @@
 
                     <dd class="dd">When processing records, the Hive Metadata processor detects columnar drift
                         and the need for new tables and partitions. It generates metadata records
-                        that describe the necessary changes. </dd>
+                        that describe the necessary changes and passes it to the Hive Metastore
+                        destination.</dd>
 
                     <dd class="dd">When the Hive Metastore destination receives a metadata record, it compares
                         the proposed changes with the latest Hive metadata, and creates and updates
@@ -67,28 +68,30 @@
                 
                     <dt class="dt dlterm">Record-based writes</dt>
 
-                    <dd class="dd">The Hive Metadata processor also adds the following information to the
-                        header of each record. The Hadoop FS destination writes data to HDFS based
-                        on these details: <ul class="ul" id="concept_phk_bdf_2w__ul_sn1_bjg_2w">
+                    <dd class="dd">The Hive Metadata processor also adds information to the header of each
+                        record and passes the records to the Hadoop FS destination or the MapR FS
+                        destination. The destinations can perform record-based writes to their
+                        destination systems based on the following details: <ul class="ul" id="concept_phk_bdf_2w__ul_sn1_bjg_2w">
                             <li class="li">Target directory - Based on user-defined expressions, the Hive
                                 Metadata processor assembles the path where each record should be
-                                stored in HDFS. It writes the generated path to a
+                                stored. It writes the generated path to a
                                     <dfn class="term">targetDirectory</dfn> attribute in each record
                                     header.<p class="p">To write the record to the generated path, configure
-                                    Hadoop FS to use the targetDirectory header attribute. </p>
+                                    the destination to use the targetDirectory header attribute.
+                                </p>
 </li>
 
                             <li class="li">Avro schema - The processor writes the Avro schema to the
                                     <dfn class="term">avroSchema</dfn> attribute in each record header. It
                                 generates new Avro schemas when necessary based on the record
-                                    structure.<p class="p">To use the generated Avro schema, configure Hadoop
-                                    FS to use the avroSchema header attribute.</p>
+                                    structure.<p class="p">To use the generated Avro schema, configure the
+                                    destination to use the avroSchema header attribute.</p>
 </li>
 
                             <li class="li">Roll files - When a change in Avro schema occurs, the processor
                                 generates a roll indicator - the <dfn class="term">roll</dfn> header attribute.
-                                    <p class="p">To roll files based on schema changes, configure Hadoop FS
-                                    use the roll header attribute.</p>
+                                    <p class="p">To roll files based on schema changes, configure te
+                                    destination use the roll header attribute.</p>
 </li>
 
                         </ul>
@@ -99,19 +102,18 @@
 
         </div>
 
-        <p class="p">For example, say you use this solution to write sales data to HDFS. A partial upgrade of
-            the sales system adds several new fields to a subset of the incoming data. </p>
+        <p class="p">For example, say you use this solution to write sales data to MapR FS. A partial upgrade
+            of the sales system adds several new fields to a subset of the incoming data. </p>
 
         <p class="p">With the Hive Drift Solution, the Hive Metadata processor notes the new fields in a
             metadata record and passes it to the Hive Metastore destination. The Hive Metastore
-            destination adds the new columns to the Hive target table. Hadoop FS then writes the
-            data to the updated table. When writing data without the new fields to the updated
-            table, Hadoop FS inserts null values for the missing fields. </p>
+            destination adds the new columns to the Hive target table. The MapR FS destination then
+            writes the data to the updated table. When writing data without the new fields to the
+            updated table, the destination inserts null values for the missing fields. </p>
 
     </div>
 
 <div class="related-links"></div>
-</div>
 <div class="navfooter"><!---->
 <span class="navparent"><a class="link" href="../Hive_Metadata/HiveDriftSolution_title.html" title="Hive Drift Solution"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </div>
 </body>

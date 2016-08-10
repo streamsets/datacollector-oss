@@ -43,7 +43,8 @@
 
         <p class="p">Now you want a new pipeline to pass the data to HDFS where it can be stored and reviewed,
             and you'd like the data written to tables based on the web service that generated the
-            data. </p>
+            data. Note that you could also write the data to MapR FS -- the steps are almost
+            identical to this case study, you'd just use a different destination.</p>
 
         <p class="p">To do this, add and configure a Kafka Consumer to read the data into the pipeline, then
             connect it to a Hive Metadata processor. The processor assesses the record structure and
@@ -60,7 +61,7 @@
         <p class="p">You connect the Hive Metadata processor data output stream to a Hadoop FS destination and
             configure it to use the information in record headers. The destination then writes each
             record where it wants to go using the target directory and Avro schema in the record
-            header, and rolling files when needed.</p>
+            header, and rolling files when needed. </p>
 
         <p class="p">Now let's take a closer look... </p>
 
@@ -141,15 +142,20 @@
  <h2 class="title topictitle2">The Hadoop FS Destination</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Hadoop FS is the destination that writes data to HDFS using record header attributes.
-        Record header attributes contain the write details that the Hive Metadata processor
-        generates and adds to records. </p>
+ <div class="body conbody"><p class="shortdesc">The Hadoop FS destination can write data to HDFS using record header attributes. If you
+        wanted, you could use the MapR FS destination to write to MapR FS instead. Record header
+        attributes contain the write details that the Hive Metadata processor generates and adds to
+        records. </p>
 
-  <p class="p">So you connect the Hadoop FS destination to the data output stream of the processor. When you
-            configure the destination, instead of configuring a directory template, you configure
-            the destination to use the directory in the record header. Instead of configuring an
-            Avro schema, you indicate you have a schema in the record header. And you configure the
-            destination to roll files when it sees a "roll" attribute in the record header. </p>
+  <p class="p">To write data to HDFS, you connect the Hadoop FS destination to the data output stream of the
+            processor. You could connect the data output stream to the MapR FS destination to write
+            data to MapR FS. The configuration options are essentially the same.... </p>
+
+        <p class="p">When you configure the destination, instead of configuring a directory template, you
+            configure the destination to use the directory in the record header. Instead of
+            configuring an Avro schema, you indicate you have a schema in the record header. And you
+            configure the destination to roll files when it sees a "roll" attribute in the record
+            header. </p>
 
         <p class="p">The Output Files tab of the destination might look something like this:</p>
 
@@ -159,10 +165,10 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="276" width="469"></img></p>
 
-        <p class="p">With this setup, the destination uses the information in record header attributes to
-            write data to HDFS. It writes each record to the directory in the targetDirectory header
-            attribute, using the Avro schema in the avroSchema header attribute. And it rolls a file
-            when it spots the roll attribute in a record header. </p>
+        <p class="p">With this configuration, the destination uses the information in record header attributes
+            to write data to HDFS. It writes each record to the directory in the targetDirectory
+            header attribute, using the Avro schema in the avroSchema header attribute. And it rolls
+            a file when it spots the roll attribute in a record header. </p>
 
         <p class="p">Note that the destination can also use Max Records in File and Max Files Size to
             determine when to roll files.</p>

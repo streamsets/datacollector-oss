@@ -99,6 +99,45 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_wps_1mc_ww">
+    <h2 class="title topictitle2">HTTP Client</h2>
+
+    <div class="body conbody">
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">My HTTP Client origin and HTTP Client processor fail to connect to the HTTP
+                        server with the following error message:</dt>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">javax.net.ssl.SSLHandshakeException: Remote host closed connection during handshake</pre>
+
+                    </dd>
+
+                    <dd class="dd">By default, <span class="ph">Data
+                  Collector</span> is configured to use TLS versions 1.1 and 1.2. This error can occur when
+                        you configure the HTTP Client origin or HTTP Client processor to connect to
+                        an HTTP server that is using an earlier version of TLS, such as version 1.0. </dd>
+
+                    <dd class="dd">You can enable <span class="ph">Data
+                  Collector</span> to connect to a system using an earlier TLS version by modifying the
+                            <samp class="ph codeph">Dhttps.protocols</samp> option in the SDC_JAVA_OPTS
+                        environment variable in the <samp class="ph codeph">sdc-env.sh</samp> or
+                            <samp class="ph codeph">sdcd-env.sh</samp> file. The files are located in the
+                            <samp class="ph codeph">$SDC_DIST/libexec</samp> directory. For example, if the HTTP
+                        server uses TLS version 1.0, modify the <samp class="ph codeph">Dhttps.protocols</samp>
+                        option as
+                        follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</strong> -Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
+</dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ggx_s23_ks">
  <h2 class="title topictitle2">JDBC</h2>
 

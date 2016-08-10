@@ -96,69 +96,23 @@
  </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_adq_swp_kv">
- <h2 class="title topictitle2">AWS Credentials</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">When <span class="ph">Data
-                  Collector</span> writes data to an Amazon S3, Kinesis Firehose, or Kinesis Producer destination, it must
-        pass credentials to Amazon Web Services. </p>
-
-  <p class="p">
-            Use one of the following
-            methods to pass AWS credentials:</p>
-
-     <dl class="dl">
-         
-             <dt class="dt dlterm">IAM roles</dt>
-
-             <dd class="dd">When <span class="ph">Data
-                  Collector</span> runs on an Amazon EC2 instance, you can use the AWS Management Console to
-                    configure an IAM role for the EC2 instance. <span class="ph">Data
-                  Collector</span> uses the IAM instance profile credentials to automatically connect to AWS. </dd>
-
-                <dd class="dd">When you use IAM roles, you do not need to specify the <span class="ph uicontrol">Access Key
-                        ID</span> and <span class="ph uicontrol">Secret Access Key</span> properties in
-                    the destination. </dd>
-
-                <dd class="dd">For more information about assigning an IAM role to an EC2 instance, see the
-                    Amazon EC2 documentation.</dd>
-
-         
-            
-                <dt class="dt dlterm">AWS access key pairs</dt>
-
-                <dd class="dd">
-                    <p class="p">When <span class="ph">Data
-                  Collector</span> does not run on an Amazon EC2 instance or when the EC2 instance doesn’t
-                        have an IAM role, you must specify the <span class="ph uicontrol">Access Key ID</span>
-                        and <span class="ph uicontrol">Secret Access Key</span> properties in the
-                        destination.</p>
-
-                </dd>
-
-            
-     </dl>
-
- </div>
-
-</div>
 <div class="topic concept nested1" id="concept_lmn_gdc_1w">
     <h2 class="title topictitle2">Record Header Attributes for Record-Based Writes</h2>
 
     <div class="body conbody">
         <p class="p">Destinations can use information in record header
             attributes to write data. Destinations that write Avro data can use Avro schemas in the
-            record header. The Hadoop FS, MapR FS, and Local FS destinations can use record header
-            attributes to determine the directory to write to and when to roll a file. </p>
+            record header. The Hadoop FS and MapR FS destinations can use record header attributes
+            to determine the directory to write to and when to roll a file as part of the Hive Drift
+            Solution. For more information, see <a class="xref" href="../Hive_Metadata/HiveDrift-Overview.html#concept_phk_bdf_2w">Hive Drift Solution: Ingesting Drifting Data into Hive</a>.</p>
 
         <p class="p">To use a record header attribute, configure the destination to use the header attribute
             and ensure that the records include the header attribute.</p>
 
         <p class="p"><span class="ph">The Hive Metadata processor automatically generates record
-                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
-                        For all other destinations, you can use the Expression Evaluator to add
-                        record header attributes.</span>
+                        header attributes for Hadoop FS and MapR FS to use as part of the Hive Drift
+                        Solution. For all other destinations, you can use the Expression Evaluator
+                        to add record header attributes.</span>
         </p>
 
         <div class="p">You can use the following record header attributes in destinations:
@@ -221,9 +175,9 @@
         <p class="p">You can
             use the Hive Metadata processor or the Expression Evaluator to generate record header
             attributes for record-based writes. <span class="ph">The Hive Metadata processor automatically generates record
-                        header attributes for Hadoop FS to use as part of the Hive Drift Solution.
-                        For all other destinations, you can use the Expression Evaluator to add
-                        record header attributes.</span></p>
+                        header attributes for Hadoop FS and MapR FS to use as part of the Hive Drift
+                        Solution. For all other destinations, you can use the Expression Evaluator
+                        to add record header attributes.</span></p>
 
         <div class="p">To use the Expression Evaluator, you must generate record header attributes as expected
             by the destination. Use the following guidelines to generate record header attributes
@@ -308,8 +262,7 @@
                             <li class="li">Use any name for the attribute and specify the attribute name in the
                                 destination. </li>
 
-                            <li class="li">Configure an expression that defines when to roll
-                                    files.</li>
+                            <li class="li">Configure an expression that defines when to roll files.</li>
 
                         </ul>
 </dd>

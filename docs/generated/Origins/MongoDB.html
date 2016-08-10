@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The MongoDB origin reads data from MongoDB. The Data Collector generates a record for every MongoDB document. The MongoDB origin reads from capped and uncapped collections. When you configure MongoDB, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MongoDB"></meta><meta name="abstract" content="The MongoDB origin reads data from MongoDB. The Data Collector generates a record for every MongoDB document."></meta><meta name="description" content="The MongoDB origin reads data from MongoDB. The Data Collector generates a record for every MongoDB document."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bk4_2rs_ns"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The MongoDB origin reads data from MongoDB. Data Collector generates a record for every MongoDB document. The MongoDB origin reads from capped and uncapped collections. When you configure MongoDB, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MongoDB"></meta><meta name="abstract" content="The MongoDB origin reads data from MongoDB. Data Collector generates a record for every MongoDB document."></meta><meta name="description" content="The MongoDB origin reads data from MongoDB. Data Collector generates a record for every MongoDB document."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bk4_2rs_ns"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,15 +35,16 @@
  <h1 class="title topictitle1">MongoDB</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The MongoDB origin reads data from MongoDB. The <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">The MongoDB origin reads data from MongoDB. <span class="ph">Data
                   Collector</span> generates a
-  record for every MongoDB document.</p>
+    record for every MongoDB document.</p>
 
   <p class="p">The MongoDB origin reads from capped and uncapped collections. When you configure MongoDB, you
-   define the offset field, start timestamp, and the collection type. These properties determine how
-   the <span class="ph">Data
-                  Collector</span> queries
-   the database.</p>
+      define the offset field, start timestamp, and the collection type. These properties determine
+      how the origin queries the database. </p>
+
+    <p class="p">You can optionally configure advanced options that determine how the origin connects to
+      MongoDB, including enabling SSL for the origin.</p>
 
  </div>
 
@@ -93,6 +94,51 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
  </div>
 
 </div>
+<div class="topic task nested1" id="task_zry_dg2_ww">
+    <h2 class="title topictitle2">Enabling SSL</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">You can enable the MongoDB origin to use SSL
+                to connect to MongoDB. You enable SSL for the origin, and then define the truststore
+                file and password to use in the SDC_JAVA_OPTS environment variable.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Advanced</span> tab for the stage, select the
+                        <span class="ph uicontrol">SSL Enabled</span> property.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable in the
+                    Data Collector environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
+                        <samp class="ph codeph">sdcd-env.sh</samp>:</span>
+                <ul class="ul choices" id="task_zry_dg2_ww__d12178e5674">
+                    <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
+                        file</li>
+
+                    <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStorePassword</samp> - truststore
+                        password</li>
+
+                </ul>
+
+                <div class="itemgroup info">
+                    <div class="p">For example, define the options as
+                        follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; -Djavax.net.ssl.trustStorePassword=&lt;password&gt;</strong> 
+-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"                   </pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 <div class="topic task nested1" id="task_mdf_2rs_ns">
     <h2 class="title topictitle2">Configuring a MongoDB Origin</h2>
 
@@ -108,14 +154,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d11101e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d12178e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d114127e144">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d118557e230">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d114127e147">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d118557e233">Description</th>
 
                                 </tr>
 
@@ -123,24 +169,24 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d114127e144 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d118557e230 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d114127e147 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d114127e144 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d114127e147 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d118557e233 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d114127e144 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mdf_2rs_ns__d11101e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d118557e230 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d114127e147 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d11101e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d118557e233 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d118557e230 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mdf_2rs_ns__d12178e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d118557e233 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d12178e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -170,9 +216,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d114127e229">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d118557e315">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d114127e232">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d118557e318">Description</th>
 
                                 </tr>
 
@@ -180,68 +226,78 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Connection String</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Connection String</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Connection string for the MongoDB instance.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Database</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Name of the MongoDB database.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Connection string for the MongoDB instance.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Collection</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Database</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Name of the MongoDB collection to use.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Name of the MongoDB database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Capped Collection</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">The collection is capped. Clear this option to read an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Name of the MongoDB collection to use.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Capped Collection</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">The collection is capped. Clear this option to read an
                                         uncapped collection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Start Timestamp</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Start Timestamp</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Timestamp to begin reading data based on the timestamp in
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Timestamp to begin reading data based on the timestamp in
                                         the offset field. Use the following format:
                                             <samp class="ph codeph">YYYY-MM-DD hh:mm:ss</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns" title="MongoDB uses the offset field to track the data to read. By default, the MongoDB origin uses the _id field as the offset field.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns" title="MongoDB uses the offset field to track the data to read. By default, the MongoDB origin uses the _id field as the offset field.">
                                             <img class="image" id="task_mdf_2rs_ns__image_k2w_rsd_3t" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Field to use to track reads. Default is the _id field.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Field to use to track reads. Default is the _id field.
                                         You can use any Object ID field, but results are not
                                         guaranteed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Batch Size (records)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Batch Size (records)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Maximum number of records allowed in a batch.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Maximum number of records allowed in a batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d114127e229 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_mdf_2rs_ns__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d114127e232 ">Amount of time the origin will wait to fill a batch
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Amount of time the origin will wait to fill a batch
                                         before sending an empty batch. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d118557e315 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns" title="You can configure the read preference that the MongoDB origin uses. The read preference determines how the origin reads data from different members of the MongoDB replica set.">
+                                            <img class="image" id="task_mdf_2rs_ns__image_o23_1rd_ww" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d118557e318 ">Determines how the origin reads data from different
+                                        members of the MongoDB replica set.</td>
 
                                 </tr>
 
@@ -257,14 +313,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_bdl_csd_3t" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d12178e5726" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d114127e358">Credentials</th>
+                                    <th class="entry" valign="top" width="30%" id="d118557e461">Credentials</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d114127e361">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d118557e464">Description</th>
 
                                 </tr>
 
@@ -272,24 +328,24 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d114127e358 ">Authentication Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d118557e461 ">Authentication Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d114127e361 ">Authentication to use. To use authentication, select
+                                    <td class="entry" valign="top" width="70%" headers="d118557e464 ">Authentication to use. To use authentication, select
                                         Username/Password.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d114127e358 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d118557e461 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d114127e361 ">MongoDB user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d118557e464 ">MongoDB user name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d114127e358 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d118557e461 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d114127e361 ">MongoDB password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d118557e464 ">MongoDB password.</td>
 
                                 </tr>
 
@@ -301,37 +357,200 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Optionally, click the <span class="ph uicontrol">Advanced</span> tab to configure the read
-                    preference:</span>
+                <span class="ph cmd">Optionally, click the <span class="ph uicontrol">Advanced</span> tab to configure how the
+                    origin connects to MongoDB.</span>
                 <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_xwz_jsd_3t" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d114127e422">Advanced Property</th>
+                    <div class="p">The defaults for these properties should work in most cases:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_ekt_wk2_ww" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr class="row">
+                                        <th class="entry" valign="top" width="34.01360544217687%" id="d118557e527">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d114127e425">Description</th>
+                                        <th class="entry" valign="top" width="65.98639455782312%" id="d118557e530">Description</th>
 
-                                </tr>
+                                    </tr>
 
-                            </thead>
+                                </thead>
 
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d114127e422 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns" title="You can configure the read preference that the MongoDB origin uses. The read preference determines how the origin reads data from different members of the MongoDB replica set.">
-                                            <img class="image" id="task_mdf_2rs_ns__image_egw_psd_3t" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
-                                    </td>
+                                <tbody class="tbody">
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Connections Per Host</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d114127e425 ">Determines how the origin reads data from different
-                                        members of the MongoDB replica set.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+</td>
 
-                                </tr>
+     </tr>
 
-                            </tbody>
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Min Connections Per Host</td>
 
-                        </table>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Connection Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+       10,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Max Connection Idle Time</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+       connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
+        property.<p class="p">Default is 0.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Max Connection Lifetime</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
+       connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
+        property.<p class="p">Default is 0.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Max Wait Time</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds that a thread can wait for a connection to become
+       available. Use 0 to opt out of this property. Use a negative value to wait
+        indefinitely.<p class="p">Default is 120,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Server Selection Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds that <span class="ph">Data
+                  Collector</span> waits for a server selection
+       before throwing an exception. If you use 0, an exception is thrown immediately if no server
+       is available. Use a negative value to wait indefinitely.<p class="p">Default is 30,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Threads Allowed to Block for Connection Multiplier</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Multiplier that determines the maximum number of threads that can wait for a connection
+       to become available from the pool. This number multiplied by the Connections Per Host value
+       determines the maximum number of threads.<p class="p">Default is 5.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Heartbeat Frequency</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">The frequency in milliseconds at which <span class="ph">Data
+                  Collector</span> attempts to determine the
+       current state of each server in the cluster.<p class="p">Default is 10,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Min Heartbeat Frequency</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
+                  Collector</span> waits at least this long
+       before checking the state of each server.<p class="p">Default is 500.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Heartbeat Connection Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds to wait for a connection used for the cluster
+        heartbeat.<p class="p">Default is 20,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Heartbeat Socket Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
+        heartbeat.<p class="p">Default is 20,000.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Local Threshold</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+       than or equal to the server with the fastest ping time plus the local threshold
+        value.<p class="p">Default is 15.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Required Replica Set Name</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Required replica set name to use for the cluster.</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Cursor Finalizer Enabled</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Specifies whether to enable cursor finalizers.</td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Socket Keep Alive</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Specifies whether to enable socket keep alive. </td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">Socket Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+        property.<p class="p">Default is 0.</p>
+</td>
+
+     </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">SSL Enabled </td>
+
+                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Enables SSL between <span class="ph">Data
+                  Collector</span> and MongoDB.<p class="p">You also must define the truststore
+                                                file and password in the SDC_JAVA_OPTS environment
+                                                variable, as described in <a class="xref" href="MongoDB.html#task_zry_dg2_ww">Enabling SSL</a>.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d118557e527 ">SSL Invalid Host Name Allowed</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d118557e530 ">Specifies whether invalid host names are allowed in SSL certificates.</td>
+
+     </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
 </div>
 
                 </div>

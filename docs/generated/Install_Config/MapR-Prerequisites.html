@@ -40,118 +40,64 @@
                   Collector</span>.
             As a result, you must perform additional steps to enable the <span class="ph">Data
                   Collector</span>
-            machine to connect to MapR.</p>
+            machine to connect to MapR. You must install the required client libraries and run a
+            MapR setup script to modify configuration files and create the required symbolic
+            links.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> The MapR DB destination and the Hive Streaming destination using the MapR library
-            currently only support MapR version 5.1.</div>
+            currently only support MapR version 5.1.0. All other stages that use the MapR library
+            support MapR versions 5.0.0 and 5.1.0.</div>
 
-        <p class="p">To connect to a MapR cluster, install <span class="ph">Data
-                  Collector</span> on
-            a node in the cluster or on a client machine. </p>
-
-        <div class="p">To run <span class="ph">Data
-                  Collector</span> on
-            a client machine - outside the cluster or on your local machine - the MapR client
-            package must be installed and configured on the machine. If the MapR client package is
-            not installed on the machine, download and install the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
-                <li class="li">MapR client library - Typically named
-                        <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can download the
-                        files for your operating system
-                        here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
+        <div class="p">
+            <ol class="ol" id="concept_jgs_qpg_2v__ol_o2r_nq4_vw">
+                <li class="li">Install <span class="ph">Data
+                  Collector</span> on a node in the MapR cluster or on a client machine.<div class="p">To run <span class="ph">Data
+                  Collector</span> on a client machine - outside the cluster or on your local machine - the
+                        MapR client package must be installed and configured on the machine. If the
+                        MapR client package is not installed on the machine, download and install
+                        the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
+                            <li class="li">MapR client library - Typically named
+                                    <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can
+                                    download the files for your operating system
+                                    here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
 </div>
 </li>
 
-                <li class="li">Kafka client library - Typically named
-                        <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">You can download the
-                        files for your operating system here:
-                        <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
+                            <li class="li">Kafka client library - Typically named
+                                    <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">You can
+                                    download the files for your operating system here:
+                                    <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
 </div>
 </li>
 
-            </ul>
-</div>
-
-        <p class="p">Before using <span class="ph">Data
-                  Collector</span> to
-            connect to a MapR cluster, perform the following steps:</p>
-
-        <ol class="ol" id="concept_jgs_qpg_2v__ol_ghq_zrg_2v">
-            <li class="li">In the <span class="ph">Data
-                  Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, remove the MapR
-                stage library that you want to use from the
-                    <span class="ph uicontrol">system.stagelibs.blacklist</span> property.<div class="p">For example, the
-                        <span class="ph uicontrol">system.stagelibs.blacklist</span> property is defined as
-                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib</pre>
-</div>
-<div class="p">To
-                    use the MapR version 5.1, remove the version 5.1 stage library from the property
-                    as
-                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib</pre>
-</div>
-<div class="note warning"><span class="warningtitle">Warning:</span> You can use only one version of the MapR library at a time.
-                </div>
-</li>
-
-            <li class="li">Create the following symlinks:<ul class="ul" id="concept_jgs_qpg_2v__ul_yhl_bsg_2v">
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/lib/*</span> to
-                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
-                        library&gt;/lib/</span></li>
-
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hbase/hbase-&lt;version&gt;/lib/*</span> to
-                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
-                        library&gt;/lib/</span></li>
-
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hive/hive-&lt;version&gt;/lib/*</span> to
-                            <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
-                        library&gt;/lib/</span></li>
-
-                    <li class="li"><span class="ph uicontrol">$MAPR_HOME/hive/hive-&lt;version&gt;/hcatalog/share/hcatalog/*
-                        </span> to <span class="ph uicontrol">$SDC_DIST/streamsets-libs/&lt;MapR
-                            library&gt;/lib/</span></li>
-
-                    <li class="li">
-                        <span class="ph uicontrol">$MAPR_HOME/lib/maprfs-&lt;version&gt;-mapr.jar</span> to
-                            <span class="ph uicontrol">$SDC_DIST/root-lib/</span></li>
-
-                </ul>
-<p class="p">$MAPR_HOME is usually /opt/mapr. </p>
-<p class="p">&lt;MapR library&gt; is the version of
-                    the StreamSets MapR library to use. The StreamSets MapR libraries are named as
-                    follows: streamsets-datacollector-mapr_&lt;version&gt;-lib. For example:
-                    streamsets-datacollector-mapr_5_1-lib. </p>
-<p class="p">&lt;version&gt; is the HBase, Hive,
-                    or MapR version.</p>
-<div class="p">So to use MapR version 5.1, HBase version 1.1.1, and Hive
-                    version 1.2 with <span class="ph">Data
-                  Collector</span>, you would create the following
-                    symlinks:<pre class="pre codeblock">ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hbase/hbase-1.1.1/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hive/hive-1.2/lib/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/hive/hive-1.2/hcatalog/share/hcatalog/* $SDC_DIST/streamsets-libs/streamsets-datacollector-mapr_5_1-lib/lib/
-ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</pre>
+                        </ul>
 </div>
 </li>
 
-            <li class="li">In the <span class="ph">Data
-                  Collector</span> security policy file, <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp>, add a new
-                permissions block for $MAPR_HOME as follows:
-                    <pre class="pre codeblock">// MapR home directory
-grant codebase "file://&lt;MapR home directory&gt;-" {
-    permission java.security.AllPermission;
-};</pre>
-<div class="p">For
-                    example:
-                    <pre class="pre codeblock">grant codebase "file:///opt/mapr/-" {
-  permission java.security.AllPermission;
-};</pre>
-</div>
+                <li class="li">From the <span class="ph">Data
+                  Collector</span> runtime directory, <samp class="ph codeph">$SDC_DIST</samp>, use the following command to
+                    make the MapR setup script file
+                    executable:<pre class="pre codeblock">sudo chmod u+x etc/mapr-setup.sh</pre>
 </li>
 
-            <li class="li">Restart <span class="ph">Data
+                <li class="li">To run the setup script, use the following
+                    command:<pre class="pre codeblock">etc/mapr-setup.sh</pre>
+</li>
+
+                <li class="li">When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
+
+                <li class="li">When prompted, enter the absolute path to the MapR home directory, usually
+                        /opt/mapr.<p class="p">The script modifies configuration files and creates the
+                        required symbolic links.</p>
+</li>
+
+                <li class="li">When the script finishes, restart <span class="ph">Data
                   Collector</span> and verify that you can see the MapR origins and destinations in the stage
-                library.</li>
+                    library.</li>
 
-        </ol>
+            </ol>
+
+        </div>
 
  </div>
 

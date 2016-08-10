@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector provides a command line interface. You can use the following commands with the command line interface: help Provides information about each command. manager Provides the following ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Command Line Interface"></meta><meta name="abstract" content="The Data Collector provides a command line interface."></meta><meta name="description" content="The Data Collector provides a command line interface."></meta><meta name="DC.Relation" scheme="URI" content="../Administration/Administration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ywx_d5x_pt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Command Line Interface</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Data Collector provides a command line interface. You can use the following commands with the command line interface: help Provides information about each command. manager Provides the following ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Command Line Interface"></meta><meta name="abstract" content="Data Collector provides a command line interface."></meta><meta name="description" content="Data Collector provides a command line interface."></meta><meta name="DC.Relation" scheme="URI" content="../Administration/Administration_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ywx_d5x_pt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Command Line Interface</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,8 +35,9 @@
  <h1 class="title topictitle1">Command Line Interface</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
-                  Collector</span> provides a command line interface. </p>
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+    provides a command line interface. </p>
 
   <div class="p">You can use the following commands with the command line interface:<dl class="dl">
         
@@ -79,6 +80,26 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zrc_qch_xw">
+ <h2 class="title topictitle2">Java Configuration Options for the Command Line</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use the SDC_CLI_JAVA_OPTS environment variable to modify Java configuration options for
+        the <span class="ph">Data
+                  Collector</span>
+        command line interface.</p>
+
+  <p class="p">For
+            example, to set the <samp class="ph codeph">-Djavax.net.ssl.trustStore</samp> option for the command
+            line when using <span class="ph">Data
+                  Collector</span>
+            with HTTPS, run the following command:</p>
+
+        <pre class="pre codeblock">export SDC_CLI_JAVA_OPTS="-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; ${SDC_CLI_JAVA_OPTS}"</pre>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_kpw_mdt_qt">
   <h2 class="title topictitle2">Using the Command Line Interface</h2>
 
@@ -107,9 +128,9 @@
           
           <thead class="thead" align="left">
             <tr class="row">
-              <th class="entry" valign="top" width="30%" id="d208e138">Option</th>
+              <th class="entry" valign="top" width="30%" id="d208e170">Option</th>
 
-              <th class="entry" valign="top" width="70%" id="d208e141">Description</th>
+              <th class="entry" valign="top" width="70%" id="d208e173">Description</th>
 
             </tr>
 
@@ -117,10 +138,10 @@
 
           <tbody class="tbody">
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">URL of the <span class="ph">Data
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">URL of the <span class="ph">Data
                   Collector</span>.
                   <p class="p">The default URL is <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
@@ -128,21 +149,21 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">Optional. HTTP authentication type used by the <span class="ph">Data
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">Optional. HTTP authentication type used by the <span class="ph">Data
                   Collector</span>.
               </td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">Optional. User name to use to log in. The roles assigned to the user account
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">Optional. User name to use to log in. The roles assigned to the user account
                 determine the tasks that you can perform.<p class="p">If you omit this option, the <span class="ph">Data
                   Collector</span> allows admin access.</p>
 </td>
@@ -150,26 +171,26 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password &lt;sdcPassword&gt;</p>
 </td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">Optional. Required when you enter a user name. Password for the user
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">Optional. Required when you enter a user name. Password for the user
                 account.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">&lt;command&gt; </td>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">&lt;command&gt; </td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">Required. Command to perform.</td>
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">Required. Command to perform.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d208e138 ">&lt;args&gt;</td>
+              <td class="entry" valign="top" width="30%" headers="d208e170 ">&lt;args&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d208e141 ">Optional. Include arguments and options as needed.</td>
+              <td class="entry" valign="top" width="70%" headers="d208e173 ">Optional. Include arguments and options as needed.</td>
 
             </tr>
 
@@ -257,9 +278,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d208e338">Start Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d208e371">Start Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208e341">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d208e374">Description</th>
 
                                     </tr>
 
@@ -267,12 +288,12 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e338 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e371 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e341 ">Required. Name of the pipeline to start. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d208e374 ">Required. Name of the pipeline to start. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -282,9 +303,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e338 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d208e371 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e341 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d208e374 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot start the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -292,12 +313,12 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e338 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e371 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e341 ">Optional. The revision of the pipeline. Use to start
+                                        <td class="entry" valign="top" width="70%" headers="d208e374 ">Optional. The revision of the pipeline. Use to start
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> starts the most recent version.</p>
 </td>
@@ -338,9 +359,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d208e444">Stop Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d208e477">Stop Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208e447">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d208e480">Description</th>
 
                                     </tr>
 
@@ -348,12 +369,12 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e444 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e477 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e447 ">Required. Name of the pipeline to stop. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d208e480 ">Required. Name of the pipeline to stop. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -363,9 +384,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e444 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d208e477 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e447 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d208e480 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
@@ -373,12 +394,12 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e444 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e477 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e447 ">Optional. The revision of the pipeline. Use to stop
+                                        <td class="entry" valign="top" width="70%" headers="d208e480 ">Optional. The revision of the pipeline. Use to stop
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> stops the most recent version.</p>
 </td>
@@ -422,9 +443,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d208e553">Status Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d208e586">Status Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208e556">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d208e589">Description</th>
 
                                     </tr>
 
@@ -432,12 +453,12 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e553 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e586 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e556 ">Required. Name of the pipeline. <div class="note note"><span class="notetitle">Note:</span> If the name
+                                        <td class="entry" valign="top" width="70%" headers="d208e589 ">Required. Name of the pipeline. <div class="note note"><span class="notetitle">Note:</span> If the name
                                                 includes spaces, surround the name in quotation
                                                 marks.</div>
 </td>
@@ -445,9 +466,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e553 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d208e586 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e556 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d208e589 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot return the status of the pipeline. <p class="p">Use to
                                                 debug the problem or pass to StreamSets for
                                                 help.</p>
@@ -456,12 +477,12 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e553 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e586 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e556 ">Optional. The revision of the pipeline. Use for older
+                                        <td class="entry" valign="top" width="70%" headers="d208e589 ">Optional. The revision of the pipeline. Use for older
                                             versions of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> returns information for the most recent
                                                 version.</p>
@@ -507,9 +528,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d208e656">Reset Origin Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d208e689">Reset Origin Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208e659">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d208e692">Description</th>
 
                                     </tr>
 
@@ -517,12 +538,12 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e656 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e689 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e659 ">Required. Name of the pipeline. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d208e692 ">Required. Name of the pipeline. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -532,9 +553,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e656 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d208e689 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e659 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d208e692 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
@@ -542,12 +563,12 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e656 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e689 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e659 ">Optional. The revision of the pipeline. Use to reset
+                                        <td class="entry" valign="top" width="70%" headers="d208e692 ">Optional. The revision of the pipeline. Use to reset
                                             the origin for an older version of the pipeline. <p class="p">By
                                                 default, the <span class="ph">Data
                   Collector</span> resets the origin for the most recent
@@ -635,9 +656,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d208e821">Import Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d208e853">Import Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208e824">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d208e856">Description</th>
 
                                     </tr>
 
@@ -645,12 +666,12 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e821 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e853 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e824 ">Required. Name for the imported pipeline. <p class="p">If the
+                                        <td class="entry" valign="top" width="70%" headers="d208e856 ">Required. Name for the imported pipeline. <p class="p">If the
                                                 name includes spaces, surround the name in quotation
                                                 marks.</p>
 </td>
@@ -658,9 +679,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e821 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d208e853 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e824 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d208e856 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot import the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -668,12 +689,12 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d208e821 ">-f &lt;fileName&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d208e853 ">-f &lt;fileName&gt;<p class="p">or</p>
 <p class="p">--file
                                             &lt;fileName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208e824 ">Optional. The location and name of the file to
+                                        <td class="entry" valign="top" width="70%" headers="d208e856 ">Optional. The location and name of the file to
                                             import. <p class="p">Enter a path relative to the <span class="ph">Data
                   Collector</span> installation directory.</p>
 </td>

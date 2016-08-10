@@ -102,7 +102,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_w54_kpv_jw__d11073e398">
+                                    following delimited format types:<ul class="ul" id="concept_w54_kpv_jw__d12089e494">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -128,6 +128,8 @@
 
                               <dd class="dd">You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
+
+                              <dd class="dd">You can also replace a string constant with null values.</dd>
 
                               <dd class="dd">When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
@@ -321,14 +323,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d11101e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d121225e431">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d126524e435">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d121225e434">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d126524e438">Description</th>
 
                                 </tr>
 
@@ -336,24 +338,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d121225e431 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e435 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d121225e434 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d121225e431 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d121225e434 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e438 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d121225e431 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_dtz_npv_jw__d11101e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e435 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d121225e434 ">Error record handling for the stage: <ul class="ul" id="task_dtz_npv_jw__d11101e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e438 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e435 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_dtz_npv_jw__d12178e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e438 ">Error record handling for the stage: <ul class="ul" id="task_dtz_npv_jw__d12178e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -383,9 +385,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d121225e516">Redis Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d126524e520">Redis Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d121225e519">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d126524e523">Description</th>
 
                                 </tr>
 
@@ -393,9 +395,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d121225e516 ">URI</td>
+      <td class="entry" valign="top" width="30%" headers="d126524e520 ">URI</td>
 
-      <td class="entry" valign="top" width="70%" headers="d121225e519 ">URI of the Redis server. Use the following
+      <td class="entry" valign="top" width="70%" headers="d126524e523 ">URI of the Redis server. Use the following
         format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
 <p class="p">You
         can omit the port number or database if the server uses the default port number or default
@@ -408,9 +410,9 @@
      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d121225e516 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d126524e520 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d121225e519 ">
+                                    <td class="entry" valign="top" width="70%" headers="d126524e523 ">
                                         <div class="p">Type of data to be read. Use one of the following
                                                 options:<ul class="ul" id="task_dtz_npv_jw__ul_ybf_3gw_jw">
                                                 <li class="li">Avro</li>
@@ -440,20 +442,20 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d121225e516 ">Channels <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e520 ">Channels <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
                                             <img class="image" id="task_dtz_npv_jw__image_off_y4w_jw" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d121225e519 ">Name of the channel to use. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d126524e523 ">Name of the channel to use. Use the
                                             <span class="ph uicontrol">Add</span> icon to read from additional
                                         channels. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d121225e516 ">Pattern <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e520 ">Pattern <a class="xref" href="Redis.html#concept_kww_cmw_jw" title="You can specify channels and patterns to define the data that the Redis Consumer origin processes.">
                                             <img class="image" id="task_dtz_npv_jw__image_up3_y4w_jw" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d121225e519 ">Glob-style pattern to use. The origin subscribes to
+                                    <td class="entry" valign="top" width="70%" headers="d126524e523 ">Glob-style pattern to use. The origin subscribes to
                                         channels with names that match the pattern. Use the
                                             <span class="ph uicontrol">Add</span> icon to read from additional
                                         patterns. </td>
@@ -461,24 +463,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d121225e516 ">Connection Timeout</td>
+                                    <td class="entry" valign="top" width="30%" headers="d126524e520 ">Connection Timeout</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d121225e519 ">Time to wait for a connection to Redis.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d126524e523 ">Time to wait for a connection to Redis.</td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d121225e516 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_dtz_npv_jw__d11114e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d126524e520 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_dtz_npv_jw__d12191e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d121225e519 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="70%" headers="d126524e523 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d121225e516 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d126524e520 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d121225e519 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d126524e523 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -488,19 +490,19 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d121225e516 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d126524e520 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d121225e519 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
+       <td class="entry" valign="top" width="70%" headers="d126524e523 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
          formats.</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d121225e516 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_dtz_npv_jw__d11114e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d126524e520 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_dtz_npv_jw__d12191e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d121225e519 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d126524e523 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -512,6 +514,578 @@
 
                 </div>
             </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e738" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e737">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e740">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e737 ">Message includes Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e740 ">Indicates that the message includes an Avro schema.
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e737 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e740 ">Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p class="p">When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p>
+<p class="p">You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, click the <span class="keyword wintitle">Binary</span> tab and configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e808" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e796">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e799">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e796 ">Max Data Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e799 ">Maximum number of bytes in the message. Larger messages
+                                        cannot be processed or written to error. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="ph uicontrol">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e959" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e842">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e845">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Delimiter Format Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Delimiter format type. Use one of the following options:
+                                            <ul class="ul" id="task_dtz_npv_jw__ul_s5z_b3z_3r">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Indicates whether a file contains a header line, and
+                                        whether to use the header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Max Record Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Maximum length of a record in characters. Longer records
+                                        are not read. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                            character.<p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Escape Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Escape character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_dtz_npv_jw__d12178e1056" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Root field type to use:<ul class="ul" id="task_dtz_npv_jw__d12178e1060">
+                                            <li class="li">List-Map - Generates an indexed list of data.
+                                                Enables you to use standard functions to process
+                                                data. Use for new pipelines.</li>
+
+                                            <li class="li">List - Generates a record with an indexed list with
+                                                a map for header and value. Requires the use of
+                                                delimited data functions to process data. Use only
+                                                to maintain pipelines created before 1.1.0.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Lines to Skip</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Lines to skip before reading data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">Parse NULLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">Replaces the specified string constant with null
+                                        values.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e842 ">NULL Constant</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e845 ">String constant to replace with null values.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1123" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e1026">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e1029">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_dtz_npv_jw__d12178e1145" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1026 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1029 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_dtz_npv_jw__d12178e1154">
+                                                <li class="li">Array of Objects </li>
+
+                                                <li class="li">Multiple Objects</li>
+
+                                            </ul>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr id="task_dtz_npv_jw__d12178e1165" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1026 ">Maximum Object Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1029 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For log data, on the <span class="keyword wintitle">Log</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1212" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e1094">Log Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e1097">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1094 ">Log Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1097 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_dtz_npv_jw__d12178e1241">
+                                            <li class="li">Common Log Format</li>
+
+                                            <li class="li">Combined Log Format</li>
+
+                                            <li class="li">Apache Error Log Format</li>
+
+                                            <li class="li">Apache Access Log Custom Format</li>
+
+                                            <li class="li">Regular Expression</li>
+
+                                            <li class="li">Grok Pattern</li>
+
+                                            <li class="li">Log4j</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1094 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1097 ">Maximum length of a log line. The origin truncates longer
+                                        lines. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1094 ">Retain Original Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1097 ">Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p class="p">By default, the original line is
+                                            discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                    <ul class="ul" id="task_dtz_npv_jw__d12178e1290">
+                        <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
+                            use Apache log format strings to define the <span class="ph uicontrol">Custom Log
+                                Format</span>.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Regular Expression</span>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Grok Pattern</span>, you can use the
+                                <span class="ph uicontrol">Grok Pattern Definition</span> field to define
+                            custom grok patterns. You can define a pattern on each line. <p class="p">In the
+                                    <span class="ph uicontrol">Grok Pattern</span> field, enter the pattern to
+                                use to parse the log. You can use a predefined grok patterns or
+                                create a custom grok pattern using patterns defined in
+                                    <span class="ph uicontrol">Grok Pattern Definition</span>.</p>
+<p class="p">For more
+                                information about defining grok patterns and supported grok
+                                patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
+</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
+                                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1335" class="table" frame="border" border="1" rules="all">
+                                        
+                                        
+                                        <thead class="thead" align="left">
+                                            <tr class="row">
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d126524e1222">Log4j Property</th>
+
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d126524e1225">Description</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody class="tbody">
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e1222 ">On Parse Error</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e1225 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_dtz_npv_jw__d12178e1364">
+                                                  <li class="li">Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+
+                                                  <li class="li">Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+
+                                                  <li class="li">Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is added
+                                                  to the message field for the last valid log
+                                                  line.</li>
+
+                                                  </ul>
+</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e1222 ">Use Custom Log Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e1225 ">Allows you to define a custom log
+                                                  format.</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d126524e1222 ">Custom Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d126524e1225 ">Use log4j variables to define a custom log
+                                                  format. </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+</div>
+
+                            </div>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Protobuf</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1425" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e1299">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e1302">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_dtz_npv_jw__d12178e1447" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1299 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1302 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory,
+                                            <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
+                                            generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. For more information about environment variables,
+                                            see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_dtz_npv_jw__d12178e1467" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1299 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1302 ">The fully-qualified name for the message type to use when
+                                        reading data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1299 ">Delimited Messages</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1302 ">Indicates if a message might include more than one
+                                        protobuf message.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                    <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1612" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d126524e1422">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126524e1425">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d126524e1422 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126524e1425 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+               
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                    properties:</span>      
+            <div class="itemgroup info">
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dtz_npv_jw__d12178e1669" class="table" frame="border" border="1" rules="all">
+                        
+                        
+                        <thead class="thead" align="left"> <tr class="row">                         
+                            <th class="entry" valign="top" width="30%" id="d126524e1470">XML Property</th>
+
+                            <th class="entry" valign="top" width="70%" id="d126524e1473">Description</th>
+</tr>
+  
+                        </thead>
+
+       <tbody class="tbody">                
+            <tr class="row">
+                <td class="entry" valign="top" width="30%" headers="d126524e1470 ">Delimiter Element</td>
+
+                <td class="entry" valign="top" width="70%" headers="d126524e1473 ">
+                    <p class="p">XML element that acts as a delimiter. Omit a delimiter to
+                        treat the entire XML document as one record.</p>
+
+                </td>
+
+            </tr>
+
+            <tr class="row">
+                <td class="entry" valign="top" width="30%" headers="d126524e1470 ">Max Record Length (chars)</td>
+
+                <td class="entry" valign="top" width="70%" headers="d126524e1473 ">
+                    <p class="p">The maximum number of characters in a record. Longer
+                        records are diverted to the pipeline for error handling.
+                    </p>
+
+                </td>
+         
+            </tr>
+ 
+            </tbody>
+
+            </table>
+</div>
+
+            </div></li>
 </ol>
 
     </div>

@@ -103,8 +103,7 @@
 
  <div class="body conbody">
   <div class="p">You can use the following scripting objects in the Jython
-        Evaluator:
-    <dl class="dl">
+        Evaluator:<dl class="dl">
         
           <dt class="dt dlterm">records</dt>
 
@@ -136,7 +135,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d17323e795">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d20178e935">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -169,7 +168,7 @@
                                           <samp class="ph codeph">debug()</samp>, and <samp class="ph codeph">trace()</samp>. </dd>
 
                               <dd class="dd">The signature of the four methods is as follows:
-                                    <pre class="pre codeblock">(message-template, arguments…) </pre>
+                                    <pre class="pre codeblock">(message-template, arguments...) </pre>
 The
                                     message template can have positional variables denoted by curly
                                     brackets: { }. The arguments are replaced in the message
@@ -190,6 +189,15 @@ The
                               <dd class="dd">An object that passes error records to the processor for error
                                     handling. Includes a <samp class="ph codeph">write(Record, message)</samp>
                                     method.</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">sdcFunctions</dt>
+
+                              <dd class="dd">An object that runs functions that evaluate or modify data.
+                                    Includes a <samp class="ph codeph">getFieldNull(Record, 'field path')</samp>
+                                    method that checks if a field is assigned a constant such as
+                                    NULL_INTEGER or NULL_STRING. </dd>
 
                         
                   </dl>
@@ -216,31 +224,65 @@ The
 
 </div>
 <div class="topic concept nested1" id="concept_szj_slw_tr">
- <h2 class="title topictitle2">Type Handling</h2>
+    <h2 class="title topictitle2">Type Handling</h2>
 
- <div class="body conbody">
-  <p class="p">Though Jython does not use type information when
-      processing data, passing data to the rest of the pipeline requires data types. </p>
+    <div class="body conbody">
+        <p class="p">Though Jython does not use type information
+            when processing data, passing data to the rest of the pipeline requires data types. </p>
 
-    <div class="p">Note the following type information before you configure the remainder of the pipeline: <ul class="ul" id="concept_szj_slw_tr__ul_e3h_1qc_5r">
-        <li class="li">Null values convert to String.<p class="p">Regardless of the original data type of a field, when a
-            null value is processed by the Jython Evaluator it returns to the pipeline as a string.
-            Because Jython does not associate nulls with a data type, the processor uses the String
-            data type.</p>
-<div class="note tip"><span class="tiptitle">Tip:</span> To avoid type errors in downstream processing, you might
-            use a Type Converter to ensure that fields have data of the appropriate type.
-          </div>
-</li>
+        <div class="p">Note the following type information before you configure the remainder of the pipeline: <dl class="dl">
+                
+                    <dt class="dt dlterm">Data type of null values</dt>
 
-        <li class="li">Non-null values that are not modified in the processor retain their original type.</li>
+                    <dd class="dd">The Jython Evaluator can associate null values with a data type. For
+                        example, if the Jython Evaluator assigns a null value to an Integer field,
+                        the field is returned to the pipeline as an integer with a null value.</dd>
 
-        <li class="li">Numeric data that is modified becomes a Double, other types of data retain their
-          original type.</li>
+                    <dd class="dd">Use constants in the Jython code to create a new field of a specific data
+                        type with a null value. For example, you can create a new String field with
+                        a null value by assigning the type constant NULL_STRING to the field as
+                        follows:<pre class="pre codeblock">record.value['new_field'] = NULL_STRING</pre>
+</dd>
 
-      </ul>
+                
+                
+                    <dt class="dt dlterm">Date fields</dt>
+
+                    <dd class="dd">Use the String data type to create a new field to store a date with a
+                        specific format. For example, the following sample code creates a new String
+                        field that stores the current date using the format
+                        YYYY-MM-dd:<pre class="pre codeblock"># Define a date object to record the current date
+import datetime as dt
+newDate = dt.datetime.utcnow().strftime("%Y-%m-%d")
+
+for record in records:
+  try:
+    # Create a string field to store the current date with the specified format
+    record.value["date"] = newDate
+    
+    # Write record to processor output
+    output.write(record)
+
+  except Exception as e:
+    # Send record to error
+    error.write(record, str(e))</pre>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Data type of modified values</dt>
+
+                    <dd class="dd">Values that are not modified in the processor retain their original
+                        type.</dd>
+
+                    <dd class="dd">Numeric data that is modified becomes a Double, other types of data retain
+                        their original type.</dd>
+
+                
+            </dl>
 </div>
 
- </div>
+    </div>
 
 </div>
 <div class="topic task nested1" id="task_fty_jwx_nr">
@@ -258,14 +300,14 @@ The
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d17261e2509" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d20116e3037" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d154104e355">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d167229e390">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154104e358">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d167229e393">Description</th>
 
                                 </tr>
 
@@ -273,24 +315,24 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d167229e390 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d167229e393 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2555" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d167229e390 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d167229e393 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d167229e390 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d20116e3083" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d167229e393 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -298,10 +340,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2569" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d167229e390 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d20116e3097" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d167229e393 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -309,10 +351,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d154104e355 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_fty_jwx_nr__d17261e2584" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d167229e390 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_fty_jwx_nr__d20116e3112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154104e358 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d17261e2588">
+                                    <td class="entry" valign="top" width="70%" headers="d167229e393 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d20116e3116">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -343,9 +385,9 @@ The
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d154104e477">Jython Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d167229e512">Jython Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d154104e480">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d167229e515">Description</th>
 
                                 </tr>
 
@@ -353,9 +395,9 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154104e477 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d167229e512 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154104e480 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d167229e515 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -369,9 +411,9 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154104e477 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d167229e512 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154104e480 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d167229e515 ">Jython code to use in the processor.</td>
 
                                 </tr>
 

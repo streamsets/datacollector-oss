@@ -106,7 +106,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d11073e398">
+                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d12089e494">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -132,6 +132,8 @@
 
                               <dd class="dd">You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
+
+                              <dd class="dd">You can also replace a string constant with null values.</dd>
 
                               <dd class="dd">When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
@@ -242,14 +244,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d117215e313">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d122442e317">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d117215e316">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d122442e320">Description</th>
 
                                 </tr>
 
@@ -257,24 +259,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e313 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e317 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e316 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e313 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e316 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e320 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e313 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_hrz_mq1_h5__d11101e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e317 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e316 ">Error record handling for the stage: <ul class="ul" id="task_hrz_mq1_h5__d11101e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e320 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e317 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_hrz_mq1_h5__d12178e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e320 ">Error record handling for the stage: <ul class="ul" id="task_hrz_mq1_h5__d12178e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -299,50 +301,50 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e2010" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e2222" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e398">RabbitMQ Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e402">RabbitMQ Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e401">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e405">Description</th>
 
                                 </tr>
 </thead>
 
                             <tbody class="tbody">
-                              <tr id="task_hrz_mq1_h5__d11101e2031" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">URI</td>
+                              <tr id="task_hrz_mq1_h5__d12178e2243" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">RabbitMQ URI. <p class="p">Typically uses the following format:
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">RabbitMQ URI. <p class="p">Typically uses the following format:
                                                 <samp class="ph codeph">amqp:&lt;host&gt;:&lt;port&gt;/&lt;virtualhost&gt;</samp>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">Consumer Tag</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">Consumer Tag</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">RabbitMQ consumer tag. Leave empty to use an
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">RabbitMQ consumer tag. Leave empty to use an
                                         automatically generated consumer tag. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">One Record per Message</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">One Record per Message</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">Generates a single record for each RabbitMQ message.
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">Generates a single record for each RabbitMQ message.
                                             <p class="p">When not selected, the origin generates a record for
                                             each object in the message. </p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_hrz_mq1_h5__d11101e2065" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">Additional Client Configuration</td>
+                                <tr id="task_hrz_mq1_h5__d12178e2277" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">Additional Client Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">Additional RabbitMQ client configuration properties to
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">Additional RabbitMQ client configuration properties to
                                         use. To add properties, click <span class="ph uicontrol">Add</span> and
                                         define the RabbitMQ client property name and value. <p class="p">Use
                                             the property names and values as expected by RabbitMQ.
@@ -352,27 +354,27 @@
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e398 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d122442e402 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e401 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
+       <td class="entry" valign="top" width="70%" headers="d122442e405 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
          formats.</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e398 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_hrz_mq1_h5__d11114e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d122442e402 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_hrz_mq1_h5__d12191e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e401 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d122442e405 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e398 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d122442e402 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e401 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d122442e405 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -382,25 +384,25 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e398 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_hrz_mq1_h5__d11114e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d122442e402 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_hrz_mq1_h5__d12191e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e401 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="70%" headers="d122442e405 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
-                                <tr id="task_hrz_mq1_h5__d11101e2100" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">Use Credentials</td>
+                                <tr id="task_hrz_mq1_h5__d12178e2312" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">Use Credentials</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">Enables the use of RabbitMQ credentials.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">Enables the use of RabbitMQ credentials.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e398 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e402 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e401 ">Type of data to be read. Use one of the following data
-                                            formats:<ul class="ul" id="task_hrz_mq1_h5__d11101e2116">
+                                    <td class="entry" valign="top" width="70%" headers="d122442e405 ">Type of data to be read. Use one of the following data
+                                            formats:<ul class="ul" id="task_hrz_mq1_h5__d12178e2328">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -414,7 +416,7 @@
                                             <li class="li">Protobuf</li>
 
                                             <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_hrz_mq1_h5__d11101e2141" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+                                                  <img class="image" id="task_hrz_mq1_h5__d12178e2353" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
 
                                             <li class="li">Text</li>
 
@@ -443,9 +445,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e604">RabbitMQ Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e608">RabbitMQ Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e607">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e611">Description</th>
 
                                 </tr>
 
@@ -453,52 +455,52 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e604 ">URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e608 ">URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e607 ">RabbitMQ URI. <p class="p">Typically uses the following format:
+                                    <td class="entry" valign="top" width="70%" headers="d122442e611 ">RabbitMQ URI. <p class="p">Typically uses the following format:
                                                 <samp class="ph codeph">amqp:&lt;host&gt;:&lt;port&gt;/&lt;virtualhost&gt;</samp>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e604 ">Consumer Tag</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e608 ">Consumer Tag</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e607 ">RabbitMQ consumer tag. Leave empty to use an
+                                    <td class="entry" valign="top" width="70%" headers="d122442e611 ">RabbitMQ consumer tag. Leave empty to use an
                                         automatically generated consumer tag. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e604 ">Additional Client Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e608 ">Additional Client Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e607 ">Additional RabbitMQ client configuration properties to
+                                    <td class="entry" valign="top" width="70%" headers="d122442e611 ">Additional RabbitMQ client configuration properties to
                                         use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e604 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d122442e608 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e607 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
+       <td class="entry" valign="top" width="70%" headers="d122442e611 ">Character encoding of the messages to be processed.<p class="p">Not used for all data
          formats.</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e604 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_hrz_mq1_h5__d11114e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d122442e608 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_hrz_mq1_h5__d12191e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e607 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d122442e611 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e604 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d122442e608 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e607 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d122442e611 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -508,24 +510,24 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d117215e604 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_hrz_mq1_h5__d11114e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d122442e608 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_hrz_mq1_h5__d12191e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d117215e607 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="70%" headers="d122442e611 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e604 ">Use Credentials</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e608 ">Use Credentials</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e607 ">Enables the use of RabbitMQ credentials.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e611 ">Enables the use of RabbitMQ credentials.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e604 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e608 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e607 ">Type of data to be read. Use one of the following data
+                                    <td class="entry" valign="top" width="70%" headers="d122442e611 ">Type of data to be read. Use one of the following data
                                             formats:<ul class="ul" id="task_hrz_mq1_h5__ul_epm_gg4_q5">
                                             <li class="li">Avro</li>
 
@@ -571,9 +573,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e791">Queue Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e795">Queue Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e794">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e798">Description</th>
 
                                 </tr>
 
@@ -581,25 +583,25 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e791 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e795 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e794 ">Name of the queue to create.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e798 ">Name of the queue to create.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e791 ">Durable</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e795 ">Durable</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e794 ">Creates a durable queue when selected. <p class="p">By default, the
+                                    <td class="entry" valign="top" width="70%" headers="d122442e798 ">Creates a durable queue when selected. <p class="p">By default, the
                                             origin creates a durable queue.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e791 ">Exclusive</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e795 ">Exclusive</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e794 ">Creates an exclusive queue when selected. When exclusive,
+                                    <td class="entry" valign="top" width="70%" headers="d122442e798 ">Creates an exclusive queue when selected. When exclusive,
                                         the queue allows only <span class="ph">Data
                   Collector</span>  to use it.<p class="p">By default, the origin creates an exclusive
                                             queue.</p>
@@ -608,9 +610,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e791 ">Auto-Delete</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e795 ">Auto-Delete</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e794 ">Automatically deletes a queue after all consumers
+                                    <td class="entry" valign="top" width="70%" headers="d122442e798 ">Automatically deletes a queue after all consumers
                                         unsubscribe. <p class="p">When used with an exclusive queue, the queue
                                             is automatically deleted when you stop the pipeline.
                                         </p>
@@ -619,9 +621,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e791 ">Declaration Properties</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e795 ">Declaration Properties</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e794 ">Additional queue declaration properties to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e798 ">Additional queue declaration properties to use. </td>
 
                                 </tr>
 
@@ -642,9 +644,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e882">Exchange Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e886">Exchange Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e885">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e889">Description</th>
 
                                 </tr>
 
@@ -652,54 +654,54 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Binding name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Type</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Binding type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Binding name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Durable</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Creates a durable exchange.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Binding type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Auto-Delete</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Durable</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Automatically deletes an exchange when all queues are
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Creates a durable exchange.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Auto-Delete</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Automatically deletes an exchange when all queues are
                                         finished using it.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Routing Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Routing Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Routing key. <p class="p">Leave empty to default to the queue
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Routing key. <p class="p">Leave empty to default to the queue
                                             name.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Declaration Properties</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Declaration Properties</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Additional exchange properties to use.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Additional exchange properties to use.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e882 ">Binding Properties</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e886 ">Binding Properties</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e885 ">Additional binding properties to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e889 ">Additional binding properties to use. </td>
 
                                 </tr>
 
@@ -720,9 +722,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e987">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e991">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e990">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e994">Description</th>
 
                                 </tr>
 
@@ -730,26 +732,26 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Automatic Recovery Enabled</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Automatic Recovery Enabled</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Determines whether the origin attempts to reestablish a
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Determines whether the origin attempts to reestablish a
                                         connection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Network Recovery Interval</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Network Recovery Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Milliseconds to wait before attempting to reestablish a
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Milliseconds to wait before attempting to reestablish a
                                         network connection. <p class="p">Default is 5000.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Milliseconds for the connection to establish. Use 0 to
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Milliseconds for the connection to establish. Use 0 to
                                         opt out of a connection timeout. <p class="p">Default is
                                         0.</p>
 </td>
@@ -757,23 +759,23 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Handshake Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Handshake Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Milliseconds for the handshake to complete.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Shutdown Timeout (ms)</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Milliseconds for the shutdown to complete. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Milliseconds for the handshake to complete.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Heartbeat Timeout (secs)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Shutdown Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Seconds to wait for a heartbeat from RabbitMQ to verify
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Milliseconds for the shutdown to complete. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Heartbeat Timeout (secs)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Seconds to wait for a heartbeat from RabbitMQ to verify
                                         that the origin is up and the connection still
                                             available.<p class="p">Use 0 to avoid requesting heartbeats.
                                             Default is 0.</p>
@@ -782,9 +784,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Maximum Frame Size (bytes)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Maximum Frame Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Maximum frame size in bytes. Use for performance tuning.
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Maximum frame size in bytes. Use for performance tuning.
                                             <p class="p">Setting a larger value can improve throughput.
                                             Setting a smaller value can improve latency.</p>
 <p class="p">Use 0
@@ -794,9 +796,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e987 ">Maximum Channel Number</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e991 ">Maximum Channel Number</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e990 ">Maximum number of channels allowed. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e994 ">Maximum number of channels allowed. </td>
 
                                 </tr>
 
@@ -811,14 +813,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e738" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e738" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1106">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1110">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1109">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1113">Description</th>
 
                                 </tr>
 
@@ -826,17 +828,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1106 ">Message includes Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1110 ">Message includes Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1109 ">Indicates that the message includes an Avro schema.
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1113 ">Indicates that the message includes an Avro schema.
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1106 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1110 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1109 ">Avro schema definition to use when processing data.
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1113 ">Avro schema definition to use when processing data.
                                         Overrides any existing schema definitions associated with
                                         the data. Defining a schema can improve performance.<p class="p">When
                                             not used, the origin uses the schema defined in the
@@ -860,14 +862,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e808" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e808" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1165">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1169">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1168">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1172">Description</th>
 
                                 </tr>
 
@@ -875,9 +877,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1165 ">Max Data Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1169 ">Max Data Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1168 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1172 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -894,14 +896,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e865" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e959" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1211">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1215">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1214">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1218">Description</th>
 
                                 </tr>
 
@@ -909,9 +911,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_hrz_mq1_h5__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -936,25 +938,25 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -969,24 +971,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Escape Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
-                                            <img class="image" id="task_hrz_mq1_h5__d11101e962" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Root field type to use:<ul class="ul" id="task_hrz_mq1_h5__d11101e966">
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_hrz_mq1_h5__d12178e1056" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Root field type to use:<ul class="ul" id="task_hrz_mq1_h5__d12178e1060">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1002,9 +1004,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1211 ">Lines to Skip</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1214 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Lines to skip before reading data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">Parse NULLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">Replaces the specified string constant with null
+                                        values.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1215 ">NULL Constant</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1218 ">String constant to replace with null values.</td>
 
                                 </tr>
 
@@ -1020,25 +1037,25 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1012" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1123" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1376">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1398">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1379">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1401">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_hrz_mq1_h5__d11101e1034" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1376 ">JSON Content</td>
+                                <tr id="task_hrz_mq1_h5__d12178e1145" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1398 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1379 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_hrz_mq1_h5__d11101e1043">
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1401 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_hrz_mq1_h5__d12178e1154">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1050,10 +1067,10 @@
 
                                 </tr>
 
-                                <tr id="task_hrz_mq1_h5__d11101e1054" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1376 ">Maximum Object Length (chars)</td>
+                                <tr id="task_hrz_mq1_h5__d12178e1165" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1398 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1379 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1401 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -1072,14 +1089,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1100" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1212" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1445">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1467">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1448">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1470">Description</th>
 
                                 </tr>
 
@@ -1087,10 +1104,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1445 ">Log Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1467 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1448 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_hrz_mq1_h5__d11101e1129">
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1470 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_hrz_mq1_h5__d12178e1241">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1111,17 +1128,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1445 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1467 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1448 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1470 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1445 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1467 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1448 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1470 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1134,7 +1151,7 @@
                         </table>
 </div>
 
-                    <ul class="ul" id="task_hrz_mq1_h5__d11101e1178">
+                    <ul class="ul" id="task_hrz_mq1_h5__d12178e1290">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1157,14 +1174,14 @@
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1223" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1335" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d117215e1573">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d122442e1595">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d117215e1576">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d122442e1598">Description</th>
 
                                             </tr>
 
@@ -1172,10 +1189,10 @@
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e1573 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e1595 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e1576 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_hrz_mq1_h5__d11101e1252">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e1598 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_hrz_mq1_h5__d12178e1364">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1194,17 +1211,17 @@
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e1573 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e1595 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e1576 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e1598 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d117215e1573 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d122442e1595 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d117215e1576 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d122442e1598 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1226,37 +1243,37 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1314" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1425" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1650">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1672">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1653">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1675">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_hrz_mq1_h5__d11101e1336" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1650 ">Protobuf Descriptor File </td>
+                                <tr id="task_hrz_mq1_h5__d12178e1447" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1672 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1653 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1675 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory,
                                             <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
                                             generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. For more information about environment variables,
-                                            see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+                                            see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
 </td>
 
                                 </tr>
 
-                                <tr id="task_hrz_mq1_h5__d11101e1356" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1650 ">Message Type</td>
+                                <tr id="task_hrz_mq1_h5__d12178e1467" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1672 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1653 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1675 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1266,9 +1283,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1650 ">Delimited Messages</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1672 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1653 ">Indicates if a message might include more than one
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1675 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
@@ -1284,14 +1301,14 @@ Use a message type defined in the
                     <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1500" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1612" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d117215e1764">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d122442e1795">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d117215e1767">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d122442e1798">Description</th>
 
                                 </tr>
 
@@ -1299,9 +1316,9 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d117215e1764 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d122442e1795 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d117215e1767 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d122442e1798 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1322,22 +1339,22 @@ Use a message type defined in the
                     properties:</span>      
             <div class="itemgroup info">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d11101e1558" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d12178e1669" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left"> <tr class="row">                         
-                            <th class="entry" valign="top" width="30%" id="d117215e1812">XML Property</th>
+                            <th class="entry" valign="top" width="30%" id="d122442e1843">XML Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117215e1815">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d122442e1846">Description</th>
 </tr>
   
                         </thead>
 
        <tbody class="tbody">                
             <tr class="row">
-                <td class="entry" valign="top" width="30%" headers="d117215e1812 ">Delimiter Element</td>
+                <td class="entry" valign="top" width="30%" headers="d122442e1843 ">Delimiter Element</td>
 
-                <td class="entry" valign="top" width="70%" headers="d117215e1815 ">
+                <td class="entry" valign="top" width="70%" headers="d122442e1846 ">
                     <p class="p">XML element that acts as a delimiter. Omit a delimiter to
                         treat the entire XML document as one record.</p>
 
@@ -1346,9 +1363,9 @@ Use a message type defined in the
             </tr>
 
             <tr class="row">
-                <td class="entry" valign="top" width="30%" headers="d117215e1812 ">Max Record Length (chars)</td>
+                <td class="entry" valign="top" width="30%" headers="d122442e1843 ">Max Record Length (chars)</td>
 
-                <td class="entry" valign="top" width="70%" headers="d117215e1815 ">
+                <td class="entry" valign="top" width="70%" headers="d122442e1846 ">
                     <p class="p">The maximum number of characters in a record. Longer
                         records are diverted to the pipeline for error handling.
                     </p>

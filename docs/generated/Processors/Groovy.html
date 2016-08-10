@@ -134,7 +134,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_hzt_zjt_gv__d17323e795">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_hzt_zjt_gv__d20178e935">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -167,7 +167,7 @@
                                           <samp class="ph codeph">debug()</samp>, and <samp class="ph codeph">trace()</samp>. </dd>
 
                               <dd class="dd">The signature of the four methods is as follows:
-                                    <pre class="pre codeblock">(message-template, arguments…) </pre>
+                                    <pre class="pre codeblock">(message-template, arguments...) </pre>
 The
                                     message template can have positional variables denoted by curly
                                     brackets: { }. The arguments are replaced in the message
@@ -188,6 +188,15 @@ The
                               <dd class="dd">An object that passes error records to the processor for error
                                     handling. Includes a <samp class="ph codeph">write(Record, message)</samp>
                                     method.</dd>
+
+                        
+                        
+                              <dt class="dt dlterm">sdcFunctions</dt>
+
+                              <dd class="dd">An object that runs functions that evaluate or modify data.
+                                    Includes a <samp class="ph codeph">getFieldNull(Record, 'field path')</samp>
+                                    method that checks if a field is assigned a constant such as
+                                    NULL_INTEGER or NULL_STRING. </dd>
 
                         
                   </dl>
@@ -212,6 +221,61 @@ The
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_u13_flh_tw">
+ <h2 class="title topictitle2">Type Handling</h2>
+
+ <div class="body conbody">
+  <p class="p">Note the following data type information when
+            using the Groovy Evaluator:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Data type of null values</dt>
+
+                <dd class="dd">
+                    <p class="p">The Groovy Evaluator can associate null values with a data type. For example,
+                        if the Groovy Evaluator assigns a null value to an Integer field, the field
+                        is returned to the pipeline as an integer with a null value.</p>
+
+                    <div class="p">Use constants in the Groovy code to create a new field of a specific data
+                        type with a null value. For example, you can create a new String field with
+                        a null value by assigning the type constant NULL_STRING to the field as
+                        follows:<pre class="pre codeblock">record.value['new_field'] = NULL_STRING</pre>
+</div>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Date fields</dt>
+
+                <dd class="dd">Use the String data type to create a new field to store a date with a specific
+                    format. For example, the following sample code creates a new String field that
+                    stores the current date using the format
+                    YYYY-MM-dd:<pre class="pre codeblock"> // Define a date object to record the current date
+def date = new Date()
+
+for (record in records) {
+  try {
+    // Create a string field to store the current date with the specified format
+    record.value['date'] = date.format('YYYY-MM-dd')
+    
+    // Write a record to the processor output
+    output.write(record)
+  } catch (e) {
+    // Send a record to error
+    log.error(e.toString(), e)
+    error.write(record, e.toString())
+  }
+}</pre>
+</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_asl_bpt_gv">
     <h2 class="title topictitle2">Configuring a Groovy Evaluator</h2>
 
@@ -227,14 +291,14 @@ The
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__d17261e2509" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__d20116e3037" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d146282e313">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d156570e378">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d146282e316">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d156570e381">Description</th>
 
                                 </tr>
 
@@ -242,24 +306,24 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d146282e313 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d156570e378 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146282e316 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d146282e313 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d146282e316 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d156570e381 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d146282e313 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d17261e2555" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d156570e378 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146282e316 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d156570e381 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d156570e378 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d20116e3083" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d156570e381 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -267,10 +331,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d146282e313 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d17261e2569" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d156570e378 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d20116e3097" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146282e316 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d156570e381 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -278,10 +342,10 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d146282e313 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_asl_bpt_gv__d17261e2584" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d156570e378 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_asl_bpt_gv__d20116e3112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146282e316 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d17261e2588">
+                                    <td class="entry" valign="top" width="70%" headers="d156570e381 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d20116e3116">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -312,9 +376,9 @@ The
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d146282e435">Groovy Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d156570e500">Groovy Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d146282e438">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d156570e503">Description</th>
 
                                 </tr>
 
@@ -322,9 +386,9 @@ The
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d146282e435 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d156570e500 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d146282e438 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d156570e503 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -338,9 +402,9 @@ The
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d146282e435 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d156570e500 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d146282e438 ">Groovy code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d156570e503 ">Groovy code to use in the processor.</td>
 
                                 </tr>
 

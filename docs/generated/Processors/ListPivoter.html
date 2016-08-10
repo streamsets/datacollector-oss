@@ -1,0 +1,610 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The List Pivoter pivots data in a list field and creates a record for each item in the list. The List Pivoter processor pivots the data in one field. To pivot additional list fields or nested lists, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="List Pivoter"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ekg_313_qw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>List Pivoter</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ekg_313_qw">
+ <h1 class="title topictitle1">List Pivoter</h1>
+
+ <div class="body conbody">
+        <p class="p">The List Pivoter pivots data
+            in a list field and creates a record for each item in the list. </p>
+
+        <p class="p">The List Pivoter processor pivots the data in one field. <span class="ph">To pivot additional list fields or nested lists, use
+                        additional List Pivoters.</span></p>
+
+  <p class="p">When you configure the List Pivoter, you specify the list field to pivot and where to write the
+            pivoted data. By default, the processor writes the pivoted data to the original list
+            field, but you can specify another field for the data. </p>
+
+        <p class="p">You can also specify whether to include the existing fields in the resulting records and
+            configure the action to take when the list field does not exist. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_efn_wgw_tw">
+ <h2 class="title topictitle2">Generated Records</h2>
+
+ <div class="body conbody">
+        <p class="p">When you pivot
+            a field, the List Pivoter creates a new record for each first-level item in the list.
+                <span class="ph">To pivot additional list fields or nested lists, use
+                        additional List Pivoters.</span>
+        </p>
+
+        <p class="p">When pivoting a list, you can include the existing fields in the record or drop them,
+            using only the pivoted data in the new records. You can also specify where to write the
+            pivoted data - in the original list field or in a different field. </p>
+
+        <div class="p">For example, say you want to pivot the Color_List data in the following set of records so
+            you can update the unit costs based on color later in the pipeline:<dl class="dl">
+                
+                    <dt class="dt dlterm">Incoming data</dt>
+
+                    <dd class="dd">
+                        <div class="p">
+                            <table cellpadding="4" cellspacing="0" summary="" id="concept_efn_wgw_tw__simpletable_gs4_rqz_5w" border="1" class="simpletable"><tr class="sthead">
+                                    <th valign="bottom" align="left" id="d168108e86" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Pen_Type</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e90" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Color_List</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e94" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Unit_Cost</samp></th>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e86" class="stentry">
+                                        <p class="p"><samp class="ph codeph">ballpoint</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e90" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">blue</samp>
+                                        </p>
+
+                                        <p class="p"><samp class="ph codeph">red</samp>
+                                        </p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e94" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">10</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e86" class="stentry">
+                                        <p class="p"><samp class="ph codeph">highlighter</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e90" class="stentry">
+                                        <p class="p"><samp class="ph codeph">light blue</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e94" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">20</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e86" class="stentry">
+                                        <p class="p"><samp class="ph codeph">felt tip</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e90" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e94" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">15</samp></p>
+
+                                    </td>
+
+                                </tr>
+</table>
+
+                        </div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Pivot to existing field, include existing data</dt>
+
+                    <dd class="dd">If you use the List Processor default to pivot the list in the Color_List
+                        field to the same field and include existing fields, List Pivoter overwrites
+                        the list in the Color_List field with the pivoted data as follows:<div class="p">
+                            <table cellpadding="4" cellspacing="0" summary="" id="concept_efn_wgw_tw__simpletable_emf_qj3_vw" border="1" class="simpletable"><tr class="sthead">
+                                    <th valign="bottom" align="left" id="d168108e205" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Pen_Type</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e209" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Color_List</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e213" class="stentry" width="33.333333333333336%"><samp class="ph codeph">Unit_Cost</samp></th>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">ballpoint</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry"><samp class="ph codeph">black</samp></td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">10</samp></td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">ballpoint</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry"><samp class="ph codeph">blue</samp>
+                                    </td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">10</samp></td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">ballpoint</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry"><samp class="ph codeph">red</samp>
+                                    </td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">10</samp></td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">highlighter</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry"><samp class="ph codeph">light blue</samp></td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">20</samp></td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">highlighter</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry">
+                                        <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">20</samp></td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e205" class="stentry"><samp class="ph codeph">felt tip</samp></td>
+
+                                    <td valign="top" headers="d168108e209" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e213" class="stentry">.<samp class="ph codeph">15</samp></td>
+
+                                </tr>
+</table>
+
+                        </div>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Pivot to new field, include existing data</dt>
+
+                    <dd class="dd">If you configure the processor to pivot the list to a new Color field and
+                        include the existing records, List Pivoter generates the following records:<div class="p">
+                            <table cellpadding="4" cellspacing="0" summary="" id="concept_efn_wgw_tw__simpletable_kqm_qsz_5w" border="1" class="simpletable"><tr class="sthead">
+                                    <th valign="bottom" align="left" id="d168108e339" class="stentry" width="25%"><samp class="ph codeph">Pen_Type</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e343" class="stentry" width="25%"><samp class="ph codeph">Color_List</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e347" class="stentry" width="25%"><samp class="ph codeph">Color</samp></th>
+
+                                    <th valign="bottom" align="left" id="d168108e351" class="stentry" width="25%"><samp class="ph codeph">Unit_Cost</samp></th>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">ballpoint</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">blue</samp>
+                                        </p>
+
+                                        <p class="p"><samp class="ph codeph">red</samp>
+                                        </p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">10</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">ballpoint</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">blue</samp>
+                                        </p>
+
+                                        <p class="p"><samp class="ph codeph">red</samp>
+                                        </p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">blue</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">10</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">ballpoint</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">blue</samp>
+                                        </p>
+
+                                        <p class="p"><samp class="ph codeph">red</samp>
+                                        </p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">red</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">10</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">highlighter</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry">
+                                        <p class="p"><samp class="ph codeph">light blue</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">light blue</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">20</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">highlighter</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry">
+                                        <p class="p"><samp class="ph codeph">light blue</samp></p>
+
+                                        <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">20</samp></p>
+
+                                    </td>
+
+                                </tr>
+<tr class="strow">
+                                    <td valign="top" headers="d168108e339" class="stentry">
+                                        <p class="p"><samp class="ph codeph">felt tip</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e343" class="stentry"><samp class="ph codeph">black</samp></td>
+
+                                    <td valign="top" headers="d168108e347" class="stentry">
+                                        <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                    </td>
+
+                                    <td valign="top" headers="d168108e351" class="stentry">
+                                        <p class="p">.<samp class="ph codeph">15</samp></p>
+
+                                    </td>
+
+                                </tr>
+</table>
+
+                        </div>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Pivot to new field, drop existing data</dt>
+
+                    <dd class="dd">If you pivot data to a new Color field without including the existing
+                        fields, List Pivoter produces records with only the Color field. This choice
+                        doesn't make sense in this example, but can be useful when pivoting nested
+                        lists or when you plan to enrich the data downstream:<table cellpadding="4" cellspacing="0" summary="" id="concept_efn_wgw_tw__simpletable_ogz_3k3_vw" border="1" class="simpletable"><tr class="sthead">
+                                <th valign="bottom" align="left" id="d168108e598" class="stentry" width="100%"><samp class="ph codeph">Color</samp></th>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry"><samp class="ph codeph">black</samp></td>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry"><samp class="ph codeph">blue</samp>
+                                </td>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry"><samp class="ph codeph">red</samp>
+                                </td>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry"><samp class="ph codeph">light blue</samp></td>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry">
+                                    <p class="p"><samp class="ph codeph">yellow</samp></p>
+
+                                </td>
+
+                            </tr>
+<tr class="strow">
+                                <td valign="top" headers="d168108e598" class="stentry">
+                                    <p class="p"><samp class="ph codeph">black</samp></p>
+
+                                </td>
+
+                            </tr>
+</table>
+</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_dn1_k13_qw">
+    <h2 class="title topictitle2">Configuring a List Pivoter</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a List Pivoter to pivot data in a list field and generate a record for each
+        item in the list.</p>
+
+        <div class="section context"></div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dn1_k13_qw__d20116e3037" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d168108e698">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d168108e701">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e698 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e701 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e698 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e701 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e698 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_dn1_k13_qw__d20116e3083" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e701 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e698 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_dn1_k13_qw__d20116e3097" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e701 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e698 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_dn1_k13_qw__d20116e3112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e701 ">Error record handling for the stage: <ul class="ul" id="task_dn1_k13_qw__d20116e3116">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">List Pivot</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_dn1_k13_qw__table_rx1_t1y_tw" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d168108e820">List Pivoter Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d168108e823">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e820 ">List to Pivot</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e823 ">List field to pivot.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e820 ">Copy All Fields <a class="xref" href="ListPivoter.html#concept_efn_wgw_tw">
+                                            <img class="image" id="task_dn1_k13_qw__image_f3b_khp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e823 ">Includes all existing fields in the generated
+                                        records.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e820 ">Pivoted Items Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e823 ">Field path to write the pivoted data. If the field
+                                        exists, the processor overwrites any data in the field.<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> When not used, the processor writes pivoted data
+                                                to the original list field. </div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d168108e820 ">Field Does Not Exist</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d168108e823 ">Action to take if the record does not include the
+                                        specified field to pivot.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
+</body>
+</html>

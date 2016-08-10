@@ -150,15 +150,73 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
 
                 
                 
+                    <dt class="dt dlterm">Hadoop FS destination</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, Hadoop FS
+                        provides the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_gps_l4z_ww">
+                            <li class="li">Late Records meter and counter - The number of late records written
+                                to HDFS. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_HdfsTarget_\ 
+HDFSDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt;</pre>
+</li>
+
+                            <li class="li">To HDFS Records meter and counter. The number of records written to
+                                HDFS. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_HdfsTarget_\
+HDFSDTarget_&lt;library version&gt;.hdfsRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt; </pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+                
                     <dt class="dt dlterm">Local FS destination</dt>
 
-                    <dd class="dd">In addition to the standard metrics available for origins, LocalFS provides
-                        the following custom metric:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
+                    <dd class="dd">In addition to the standard metrics available for origins, Local FS provides
+                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_m4h_txt_nv">
                             <li class="li">Late Records meter and counter - The number of late records written
-                                to the destination system. The counter displays in external tools as
-                                    follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+                                to the local file system. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
 com_streamsets_pipeline_stage_destination_localfilesystem_\
 LocalFileSystemDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt;</pre>
+</li>
+
+                            <li class="li">To HDFS Records meter and counter. The number of records written to
+                                the local file system. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_localfilesystem_\
+LocalFileSystemDTarget_&lt;library version&gt;.hdfsRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt;</pre>
+</li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">MapR FS destination</dt>
+
+                    <dd class="dd">In addition to the standard metrics available for origins, MapR FS provides
+                        the following custom metrics:<ul class="ul" id="concept_llw_2st_nv__ul_dll_t41_xw">
+                            <li class="li">Late Records meter and counter - The number of late records written
+                                to MapR FS. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_marpfs_\
+MaprFSDTarget_&lt;library version&gt;.lateRecords.&lt;file path&gt;.\
+&lt;counter | metric&gt;</pre>
+</li>
+
+                            <li class="li">To HDFS Records meter and counter. The number of records written to
+                                MapR FS. The counter displays in external tools as
+                                follows:<pre class="pre codeblock">sdc.pipeline.&lt;pipeline name&gt;.&lt;pipeline revision&gt;.custom.\
+com_streamsets_pipeline_stage_destination_marpfs_\
+MaprFSDTarget_&lt;library version&gt;.hdfsRecords.&lt;file path&gt;.\
 &lt;counter | metric&gt;</pre>
 </li>
 
