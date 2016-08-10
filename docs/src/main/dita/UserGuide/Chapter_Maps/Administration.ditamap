@@ -53,6 +53,7 @@
   <topicmeta>
    <shortdesc/>
   </topicmeta>
+   <topicref href="../Administration/CLI-JavaConfigOptions.dita"/>
    <topicref href="../Administration/CLI-Launching.dita"/>
    <topicref href="../Administration/CLI-Help.dita"/>
    <topicref href="../Administration/CLI-Manager.dita"/>

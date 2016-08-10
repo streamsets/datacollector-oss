@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ywx_d5x_pt">
  <title>Command Line Interface</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> provides a command line interface. </shortdesc>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    provides a command line interface. </shortdesc>
  <conbody>
   <p><indexterm>command line
           interface<indexterm>overview</indexterm></indexterm><indexterm>administration<indexterm>command

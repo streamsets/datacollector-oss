@@ -22,6 +22,11 @@
           variable</indexterm></indexterm><indexterm>SDC_JAVA_OPTS<indexterm>Java environment
           variable</indexterm></indexterm>You can edit the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      environment configuration file to add or update Java configuration options. </p>
+      environment configuration file to add or update Java configuration options in the
+      SDC_JAVA_OPTS environment variable.</p>
+    <note>To modify Java configuration options for the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
+      line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
+        <xref href="../Administration/CLI-JavaConfigOptions.dita#concept_zrc_qch_xw"/>.</note>
  </conbody>
 </concept>
