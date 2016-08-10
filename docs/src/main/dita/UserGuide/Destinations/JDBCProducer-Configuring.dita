@@ -39,12 +39,9 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>JDBC Connection String</entry>
-                                    <entry>Connection string to use to connect to the
-                                            database.<p>Some databases, such as Postgres, require
-                                            the schema in the connection string. Use the connection
-                                            string format required by the database. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCConnectString_row">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
@@ -54,45 +51,32 @@
                                             required by the database. </p></entry>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FIELD2ColumnMapping">
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FieldToColumnJDBC_row">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Change Log Format</entry>
-                                    <entry>Format of the change capture log. Use to specify the log
-                                        format of origin data when processing change capture
-                                        data.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/LogFormat_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Rollback Batch On Error</entry>
-                                    <entry>Rolls back the entire batch when an error occurs within
-                                        the batch. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/RollbackBatch_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Use Multi-Row Insert</entry>
-                                    <entry>Determines how the destination inserts records. Select to
-                                        allow inserts of multiple rows at a time. Clear to insert a
-                                        single row at a time. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MultiRowInsert_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Statement Parameter Limit</entry>
-                                    <entry>Defines the number of parameters allowed in the prepared
-                                        statement for multi-row inserts.<p>Use -1 to disable the
-                                            parameter limit. Default is -1.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ParamLimit_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Select to use JDBC credentials.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Additional JDBC Configuration Properties</entry>
-                                    <entry>
-                                        <p>Additional JDBC configuration properties to use. To add
-                                            properties, click <uicontrol>Add</uicontrol> and define
-                                            the JDBC property name and value. </p>
-                                        <p>Use the property names and values as expected by JDBC.
-                                        </p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

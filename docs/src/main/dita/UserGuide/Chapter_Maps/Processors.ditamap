@@ -124,6 +124,16 @@
    <topicref href="../Processors/JavaScript-TypeHandling.dita"/>
    <topicref href="../Processors/JavaScript-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/JDBCLookup.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/JDBCLookup-DriverInstall.dita"/>
+   <topicref href="../Processors/JDBCLookup-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Processors/JDBCTee.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/JDBCTee-DriverInstall.dita"/>
+   <topicref href="../Processors/JDBCTee-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JSONParser-Configuring.dita"/>

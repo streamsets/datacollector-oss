@@ -40,9 +40,9 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>JDBC Connection String</entry>
-                                    <entry>JDBC connection string.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCConnectString_row">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Incremental Mode <xref
@@ -81,10 +81,9 @@
                                         MINUTES, or HOURS.<p>Default is 10 seconds: ${10 * SECONDS}.
                                         </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Indicates whether to use a login to access the
-                                        database.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Root Field Type</entry>
@@ -98,20 +97,13 @@
                                     <entry>Max Batch Size (records)</entry>
                                     <entry>Maximum number of records to include in a batch.</entry>
                                 </row>
-                                <row>
-                                    <entry>Max Clob Size (characters)</entry>
-                                    <entry>Maximum number of characters to be read in a Clob field.
-                                        Larger data is truncated.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Additional JDBC Configuration</entry>
-                                    <entry>
-                                        <p>Additional JDBC configuration properties to use. To add
-                                            properties, click <uicontrol>Add</uicontrol> and define
-                                            the JDBC property name and value. </p>
-                                        <p>Use the property names and values as expected by JDBC.
-                                        </p>
-                                    </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

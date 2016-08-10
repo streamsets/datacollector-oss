@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!--ield
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -99,8 +99,8 @@
    </strow>
   </simpletable>
   <p>
-   <draft-comment author="Loretta">The following row is used in Configuring Hive Streaming and
-    Configuring JDBC Producer</draft-comment>
+   <draft-comment author="Loretta">The following row is used in Configuring Hive
+    Streaming</draft-comment>
   </p>
   <table frame="all" rowsep="1" colsep="1" id="table_ps1_hln_jt">
    <tgroup cols="2">
@@ -433,8 +433,75 @@
    </table>
   </p>
   <p>
-   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer uses the whole table,
-    row by row. Producer uses all rows but last.</draft-comment>
+   <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Consumer, Lookup, Producer,
+    and Tee use most rows in this table.</draft-comment>
+   <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+     <thead>
+      <row>
+       <entry>JDBC Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row id="JDBCConnectString_row">
+       <entry>JDBC Connection String</entry>
+       <entry>Connection string to use to connect to the database.<p>Some databases, such as
+         Postgres, require the schema in the connection string. Use the connection string format
+         required by the database.</p></entry>
+      </row>
+      <row id="FieldToColumnJDBC_row">
+       <entry>Field to Column Mapping</entry>
+       <entry>Use to override the default field to column mappings. By default, fields are written
+        to columns of the same name.<p>When you override the mappings, you can define parameterized
+         values to apply SQL functions to the field values before writing them to columns. For
+         example, to convert a field value to an integer, enter the following for the parameterized
+         value:<codeblock>CAST(? AS INTEGER)</codeblock></p><p>The question mark (?) is substituted
+         with the value of the field. Leave the default value of ? if you do not need to apply a SQL
+         function.</p><p>Use the <uicontrol>Add</uicontrol> icon to create additional field to
+         column mappings.</p></entry>
+      </row>
+      <row id="JDBCUseCredentials_row">
+       <entry>Use Credentials</entry>
+       <entry>Indicates whether to use a login to access the database.</entry>
+      </row>
+      <row id="JDBCMaxClob_row">
+       <entry>Max Clob Size (characters)</entry>
+       <entry>Maximum number of characters to be read in a Clob field. Larger data is
+        truncated.</entry>
+      </row>
+      <row id="LogFormat_row">
+       <entry>Change Log Format</entry>
+       <entry>Format of the change capture log. Use to specify the log format of origin data when
+        processing change capture data.</entry>
+      </row>
+      <row id="RollbackBatch_row">
+       <entry>Rollback Batch On Error</entry>
+       <entry>Rolls back the entire batch when an error occurs within the batch. </entry>
+      </row>
+      <row id="MultiRowInsert_row">
+       <entry>Use Multi-Row Insert</entry>
+       <entry>Determines how the stage inserts records. Select to allow inserts of multiple rows at
+        a time. Clear to insert a single row at a time. </entry>
+      </row>
+      <row id="ParamLimit_row">
+       <entry>Statement Parameter Limit</entry>
+       <entry>Defines the number of parameters allowed in the prepared statement for multi-row
+         inserts.<p>Use -1 to disable the parameter limit. Default is -1.</p></entry>
+      </row>
+      <row id="JDBCAddtitionalProps_row">
+       <entry>Additional JDBC Configuration Properties</entry>
+       <entry>Additional JDBC configuration properties to use. To add properties, click
+         <uicontrol>Add</uicontrol> and define the JDBC property name and value. <p>Use the property
+         names and values as expected by JDBC. </p></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer, JDBC Lookup, and JDBC
+    Tee use the whole table, row by row. Producer uses all rows but last.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>

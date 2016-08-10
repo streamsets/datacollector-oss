@@ -15,8 +15,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ysc_ccy_hw">
  <title>JDBC Lookup</title>
- <shortdesc></shortdesc>
+ <shortdesc>The JDBC Lookup processor uses a JDBC connection to perform lookups in a database table
+        and pass the lookup values to fields. Use the JDBC Lookup to enrich records with additional
+        data.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>JDBC Lookup
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JDBC
+                    Lookup</indexterm></indexterm>For example, you can configure the processor to
+            use a department_ID field as the column to look up department name values in a database
+            table, and pass the values to a new department_name output field.</p>
+        <p>When you configure JDBC Lookup, you specify connection information and custom JDBC
+            configuration properties to determine how the processor connects to the database. You
+            configure the SQL query to define the data to look up in the database, and specify the
+            output fields to write the lookup values to. </p>
+        <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
+            health check query.</p>
  </conbody>
 </concept>

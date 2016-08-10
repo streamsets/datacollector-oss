@@ -1111,7 +1111,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">The following steps are used in <uicontrol>JDBC
-                            Consumer &amp; Producer </uicontrol>config topics.</draft-comment>
+                            Consumer, JDBC Producer, JDBC Lookup, and JDBC Tee </uicontrol>config
+                        topics.</draft-comment>
                 </cmd>
             </step>
             <step id="JDBC-Credentials">

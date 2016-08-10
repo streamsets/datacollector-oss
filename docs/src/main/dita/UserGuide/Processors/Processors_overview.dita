@@ -39,6 +39,9 @@
         <li>HTTP Client - The HTTP Client processor sends requests to an HTTP resource URL and
           writes the results to a field.</li>
         <li>JavaScript Evaluator - Processes records based on custom JavaScript code.  </li>
+        <li>JDBC Lookup - Performs lookups in a database table through a JDBC connection.</li>
+        <li>JDBC Tee - Writes data to a database table through a JDBC connection, and enriches
+          records with data from generated database columns.</li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>
         <li>Log Parser - Parses log data in a field based on the specified log format.</li>
