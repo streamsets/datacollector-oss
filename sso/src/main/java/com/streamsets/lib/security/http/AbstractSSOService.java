@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractSSOService implements SSOService {
@@ -100,21 +104,7 @@ public abstract class AbstractSSOService implements SSOService {
 
   @Override
   public SSOPrincipal validateUserToken(String authToken) {
-    SSOPrincipal principal = userPrincipalCache.get(authToken);
-    if (principal == null) {
-      if (userPrincipalCache.isInvalid(authToken)) {
-        LOG.debug("User token (cached) invalid '{}'", authToken);
-      } else {
-        principal = validateUserTokenWithSecurityService(authToken);
-        if (principal != null) {
-          userPrincipalCache.put(authToken, principal);
-        } else {
-          LOG.debug("User token invalid '{}'", authToken);
-          userPrincipalCache.invalidate(authToken);
-        }
-      }
-    }
-    return principal;
+    return validate(userPrincipalCache, createUserRemoteValidation(authToken), authToken, "User");
   }
 
   @Override
@@ -126,23 +116,10 @@ public abstract class AbstractSSOService implements SSOService {
 
   @Override
   public SSOPrincipal validateAppToken(String authToken, String componentId) {
-    SSOPrincipal principal = appPrincipalCache.get(authToken);
-    if (principal == null) {
-      if (appPrincipalCache.isInvalid(authToken)) {
-        LOG.debug("App token invalid '{}'", authToken);
-      } else {
-        principal = validateAppTokenWithSecurityService(authToken, componentId);
-        if (principal != null) {
-          appPrincipalCache.put(authToken, principal);
-        } else {
-          LOG.debug("App token invalid '{}'", authToken);
-          appPrincipalCache.invalidate(authToken);
-        }
-      }
-    } else {
-      if (!principal.getPrincipalId().equals(componentId)) {
-        principal = null;
-      }
+    SSOPrincipal principal =
+        validate(appPrincipalCache, createAppRemoteValidation(authToken, componentId), authToken, "App");
+    if (principal != null && !principal.getPrincipalId().equals(componentId)) {
+      principal = null;
     }
     return principal;
   }
@@ -153,5 +130,78 @@ public abstract class AbstractSSOService implements SSOService {
   }
 
   protected abstract SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId);
+
+  private static final Object DUMMY = new Object();
+  private ConcurrentMap<String, Object> lockMap = new ConcurrentHashMap<>();
+
+  @VisibleForTesting
+  ConcurrentMap<String, Object> getLockMap() {
+    return lockMap;
+  }
+
+  SSOPrincipal validate(PrincipalCache cache, Callable<SSOPrincipal> remoteValidation, String token, String type) {
+    SSOPrincipal principal = cache.get(token);
+    if (principal == null) {
+      if (cache.isInvalid(token)) {
+        LOG.debug("{} token (cached) invalid '{}'", type, token);
+      } else {
+        long start = System.currentTimeMillis();
+        while (getLockMap().putIfAbsent(token, DUMMY) != null) {
+          if (System.currentTimeMillis() - start > 10000) {
+            String msg = "Exceeded 10sec max wait time";
+            LOG.warn(msg);
+            throw new RuntimeException(msg);
+          }
+          try {
+            Thread.sleep(10);
+          } catch (InterruptedException ex) {
+            LOG.warn("Got interrupted while waiting for lock");
+            return null;
+          }
+        }
+        try {
+          principal = cache.get(token);
+          if (principal == null) {
+            try {
+              principal = remoteValidation.call();
+            } catch (Exception ex) {
+              if (ex instanceof RuntimeException) {
+                throw (RuntimeException) ex;
+              } else {
+                throw new RuntimeException(ex);
+              }
+            }
+            if (principal != null) {
+              cache.put(token, principal);
+            } else {
+              LOG.debug("{} token invalid '{}'", type, token);
+              cache.invalidate(token);
+            }
+          }
+        } finally {
+          getLockMap().remove(token);
+        }
+      }
+    }
+    return principal;
+  }
+
+  Callable<SSOPrincipal> createUserRemoteValidation(final String authToken) {
+    return new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        return validateUserTokenWithSecurityService(authToken);
+      }
+    };
+  }
+
+  Callable<SSOPrincipal> createAppRemoteValidation(final String authToken, final String componentId) {
+    return new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        return validateAppTokenWithSecurityService(authToken, componentId);
+      }
+    };
+  }
 
 }

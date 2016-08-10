@@ -25,6 +25,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.URLEncoder;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
+
+import static org.mockito.Mockito.when;
 
 public class TestAbstractSSOService {
 
@@ -100,7 +105,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
-    Mockito.when(service.validateUserTokenWithSecurityService(Mockito.eq("a"))).thenReturn(principal);
+    when(service.validateUserTokenWithSecurityService(Mockito.eq("a"))).thenReturn(principal);
 
     Assert.assertEquals(principal, service.validateUserToken("a"));
     Mockito.verify(service).validateUserTokenWithSecurityService(Mockito.eq("a"));
@@ -113,7 +118,7 @@ public class TestAbstractSSOService {
     service.initializePrincipalCaches(1); //1 millisec cache
 
     //valid, unknown
-    Mockito.when(service.validateUserTokenWithSecurityService(Mockito.eq("b"))).thenReturn(principal);
+    when(service.validateUserTokenWithSecurityService(Mockito.eq("b"))).thenReturn(principal);
 
     Assert.assertEquals(principal, service.validateUserToken("b"));
     Mockito.verify(service).validateUserTokenWithSecurityService(Mockito.eq("b"));
@@ -123,7 +128,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     Mockito.reset(service);
-    Mockito.when(service.validateUserTokenWithSecurityService(Mockito.eq("b"))).thenReturn(principal);
+    when(service.validateUserTokenWithSecurityService(Mockito.eq("b"))).thenReturn(principal);
     Assert.assertEquals(principal, service.validateUserToken("b"));
     Mockito.verify(service).validateUserTokenWithSecurityService(Mockito.eq("b"));
   }
@@ -138,15 +143,13 @@ public class TestAbstractSSOService {
     Assert.assertNull(service.validateUserToken("x"));
 
     // valid, unknown
-    Mockito
-        .when(service.validateUserTokenWithSecurityService(Mockito.eq("y")))
+    when(service.validateUserTokenWithSecurityService(Mockito.eq("y")))
         .thenReturn(Mockito.mock(SSOPrincipal.class));
     service.invalidateUserToken("y");
     Assert.assertNull(service.validateUserToken("y"));
 
     // valid, cached
-    Mockito
-        .when(service.validateUserTokenWithSecurityService(Mockito.eq("z")))
+    when(service.validateUserTokenWithSecurityService(Mockito.eq("z")))
         .thenReturn(Mockito.mock(SSOPrincipal.class));
     Assert.assertNotNull(service.validateUserToken("z"));
     service.invalidateUserToken("z");
@@ -171,8 +174,8 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
-    Mockito.when(principal.getPrincipalId()).thenReturn("c");
-    Mockito.when(service.validateAppTokenWithSecurityService(Mockito.eq("a"), Mockito.eq("c"))).thenReturn(principal);
+    when(principal.getPrincipalId()).thenReturn("c");
+    when(service.validateAppTokenWithSecurityService(Mockito.eq("a"), Mockito.eq("c"))).thenReturn(principal);
 
     Assert.assertEquals(principal, service.validateAppToken("a", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(Mockito.eq("a"), Mockito.eq("c"));
@@ -188,7 +191,7 @@ public class TestAbstractSSOService {
     service.initializePrincipalCaches(1); //1 millisec cache
 
     //valid, unknown
-    Mockito.when(service.validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"))).thenReturn(principal);
+    when(service.validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"))).thenReturn(principal);
 
     Assert.assertEquals(principal, service.validateAppToken("b", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"));
@@ -198,7 +201,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     Mockito.reset(service);
-    Mockito.when(service.validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"))).thenReturn(principal);
+    when(service.validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"))).thenReturn(principal);
     Assert.assertEquals(principal, service.validateAppToken("b", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"));
   }
@@ -213,20 +216,162 @@ public class TestAbstractSSOService {
     Assert.assertNull(service.validateAppToken("x", "c"));
 
     // valid, unknown
-    Mockito
-        .when(service.validateAppTokenWithSecurityService(Mockito.eq("y"), Mockito.eq("c")))
+    when(service.validateAppTokenWithSecurityService(Mockito.eq("y"), Mockito.eq("c")))
         .thenReturn(Mockito.mock(SSOPrincipal.class));
     service.invalidateAppToken("y");
     Assert.assertNull(service.validateAppToken("y", "c"));
 
     // valid, cached
-    Mockito
-        .when(service.validateAppTokenWithSecurityService(Mockito.eq("z"), Mockito.eq("c")))
-        .thenReturn(Mockito.mock(SSOPrincipal.class));
+    SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
+    Mockito.when(principal.getPrincipalId()).thenReturn("c");
+    Mockito.when(service.validateAppTokenWithSecurityService(Mockito.eq("z"), Mockito.eq("c"))).thenReturn(principal);
     Assert.assertNotNull(service.validateAppToken("z", "c"));
     service.invalidateAppToken("z");
     Assert.assertNull(service.validateAppToken("z", "c"));
-
   }
+
+  @Test
+  public void testValidateTokenValidInCache() throws Exception {
+    AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    final SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
+
+    PrincipalCache cache = Mockito.mock(PrincipalCache.class);
+    Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(principal);
+
+    Assert.assertEquals(principal, service.validate(cache, null, "t", "x"));
+    Mockito.verify(cache, Mockito.times(1)).get(Mockito.eq("t"));
+  }
+
+  @Test
+  public void testValidateTokenInvalid() throws Exception {
+    AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    PrincipalCache cache = Mockito.mock(PrincipalCache.class);
+    Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(null);
+    Mockito.when(cache.isInvalid(Mockito.eq("t"))).thenReturn(true);
+
+    Assert.assertNull(service.validate(cache, null, "t", "x"));
+    Mockito.verify(cache, Mockito.times(1)).get(Mockito.eq("t"));
+  }
+
+  @Test
+  public void testValidateTokenValidNotInCache() throws Exception {
+    AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    final SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
+
+    // token not in cache, no lock, valid token
+    PrincipalCache cache = Mockito.mock(PrincipalCache.class);
+    Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(null);
+    Mockito.when(cache.isInvalid(Mockito.eq("t"))).thenReturn(false);
+    ConcurrentMap<String, Object> lockMap = service.getLockMap();
+    lockMap = Mockito.spy(lockMap);
+    Mockito.doReturn(lockMap).when(service).getLockMap();
+    Callable<SSOPrincipal> callable = new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        return principal;
+      }
+    };
+
+    Assert.assertEquals(principal, service.validate(cache, callable, "t", "x"));
+    Mockito.verify(cache, Mockito.times(2)).get(Mockito.eq("t"));
+    Mockito.verify(cache, Mockito.times(1)).isInvalid(Mockito.eq("t"));
+    Mockito.verify(cache, Mockito.times(1)).put(Mockito.eq("t"), Mockito.eq(principal));
+    Mockito.verify(cache, Mockito.times(0)).invalidate(Mockito.eq("t"));
+    Mockito.verify(lockMap, Mockito.times(1)).putIfAbsent(Mockito.eq("t"), Mockito.any());
+    Mockito.verify(lockMap, Mockito.times(1)).remove(Mockito.eq("t"));
+  }
+
+  @Test
+  public void testValidateTokenInvalidNotInCache() throws Exception {
+    AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    PrincipalCache cache = Mockito.mock(PrincipalCache.class);
+    Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(null);
+    Mockito.when(cache.isInvalid(Mockito.eq("t"))).thenReturn(false);
+    ConcurrentMap<String, Object> lockMap = service.getLockMap();
+    lockMap = Mockito.spy(lockMap);
+    Mockito.doReturn(lockMap).when(service).getLockMap();
+    Callable<SSOPrincipal> callable = new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        return null;
+      }
+    };
+
+    Assert.assertNull(service.validate(cache, callable, "t", "x"));
+    Mockito.verify(cache, Mockito.times(2)).get(Mockito.eq("t"));
+    Mockito.verify(cache, Mockito.times(1)).isInvalid(Mockito.eq("t"));
+    Mockito.verify(cache, Mockito.times(0)).put(Mockito.eq("t"), Mockito.any(SSOPrincipal.class));
+    Mockito.verify(cache, Mockito.times(1)).invalidate(Mockito.eq("t"));
+    Mockito.verify(lockMap, Mockito.times(1)).putIfAbsent(Mockito.eq("t"), Mockito.any());
+    Mockito.verify(lockMap, Mockito.times(1)).remove(Mockito.eq("t"));
+  }
+
+  @Test
+  public void testValidateSerialization() throws Exception {
+    final AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    final CountDownLatch ready = new CountDownLatch(2);
+    final CountDownLatch done = new CountDownLatch(1);
+
+    final PrincipalCache cache = new PrincipalCache(10000);
+    final SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
+    final Callable<SSOPrincipal> goThruCallable = new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        done.countDown();
+        Thread.sleep(100);
+        return principal;
+      }
+    };
+
+    final Callable<SSOPrincipal> neverCalledCallable = new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        Assert.fail();
+        return null;
+      }
+    };
+
+
+    Thread t2 = new Thread() {
+      @Override
+      public void run() {
+        ready.countDown();
+        try {
+          done.await();
+        } catch (InterruptedException ex) {
+        }
+        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "x"));
+      }
+    };
+    t2.start();
+
+    Thread t3 = new Thread() {
+      @Override
+      public void run() {
+        ready.countDown();
+        try {
+          done.await();
+        } catch (InterruptedException ex) {
+        }
+        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "x"));
+      }
+    };
+    t3.start();
+
+    ready.await();
+
+    Assert.assertEquals(principal, service.validate(cache, goThruCallable, "t", "x"));
+
+    done.await();
+
+    t2.join();
+    t3.join();
+  }
+
 
 }
