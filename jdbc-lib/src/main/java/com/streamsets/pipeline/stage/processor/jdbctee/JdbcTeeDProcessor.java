@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
@@ -48,6 +49,7 @@ import java.util.List;
     onlineHelpRefUrl = "index.html#Processors/JDBCTee.html#task_qpj_ncy_hw"
 )
 @ConfigGroups(Groups.class)
+@HideConfigs(value = {"hikariConfigBean.readOnly"})
 @GenerateResourceBundle
 public class JdbcTeeDProcessor extends DProcessor {
 
