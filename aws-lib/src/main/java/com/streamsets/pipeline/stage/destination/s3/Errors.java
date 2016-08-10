@@ -36,6 +36,11 @@ public enum Errors implements ErrorCode {
   S3_30("Unsupported data format '{}'"),
   S3_31("Field cannot be empty"),
   S3_32("Error serializing record '{}': {}"),
+
+  S3_40("Internal Error {}"),
+
+  S3_50("Compression Option not supported for Whole file Data format"),
+
   ;
 
   private final String msg;

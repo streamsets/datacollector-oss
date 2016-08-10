@@ -32,12 +32,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-final class S3FileRef extends AbstractFileRef {
+public final class S3FileRef extends AbstractFileRef {
   private final AmazonS3Client s3Client;
   private final S3ObjectSummary s3ObjectSummary;
 
   @SuppressWarnings("unchecked")
-  S3FileRef(
+  public S3FileRef(
       AmazonS3Client s3Client,
       S3ObjectSummary s3ObjectSummary,
       int bufferSize,
