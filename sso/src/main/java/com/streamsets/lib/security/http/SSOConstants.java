@@ -57,6 +57,12 @@ public interface  SSOConstants {
   String X_APP_COMPONENT_ID = "X-SS-App-Component-Id";
 
   /**
+   * Header to be used for connection and read timeouts. The timeout value in millis is used by clients making REST
+   * calls to StreamSets services.
+   */
+  String X_APP_CONNECTION_TIMEOUT = "X-SS-CONNECTION-TIMEOUT";
+
+  /**
    * Query string parameter with the user authentication token. The parameter contains the authentication token for
    * the user. This parameter is returned by the StreamSets security service with a redirection to the original page
    * that triggered the redirection to authentication.

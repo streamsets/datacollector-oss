@@ -46,6 +46,7 @@ public class TestRemoteSSOService {
     service.setConfiguration(conf);
     Assert.assertEquals(RemoteSSOService.DPM_BASE_URL_DEFAULT + "/security/login", service.getLoginPageUrl());
     Assert.assertEquals(RemoteSSOService.DPM_BASE_URL_DEFAULT + "/security/_logout", service.getLogoutUrl());
+    Assert.assertEquals(10000, service.getConnectionTimeout());
   }
 
 
@@ -58,9 +59,11 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "authToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, 2000);
     service.setConfiguration(conf);
     Assert.assertEquals("http://foo/security/login", service.getLoginPageUrl());
     Assert.assertEquals("http://foo/security/_logout", service.getLogoutUrl());
+    Assert.assertEquals(2000, service.getConnectionTimeout());
   }
 
   @Test
@@ -86,7 +89,7 @@ public class TestRemoteSSOService {
         .createAuthConnection(Mockito.eq("http://foo/security/rest/v1/validateAuthToken/component"));
 
     Assert.assertEquals(conn,
-        service.getAuthConnection("POST", "http://foo/security/rest/v1/validateAuthToken/component")
+        service.getAuthConnection("POST", "http://foo/security/rest/v1/validateAuthToken/component", 5000)
     );
 
     Mockito.verify(conn).setRequestMethod(Mockito.eq("POST"));
@@ -127,9 +130,10 @@ public class TestRemoteSSOService {
     responseData.close();
     InputStream inputStream = new ByteArrayInputStream(responseData.toByteArray());
     Mockito.when(conn.getInputStream()).thenReturn(inputStream);
+    Mockito.when(conn.getHeaderField(SSOConstants.X_APP_CONNECTION_TIMEOUT)).thenReturn("1000");
 
     Mockito.doReturn(HttpURLConnection.HTTP_OK).when(conn).getResponseCode();
-    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString());
+    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 
     Map got = service.doAuthRestCall("http://foo", ImmutableMap.of("b", "B"), Map.class);
 
@@ -138,6 +142,8 @@ public class TestRemoteSSOService {
     got = (Map) new ObjectMapper().readValue(outputStream.toByteArray(), Map.class);
 
     Assert.assertEquals(ImmutableMap.of("b", "B"), got);
+
+    Assert.assertEquals(1000, service.getConnectionTimeout());
   }
 
   @Test
@@ -153,11 +159,13 @@ public class TestRemoteSSOService {
     HttpURLConnection conn = Mockito.mock(HttpURLConnection.class);
 
     Mockito.doThrow(new IOException()).when(conn).getOutputStream();
-    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString());
-
-    Map got = service.doAuthRestCall("http://localhost", new Object(), Map.class);
-
-    Assert.assertNull(got);
+    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+    try {
+      service.doAuthRestCall("http://localhost", new Object(), Map.class);
+      Assert.fail("Expected Runtime exception but didn't get any");
+    } catch (RuntimeException e) {
+      // expected
+    }
   }
 
   @Test
@@ -173,7 +181,7 @@ public class TestRemoteSSOService {
     HttpURLConnection conn = Mockito.mock(HttpURLConnection.class);
 
     Mockito.doReturn(HttpURLConnection.HTTP_FORBIDDEN).when(conn).getResponseCode();
-    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString());
+    Mockito.doReturn(conn).when(service).getAuthConnection(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 
     Map got = service.doAuthRestCall("http://localhost", null, Map.class);
 

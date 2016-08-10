@@ -20,6 +20,7 @@
 package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final String SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "appAuthToken";
   public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
   public static final String SECURITY_SERVICE_COMPONENT_TYPE_CONFIG = CONFIG_PREFIX + "componentType";
+  public static final String SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG = CONFIG_PREFIX + "connectionTimeout.millis";
+  public static final int DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT = 10000;
   public static final String DPM_ENABLED = CONFIG_PREFIX + "enabled";
   public static final boolean DPM_ENABLED_DEFAULT = false;
 
@@ -52,6 +55,8 @@ public class RemoteSSOService extends AbstractSSOService {
   private String appAuthUrl;
   private String appToken;
   private String componentId;
+  private volatile int connTimeout;
+
 
   @Override
   public void setDelegateTo(SSOService ssoService) {
@@ -76,6 +81,7 @@ public class RemoteSSOService extends AbstractSSOService {
     userAuthUrl = baseUrl + "/rest/v1/validateAuthToken/user";
     appAuthUrl = baseUrl + "/rest/v1/validateAuthToken/component";
     appToken = conf.get(SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null);
+    connTimeout = conf.get(SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT);
   }
 
   public void setComponentId(String componentId) {
@@ -91,7 +97,7 @@ public class RemoteSSOService extends AbstractSSOService {
     return (HttpURLConnection) new URL(url).openConnection();
   }
 
-  HttpURLConnection getAuthConnection(String method, String url) throws IOException {
+  HttpURLConnection getAuthConnection(String method, String url, int connTimeout) throws IOException {
     HttpURLConnection conn = createAuthConnection(url);
     conn.setRequestMethod(method);
     switch (method) {
@@ -102,8 +108,8 @@ public class RemoteSSOService extends AbstractSSOService {
         conn.setDoInput(true);
     }
     conn.setUseCaches(false);
-    conn.setConnectTimeout(5000);
-    conn.setReadTimeout(5000);
+    conn.setConnectTimeout(connTimeout);
+    conn.setReadTimeout(connTimeout);
     conn.setRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
     conn.setRequestProperty(ACCEPT, APPLICATION_JSON);
     conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
@@ -116,18 +122,26 @@ public class RemoteSSOService extends AbstractSSOService {
     T ret = null;
     String method = (uploadData == null) ? "GET" : "POST";
     try {
-      HttpURLConnection conn = getAuthConnection(method, url);
+      HttpURLConnection conn = getAuthConnection(method, url, connTimeout);
       if (uploadData != null) {
         OutputStream os = conn.getOutputStream();
         OBJECT_MAPPER.writeValue(os, uploadData);
       }
       if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
         ret = (T) OBJECT_MAPPER.readValue(conn.getInputStream(), responseType);
+        String timeout = conn.getHeaderField(SSOConstants.X_APP_CONNECTION_TIMEOUT);
+        connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
+      } else if (conn.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+        LOG.warn("Security service HTTP forbidden error: '{}'", conn.getResponseMessage());
       } else {
-        LOG.warn("Security service HTTP error '{}': {}", conn.getResponseCode(), conn.getResponseMessage());
+        throw new RuntimeException(Utils.format(
+            "Security service HTTP error: '{}': {}",
+            conn.getResponseCode(),
+            conn.getResponseMessage()
+        ));
       }
     } catch (IOException ex) {
-      LOG.warn("Security service error: {}", ex.toString(), ex);
+      throw new RuntimeException(Utils.format("Security service error: {}", ex), ex);
     }
     return ret;
   }
@@ -167,6 +181,11 @@ public class RemoteSSOService extends AbstractSSOService {
       url += "/";
     }
     return url;
+  }
+
+  @VisibleForTesting
+  int getConnectionTimeout() {
+    return connTimeout;
   }
 
 }
