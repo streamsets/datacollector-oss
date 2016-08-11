@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RemoteSSOService extends AbstractSSOService {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteSSOService.class);
@@ -46,6 +48,8 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final int DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT = 10000;
   public static final String DPM_ENABLED = CONFIG_PREFIX + "enabled";
   public static final boolean DPM_ENABLED_DEFAULT = false;
+  public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "registration.retry.attempts";
+  public static final int DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT = 5;
 
   public static final String CONTENT_TYPE = "Content-Type";
   public static final String ACCEPT = "Accept";
@@ -56,6 +60,8 @@ public class RemoteSSOService extends AbstractSSOService {
   private String appToken;
   private String componentId;
   private volatile int connTimeout;
+  private int dpmRegistrationMaxRetryAttempts;
+  private String registrationUrl;
 
 
   @Override
@@ -82,6 +88,74 @@ public class RemoteSSOService extends AbstractSSOService {
     appAuthUrl = baseUrl + "/rest/v1/validateAuthToken/component";
     appToken = conf.get(SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null);
     connTimeout = conf.get(SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT);
+    dpmRegistrationMaxRetryAttempts = conf.get(DPM_REGISTRATION_RETRY_ATTEMPTS,
+        DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT);
+    registrationUrl = baseUrl + "/public-rest/v1/components/registration";
+  }
+
+  @VisibleForTesting
+  void sleep(int secs) {
+    try {
+      Thread.sleep(secs * 1000);
+    } catch (InterruptedException ex) {
+      String msg = "Interrupted while attempting DPM registration";
+      LOG.error(msg);
+      throw new RuntimeException(msg);
+    }
+  }
+
+  @Override
+  public void register(Map<String, String> attributes) {
+    if (appToken.isEmpty() || componentId.isEmpty()) {
+      if (appToken.isEmpty()) {
+        LOG.warn("Skipping component registration to DPM, application auth token is not set");
+      }
+      if (componentId.isEmpty()) {
+        LOG.warn("Skipping component registration to DPM, component ID is not set");
+      }
+      throw new RuntimeException("Registration to DPM not done, missing component ID or app auth token");
+    } else {
+      LOG.debug("Doing component ID '{}' registration with DPM", componentId);
+
+      Map<String, Object> registrationData = new HashMap<>();
+      registrationData.put("authToken", appToken);
+      registrationData.put("componentId", componentId);
+      registrationData.put("attributes", attributes);
+
+      int delaySecs = 1;
+      int attempts = 0;
+      boolean registered = false;
+
+      //When Load Balancer(HAProxy or ELB) is used, it will take couple of seconds for load balancer to access
+      //security service. So we are retrying registration couple of times until server is accessible via load balancer.
+      while (attempts < dpmRegistrationMaxRetryAttempts) {
+        if (attempts > 0) {
+          delaySecs = delaySecs * 2;
+          delaySecs = Math.min(delaySecs, 16);
+          String msg = Utils.format("DPM registration attempt '{}', waiting for '{}' seconds before retrying ...",
+              attempts,
+              delaySecs
+          );
+          LOG.warn(msg);
+          System.out.println(msg);
+          sleep(delaySecs);
+        }
+        attempts++;
+        try {
+          if (doAuthRestCall(registrationUrl, registrationData)) {
+            registered = true;
+          }
+          break;
+        } catch (Exception ex) {
+          String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
+          LOG.warn(msg, ex);
+          System.out.println(msg);
+        }
+      }
+      if (!registered) {
+        throw new RuntimeException(Utils.format("DPM registration failed after '{}' attempts", attempts));
+      }
+    }
   }
 
   public void setComponentId(String componentId) {
@@ -118,6 +192,10 @@ public class RemoteSSOService extends AbstractSSOService {
     return conn;
   }
 
+  boolean doAuthRestCall(String url, Object uploadData) {
+    return doAuthRestCall(url, uploadData, (Class<Boolean>) null);
+  }
+
   <T> T doAuthRestCall(String url, Object uploadData, Class<T> responseType) {
     T ret = null;
     String method = (uploadData == null) ? "GET" : "POST";
@@ -128,11 +206,18 @@ public class RemoteSSOService extends AbstractSSOService {
         OBJECT_MAPPER.writeValue(os, uploadData);
       }
       if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        ret = (T) OBJECT_MAPPER.readValue(conn.getInputStream(), responseType);
         String timeout = conn.getHeaderField(SSOConstants.X_APP_CONNECTION_TIMEOUT);
         connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
+        if (responseType != null) {
+          ret = OBJECT_MAPPER.readValue(conn.getInputStream(), responseType);
+        } else {
+          ret = (T) Boolean.TRUE;
+        }
       } else if (conn.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
         LOG.warn("Security service HTTP forbidden error: '{}'", conn.getResponseMessage());
+        if (responseType == null) {
+          ret = (T) Boolean.FALSE;
+        }
       } else {
         throw new RuntimeException(Utils.format(
             "Security service HTTP error: '{}': {}",

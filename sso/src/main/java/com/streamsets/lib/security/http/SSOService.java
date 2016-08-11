@@ -22,6 +22,7 @@ package com.streamsets.lib.security.http;
 import com.streamsets.datacollector.util.Configuration;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SSOService {
   String SSO_SERVICE_KEY = "ssoService";
@@ -35,6 +36,8 @@ public interface SSOService {
   void setDelegateTo(SSOService ssoService);
 
   void setConfiguration(Configuration configuration);
+
+  void register(Map<String, String> attributes);
 
   String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect);
 

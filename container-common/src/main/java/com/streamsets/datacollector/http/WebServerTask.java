@@ -29,6 +29,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.ProxySSOService;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAuthenticator;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -64,7 +65,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,11 +73,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Response;
 
 import java.io.File;
 import java.io.IOException;
@@ -152,9 +147,6 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
   private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
 
-  public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "dpm.registration.retry.attempts";
-  public static final int DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT = 5;
-
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
@@ -177,7 +169,6 @@ public abstract class WebServerTask extends AbstractTask {
   private Server redirector;
   private HashSessionManager hashSessionManager;
   private Map<String, Set<String>> roleMapping;
-  private int dpmRegistrationMaxRetryAttempts;
 
   public WebServerTask(
       BuildInfo buildInfo,
@@ -192,8 +183,6 @@ public abstract class WebServerTask extends AbstractTask {
     this.conf = conf;
     this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
-    this.dpmRegistrationMaxRetryAttempts = conf.get(DPM_REGISTRATION_RETRY_ATTEMPTS,
-        DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT);
   }
 
   protected RuntimeInfo getRuntimeInfo() {
@@ -421,7 +410,7 @@ public abstract class WebServerTask extends AbstractTask {
     SSOService ssoService = null;
     if (appConf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null) != null) {
       LOG.debug("Initializing RemoteSSOService");
-      RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
+      final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
 
       final String componentId = getComponentId(appConf);
       final String appToken = getAppAuthToken(appConf);
@@ -429,15 +418,15 @@ public abstract class WebServerTask extends AbstractTask {
       remoteSsoService.setApplicationAuthToken(appToken);
       String appTokenForLogging = (appToken != null) ? (appToken + "..........").substring(0, 10) + "..." : null;
       LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, appTokenForLogging);
-      ssoService = remoteSsoService;
-      // we only need to do this if we have an app token configured
       addToPostStart(new Runnable() {
         @Override
         public void run() {
           LOG.debug("Validating Application Token with SSO Remote Service");
-          validateApplicationToken(componentId, appToken);
+          remoteSsoService.register(getRegistrationAttributes());
+          runtimeInfo.setRemoteRegistrationStatus(true);
         }
       });
+      ssoService = remoteSsoService;
     }
     ssoService = new ProxySSOService(ssoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
@@ -818,91 +807,8 @@ public abstract class WebServerTask extends AbstractTask {
 
   protected abstract String getComponentId(Configuration appConfiguration);
 
-  @VisibleForTesting
-  void sleep(int secs) {
-    try {
-      Thread.sleep(secs * 1000);
-    } catch (InterruptedException ex) {
-      String msg = "Interrupted while attempting DPM registration";
-      LOG.error(msg);
-      throw new RuntimeException(msg);
-    }
-  }
-
-  /**
-   * When Load Balancer(HAProxy or ELB) is used, it will take couple of seconds for load balancer to access
-   * security service. So we are retrying registration couple of times until server is accessible via load balancer.
-   */
-  private void validateApplicationToken(String componentId, String applicationToken) {
-    if (applicationToken.isEmpty() || componentId.isEmpty()) {
-      if (applicationToken.isEmpty()) {
-        LOG.warn("Skipping component registration to DPM, application auth token is not set");
-      }
-      if (componentId.isEmpty()) {
-        LOG.warn("Skipping component registration to DPM, component ID is not set");
-      }
-      throw new RuntimeException("Registration to DPM not done, missing component ID or app auth token");
-    } else {
-      LOG.debug("Doing component ID '{}' registration with DPM", componentId);
-      String dpmBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
-          RemoteSSOService.DPM_BASE_URL_DEFAULT));
-      String registrationURI = dpmBaseURL + "security/public-rest/v1/components/registration";
-
-      Map<String, Object> registrationData = new HashMap<>();
-      registrationData.put("authToken", applicationToken);
-      registrationData.put("componentId", componentId);
-      registrationData.put("attributes", ImmutableMap.of("baseHttpUrl", this.runtimeInfo.getBaseHttpUrl()));
-      Invocation.Builder builder =
-          ClientBuilder.newClient().target(registrationURI).register(new CsrfProtectionFilter("CSRF")).request();
-
-      int delaySecs = 1;
-      int attempts = 0;
-      while (attempts < dpmRegistrationMaxRetryAttempts) {
-        if (attempts > 0) {
-          delaySecs = delaySecs * 2;
-          delaySecs = Math.min(delaySecs, 16);
-          String msg = Utils.format(
-              "DPM registration attempt '{}', waiting for '{}' seconds before retrying ...",
-              attempts,
-              delaySecs
-          );
-          LOG.warn(msg);
-          System.out.println(msg);
-          sleep(delaySecs);
-        }
-        attempts++;
-        Response response = null;
-        try {
-          response = builder.post(Entity.json(registrationData));
-          if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            LOG.info("DPM registration as component ID '{}' successful", componentId);
-            runtimeInfo.setRemoteRegistrationStatus(true);
-            break;
-          } else {
-            String msg = Utils.format("DPM Registration failed, status code '{}': {}",
-                response.getStatus(),
-                response.readEntity(String.class)
-            );
-            LOG.warn(msg);
-            System.out.println(msg);
-            if (response.getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
-              break;
-            }
-          }
-        } catch (ProcessingException ex) {
-          String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
-          LOG.warn(msg, ex);
-          System.out.println(msg);
-        } finally {
-          if (response != null) {
-            response.close();
-          }
-        }
-      }
-      if (!runtimeInfo.isRemoteRegistrationSuccessful()) {
-        throw new RuntimeException(Utils.format("DPM registration failed after '{}' attempts", attempts));
-      }
-    }
+  protected Map<String, String> getRegistrationAttributes() {
+    return ImmutableMap.of(SSOConstants.SERVICE_BASE_URL_ATTR, this.runtimeInfo.getBaseHttpUrl());
   }
 
 }

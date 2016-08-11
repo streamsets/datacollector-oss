@@ -77,10 +77,6 @@ public interface  SSOConstants {
 
   String REPEATED_REDIRECT_PARAM = "ss-repeated-redirect";
 
-  // for-client-services
-
-  String INVALIDATE_AUTH_TOKENS = "invalidate.auth.tokens";
-
-  String FETCH_INFO_FREQUENCY = "fetch.info.frequency.secs";
+  String SERVICE_BASE_URL_ATTR = "baseHttpUrl";
 
 }

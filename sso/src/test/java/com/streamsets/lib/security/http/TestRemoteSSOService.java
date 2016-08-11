@@ -20,6 +20,7 @@
 package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
@@ -32,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.Collections;
 import java.util.Map;
 
 public class TestRemoteSSOService {
@@ -246,6 +248,52 @@ public class TestRemoteSSOService {
     // null
     Mockito.doReturn(null).when(service).doAuthRestCall(Mockito.anyString(), Mockito.any(), Mockito.<Class>any());
     Assert.assertNull(service.validateAppTokenWithSecurityService("foo", "bar"));
+  }
+
+
+  @Test
+  public void testRegister() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
+    RemoteSSOService service = Mockito.spy(new RemoteSSOService());
+    service.setConfiguration(conf);
+    service.setApplicationAuthToken("appToken");
+    service.setComponentId("componentId");
+
+    Mockito.doReturn(true).when(service).doAuthRestCall(Mockito.anyString(), Mockito.any());
+
+    ArgumentCaptor<Map> registrationData = ArgumentCaptor.forClass(Map.class);
+
+    Map<String, String> attributes = ImmutableMap.of("a", "A");
+    service.register(attributes);
+    Mockito.verify(service).doAuthRestCall(Mockito.anyString(), registrationData.capture());
+    Assert.assertNotNull(registrationData.getValue());
+    Assert.assertEquals("appToken", registrationData.getValue().get("authToken"));
+    Assert.assertEquals("componentId", registrationData.getValue().get("componentId"));
+    Assert.assertEquals(attributes, registrationData.getValue().get("attributes"));
+  }
+
+  @Test
+  public void testRegisterRetryAttempts() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://notAValidDPMURL");
+    conf.set(RemoteSSOService.DPM_REGISTRATION_RETRY_ATTEMPTS, "7");
+
+    RemoteSSOService ssoService = Mockito.spy(new RemoteSSOService());
+    ssoService.setConfiguration(conf);
+    ssoService.setApplicationAuthToken("appToken");
+    ssoService.setComponentId("componentId");
+    Mockito.doNothing().when(ssoService).sleep(Mockito.anyInt());
+
+    try {
+      ssoService.register(Collections.<String, String>emptyMap());
+      Assert.fail();
+    } catch (RuntimeException ex) {
+      ArgumentCaptor<Integer> sleepCaptor = ArgumentCaptor.forClass(Integer.class);
+      Mockito.verify(ssoService, Mockito.times(6)).sleep(sleepCaptor.capture());
+      Assert.assertEquals(ImmutableList.of(2, 4, 8, 16, 16, 16), sleepCaptor.getAllValues());
+      Assert.assertEquals("DPM registration failed after '7' attempts", ex.getMessage());
+    }
   }
 
 }

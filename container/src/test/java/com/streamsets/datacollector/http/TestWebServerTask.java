@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -33,12 +32,12 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class TestWebServerTask {
@@ -136,38 +135,6 @@ public class TestWebServerTask {
     } finally {
       webServerTask.stopTask();
     }
-  }
-
-  @Test
-  public void testValidateApplicationTokenRetryAttempts() throws Exception {
-    Configuration serverConf = new Configuration();
-    serverConf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "applicationToken");
-    serverConf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://notAValidDPMURL");
-    serverConf.set(WebServerTask.DPM_REGISTRATION_RETRY_ATTEMPTS, "7");
-
-    WebServerTask webServerTask =
-        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet(),
-            true);
-    webServerTask = Mockito.spy(webServerTask);
-
-    RemoteSSOService ssoService = Mockito.mock(RemoteSSOService.class);
-    Mockito.doReturn(ssoService).when(webServerTask).createRemoteSSOService(Mockito.<Configuration>any());
-    Mockito.doNothing().when(webServerTask).sleep(Mockito.anyInt());
-
-    boolean triggeredRuntimeException = false;
-    try {
-      webServerTask.initTask();
-      webServerTask.runTask();
-    } catch (RuntimeException ex) {
-      triggeredRuntimeException = true;
-      ArgumentCaptor<Integer> sleepCaptor = ArgumentCaptor.forClass(Integer.class);
-      Mockito.verify(webServerTask, Mockito.times(6)).sleep(sleepCaptor.capture());
-      Assert.assertEquals(ImmutableList.of(2, 4, 8, 16, 16, 16), sleepCaptor.getAllValues());
-      Assert.assertEquals("DPM registration failed after '7' attempts", ex.getMessage());
-    } finally {
-      webServerTask.stopTask();
-    }
-    Assert.assertTrue(triggeredRuntimeException);
   }
 
   @Test

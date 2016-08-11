@@ -19,15 +19,18 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.Set;
 
 public class DataCollectorWebServerTask extends WebServerTask {
+  private BuildInfo buildInfo;
 
   @Inject
   public DataCollectorWebServerTask(
@@ -38,6 +41,7 @@ public class DataCollectorWebServerTask extends WebServerTask {
       Set<WebAppProvider> webAppProviders
   ) {
     super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
+    this.buildInfo = buildInfo;
   }
 
   @Override
@@ -50,5 +54,14 @@ public class DataCollectorWebServerTask extends WebServerTask {
     return getRuntimeInfo().getId();
   }
 
+  @Override
+  protected Map<String, String> getRegistrationAttributes() {
+    return ImmutableBiMap.<String, String>builder()
+        .putAll(super.getRegistrationAttributes())
+        .put("sdcJavaVersion", System.getProperty("java.runtime.version"))
+        .put("sdcVersion", buildInfo.getVersion())
+        .put("sdcRepoSha", buildInfo.getBuiltRepoSha())
+        .build();
+  }
 
 }

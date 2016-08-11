@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.URLEncoder;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
@@ -34,6 +35,11 @@ import static org.mockito.Mockito.when;
 public class TestAbstractSSOService {
 
   class ForTestSSOService extends AbstractSSOService {
+
+    @Override
+    public void register(Map<String, String> attributes) {
+    }
+
     @Override
     protected SSOPrincipal validateUserTokenWithSecurityService(String authToken) {
       return null;

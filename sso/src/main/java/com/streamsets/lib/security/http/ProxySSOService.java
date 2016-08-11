@@ -21,6 +21,8 @@ package com.streamsets.lib.security.http;
 
 import com.streamsets.datacollector.util.Configuration;
 
+import java.util.Map;
+
 public class ProxySSOService implements SSOService {
   private SSOService ssoService;
 
@@ -36,6 +38,11 @@ public class ProxySSOService implements SSOService {
   @Override
   public void setConfiguration(Configuration configuration) {
     ssoService.setConfiguration(configuration);
+  }
+
+  @Override
+  public void register(Map<String, String> attributes) {
+    ssoService.register(attributes);
   }
 
   @Override

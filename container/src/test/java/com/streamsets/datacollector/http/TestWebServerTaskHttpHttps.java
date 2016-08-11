@@ -62,6 +62,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -440,6 +441,10 @@ public class TestWebServerTaskHttpHttps {
 
     @Override
     public void setConfiguration(Configuration configuration) {
+    }
+
+    @Override
+    public void register(Map<String, String> attributes) {
     }
 
     @Override
