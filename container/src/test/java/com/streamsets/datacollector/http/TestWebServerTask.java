@@ -22,6 +22,7 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -60,7 +61,7 @@ public class TestWebServerTask {
         };
     runtimeInfo.setDPMEnabled(isDPMEnabled);
     Set<ContextConfigurator> configurators = new HashSet<>();
-    return new WebServerTask(runtimeInfo, conf, configurators, webAppProviders) {
+    return new WebServerTask(new DataCollectorBuildInfo(), runtimeInfo, conf, configurators, webAppProviders) {
       @Override
       protected String getAppAuthToken(Configuration appConfiguration) {
         return "applicationToken";

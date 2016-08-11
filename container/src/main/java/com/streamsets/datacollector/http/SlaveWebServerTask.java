@@ -25,6 +25,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.streamsets.datacollector.main.BuildInfo;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +51,13 @@ public class SlaveWebServerTask extends DataCollectorWebServerTask {
 
   @Inject
   public SlaveWebServerTask(
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
-    super(runtimeInfo, conf, contextConfigurators, webAppProviders);
+    super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
     this.conf = conf;
   }
 

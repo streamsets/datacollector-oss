@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -30,12 +31,13 @@ public class DataCollectorWebServerTask extends WebServerTask {
 
   @Inject
   public DataCollectorWebServerTask(
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
-    super(runtimeInfo, conf, contextConfigurators, webAppProviders);
+    super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
   }
 
   @Override

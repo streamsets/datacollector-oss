@@ -22,6 +22,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -166,6 +167,7 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String LDAP = "ldap";
   public static final String LDAP_LOGIN_MODULE_NAME = "ldap.login.module.name";
 
+  private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
   private final Set<WebAppProvider> webAppProviders;
@@ -178,12 +180,14 @@ public abstract class WebServerTask extends AbstractTask {
   private int dpmRegistrationMaxRetryAttempts;
 
   public WebServerTask(
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
     super("webServer");
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
     this.webAppProviders = webAppProviders;

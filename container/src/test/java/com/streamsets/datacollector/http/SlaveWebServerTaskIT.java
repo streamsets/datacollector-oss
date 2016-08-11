@@ -21,6 +21,7 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -66,7 +67,7 @@ public class SlaveWebServerTaskIT {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new SlaveWebServerTask(runtimeInfo, conf, configurators, webAppProviders);
+    return new SlaveWebServerTask(new DataCollectorBuildInfo(), runtimeInfo, conf, configurators, webAppProviders);
   }
 
   private WebServerTask createSlaveWebServerTask(final String confDir, final Configuration conf) throws Exception {

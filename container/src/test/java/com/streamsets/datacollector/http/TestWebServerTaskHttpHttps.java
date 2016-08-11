@@ -21,6 +21,7 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -106,7 +107,12 @@ public class TestWebServerTaskHttpHttps {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new DataCollectorWebServerTask(runtimeInfo, conf, configurators, webAppProviders);
+    return new DataCollectorWebServerTask(new DataCollectorBuildInfo(),
+        runtimeInfo,
+        conf,
+        configurators,
+        webAppProviders
+    );
   }
 
   @SuppressWarnings("unchecked")
