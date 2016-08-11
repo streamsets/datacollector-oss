@@ -393,9 +393,95 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>generate-sdc-${project.artifactId}-tars</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
+                      <arg line="${basedir}/../root/src/main/bin/create-lib-tars.sh ${project.version} ${project.build.directory}"
+                      />
+                    </exec>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>rpm</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+            <version>2.1.2</version>
+            <executions>
+              <execution>
+                <id>generate-sdc-${project.artifactId}-rpm</id>
+                <goals>
+                  <goal>attached-rpm</goal>
+                </goals>
+                <configuration>
+                  <name>${project.artifactId}</name>
+                  <classifier>streamsets-datacollector</classifier>
+                  <license>Proprietary</license>
+                  <distribution>el6</distribution>
+                  <group>Applications/System</group>
+                  <packager>StreamSets</packager>
+                  <targetOS>linux</targetOS>
+                  <prefix>/opt</prefix>
+                  <provides>
+                    <provide>streamsets-datacollector</provide>
+                  </provides>
+                  <requires>
+                    <require>jre &gt;= 1.7</require>
+                    <require>bash</require>
+                    <require>which</require>
+                  </requires>
+                  <defineStatements>
+                    <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+                    ${parent.}
+                    <defineStatement>service_user ${rpm.sdc.user}</defineStatement>
+                    <defineStatement>service_group ${rpm.sdc.group}</defineStatement>
+                    <defineStatement>install_dir ${rpm.sdc.dir}</defineStatement>
+                    <defineStatement>sdc_dist ${rpm.sdc.dir}/${project.artifactId}</defineStatement>
+                  </defineStatements>
+                  <mappings>
+                    <mapping>
+                      <directory>${rpm.sdc.dir}/${project.artifactId}</directory>
+                      <filemode>755</filemode>
+                      <username>root</username>
+                      <groupname>root</groupname>
+                      <sources>
+                        <source>
+                          <location>${rpm.sdc.distroot}/${project.artifactId}</location>
+                        </source>
+                      </sources>
+                    </mapping>
+                  </mappings>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
   </profiles>
-
 </project>

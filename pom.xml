@@ -95,6 +95,13 @@
     <sdc-solr-api>none</sdc-solr-api>
     <sdc-solr_cdh_4-lib>none</sdc-solr_cdh_4-lib>
     <sdc-solr_6-lib>none</sdc-solr_6-lib>
+    <rpm.sdc.user>sdc</rpm.sdc.user>
+    <rpm.sdc.group>sdc</rpm.sdc.group>
+    <rpm.sdc.dir>/opt/streamsets-datacollector/streamsets-libs</rpm.sdc.dir>
+    <!--sdc.distroot>
+      ${basedir}/../dist/target/streamsets-datacollector-${project.version}/streamsets-datacollector-${project.version}
+    </sdc.distroot-->
+    <rpm.sdc.distroot>target/streamsets-libs</rpm.sdc.distroot>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
