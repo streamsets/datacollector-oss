@@ -32,6 +32,12 @@ public class GeolocationProcessorUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -41,5 +47,9 @@ public class GeolocationProcessorUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("geoIP2DBType", "COUNTRY"));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("missingAddressAction", "REPLACE_WITH_NULLS"));
   }
 }

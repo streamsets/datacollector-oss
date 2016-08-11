@@ -49,6 +49,21 @@ public class TestGeolocationProcessorUpgrader {
     assertEquals(geoIP2DBType, "COUNTRY");
   }
 
+  @Test
+  public void testV2ToV3() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("geoIP2DBFile", 1000));
+    configs.add(new Config("fieldTypeConverterConfigs", null));
+
+    GeolocationProcessorUpgrader upgrader = new GeolocationProcessorUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    String missingAddressAction = getConfigsAsMap(configs).get("missingAddressAction").toString();
+    assertEquals(missingAddressAction, "REPLACE_WITH_NULLS");
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

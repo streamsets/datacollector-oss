@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=2,
+    version=3,
     label="Geo IP",
     description = "IP address geolocation using a Maxmind GeoIP2 database file",
     icon="globe.png",
@@ -77,10 +77,23 @@ public class GeolocationDProcessor extends DProcessor {
   @ListBeanModel
   public List<GeolocationFieldConfig> fieldTypeConverterConfigs;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "TO_ERROR",
+      label = "Missing Address Action",
+      description = "Action to perform on record if IP address is missing from database",
+      displayPosition = 30,
+      group = "GEOLOCATION"
+  )
+  @ValueChooserModel(GeolocationMissingAddressEnumChooserValues.class)
+  public GeolocationMissingAddressAction missingAddressAction;
+
   @Override
   protected Processor createProcessor() {
     return new GeolocationProcessor(geoIP2DBFile,
       geoIP2DBType,
+      missingAddressAction,
       fieldTypeConverterConfigs);
   }
 }

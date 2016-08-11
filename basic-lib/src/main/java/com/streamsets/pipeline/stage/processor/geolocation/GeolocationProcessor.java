@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,19 +64,30 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
   private final String geoIP2DBFile;
   private final GeolocationDBType geoIP2DBType;
   private final List<GeolocationFieldConfig> configs;
+  private final GeolocationMissingAddressAction missingAddressAction;
   private LoadingCache<Field, CountryResponse> countries;
   private LoadingCache<Field, CityResponse> cities;
   private DatabaseReader reader;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
-  public GeolocationProcessor(String geoIP2DBFile, GeolocationDBType geoIP2DBType, List<GeolocationFieldConfig> configs) {
+  public GeolocationProcessor(
+      String geoIP2DBFile,
+      GeolocationDBType geoIP2DBType,
+      GeolocationMissingAddressAction missingAddressAction,
+      List<GeolocationFieldConfig> configs
+  ) {
     this.geoIP2DBFile = geoIP2DBFile;
     this.geoIP2DBType = geoIP2DBType;
+    this.missingAddressAction = missingAddressAction;
     this.configs = configs;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> result = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
+
     File database = new File(geoIP2DBFile);
     if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH
         || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
@@ -162,7 +174,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
         Field field = record.get(config.inputFieldName);
 
         if(field == null) {
-          throw new OnRecordErrorException(Errors.GEOIP_11, record.getHeader().getSourceId(), config.inputFieldName);
+          errorRecordHandler.onError(new OnRecordErrorException(record, Errors.GEOIP_11, record.getHeader().getSourceId(), config.inputFieldName));
         }
 
         try {
@@ -184,9 +196,19 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
             cause = ex;
           }
           if (cause instanceof UnknownHostException || cause instanceof AddressNotFoundException) {
-            throw new OnRecordErrorException(Errors.GEOIP_02, field.getValue(), cause);
+            switch (missingAddressAction) {
+              case TO_ERROR:
+                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.GEOIP_02, field.getValue(), cause.getMessage()));
+                LOG.debug(Utils.format(Errors.GEOIP_02.getMessage(), field.getValue(), cause.getMessage()), cause);
+                continue;
+              case REPLACE_WITH_NULLS:
+                setNullField(config.targetType, config.outputFieldName, record);
+              case IGNORE:
+                continue;
+              default:
+                throw new IllegalStateException(Utils.format("Unknown configuration value: ", missingAddressAction));
+            }
           }
-          Throwables.propagateIfInstanceOf(cause, OnRecordErrorException.class);
           Throwables.propagateIfInstanceOf(cause, GeoIp2Exception.class);
           Throwables.propagateIfInstanceOf(cause, IOException.class);
           Throwables.propagate(cause);
@@ -260,6 +282,22 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
         break;
       case CITY_NAME:
         record.set(outputField, Field.create(resp.getCity().getName()));
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unknown configuration value: ", fieldType));
+    }
+  }
+
+  public void setNullField(GeolocationField fieldType, String outputField, Record record) {
+    switch (fieldType) {
+      case COUNTRY_NAME:
+      case COUNTRY_ISO_CODE:
+      case CITY_NAME:
+        record.set(outputField, Field.create(Field.Type.STRING, null));
+        break;
+      case LATITUDE:
+      case LONGITUDE:
+        record.set(outputField, Field.create(Field.Type.DOUBLE, null));
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown configuration value: ", fieldType));
