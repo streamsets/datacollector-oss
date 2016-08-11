@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.io.fileref.FileRefStreamStatisticsConstants;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -103,12 +103,12 @@ public class TestWholeFileSpoolDirSource {
 
 
   private void initMetrics(Stage.Context context) {
-    context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
-    context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
       @Override
       public Map<String, Object> getValue() {
         return gaugeStatistics;
@@ -137,13 +137,13 @@ public class TestWholeFileSpoolDirSource {
       Assert.assertEquals(1, records.size());
       Record record = records.get(0);
       Map<String, Object> metadata = Files.readAttributes(Paths.get(testDir+"/source.txt"), "posix:*");
-      Assert.assertTrue(record.has("/fileInfo"));
-      Assert.assertTrue(record.has("/fileRef"));
-      Assert.assertEquals(Field.Type.FILE_REF, record.get("/fileRef").getType());
-      Assert.assertEquals(Field.Type.MAP, record.get("/fileInfo").getType());
-      Assert.assertTrue(record.get("/fileInfo").getValueAsMap().keySet().containsAll(metadata.keySet()));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_REF_FIELD_PATH));
+      Assert.assertEquals(Field.Type.FILE_REF, record.get(FileRefUtil.FILE_REF_FIELD_PATH).getType());
+      Assert.assertEquals(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getType());
+      Assert.assertTrue(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet().containsAll(metadata.keySet()));
 
-      FileRef fileRef = record.get("/fileRef").getValueAsFileRef();
+      FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
       String targetFile = testDir + "/target.txt";
       Stage.Context context = (Stage.Context) Whitebox.getInternalState(source, "context");
       initMetrics(context);

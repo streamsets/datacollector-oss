@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.io.fileref.FileRefStreamStatisticsConstants;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,10 +39,10 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
   public static final Map<String, Object> CONFIGS = ImmutableMap.of();
   public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
   private static final Map<String, Integer> GAUGE_MAP_ORDERING = ImmutableMap.of(
-      FileRefStreamStatisticsConstants.FILE_NAME, 1,
-      FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 2,
-      FileRefStreamStatisticsConstants.COPIED_BYTES, 3,
-      FileRefStreamStatisticsConstants.REMAINING_BYTES, 4
+      FileRefUtil.FILE_NAME, 1,
+      FileRefUtil.TRANSFER_THROUGHPUT, 2,
+      FileRefUtil.COPIED_BYTES, 3,
+      FileRefUtil.REMAINING_BYTES, 4
   );
 
   /**
@@ -51,7 +51,7 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
    */
   @SuppressWarnings("unchecked")
   private void initMetricsIfNeeded(Stage.Context context) {
-    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME);
+    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
     if (gauge == null) {
       //Concurrent because the metrics thread will access this.
       final Map<String, Object> gaugeStatistics = new ConcurrentSkipListMap<>(new Comparator<String>() {
@@ -61,20 +61,20 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
         }
       });
       //File name is populated at the MetricEnabledWrapperStream.
-      gaugeStatistics.put(FileRefStreamStatisticsConstants.FILE_NAME, "");
-      gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
-      gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
-      gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
-      context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+      gaugeStatistics.put(FileRefUtil.FILE_NAME, "");
+      gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+      gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+      gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+      context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
         @Override
         public Map<String, Object> getValue() {
           return gaugeStatistics;
         }
       });
     }
-    Meter dataTransferMeter = context.getMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    Meter dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     if (dataTransferMeter == null) {
-      context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+      context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     }
   }
 

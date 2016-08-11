@@ -22,8 +22,6 @@ package com.streamsets.pipeline.lib.io.fileref;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,9 +50,9 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     remainingBytesCounter = new Counter();
     copiedBytesCounter = new Counter();
     remainingBytesCounter.inc(fileSize);
-    dataTransferMeter = context.getMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
-    gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME).getValue();
-    gaugeStatisticsMap.put(FileRefStreamStatisticsConstants.FILE_NAME, id);
+    dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
+    gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefUtil.GAUGE_NAME).getValue();
+    gaugeStatisticsMap.put(FileRefUtil.FILE_NAME, id);
   }
 
   private int updateMetricsAndReturnBytesRead(int bytesRead) {
@@ -66,15 +64,15 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
       remainingBytesCounter.dec(bytesRead);
       //Putting one minute rate because that is the latest speed of transfer
       gaugeStatisticsMap.put(
-          FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT,
+          FileRefUtil.TRANSFER_THROUGHPUT,
           convertBytesToDisplayFormat(dataThroughputMeterForCurrentStream.getOneMinuteRate()) + PER_SEC
       );
       gaugeStatisticsMap.put(
-          FileRefStreamStatisticsConstants.COPIED_BYTES,
+          FileRefUtil.COPIED_BYTES,
           convertBytesToDisplayFormat((double)copiedBytesCounter.getCount())
       );
       gaugeStatisticsMap.put(
-          FileRefStreamStatisticsConstants.REMAINING_BYTES,
+          FileRefUtil.REMAINING_BYTES,
           convertBytesToDisplayFormat((double)remainingBytesCounter.getCount())
       );
     }

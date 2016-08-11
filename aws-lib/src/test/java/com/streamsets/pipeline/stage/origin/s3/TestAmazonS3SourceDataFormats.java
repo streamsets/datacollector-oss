@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.codahale.metrics.Gauge;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
@@ -60,6 +62,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -336,6 +339,20 @@ public class TestAmazonS3SourceDataFormats {
     AmazonS3Source source = createSourceWholeFile();
     SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
     runner.runInit();
+
+    Stage.Context context = ((Stage.Context) Whitebox.getInternalState(source, "context"));
+
+    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
+    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+      @Override
+      public Map<String, Object> getValue() {
+        return gaugeStatistics;
+      }
+    });
+    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     String offset = null;
     try {
       Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, BUCKET_NAME).iterator();
@@ -351,14 +368,13 @@ public class TestAmazonS3SourceDataFormats {
         StageRunner.Output output = SourceRunner.getOutput(batchMaker);
         List<Record> records = output.getRecords().get("lane");
         Record record = records.get(0);
-        Assert.assertTrue(record.has("/fileInfo/bucket"));
-        Assert.assertTrue(record.has("/fileInfo/objectKey"));
-        Assert.assertTrue(record.has("/fileInfo/owner"));
-        Assert.assertTrue(record.has("/fileInfo/size"));
+        Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/bucket"));
+        Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/objectKey"));
+        Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/owner"));
+        Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/size"));
 
-
-        String actualBucketName = record.get("/fileInfo/bucket").getValueAsString();
-        String actualObjectKey = record.get("/fileInfo/objectKey").getValueAsString();
+        String actualBucketName = record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/bucket").getValueAsString();
+        String actualObjectKey = record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/objectKey").getValueAsString();
 
         S3ObjectSummary s3ObjectSummary = s3ObjectSummaries.get(Pair.of(actualBucketName, actualObjectKey));
 
@@ -367,15 +383,16 @@ public class TestAmazonS3SourceDataFormats {
 
         Assert.assertEquals(
             s3ObjectSummary.getLastModified(),
-            record.get("/fileInfo/" + Headers.LAST_MODIFIED).getValueAsDate()
+            record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + Headers.LAST_MODIFIED).getValueAsDate()
         );
-        Assert.assertEquals(s3ObjectSummary.getOwner().toString(), record.get("/fileInfo/owner").getValueAsString());
-        Assert.assertEquals(s3ObjectSummary.getSize(), record.get("/fileInfo/size").getValueAsLong());
+        Assert.assertEquals(s3ObjectSummary.getOwner().toString(), record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/owner").getValueAsString());
+        Assert.assertEquals(s3ObjectSummary.getSize(), record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/size").getValueAsLong());
         //Check file content
+
         verifyStreamCorrectness(
             AmazonS3Util.getObject(s3client, BUCKET_NAME, s3ObjectSummary.getKey()).getObjectContent(),
-            record.get("/fileRef").getValueAsFileRef().createInputStream(
-                ((Stage.Context) Whitebox.getInternalState(source, "context")),
+            record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef().createInputStream(
+                context,
                 InputStream.class
             )
         );

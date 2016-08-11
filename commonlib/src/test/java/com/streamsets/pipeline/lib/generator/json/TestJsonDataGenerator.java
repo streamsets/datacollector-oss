@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.generator.json;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
@@ -201,14 +203,8 @@ public class TestJsonDataGenerator {
       Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
       Record record = context.createRecord("id");
       Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
-      Map<String, Field> fieldMap = new HashMap<>();
-      fieldMap.put(
-          "fileRef",
-          Field.create(FileRefTestUtil.getLocalFileRef(testDir, false, null, null))
-      );
-      fieldMap.put("fileInfo", FileRefTestUtil.createFieldForMetadata(metadata));
-      record.set(Field.create(fieldMap));
-
+      FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
+      record.set(FileRefUtil.getWholeFileRecordRootField(fileRef, metadata));
       DataGenerator gen = new JsonCharDataGenerator(new StringWriter(), JsonMode.MULTIPLE_OBJECTS);
       gen.write(record);
       Assert.fail("Json should not process FileRef field");

@@ -19,10 +19,9 @@
  */
 package com.streamsets.pipeline.lib.parser.wholefile;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -36,17 +35,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class WholeFileDataParserFactory extends DataParserFactory {
-  static final ImmutableMap<String, ?> MANDATORY_METADATA_INFO =
-      ImmutableMap
-          .of("file", String.class)
-          .of("filename", String.class)
-          .of("owner", String.class)
-          .of("group", String.class)
-          .of("lastModifiedTime", Long.class)
-          .of("lastAccessTime", Long.class)
-          .of("creationTime", Long.class)
-          .of("size", Long.class);
-
   public static final Map<String, Object> CONFIGS = new HashMap<>();
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
@@ -70,7 +58,7 @@ public class WholeFileDataParserFactory extends DataParserFactory {
       Map<String, Object> metadata,
       FileRef fileRef
   ) throws DataParserException {
-    Utils.checkNotNull(fileRef, "fileRef");
+    Utils.checkNotNull(fileRef, FileRefUtil.FILE_REF_FIELD_NAME);
     validateMetadata(metadata);
     return new WholeFileDataParser(
         getSettings().getContext(),
@@ -81,8 +69,8 @@ public class WholeFileDataParserFactory extends DataParserFactory {
   }
 
   private static void validateMetadata(Map<String, Object> metadata) throws DataParserException {
-    if (!metadata.keySet().containsAll(MANDATORY_METADATA_INFO.keySet())) {
-      Set<String> missingMetadata = new HashSet<>(MANDATORY_METADATA_INFO.keySet());
+    if (!metadata.keySet().containsAll(FileRefUtil.MANDATORY_METADATA_INFO.keySet())) {
+      Set<String> missingMetadata = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
       missingMetadata.removeAll(metadata.keySet());
       StringBuilder sb = new StringBuilder();
       boolean commaNeeded = false;
@@ -97,9 +85,9 @@ public class WholeFileDataParserFactory extends DataParserFactory {
     }
     boolean isValid = true;
     StringBuilder sb = new StringBuilder();
-    for (String metadataKey : MANDATORY_METADATA_INFO.keySet()) {
+    for (String metadataKey : FileRefUtil.MANDATORY_METADATA_INFO.keySet()) {
       Object metadataObject = metadata.get(metadataKey);
-      Class<?> classType = (Class<?>) MANDATORY_METADATA_INFO.get(metadataKey);
+      Class<?> classType = (Class<?>) FileRefUtil.MANDATORY_METADATA_INFO.get(metadataKey);
       if (!classType.isAssignableFrom(metadataObject.getClass())) {
         sb.append(
             Utils.format(

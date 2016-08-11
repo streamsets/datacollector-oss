@@ -19,12 +19,12 @@
  */
 package com.streamsets.pipeline.lib.generator.wholefile;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -34,12 +34,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.List;
 
 public class WholeFileDataGenerator implements DataGenerator {
-  private static final String FILE_REF = "/fileRef";
-  private static final String FILE_INFO = "/fileInfo";
-  private static final List<String> MANDATORY_FIELD_PATHS = ImmutableList.of(FILE_REF, FILE_INFO);
   private final Stage.Context context;
   private final OutputStream outputStream;
 
@@ -52,7 +48,7 @@ public class WholeFileDataGenerator implements DataGenerator {
   }
 
   private void validateRecord(Record record) throws DataGeneratorException {
-    for (String fieldPath : MANDATORY_FIELD_PATHS) {
+    for (String fieldPath : FileRefUtil.MANDATORY_FIELD_PATHS) {
       if (!record.has(fieldPath)) {
         throw new DataGeneratorException(Errors.WHOLE_FILE_GENERATOR_ERROR_0, fieldPath);
       }
@@ -62,7 +58,7 @@ public class WholeFileDataGenerator implements DataGenerator {
   @Override
   public void write(Record record) throws IOException, DataGeneratorException {
     validateRecord(record);
-    FileRef fileRef = record.get(FILE_REF).getValueAsFileRef();
+    FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
     int bufferSize = fileRef.getBufferSize();
     boolean canUseDirectByteBuffer = fileRef.getSupportedStreamClasses().contains(ReadableByteChannel.class);
     if (canUseDirectByteBuffer) {

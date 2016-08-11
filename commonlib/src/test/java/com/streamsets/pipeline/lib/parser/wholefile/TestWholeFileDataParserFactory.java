@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -98,7 +99,7 @@ public class TestWholeFileDataParserFactory {
         .build();
     Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
     FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
-    Set<String> keys = new HashSet<>(WholeFileDataParserFactory.MANDATORY_METADATA_INFO.keySet());
+    Set<String> keys = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
     for (String key :keys) {
       Map<String, Object> metadataCopy = new HashMap<>(metadata);
       metadataCopy.remove(key);
@@ -113,10 +114,10 @@ public class TestWholeFileDataParserFactory {
         .build();
     Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
     FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
-    Set<String> keys = new HashSet<>(WholeFileDataParserFactory.MANDATORY_METADATA_INFO.keySet());
+    Set<String> keys = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
     for (String key :keys) {
       Map<String, Object> metadataCopy = new HashMap<>(metadata);
-      if ((WholeFileDataParserFactory.MANDATORY_METADATA_INFO.get(key)).equals(Long.class) ) {
+      if ((FileRefUtil.MANDATORY_METADATA_INFO.get(key)).equals(Long.class) ) {
         metadataCopy.put(key, String.valueOf(metadataCopy.get(key)));
       } else {
         metadataCopy.put(key, 1);

@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
-import com.streamsets.pipeline.lib.io.fileref.FileRefStreamStatisticsConstants;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,9 +48,9 @@ public class TestWholeFileDataGeneratorFactory {
   public void testGaugeInit() throws Exception {
     DataGeneratorFactory factory =
         new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.WHOLE_FILE).build();
-    Assert.assertNull(context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME));
+    Assert.assertNull(context.getGauge(FileRefUtil.GAUGE_NAME));
     factory.getGenerator(new ByteArrayOutputStream());
-    Assert.assertNotNull(context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME));
+    Assert.assertNotNull(context.getGauge(FileRefUtil.GAUGE_NAME));
   }
 
   @Test
@@ -58,15 +58,15 @@ public class TestWholeFileDataGeneratorFactory {
     DataGeneratorFactory factory =
         new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.WHOLE_FILE).build();
     factory.getGenerator(new ByteArrayOutputStream());
-    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefStreamStatisticsConstants.GAUGE_NAME);
+    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
     Map<String, Object> map = gauge.getValue();
 
     LinkedHashSet<String> hashSet = new LinkedHashSet<>();
     //Ordering
-    hashSet.add(FileRefStreamStatisticsConstants.FILE_NAME);
-    hashSet.add(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT);
-    hashSet.add(FileRefStreamStatisticsConstants.COPIED_BYTES);
-    hashSet.add(FileRefStreamStatisticsConstants.REMAINING_BYTES);
+    hashSet.add(FileRefUtil.FILE_NAME);
+    hashSet.add(FileRefUtil.TRANSFER_THROUGHPUT);
+    hashSet.add(FileRefUtil.COPIED_BYTES);
+    hashSet.add(FileRefUtil.REMAINING_BYTES);
 
     Iterator<String> hashSetKeyIterator = hashSet.iterator();
     Iterator<String> keySetIterator = map.keySet().iterator();

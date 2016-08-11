@@ -52,16 +52,16 @@ public class TestMetricsEnabledWrapperStream {
     FileRefTestUtil.writePredefinedTextToFile(testDir);
     context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.COPIED_BYTES, 0L);
-    gaugeStatistics.put(FileRefStreamStatisticsConstants.REMAINING_BYTES, 0L);
-    context.createGauge(FileRefStreamStatisticsConstants.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
       @Override
       public Map<String, Object> getValue() {
         return gaugeStatistics;
       }
     });
-    context.createMeter(FileRefStreamStatisticsConstants.TRANSFER_THROUGHPUT_METER);
+    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
   }
 
   @After

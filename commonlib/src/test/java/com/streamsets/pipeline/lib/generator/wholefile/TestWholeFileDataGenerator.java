@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.lib.generator.wholefile;
 
 import com.google.common.io.Files;
-import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.After;
 import org.junit.Assert;
@@ -43,7 +44,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -71,13 +71,8 @@ public class TestWholeFileDataGenerator {
   private Record createRecord(String checksum, HashingUtil.HashType checksumAlgorithm) throws Exception {
     Record record = context.createRecord("id");
     Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
-    Map<String, Field> fieldMap = new HashMap<>();
-    fieldMap.put(
-        "fileRef",
-        Field.create(FileRefTestUtil.getLocalFileRef(testDir, true, checksum, checksumAlgorithm))
-    );
-    fieldMap.put("fileInfo", FileRefTestUtil.createFieldForMetadata(metadata));
-    record.set(Field.create(fieldMap));
+    FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, true, checksum, checksumAlgorithm);
+    record.set(FileRefUtil.getWholeFileRecordRootField(fileRef, metadata));
     return record;
   }
 
@@ -112,12 +107,12 @@ public class TestWholeFileDataGenerator {
 
   @Test
   public void testInvalidRecordWithNoFileRef() throws Exception {
-    testInvalidRecord("/fileRef");
+    testInvalidRecord(FileRefUtil.FILE_REF_FIELD_PATH);
   }
 
   @Test
   public void testInvalidRecordWithNoFileInfo() throws Exception {
-    testInvalidRecord("/fileInfo");
+    testInvalidRecord(FileRefUtil.FILE_INFO_FIELD_PATH);
   }
 
   @Test
