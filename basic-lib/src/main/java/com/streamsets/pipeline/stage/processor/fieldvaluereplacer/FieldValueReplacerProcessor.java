@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
@@ -129,6 +130,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         return Long.valueOf(stringValue);
       case SHORT:
         return Short.valueOf(stringValue);
+      case FILE_REF:
+        throw new IllegalArgumentException(Utils.format("Cannot convert String value to type {}", fieldType));
       case LIST_MAP:
       case LIST:
       case MAP:

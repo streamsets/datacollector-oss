@@ -174,6 +174,14 @@ public final class HashingUtil {
             case BYTE_ARRAY:
               sink.putBytes(field.getValueAsByteArray());
               break;
+            case FILE_REF:
+              throw new IllegalStateException(
+                  Utils.format(
+                      "Hashing not supported for field: {} of type {}",
+                      path,
+                      field.getType()
+                  )
+              );
             case MAP:
             case LIST:
           }

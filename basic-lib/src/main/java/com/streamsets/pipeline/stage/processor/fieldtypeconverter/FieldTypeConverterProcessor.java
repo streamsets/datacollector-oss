@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,7 +129,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
             dateMask = converterConfig.getDateMask();
           }
           return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask);
-        } catch (ParseException | NumberFormatException e) {
+        } catch (ParseException | IllegalArgumentException e) {
           throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(), converterConfig.targetType.name(), e.toString(), e);
         }
       }
@@ -137,7 +138,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING)) {
       if (field.getValue() == null) {
         LOG.warn("Field {} in record has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
-        return Field.create(converterConfig.targetType,null);
+        return Field.create(converterConfig.targetType, null);
       } else if(converterConfig.targetType == Field.Type.LONG) {
         return Field.create(converterConfig.targetType, field.getValueAsDatetime().getTime());
       } else if(converterConfig.targetType == Field.Type.STRING) {
@@ -190,6 +191,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).longValue());
       case SHORT:
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).shortValue());
+      case FILE_REF:
+        throw new IllegalArgumentException(Utils.format("Cannot convert String value to type {}", targetType));
       default:
         return field;
     }

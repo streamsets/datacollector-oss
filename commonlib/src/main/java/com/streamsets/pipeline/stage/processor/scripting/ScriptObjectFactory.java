@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.script.ScriptEngine;
 import java.math.BigDecimal;
@@ -112,6 +113,8 @@ public class ScriptObjectFactory {
             }
             scriptObject = createArray(scripArrayElements);
             break;
+          case FILE_REF:
+            throw new IllegalStateException(Utils.format("Unsupported field type {}", field.getType()));
           default:
             // no action
             break;

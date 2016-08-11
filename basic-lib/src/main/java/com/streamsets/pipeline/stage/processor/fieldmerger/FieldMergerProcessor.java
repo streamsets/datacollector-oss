@@ -149,8 +149,6 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
   }
 
   private boolean isListOrMapField(Field field) {
-    return field.getType().equals(Field.Type.MAP) ||
-        field.getType().equals(Field.Type.LIST) ||
-        field.getType().equals(Field.Type.LIST_MAP);
+    return field.getType().isOneOf(Field.Type.MAP, Field.Type.LIST, Field.Type.LIST_MAP);
   }
 }
