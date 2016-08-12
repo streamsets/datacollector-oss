@@ -107,7 +107,7 @@ public abstract class AbstractSSOAuthenticator implements Authenticator {
     }
     try {
       httpRes.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "dpm");
-      httpRes.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+      httpRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       httpRes.setContentType("application/json");
       httpRes.getWriter().println(UNAUTHORIZED_JSON_STR);
     } catch (IOException ex) {

@@ -111,7 +111,7 @@ public class TestAbstractSSOAuthenticator {
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnUnauthorized(req, res, "principal", "template"));
 
     ArgumentCaptor<Integer> error = ArgumentCaptor.forClass(Integer.class);
-    Mockito.verify(res).sendError(error.capture());
+    Mockito.verify(res).setStatus(error.capture());
     Assert.assertEquals(SSOUserAuthenticator.UNAUTHORIZED_JSON_STR, writer.toString().trim());
     Mockito.verify(res).setContentType(Mockito.eq("application/json"));
   }
