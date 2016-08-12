@@ -245,7 +245,7 @@ public class TestAbstractSSOService {
     PrincipalCache cache = Mockito.mock(PrincipalCache.class);
     Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(principal);
 
-    Assert.assertEquals(principal, service.validate(cache, null, "t", "x"));
+    Assert.assertEquals(principal, service.validate(cache, null, "t", "c", "x"));
     Mockito.verify(cache, Mockito.times(1)).get(Mockito.eq("t"));
   }
 
@@ -257,7 +257,7 @@ public class TestAbstractSSOService {
     Mockito.when(cache.get(Mockito.eq("t"))).thenReturn(null);
     Mockito.when(cache.isInvalid(Mockito.eq("t"))).thenReturn(true);
 
-    Assert.assertNull(service.validate(cache, null, "t", "x"));
+    Assert.assertNull(service.validate(cache, null, "t", "c", "x"));
     Mockito.verify(cache, Mockito.times(1)).get(Mockito.eq("t"));
   }
 
@@ -281,7 +281,7 @@ public class TestAbstractSSOService {
       }
     };
 
-    Assert.assertEquals(principal, service.validate(cache, callable, "t", "x"));
+    Assert.assertEquals(principal, service.validate(cache, callable, "t", "c", "x"));
     Mockito.verify(cache, Mockito.times(2)).get(Mockito.eq("t"));
     Mockito.verify(cache, Mockito.times(1)).isInvalid(Mockito.eq("t"));
     Mockito.verify(cache, Mockito.times(1)).put(Mockito.eq("t"), Mockito.eq(principal));
@@ -307,7 +307,7 @@ public class TestAbstractSSOService {
       }
     };
 
-    Assert.assertNull(service.validate(cache, callable, "t", "x"));
+    Assert.assertNull(service.validate(cache, callable, "t", "c", "x"));
     Mockito.verify(cache, Mockito.times(2)).get(Mockito.eq("t"));
     Mockito.verify(cache, Mockito.times(1)).isInvalid(Mockito.eq("t"));
     Mockito.verify(cache, Mockito.times(0)).put(Mockito.eq("t"), Mockito.any(SSOPrincipal.class));
@@ -351,7 +351,7 @@ public class TestAbstractSSOService {
           done.await();
         } catch (InterruptedException ex) {
         }
-        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "x"));
+        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "c", "x"));
       }
     };
     t2.start();
@@ -364,14 +364,14 @@ public class TestAbstractSSOService {
           done.await();
         } catch (InterruptedException ex) {
         }
-        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "x"));
+        Assert.assertEquals(principal, service.validate(cache, neverCalledCallable, "t", "c", "x"));
       }
     };
     t3.start();
 
     ready.await();
 
-    Assert.assertEquals(principal, service.validate(cache, goThruCallable, "t", "x"));
+    Assert.assertEquals(principal, service.validate(cache, goThruCallable, "t", "c", "x"));
 
     done.await();
 
