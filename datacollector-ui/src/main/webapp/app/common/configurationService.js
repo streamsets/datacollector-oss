@@ -40,6 +40,7 @@ angular.module('dataCollectorApp.common')
     var DPM_ENABLED = 'dpm.enabled';
     var DPM_BASE_URL = 'dpm.base.url';
     var CLOUDERA_MANAGER_MANAGED = 'clouderaManager.managed';
+    var DPM_LABELS ='dpm.remote.control.job.labels';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -233,6 +234,17 @@ angular.module('dataCollectorApp.common')
         return self.config[DPM_ENABLED] === 'true';
       }
       return false;
+    };
+
+    /*
+     * Returns dpm.remote.control.job.labels configuration value
+     * @returns {*}
+     */
+    this.getDPMLabels = function() {
+      if (self.config && self.config[DPM_LABELS] !== undefined && self.config[DPM_LABELS].trim().length) {
+        return self.config[DPM_LABELS].split(',');
+      }
+      return [];
     };
 
     /*

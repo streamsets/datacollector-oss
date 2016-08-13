@@ -24,7 +24,7 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('EnableDPMModalInstanceController', function ($scope, $modalInstance, api, authService) {
+  .controller('EnableDPMModalInstanceController', function ($scope, $modalInstance, api, authService, configuration) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -64,4 +64,10 @@ angular
         $modalInstance.dismiss('cancel');
       }
     });
+
+    var currentDPMLabels = configuration.getDPMLabels();
+    if (currentDPMLabels && currentDPMLabels.length) {
+      $scope.dpmInfoModel.labels = currentDPMLabels;
+    }
+
   });
