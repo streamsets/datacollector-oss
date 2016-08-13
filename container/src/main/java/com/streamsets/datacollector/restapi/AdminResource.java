@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -28,6 +29,7 @@ import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
+import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import io.swagger.annotations.Api;
@@ -45,12 +47,14 @@ import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -221,7 +225,6 @@ public class AdminResource {
         dataStore.commit(os);
       } finally {
         dataStore.release();
-        dataStore.close();
       }
     }
 
@@ -261,7 +264,100 @@ public class AdminResource {
   )
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
-  public Response disableDPM() throws IOException {
+  public Response disableDPM(@Context HttpServletRequest request) throws IOException {
+    // check if DPM enabled
+    if (!runtimeInfo.isDPMEnabled()) {
+      throw new RuntimeException("disableDPM is supported only when DPM is enabled");
+    }
+
+    String dpmBaseURL = config.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
+    if (dpmBaseURL.endsWith("/")) {
+      dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
+    }
+
+    // 1. Get DPM user auth token from request cookie
+    SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
+    String userAuthToken = ssoPrincipal.getTokenStr();
+    String organizationId = ssoPrincipal.getOrganizationId();
+    String componentId = runtimeInfo.getId();
+
+    // 2. Deactivate Data Collector System Component
+    Response response = null;
+    try {
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/security/rest/v1/organization/" + organizationId + "/components/deactivate")
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+          .header(SSOConstants.X_REST_CALL, true)
+          .post(Entity.json(ImmutableList.of(componentId)));
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format(
+            " Deactivate Data Collector System Component from DPM failed, status code '{}': {}",
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    // 3. Delete Data Collector System Component
+    try {
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/security/rest/v1/organization/" + organizationId + "/components/delete")
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+          .header(SSOConstants.X_REST_CALL, true)
+          .post(Entity.json(ImmutableList.of(componentId)));
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format(
+            " Deactivate Data Collector System Component from DPM failed, status code '{}': {}",
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    // 4. Delete from Job Runner SDC list
+    try {
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/jobrunner/rest/v1/sdc/" + componentId)
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+          .header(SSOConstants.X_REST_CALL, true)
+          .delete();
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format(
+            "Delete from DPM Job Runner SDC list failed, status code '{}': {}",
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    // 5. Update App Token file
+    DataStore dataStore = new DataStore(new File(runtimeInfo.getConfigDir(), APP_TOKEN_FILE));
+    try (OutputStream os = dataStore.getOutputStream()) {
+      IOUtils.write("", os);
+      dataStore.commit(os);
+    } finally {
+      dataStore.release();
+    }
+
+    // 4. Update dpm.properties file
     try {
       FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
           new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
