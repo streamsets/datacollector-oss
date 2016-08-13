@@ -60,6 +60,7 @@ public class TestJdbcSource {
 
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
   private final String query = "SELECT * FROM TEST.TEST_TABLE WHERE P_ID > ${offset} ORDER BY P_ID ASC LIMIT 10;";
+  private final String queryNonIncremental = "SELECT * FROM TEST.TEST_TABLE LIMIT 10;";
   private final String initialOffset = "0";
   private final long queryInterval = 0L;
 
@@ -203,7 +204,7 @@ public class TestJdbcSource {
   public void testNonIncrementalMode() throws Exception {
     JdbcSource origin = new JdbcSource(
         false,
-        query,
+        queryNonIncremental,
         initialOffset,
         "P_ID",
         queryInterval,

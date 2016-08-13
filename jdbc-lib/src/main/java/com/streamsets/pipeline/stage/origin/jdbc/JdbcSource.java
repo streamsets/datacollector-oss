@@ -145,26 +145,29 @@ public class JdbcSource extends BaseSource {
       }
     }
 
-    final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
-    Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
+    // Incremental mode have special requirements for the query form
+    if(isIncrementalMode) {
+      final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
+      Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
         String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b.*\\b%s\\b.*",
-            formattedOffsetColumn,
-            formattedOffsetColumn
+          formattedOffsetColumn,
+          formattedOffsetColumn
         )
-    );
+      );
 
-    String upperCaseQuery = query.toUpperCase();
-    boolean checkOffsetColumnInWhereOrder = true;
-    if(!upperCaseQuery.contains("WHERE")) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "WHERE"));
-      checkOffsetColumnInWhereOrder = false;
-    }
-    if(!upperCaseQuery.contains("ORDER BY")) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "ORDER BY"));
-      checkOffsetColumnInWhereOrder = false;
-    }
-    if(checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_29, offsetColumn));
+      String upperCaseQuery = query.toUpperCase();
+      boolean checkOffsetColumnInWhereOrder = true;
+      if (!upperCaseQuery.contains("WHERE")) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "WHERE"));
+        checkOffsetColumnInWhereOrder = false;
+      }
+      if (!upperCaseQuery.contains("ORDER BY")) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "ORDER BY"));
+        checkOffsetColumnInWhereOrder = false;
+      }
+      if (checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_29, offsetColumn));
+      }
     }
 
     if (txnMaxSize < 0) {
