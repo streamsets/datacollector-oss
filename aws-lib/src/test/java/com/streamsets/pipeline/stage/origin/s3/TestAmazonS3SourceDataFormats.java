@@ -344,7 +344,7 @@ public class TestAmazonS3SourceDataFormats {
 
     final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
     gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
     gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
     context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
       @Override

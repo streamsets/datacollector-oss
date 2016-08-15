@@ -37,39 +37,50 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
   private final Meter dataThroughputMeterForCurrentStream;
   private final Meter dataTransferMeter;
   private final Counter remainingBytesCounter;
-  private final Counter copiedBytesCounter;
+  private final Counter sentBytesCounter;
   private final Map<String, Object> gaugeStatisticsMap;
+  private final long fileSize;
   private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB"};
   private static final DecimalFormat df = new DecimalFormat("#.##");
   private static final String PER_SEC = "/s";
+  private static final String PERCENT = "%";
+
 
   @SuppressWarnings("unchecked")
   MetricEnabledWrapperStream(String id, long fileSize, Stage.Context context, T stream) {
     super(stream);
+    this.fileSize = fileSize;
     dataThroughputMeterForCurrentStream = new Meter();
     remainingBytesCounter = new Counter();
-    copiedBytesCounter = new Counter();
+    sentBytesCounter = new Counter();
     remainingBytesCounter.inc(fileSize);
     dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefUtil.GAUGE_NAME).getValue();
-    gaugeStatisticsMap.put(FileRefUtil.FILE_NAME, id);
+    //Shows the size of the file in the brack after the file name.
+    gaugeStatisticsMap.put(FileRefUtil.FILE, String.format(FileRefUtil.BRACKETED_TEMPLATE, id, convertBytesToDisplayFormat(fileSize)));
   }
 
   private int updateMetricsAndReturnBytesRead(int bytesRead) {
     if (bytesRead > 0) {
+      double sentBytes = (double) sentBytesCounter.getCount();
       dataThroughputMeterForCurrentStream.mark(bytesRead);
       //In KB
       dataTransferMeter.mark(bytesRead);
-      copiedBytesCounter.inc(bytesRead);
+      sentBytesCounter.inc(bytesRead);
       remainingBytesCounter.dec(bytesRead);
       //Putting one minute rate because that is the latest speed of transfer
       gaugeStatisticsMap.put(
           FileRefUtil.TRANSFER_THROUGHPUT,
           convertBytesToDisplayFormat(dataThroughputMeterForCurrentStream.getOneMinuteRate()) + PER_SEC
       );
+      //Shows a percent of file copied in bracket after the sent bytes.
       gaugeStatisticsMap.put(
-          FileRefUtil.COPIED_BYTES,
-          convertBytesToDisplayFormat((double)copiedBytesCounter.getCount())
+          FileRefUtil.SENT_BYTES,
+          String.format(
+              FileRefUtil.BRACKETED_TEMPLATE,
+              convertBytesToDisplayFormat(sentBytes),
+              (long)Math.floor( (sentBytes / fileSize) * 100) + PERCENT
+          )
       );
       gaugeStatisticsMap.put(
           FileRefUtil.REMAINING_BYTES,
@@ -116,5 +127,12 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
   @Override
   public int read(byte[] b, int offset, int len) throws IOException {
     return updateMetricsAndReturnBytesRead(super.read(b, offset, len));
+  }
+
+  @Override
+  public void close() throws IOException {
+    long completedFileCount = (long) gaugeStatisticsMap.get(FileRefUtil.COMPLETED_FILE_COUNT) + 1;
+    gaugeStatisticsMap.put(FileRefUtil.COMPLETED_FILE_COUNT, completedFileCount);
+    super.close();
   }
 }

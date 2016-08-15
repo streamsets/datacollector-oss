@@ -39,10 +39,11 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
   public static final Map<String, Object> CONFIGS = ImmutableMap.of();
   public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
   private static final Map<String, Integer> GAUGE_MAP_ORDERING = ImmutableMap.of(
-      FileRefUtil.FILE_NAME, 1,
+      FileRefUtil.FILE, 1,
       FileRefUtil.TRANSFER_THROUGHPUT, 2,
-      FileRefUtil.COPIED_BYTES, 3,
-      FileRefUtil.REMAINING_BYTES, 4
+      FileRefUtil.SENT_BYTES, 3,
+      FileRefUtil.REMAINING_BYTES, 4,
+      FileRefUtil.COMPLETED_FILE_COUNT, 5
   );
 
   /**
@@ -61,10 +62,11 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
         }
       });
       //File name is populated at the MetricEnabledWrapperStream.
-      gaugeStatistics.put(FileRefUtil.FILE_NAME, "");
+      gaugeStatistics.put(FileRefUtil.FILE, "");
       gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-      gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+      gaugeStatistics.put(FileRefUtil.SENT_BYTES, String.format(FileRefUtil.BRACKETED_TEMPLATE, 0, 0));
       gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+      gaugeStatistics.put(FileRefUtil.COMPLETED_FILE_COUNT, 0L);
       context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
         @Override
         public Map<String, Object> getValue() {
@@ -72,6 +74,7 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
         }
       });
     }
+
     Meter dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     if (dataTransferMeter == null) {
       context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);

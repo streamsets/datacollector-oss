@@ -68,7 +68,7 @@ public final class LocalFileRef extends AbstractFileRef {
 
   @Override
   public String toString() {
-    return "Local File: '" + filePath + "'";
+    return "Local: '" + filePath + "'";
   }
 
   @Override

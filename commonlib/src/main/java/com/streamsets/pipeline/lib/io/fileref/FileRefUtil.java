@@ -39,11 +39,14 @@ public final class FileRefUtil {
 
   //Metric Constants
   public static final String GAUGE_NAME = "File Transfer Statistics";
-  public static final String FILE_NAME = "File Name";
+  public static final String FILE = "File";
   public static final String TRANSFER_THROUGHPUT = "Transfer Rate";
-  public static final String COPIED_BYTES = "Copied Bytes";
+  public static final String SENT_BYTES = "Sent Bytes";
   public static final String REMAINING_BYTES = "Remaining Bytes";
   public static final String TRANSFER_THROUGHPUT_METER = "transferRateKb";
+  public static final String COMPLETED_FILE_COUNT = "Completed File Count";
+
+  public static final String BRACKETED_TEMPLATE = "%s (%s)";
 
   public static final String FILE_REF_FIELD_NAME = "fileRef";
   public static final String FILE_INFO_FIELD_NAME = "fileInfo";

@@ -667,8 +667,8 @@ public class DataParserFormatConfig implements DataFormatConfig{
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "1024",
-      label = "Max Buffer Size (bytes)",
+      defaultValue = "8192",
+      label = "Buffer Size (bytes)",
       description = "Size of the Buffer used to copy the file.",
       displayPosition = 900,
       group = "WHOLE_FILE",
@@ -677,7 +677,8 @@ public class DataParserFormatConfig implements DataFormatConfig{
       min = 1,
       max = Integer.MAX_VALUE
   )
-  public int wholeFileMaxObjectLen = 1024;
+  //Optimal 8KB
+  public int wholeFileMaxObjectLen = 8 * 1024;
 
   @ConfigDef(
       required = true,

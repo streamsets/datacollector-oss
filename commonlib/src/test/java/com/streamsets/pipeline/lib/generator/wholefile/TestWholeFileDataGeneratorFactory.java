@@ -63,10 +63,12 @@ public class TestWholeFileDataGeneratorFactory {
 
     LinkedHashSet<String> hashSet = new LinkedHashSet<>();
     //Ordering
-    hashSet.add(FileRefUtil.FILE_NAME);
+    hashSet.add(FileRefUtil.FILE);
     hashSet.add(FileRefUtil.TRANSFER_THROUGHPUT);
-    hashSet.add(FileRefUtil.COPIED_BYTES);
+    hashSet.add(FileRefUtil.SENT_BYTES);
     hashSet.add(FileRefUtil.REMAINING_BYTES);
+    hashSet.add(FileRefUtil.COMPLETED_FILE_COUNT);
+
 
     Iterator<String> hashSetKeyIterator = hashSet.iterator();
     Iterator<String> keySetIterator = map.keySet().iterator();

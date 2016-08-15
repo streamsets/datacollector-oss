@@ -53,8 +53,9 @@ public class TestMetricsEnabledWrapperStream {
     context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
     gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefUtil.COPIED_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
     gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.COMPLETED_FILE_COUNT, 0L);
     context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
       @Override
       public Map<String, Object> getValue() {
@@ -73,20 +74,20 @@ public class TestMetricsEnabledWrapperStream {
     return ((Counter)Whitebox.getInternalState(stream, "remainingBytesCounter")).getCount();
   }
 
-  private <T extends  AutoCloseable> long getCopiedBytes(T stream) {
-    return ((Counter)Whitebox.getInternalState(stream, "copiedBytesCounter")).getCount();
+  private <T extends  AutoCloseable> long getSentBytes(T stream) {
+    return ((Counter)Whitebox.getInternalState(stream, "sentBytesCounter")).getCount();
   }
 
   private <T extends AutoCloseable> void checkStateDuringReads(long fileSize, long remainingFileSize, T is) {
     Assert.assertEquals(remainingFileSize, getRemainingBytes(is));
-    Assert.assertEquals(fileSize - remainingFileSize, getCopiedBytes(is));
-    Assert.assertEquals(fileSize, getRemainingBytes(is) + getCopiedBytes(is));
+    Assert.assertEquals(fileSize - remainingFileSize, getSentBytes(is));
+    Assert.assertEquals(fileSize, getRemainingBytes(is) + getSentBytes(is));
   }
 
 
   private <T extends AutoCloseable>  void checkStateAfterReadCompletion(long fileSize, long remainingFileSize, T is) {
     Assert.assertEquals(0, remainingFileSize);
-    Assert.assertEquals(fileSize, getCopiedBytes(is));
+    Assert.assertEquals(fileSize, getSentBytes(is));
     Assert.assertEquals(remainingFileSize, getRemainingBytes(is));
   }
 
