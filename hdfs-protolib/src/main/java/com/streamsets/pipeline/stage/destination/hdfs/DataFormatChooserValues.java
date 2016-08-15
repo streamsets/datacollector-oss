@@ -30,6 +30,7 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
         DataFormat.JSON,
         DataFormat.DELIMITED,
         DataFormat.AVRO,
+        DataFormat.BINARY,
         DataFormat.PROTOBUF,
         DataFormat.WHOLE_FILE
     );
