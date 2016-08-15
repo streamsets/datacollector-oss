@@ -40,6 +40,7 @@ public enum Errors implements ErrorCode {
   S3_40("Internal Error {}"),
 
   S3_50("Compression Option not supported for Whole file Data format"),
+  S3_51("Object Key {} already exists"),
 
   ;
 

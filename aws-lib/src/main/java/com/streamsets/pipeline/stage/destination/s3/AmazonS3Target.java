@@ -33,7 +33,6 @@ import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -41,6 +40,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -224,6 +224,15 @@ public class AmazonS3Target extends BaseTarget {
     }
   }
 
+  private void checkForWholeFileExistence(String objectKey) throws OnRecordErrorException {
+    boolean fileExists = s3TargetConfigBean.s3Config.getS3Client().doesObjectExist(s3TargetConfigBean.s3Config.bucket, objectKey);
+    WholeFileExistsAction wholeFileExistsAction = s3TargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction;
+    if (fileExists && wholeFileExistsAction == WholeFileExistsAction.TO_ERROR) {
+      throw new OnRecordErrorException(Errors.S3_51, objectKey);
+    }
+    //else we will do the upload which will overwrite/ version based on the bucket configuration.
+  }
+
   private List<Upload> handleRecordsForWholeFileFormat(
       Iterator<Record> recordIterator,
       String keyPrefix
@@ -232,14 +241,26 @@ public class AmazonS3Target extends BaseTarget {
     if (recordIterator.hasNext()) {
       Record record = recordIterator.next();
       String fileName = getFileNameFromFileNameEL(keyPrefix, record);
-      FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
-      ObjectMetadata metadata = getObjectMetadata();
-      metadata = (metadata == null)? new ObjectMetadata() : metadata;
-      //Mandatory field path specifying size.
-      metadata.setContentLength(record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/size").getValueAsLong());
-      //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.
-      Upload upload = doUpload(fileName, fileRef.createInputStream(getContext(), InputStream.class), metadata);
-      uploads.add(upload);
+      try {
+        checkForWholeFileExistence(fileName);
+        FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
+        ObjectMetadata metadata = getObjectMetadata();
+        metadata = (metadata == null)? new ObjectMetadata() : metadata;
+        //Mandatory field path specifying size.
+        metadata.setContentLength(record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/size").getValueAsLong());
+
+        //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.
+        Upload upload = doUpload(fileName, fileRef.createInputStream(getContext(), InputStream.class), metadata);
+        uploads.add(upload);
+      } catch (OnRecordErrorException e) {
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                e.getErrorCode(),
+                e.getParams()
+            )
+        );
+      }
     }
     return uploads;
   }
