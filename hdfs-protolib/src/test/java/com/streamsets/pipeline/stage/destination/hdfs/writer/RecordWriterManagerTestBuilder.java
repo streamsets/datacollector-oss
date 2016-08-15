@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import org.apache.hadoop.conf.Configuration;
@@ -56,6 +57,7 @@ public final class RecordWriterManagerTestBuilder {
   private  String rollHeaderName = "roll";
   private String config = "dirPathTemplate";
   private String fileNameEL = "";
+  private WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
   private DataGeneratorFactory generatorFactory = new TestActiveRecordWriters.DummyDataGeneratorFactory(null);
   private Target.Context context;
 
@@ -158,6 +160,11 @@ public final class RecordWriterManagerTestBuilder {
     return this;
   }
 
+  public RecordWriterManagerTestBuilder wholeFileExistsAction(WholeFileExistsAction wholeFileExistsAction) {
+    this.wholeFileExistsAction = wholeFileExistsAction;
+    return this;
+  }
+
   public RecordWriterManager build() throws IOException {
     RecordWriterManager mgr = new RecordWriterManager(
       FileSystem.get(hdfsUri, hdfsConf),
@@ -176,6 +183,7 @@ public final class RecordWriterManagerTestBuilder {
       rollIfHeader,
       rollHeaderName,
       fileNameEL,
+      wholeFileExistsAction,
       generatorFactory,
       context,
       config

@@ -85,11 +85,11 @@ public class ActiveRecordWriters {
     this.manager = manager;
   }
 
-  public void commitOldFiles(FileSystem fs) throws IOException, ELEvalException {
+  public void commitOldFiles(FileSystem fs) throws IOException, StageException {
     manager.commitOldFiles(fs);
   }
 
-  public void purge() throws IOException {
+  public void purge() throws IOException, StageException {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Purge");
     }
@@ -156,7 +156,7 @@ public class ActiveRecordWriters {
   //or else we will get into a deadlock
   //For Ex: idle close thread calls this method
   //and the hdfsTarget (in the pipeline runnable thread), calls flushAll
-  public synchronized void release(RecordWriter writer, boolean roll) throws IOException {
+  public synchronized void release(RecordWriter writer, boolean roll) throws StageException, IOException {
     writer.closeLock();
     try {
       if (roll || writer.isIdleClosed() || manager.isOverThresholds(writer)) {
@@ -188,7 +188,7 @@ public class ActiveRecordWriters {
     }
   }
 
-  public synchronized void closeAll() {
+  public synchronized void closeAll() throws StageException{
     if (IS_TRACE_ENABLED) {
       LOG.trace("Close all '{}'", toString());
     }

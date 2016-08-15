@@ -33,6 +33,8 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.config.WholeFileExistsActionChooserValues;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -336,6 +338,20 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       triggeredByValue = "WHOLE_FILE"
   )
   public String fileNameEL;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "TO_ERROR",
+      label = "File Already Exists Action",
+      description = "The action to perform when the file already exists.",
+      displayPosition = 460,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE"
+  )
+  @ValueChooserModel(WholeFileExistsActionChooserValues.class)
+  public WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
 
   private boolean validateDataGenerator (
       Stage.Context context,

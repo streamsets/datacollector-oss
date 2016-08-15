@@ -61,6 +61,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
       "kafkaConfigBean.dataGeneratorFormatConfig.protoDescriptorFile",
       "kafkaConfigBean.dataGeneratorFormatConfig.messageType",
       "kafkaConfigBean.dataGeneratorFormatConfig.fileNameEL",
+      "kafkaConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
       "kafkaConfigBean.dataFormat",
       "kafkaConfigBean.kafkaConfig.runtimeTopicResolution",
       "kafkaConfigBean.kafkaConfig.partitionStrategy",

@@ -29,10 +29,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.FakeRecordEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -94,8 +96,8 @@ public class RecordWriterManager {
   public RecordWriterManager(FileSystem fs, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
       String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
       HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      boolean rollIfHeader, String rollHeaderName, String fileNameEL, DataGeneratorFactory generatorFactory, Target.Context context,
-      String config) {
+      boolean rollIfHeader, String rollHeaderName, String fileNameEL, WholeFileExistsAction wholeFileAlreadyExistsAction,
+      DataGeneratorFactory generatorFactory, Target.Context context, String config) {
     this.fs = fs;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -114,7 +116,7 @@ public class RecordWriterManager {
     this.rollIfHeader = rollIfHeader;
     this.rollHeaderName = rollHeaderName;
     pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
-    fsHelper = getFsHelper(context, fileNameEL);
+    fsHelper = getFsHelper(context, fileNameEL, wholeFileAlreadyExistsAction);
     this.closedPaths = new ConcurrentLinkedQueue<>();
   }
 
@@ -166,14 +168,14 @@ public class RecordWriterManager {
     return pathResolver.resolvePath(date, null);
   }
 
-  public Path getPath(Date recordDate, Record record) throws StageException {
+  public Path getPath(Date recordDate, Record record) throws StageException, IOException {
     return fsHelper.getPath(recordDate, record);
   }
 
   /**
    * This method should be called every time we finish writing into a file and consider it "done".
    */
-  Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException {
+  Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException, StageException {
     Path finalPath = fsHelper.getRenamableFinalFilePath(tempPath);
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
@@ -285,7 +287,7 @@ public class RecordWriterManager {
   /**
    * This method must always be called after the closeLock() method on the writer has been called.
    */
-  public Path commitWriter(RecordWriter writer) throws IOException {
+  public Path commitWriter(RecordWriter writer) throws IOException, StageException {
     Path path = null;
     if (!writer.isClosed() || writer.isIdleClosed()) {
       // Unset the interrupt flag before close(). InterruptedIOException makes close() fail
@@ -377,7 +379,7 @@ public class RecordWriterManager {
     return globs;
   }
 
-  public void commitOldFiles(FileSystem fs) throws IOException, ELEvalException {
+  public void commitOldFiles(FileSystem fs) throws IOException, StageException {
     fsHelper.commitOldFiles(fs);
   }
 
@@ -386,14 +388,14 @@ public class RecordWriterManager {
   }
 
   private interface FsHelper {
-    Path getPath(Date recordDate, Record record) throws StageException;
-    void commitOldFiles(FileSystem fs) throws ELEvalException, IOException;
-    void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws IOException;
-    Path getRenamableFinalFilePath(Path tempPath);
+    Path getPath(Date recordDate, Record record) throws StageException, IOException;
+    void commitOldFiles(FileSystem fs) throws StageException, IOException;
+    void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws IOException, StageException;
+    Path getRenamableFinalFilePath(Path tempPath) throws IOException, StageException;
     OutputStream create(FileSystem fs, Path path) throws IOException;
   }
 
-  private FsHelper getFsHelper(final Stage.Context context, final String fileNameEL) {
+  private FsHelper getFsHelper(final Stage.Context context, final String fileNameEL, final WholeFileExistsAction wholeFileAlreadyExistsAction) {
     if (!fileNameEL.isEmpty()) {
       //WHOLE_FILE
       return new FsHelper() {
@@ -405,11 +407,27 @@ public class RecordWriterManager {
           return TMP_FILE_PREFIX + uniquePrefix + elEval.eval(vars, fileNameEL, String.class);
         }
 
+        private void checkAndHandleWholeFileExistence(Path renamableFinalPath) throws IOException, OnRecordErrorException {
+          if (fs.exists(renamableFinalPath)) {
+            //whole file exists.
+            if (wholeFileAlreadyExistsAction == WholeFileExistsAction.OVERWRITE) {
+              fs.delete(renamableFinalPath, false);
+              LOG.debug(Utils.format(Errors.HADOOPFS_54.getMessage(), renamableFinalPath) + "so deleting it");
+            } else {
+              throw new OnRecordErrorException(Errors.HADOOPFS_54, renamableFinalPath);
+            }
+          }
+        }
+
         @Override
-        public Path getPath(Date recordDate, Record record) throws StageException {
+        public Path getPath(Date recordDate, Record record) throws StageException, IOException {
+          //Check whether the real file already exists
+          Path path = new Path(getDirPath(recordDate, record), getTempFile(recordDate, record));
+          //this will check the file exists.
+          getRenamableFinalFilePath(path);
           //This is going to be done only once per record, so skipping cache save
           //because the path is going to be used only once (because only one record is used).
-          return new Path(getDirPath(recordDate, record), getTempFile(recordDate, record));
+          return path;
         }
 
         @Override
@@ -426,9 +444,12 @@ public class RecordWriterManager {
         }
 
         @Override
-        public Path getRenamableFinalFilePath(Path tempPath) {
+        public Path getRenamableFinalFilePath(Path tempPath) throws IOException, StageException {
           String finalFileName = tempPath.getName().replaceFirst(TMP_FILE_PREFIX, "");
-          return new Path(tempPath.getParent(), finalFileName);
+          Path finalPath = new Path(tempPath.getParent(), finalFileName);
+          //Checks during rename.
+          checkAndHandleWholeFileExistence(finalPath);
+          return finalPath;
         }
 
         @Override
@@ -452,7 +473,7 @@ public class RecordWriterManager {
                 });
 
         @Override
-        public Path getPath(Date recordDate, Record record) throws StageException {
+        public Path getPath(Date recordDate, Record record) throws StageException, IOException {
           // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
           // pipeline
           try {
@@ -467,7 +488,7 @@ public class RecordWriterManager {
         }
 
         @Override
-        public void commitOldFiles(FileSystem fs) throws ELEvalException, IOException{
+        public void commitOldFiles(FileSystem fs) throws StageException, IOException {
           if (context.getLastBatchTime() > 0) {
             for (String glob : getGlobs()) {
               LOG.debug("Looking for uncommitted files using glob '{}'", glob);
@@ -483,7 +504,7 @@ public class RecordWriterManager {
         }
 
         @Override
-        public void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws IOException {
+        public void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws StageException, IOException {
           Path path = renameToFinalName(fs, tempPath);
           LOG.warn("Path[{}] - Found previous file '{}', committing it", tempPath, path);
         }

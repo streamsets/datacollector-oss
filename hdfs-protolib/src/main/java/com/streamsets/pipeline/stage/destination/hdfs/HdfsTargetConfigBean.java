@@ -507,7 +507,7 @@ public class HdfsTargetConfigBean {
         RecordWriterManager mgr = new RecordWriterManager(fs, hdfsConfiguration, uniquePrefix,
                 dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
                 maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-                rollIfHeader, rollHeaderName, fileNameEL,
+                rollIfHeader, rollHeaderName, fileNameEL, dataGeneratorFormatConfig.wholeFileExistsAction,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
         if (idleTimeSecs > 0) {
@@ -561,6 +561,7 @@ public class HdfsTargetConfigBean {
                   false,
                   null,
                   fileNameEL,
+                  dataGeneratorFormatConfig.wholeFileExistsAction,
                   dataGeneratorFormatConfig.getDataGeneratorFactory(),
                   (Target.Context) context, "lateRecordsDirPathTemplate"
           );

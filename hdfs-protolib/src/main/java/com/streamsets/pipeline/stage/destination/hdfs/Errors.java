@@ -87,6 +87,8 @@ public enum Errors implements ErrorCode {
   HADOOPFS_51("Missing roll header name"),
   HADOOPFS_52("Invalid setting for idle timeout"),
   HADOOPFS_53("Invalid Setting {}, should be {} for Whole File Data Format."),
+  HADOOPFS_54("The path {} already exists."),
+
   ;
 
   private final String msg;

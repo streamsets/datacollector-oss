@@ -212,11 +212,11 @@ public class RecordWriter {
     return recordCount;
   }
 
-  public void close() throws IOException {
+  public void close() throws IOException, StageException {
     close(false);
   }
 
-  private void close(boolean idleClosed) throws IOException {
+  private void close(boolean idleClosed) throws IOException, StageException {
     closeLock.writeLock().lock();
     LOG.debug("Path[{}] - Closing", path);
     try {
@@ -311,7 +311,7 @@ public class RecordWriter {
   private class IdleCloseCallable implements Callable<Void> {
 
     @Override
-    public Void call() {
+    public Void call() throws StageException{
       try {
         if (writers != null) {
           //We are going to call close(true) which takes a lock on writers
