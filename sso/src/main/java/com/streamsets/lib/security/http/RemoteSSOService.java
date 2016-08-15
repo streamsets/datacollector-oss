@@ -43,7 +43,6 @@ public class RemoteSSOService extends AbstractSSOService {
 
   public static final String SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "appAuthToken";
   public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
-  public static final String SECURITY_SERVICE_COMPONENT_TYPE_CONFIG = CONFIG_PREFIX + "componentType";
   public static final String SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG = CONFIG_PREFIX + "connectionTimeout.millis";
   public static final int DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT = 10000;
   public static final String DPM_ENABLED = CONFIG_PREFIX + "enabled";
@@ -62,12 +61,6 @@ public class RemoteSSOService extends AbstractSSOService {
   private volatile int connTimeout;
   private int dpmRegistrationMaxRetryAttempts;
   private String registrationUrl;
-
-
-  @Override
-  public void setDelegateTo(SSOService ssoService) {
-    throw new UnsupportedOperationException();
-  }
 
   @Override
   public void setConfiguration(Configuration conf) {

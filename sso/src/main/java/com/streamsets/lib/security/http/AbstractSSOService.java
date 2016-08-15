@@ -53,9 +53,20 @@ public abstract class AbstractSSOService implements SSOService {
   }
 
   @Override
+  public SSOService getDelegateTo() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public void setConfiguration(Configuration conf) {
     long validateAuthTokenFrequencySecs =
         conf.get(SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT);
+    Utils.checkArgument(validateAuthTokenFrequencySecs >= 30, Utils.format(
+        "Configuration '{}' set to '{}' seconds, it must be at least '{}' secs",
+        SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG,
+        validateAuthTokenFrequencySecs,
+        30
+    ));
     initializePrincipalCaches(TimeUnit.SECONDS.toMillis(validateAuthTokenFrequencySecs));
   }
 

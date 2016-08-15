@@ -35,6 +35,8 @@ public interface SSOService {
 
   void setDelegateTo(SSOService ssoService);
 
+  SSOService getDelegateTo();
+
   void setConfiguration(Configuration configuration);
 
   void register(Map<String, String> attributes);

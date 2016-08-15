@@ -60,12 +60,25 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "authToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     conf.set(RemoteSSOService.SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, 2000);
     service.setConfiguration(conf);
     Assert.assertEquals("http://foo/security/login", service.getLoginPageUrl());
     Assert.assertEquals("http://foo/security/_logout", service.getLogoutUrl());
     Assert.assertEquals(2000, service.getConnectionTimeout());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLowValidateAuthTokenFrequency() throws Exception {
+    RemoteSSOService service = Mockito.spy(new RemoteSSOService());
+
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "authToken");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 29);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, 2000);
+    service.setConfiguration(conf);
   }
 
   @Test
@@ -74,7 +87,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
     service.setApplicationAuthToken("serviceToken");
@@ -119,7 +132,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
 
@@ -154,7 +167,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
 
@@ -176,7 +189,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
 
@@ -197,7 +210,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
 
@@ -226,7 +239,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "serviceToken");
     conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
-    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
 

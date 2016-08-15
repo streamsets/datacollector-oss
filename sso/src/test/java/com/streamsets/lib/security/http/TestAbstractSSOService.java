@@ -62,9 +62,9 @@ public class TestAbstractSSOService {
         .initializePrincipalCaches(Mockito.eq(AbstractSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT *
             1000));
 
-    conf.set(AbstractSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
+    conf.set(AbstractSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     service.setConfiguration(conf);
-    Mockito.verify(service).initializePrincipalCaches(Mockito.eq(1000l));
+    Mockito.verify(service).initializePrincipalCaches(Mockito.eq(30 * 1000l));
 
     Assert.assertNotNull(service.getUserPrincipalCache());
     Assert.assertNotNull(service.getAppPrincipalCache());

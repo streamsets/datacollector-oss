@@ -451,6 +451,11 @@ public class TestWebServerTaskHttpHttps {
     }
 
     @Override
+    public SSOService getDelegateTo() {
+      return null;
+    }
+
+    @Override
     public void setConfiguration(Configuration configuration) {
     }
 

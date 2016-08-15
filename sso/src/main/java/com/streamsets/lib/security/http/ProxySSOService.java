@@ -36,6 +36,11 @@ public class ProxySSOService implements SSOService {
   }
 
   @Override
+  public SSOService getDelegateTo() {
+    return ssoService;
+  }
+
+  @Override
   public void setConfiguration(Configuration configuration) {
     ssoService.setConfiguration(configuration);
   }
