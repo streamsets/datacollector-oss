@@ -24,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -45,7 +47,7 @@ import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 public class TestSlavePipelineStoreExecutionModes {
 
   @Test
-  public void testSlaveExecutionModeStoreDir() {
+  public void testSlaveExecutionModeStoreDir() throws Exception {
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo =
       new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
@@ -55,12 +57,12 @@ public class TestSlavePipelineStoreExecutionModes {
       new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
-    assertEquals(new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR).getAbsolutePath(), pipelineStoreTask.getStoreDir().getAbsolutePath());
-    pipelineStoreTask.getStoreDir().delete();
+    assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());
+    Files.delete(pipelineStoreTask.getStoreDir());
   }
 
   @Test
-  public void testStandaloneExecutionModeStoreDir() {
+  public void testStandaloneExecutionModeStoreDir() throws Exception {
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo =
       new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
@@ -70,8 +72,7 @@ public class TestSlavePipelineStoreExecutionModes {
       new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
-    assertEquals(new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR).getAbsolutePath(),
-      pipelineStoreTask.getStoreDir().getAbsolutePath());
-    pipelineStoreTask.getStoreDir().delete();
+    assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());
+    Files.delete(pipelineStoreTask.getStoreDir());
   }
 }

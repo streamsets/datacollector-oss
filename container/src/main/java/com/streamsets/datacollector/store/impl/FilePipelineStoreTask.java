@@ -60,11 +60,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -88,7 +90,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
-  private File storeDir;
+  private Path storeDir;
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
@@ -106,16 +108,18 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @VisibleForTesting
-  File getStoreDir() {
+  Path getStoreDir() {
     return storeDir;
   }
 
   @Override
   public void initTask() {
-    storeDir = new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
-    if (!storeDir.exists()) {
-      if (!storeDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir.getAbsolutePath()));
+    storeDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+    if (!Files.exists(storeDir)) {
+      try {
+        Files.createDirectories(storeDir);
+      } catch (IOException e) {
+        throw new RuntimeException(Utils.format("Could not create directory '{}'", storeDir), e);
       }
     }
     if (pipelineStateStore != null) {
@@ -130,30 +134,30 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
   }
 
-  public File getPipelineDir(String name) {
-    return new File(storeDir, PipelineUtils.escapedPipelineName(name));
+  public Path getPipelineDir(String name) {
+    return storeDir.resolve(PipelineUtils.escapedPipelineName(name));
   }
 
   @VisibleForTesting
-  File getInfoFile(String name) {
-    return new File(getPipelineDir(name), INFO_FILE);
+  Path getInfoFile(String name) {
+    return getPipelineDir(name).resolve(INFO_FILE);
   }
 
-  private File getPipelineFile(String name) {
-    return new File(getPipelineDir(name), PIPELINE_FILE);
+  private Path getPipelineFile(String name) {
+    return getPipelineDir(name).resolve(PIPELINE_FILE);
   }
 
-  private File getPipelineUiInfoFile(String name) {
-    return new File(getPipelineDir(name), UI_INFO_FILE);
+  private Path getPipelineUiInfoFile(String name) {
+    return getPipelineDir(name).resolve(UI_INFO_FILE);
   }
 
-  private File getRulesFile(String name) {
-    return new File(getPipelineDir(name), RULES_FILE);
+  private Path getRulesFile(String name) {
+    return getPipelineDir(name).resolve(RULES_FILE);
   }
 
   @Override
   public boolean hasPipeline(String name) {
-    return getPipelineDir(name).exists();
+    return Files.exists(getPipelineDir(name));
   }
 
   @Override
@@ -162,9 +166,11 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
       }
-      if (!getPipelineDir(name).mkdir()) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, Utils.format("'{}' mkdir failed",
-          getPipelineDir(name)));
+
+      try {
+        Files.createDirectory(getPipelineDir(name));
+      } catch (IOException e) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, Utils.format("'{}' mkdir failed", getPipelineDir(name)), e);
       }
 
       Date date = new Date();
@@ -174,9 +180,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
           .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null, null);
 
-      try {
-        json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
-        json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+      try (
+          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
+          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name));
+        ){
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+        json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
       } catch (Exception ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, ex.toString(), ex);
       }
@@ -189,7 +198,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private boolean cleanUp(String name) throws PipelineStoreException {
-    boolean deleted = PipelineDirectoryUtil.deleteAll(getPipelineDir(name));
+    boolean deleted = PipelineDirectoryUtil.deleteAll(getPipelineDir(name).toFile());
     deleted &= PipelineDirectoryUtil.deletePipelineDir(runtimeInfo, name);
     if(deleted) {
       LogUtil.resetRollingFileAppender(name, "0", STATE);
@@ -216,29 +225,31 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     }
   }
 
+  DirectoryStream.Filter<Path> filterHiddenFiles = new DirectoryStream.Filter<Path>() {
+    public boolean accept(Path path) throws IOException {
+      return !path.getFileName().startsWith(".");
+    }
+  };
+
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
-    List<PipelineInfo> pipelineInfoList = new ArrayList<PipelineInfo>();
-    String[] filenames = storeDir.list(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        // If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
-        // So filter it out
-        return !name.startsWith(".");
-      }
+    List<PipelineInfo> pipelineInfoList = new ArrayList<>();
 
-    });
-    // filenames can be null if storeDir is not actually a directory.
-    if (filenames == null) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0213, storeDir.getPath());
+    List<String> fileNames = new ArrayList<>();
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(storeDir, filterHiddenFiles)) {
+      for (Path path : directoryStream) {
+        fileNames.add(path.getFileName().toString());
+      }
+    } catch (IOException ex) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0213, storeDir, ex);
     }
 
-    for (String name : filenames) {
+    for (String name : fileNames) {
       PipelineInfoJson pipelineInfoJsonBean;
-      try {
-        pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);
+      try (InputStream infoFile = Files.newInputStream(getInfoFile(name))){
+        pipelineInfoJsonBean = json.readValue(infoFile, PipelineInfoJson.class);
       } catch (IOException e) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, e);
       }
       pipelineInfoList.add(pipelineInfoJsonBean.getPipelineInfo());
     }
@@ -255,11 +266,11 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (checkExistence && !hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      try {
-        PipelineInfoJson pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);
+      try (InputStream infoFile = Files.newInputStream(getInfoFile(name))) {
+        PipelineInfoJson pipelineInfoJsonBean = json.readValue(infoFile, PipelineInfoJson.class);
         return pipelineInfoJsonBean.getPipelineInfo();
       } catch (Exception ex) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex);
       }
     }
   }
@@ -292,10 +303,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           pipeline.isValid(),
           pipeline.getMetadata()
       );
-      try {
+      try (
+          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
+          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name));
+        ){
         pipeline.setUuid(uuid);
-        json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));
-        json.writeValue(getPipelineFile(name), BeanHelper.wrapPipelineConfiguration(pipeline));
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+        json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
           PipelineBeanCreator.get().create(pipeline, errors);
@@ -329,17 +343,19 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (!hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      try {
+      try (InputStream pipelineFile = Files.newInputStream(getPipelineFile(name))) {
         PipelineInfo info = getInfo(name);
         PipelineConfigurationJson pipelineConfigBean =
-          json.readValue(getPipelineFile(name), PipelineConfigurationJson.class);
+          json.readValue(pipelineFile, PipelineConfigurationJson.class);
         PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
         pipeline.setPipelineInfo(info);
 
         Map<String, Map> uiInfo;
-        if (getPipelineUiInfoFile(name).exists()) {
-          uiInfo = json.readValue(getPipelineUiInfoFile(name), Map.class);
-          pipeline = injectUiInfo(uiInfo, pipeline);
+        if (Files.exists(getPipelineUiInfoFile(name))) {
+          try (InputStream uiInfoFile = Files.newInputStream(getPipelineUiInfoFile(name))) {
+            uiInfo = json.readValue(uiInfoFile, Map.class);
+            pipeline = injectUiInfo(uiInfo, pipeline);
+          }
         }
 
         return pipeline;
@@ -359,7 +375,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
         //try loading from store, needed in cases like restart
         RuleDefinitions ruleDefinitions = null;
-        DataStore ds = new DataStore(getRulesFile(name));
+        DataStore ds = new DataStore(getRulesFile(name).toFile());
         try {
           if (ds.exists()) {
             try (InputStream is = ds.getInputStream()) {
@@ -404,7 +420,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       UUID uuid = UUID.randomUUID();
       ruleDefinitions.setUuid(uuid);
-      DataStore dataStore = new DataStore(getRulesFile(pipelineName));
+      DataStore dataStore = new DataStore(getRulesFile(pipelineName).toFile());
       try (OutputStream os = dataStore.getOutputStream()) {
         ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
         dataStore.commit(os);
@@ -423,8 +439,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     synchronized (lockCache.getLock(name)) {
       pipelineToRuleDefinitionMap.remove(getPipelineKey(name, REV));
 
-      if (hasPipeline(name) && getRulesFile(name) != null && getRulesFile(name).exists()) {
-        return getRulesFile(name).delete();
+      if (hasPipeline(name) && getRulesFile(name) != null) {
+        try {
+          return Files.deleteIfExists(getRulesFile(name));
+        } catch (IOException e) {
+          LOG.error("Exception when deleting rules file", e);
+          return false;
+        }
       }
       return false;
     }
@@ -436,8 +457,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
-    try {
-      json.writeValue(getPipelineUiInfoFile(name), uiInfo);
+    try (OutputStream uiInfoFile = Files.newOutputStream(getPipelineUiInfoFile(name))){
+      json.writeValue(uiInfoFile, uiInfo);
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0405, name, ex.toString(), ex);
     }
