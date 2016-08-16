@@ -37,9 +37,13 @@ public class PipelineException extends Exception {
 
   // last parameter can be an exception cause
   public PipelineException(ErrorCode errorCode, Object... params) {
-    super(getCause(params));
     this.errorCode = errorCode;
     errorMessage = new ErrorMessage(errorCode, params);
+
+    Throwable cause = getCause(params);
+    if(cause != null) {
+      initCause(cause);
+    }
   }
 
   public ErrorMessage getErrorMessage() {
