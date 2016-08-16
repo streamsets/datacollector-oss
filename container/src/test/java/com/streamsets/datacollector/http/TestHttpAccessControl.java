@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -184,6 +185,15 @@ public class TestHttpAccessControl {
   public void testForSSOAuthentication() throws Exception {
     String userInfoURI =  startServer("", true) + "/rest/v1/system/info/currentUser";
     testPreFlightRequest(userInfoURI);
+  }
+
+  @Test
+  public void testDisabledTrace() throws Exception {
+    String serverUrl =  startServer("form", false) + "/jmx";
+
+    HttpURLConnection conn = (HttpURLConnection) new URL(serverUrl).openConnection();
+    conn.setRequestMethod("TRACE");
+    Assert.assertEquals(403, conn.getResponseCode());
   }
 
   /**

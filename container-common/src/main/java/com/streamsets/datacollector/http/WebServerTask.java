@@ -329,7 +329,16 @@ public abstract class WebServerTask extends AbstractTask {
     indexMapping.setPathSpec("");
     indexMapping.setConstraint(indexConstraint);
 
-    return ImmutableList.of(restMapping, indexMapping, logoutMapping, noAuthMapping, publicRestMapping);
+    // Disable TRACE method
+    Constraint disableTraceConstraint = new Constraint();
+    disableTraceConstraint.setName("Disable TRACE");
+    disableTraceConstraint.setAuthenticate(true);
+    ConstraintMapping disableTraceMapping = new ConstraintMapping();
+    disableTraceMapping.setPathSpec("/*");
+    disableTraceMapping.setMethod("TRACE");
+    disableTraceMapping.setConstraint(disableTraceConstraint);
+
+    return ImmutableList.of(disableTraceMapping, restMapping, indexMapping, logoutMapping, noAuthMapping, publicRestMapping);
   }
 
 
