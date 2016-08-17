@@ -104,17 +104,6 @@
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <name>Cloudera Repositories</name>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <build>
     <plugins>
       <plugin>

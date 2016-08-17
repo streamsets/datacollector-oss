@@ -37,19 +37,6 @@
     <hbase.version>0.98.12-mapr-1506-m7-5.0.0</hbase.version>
  </properties>
 
-  <repositories>
-    <repository>
-      <id>mapr-releases</id>
-      <url>http://repository.mapr.com/maven/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
-
   <dependencies>
     <!-- MapR Hadoop client -->
     <dependency>
