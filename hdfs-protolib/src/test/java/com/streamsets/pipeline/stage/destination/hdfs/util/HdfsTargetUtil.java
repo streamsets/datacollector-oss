@@ -21,12 +21,14 @@ package com.streamsets.pipeline.stage.destination.hdfs.util;
 
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.stage.destination.hdfs.CompressionMode;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsSequenceFileCompressionType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTargetConfigBean;
 import com.streamsets.pipeline.stage.destination.hdfs.LateRecordsAction;
+import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManagerTestBuilder;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.HashMap;
@@ -64,6 +66,8 @@ public class HdfsTargetUtil {
     boolean rollIfHeader = false;
     String rollHeaderName = null;
     String fileNameEL = "";
+    WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
+    String permissionEL = "";
 
     public HdfsTarget build() {
       HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
@@ -96,6 +100,8 @@ public class HdfsTargetUtil {
       hdfsTargetConfigBean.rollIfHeader = rollIfHeader;
       hdfsTargetConfigBean.rollHeaderName = rollHeaderName;
       hdfsTargetConfigBean.dataGeneratorFormatConfig.fileNameEL = fileNameEL;
+      hdfsTargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction = wholeFileExistsAction;
+      hdfsTargetConfigBean.permissionEL = permissionEL;
       return new HdfsTarget(hdfsTargetConfigBean);
     }
 
@@ -221,6 +227,16 @@ public class HdfsTargetUtil {
 
     public Builder fileNameEL(String fileNameEL) {
       this.fileNameEL = fileNameEL;
+      return this;
+    }
+
+    public Builder wholeFileExistsAction(WholeFileExistsAction wholeFileExistsAction) {
+      this.wholeFileExistsAction = wholeFileExistsAction;
+      return this;
+    }
+
+    public Builder permissionEL(String permissionEL) {
+      this.permissionEL = permissionEL;
       return this;
     }
   }

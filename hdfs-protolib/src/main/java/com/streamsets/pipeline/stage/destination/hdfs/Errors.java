@@ -88,6 +88,8 @@ public enum Errors implements ErrorCode {
   HADOOPFS_52("Invalid setting for idle timeout"),
   HADOOPFS_53("Invalid Setting {}, should be {} for Whole File Data Format."),
   HADOOPFS_54("The path {} already exists."),
+  HADOOPFS_55("Invalid permission EL {} for the file"),
+  HADOOPFS_56("Invalid permission value {} for the file"),
 
   ;
 

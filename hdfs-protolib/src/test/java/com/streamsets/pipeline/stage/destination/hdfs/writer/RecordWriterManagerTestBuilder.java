@@ -58,6 +58,7 @@ public final class RecordWriterManagerTestBuilder {
   private String config = "dirPathTemplate";
   private String fileNameEL = "";
   private WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
+  private String permissionEL = "";
   private DataGeneratorFactory generatorFactory = new TestActiveRecordWriters.DummyDataGeneratorFactory(null);
   private Target.Context context;
 
@@ -165,6 +166,11 @@ public final class RecordWriterManagerTestBuilder {
     return this;
   }
 
+  public RecordWriterManagerTestBuilder permissionEL(String permissionEL) {
+    this.permissionEL = permissionEL;
+    return this;
+  }
+
   public RecordWriterManager build() throws IOException {
     RecordWriterManager mgr = new RecordWriterManager(
       FileSystem.get(hdfsUri, hdfsConf),
@@ -184,6 +190,7 @@ public final class RecordWriterManagerTestBuilder {
       rollHeaderName,
       fileNameEL,
       wholeFileExistsAction,
+      permissionEL,
       generatorFactory,
       context,
       config

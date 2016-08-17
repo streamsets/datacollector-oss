@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
@@ -29,16 +26,13 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.FakeRecordEL;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
@@ -62,14 +56,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
-  private final static String TMP_FILE_PREFIX = "_tmp_";
+  public final static String TMP_FILE_PREFIX = "_tmp_";
 
   private FileSystem fs;
   private Configuration hdfsConf;
@@ -97,7 +88,7 @@ public class RecordWriterManager {
       String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
       HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
       boolean rollIfHeader, String rollHeaderName, String fileNameEL, WholeFileExistsAction wholeFileAlreadyExistsAction,
-      DataGeneratorFactory generatorFactory, Target.Context context, String config) {
+      String permissionEL, DataGeneratorFactory generatorFactory, Target.Context context, String config) {
     this.fs = fs;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
@@ -116,7 +107,7 @@ public class RecordWriterManager {
     this.rollIfHeader = rollIfHeader;
     this.rollHeaderName = rollHeaderName;
     pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
-    fsHelper = getFsHelper(context, fileNameEL, wholeFileAlreadyExistsAction);
+    fsHelper = getFsHelper(context, fileNameEL, wholeFileAlreadyExistsAction, permissionEL);
     this.closedPaths = new ConcurrentLinkedQueue<>();
   }
 
@@ -169,17 +160,14 @@ public class RecordWriterManager {
   }
 
   public Path getPath(Date recordDate, Record record) throws StageException, IOException {
-    return fsHelper.getPath(recordDate, record);
+    return fsHelper.getPath(fs, recordDate, record);
   }
 
   /**
    * This method should be called every time we finish writing into a file and consider it "done".
    */
   Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException, StageException {
-    Path finalPath = fsHelper.getRenamableFinalFilePath(tempPath);
-    if (!fs.rename(tempPath, finalPath)) {
-      throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
-    }
+    Path finalPath = fsHelper.renameAndGetPath(fs, tempPath);
 
     // Store closed path so that we can generate event for it later
     closedPaths.add(finalPath);
@@ -387,138 +375,28 @@ public class RecordWriterManager {
     return (valueToVerify > 0) ? valueToVerify : Long.MAX_VALUE;
   }
 
-  private interface FsHelper {
-    Path getPath(Date recordDate, Record record) throws StageException, IOException;
-    void commitOldFiles(FileSystem fs) throws StageException, IOException;
-    void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws IOException, StageException;
-    Path getRenamableFinalFilePath(Path tempPath) throws IOException, StageException;
-    OutputStream create(FileSystem fs, Path path) throws IOException;
-  }
-
-  private FsHelper getFsHelper(final Stage.Context context, final String fileNameEL, final WholeFileExistsAction wholeFileAlreadyExistsAction) {
+  private FsHelper getFsHelper(
+      final Stage.Context context,
+      final String fileNameEL,
+      final WholeFileExistsAction wholeFileAlreadyExistsAction,
+      final String permissionEL
+  ) {
     if (!fileNameEL.isEmpty()) {
       //WHOLE_FILE
-      return new FsHelper() {
-        private String getTempFile(Date recordDate, Record record) throws StageException {
-          ELEval elEval = context.createELEval("fileNameEL");
-          ELVars vars = context.createELVars();
-          RecordEL.setRecordInContext(vars, record);
-          TimeNowEL.setTimeNowInContext(vars, recordDate);
-          return TMP_FILE_PREFIX + uniquePrefix + elEval.eval(vars, fileNameEL, String.class);
-        }
-
-        private void checkAndHandleWholeFileExistence(Path renamableFinalPath) throws IOException, OnRecordErrorException {
-          if (fs.exists(renamableFinalPath)) {
-            //whole file exists.
-            if (wholeFileAlreadyExistsAction == WholeFileExistsAction.OVERWRITE) {
-              fs.delete(renamableFinalPath, false);
-              LOG.debug(Utils.format(Errors.HADOOPFS_54.getMessage(), renamableFinalPath) + "so deleting it");
-            } else {
-              throw new OnRecordErrorException(Errors.HADOOPFS_54, renamableFinalPath);
-            }
-          }
-        }
-
-        @Override
-        public Path getPath(Date recordDate, Record record) throws StageException, IOException {
-          //Check whether the real file already exists
-          Path path = new Path(getDirPath(recordDate, record), getTempFile(recordDate, record));
-          //this will check the file exists.
-          getRenamableFinalFilePath(path);
-          //This is going to be done only once per record, so skipping cache save
-          //because the path is going to be used only once (because only one record is used).
-          return path;
-        }
-
-        @Override
-        public void commitOldFiles(FileSystem fs) throws ELEvalException, IOException {
-          //Nothing to do, we will simply overwrite the tmp files with new file.
-          //As a performance feature, we could have marker files which tells
-          //whether the file is completely copied and rename failed on previous
-          //run (but there is a problem our op to delete the marker file may still fail)
-        }
-
-        @Override
-        public void handleAlreadyExistingFile(FileSystem fs, Path tempPath) {
-          //NOOP createWriter will overwrite existing tmp file
-        }
-
-        @Override
-        public Path getRenamableFinalFilePath(Path tempPath) throws IOException, StageException {
-          String finalFileName = tempPath.getName().replaceFirst(TMP_FILE_PREFIX, "");
-          Path finalPath = new Path(tempPath.getParent(), finalFileName);
-          //Checks during rename.
-          checkAndHandleWholeFileExistence(finalPath);
-          return finalPath;
-        }
-
-        @Override
-        public OutputStream create(FileSystem fs, Path path) throws IOException {
-          //Make sure if the tmp file already exists, overwrite it
-          return fs.create(path, true);
-        }
-      };
+      //At a point of time only one record is in process
+      //and only a file is being copied
+      return new WholeFileFormatFsHelper(
+          context,
+          fileNameEL,
+          wholeFileAlreadyExistsAction,
+          permissionEL,
+          uniquePrefix,
+          this
+      );
     } else {
       //Other Data Formats
-      return new FsHelper() {
-        // we use/reuse Path as they are expensive to create (it increases the performance by at least 3%)
-        private final Path tempFilePath = new Path(getTempFileName());
-        private final LoadingCache<String, Path> dirPathCache =
-            CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(
-                new CacheLoader<String, org.apache.hadoop.fs.Path>() {
-                  @Override
-                  public Path load(String key) throws Exception {
-                    return new Path(key, tempFilePath);
-                  }
-                });
-
-        @Override
-        public Path getPath(Date recordDate, Record record) throws StageException, IOException {
-          // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
-          // pipeline
-          try {
-            return dirPathCache.get(getDirPath(recordDate, record));
-          } catch (ExecutionException ex) {
-            if (ex.getCause() instanceof StageException) {
-              throw (StageException) ex.getCause();
-            } else{
-              throw new StageException(Errors.HADOOPFS_24, ex.toString(), ex);
-            }
-          }
-        }
-
-        @Override
-        public void commitOldFiles(FileSystem fs) throws StageException, IOException {
-          if (context.getLastBatchTime() > 0) {
-            for (String glob : getGlobs()) {
-              LOG.debug("Looking for uncommitted files using glob '{}'", glob);
-              FileStatus[] globStatus = fs.globStatus(new Path(glob));
-              if (globStatus != null) {
-                for (FileStatus status : globStatus) {
-                  LOG.debug("Found uncommitted file '{}'", status.getPath());
-                  renameToFinalName(fs, status.getPath());
-                }
-              }
-            }
-          }
-        }
-
-        @Override
-        public void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws StageException, IOException {
-          Path path = renameToFinalName(fs, tempPath);
-          LOG.warn("Path[{}] - Found previous file '{}', committing it", tempPath, path);
-        }
-
-        @Override
-        public Path getRenamableFinalFilePath(Path tempPath) {
-          return new Path(tempPath.getParent(), uniquePrefix + "_" + UUID.randomUUID().toString() + getExtension());
-        }
-
-        @Override
-        public OutputStream create(FileSystem fs, Path path) throws IOException {
-          return fs.create(path, false);
-        }
-      };
+      return new DefaultFsHelper(context, uniquePrefix, this);
     }
   }
+
 }

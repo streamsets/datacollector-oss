@@ -25,50 +25,42 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
-import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
-import com.streamsets.pipeline.stage.destination.hdfs.LateRecordsAction;
 import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.RemoteIterator;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
-import org.powermock.core.PowerMockUtils;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -302,6 +294,170 @@ public class TestHDFSTargetWholeFile {
     runner.runDestroy();
   }
 
+  @Test
+  public void testWholeFilePermission() throws Exception {
+
+    java.nio.file.Path filePath1 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles1.txt");
+    java.nio.file.Path filePath2 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles2.txt");
+    java.nio.file.Path filePath3 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles3.txt");
+
+
+
+    Files.write(filePath1, "This is a sample file 1 with some text".getBytes());
+    Files.write(filePath2, "This is a sample file 2 with some text".getBytes());
+    Files.write(filePath3, "This is a sample file 3 with some text".getBytes());
+
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri(uri.toString())
+        .dirPathTemplate(getTestDir())
+        .timeDriver("${time:now()}")
+        .dataForamt(DataFormat.WHOLE_FILE)
+        .fileType(HdfsFileType.WHOLE_FILE)
+        .fileNameEL("${record:value('/fileInfo/filename')}")
+        .maxRecordsPerFile(1)
+        .maxFileSize(0)
+        .uniquePrefix("sdc-")
+        .idleTimeout("-1")
+        .permissionEL("${record:value('/fileInfo/permissions')}")
+        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    runner.runInit();
+
+    try {
+      runner.runWrite(
+          Arrays.asList(
+              getFileRefRecordForFile(filePath1, "755"),
+              //posix style
+              getFileRefRecordForFile(filePath2, "rwxr--r--"),
+              //unix style
+              getFileRefRecordForFile(filePath3, "-rw-rw----")
+          )
+      );
+
+      org.apache.hadoop.fs.Path targetPath1 = new org.apache.hadoop.fs.Path(getTestDir() + "/sdc-" + filePath1.getFileName());
+      org.apache.hadoop.fs.Path targetPath2 = new org.apache.hadoop.fs.Path(getTestDir() + "/sdc-" + filePath2.getFileName());
+      org.apache.hadoop.fs.Path targetPath3 = new org.apache.hadoop.fs.Path(getTestDir() + "/sdc-" + filePath3.getFileName());
+
+
+
+      FileSystem fs = FileSystem.get(uri, new HdfsConfiguration());
+
+      Assert.assertTrue(fs.exists(targetPath1));
+      Assert.assertTrue(fs.exists(targetPath2));
+      Assert.assertTrue(fs.exists(targetPath3));
+
+
+
+      FsPermission actual1 = fs.listStatus(targetPath1)[0].getPermission();
+      FsPermission actual2 = fs.listStatus(targetPath2)[0].getPermission();
+      FsPermission actual3 = fs.listStatus(targetPath3)[0].getPermission();
+
+
+      FsPermission expected1 = new FsPermission("755");
+      FsPermission expected2 = FsPermission.valueOf("-rwxr--r--");
+      FsPermission expected3 = FsPermission.valueOf("-rw-rw----");
+
+
+      Assert.assertEquals(expected1, actual1);
+      Assert.assertEquals(expected2, actual2);
+      Assert.assertEquals(expected3, actual3);
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWholeFileAlreadyExistsToError() throws Exception {
+    java.nio.file.Path filePath = Paths.get(getTestDir() + "/source_testWholeFileAlreadyExistsToError.txt");
+    Files.write(filePath, "This is a sample file 1 with some text".getBytes());
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri(uri.toString())
+        .dirPathTemplate(getTestDir())
+        .timeDriver("${time:now()}")
+        .dataForamt(DataFormat.WHOLE_FILE)
+        .fileType(HdfsFileType.WHOLE_FILE)
+        .fileNameEL("${record:value('"+ FileRefUtil.FILE_INFO_FIELD_PATH +"/filename')}")
+        .maxRecordsPerFile(1)
+        .maxFileSize(0)
+        .uniquePrefix("sdc-")
+        .idleTimeout("-1")
+        .wholeFileExistsAction(WholeFileExistsAction.TO_ERROR)
+        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    runner.runInit();
+
+    try {
+      runner.runWrite(Collections.singletonList(getFileRefRecordForFile(filePath)));
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+
+      //Write the same file already exists
+      runner.runWrite(Collections.singletonList(getFileRefRecordForFile(filePath)));
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+
+      Record record = runner.getErrorRecords().get(0);
+      Assert.assertEquals(record.getHeader().getErrorCode(), Errors.HADOOPFS_54.getCode());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWholeFileAlreadyExistsOverwrite() throws Exception {
+    java.nio.file.Path filePath = Paths.get(getTestDir() + "/source_testWholeFileAlreadyExistsOverwrite.txt");
+    Files.write(filePath, "This is a sample file 1 with some text".getBytes());
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri(uri.toString())
+        .dirPathTemplate(getTestDir())
+        .timeDriver("${time:now()}")
+        .dataForamt(DataFormat.WHOLE_FILE)
+        .fileType(HdfsFileType.WHOLE_FILE)
+        .fileNameEL("${record:value('"+ FileRefUtil.FILE_INFO_FIELD_PATH +"/filename')}")
+        .maxRecordsPerFile(1)
+        .maxFileSize(0)
+        .uniquePrefix("sdc-")
+        .idleTimeout("-1")
+        .wholeFileExistsAction(WholeFileExistsAction.OVERWRITE)
+        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    runner.runInit();
+
+    try {
+      runner.runWrite(Collections.singletonList(getFileRefRecordForFile(filePath)));
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+
+      //Write the same file no error, overwritten
+      runner.runWrite(Collections.singletonList(getFileRefRecordForFile(filePath)));
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private Record getFileRefRecordForFile(Path filePath, String octalPermission) throws Exception {
+    Record fileRefRecord = getFileRefRecordForFile(filePath);
+    fileRefRecord.set("/fileInfo/permissions", Field.create(octalPermission));
+    return fileRefRecord;
+  }
+
   private Record getFileRefRecordForFile(Path filePath) throws Exception {
     Record fileRefRecord = RecordCreator.create();
     FileRef fileRef =
@@ -313,13 +469,14 @@ public class TestHDFSTargetWholeFile {
             .build();
     Map<String, Field> fieldMap = new HashMap<>();
 
-    Map<String, Object> metadata = new HashMap<>(Files.readAttributes(filePath, "*"));
+    Map<String, Object> metadata = new HashMap<>(Files.readAttributes(filePath, "posix:*"));
     metadata.put("filename", filePath.getFileName());
     metadata.put("file", filePath.toString());
     metadata.put("dir", filePath.getParent().toString());
+    metadata.put("permissions", "777");
 
-    fieldMap.put("fileRef", Field.create(Field.Type.FILE_REF, fileRef));
-    fieldMap.put("fileInfo", createFieldForMetadata(metadata));
+    fieldMap.put(FileRefUtil.FILE_REF_FIELD_NAME, Field.create(Field.Type.FILE_REF, fileRef));
+    fieldMap.put(FileRefUtil.FILE_INFO_FIELD_NAME, FileRefUtil.createFieldForMetadata(metadata));
     fileRefRecord.set(Field.create(fieldMap));
 
     return fileRefRecord;
@@ -336,48 +493,4 @@ public class TestHDFSTargetWholeFile {
     Assert.assertEquals(totalBytesRead1, totalBytesRead2);
   }
 
-  private static Field createFieldForMetadata(Object metadataObject) {
-    if (metadataObject instanceof Boolean) {
-      return Field.create((Boolean) metadataObject);
-    } else if (metadataObject instanceof Character) {
-      return Field.create((Character) metadataObject);
-    } else if (metadataObject instanceof Byte) {
-      return Field.create((Byte) metadataObject);
-    } else if (metadataObject instanceof Short) {
-      return Field.create((Short) metadataObject);
-    } else if (metadataObject instanceof Integer) {
-      return Field.create((Integer) metadataObject);
-    } else if (metadataObject instanceof Long) {
-      return Field.create((Long) metadataObject);
-    } else if (metadataObject instanceof Float) {
-      return Field.create((Float) metadataObject);
-    } else if (metadataObject instanceof Double) {
-      return Field.create((Double) metadataObject);
-    } else if (metadataObject instanceof Date) {
-      return Field.createDatetime((Date) metadataObject);
-    } else if (metadataObject instanceof BigDecimal) {
-      return Field.create((BigDecimal) metadataObject);
-    } else if (metadataObject instanceof String) {
-      return Field.create((String) metadataObject);
-    } else if (metadataObject instanceof byte[]) {
-      return Field.create((byte[]) metadataObject);
-    } else if (metadataObject instanceof Collection) {
-      Iterator iterator = ((Collection)metadataObject).iterator();
-      List<Field> fields = new ArrayList<>();
-      while (iterator.hasNext()) {
-        fields.add(createFieldForMetadata(iterator.next()));
-      }
-      return Field.create(fields);
-    } else if (metadataObject instanceof Map) {
-      boolean isListMap = (metadataObject instanceof LinkedHashMap);
-      Map<String, Field> fieldMap = isListMap? new LinkedHashMap<String, Field>() : new HashMap<String, Field>();
-      Map map = (Map)metadataObject;
-      for (Object key : map.keySet()) {
-        fieldMap.put(key.toString(), createFieldForMetadata(map.get(key)));
-      }
-      return isListMap? Field.create(Field.Type.LIST_MAP, fieldMap) : Field.create(fieldMap);
-    } else {
-      return Field.create(metadataObject.toString());
-    }
-  }
 }

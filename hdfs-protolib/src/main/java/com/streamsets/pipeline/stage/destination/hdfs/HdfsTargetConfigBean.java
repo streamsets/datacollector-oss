@@ -39,6 +39,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
@@ -395,6 +396,22 @@ public class HdfsTargetConfigBean {
   )
   public boolean hdfsPermissionCheck;
 
+  //Optional if empty file is created with default umask.
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class, StringEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      label = "Permissions Expression for the Target File",
+      description = "Expression which determines what the permissions are for the target file." +
+          " Should be a octal/symbolic representation of the permission",
+      displayPosition = 250,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat",
+      triggeredByValue = "WHOLE_FILE"
+  )
+  public String permissionEL = "";
+
   @ConfigDefBean()
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
@@ -507,7 +524,7 @@ public class HdfsTargetConfigBean {
         RecordWriterManager mgr = new RecordWriterManager(fs, hdfsConfiguration, uniquePrefix,
                 dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
                 maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-                rollIfHeader, rollHeaderName, fileNameEL, dataGeneratorFormatConfig.wholeFileExistsAction,
+                rollIfHeader, rollHeaderName, fileNameEL, dataGeneratorFormatConfig.wholeFileExistsAction, permissionEL,
                 dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
         if (idleTimeSecs > 0) {
@@ -562,6 +579,7 @@ public class HdfsTargetConfigBean {
                   null,
                   fileNameEL,
                   dataGeneratorFormatConfig.wholeFileExistsAction,
+                  permissionEL,
                   dataGeneratorFormatConfig.getDataGeneratorFactory(),
                   (Target.Context) context, "lateRecordsDirPathTemplate"
           );
