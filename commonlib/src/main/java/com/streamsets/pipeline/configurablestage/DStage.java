@@ -42,7 +42,9 @@ public abstract class DStage<C extends Stage.Context> implements Stage<C> {
 
   @Override
   public final void destroy() {
-    stage.destroy();
+    if(stage != null) {
+      stage.destroy();
+    }
   }
 
 }
