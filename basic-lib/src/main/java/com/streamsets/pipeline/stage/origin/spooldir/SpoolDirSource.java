@@ -46,10 +46,13 @@ import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
 import java.nio.file.PathMatcher;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class SpoolDirSource extends BaseSource {
@@ -58,6 +61,10 @@ public class SpoolDirSource extends BaseSource {
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
+  static final String PERMISSIONS = "permissions";
+
+  private static final String BASE_DIR = "baseDir";
+
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
   public static final String SPOOLDIR_CONFIG_BEAN_PREFIX = "conf.";
   public static final String SPOOLDIR_DATAFORMAT_CONFIG_PREFIX = SPOOLDIR_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
@@ -474,18 +481,13 @@ public class SpoolDirSource extends BaseSource {
             parser = parserFactory.getParser(file, offset);
             break;
           case WHOLE_FILE:
-            String attributesToRead =
-                file.toPath().getFileSystem().supportedFileAttributeViews().contains("posix")? "posix:*" : "*";
-            Map<String, Object> metadata = new HashMap<>(Files.readAttributes(file.toPath(), attributesToRead));
             FileRef localFileRef = new LocalFileRef.Builder()
                 .filePath(file.getAbsolutePath())
                 .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
                 .createMetrics(true)
                 .totalSizeInBytes(Files.size(file.toPath()))
                 .build();
-            metadata.put(HeaderAttributeConstants.FILE_NAME, file.getName());
-            metadata.put(HeaderAttributeConstants.FILE, file.getPath());
-            parser = parserFactory.getParser(file.getName(), metadata, localFileRef);
+            parser = parserFactory.getParser(file.getName(), getFileMetadata(file), localFileRef);
             break;
           default:
             parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
@@ -498,6 +500,7 @@ public class SpoolDirSource extends BaseSource {
             record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
             record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
             record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
+            record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
             batchMaker.addRecord(record);
             offset = parser.getOffset();
           } else {
@@ -558,6 +561,21 @@ public class SpoolDirSource extends BaseSource {
       }
     }
     return offset;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static Map<String, Object> getFileMetadata(File file) throws IOException {
+    boolean isPosix = file.toPath().getFileSystem().supportedFileAttributeViews().contains("posix");
+    Map<String, Object>  metadata = new HashMap<>(Files.readAttributes(file.toPath(), isPosix? "posix:*" : "*"));
+    metadata.put(HeaderAttributeConstants.FILE_NAME, file.getName());
+    metadata.put(HeaderAttributeConstants.FILE, file.getPath());
+    if (isPosix && metadata.containsKey(PERMISSIONS) && Set.class.isAssignableFrom(metadata.get(PERMISSIONS).getClass())) {
+      Set<PosixFilePermission> posixFilePermissions = (Set<PosixFilePermission>)(metadata.get(PERMISSIONS));
+      //converts permission to rwx- format and replace it in permissions field.
+      // (totally containing 9 characters 3 for user 3 for group and 3 for others)
+      metadata.put(PERMISSIONS, PosixFilePermissions.toString(posixFilePermissions));
+    }
+    return metadata;
   }
 
 }

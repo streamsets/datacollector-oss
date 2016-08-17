@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.codahale.metrics.Gauge;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -44,6 +45,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +83,18 @@ public class TestWholeFileSpoolDirSource {
 
   @Test
   public void testWholeFileRecordsForFile() throws Exception {
-    Files.write(Paths.get(testDir + "/source.txt"), "Sample Text 1".getBytes());
+    Path sourcePath = Paths.get(testDir + "/source.txt");
+    Files.write(sourcePath, "Sample Text 1".getBytes());
+    Files.setAttribute(
+        sourcePath,
+        "posix:permissions",
+        ImmutableSet.of(
+            PosixFilePermission.OWNER_READ,
+            PosixFilePermission.OWNER_WRITE,
+            PosixFilePermission.OWNER_EXECUTE,
+            PosixFilePermission.GROUP_READ
+        )
+    );
 
     SpoolDirSource source = createSource();
     SourceRunner runner =
@@ -96,6 +109,27 @@ public class TestWholeFileSpoolDirSource {
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(1, records.size());
+      Record record = records.get(0);
+
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_REF_FIELD_PATH));
+
+      Assert.assertEquals(Field.Type.FILE_REF, record.get(FileRefUtil.FILE_REF_FIELD_PATH).getType());
+      Assert.assertEquals(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getType());
+
+      Map<String, Object> metadata = Files.readAttributes(sourcePath, "posix:*");
+      Assert.assertTrue(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet().containsAll(metadata.keySet()));
+
+      //Check permissions
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirSource.PERMISSIONS));
+      Assert.assertEquals(
+          "rwxr-----",
+          record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirSource.PERMISSIONS).getValueAsString()
+      );
+
+      Assert.assertEquals(Field.Type.FILE_REF, record.get(FileRefUtil.FILE_REF_FIELD_PATH).getType());
+      Assert.assertEquals(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getType());
+
     } finally {
       runner.runDestroy();
     }
@@ -119,10 +153,9 @@ public class TestWholeFileSpoolDirSource {
 
 
   @Test
-  public void testWholeFileRecords() throws Exception {
+  public void testWholeFileRecordsCopy() throws Exception {
     Path sourcePath = Paths.get(testDir + "/source.txt");
     Files.write(sourcePath, "Sample Text 1".getBytes());
-
     SpoolDirSource source = createSource();
     SourceRunner runner =
         new SourceRunner.Builder(SpoolDirDSource.class, source)
@@ -137,16 +170,13 @@ public class TestWholeFileSpoolDirSource {
       Assert.assertNotNull(records);
       Assert.assertEquals(1, records.size());
       Record record = records.get(0);
-      Map<String, Object> metadata = Files.readAttributes(Paths.get(testDir+"/source.txt"), "posix:*");
       Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH));
       Assert.assertTrue(record.has(FileRefUtil.FILE_REF_FIELD_PATH));
-      Assert.assertEquals(Field.Type.FILE_REF, record.get(FileRefUtil.FILE_REF_FIELD_PATH).getType());
-      Assert.assertEquals(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getType());
-      Assert.assertTrue(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet().containsAll(metadata.keySet()));
 
       FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
       String targetFile = testDir + "/target.txt";
       Stage.Context context = (Stage.Context) Whitebox.getInternalState(source, "context");
+
       initMetrics(context);
 
       IOUtils.copy(
