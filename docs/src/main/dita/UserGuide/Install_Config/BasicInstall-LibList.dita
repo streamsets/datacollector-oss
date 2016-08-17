@@ -32,7 +32,7 @@
                             <entry>streamsets-datacollector-apache-kafka_0_8_1-lib </entry>
                             <entry>For Kafka version 0.8.1.<p>Includes: <ul id="ul_hfn_3yp_vw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
@@ -41,7 +41,7 @@
                             <entry>streamsets-datacollector-apache-kafka_0_8_2-lib </entry>
                             <entry>For Kafka version 0.8.2.<p>Includes: <ul id="ul_jfg_jyp_vw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
@@ -50,7 +50,16 @@
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
                             <entry>For Kafka version 0.9.<p>Includes:<ul id="ul_hpb_htg_qw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-apache-kafka_0_10-lib</entry>
+                            <entry>For Kafka version 0.10.<p>Includes:<ul id="ul_jyh_nml_zw">
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
