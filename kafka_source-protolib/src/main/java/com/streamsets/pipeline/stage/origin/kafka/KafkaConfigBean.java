@@ -29,9 +29,6 @@ import java.util.Map;
 
 public class KafkaConfigBean {
 
-  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
-  public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
-
   @ConfigDefBean(groups = "KAFKA")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 

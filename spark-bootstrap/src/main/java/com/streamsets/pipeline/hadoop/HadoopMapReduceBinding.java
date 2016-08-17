@@ -27,18 +27,14 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 public class HadoopMapReduceBinding implements ClusterBinding {
-  private static final Logger LOG = LoggerFactory.getLogger(HadoopMapReduceBinding.class);
   private final String[] args;
   private Properties properties;
   private Job job;
@@ -49,13 +45,6 @@ public class HadoopMapReduceBinding implements ClusterBinding {
 
   public HadoopMapReduceBinding(String[] args) {
     this.args = args;
-  }
-
-  private String getProperty(String name) {
-    String val = Utils.checkArgumentNotNull(properties.getProperty(name),
-      "Property " + name + " cannot be null").trim();
-    LOG.info("Value of property: " + name + " is " + val);
-    return val;
   }
 
   @Override
@@ -75,11 +64,11 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
-      String dataFormat = getProperty("clusterHDFSConfigBean.dataFormat");
+      String dataFormat = Utils.getHdfsDataFormat(properties);
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
-        String value = getProperty(realKey);
+        String value = Utils.getPropertyNotNull(properties, realKey);
         conf.set(realKey, value, source);
       }
       Integer mapMemoryMb = getMapMemoryMb(javaOpts, conf);

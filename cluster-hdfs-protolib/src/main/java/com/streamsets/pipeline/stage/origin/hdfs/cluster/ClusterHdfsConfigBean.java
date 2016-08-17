@@ -30,8 +30,6 @@ import java.util.Map;
 
 public class ClusterHdfsConfigBean {
 
-  public static final String CLUSTER_HDFS_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.";
-
   @ConfigDefBean(groups = "HADOOP_FS")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 

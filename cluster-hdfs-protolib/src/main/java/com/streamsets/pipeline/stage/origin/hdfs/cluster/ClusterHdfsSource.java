@@ -89,6 +89,8 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 
+import static com.streamsets.pipeline.Utils.CLUSTER_HDFS_CONFIG_BEAN_PREFIX;
+
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
 
   public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.dataFormatConfig.";
@@ -141,7 +143,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       issues.add(
           getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
-              ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
               Errors.HADOOPFS_18
           )
       );
@@ -155,7 +157,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                     Errors.HADOOPFS_10,
                     hdfsDirLocation
                 )
@@ -164,7 +166,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                     Errors.HADOOPFS_15,
                     hdfsDirLocation
                 )
@@ -176,7 +178,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                 issues.add(
                     getContext().createConfigIssue(
                         Groups.HADOOP_FS.name(),
-                        ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                        CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                         Errors.HADOOPFS_16,
                         hdfsDirLocation
                     )
@@ -203,7 +205,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                       issues.add(
                           getContext().createConfigIssue(
                               Groups.HADOOP_FS.name(),
-                              ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                               Errors.HADOOPFS_16,
                               fileStatus.getPath()
                           )
@@ -216,7 +218,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
               issues.add(
                   getContext().createConfigIssue(
                       Groups.HADOOP_FS.name(),
-                      ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                      CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                       Errors.HADOOPFS_09,
                       hdfsDirLocation,
                       ex.toString(),
@@ -230,7 +232,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
               getContext().createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
                   Errors.HADOOPFS_11,
                   hdfsDirLocation,
                   ioe.toString(),
@@ -342,7 +344,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
                 Errors.HADOOPFS_29,
                 conf.hdfsConfDir
             )
@@ -354,7 +356,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_25,
                 hadoopConfigDir.getPath()
             )
@@ -363,7 +365,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_26,
                 hadoopConfigDir.getPath()
             )
@@ -375,7 +377,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                     Errors.HADOOPFS_27,
                     coreSite.getPath()
                 )
@@ -386,7 +388,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_30,
                 CORE_SITE_XML
             )
@@ -398,7 +400,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                     Errors.HADOOPFS_27,
                     hdfsSite.getPath()
                 )
@@ -409,7 +411,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_30,
                 HDFS_SITE_XML
             )
@@ -421,7 +423,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                     Errors.HADOOPFS_27,
                     yarnSite.getPath()
                 )
@@ -432,7 +434,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_30,
                 YARN_SITE_XML
             )
@@ -444,7 +446,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
                 getContext().createConfigIssue(
                     Groups.HADOOP_FS.name(),
-                    ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                     Errors.HADOOPFS_27,
                     mapredSite.getPath()
                 )
@@ -455,7 +457,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
                 Errors.HADOOPFS_30,
                 MAPRED_SITE_XML
             )
@@ -482,7 +484,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
                 Errors.HADOOPFS_19
             )
         );
@@ -498,7 +500,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
               getContext().createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
                   Errors.HADOOPFS_12,
                   conf.hdfsUri,
                   uri.getScheme()
@@ -509,7 +511,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
               getContext().createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
                   Errors.HADOOPFS_13,
                   conf.hdfsUri
               )
@@ -520,7 +522,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
                 Errors.HADOOPFS_22,
                 conf.hdfsUri,
                 ex.getMessage(),
@@ -533,7 +535,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       issues.add(
           getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
-              ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
               Errors.HADOOPFS_02,
               conf.hdfsUri
           )
@@ -550,7 +552,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
               getContext().createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsKerberos",
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsKerberos",
                   Errors.HADOOPFS_00,
                   loginUgi.getAuthenticationMethod(),
                   UserGroupInformation.AuthenticationMethod.KERBEROS

@@ -50,9 +50,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class SparkStreamingBinding implements ClusterBinding {
-  private static final String MAX_WAIT_TIME = "kafkaConfigBean.maxWaitTime";
-  private static final String METADATA_BROKER_LIST = "kafkaConfigBean.metadataBrokerList";
-  private static final String TOPIC = "kafkaConfigBean.topic";
   private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
   private final boolean isRunningInMesos;
@@ -71,15 +68,8 @@ public class SparkStreamingBinding implements ClusterBinding {
     }
     final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-    final String topic = getProperty(TOPIC);
-    final long duration;
-    String durationAsString = getProperty(MAX_WAIT_TIME);
-    try {
-      duration = Long.parseLong(durationAsString);
-    } catch (NumberFormatException ex) {
-      String msg = "Invalid " + MAX_WAIT_TIME  + " '" + durationAsString + "' : " + ex;
-      throw new IllegalArgumentException(msg, ex);
-    }
+    final String topic = Utils.getKafkaTopic(properties);
+    final long duration = Utils.getKafkaMaxWaitTime(properties);
 
     Configuration hadoopConf = new SparkHadoopUtil().newConfiguration(conf);
     if (isRunningInMesos) {
@@ -91,9 +81,9 @@ public class SparkStreamingBinding implements ClusterBinding {
     logMessage("Default FS URI: " + hdfsURI, isRunningInMesos);
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
     Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"
-      + getProperty("sdc.id") + "/" + encode(topic));
+      + Utils.getPropertyNotNull(properties, "sdc.id") + "/" + encode(topic));
     // encode as remote pipeline name might have colon within it
-    String pipelineName = encode(getProperty("cluster.pipeline.name"));
+    String pipelineName = encode(Utils.getPropertyNotNull(properties, "cluster.pipeline.name"));
     final Path checkPointPath = new Path(sdcCheckpointPath, pipelineName);
     hdfs.mkdirs(checkPointPath);
     if (!hdfs.isDirectory(checkPointPath)) {
@@ -110,13 +100,20 @@ public class SparkStreamingBinding implements ClusterBinding {
       } else if (scheme.equals("s3") || scheme.equals("s3n") || scheme.equals("s3a")) {
         // we cant upload the jar to s3 as executors wont understand s3 scheme without the aws jar.
         // So have the jar available on http
-        conf.setJars(new String[] { getProperty("mesos.jar.url") });
+        conf.setJars(new String[] { Utils.getPropertyNotNull(properties, "mesos.jar.url") });
       } else {
         throw new IllegalStateException("Unsupported scheme: " + scheme);
       }
     }
-    JavaStreamingContextFactory javaStreamingContextFactory = new JavaStreamingContextFactoryImpl(conf, duration, checkPointPath.toString(),
-      getProperty(METADATA_BROKER_LIST), topic, properties.getProperty(AUTO_OFFSET_RESET, "").trim(), isRunningInMesos);
+    JavaStreamingContextFactory javaStreamingContextFactory = new JavaStreamingContextFactoryImpl(
+        conf,
+        duration,
+        checkPointPath.toString(),
+        Utils.getKafkaMetadataBrokerList(properties),
+        topic,
+        Utils.getPropertyOrEmptyString(properties, AUTO_OFFSET_RESET),
+        isRunningInMesos
+    );
 
     ssc = JavaStreamingContext.getOrCreate(checkPointPath.toString(), hadoopConf, javaStreamingContextFactory, true);
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
@@ -184,15 +181,9 @@ public class SparkStreamingBinding implements ClusterBinding {
     }
   }
 
-  private String getProperty(String name) {
-    Utils.checkArgumentNotNull(properties.getProperty(name),
-      "Property " + name +" cannot be null");
-    return properties.getProperty(name).trim();
-  }
-
   private Configuration getHadoopConf(Configuration conf) {
-    String hdfsS3ConfProp = properties.getProperty("hdfsS3ConfDir");
-    if (hdfsS3ConfProp != null && !hdfsS3ConfProp.isEmpty()) {
+    String hdfsS3ConfProp = Utils.getPropertyOrEmptyString(properties, "hdfsS3ConfDir");
+    if (!hdfsS3ConfProp.isEmpty()) {
       File hdfsS3ConfDir = new File(System.getProperty("sdc.resources.dir"), hdfsS3ConfProp).getAbsoluteFile();
       if (!hdfsS3ConfDir.exists()) {
         throw new IllegalArgumentException("The config dir for hdfs/S3 doesn't exist");
@@ -209,10 +200,8 @@ public class SparkStreamingBinding implements ClusterBinding {
           conf.addResource(new Path(hdfsSite.getAbsolutePath()));
         }
       }
-    }
-    if ((hdfsS3ConfProp == null || hdfsS3ConfProp.isEmpty())) {
-      throw new IllegalArgumentException(
-        "Cannot find hdfs/S3 config; hdfsS3ConfDir cannot be null");
+    } else {
+      throw new IllegalArgumentException("Cannot find hdfs/S3 config; hdfsS3ConfDir cannot be empty");
     }
     return conf;
   }

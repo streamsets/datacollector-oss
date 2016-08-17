@@ -47,6 +47,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.streamsets.pipeline.Utils.KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX;
+import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
+
 public abstract class BaseKafkaSource extends BaseSource implements OffsetCommitter {
 
   protected final KafkaConfigBean conf;
@@ -71,7 +74,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       issues.add(
           getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
+              KAFKA_CONFIG_BEAN_PREFIX + "topic",
               KafkaErrors.KAFKA_05
           )
       );
@@ -81,7 +84,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       issues.add(
           getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime",
+              KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime",
               KafkaErrors.KAFKA_35
           )
       );
@@ -91,14 +94,14 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext(),
         conf.dataFormat,
         KafkaOriginGroups.KAFKA.name(),
-        KafkaConfigBean.DATA_FROMAT_CONFIG_BEAN_PREFIX,
+        KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX,
         issues
     );
     if (conf.dataFormat == DataFormat.XML && conf.produceSingleRecordPerMessage) {
       issues.add(
           getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "produceSingleRecordPerMessage",
+              KAFKA_CONFIG_BEAN_PREFIX + "produceSingleRecordPerMessage",
               KafkaErrors.KAFKA_40
           )
       );
@@ -111,7 +114,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         issues,
         conf.metadataBrokerList,
         KafkaOriginGroups.KAFKA.name(),
-        KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+        KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
         getContext()
     );
 
@@ -130,7 +133,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           issues.add(
             getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
-              KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
+              KAFKA_CONFIG_BEAN_PREFIX + "topic",
               KafkaErrors.KAFKA_42,
               conf.topic
             )
@@ -143,7 +146,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         issues.add(
           getContext().createConfigIssue(
             KafkaOriginGroups.KAFKA.name(),
-            KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
+            KAFKA_CONFIG_BEAN_PREFIX + "topic",
             KafkaErrors.KAFKA_41,
             conf.topic,
             e.toString(),
@@ -158,7 +161,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         issues,
         conf.zookeeperConnect,
         KafkaOriginGroups.KAFKA.name(),
-        KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "zookeeperConnect",
+        KAFKA_CONFIG_BEAN_PREFIX + "zookeeperConnect",
         getContext()
     );
 
@@ -167,7 +170,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       issues.add(
         getContext().createConfigIssue(
           KafkaOriginGroups.KAFKA.name(),
-          KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
+          KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
           KafkaErrors.KAFKA_33
         )
       );

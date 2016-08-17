@@ -19,7 +19,18 @@
  */
 package com.streamsets.pipeline;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
+
 public class Utils {
+  private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
+
+  public static final String CLUSTER_HDFS_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.";
+  public static final String CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX = CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
+  public static final String KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX = KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
 
   private Utils() {}
 
@@ -35,5 +46,61 @@ public class Utils {
       throw new IllegalArgumentException((msg != null) ? msg.toString() : "");
     }
     return arg;
+  }
+
+  public static String getPropertyOrEmptyString(Properties properties, String name) {
+    return properties.getProperty(name, "").trim();
+  }
+
+  public static String getPropertyNotNull(Properties properties, String name) {
+    String val = checkArgumentNotNull(properties.getProperty(name), "Property " + name + " cannot be null");
+    LOG.info("Value of property: " + name + " is " + val);
+    return val.trim();
+  }
+
+  public static String getHdfsDataFormat(Properties properties) {
+    return getPropertyNotNull(properties, CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormat");
+  }
+
+  public static String getHdfsCsvHeader(Properties properties) {
+    return getPropertyOrEmptyString(properties, CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX + "csvHeader");
+  }
+
+  public static int getHdfsMaxBatchSize(Properties properties) {
+    String maxBatchAsString = properties.getProperty(CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "maxBatchSize", "1000").trim();
+    try {
+      return Integer.parseInt(maxBatchAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "maxBatchSize '" + maxBatchAsString + "' : " + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
+  public static String getKafkaTopic(Properties properties) {
+    return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "topic");
+  }
+
+  public static String getKafkaMetadataBrokerList(Properties properties) {
+    return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList");
+  }
+
+  public static int getKafkaMaxBatchSize(Properties properties) {
+    String maxBatchAsString = properties.getProperty(KAFKA_CONFIG_BEAN_PREFIX + "maxBatchSize", "1000").trim();
+    try {
+      return Integer.parseInt(maxBatchAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + KAFKA_CONFIG_BEAN_PREFIX + "maxBatchSize '" + maxBatchAsString + "' : " + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
+  public static long getKafkaMaxWaitTime(Properties properties) {
+    String durationAsString = properties.getProperty(KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime", "2000").trim();
+    try {
+      return Long.parseLong(durationAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime '" + durationAsString + "' : " + e;
+      throw new IllegalArgumentException(msg, e);
+    }
   }
 }
