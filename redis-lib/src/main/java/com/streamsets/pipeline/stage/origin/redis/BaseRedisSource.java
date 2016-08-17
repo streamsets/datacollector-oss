@@ -104,8 +104,8 @@ public abstract class BaseRedisSource extends BaseSource {
       try {
         redisClient = new Jedis(URI.create(conf.uri), conf.connectionTimeout);
       } catch (Exception e) {
+        LOG.error("Can't create redis client", e);
         issues.add(getContext().createConfigIssue(Groups.REDIS.name(), "uri", Errors.REDIS_01, conf.uri, e.toString()));
-        LOG.debug(e.getMessage(), e);
         isOk = false;
       }
     }
