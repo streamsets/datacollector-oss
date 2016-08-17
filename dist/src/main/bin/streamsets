@@ -58,6 +58,10 @@ while test $# -gt 0; do
       shift
       exec ${BASEDIR}/libexec/_show_vault_id
       ;;
+    setup-mapr)
+      shift
+      exec ${BASEDIR}/libexec/_mapr_setup
+      ;;
     help)
       ${PRG} --help
       exit 0
@@ -68,11 +72,11 @@ while test $# -gt 0; do
       ;;
     --help)
       echo ""
-      echo "streamsets <SUB_COMAND> [<SUB_COMMAND_ARGUMENTS>]"
+      echo "streamsets <SUB_COMMAND> [<SUB_COMMAND_ARGUMENTS>]"
       echo ""
       echo "  Sub-commands:"
       echo ""
-      echo "    dc: starts the Data Collector"
+      echo "    dc: Starts the Data Collector"
       echo ""
       echo "    create-dc: Creates new instance of Data Collector"
       echo ""
@@ -80,7 +84,10 @@ while test $# -gt 0; do
       echo ""
       echo "    stagelibs: Data Collector Stage library installer"
       echo ""
-      echo "    show-vault-id: shows the user-id to authorize in Vault"
+      echo "    show-vault-id: Shows the user-id to authorize in Vault"
+      echo ""
+      echo "    setup-mapr: Enables the MapR stage library for the detected"
+      echo "                MapR installation."
       echo ""
       exit 0
       ;;

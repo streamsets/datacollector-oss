@@ -1,4 +1,4 @@
-#
+#!/bin/bash
 # Copyright 2016 StreamSets Inc.
 #
 # Licensed under the Apache Software Foundation (ASF) under one
@@ -17,13 +17,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/bash
 #
 # Prerequisites:
 # - The MapR client package must be installed and configured
 #   on the machine where StreamSets is being installed.
 #
-# This script does followings:
+# This script does following:
 # - Obtain MapR version and MapR Home directory
 # - Remove the MapR version from blacklist in etc/sdc.properties
 # - Create soft links to MapR client libraries so that StreamSets data collector can load these at runtime.
@@ -31,7 +30,7 @@
 
 BLACKLIST_PROP="system.stagelibs.blacklist"
 SDC_PROP_FILE="sdc.properties"
-SDC_POLOCY_FILE="sdc-security.policy"
+SDC_POLICY_FILE="sdc-security.policy"
 MAPR_VERSION=5.1.0
 MAPR_HOME=""
 MAPR_LIB="streamsets-datacollector-mapr"
@@ -48,8 +47,9 @@ if [ ! -w "$SDC_HOME/etc/$SDC_PROP_FILE" ]; then
 fi
 
 # Check if this is running on supported OS
-if [[ $OSTYPE == "darwin"* ]]; then #MacOS requires additional '' in sed command
-  option="''"
+if [[ $OSTYPE == "darwin"* ]]; then
+  # OS X requires specifying backup file extension in sed command
+  BACKUP_EXT="''"
 elif [[ $OSTYPE == "cygwin" ]];then
   echo "Error: Cannot used on Windows OS"
   exit 0
@@ -59,13 +59,13 @@ fi
 read -p "Please enter the MapR version (default 5.1.0): " MAPR_VERSION
 MAPR_VERSION=${MAPR_VERSION:=5.1.0}
 # Check if input version is valid
-if ! [[ $MAPR_VERSION =~ ^[1-9][0-9]*\.[0-9]*(\.[0-9]*)*$ ]];
+if ! [[ ${MAPR_VERSION} =~ ^[1-9][0-9]*\.[0-9]*(\.[0-9]*)*$ ]];
 then
   echo "Error: Invalid MapR version number"
   exit 0
 fi
 MAPR_VERSION=`expr "$MAPR_VERSION" : '\([1-9][0-9]*\.[0-9]*\)'`
-_MAPR_VERSION=${MAPR_VERSION/"."/"_"}
+_MAPR_VERSION=${MAPR_VERSION/./_}
 MAPR_LIB=${MAPR_LIB}_${_MAPR_VERSION}-lib
 # Check if this Data Collector support the MapR version
 if [ ! -d "$SDC_HOME/streamsets-libs/$MAPR_LIB" ]; then
@@ -86,8 +86,8 @@ fi
 # Remove MapR Version from sdc.properies file
 printf "Updating etc/sdc.properties file ...."
 original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_HOME}/etc/${SDC_PROP_FILE}")
-blacklist_property=${original_property/$MAPR_LIB,/}
-sed -i ${option} "s/${original_property}/${blacklist_property}/" "${SDC_HOME}/etc/${SDC_PROP_FILE}"
+blacklist_property=${original_property/${MAPR_LIB},/}
+sed -i "${BACKUP_EXT}" "s/${original_property}/${blacklist_property}/" "${SDC_HOME}/etc/${SDC_PROP_FILE}"
 printf "Done.\n"
 
 # Create symbolic links. Ignore the stderr (there will be a lot of symlinks already exist errors)
@@ -101,7 +101,7 @@ printf "Done.\n"
 
 # Add permission to sdc-security.policy file
 printf "Updating etc/sdc-security.policy file ..."
-printf "\ngrant codebase \"file://${MAPR_HOME}/-\" {\n  permission java.security.AllPermission;\n};\n" >> ${SDC_HOME}/etc/${SDC_POLOCY_FILE}
+printf "\ngrant codebase \"file://%s/-\" {\n  permission java.security.AllPermission;\n};\n" "${MAPR_HOME}" >> ${SDC_HOME}/etc/${SDC_POLICY_FILE}
 printf "Done\n"
 
 echo "Succeeded"

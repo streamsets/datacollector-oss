@@ -77,7 +77,6 @@
         <exclude>vault.properties</exclude>
         <exclude>sdc-keystore.jks</exclude>
         <exclude>sdc-log4j.properties</exclude>
-        <exclude>*.sh</exclude>
       </excludes>
     </fileSet>
 
@@ -100,15 +99,6 @@
         <include>vault.properties</include>
       </includes>
       <fileMode>0600</fileMode>
-    </fileSet>
-
-    <fileSet>
-      <directory>${basedir}/src/main/etc</directory>
-      <outputDirectory>/etc</outputDirectory>
-      <includes>
-        <include>*.sh</include>
-      </includes>
-      <fileMode>0755</fileMode>
     </fileSet>
 
     <!-- log dir -->
