@@ -230,7 +230,10 @@ public class StreamingXmlParser {
     while (hasNext(reader) && !peek(reader).isEndElement()) {
       XMLEvent next = read(reader);
       if (next.isCharacters()) {
-        if (peek(reader).isEndElement() && maybeText) {
+        // If this set of characters is all whitespace, ignore.
+        if (next.asCharacters().isWhiteSpace()) {
+          continue;
+        } else if (peek(reader).isEndElement() && maybeText) {
           contents.put(VALUE_KEY, Field.create(((Characters)next).getData()));
         } else if (peek(reader).isStartElement()) {
           StartElement subStartE = (StartElement) read(reader);

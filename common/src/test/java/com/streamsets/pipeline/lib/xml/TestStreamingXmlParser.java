@@ -164,4 +164,20 @@ public class TestStreamingXmlParser {
     parser.close();
   }
 
+  @Test
+  public void testParserWithWhitespaces() throws Exception {
+    StreamingXmlParser parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-whitespaces.xml"));
+    Field f = parser.read();
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Map<String, Field> a = f.getValueAsMap().get("a").getValueAsList().get(0).getValueAsMap();
+    Assert.assertEquals(2, a.size());
+    Field b = a.get("b").getValueAsList().get(0);
+    Assert.assertEquals("foo", b.getValueAsMap().get("value").getValueAsString());
+    Field c = a.get("c").getValueAsList().get(0);
+    Assert.assertNull(c.getValueAsMap().get("value"));
+    f = parser.read();
+    Assert.assertNull(f);
+    parser.close();
+  }
+
 }
