@@ -2546,14 +2546,14 @@
                                     <entry>Enables access to a Shield-protected cluster.</entry>
                                 </row>
                                 <row>
-                                    <entry>Elastic Found Cluster</entry>
-                                    <entry>Enables access to a Found cluster. <p>Selecting this
-                                            property is the equivalent to setting the
+                                    <entry>Elastic Cloud Cluster</entry>
+                                    <entry>Enables access to an Elastic Cloud cluster. <p>Selecting
+                                            this property is the equivalent to setting the
                                             action.bulk.compress Elasticsearch property to false,
                                             and the request.headers.X-Found-Cluster to the cluster
-                                            name. </p><p>Found requires Shield. When enabling Found,
-                                            enable Shield and configure the additional Shield
-                                            properties. </p></entry>
+                                            name. </p><p>Elastic Cloud requires Shield. When
+                                            enabling Elastic Cloud, enable Shield and configure the
+                                            additional Shield properties. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Detect Additional Nodes in Cluster</entry>
@@ -2563,7 +2563,8 @@
                                         Elasticsearch property to true.<p>Use only when the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> shares the same network as the Elasticsearch cluster.
-                                            Do not use for Found or Docker clusters.</p></entry>
+                                            Do not use for Elastic Cloud or Docker
+                                        clusters.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Additional Configuration</entry>
@@ -2678,32 +2679,32 @@
                                     <entry>Location of the keystore file. <p>Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.keystore.path Elasticsearch
-                                            property.</p><p>Not necessary for Found clusters.
-                                        </p></entry>
+                                            property.</p><p>Not necessary for Elastic Cloud
+                                            clusters. </p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Keystore Password</entry>
                                     <entry>Password for the keystore file.<p>Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.keystore.password Elasticsearch
-                                            property.</p><p>Not necessary for Found
-                                        clusters.</p></entry>
+                                            property.</p><p>Not necessary for Elastic Cloud
+                                            clusters.</p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Truststore Path</entry>
                                     <entry>Location of the truststore file. <p>Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.truststore.path Elasticsearch
-                                            property.</p><p>Not necessary for Found clusters.
-                                        </p></entry>
+                                            property.</p><p>Not necessary for Elastic Cloud
+                                            clusters. </p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Truststore Password</entry>
                                     <entry>Password for the truststore file.<p>Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.truststore.password Elasticsearch
-                                            property.</p><p>Not necessary for Found
-                                        clusters.</p></entry>
+                                            property.</p><p>Not necessary for Elastic Cloud
+                                            clusters.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
