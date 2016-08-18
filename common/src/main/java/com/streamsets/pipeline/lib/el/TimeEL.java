@@ -90,4 +90,10 @@ public class TimeEL {
     return Utils.intToPaddedString(calendar.get(Calendar.SECOND), 2);
   }
 
+  @ElFunction(prefix = "", name = "SSS", description = "")
+  public static String getMilisecond() {
+    Calendar calendar = (Calendar) ELEval.getVariablesInScope().getContextVariable(CALENDER_CONTEXT_VAR);
+    return Utils.intToPaddedString(calendar.get(Calendar.MILLISECOND), 3);
+  }
+
 }
