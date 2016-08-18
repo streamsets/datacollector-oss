@@ -62,11 +62,11 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
 
   private int updateMetricsAndReturnBytesRead(int bytesRead) {
     if (bytesRead > 0) {
-      double sentBytes = (double) sentBytesCounter.getCount();
       dataThroughputMeterForCurrentStream.mark(bytesRead);
       //In KB
       dataTransferMeter.mark(bytesRead);
       sentBytesCounter.inc(bytesRead);
+      double sentBytes = (double) sentBytesCounter.getCount();
       remainingBytesCounter.dec(bytesRead);
       //Putting one minute rate because that is the latest speed of transfer
       gaugeStatisticsMap.put(
