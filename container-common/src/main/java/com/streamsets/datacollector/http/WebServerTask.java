@@ -354,9 +354,7 @@ public abstract class WebServerTask extends AbstractTask {
     return ImmutableList.of(disableTraceMapping, restMapping, indexMapping, logoutMapping, noAuthMapping, publicRestMapping);
   }
 
-
-  @VisibleForTesting
-  SecurityHandler createSecurityHandler(
+  protected SecurityHandler createSecurityHandler(
       Server server, Configuration appConf, ServletContextHandler appHandler, String appContext
   ) {
     ConstraintSecurityHandler securityHandler;
