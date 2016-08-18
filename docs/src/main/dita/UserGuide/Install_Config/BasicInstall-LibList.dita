@@ -110,9 +110,9 @@
                                     </ul></p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-cassandra_2-lib</entry>
-                            <entry>For Cassandra 2.1. Can be used for Cassandra 1.2, 2.0, and 2.1.
-                                    <p>Includes the Cassandra destination.</p></entry>
+                            <entry>streamsets-datacollector-cassandra_3-lib</entry>
+                            <entry>For Cassandra 1.2, 2.x, and 3.x. <p>Includes the Cassandra
+                                    destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_5_2-lib </entry>
