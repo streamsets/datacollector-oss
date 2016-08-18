@@ -53,4 +53,6 @@ public interface SSOService {
 
   boolean invalidateAppToken(String authToken);
 
+  void clearCaches();
+
 }

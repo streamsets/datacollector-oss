@@ -37,12 +37,12 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TestWebServerTask {
 
 
-  @SuppressWarnings("unchecked")
   private WebServerTask createWebServerTask(
       final String confDir,
       final Configuration conf,
@@ -58,6 +58,15 @@ public class TestWebServerTask {
           }
         };
     runtimeInfo.setDPMEnabled(isDPMEnabled);
+    return createWebServerTask(runtimeInfo, conf, webAppProviders);
+  }
+
+  @SuppressWarnings("unchecked")
+  private WebServerTask createWebServerTask(
+        RuntimeInfo runtimeInfo,
+      final Configuration conf,
+      final Set<WebAppProvider> webAppProviders
+  ) throws Exception {
     Set<ContextConfigurator> configurators = new HashSet<>();
     return new WebServerTask(new DataCollectorBuildInfo(), runtimeInfo, conf, configurators, webAppProviders) {
       @Override
@@ -153,6 +162,47 @@ public class TestWebServerTask {
     } finally {
       webServerTask.stopTask();
     }
+
+  }
+
+  @Test
+  public void testSSOServiceInRuntime() throws Exception {
+    RuntimeInfo runtimeInfo =
+        new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections
+            .<ClassLoader>emptyList()) {
+          @Override
+          public String getConfigDir() {
+            return new File("target").getAbsolutePath();
+          }
+        };
+    runtimeInfo.setDPMEnabled(true);
+
+
+    Assert.assertNull(runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
+
+    Configuration conf = new Configuration();
+
+    WebServerTask webServerTask = createWebServerTask(runtimeInfo, conf, Collections.<WebAppProvider>emptySet());
+    try {
+      webServerTask.initTask();
+    } finally {
+      webServerTask.stopTask();
+    }
+
+    Assert.assertNotNull(runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
+
+    Object attr = runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR);
+    Assert.assertEquals(1, ((List)attr).size());
+
+    webServerTask = createWebServerTask(runtimeInfo, conf, Collections.<WebAppProvider>emptySet());
+    try {
+      webServerTask.initTask();
+    } finally {
+      webServerTask.stopTask();
+    }
+
+    Assert.assertEquals(attr, runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
+    Assert.assertEquals(2, ((List)attr).size());
 
   }
 

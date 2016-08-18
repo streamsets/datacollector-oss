@@ -140,6 +140,13 @@ public abstract class AbstractSSOService implements SSOService {
     return appPrincipalCache.invalidate(authToken);
   }
 
+  @Override
+  public void clearCaches() {
+    getUserPrincipalCache().clear();
+    getAppPrincipalCache().clear();
+    LOG.info("Flushed user and application principal caches");
+  }
+
   protected abstract SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId);
 
   private static final Object DUMMY = new Object();

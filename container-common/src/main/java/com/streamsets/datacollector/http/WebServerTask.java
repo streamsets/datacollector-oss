@@ -86,6 +86,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -159,6 +160,8 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String LDAP = "ldap";
   public static final String LDAP_LOGIN_MODULE_NAME = "ldap.login.module.name";
 
+  public static final String SSO_SERVICES_ATTR = "ssoServices";
+
   private final String serverName;
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
@@ -209,6 +212,13 @@ public abstract class WebServerTask extends AbstractTask {
   @Override
   public void initTask() {
     checkValidPorts();
+
+    synchronized (getRuntimeInfo()) {
+      if (!getRuntimeInfo().hasAttribute(SSO_SERVICES_ATTR)) {
+        getRuntimeInfo().setAttribute(SSO_SERVICES_ATTR, Collections.synchronizedList(new ArrayList<Object>()));
+      }
+    }
+
     server = createServer();
 
     // initialize a global session manager
@@ -447,6 +457,8 @@ public abstract class WebServerTask extends AbstractTask {
       }
     });
     ssoService = new ProxySSOService(remoteSsoService);
+    // registering ssoService with runtime, to enable cache flushing
+    ((List)getRuntimeInfo().getAttribute(SSO_SERVICES_ATTR)).add(ssoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
     security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, appConf));
     return security;

@@ -80,4 +80,9 @@ public class ProxySSOService implements SSOService {
     return ssoService.invalidateAppToken(authToken);
   }
 
+  @Override
+  public void clearCaches() {
+    ssoService.clearCaches();
+  }
+
 }

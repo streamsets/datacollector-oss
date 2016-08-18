@@ -65,6 +65,19 @@ public class TestPrincipalCache {
     Assert.assertTrue(cache.invalidate("token"));
     Assert.assertTrue(cache.isInvalid("token"));
 
+    // cache clear
+    cache.clear();
+
+    Assert.assertTrue(cache.put("token", principal));
+    cache.clear();
+    Assert.assertNull(cache.get("token"));
+
+    Assert.assertTrue(cache.invalidate("token"));
+    Assert.assertTrue(cache.isInvalid("token"));
+    cache.clear();
+    Assert.assertNull(cache.get("token"));
+    Assert.assertFalse(cache.isInvalid("token"));
+
   }
 
 }

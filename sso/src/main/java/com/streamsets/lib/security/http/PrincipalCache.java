@@ -70,5 +70,10 @@ public class PrincipalCache {
     return invalidate;
   }
 
+  public void clear (){
+    invalidatedTokens.invalidateAll();
+    principalsCache.invalidateAll();
+  }
+
 
 }

@@ -497,7 +497,12 @@ public class TestWebServerTaskHttpHttps {
       return false;
     }
 
+    @Override
+    public void clearCaches() {
+
+    }
   }
+
   @Test
   public void testWebAppSSOServiceDelegation() throws Exception {
     final DummySSOService delegatedTo = new DummySSOService();
