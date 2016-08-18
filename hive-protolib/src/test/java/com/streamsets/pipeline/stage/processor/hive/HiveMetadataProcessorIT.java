@@ -314,4 +314,43 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
         hdfsRecord.getHeader().getAttribute("targetDirectory")
     );
   }
+
+  @Test
+  public void testTimeAllTheWayToMillisecond() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .partitions(new PartitionConfigBuilder()
+        .addPartition("dt", HiveType.STRING, "${ss()}.${SSS()}")
+        .build()
+      )
+      .external(true)
+      .timeDriver("${time:now()}")
+      .partitionPathTemplate("${ss()}.${SSS()}")
+      .tablePathTemplate("/table")
+      .build();
+    ProcessorRunner runner = getProcessorRunner(processor);
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "SDC"));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    // Look at generated partition
+
+    Record newPartitionRecord = output.getRecords().get("hive").get(1);
+    Assert.assertNotNull(newPartitionRecord);
+    Assert.assertEquals(1, newPartitionRecord.get("/version").getValueAsInteger());
+    Assert.assertEquals("PARTITION", newPartitionRecord.get("/type").getValueAsString());
+
+    String partitionValue = newPartitionRecord.get("/partitions[0]/value").getValueAsString();
+    Assert.assertNotNull(partitionValue);
+    String expectedPath = "/table/" + partitionValue;
+
+    Assert.assertEquals(expectedPath, newPartitionRecord.get("/location").getValueAsString());
+  }
+
 }

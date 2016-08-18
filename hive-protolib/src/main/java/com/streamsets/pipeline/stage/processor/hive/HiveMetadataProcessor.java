@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
@@ -209,12 +210,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       errorRecordHandler = new DefaultErrorRecordHandler(getContext());
       elEvals.init(getContext());
       try {
-        HiveMetastoreUtil.getTimeBasis(
-            getContext(),
-            getContext().createRecord("validationConfigs"),
-            timeDriver,
-            elEvals.timeDriverElEval
-        );
+        elEvals.timeDriverElEval.eval(getContext().createELVars(), timeDriver, Date.class);
       } catch (ELEvalException ex) {
         issues.add(
             getContext().createConfigIssue(
@@ -285,6 +281,14 @@ public class HiveMetadataProcessor extends RecordProcessor {
     ELVars variables = getContext().createELVars();
     RecordEL.setRecordInContext(variables, record);
     TimeEL.setCalendarInContext(variables, Calendar.getInstance());
+    TimeNowEL.setTimeNowInContext(variables, new Date());
+
+    // Calculate record time for this particular record and persist it in the variables
+    Date timeBasis = elEvals.timeDriverElEval.eval(variables, timeDriver, Date.class);
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(timeBasis);
+    TimeEL.setCalendarInContext(variables, calendar);
+
     String dbName = HiveMetastoreUtil.resolveEL(elEvals.dbNameELEval, variables, databaseEL);
     String tableName = HiveMetastoreUtil.resolveEL(elEvals.tableNameELEval,variables,tableEL);
     String warehouseDir, avroSchema;
@@ -296,7 +300,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       dbName = DEFAULT_DB;
     }
     try{
-      partitionValMap = getPartitionValuesFromRecord(record);
+      partitionValMap = getPartitionValuesFromRecord(variables);
       warehouseDir = externalTable ?
           HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate) :
           internalWarehouseDir;
@@ -537,36 +541,21 @@ public class HiveMetadataProcessor extends RecordProcessor {
     return null;
   }
 
-  @VisibleForTesting
-  String getPartitionValue(Date date, Record record, String partitionValueEL) throws ELEvalException {
-    ELVars vars = getContext().createELVars();
-    RecordEL.setRecordInContext(vars, record);
-    if (date != null) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(date);
-      TimeEL.setCalendarInContext(vars, calendar);
-    }
-    return HiveMetastoreUtil.resolveEL(elEvals.partitionValueELEval, vars, partitionValueEL);
-  }
-
   /**
    * Obtain a list of partition values from record.
    * @return LinkedHashMap that contains pairs of partition name-values
    * @throws StageException
    */
   @VisibleForTesting
-  LinkedHashMap<String, String> getPartitionValuesFromRecord(Record r)
-      throws StageException
-  {
+  LinkedHashMap<String, String> getPartitionValuesFromRecord(ELVars variables) throws StageException {
     LinkedHashMap<String, String> values = new LinkedHashMap<>();
-    Date timeBasis = HiveMetastoreUtil.getTimeBasis(getContext(), r, timeDriver, elEvals.timeDriverElEval);
     for (PartitionConfig pName: partitionConfigList) {
-      String ret = getPartitionValue(timeBasis, r, pName.valueEL);
+      String ret = HiveMetastoreUtil.resolveEL(elEvals.partitionValueELEval, variables, pName.valueEL);
       if (ret == null || ret.isEmpty()) {
         // If no partition value is found in record, this record goes to Error Record
         throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, pName.valueEL);
-      }  else if (HiveMetastoreUtil.hasUnsupportedChar(ret)){
-          throw new HiveStageCheckedException(Errors.HIVE_METADATA_10, pName.valueEL, ret);
+      } else if (HiveMetastoreUtil.hasUnsupportedChar(ret)){
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_10, pName.valueEL, ret);
       }
       values.put(pName.name.toLowerCase(), ret);
     }

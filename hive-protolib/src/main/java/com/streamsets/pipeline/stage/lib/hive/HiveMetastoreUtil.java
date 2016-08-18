@@ -27,9 +27,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Matcher;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheSupport;
@@ -38,7 +35,6 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -58,7 +54,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.LinkedList;
@@ -156,19 +151,6 @@ public final class HiveMetastoreUtil {
     } else {
       conf.addResource(new Path(confFile.getAbsolutePath()));
     }
-  }
-
-  public static Date getTimeBasis(
-      Stage.Context context,
-      Record record,
-      String timeDriver,
-      ELEval timeDriverElEval
-  ) throws ELEvalException {
-    ELVars elVars = context.createELVars();
-    TimeNowEL.setTimeNowInContext(elVars, new Date());
-    RecordEL.setRecordInContext(elVars, record);
-    context.parseEL(timeDriver);
-    return timeDriverElEval.eval(elVars, timeDriver, Date.class);
   }
 
   // Resolve expression from record

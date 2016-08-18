@@ -511,7 +511,7 @@ public class TestHiveMetadataProcessor {
     String day =  String.valueOf(Utils.intToPaddedString(cal.get(Calendar.DAY_OF_MONTH), 2));
 
     try {
-      values = processor.getPartitionValuesFromRecord(record);
+      values = processor.getPartitionValuesFromRecord(elVars);
     } catch (StageException e) {
       Assert.fail("getPartitionValuesFromRecord should not raise StageException");
     }
