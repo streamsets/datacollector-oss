@@ -65,7 +65,12 @@
                                         name for the cluster.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Indexing Mode</entry>
+                                    <entry>Record Indexing Mode
+                                        <xref
+                                            href="Solr-IndexMode.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a6x_jzn_vs"
+                                            /></xref></entry>
                                     <entry>Determines how records are indexed.</entry>
                                 </row>
                                 <row>
@@ -76,6 +81,20 @@
                                             fields that are multi-valued.</p><p>Use the
                                                 <uicontrol>Add</uicontrol> icon to create additional
                                             field mappings.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Authentication
+                                        <xref
+                                            href="Solr-Kerberos.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a3x_jzn_vs"
+                                            /></xref></entry>
+                                    <entry>Uses Kerberos credentials to connect to a Solr node or
+                                        cluster. <p>When selected, uses the Kerberos principal and
+                                            keytab defined in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file,
+                                                <codeph>$SDC_CONF/sdc.properties</codeph>.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

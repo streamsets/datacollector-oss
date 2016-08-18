@@ -242,6 +242,7 @@
    </topicmeta>
    <topicref href="../Destinations/Solr-Prerequisites.dita"/>
    <topicref href="../Destinations/Solr-IndexMode.dita"/>
+   <topicref href="../Destinations/Solr-Kerberos.dita"/>
    <topicref href="../Destinations/Solr-configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/ToError.dita">
