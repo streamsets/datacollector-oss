@@ -15,15 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jgs_qpg_2v">
  <title>MapR Prerequisites</title>
+    <shortdesc>Due to licensing restrictions, StreamSets cannot distribute MapR libraries with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As a
+        result, you must perform additional steps to enable the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        machine to connect to MapR.</shortdesc>
  <conbody>
-        <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>Due to licensing
-            restrictions, StreamSets cannot distribute MapR libraries with <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-            As a result, you must perform additional steps to enable the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine to connect to MapR. You must install the required client libraries and run a
-            MapR setup script to modify configuration files and create the required symbolic
-            links.</p>
+        <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>You must install the
+            required client libraries and then run the <codeph>setup-mapr</codeph> command. The
+            command modifies configuration files and creates the required symbolic links.</p>
         <note>The MapR DB destination and the Hive Streaming destination using the MapR library
             currently only support MapR version 5.1.0. All other stages that use the MapR library
             support MapR versions 5.0.0 and 5.1.0.</note>
@@ -46,18 +46,12 @@
                                     download the files for your operating system here:
                                     <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
                         </ul></p></li>
-                <li>From the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> runtime directory, <codeph>$SDC_DIST</codeph>, use the following command to
-                    make the MapR setup script file
-                    executable:<codeblock>sudo chmod u+x etc/mapr-setup.sh</codeblock></li>
-                <li>To run the setup script, use the following
-                    command:<codeblock>etc/mapr-setup.sh</codeblock></li>
+                <li>Use the following
+                    command:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
                 <li>When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
                 <li>When prompted, enter the absolute path to the MapR home directory, usually
-                        /opt/mapr.<p>The script modifies configuration files and creates the
-                        required symbolic links.</p></li>
-                <li>When the script finishes, restart <ph
+                    /opt/mapr.</li>
+                <li>When the command finishes, restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> and verify that you can see the MapR origins and destinations in the stage
                     library.</li>
