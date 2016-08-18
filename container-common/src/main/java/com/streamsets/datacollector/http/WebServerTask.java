@@ -159,6 +159,7 @@ public abstract class WebServerTask extends AbstractTask {
   public static final String LDAP = "ldap";
   public static final String LDAP_LOGIN_MODULE_NAME = "ldap.login.module.name";
 
+  private final String serverName;
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
@@ -177,7 +178,19 @@ public abstract class WebServerTask extends AbstractTask {
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
+    this("webserver", buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
+  }
+
+  public WebServerTask(
+      String serverName,
+      BuildInfo buildInfo,
+      RuntimeInfo runtimeInfo,
+      Configuration conf,
+      Set<ContextConfigurator> contextConfigurators,
+      Set<WebAppProvider> webAppProviders
+  ) {
     super("webServer");
+    this.serverName = serverName;
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
@@ -503,7 +516,7 @@ public abstract class WebServerTask extends AbstractTask {
     String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
 
     QueuedThreadPool qtp = new QueuedThreadPool(conf.get(HTTP_MAX_THREADS, HTTP_MAX_THREADS_DEFAULT));
-    qtp.setName("jetty");
+    qtp.setName(serverName);
     qtp.setDaemon(true);
     Server server = new Server(qtp);
 
@@ -598,7 +611,17 @@ public abstract class WebServerTask extends AbstractTask {
   private Server createRedirectorServer() {
     int unsecurePort = conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT);
     String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
-    Server server = new Server(new InetSocketAddress(hostname, unsecurePort));
+
+    QueuedThreadPool qtp = new QueuedThreadPool(25);
+    qtp.setName(serverName + "Redirector");
+    qtp.setDaemon(true);
+    Server server = new Server(qtp);
+    InetSocketAddress addr = new InetSocketAddress(hostname, unsecurePort);
+    ServerConnector connector = new ServerConnector(server);
+    connector.setHost(addr.getHostName());
+    connector.setPort(addr.getPort());
+    server.setConnectors(new Connector[]{connector});
+
     ServletContextHandler context = new ServletContextHandler();
     context.addServlet(new ServletHolder(new RedirectorServlet()), "/*");
     context.setContextPath("/");
