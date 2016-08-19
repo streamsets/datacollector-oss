@@ -29,19 +29,40 @@
 # - Add permissions to MapR libraries in sdc-security.policy
 
 BLACKLIST_PROP="system.stagelibs.blacklist"
-SDC_PROP_FILE="sdc.properties"
-SDC_POLICY_FILE="sdc-security.policy"
+PROP_FILENAME="sdc.properties"
+POLICY_FILENAME="sdc-security.policy"
 MAPR_VERSION=5.1.0
 MAPR_HOME=""
 MAPR_LIB="streamsets-datacollector-mapr"
-SDC_HOME=$PWD
-if [[ ${SDC_HOME} == *"/etc" ]];then
-  SDC_HOME=${SDC_HOME%/etc}
+
+if [ -z ${SDC_HOME} ];then
+  echo "Set the SDC_HOME environment variable to the Data Collector installation directory."
+  exit 0
 fi
 
-# Confirm sdc.properties exists in the current directory and has a permission to write
-if [ ! -w "$SDC_HOME/etc/$SDC_PROP_FILE" ]; then
-  echo "Error: Check etc/$SDC_PROP_FILE exists in the current directory and current user has write permission"
+# Check if SDC_HOME really points to the StreamSets Data Collector
+if [ ! -f "${SDC_HOME}/bin/streamsets" ];then
+   echo "SDC_HOME is not pointing to StreamSets Data Collector. Please check the directory path"
+   exit 0
+fi
+
+if [ -z ${SDC_CONF} ];then
+  echo "Set the SDC_CONF environment variable to the Data Collector configuration directory."
+  exit 0
+fi
+
+# Check if SDC_CONF really points to the directory where config files are stored
+if [ ! -f "${SDC_CONF}/${PROP_FILENAME}" ];then
+  echo "SDC_CONF is not pointing to the directory where config files are stored. Please check the directory path."
+  exit 0
+fi
+
+SDC_PROP_FILE="${SDC_CONF}/${PROP_FILENAME}"
+SDC_POLICY_FILE="${SDC_CONF}/${POLICY_FILENAME}"
+
+# Confirm sdc.properties exists in the expected directory and has a permission to write
+if [ ! -w "${SDC_PROP_FILE}" ]; then
+  echo "Error: Check ${SDC_PROP_FILE} exists and current user has a write permission"
   echo "Exit."
   exit 0
 fi
@@ -84,10 +105,10 @@ if [ ! -e "${MAPR_HOME}/MapRBuildVersion" ]; then
 fi
 
 # Remove MapR Version from sdc.properies file
-printf "Updating etc/sdc.properties file ...."
-original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_HOME}/etc/${SDC_PROP_FILE}")
+printf "Updating sdc.properties file ...."
+original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_PROP_FILE}")
 blacklist_property=${original_property/${MAPR_LIB},/}
-sed -i "${BACKUP_EXT}" "s/${original_property}/${blacklist_property}/" "${SDC_HOME}/etc/${SDC_PROP_FILE}"
+sed -i ${BACKUP_EXT} "s/${original_property}/${blacklist_property}/" "${SDC_PROP_FILE}"
 printf "Done.\n"
 
 # Create symbolic links. Ignore the stderr (there will be a lot of symlinks already exist errors)
@@ -100,8 +121,12 @@ ln -s ${MAPR_HOME}/lib/maprfs-${MAPR_VERSION}*.jar  ${SDC_HOME}/root-lib/ 2>/dev
 printf "Done.\n"
 
 # Add permission to sdc-security.policy file
-printf "Updating etc/sdc-security.policy file ..."
-printf "\ngrant codebase \"file://%s/-\" {\n  permission java.security.AllPermission;\n};\n" "${MAPR_HOME}" >> ${SDC_HOME}/etc/${SDC_POLICY_FILE}
-printf "Done\n"
+printf "Updating sdc-security.policy file ..."
+if grep -q "file://${MAPR_HOME}" "${SDC_POLICY_FILE}"; then
+  printf "permission already added.\n"
+else
+  printf "\ngrant codebase \"file://%s/-\" {\n  permission java.security.AllPermission;\n};\n" "${MAPR_HOME}" >> ${SDC_POLICY_FILE}
+  printf "Done\n"
+fi
 
 echo "Succeeded"
