@@ -32,7 +32,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   description = "Executes HDFS metadata operations",
   icon = "hdfs.png", // TODO change
   privateClassLoader = true,
-  onlineHelpRefUrl = "index.html#Destinations/Hive.html#task_cx3_lhh_ht" // TODO change
+  onlineHelpRefUrl = "index.html#Destinations/Hive.html#task_cx3_lhh_ht", // TODO change
+  producesEvents = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

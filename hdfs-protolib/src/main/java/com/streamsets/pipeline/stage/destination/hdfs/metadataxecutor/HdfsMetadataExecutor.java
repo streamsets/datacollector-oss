@@ -19,7 +19,10 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -126,6 +129,14 @@ public class HdfsMetadataExecutor extends BaseTarget {
               LOG.debug("Applying permissions: {} loaded from value '{}'", fsPerms, stringPerms);
               fs.setPermission(workingFile, fsPerms);
             }
+
+            // Issue event with the final file name (e.g. the renamed one if applicable)
+            EventRecord event = getContext().createEventRecord("file-changed", 1);
+            event.set(Field.create(Field.Type.MAP, new ImmutableMap.Builder<String, Field>()
+              .put("filepath", Field.create(Field.Type.STRING, workingFile.toString()))
+              .build()
+            ));
+            getContext().toEvent(event);
 
             LOG.debug("Done changing metadata on file: {}", workingFile);
             return null;

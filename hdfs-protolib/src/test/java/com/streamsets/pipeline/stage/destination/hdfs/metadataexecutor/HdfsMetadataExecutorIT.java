@@ -179,6 +179,24 @@ public class HdfsMetadataExecutorIT {
   }
 
   /**
+   * Assert proper event for the changed file.
+   */
+  private void assertEvent(List<Record> events, Path expectedPath) {
+    Assert.assertNotNull(events);
+    Assert.assertEquals(1, events.size());
+
+    Record event = events.get(0);
+    Assert.assertNotNull(event);
+    Assert.assertNotNull(event.get());
+    Assert.assertEquals(Field.Type.MAP, event.get().getType());
+
+    Field path = event.get("/filepath");
+    Assert.assertNotNull(path);
+    Assert.assertEquals(Field.Type.STRING, path.getType());
+    Assert.assertEquals(expectedPath.toString(), path.getValueAsString());
+  }
+
+  /**
    * Write given content to given path on HDFS
    */
   private void writeFile(Path path, String content) throws IOException {
@@ -239,6 +257,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord(outputPath.toString())));
+    assertEvent(runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
     assertFile(outputPath, "CONTENT");
@@ -263,6 +282,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, "CONTENT");
@@ -287,6 +307,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, "CONTENT");
@@ -311,6 +332,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, "CONTENT");
