@@ -76,7 +76,10 @@
    <topicref href="../Origins/JDBCConsumer-OffsetColumn_Value.dita"/>
    <topicref href="../Origins/JDBCConsumer-Recovery.dita"/>
    <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
-   <topicref href="../Origins/JDBC-SQLQuery.dita"/>
+   <topicref href="../Origins/JDBC-SQLQuery.dita">
+    <topicref href="../Origins/JDBC-SQLQueryIncremental.dita"/>
+    <topicref href="../Origins/JDBC-SQLQueryFull.dita"/>
+   </topicref>
    <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
    <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita"/>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
