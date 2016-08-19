@@ -46,6 +46,8 @@ public enum PipelineStatus {
   CONNECTING (true),       // SDC starting back (transition to STARTING for LOCAL, for CLUSTER checks job still running)
                     //                   (and transitions to RUNNING or RUN_ERROR -streaming- or FINISHED -batch)
   CONNECT_ERROR (true),     // failed to get to RUNNING, on SDC restart will retry again - only for cluster mode
+
+  DELETED(false)
   ;
 
   private final boolean isActive;

@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.event.handler;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -54,5 +55,7 @@ public interface DataCollector {
   void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException;
 
   Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException;
+
+  List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException;
 
 }

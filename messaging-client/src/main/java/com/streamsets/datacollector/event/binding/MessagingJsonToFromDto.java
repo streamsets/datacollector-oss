@@ -94,6 +94,9 @@ public class MessagingJsonToFromDto {
       case SAVE_RULES_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineSaveRulesEventJson((PipelineSaveRulesEvent) event);
         break;
+      case STATUS_PIPELINE:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
+        break;
       case STATUS_MULTIPLE_PIPELINES:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson((PipelineStatusEvents) event);
         break;

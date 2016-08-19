@@ -44,7 +44,8 @@ public enum PipelineStatusJson {
 
   CONNECTING,       // SDC starting back (transition to STARTING for LOCAL, for CLUSTER checks job still running)
                     //                   (and transitions to RUNNING or RUN_ERROR -streaming- or FINISHED -batch)
-  CONNECT_ERROR     // failed to get to RUNNING, on SDC restart will retry again
+  CONNECT_ERROR,
+  DELETED // failed to get to RUNNING, on SDC restart will retry again
   ;
 
 }

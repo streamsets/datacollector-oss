@@ -21,6 +21,7 @@ package com.streamsets.datacollector.store;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.task.Task;
 
 import java.util.List;
@@ -57,5 +58,7 @@ public interface PipelineStoreTask extends Task {
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
 
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException;
+
+  void registerStateListener(StateEventListener stateListener);
 
 }

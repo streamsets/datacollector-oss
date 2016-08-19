@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
@@ -88,7 +89,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String DEFAULT_REMOTE_JOB_LABELS = "";
   private static final String REMOTE_CONTROL_EVENTS_RECIPIENT = REMOTE_CONTROL + "events.recipient";
   private static final String DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT = "jobrunner-app";
-  private final DataCollector remoteDataCollector;
+  private final RemoteDataCollector remoteDataCollector;
   private final EventClient eventSenderReceiver;
   private final MessagingJsonToFromDto jsonToFromDto;
   private final SafeScheduledExecutorService executorService;
@@ -101,7 +102,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final Stopwatch stopWatch;
   private final long sendAllStatusEventsInterval;
 
-  public RemoteEventHandlerTask(DataCollector remoteDataCollector,
+  public RemoteEventHandlerTask(RemoteDataCollector remoteDataCollector,
     EventClient eventSenderReceiver,
     SafeScheduledExecutorService executorService,
     StageLibraryTask stageLibrary,
@@ -133,13 +134,16 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put("X-SS-App-Auth-Token", runtimeInfo.getAppAuthToken());
     requestHeader.put("X-SS-App-Component-Id", this.runtimeInfo.getId());
     stopWatch = Stopwatch.createUnstarted();
+    remoteDataCollector.init();
   }
 
   @Override
   public void runTask() {
-    executorService.submit(new EventHandlerCallable(remoteDataCollector,
+    executorService.submit(new EventHandlerCallable(
+        remoteDataCollector,
         eventSenderReceiver,
         jsonToFromDto,
+        new ArrayList<ClientEvent>(),
         new ArrayList<ClientEvent>(),
         getStartupReportEvent(),
         executorService,
@@ -180,6 +184,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     private final Stopwatch stopWatch;
     private final long waitBetweenSendingStatusEvents;
     private List<ClientEvent> ackEventList;
+    private List<ClientEvent> remoteEventList;
     private ClientEvent sdcInfoEvent;
     private long delay;
 
@@ -188,6 +193,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         EventClient eventSenderReceiver,
         MessagingJsonToFromDto jsonToFromDto,
         List<ClientEvent> ackEventList,
+        List<ClientEvent> remoteEventList,
         ClientEvent sdcInfoEvent,
         SafeScheduledExecutorService executorService,
         long delay,
@@ -195,7 +201,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         Map<String, String> requestHeader,
         Stopwatch stopWatch,
         long waitBetweenSendingStatusEvents
-    ) {
+        ) {
       this.remoteDataCollector = remoteDataCollector;
       this.eventClient = eventSenderReceiver;
       this.jsonToFromDto = jsonToFromDto;
@@ -203,6 +209,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       this.delay = delay;
       this.jobEventDestinationList = jobEventDestinationList;
       this.ackEventList = ackEventList;
+      this.remoteEventList = remoteEventList;
       this.sdcInfoEvent = sdcInfoEvent;
       this.requestHeader = requestHeader;
       this.stopWatch = stopWatch;
@@ -220,6 +227,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             eventClient,
             jsonToFromDto,
             ackEventList,
+            remoteEventList,
             sdcInfoEvent,
             executorService,
             delay,
@@ -242,6 +250,23 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       return ackEventList;
     }
 
+    private PipelineStatusEvent createPipelineStatusEvent(
+        MessagingJsonToFromDto jsonToFromDto, PipelineAndValidationStatus pipelineAndValidationStatus
+    ) throws JsonProcessingException {
+      PipelineStatusEvent pipelineStatusEvent = new PipelineStatusEvent(
+          pipelineAndValidationStatus.getName(),
+          pipelineAndValidationStatus.getRev(),
+          pipelineAndValidationStatus.isRemote(),
+          pipelineAndValidationStatus.getPipelineStatus(),
+          pipelineAndValidationStatus.getMessage(),
+          pipelineAndValidationStatus.getWorkerInfos(),
+          pipelineAndValidationStatus.getValidationStatus(),
+          jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
+          pipelineAndValidationStatus.isClusterMode()
+      );
+      return pipelineStatusEvent;
+    }
+
     @VisibleForTesting
     void callRemoteControl() {
       List<ClientEvent> clientEventList = new ArrayList<>();
@@ -252,35 +277,55 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         clientEventList.add(sdcInfoEvent);
       }
       try {
-        List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
         if (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingStatusEvents) {
+          // get state of all running pipeline and state of all remote pipelines
+          List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
+          LOG.debug("Sending status of all pipelines");
           for (PipelineAndValidationStatus pipelineAndValidationStatus : remoteDataCollector.getPipelines()) {
-            PipelineStatusEvent pipelineStatusEvent = new PipelineStatusEvent(pipelineAndValidationStatus.getName(),
-                pipelineAndValidationStatus.getRev(),
-                pipelineAndValidationStatus.isRemote(),
-                pipelineAndValidationStatus.getPipelineStatus(),
-                pipelineAndValidationStatus.getMessage(),
-                pipelineAndValidationStatus.getWorkerInfos(),
-                pipelineAndValidationStatus.getValidationStatus(),
-                jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
-                pipelineAndValidationStatus.isClusterMode()
-            );
-            pipelineStatusEventList.add(pipelineStatusEvent);
+            pipelineStatusEventList.add(createPipelineStatusEvent(jsonToFromDto, pipelineAndValidationStatus));
           }
           stopWatch.reset();
           PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
           pipelineStatusEvents.setPipelineStatusEventList(pipelineStatusEventList);
-          clientEventList.add(new ClientEvent(UUID.randomUUID().toString(), jobEventDestinationList, false, false,
-              EventType.STATUS_MULTIPLE_PIPELINES, pipelineStatusEvents, null));
+          clientEventList.add(new ClientEvent(UUID.randomUUID().toString(),
+              jobEventDestinationList,
+              false,
+              false,
+              EventType.STATUS_MULTIPLE_PIPELINES,
+              pipelineStatusEvents,
+              null
+          ));
+          // Clear this state change list as we are fetching all events
+          remoteEventList.clear();
+        } else {
+          // get state of only remote pipelines which changed state
+          List<PipelineAndValidationStatus> pipelineAndValidationStatuses = remoteDataCollector
+              .getRemotePipelinesWithChanges();
+          for (PipelineAndValidationStatus pipelineAndValidationStatus : pipelineAndValidationStatuses) {
+            PipelineStatusEvent pipelineStatusEvent = createPipelineStatusEvent(jsonToFromDto,
+                pipelineAndValidationStatus);
+            ClientEvent clientEvent = new ClientEvent(UUID.randomUUID().toString(),
+                jobEventDestinationList,
+                false,
+                false,
+                EventType.STATUS_PIPELINE,
+                createPipelineStatusEvent(jsonToFromDto, pipelineAndValidationStatus),
+                null
+            );
+            remoteEventList.add(clientEvent);
+            LOG.debug(Utils.format("Sending event for remote pipeline: '{}' in status: '{}'",
+                pipelineStatusEvent.getName(), pipelineStatusEvent.getPipelineStatus()));
+          }
         }
-
       } catch (Exception ex) {
         LOG.warn(Utils.format("Error while creating/serializing pipeline status event: '{}'", ex), ex);
       }
+      clientEventList.addAll(remoteEventList);
       List<ServerEventJson> serverEventJsonList;
       try {
         List<ClientEventJson> clientEventJsonList = jsonToFromDto.toJson(clientEventList);
         serverEventJsonList  = eventClient.submit("", new HashMap<String, String>(), requestHeader, false, clientEventJsonList);
+        remoteEventList.clear();
         if (!stopWatch.isRunning()) {
           stopWatch.start();
         }
@@ -289,7 +334,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         return;
       }
       List<ClientEvent> ackClientEventList = new ArrayList<ClientEvent>();
-      LOG.debug(Utils.format("Got '{}' events ", serverEventJsonList.size()));
       for (ServerEventJson serverEventJson : serverEventJsonList) {
         ClientEvent clientEvent = handlePipelineEvent(serverEventJson);
         if (clientEvent != null) {

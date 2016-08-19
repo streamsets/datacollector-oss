@@ -68,6 +68,8 @@ public abstract class MessagingDtoJsonMapper {
 
   public abstract AckEvent asAckEventDto(AckEventJson ackEvent);
 
+  public abstract PipelineStatusEventJson toPipelineStatusEventJson(PipelineStatusEvent pipelineStatusEvent);
+
   public abstract PipelineStatusEvent asPipelineStatusEventDto(PipelineStatusEventJson pipelineStatusEvent);
 
   public abstract PipelineStatusEvents asPipelineStatusEventsDto(PipelineStatusEventsJson pipelineStatusEvent);

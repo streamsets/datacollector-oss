@@ -29,6 +29,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import com.streamsets.datacollector.event.dto.WorkerInfo;
+import com.streamsets.datacollector.execution.Runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,13 +65,22 @@ public class RemoteDataCollector implements DataCollector {
   private final PipelineStoreTask pipelineStore;
   private final List<String> validatorIdList;
   private final PipelineStateStore pipelineStateStore;
+  private final RemoteStateEventListener stateEventListener;
 
   @Inject
-  public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore) {
+  public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
+                             RemoteStateEventListener stateEventListener) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
-    this.validatorIdList = new ArrayList<String>();
+    this.validatorIdList = new ArrayList<>();
+    this.stateEventListener = stateEventListener;
+  }
+
+  public void init() {
+    stateEventListener.init();
+    this.manager.addStateEventListener(stateEventListener);
+    this.pipelineStore.registerStateListener(stateEventListener);
   }
 
   private void validateIfRemote(String name, String rev, String operation) throws PipelineException {
@@ -184,10 +194,53 @@ public class RemoteDataCollector implements DataCollector {
     delete(name, rev);
   }
 
+  // Returns info about remote pipelines that have changed since the last sending of events
+  public List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException {
+    List<PipelineAndValidationStatus> pipelineAndValidationStatuses = new ArrayList<>();
+    for (PipelineState pipelineState : stateEventListener.getPipelineStateEvents()) {
+      String name = pipelineState.getName();
+      String rev = pipelineState.getRev();
+      PipelineState latestState;
+      boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true : false;
+      List<WorkerInfo> workerInfos = new ArrayList<>();
+      if (pipelineStore.hasPipeline(name)) {
+        Runner runner = manager.getRunner(pipelineState.getUser(), name, rev);
+        latestState = runner.getState();
+        if (isClusterMode) {
+          workerInfos = getWorkers(runner.getSlaveCallbackList());
+        }
+      } else {
+        latestState = pipelineState;
+      }
+      pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(name,
+          rev,
+          true,
+          latestState.getStatus(),
+          latestState.getMessage(),
+          workerInfos,
+          isClusterMode
+      ));
+    }
+    return pipelineAndValidationStatuses;
+  }
+
+  private List<WorkerInfo> getWorkers(Collection<CallbackInfo> callbackInfos) {
+    List<WorkerInfo> workerInfos = new ArrayList<>();
+    for (CallbackInfo callbackInfo : callbackInfos) {
+      WorkerInfo workerInfo = new WorkerInfo();
+      workerInfo.setWorkerURL(callbackInfo.getSdcURL());
+      workerInfo.setWorkerId(callbackInfo.getSlaveSdcId());
+      workerInfos.add(workerInfo);
+    }
+    return workerInfos;
+  }
+
   @Override
   public Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException {
     List<PipelineState> pipelineStates = manager.getPipelines();
-    Map<String, PipelineAndValidationStatus> pipelineStatusMap = new HashMap<String, PipelineAndValidationStatus>();
+    //clear the queue as we will fetch all events
+    stateEventListener.clear();
+    Map<String, PipelineAndValidationStatus> pipelineStatusMap = new HashMap<>();
     for (PipelineState pipelineState : pipelineStates) {
       boolean isRemote = false;
       String name = pipelineState.getName();

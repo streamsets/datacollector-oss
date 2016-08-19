@@ -34,11 +34,14 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -46,7 +49,9 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -62,12 +67,18 @@ import javax.inject.Named;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class StandaloneAndClusterPipelineManager extends AbstractTask implements Manager, PreviewerListener  {
+public class StandaloneAndClusterPipelineManager extends AbstractTask implements Manager, PreviewerListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneAndClusterPipelineManager.class);
   private static final String PIPELINE_MANAGER = "PipelineManager";
@@ -102,6 +113,11 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
     eventListenerManager.addStateEventListener(resourceManager);
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
+  }
+
+  @Override
+  public void addStateEventListener(StateEventListener listener) {
+    eventListenerManager.addStateEventListener(listener);
   }
 
   @Override

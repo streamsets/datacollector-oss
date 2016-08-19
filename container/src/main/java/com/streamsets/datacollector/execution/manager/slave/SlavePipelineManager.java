@@ -27,6 +27,7 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -127,6 +128,11 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
 
   @Override
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void addStateEventListener(StateEventListener listener) {
     throw new UnsupportedOperationException();
   }
 

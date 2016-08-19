@@ -22,6 +22,7 @@ package com.streamsets.datacollector.store.impl;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -171,6 +172,11 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   @Override
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
     pipelineStore.saveUiInfo(name, rev, uiInfo);
+  }
+
+  @Override
+  public void registerStateListener(StateEventListener stateListener) {
+    pipelineStore.registerStateListener(stateListener);
   }
 
   @Override

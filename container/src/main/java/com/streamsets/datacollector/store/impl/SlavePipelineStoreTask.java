@@ -21,6 +21,7 @@ package com.streamsets.datacollector.store.impl;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -127,6 +128,10 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   @Override
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
     //NOP
+  }
+
+  @Override
+  public void registerStateListener(StateEventListener stateListener) {
   }
 
   @Override

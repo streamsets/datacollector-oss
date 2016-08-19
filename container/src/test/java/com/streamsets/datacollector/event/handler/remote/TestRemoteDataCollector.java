@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,14 +31,14 @@ import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
-import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
-import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -68,6 +68,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import org.mockito.Mockito;
 
 public class TestRemoteDataCollector {
 
@@ -124,30 +125,79 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public Runner getRunner(String user, String name, String rev) throws PipelineStoreException, PipelineManagerException {
+    public Runner getRunner(
+        String user,
+        String name,
+        String rev
+    ) throws PipelineStoreException, PipelineManagerException {
       return new MockRunner();
     }
 
     @Override
     public List<PipelineState> getPipelines() throws PipelineStoreException {
       // Create 3 remote pipelines
-      PipelineState pipelineStatus1 =
-        new PipelineStateImpl("user", "ns:name", "rev", PipelineStatus.EDITED, null, System.currentTimeMillis(), null,
-          ExecutionMode.STANDALONE, null, 0, -1);
-      PipelineState pipelineStatus2 =
-        new PipelineStateImpl("user1", "ns:name1", "rev1", PipelineStatus.EDITED, null, System.currentTimeMillis(), null,
-          ExecutionMode.STANDALONE, null, 0, -1);
-      PipelineState pipelineStatus3 =
-        new PipelineStateImpl("user1", "ns:name2", "rev1", PipelineStatus.RUNNING, null, System.currentTimeMillis(), null,
-          ExecutionMode.STANDALONE, null, 0, -1);
+      PipelineState pipelineStatus1 = new PipelineStateImpl("user",
+          "ns:name",
+          "rev",
+          PipelineStatus.EDITED,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
+      PipelineState pipelineStatus2 = new PipelineStateImpl("user1",
+          "ns:name1",
+          "rev1",
+          PipelineStatus.EDITED,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
+      PipelineState pipelineStatus3 = new PipelineStateImpl("user1",
+          "ns:name2",
+          "rev1",
+          PipelineStatus.RUNNING,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
       // create one local pipeline in active state
-      PipelineState pipelineStatus4 =
-        new PipelineStateImpl("user1", "local", "rev1", PipelineStatus.RUNNING, null, System.currentTimeMillis(), null,
-          ExecutionMode.STANDALONE, null, 0, -1);
+      PipelineState pipelineStatus4 = new PipelineStateImpl("user1",
+          "local",
+          "rev1",
+          PipelineStatus.RUNNING,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
       // create one local pipeline in non active state
-      PipelineState pipelineStatus5 =
-        new PipelineStateImpl("user1", "localError", "rev1", PipelineStatus.RUN_ERROR, null, System.currentTimeMillis(), null,
-          ExecutionMode.STANDALONE, null, 0, -1);
+      PipelineState pipelineStatus5 = new PipelineStateImpl("user1",
+          "localError",
+          "rev1",
+          PipelineStatus.RUN_ERROR,
+          null,
+          System.currentTimeMillis(),
+          null,
+          ExecutionMode.STANDALONE,
+          null,
+          0,
+          -1
+      );
       List<PipelineState> pipelineList = new ArrayList<PipelineState>();
       pipelineList.add(pipelineStatus1);
       pipelineList.add(pipelineStatus2);
@@ -170,6 +220,11 @@ public class TestRemoteDataCollector {
     @Override
     public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
       return (name.contains(":") ? true : false);
+    }
+
+    @Override
+    public void addStateEventListener(StateEventListener listener) {
+      //
     }
   }
 
@@ -243,13 +298,19 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+    public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
+        StageException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize) throws PipelineException {
+    public String captureSnapshot(
+        String snapshotName,
+        String snapshotLabel,
+        int batches,
+        int batchSize
+    ) throws PipelineException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -303,13 +364,19 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
+    public List<ErrorMessage> getErrorMessages(
+        String stage,
+        int max
+    ) throws PipelineRunnerException, PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
 
     @Override
-    public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
+    public List<SampledRecord> getSampledRecords(
+        String sampleId,
+        int max
+    ) throws PipelineRunnerException, PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -399,20 +466,23 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams) throws PipelineRuntimeException,
-      PipelineStoreException {
+    public RawPreview getRawSource(
+        int maxLength,
+        MultivaluedMap<String, String> previewParams
+    ) throws PipelineRuntimeException, PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
 
     @Override
     public void start(
-      int batches,
-      int batchSize,
-      boolean skipTargets,
-      String stopStage,
-      List<StageOutput> stagesOverride,
-      long timeoutMillis) throws PipelineException {
+        int batches,
+        int batchSize,
+        boolean skipTargets,
+        String stopStage,
+        List<StageOutput> stagesOverride,
+        long timeoutMillis
+    ) throws PipelineException {
 
     }
 
@@ -453,8 +523,13 @@ public class TestRemoteDataCollector {
     public static int getStateCalled;
 
     @Override
-    public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote)
-      throws PipelineStoreException {
+    public PipelineState edited(
+        String user,
+        String name,
+        String rev,
+        ExecutionMode executionMode,
+        boolean isRemote
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -467,16 +542,17 @@ public class TestRemoteDataCollector {
 
     @Override
     public PipelineState saveState(
-      String user,
-      String name,
-      String rev,
-      PipelineStatus status,
-      String message,
-      Map<String, Object> attributes,
-      ExecutionMode executionMode,
-      String metrics,
-      int retryAttempt,
-      long nextRetryTimeStamp) throws PipelineStoreException {
+        String user,
+        String name,
+        String rev,
+        PipelineStatus status,
+        String message,
+        Map<String, Object> attributes,
+        ExecutionMode executionMode,
+        String metrics,
+        int retryAttempt,
+        long nextRetryTimeStamp
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -485,15 +561,43 @@ public class TestRemoteDataCollector {
     public PipelineState getState(String name, String rev) throws PipelineStoreException {
       if (getStateCalled == 1) {
         getStateCalled++;
-        return new PipelineStateImpl("user", name, rev, PipelineStatus.STOPPED, null, -1, null, ExecutionMode.STANDALONE, null, -1, -1);
+        return new PipelineStateImpl(
+            "user",
+            name,
+            rev,
+            PipelineStatus.STOPPED,
+            null,
+            -1,
+            null,
+            ExecutionMode.STANDALONE,
+            null,
+            -1,
+            -1
+        );
       } else {
         getStateCalled++;
-        return new PipelineStateImpl("user", name, rev, PipelineStatus.RUNNING, null, -1, null, ExecutionMode.STANDALONE, null, -1, -1);
+        return new PipelineStateImpl(
+            "user",
+            name,
+            rev,
+            PipelineStatus.RUNNING,
+            null,
+            -1,
+            null,
+            ExecutionMode.STANDALONE,
+            null,
+            -1,
+            -1
+        );
       }
     }
 
     @Override
-    public List<PipelineState> getHistory(String name, String rev, boolean fromBeginning) throws PipelineStoreException {
+    public List<PipelineState> getHistory(
+        String name,
+        String rev,
+        boolean fromBeginning
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -559,7 +663,12 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException {
+    public PipelineConfiguration create(
+        String user,
+        String name,
+        String description,
+        boolean isRemote
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -606,7 +715,11 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions) throws PipelineStoreException {
+    public RuleDefinitions storeRules(
+        String pipelineName,
+        String tag,
+        RuleDefinitions ruleDefinitions
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -624,8 +737,18 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public PipelineConfiguration save(String user, String name, String tag, String tagDescription, PipelineConfiguration pipeline)
-      throws PipelineStoreException {
+    public void registerStateListener(StateEventListener stateListener) {
+
+    }
+
+    @Override
+    public PipelineConfiguration save(
+        String user,
+        String name,
+        String tag,
+        String tagDescription,
+        PipelineConfiguration pipeline
+    ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
     }
@@ -641,8 +764,11 @@ public class TestRemoteDataCollector {
   @Test
   public void testValidateConfigs() throws Exception {
     try {
-      RemoteDataCollector dataCollector =
-        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
+      RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+          new MockPipelineStoreTask(),
+          new MockPipelineStateStore(),
+          new RemoteStateEventListener(new Configuration())
+      );
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
       assertEquals(2, MockPreviewer.validateConfigsCalled);
@@ -656,8 +782,11 @@ public class TestRemoteDataCollector {
   @Test
   public void testStopAndDelete() throws Exception {
     try {
-      RemoteDataCollector dataCollector =
-        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
+      RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+          new MockPipelineStoreTask(),
+          new MockPipelineStateStore(),
+          new RemoteStateEventListener(new Configuration())
+      );
       dataCollector.stopAndDelete("user", "ns:name", "rev");
       assertEquals(1, MockRunner.stopCalled);
       assertEquals(1, MockPipelineStoreTask.deleteCalled);
@@ -674,15 +803,20 @@ public class TestRemoteDataCollector {
   @Test
   public void testGetPipelineStatus() throws Exception {
     try {
-      RemoteDataCollector dataCollector =
-        new RemoteDataCollector(new MockManager(), new MockPipelineStoreTask(), new MockPipelineStateStore());
+      RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+          new MockPipelineStoreTask(),
+          new MockPipelineStateStore(),
+          new RemoteStateEventListener(new Configuration())
+      );
+      dataCollector.init();
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
       Collection<PipelineAndValidationStatus> collectionPipelines = dataCollector.getPipelines();
       assertEquals(4, collectionPipelines.size());
       for (PipelineAndValidationStatus validationStatus : collectionPipelines) {
-        assertTrue(validationStatus.getName().equals("ns:name") || validationStatus.getName().equals("ns:name1")
-          || validationStatus.getName().equals("ns:name2") || validationStatus.getName().equals("local"));
+        assertTrue(validationStatus.getName().equals("ns:name") || validationStatus.getName().equals("ns:name1") ||
+            validationStatus.getName().equals(
+            "ns:name2") || validationStatus.getName().equals("local"));
         if (validationStatus.getName().equals("ns:name")) {
           assertEquals("rev", validationStatus.getRev());
           assertEquals(PipelineStatus.EDITED, validationStatus.getPipelineStatus());
@@ -712,4 +846,38 @@ public class TestRemoteDataCollector {
     }
   }
 
+  @Test
+  public void testRemotePipelines() throws Exception {
+    RemoteStateEventListener remoteStateEventListener = Mockito.mock(RemoteStateEventListener.class);
+    RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+        new MockPipelineStoreTask(),
+        new MockPipelineStateStore(),
+        remoteStateEventListener
+    );
+    List<PipelineState> pipelineStates = new ArrayList<>();
+    pipelineStates.add(new PipelineStateImpl("user",
+        "name",
+        "rev",
+        PipelineStatus.RUNNING,
+        "message",
+        -1,
+        new HashMap<String, Object>(),
+        ExecutionMode.STANDALONE,
+        "",
+        -1,
+        -1
+    ));
+    Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(pipelineStates);
+    List<PipelineAndValidationStatus> pipelineAndValidationStatuses = dataCollector.getRemotePipelinesWithChanges();
+    assertEquals(1, pipelineAndValidationStatuses.size());
+    PipelineAndValidationStatus pipelineAndValidationStatus = pipelineAndValidationStatuses.get(0);
+    assertEquals("name", pipelineAndValidationStatus.getName());
+    assertEquals("rev", pipelineAndValidationStatus.getRev());
+    assertEquals(PipelineStatus.RUNNING, pipelineAndValidationStatus.getPipelineStatus());
+    assertEquals(false, pipelineAndValidationStatus.isClusterMode());
+    assertTrue(pipelineAndValidationStatus.getWorkerInfos().isEmpty());
+    assertTrue(pipelineAndValidationStatus.isRemote());
+    assertEquals("message", pipelineAndValidationStatus.getMessage());
+    assertNull(pipelineAndValidationStatus.getValidationStatus());
+  }
 }

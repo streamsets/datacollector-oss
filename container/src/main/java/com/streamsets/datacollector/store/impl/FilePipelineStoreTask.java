@@ -24,6 +24,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
@@ -94,6 +97,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
+  private StateEventListener stateEventListener;
 
   @Inject
   public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary,
@@ -110,6 +114,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @VisibleForTesting
   Path getStoreDir() {
     return storeDir;
+  }
+
+  public void registerStateListener(StateEventListener stateListener) {
+    stateEventListener = stateListener;
   }
 
   @Override
@@ -214,12 +222,33 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       }
       if (pipelineStateStore != null) {
         // For now, passing rev 0 - make delete take tag/rev as a parameter
-        PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
+        PipelineState currentState = pipelineStateStore.getState(name, REV);
+        PipelineStatus pipelineStatus = currentState.getStatus();
         if (pipelineStatus.isActive()) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
         }
         if (!cleanUp(name)) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
+        }
+        PipelineState latestState = new PipelineStateImpl(
+            currentState.getUser(),
+            currentState.getName(),
+            currentState.getRev(),
+            PipelineStatus.DELETED,
+            "Pipeline is deleted",
+            System.currentTimeMillis(),
+            currentState.getAttributes(),
+            currentState.getExecutionMode(),
+            currentState.getMetrics(),
+            currentState.getRetryAttempt(),
+            currentState.getNextRetryTimeStamp()
+        );
+        try {
+          if (stateEventListener != null) {
+            stateEventListener.onStateChange(currentState, latestState, "", null);
+          }
+        } catch (Exception e) {
+          LOG.warn("Cannot set delete event for pipeline");
         }
       }
     }

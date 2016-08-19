@@ -52,4 +52,6 @@ public interface Manager extends Task {
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException;
 
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
+
+  void addStateEventListener(StateEventListener listener);
 }
