@@ -60,6 +60,7 @@ public class DataCollectorWebServerTask extends WebServerTask {
         .putAll(super.getRegistrationAttributes())
         .put("sdcJavaVersion", System.getProperty("java.runtime.version"))
         .put("sdcVersion", buildInfo.getVersion())
+        .put("sdcBuildDate", buildInfo.getBuiltDate())
         .put("sdcRepoSha", buildInfo.getBuiltRepoSha())
         .build();
   }
