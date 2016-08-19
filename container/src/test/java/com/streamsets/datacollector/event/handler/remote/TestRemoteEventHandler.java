@@ -30,7 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Stopwatch;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import org.junit.Test;
@@ -316,7 +318,9 @@ public class TestRemoteEventHandler {
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, new MockBaseEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
-        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          Stopwatch.createStarted(), -1
+      );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
@@ -375,7 +379,9 @@ public class TestRemoteEventHandler {
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, new MockSaveEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
-        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          Stopwatch.createStarted(), -1
+      );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
@@ -394,7 +400,9 @@ public class TestRemoteEventHandler {
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, new MockBaseEventSenderReceiver(), jsonToFromDto, ackEventJsonList, null,
-        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+        null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          Stopwatch.createStarted(), -1
+      );
     // start event in error
     mockRemoteDataCollector.errorInjection = true;
     remoteEventHandler.callRemoteControl();
@@ -413,7 +421,9 @@ public class TestRemoteEventHandler {
     List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(new MockRemoteDataCollector(), new MockPingFrequencyAdjustmentSenderReceiver(), jsonToFromDto,
-        ackEventJsonList, null, null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+        ackEventJsonList, null, null, -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          Stopwatch.createStarted(), -1
+      );
     remoteEventHandler.callRemoteControl();
     assertEquals(PING_FREQUENCY, remoteEventHandler.getDelay());
     List<ClientEvent> ackEventList = remoteEventHandler.getAckEventList();
@@ -432,12 +442,23 @@ public class TestRemoteEventHandler {
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
     mockRemoteDataCollector.putDummyPipelineStatus = true;
     MockBaseEventSenderReceiver mockBaseEventSenderReceiver = new MockBaseEventSenderReceiver();
+    Stopwatch stopwatch = Stopwatch.createUnstarted();
+    stopwatch.start();
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, null, null, -1,
-          Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+          Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          stopwatch, 60000
+      );
+    remoteEventHandler.callRemoteControl();
+    assertEquals(0, mockBaseEventSenderReceiver.clientJson.size());
+    Thread.sleep(10);
+    remoteEventHandler =
+        new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, null, null, -1,
+            Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+            stopwatch, 5
+        );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
-
     ClientEventJson clientEventJson = mockBaseEventSenderReceiver.clientJson.get(0);
     PipelineStatusEventsJson pipelineStatusEventsJson =
       jsonToFromDto.deserialize(clientEventJson.getPayload(), new TypeReference<PipelineStatusEventsJson>() {
@@ -468,7 +489,9 @@ public class TestRemoteEventHandler {
       new ClientEvent(id1.toString(), Arrays.asList("JOB_RUNNER"), false, false, EventType.SDC_INFO_EVENT, sdcInfoEvent, null);
     EventHandlerCallable remoteEventHandler =
       new EventHandlerCallable(mockRemoteDataCollector, mockBaseEventSenderReceiver, jsonToFromDto, ackEventJsonList, clientEvent, null,
-        -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>());
+        -1, Arrays.asList("JOB_RUNNER"), new HashMap<String, String>(),
+          Stopwatch.createStarted(), -1
+      );
     remoteEventHandler.callRemoteControl();
     assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
     assertEquals(EventType.SDC_INFO_EVENT.getValue(), mockBaseEventSenderReceiver.clientJson.get(0).getEventTypeId());
