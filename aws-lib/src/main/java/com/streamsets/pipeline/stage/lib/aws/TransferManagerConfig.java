@@ -41,22 +41,22 @@ public class TransferManagerConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "5242880",
-      label = "Minimum Upload Part Size",
-      description = "Minimum part size in bytes for upload parts",
+      defaultValue = "268435456",
+      label = "Multipart Upload Threshold",
+      description = "Size threshold in bytes for when to use multipart uploads",
       displayPosition = 8020,
       group = "ADVANCED"
   )
-  public long minimumUploadPartSize = 5 * 1024 * 1024;
+  public long multipartUploadThreshold = 16 * 1024 * 1024;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "268435456",
-      label = "Multipart Upload Threshold",
-      description = "Size threshold in bytes for when to use multipart uploads",
+      defaultValue = "5242880",
+      label = "Minimum Upload Part Size",
+      description = "Minimum part size in bytes for upload parts",
       displayPosition = 8030,
       group = "ADVANCED"
   )
-  public long multipartUploadThreshold = 16 * 1024 * 1024;
+  public long minimumUploadPartSize = 5 * 1024 * 1024;
 }
