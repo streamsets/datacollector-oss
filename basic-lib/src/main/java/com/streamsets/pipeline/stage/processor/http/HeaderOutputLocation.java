@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum HeaderOutputLocation implements Label {
   HEADER("Record Header"),
   FIELD("Record Field"),
+  NONE("None")
   ;
 
   private final String label;

@@ -373,6 +373,10 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @throws StageException when writing headers to a field path that already exists
    */
   private void addResponseHeaders(Record record, Response response) throws StageException {
+    if (conf.headerOutputLocation == HeaderOutputLocation.NONE) {
+      return;
+    }
+
     Record.Header header = record.getHeader();
 
     if (conf.headerOutputLocation == HeaderOutputLocation.FIELD) {

@@ -64,7 +64,7 @@ public class JerseyClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Maximum parallel requests",
+      label = "Maximum Parallel Requests",
       defaultValue = "10",
       description = "Maximum number of requests to make in parallel.",
       displayPosition = 140,
