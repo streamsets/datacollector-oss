@@ -82,7 +82,7 @@
   </div>
 
   <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageGauges">
-  <div class="col-sm-4" ng-repeat="customStageGauge in customStageGauges">
+  <div class="col-sm-4 chartPanels" ng-repeat="customStageGauge in customStageGauges">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span>{{customStageGauge.label}}</span>
