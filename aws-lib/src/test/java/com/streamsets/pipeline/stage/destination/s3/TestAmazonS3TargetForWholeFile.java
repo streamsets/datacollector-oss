@@ -29,6 +29,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -259,6 +260,7 @@ public class TestAmazonS3TargetForWholeFile {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.fileNameEL = fileNameEL;
+    dataGeneratorFormatConfig.wholeFileExistsAction = WholeFileExistsAction.OVERWRITE;
 
     s3TargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 

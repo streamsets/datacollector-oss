@@ -69,8 +69,8 @@ public class WholeFileDataParserFactory extends DataParserFactory {
   }
 
   private static void validateMetadata(Map<String, Object> metadata) throws DataParserException {
-    if (!metadata.keySet().containsAll(FileRefUtil.MANDATORY_METADATA_INFO.keySet())) {
-      Set<String> missingMetadata = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
+    if (!metadata.keySet().containsAll(FileRefUtil.MANDATORY_METADATA_INFO)) {
+      Set<String> missingMetadata = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO);
       missingMetadata.removeAll(metadata.keySet());
       StringBuilder sb = new StringBuilder();
       boolean commaNeeded = false;
@@ -82,27 +82,6 @@ public class WholeFileDataParserFactory extends DataParserFactory {
         commaNeeded = true;
       }
       throw new DataParserException(Errors.WHOLE_FILE_PARSER_ERROR_0, sb.toString());
-    }
-    boolean isValid = true;
-    StringBuilder sb = new StringBuilder();
-    for (String metadataKey : FileRefUtil.MANDATORY_METADATA_INFO.keySet()) {
-      Object metadataObject = metadata.get(metadataKey);
-      Class<?> classType = (Class<?>) FileRefUtil.MANDATORY_METADATA_INFO.get(metadataKey);
-      if (!classType.isAssignableFrom(metadataObject.getClass())) {
-        sb.append(
-            Utils.format(
-                " Property : {}, Expected Type: {}, Actual Type: {}",
-                metadataKey,
-                classType.getName(),
-                metadataObject.getClass().getName()
-            )
-        );
-        sb.append("\n");
-        isValid = false;
-      }
-    }
-    if (!isValid) {
-      throw new DataParserException(Errors.WHOLE_FILE_PARSER_ERROR_1, sb.toString());
     }
   }
 }

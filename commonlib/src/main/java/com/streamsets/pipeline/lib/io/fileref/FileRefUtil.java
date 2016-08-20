@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 
@@ -54,27 +55,18 @@ public final class FileRefUtil {
   public static final String FILE_REF_FIELD_PATH = "/" + FILE_REF_FIELD_NAME;
   public static final String FILE_INFO_FIELD_PATH = "/" + FILE_INFO_FIELD_NAME;
 
-  public static final ImmutableMap<String, ?> MANDATORY_METADATA_INFO =
-      ImmutableMap
-          .of("file", String.class)
-          .of("filename", String.class)
-          .of("owner", String.class)
-          .of("group", String.class)
-          .of("lastModifiedTime", Long.class)
-          .of("lastAccessTime", Long.class)
-          .of("creationTime", Long.class)
-          .of("size", Long.class);
 
-  public static final List<String> MANDATORY_FIELD_PATHS = ImmutableList.of(FILE_REF_FIELD_PATH, FILE_INFO_FIELD_PATH);
+  public static final ImmutableSet<String> MANDATORY_METADATA_INFO =
+      new ImmutableSet.Builder<String>().add("owner").add("size").build();
+
+
+  public static final List<String> MANDATORY_FIELD_PATHS =
+      ImmutableList.of(FILE_REF_FIELD_PATH, FILE_INFO_FIELD_PATH, FILE_INFO_FIELD_PATH + "/size");
 
   public static Field getWholeFileRecordRootField(FileRef fileRef, Map<String, Object> metadata) {
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     map.put(FILE_REF_FIELD_NAME, Field.create(Field.Type.FILE_REF, fileRef));
-    Map<String, Field> metadataField = new LinkedHashMap<>();
-    for (String metadataKey : metadata.keySet()) {
-      metadataField.put(metadataKey, createFieldForMetadata(metadata.get(metadataKey)));
-    }
-    map.put(FILE_INFO_FIELD_NAME, Field.create(metadataField));
+    map.put(FILE_INFO_FIELD_NAME, createFieldForMetadata(metadata));
     return Field.create(map);
   }
 

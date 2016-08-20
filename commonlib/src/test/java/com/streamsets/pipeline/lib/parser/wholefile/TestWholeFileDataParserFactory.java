@@ -99,30 +99,11 @@ public class TestWholeFileDataParserFactory {
         .build();
     Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
     FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
-    Set<String> keys = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
+    Set<String> keys = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO);
     for (String key :keys) {
       Map<String, Object> metadataCopy = new HashMap<>(metadata);
       metadataCopy.remove(key);
       getParserWithInvalidMetadata(fileRef, metadataCopy, factory, Errors.WHOLE_FILE_PARSER_ERROR_0);
-    }
-  }
-
-  @Test
-  public void testWholeFileDataParserFactoryInvalidMetadata() throws Exception {
-    DataParserFactory factory = new DataParserFactoryBuilder(context, DataParserFormat.WHOLE_FILE)
-        .setMaxDataLen(1000)
-        .build();
-    Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
-    FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
-    Set<String> keys = new HashSet<>(FileRefUtil.MANDATORY_METADATA_INFO.keySet());
-    for (String key :keys) {
-      Map<String, Object> metadataCopy = new HashMap<>(metadata);
-      if ((FileRefUtil.MANDATORY_METADATA_INFO.get(key)).equals(Long.class) ) {
-        metadataCopy.put(key, String.valueOf(metadataCopy.get(key)));
-      } else {
-        metadataCopy.put(key, 1);
-      }
-      getParserWithInvalidMetadata(fileRef, metadataCopy, factory, Errors.WHOLE_FILE_PARSER_ERROR_1);
     }
   }
 

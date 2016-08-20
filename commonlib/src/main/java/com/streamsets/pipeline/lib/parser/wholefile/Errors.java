@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum  Errors implements ErrorCode {
   WHOLE_FILE_PARSER_ERROR_0("Record is missing the mandatory Metadata information : {}."),
-  WHOLE_FILE_PARSER_ERROR_1("Record is having the invalid Metadata information: {}."),
   ;
 
   private final String msg;

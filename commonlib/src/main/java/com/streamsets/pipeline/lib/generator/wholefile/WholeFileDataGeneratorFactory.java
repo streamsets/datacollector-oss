@@ -38,13 +38,14 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
   public static final Map<String, Object> CONFIGS = ImmutableMap.of();
   public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
-  private static final Map<String, Integer> GAUGE_MAP_ORDERING = ImmutableMap.of(
-      FileRefUtil.FILE, 1,
-      FileRefUtil.TRANSFER_THROUGHPUT, 2,
-      FileRefUtil.SENT_BYTES, 3,
-      FileRefUtil.REMAINING_BYTES, 4,
-      FileRefUtil.COMPLETED_FILE_COUNT, 5
-  );
+  private static final Map<String, Integer> GAUGE_MAP_ORDERING
+      = new ImmutableMap.Builder<String, Integer>()
+      .put(FileRefUtil.FILE, 1)
+      .put(FileRefUtil.TRANSFER_THROUGHPUT, 2)
+      .put(FileRefUtil.SENT_BYTES, 3)
+      .put(FileRefUtil.REMAINING_BYTES, 4)
+      .put(FileRefUtil.COMPLETED_FILE_COUNT, 5)
+      .build();
 
   /**
    * Creates a gauge if it is already not. This is done only once for the stage
