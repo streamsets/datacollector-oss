@@ -34,6 +34,7 @@ public class TestBuildInfo {
     Assert.assertEquals("foo", info.getBuiltBy());
     Assert.assertEquals("sha", info.getBuiltRepoSha());
     Assert.assertEquals("checksum", info.getSourceMd5Checksum());
+    Assert.assertEquals("1", info.getInfo().getProperty("version"));
     Logger log = Mockito.mock(Logger.class);
     info.log(log);
   }

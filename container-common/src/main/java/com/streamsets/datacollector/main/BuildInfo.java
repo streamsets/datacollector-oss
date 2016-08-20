@@ -50,6 +50,10 @@ public abstract class BuildInfo {
     return props;
   }
 
+  protected Properties getInfo() {
+    return info;
+  }
+
   public String getVersion() {
     return info.getProperty("version", "?");
   }
