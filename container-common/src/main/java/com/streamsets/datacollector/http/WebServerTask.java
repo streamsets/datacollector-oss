@@ -665,6 +665,10 @@ public abstract class WebServerTask extends AbstractTask {
     }
   }
 
+  protected String getHttpUrl() {
+    return runtimeInfo.getBaseHttpUrl();
+  }
+
   @Override
   protected void runTask() {
     for (ContextConfigurator cc : contextConfigurators) {
@@ -684,13 +688,13 @@ public abstract class WebServerTask extends AbstractTask {
           baseHttpUrl += !"0.0.0.0".equals(hostname) ? hostname : InetAddress.getLocalHost().getCanonicalHostName();
           baseHttpUrl += ":" + port;
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
-          LOG.info("Running on URI : '{}'", baseHttpUrl);
-          System.out.println(Utils.format("Running on URI : '{}'", baseHttpUrl));
         } catch(UnknownHostException ex) {
           LOG.debug("Exception during hostname resolution: {}", ex);
           runtimeInfo.setBaseHttpUrl(server.getURI().toString());
         }
       }
+      System.out.println(Utils.format("Running on URI : '{}'", getHttpUrl()));
+      LOG.info("Running on URI : '{}'", getHttpUrl());
       for (Connector connector : server.getConnectors()) {
         if (connector instanceof ServerConnector) {
           port = ((ServerConnector)connector).getLocalPort();
