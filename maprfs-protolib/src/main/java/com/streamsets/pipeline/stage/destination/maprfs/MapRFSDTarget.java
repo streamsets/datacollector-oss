@@ -36,14 +36,18 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 @HideConfigs(
     value = {
         "hdfsTargetConfigBean.dataGeneratorFormatConfig.includeSchema",
-        "hdfsTargetConfigBean.hdfsUri"
     }
 )
 @GenerateResourceBundle
 public class MapRFSDTarget extends HdfsDTarget {
   @Override
   protected Target createTarget() {
-    hdfsTargetConfigBean.hdfsUri = "maprfs:///";
+    // Since we're inheriting the configuration from usual HDFS target, we don't have a way to override the default value in the
+    // annotation and hence the default value is kind of "hidden" and supplied here.
+    if(hdfsTargetConfigBean.hdfsUri == null || hdfsTargetConfigBean.hdfsUri.isEmpty()) {
+      hdfsTargetConfigBean.hdfsUri = "maprfs:///";
+    }
+
     return super.createTarget();
   }
 }
