@@ -48,20 +48,17 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSuppor
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TimeZone;
 
 public class HiveMetadataProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetadataProcessor.class.getCanonicalName());
@@ -85,6 +82,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final boolean externalTable;
   private final String timeDriver;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
+  private final TimeZone timeZone;
 
   private HiveConfigBean hiveConfigBean;
   private String internalWarehouseDir;
@@ -137,7 +135,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String partitionPathTemplate,
       HiveConfigBean hiveConfig,
       String timeDriver,
-      DecimalDefaultsConfig decimalDefaultsConfig
+      DecimalDefaultsConfig decimalDefaultsConfig,
+      TimeZone timezone
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -151,6 +150,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.timeDriver = timeDriver;
     this.decimalDefaultsConfig = decimalDefaultsConfig;
     partitionTypeInfo = new LinkedHashMap<>();
+    this.timeZone = timezone;
   }
 
   @Override
@@ -285,7 +285,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     // Calculate record time for this particular record and persist it in the variables
     Date timeBasis = elEvals.timeDriverElEval.eval(variables, timeDriver, Date.class);
-    Calendar calendar = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance(timeZone);
     calendar.setTime(timeBasis);
     TimeEL.setCalendarInContext(variables, calendar);
 

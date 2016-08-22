@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -35,6 +36,7 @@ import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @StageDef(
     version=1,
@@ -149,6 +151,18 @@ public class HiveMetadataDProcessor extends DProcessor {
   )
   public String timeDriver;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use for a record.",
+      displayPosition = 140,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
+
   @ConfigDefBean
   public DecimalDefaultsConfig decimalDefaultsConfig;
 
@@ -163,7 +177,8 @@ public class HiveMetadataDProcessor extends DProcessor {
         partitionPathTemplate,
         hiveConfigBean,
         timeDriver,
-        decimalDefaultsConfig
+        decimalDefaultsConfig,
+        TimeZone.getTimeZone(timeZoneID)
     );
   }
 

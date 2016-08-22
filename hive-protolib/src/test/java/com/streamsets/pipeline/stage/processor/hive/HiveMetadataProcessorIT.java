@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class HiveMetadataProcessorIT extends BaseHiveIT {
 
@@ -199,6 +200,64 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     // Target directory with correct path
     Assert.assertEquals(
         Utils.format("/user/hive/warehouse/tbl/year={}/month={}/day={}", year, month, day),
+        hdfsRecord.getHeader().getAttribute("targetDirectory")
+    );
+  }
+
+  @Test
+  public void testSubTimeZonepartitions() throws Exception {
+    final TimeZone timeZone = TimeZone.getTimeZone("US/Pacific");
+    final TimeZone targetTimeZone = TimeZone.getTimeZone("US/Eatern");
+
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .partitions(new PartitionConfigBuilder()
+            .addPartition("year", HiveType.STRING, "${YYYY()}")
+            .addPartition("month", HiveType.STRING, "${MM()}")
+            .addPartition("day", HiveType.STRING, "${DD()}")
+            .addPartition("hour", HiveType.STRING, "${hh()}")
+            .addPartition("minute", HiveType.STRING, "${mm()}")
+            .addPartition("second", HiveType.STRING, "${ss()}")
+            .build()
+        )
+        .timeZone(targetTimeZone)
+        .timeDriver("${record:value('/timestamp')}")
+        .build();
+
+    ProcessorRunner runner = getProcessorRunner(processor);
+    runner.runInit();
+
+    Calendar cal = Calendar.getInstance(timeZone);
+    cal.setTime(new Date(System.currentTimeMillis()));
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("name", Field.create(Field.Type.STRING, "StreamSets"));
+    map.put("timestamp", Field.create(Field.Type.DATE, cal.getTime()));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(2, output.getRecords().get("hive").size());
+    Assert.assertEquals(1, output.getRecords().get("hdfs").size());
+
+    // Set the target timezone
+    cal.setTimeZone(targetTimeZone);
+    cal.setTime(new Date(System.currentTimeMillis()));
+
+    String year = String.valueOf(cal.get(Calendar.YEAR));
+    String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
+    String day =  String.valueOf(Utils.intToPaddedString(cal.get(Calendar.DAY_OF_MONTH), 2));
+    String hour = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.HOUR_OF_DAY), 2));
+    String minute = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MINUTE), 2));
+    String second = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.SECOND), 2));
+
+    // HDFS record
+    Record hdfsRecord = output.getRecords().get("hdfs").get(0);
+    Assert.assertNotNull(hdfsRecord);
+    // The record should have "roll" set to true
+    Assert.assertNotNull(hdfsRecord.getHeader().getAttribute("roll"));
+    // Target directory with correct path
+    Assert.assertEquals(
+        Utils.format("/user/hive/warehouse/tbl/year={}/month={}/day={}/hour={}/minute={}/second={}", year, month, day, hour, minute, second),
         hdfsRecord.getHeader().getAttribute("targetDirectory")
     );
   }
