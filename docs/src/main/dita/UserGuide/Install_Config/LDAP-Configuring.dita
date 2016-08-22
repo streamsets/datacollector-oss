@@ -19,7 +19,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
         LDAP authentication.</shortdesc>
  <conbody>
-        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        <p><indexterm>LDAP authentication<indexterm>configuring</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             provides file-based and LDAP authentication. If your organization uses LDAP, configure
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> to use LDAP authentication. By default, <ph
@@ -30,9 +31,8 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>:<p>
                         <ul id="ul_tqz_224_s5">
-                            <li>To enable LDAP authentication, set
-                                    <uicontrol>http.authentication.login.module</uicontrol> to
-                                    <uicontrol>ldap</uicontrol>.</li>
+                            <li>Set <uicontrol>http.authentication.login.module</uicontrol> to
+                                    <uicontrol>ldap</uicontrol> to enable LDAP authentication.</li>
                             <li>Configure
                                     <uicontrol>http.authentication.ldap.role.mapping</uicontrol> to
                                 map LDAP groups to <ph

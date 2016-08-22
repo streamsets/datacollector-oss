@@ -74,7 +74,9 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Install_Config/LDAP-Configuring.dita"/>
+   <topicref href="../Install_Config/LDAP-Configuring.dita">
+    <topicref href="../Install_Config/LDAP-Configuring-MapR.dita"/>
+   </topicref>
    <topicref href="../Install_Config/UsersandRoles.dita">
     <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
    </topicref>

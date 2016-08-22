@@ -23,7 +23,10 @@
  <conbody>
         <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>You must install the
             required client libraries and then run the <codeph>setup-mapr</codeph> command. The
-            command modifies configuration files and creates the required symbolic links.</p>
+            command modifies configuration files and creates the required symbolic links. If the
+            MapR cluster uses username/password login authentication, you must enable <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            use username/password authentication.</p>
         <note>The MapR DB destination and the Hive Streaming destination using the MapR library
             currently only support MapR version 5.1.0. All other stages that use the MapR library
             support MapR versions 5.0.0 and 5.1.0.</note>
@@ -51,7 +54,12 @@
                 <li>When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
                 <li>When prompted, enter the absolute path to the MapR home directory, usually
                     /opt/mapr.</li>
-                <li>When the command finishes, restart <ph
+                <li>If the MapR cluster uses username/password login authentication, uncomment the
+                    following line in the environment configuration file,
+                        <codeph>sdc-env.sh</codeph> or <codeph>sdcd-env.sh</codeph>, located in the
+                        <codeph>$SDC_DIST/libexec</codeph> directory:
+                    <codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</codeblock></li>
+                <li>Restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> and verify that you can see the MapR origins and destinations in the stage
                     library.</li>
