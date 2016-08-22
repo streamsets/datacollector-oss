@@ -143,9 +143,9 @@
                   </xref>
             </p>
             <p>
-                  <draft-comment author="Loretta">DataFormats-ALL  - no longer all. As of 7/14,
-                        Kafka Consumer has datagram, but no one else does.  Used in MapR Streams
-                        Consumer, possibly others.</draft-comment>
+                  <draft-comment author="Loretta"><uicontrol>DataFormats-ALL</uicontrol> - <b>no
+                              longer all.</b> As of 7/14, Kafka Consumer has datagram, but no one
+                        else does. Used in MapR Streams Consumer, possibly others.</draft-comment>
             </p>
             <p>
                   <ul id="DataFormats-ALL">
@@ -447,6 +447,41 @@
                                     field named Truncated to indicate if the line was
                                     truncated.</dd>
                         </dlentry>
+                        <dlentry>
+                              <dt/>
+                              <dd>
+                                    <draft-comment author="Loretta"
+                                                ><uicontrol>OriginDF-WFile</uicontrol> - no
+                                          checksum. Used by Directory</draft-comment>
+                              </dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-WFile">
+                              <dt>Whole File</dt>
+                              <dd>Streams whole files from the origin system to the destination
+                                    system. </dd>
+                              <dd>The origin generates two fields: one for a file reference and one
+                                    for file information. For more information, see <xref
+                                          href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    />.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt/>
+                              <dd>
+                                    <draft-comment author="Loretta"
+                                                ><uicontrol>OriginDF-WFile-Checksum</uicontrol> -
+                                          used in s3 origin</draft-comment>
+                              </dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-WFile-Checksum">
+                              <dt>Whole File</dt>
+                              <dd>Streams whole files from the origin system to the destination
+                                    system. The origin uses checksums to verify the integrity of
+                                    data transmission.</dd>
+                              <dd>The origin generates two fields: one for a file reference and one
+                                    for file information. For more information, see <xref
+                                          href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    />.</dd>
+                        </dlentry>
                         <dlentry id="OriginDF-XML">
                               <dt>XML</dt>
                               <dd>Generates records based on the location of the XML element that
@@ -628,38 +663,11 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
-                        They also have additional data formats specific to each destination. Hadoop
-                        FS and Local FS conref individual data formats</draft-comment>
+                  <draft-comment author="Loretta">DESTINATION DATA FORMATS. Individual items are
+                        conrefed, not the whole list. (8/10/16) </draft-comment>
             </p>
             <p>
-                  <draft-comment author="Loretta"><b>DESTDataF-Text</b> and others in this list are
-                        used by Kafka, Flume, Hadoop FS, Local FS, Kinesis Firehose. </draft-comment>
-                  <dl id="DESTDataFormats">
-                        <dlentry id="DESTDataF-Text">
-                              <dt>Text</dt>
-                              <dd>The destination writes a single text field of a record. When you
-                                    configure the stage, you select the field to use. When
-                                    necessary, merge record data into the field earlier in the
-                                    pipeline. </dd>
-                        </dlentry>
-                        <dlentry id="DEST-DataF-JSON">
-                              <dt>JSON</dt>
-                              <dd>The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul id="ul_dd1_5y1_wr">
-                                          <li>Array - Each file includes a single array. In the
-                                                array, each element is a JSON representation of each
-                                                record.</li>
-                                          <li>Multiple objects - Each file includes multiple JSON
-                                                objects. Each object is a JSON representation of a
-                                                record. </li>
-                                    </ul></dd>
-                        </dlentry>
-                        <dlentry id="DEST-DataF-Delim">
-                              <dt>Delimited</dt>
-                              <dd>The destination writes records as delimited data. When you use
-                                    this data format, the root field must be list or list-map.</dd>
-                        </dlentry>
+                  <dl>
                         <dlentry>
                               <dt/>
                               <dd>
@@ -707,22 +715,34 @@
                                     When using Avro compression, avoid using other compression
                                     available in the destination. </dd>
                         </dlentry>
-                        <dlentry id="DEST-DataF-SDC">
-                              <dt>SDC Record</dt>
-                              <dd>The destination writes records in the SDC Record data format.
-                              </dd>
+                  </dl>
+                  <draft-comment author="Loretta"><b>DESTDataFormat-Binary</b> - the following is
+                        just for Kafka Producer and Amazon S3.</draft-comment>
+                  <dl>
+                        <dlentry id="DESTDataFormat-Binary">
+                              <dt>Binary</dt>
+                              <dd>The destination writes binary data from a single field in the
+                                    record. </dd>
+                        </dlentry>
+                        <dlentry id="DEST-DataF-Delim">
+                              <dt>Delimited</dt>
+                              <dd>The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+                        </dlentry>
+                        <dlentry id="DEST-DataF-JSON">
+                              <dt>JSON</dt>
+                              <dd>The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul id="ul_dd1_5y1_wr">
+                                          <li>Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+                                          <li>Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+                                    </ul></dd>
                         </dlentry>
                   </dl>
             </p>
-            <draft-comment author="Loretta"><b>DESTDataFormat-Binary</b> - the following is just for
-                  Kafka Producer and Amazon S3.</draft-comment>
-            <dl>
-                  <dlentry id="DESTDataFormat-Binary">
-                        <dt>Binary</dt>
-                        <dd>The destination writes binary data from a single field in the record.
-                        </dd>
-                  </dlentry>
-            </dl>
             <draft-comment author="Loretta"><b>DestDF-ProtoMess</b> - Amazon S3, Directory? Hadoop
                   FS?</draft-comment>
             <dl>
@@ -746,7 +766,83 @@
                         <dd>For information about generating the descriptor file, see <xref
                                     href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
                   </dlentry>
+                  <dlentry id="DEST-DataF-SDC">
+                        <dt>SDC Record</dt>
+                        <dd>The destination writes records in the SDC Record data format. </dd>
+                  </dlentry>
             </dl>
+            <draft-comment author="Loretta"><b>DESTDataF-Text</b> and others in this list are used
+                  by Kafka, Flume, Hadoop FS, Local FS, Kinesis Firehose. </draft-comment>
+            <dl>
+                  <dlentry id="DESTDataF-Text">
+                        <dt>Text</dt>
+                        <dd>The destination writes a single text field of a record. When you
+                              configure the stage, you select the field to use. When necessary,
+                              merge record data into the field earlier in the pipeline. </dd>
+                  </dlentry>
+            </dl>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>D-DF-WholeFile</uicontrol> - must be
+                        used by S3. <uicontrol>D-DF-WholeF-Basic</uicontrol> is used by Local FS.
+                              <uicontrol>D-DF-WholeF-HDFS</uicontrol> is used by Hadoop FS and MapR
+                        FS.</draft-comment>
+            </p>
+            <dl>
+                  <dlentry id="D-DF-WholeFile">
+                        <dt>Whole File</dt>
+                        <dd>Streams whole files to the destination system. The destination writes
+                              the data to the file and location defined in the stage. If a file of
+                              the same name already exists, you can configure the destination to
+                              overwrite the existing file or send the current file to error.</dd>
+                        <dd>Target files use the default permissions defined in the destination
+                              system.</dd>
+                        <dd>For more information about the whole file data format, see <xref
+                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                              />.</dd>
+                  </dlentry>
+                  <dlentry id="D-DF-WholeF-Basic">
+                        <dt>Whole File</dt>
+                        <dd>Streams whole files to the destination system. The destination writes
+                              the data to the file and location defined in the stage. If a file of
+                              the same name already exists, you can configure the destination to
+                              overwrite the existing file or send the current file to error.</dd>
+                        <dd>By default, target files use the default access permissions for the
+                              destination system. You can specify an expression that defines access
+                              permissions. </dd>
+                        <dd>For more information about the whole file data format, see <xref
+                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                              />.</dd>
+                  </dlentry>
+                  <dlentry id="D-DF-WholeF-HDFS">
+                        <dt>Whole File</dt>
+                        <dd>Streams whole files to the destination system. The destination writes
+                              the data to the file and location defined in the stage. If a file of
+                              the same name already exists, you can configure the destination to
+                              overwrite the existing file or send the current file to error.</dd>
+                        <dd>By default, target files use the default access permissions for the
+                              destination system. You can specify an expression that defines access
+                              permissions. </dd>
+                        <dd>Using this data format requires setting the <wintitle>File
+                                    Type</wintitle> property to <uicontrol>Whole
+                              File</uicontrol>.</dd>
+                        <dd>For more information about the whole file data format, see <xref
+                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                              />.</dd>
+                  </dlentry>
+            </dl>
+            <p>
+                  <draft-comment author="Loretta">The note/tip
+                              <uicontrol>WF-TIP-DataPreview</uicontrol> is used in Whole File -
+                        Additional Processors. <uicontrol>WF-ph-DataPreview</uicontrol> is used in
+                        Whole File Records.</draft-comment>
+            </p>
+            <p>
+                  <note type="tip" id="WF-TIP-DataPreview"><ph id="WF-ph-DataPreview">You can use
+                              data preview to determine the information and field names that are
+                              included in the fileInfo field.</ph> The information and field names
+                        can differ based on the origin system.</note>
+            </p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">The following paragraphs are used for Expressions
                         (Pipeline Config chapter) and Expression Language (appendix).
@@ -1224,10 +1320,10 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   cache.</p>
             <draft-comment author="alisontaylor">Used in Field Type Converter chapter and in Data
                   Preview chapter.</draft-comment>
-            <note id="PreviewDateFormat">Data preview displays date, datetime, and time data using
-                  the default format of the browser locale. For example, if the browser uses the
-                  en_US locale, preview displays dates using the following format: MMM d, y h:mm:ss
-                  a.</note>
+            <note id="PreviewDateFormat"><ph id="ph-PreviewDateFormat">Data preview displays date,
+                        datetime, and time data using the default format of the browser locale. For
+                        example, if the browser uses the en_US locale, preview displays dates using
+                        the following format: MMM d, y h:mm:ss a.</ph></note>
             <draft-comment author="alisontaylor">Used in the Function types sections in the
                   Expression Language chapter.</draft-comment>
             <p id="FunctionArgument">You can replace any argument with a literal or an expression

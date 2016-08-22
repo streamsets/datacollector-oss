@@ -26,17 +26,17 @@
                 <li>Asterisk (*) to match zero or more characters</li>
                 <li>Double asterisks (**) to match zero or more directories</li>
             </ul></p>
-        <p>For example, to process all log files in <codeph>/US/East/MD/</codeph> and all
+        <p>For example, to process all log files in <codeph>US/East/MD/</codeph> and all
             subdirectories, you can use the following common prefix and prefix
-            pattern:<codeblock>Common Prefix: /US/East/MD/
+            pattern:<codeblock>Common Prefix: US/East/MD/
 Prefix Pattern: **/*.log</codeblock></p>
         <p>If the unnamed subdirectories that you want to include appear earlier in the path, such
-            as <codeph> /US/**/weblogs/</codeph>, you can include the subdirectories in the prefix
+            as <codeph> US/**/weblogs/</codeph>, you can include the subdirectories in the prefix
             pattern or define the entire path in the prefix pattern, as
-            follows:<codeblock>Common Prefix: /US/
+            follows:<codeblock>Common Prefix: US/
 Prefix Pattern: **/weblogs/*.log
 
 Common Prefix: 
-Prefix Pattern: /US/**/weblogs/*.log</codeblock></p>
+Prefix Pattern: US/**/weblogs/*.log</codeblock></p>
  </conbody>
 </concept>

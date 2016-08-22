@@ -192,6 +192,10 @@
                                     conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttrName">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ValidateHDFSPerms">
+                                    <entry/>
+                                </row>
 
                             </tbody>
                         </tgroup>
@@ -204,6 +208,9 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
                 <cmd/>
             </step>
@@ -214,6 +221,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-WholeFile_props">
                 <cmd/>
             </step>
         </steps>

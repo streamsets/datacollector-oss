@@ -929,6 +929,72 @@
                 </info>
                
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-WholeFile</uicontrol> -
+                        Directory</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-WholeFile">
+                <cmd>For whole files on the <uicontrol>Whole File</uicontrol> tab, configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ff1_v3h_xw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Whole File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Buffer Size (bytes)</entry>
+                                    <entry>Maximum buffer size to use when transferring
+                                        data.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-WholeFile-Checksum</uicontrol> -
+                        S3</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-WholeFile-Checksum">
+                <cmd>For whole files, on the <uicontrol>Whole File</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_x5m_5xf_zw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Whole File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Buffer Size (bytes)</entry>
+                                    <entry>Maximum buffer size to use when transferring
+                                        data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Verify Checksum</entry>
+                                    <entry>Verifies the checksum during the read. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
             
             
             <step><cmd>
@@ -1936,36 +2002,6 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>D-Binary</uicontrol> - Used by Kafka
-                        Consumer and Amazon S3 dest.</draft-comment>
-                </cmd>
-            </step>
-            <step id="D-Binary">
-                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
-                    following property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Binary Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Binary Field Path</entry>
-                                    <entry>Field that contains the binary data.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-Event</uicontrol> - Used in
                         Flume. Flume doesn't have other compression types, so it's not getting that
                         note. </draft-comment>
@@ -2117,6 +2153,36 @@
                                     <entry>The Avro compression type to use. <p>When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-Binary</uicontrol> - Used by Kafka
+                        Consumer and Amazon S3 dest.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-Binary">
+                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Binary Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Binary Field Path</entry>
+                                    <entry>Field that contains the binary data.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2328,6 +2394,73 @@
                 </info>
             </step>
             <step>
+                <cmd/>
+                <info>
+                    <draft-comment author="Loretta"><b>D-WHOLEFile-props</b> - Whole table used by
+                        Hadoop Fs, Local FS, and MapR FS. Rows used by S3.</draft-comment>
+                </info>
+            </step>
+            <step id="D-WholeFile_props">
+                <cmd>For whole files, on the <wintitle>Whole File</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_amd_xml_zw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Whole File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-FileNameExp">
+                                    <entry>File Name Expression <xref
+                                            href="../Pipeline_Design/WholeFile-Records.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ns2_ytl_zw"/></xref></entry>
+                                    <entry>
+                                        <p>Expression to use for the file name. </p>
+                                        <p>Default is
+                                                <codeph>${record:value('/fileInfo/filename')}</codeph>,
+                                            which uses the original source file name as the target
+                                            file name. </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Permissions Expression <xref
+                                            href="../Pipeline_Design/WholeFile-AccessPermissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_zwb_ccw_1x"/></xref></entry>
+                                    <entry>Expression that defines the access permissions for target
+                                        files. Expressions should evaluate to a symbolic or
+                                        numeric/octal representation of the permissions you want to
+                                        use. <p>By default, with no specified expression, files use
+                                            the default permissions of the destination system.
+                                            </p><p>To use the original source file access
+                                            permissions, use the following expression:
+                                            <codeblock>${record:value('/fileInfo/permissions')}</codeblock></p></entry>
+                                </row>
+                                <row id="row-FileExists">
+                                    <entry>File Exists</entry>
+                                    <entry>Action to take when a file of the same name already
+                                        exists in the target directory. Use one of the following
+                                            options:<ul id="ul_a4s_l5l_zw">
+                                            <li>Send to Error - Handles the record based on stage
+                                                error record handling. </li>
+                                            <li>Overwrite - Overwrites the existing file.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd/>
+            </step>
+            <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DESTINATION -
                         Specific</uicontrol></draft-comment>
@@ -2363,13 +2496,16 @@
                                             <codeph>HOURS</codeph> constant in an expression to
                                         define the time increment.<p>Use -1 to set no limit. Default
                                             is 1 hour, defined as follows: <codeph>${1 *
-                                                HOURS}</codeph>.</p></entry>
+                                                HOURS}</codeph>. </p><p>Not available when using the
+                                            whole file data format. </p></entry>
                                 </row>
                                 <row id="row-FileType">
                                     <entry>File Type</entry>
                                     <entry>Output file type:<ul id="ul_pzp_dd1_s5">
                                             <li>Text files</li>
                                             <li>Sequence files</li>
+                                            <li>Whole files - Select when using the whole file data
+                                                format.</li>
                                         </ul></entry>
                                 </row>
                                 <row id="row-DataFormat">
@@ -2377,10 +2513,16 @@
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_vzp_dd1_s5">
                                             <li>Avro</li>
+                                            <li>Binary</li>
                                             <li>Delimited</li>
                                             <li>JSON</li>
                                             <li>Protobuf</li>
                                             <li>Text</li>
+                                            <li>Whole File <xref
+                                                  href="../Pipeline_Design/WholeFile.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_ylz_vsm_zw"/></xref></li>
                                         </ul></entry>
                                 </row>
                                 <row id="row-FilePrefix">
@@ -2438,13 +2580,15 @@
                                     <entry>Max Records in a File</entry>
                                     <entry>Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p>Use 0
-                                            to opt out of this property.</p></entry>
+                                            to opt out of this property. </p><p>Not available when
+                                            using the whole file data format. </p></entry>
                                 </row>
                                 <row id="row-MaxFileSize">
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size of an output file. Additional records are
-                                        written to a new file. <p>Use 0 to opt out of this
-                                            property.</p></entry>
+                                        written to a new file. <p>Use 0 to opt out of this property.
+                                            </p><p>Not available when using the whole file data
+                                            format. </p></entry>
                                 </row>
                                 <row id="row-CCodec">
                                     <entry>Compression Codec</entry>
@@ -2493,6 +2637,15 @@
                                     <entry>Roll Attribute Name</entry>
                                     <entry>Name of the roll header attribute.<p>Default is
                                         roll.</p></entry>
+                                </row>
+                                <row id="row-ValidateHDFSPerms">
+                                    <entry>Validate HDFS Permissions</entry>
+                                    <entry>When you start the pipeline, the destination tries
+                                        writing to the configured directory template to validate
+                                        permissions. The pipeline does not start if validation
+                                            fails.<note>Do not use this option when the directory
+                                            template uses expressions to represent the entire
+                                            directory.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_a2s_4jw_1x">
+ <title>Writing Whole Files</title>
+ <conbody>
+  <p><indexterm>file name expression<indexterm>writing whole files</indexterm></indexterm>When
+            writing whole files, you configure a <uicontrol>File Name Expression</uicontrol>
+            property in the destination. The expression defines the name for the target file. </p>
+        <p>You can use record:value and string functions in the expression. By default, destinations
+            use the following file name expression, which uses the original source file name as the
+            target file name:</p>
+        <p>
+            <codeblock>${record:value('/fileInfo/filename')}</codeblock>
+        </p>
+        <section>
+            <title>Example</title>
+            <p>You want a pipeline to pass whole files from a local directory to Amazon S3. For the
+                target file name, you want to append the .json file extension to the original file
+                name. To do this, you can configure the File Name Expression as follows:
+                <codeblock>${str:concat(record:value('/fileInfo/filename'), ".json")}</codeblock></p>
+            <p>Or, more
+                simply...<codeblock>${record:value('/fileInfo/filename’)}.json</codeblock></p>
+        </section>
+ </conbody>
+</concept>

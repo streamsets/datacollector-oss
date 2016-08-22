@@ -23,6 +23,7 @@
    <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
    <topicref href="../Data_Preview/SourceData.dita"/>
    <topicref href="../Data_Preview/WritingToDestinations.dita"/>
+   <topicref href="../Data_Preview/Notes.dita"/>
   </topicref>
   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
    <topicmeta>

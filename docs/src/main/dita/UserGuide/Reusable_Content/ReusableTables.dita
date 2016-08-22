@@ -204,9 +204,16 @@
         common prefix acts as a root for the prefix pattern.</entry>
       </row>
       <row id="S3ObjectPathDelimiter">
-       <entry>Object Path Delimiter</entry>
+       <entry>Delimiter</entry>
        <entry>Delimiter used by Amazon S3 to define the directory structure.<p>Default is slash ( /
          ).</p></entry>
+      </row>
+      <row id="S3IncludeMetadata-row">
+       <entry>Include Metadata <xref href="../Origins/AmazonS3-RecordHeaderAttrs.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_sw3_wjx_yw"/>
+        </xref></entry>
+       <entry>Includes system-defined and user-defined metadata in record header attributes.
+       </entry>
       </row>
       <row id="S3FileNamePattern">
        <entry>Prefix Pattern <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
@@ -252,6 +259,9 @@
            <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wjh_ycl_br"
             placement="inline"/></xref></li>
          <li>Text</li>
+         <li>Whole File <xref href="../Pipeline_Design/WholeFile.dita">
+           <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+            id="image_igx_zzm_zw"/></xref></li>
          <li>XML</li>
         </ul></entry>
       </row>
@@ -550,8 +560,8 @@
     </tgroup>
    </table>
   </p>
-  <draft-comment author="alisontaylor"><b>table-S3AdvProps</b> Amazon S3 origin/destination use the
-   whole table, Kinesis Consumer uses all rows but the first.</draft-comment>
+  <draft-comment author="alisontaylor"><b>table-S3AdvProps</b> Amazon S3 destination uses the whole
+   table, S3 and Kinesis Consumer use certain rows.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table-S3AdvProps">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -563,7 +573,7 @@
      </row>
     </thead>
     <tbody>
-     <row>
+     <row id="row-UseProxy">
       <entry>Use Proxy</entry>
       <entry>Specifies whether to use a proxy to connect to Amazon S3.</entry>
      </row>
@@ -582,6 +592,22 @@
      <row id="row-ProxyPassword">
       <entry>Proxy Password</entry>
       <entry>Password for proxy credentials. </entry>
+     </row>
+     <row>
+      <entry>Thread Pool Size for Parallel Uploads</entry>
+      <entry>Size of the thread pool for parallel uploads. Used when writing to multiple partitions
+       and writing large objects in multiple parts.<p>When writing to multiple partitions, setting
+        this property up to the number of partitions being written to can improve performance.
+        </p><p>For more information about this and the following properties, see the Amazon S3
+        TransferManager documentation.</p></entry>
+     </row>
+     <row>
+      <entry>Multipart Upload Threshold</entry>
+      <entry>Minimum batch size in bytes for the destination to use multipart uploads.</entry>
+     </row>
+     <row>
+      <entry>Minimum Upload Part Size</entry>
+      <entry>Minimum part size in bytes for multipart uploads.</entry>
      </row>
     </tbody>
    </tgroup>
