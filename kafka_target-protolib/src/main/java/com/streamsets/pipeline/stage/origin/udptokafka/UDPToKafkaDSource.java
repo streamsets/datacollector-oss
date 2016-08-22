@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
   execution = ExecutionMode.STANDALONE,
   description = "Receives UDP packages and writes them to Kafka",
   icon="udptokafka.png",
-  onlineHelpRefUrl = "TBD"
+  onlineHelpRefUrl = "index.html#Origins/UDPtoKafka.html#task_tvh_bhz_pw"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

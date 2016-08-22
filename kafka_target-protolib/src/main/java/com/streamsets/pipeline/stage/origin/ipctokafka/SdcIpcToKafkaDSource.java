@@ -37,7 +37,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
   description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination and " +
     "writes them to Kafka",
   icon="sdcipctokafka.png",
-  onlineHelpRefUrl = "TBD"
+  onlineHelpRefUrl = "index.html#Origins/SDCRPCtoKafka.html#task_il5_gtl_pw"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
