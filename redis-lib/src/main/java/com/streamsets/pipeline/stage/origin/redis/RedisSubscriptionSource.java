@@ -43,7 +43,6 @@ public class RedisSubscriptionSource extends BaseRedisSource {
    */
   public RedisSubscriptionSource(RedisOriginConfigBean redisOriginConfigBean) {
     super(redisOriginConfigBean);
-
     this.subscriptionChannels = redisOriginConfigBean.subscriptionChannels;
     this.subscriptionPatterns = redisOriginConfigBean.subscriptionPatterns;
   }
@@ -53,8 +52,33 @@ public class RedisSubscriptionSource extends BaseRedisSource {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
 
+    // Validate either non-empty subscriptionChannels or non-empty subscriptionPatterns
+    if(this.subscriptionChannels.size() > 0 || this.subscriptionPatterns.size() > 0) {
+      // check if inputs are empty
+      if (this.subscriptionChannels.size() > 0) {
+        for (int i = 0; i < this.subscriptionChannels.size(); i++) {
+          if (this.subscriptionChannels.get(i).isEmpty()) {
+            this.subscriptionChannels.remove(i);
+            i--;
+          }
+        }
+      }
+      if (this.subscriptionPatterns.size() > 0) {
+        for (int i = 0; i < this.subscriptionPatterns.size(); i++) {
+          if (this.subscriptionPatterns.get(i).isEmpty()) {
+            this.subscriptionPatterns.remove(i);
+            i--;
+          }
+        }
+      }
+    }
+
     if (createRedisClient(issues)) {
-      checkSubscribe(issues);
+      if(this.subscriptionChannels.size() < 1 && this.subscriptionPatterns.size() < 1) {
+        issues.add(getContext().createConfigIssue(Groups.REDIS.name(), this.subscriptionChannels.toString(), Errors.REDIS_04, conf.subscriptionChannels));
+      } else {
+        checkSubscribe(issues);
+      }
     }
 
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.

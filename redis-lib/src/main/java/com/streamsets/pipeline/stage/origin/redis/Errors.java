@@ -27,7 +27,8 @@ public enum Errors implements ErrorCode {
 
   REDIS_01("Failed to create Redis client: {}. {}"),
   REDIS_02("Failed to subscribe channel: {}. {}"),
-  REDIS_03("Cannot parse record from message '{}': {}"),;
+  REDIS_03("Cannot parse record from message '{}': {}"),
+  REDIS_04("Missing Channels or Pattern"),;
   private final String msg;
 
   Errors(String msg) {
