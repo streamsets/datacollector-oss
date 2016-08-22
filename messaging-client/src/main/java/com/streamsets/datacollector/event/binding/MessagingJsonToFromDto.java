@@ -80,7 +80,7 @@ public class MessagingJsonToFromDto {
     return mapper.writeValueAsString(object);
   }
 
-  private ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
+  public ClientEventJson toJson(ClientEvent clientEvent) throws JsonProcessingException {
     ClientEventJson clientEventJson = MessagingDtoJsonMapper.INSTANCE.toClientEventJson(clientEvent);
     EventJson eventJson;
     Event event = clientEvent.getEvent();
