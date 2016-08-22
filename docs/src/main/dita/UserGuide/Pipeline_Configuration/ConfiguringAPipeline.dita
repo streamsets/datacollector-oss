@@ -436,7 +436,7 @@
                                         mesos://dispatcher:7077.</entry>
                                 </row>
                                 <row>
-                                    <entry>Hadoop/S3 Checkpoint Configuration Directory <xref
+                                    <entry>Checkpoint Configuration Directory <xref
                                             href="../Cluster_Mode/CheckpointStorage.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>

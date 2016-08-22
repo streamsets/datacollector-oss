@@ -40,7 +40,7 @@
             <step>
                 <cmd>Enter the location of the files in the <menucascade>
                         <uicontrol>Cluster</uicontrol>
-                        <uicontrol>Hadoop/S3 Configuration Directory</uicontrol>
+                        <uicontrol>Checkpoint Configuration Directory</uicontrol>
                     </menucascade> pipeline property.</cmd>
             </step>
         </steps>

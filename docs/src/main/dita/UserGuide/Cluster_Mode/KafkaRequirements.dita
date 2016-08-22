@@ -17,9 +17,35 @@
     <title>Kafka Requirements</title>
     <taskbody>
         <context>
-            <p><indexterm>cluster mode<indexterm>configuration for Kafka</indexterm></indexterm>Use
-                the following requirements to configure a cluster mode pipeline to read from a Kafka
-                cluster: <ol id="ol_e32_llw_yr">
+            <p><indexterm>cluster mode<indexterm>configuration for
+                Kafka</indexterm></indexterm>Cluster mode pipelines that read from a Kafka cluster
+                have the following minimum requirements: <table frame="all" rowsep="1" colsep="1"
+                    id="table_agw_5pn_zw">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                        <thead>
+                            <row>
+                                <entry>Component</entry>
+                                <entry>Minimum Requirement</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>Spark Streaming</entry>
+                                <entry>Spark version 1.3 through 1.6</entry>
+                            </row>
+                            <row>
+                                <entry>Kafka</entry>
+                                <entry>Spark Streaming on YARN requires a Cloudera distribution of
+                                    Apache Kafka cluster. <p>Spark Streaming on Mesos requires
+                                        Apache Kafka.</p></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table></p>
+            <p>Complete the following steps to configure a cluster mode pipeline to read from a
+                Kafka cluster:<ol id="ol_e32_llw_yr">
                     <li>Verify the installation of Kafka, Spark Streaming, and either YARN or Mesos
                         as the cluster manager.</li>
                     <li>Install the <ph
@@ -38,18 +64,18 @@
                                 variable.</li>
                         </ul></li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
-                            <uicontrol>Execution Mode</uicontrol> property to
-                            <uicontrol>Cluster</uicontrol>.</li>
-                    <li>When running on Mesos, on the <uicontrol>Cluster</uicontrol> tab, enter the
-                            <uicontrol>Dispatcher URL</uicontrol> and the <uicontrol>Hadoop/S3
-                            Configuration Directory</uicontrol>. <p>The Hadoop/S3 Configuration
-                            Directory is the location of the configuration files that determine
-                            where the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> stores checkpoint metadata.</p></li>
-                    <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>If you
-                            have more than one Kafka stage library installed, select the cluster
-                            mode stage library on the General tab of the origin.</p></li>
+                            <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster
+                            YARN Streaming</uicontrol> or <uicontrol>Cluster Mesos
+                            Streaming</uicontrol>.</li>
+                    <li>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties for
+                        YARN or Mesos. </li>
+                    <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>Select the
+                            required cluster mode stage library on the <wintitle>General</wintitle>
+                            tab of the origin:<ul id="ul_okj_1rn_zw">
+                                <li>On YARN, select one of the Cloudera distributions of Apache
+                                    Kafka cluster stage libraries.</li>
+                                <li>On Mesos, select one of the Apache Kafka stage libraries.</li>
+                            </ul></p></li>
                 </ol><note>When you add a partition to the Kafka topic, restart the pipeline to
                     enable the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

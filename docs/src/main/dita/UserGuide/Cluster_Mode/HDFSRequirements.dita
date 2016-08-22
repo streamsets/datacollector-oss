@@ -17,17 +17,25 @@
     <title>HDFS Requirements</title>
     <taskbody>
         <context>
-            <p><indexterm>cluster mode<indexterm>configuration for HDFS</indexterm></indexterm>Use
-                the following requirements to configure a cluster mode pipeline to read from HDFS:
-                    <ol id="ol_e32_llw_yr">
+            <p>Cluster mode pipelines that read from HDFS require the Cloudera CDH distribution of
+                Hadoop or the Hortonworks distribution of Apache Hadoop.</p>
+            <p><indexterm>cluster mode<indexterm>configuration for
+                HDFS</indexterm></indexterm>Complete the following steps to configure a cluster mode
+                pipeline to read from HDFS: <ol id="ol_e32_llw_yr">
                     <li>Install HDFS.</li>
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> on the YARN gateway node.</li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
-                            <uicontrol>Execution Mode</uicontrol> property to
-                            <uicontrol>Cluster</uicontrol>.</li>
-                    <li>In the pipeline, use the Hadoop FS origin. </li>
+                            <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster
+                            Batch</uicontrol>.</li>
+                    <li>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties to
+                        read from HDFS. </li>
+                    <li>In the pipeline, use the Hadoop FS origin for cluster mode.<p>Select the
+                            appropriate Cloudera CDH distribution of Hadoop or Hortonworks
+                            distribution of Apache Hadoop stage library on the General tab of the
+                            origin.</p>
+                    </li>
                 </ol></p>
         </context>
     </taskbody>
