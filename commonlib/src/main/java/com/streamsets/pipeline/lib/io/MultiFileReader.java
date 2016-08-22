@@ -220,7 +220,7 @@ public class MultiFileReader implements Closeable {
             }
           }
         } catch (IOException ex) {
-          LOG.warn("Error while reading file: {}", ex.toString(), ex);
+          LOG.error("Error while reading file: {}", ex.toString(), ex);
           try {
             fileContext.releaseReader(true);
           } catch (IOException ex1) {

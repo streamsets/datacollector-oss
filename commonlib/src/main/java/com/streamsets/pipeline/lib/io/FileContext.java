@@ -147,11 +147,16 @@ public class FileContext {
     if (doneWithFile) {
       IOUtils.closeQuietly(reader);
       reader = null;
-      //using Long.MAX_VALUE to signal we reach the end of the file and next iteration should get the next file.
+      // Using Long.MAX_VALUE to signal we reach the end of the file and next iteration should get the next file.
       setStartingCurrentFileName(currentFile);
       setStartingOffset(Long.MAX_VALUE);
 
-      // file end event
+      // If we failed to open the file in first place, it will be null and hence we won't do anything with it.
+      if(currentFile == null) {
+        return;
+      }
+
+      // File end event
       LiveFile file = currentFile.refresh();
 
       if (inErrorDiscardReader) {
