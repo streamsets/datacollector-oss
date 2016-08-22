@@ -27,6 +27,7 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.h2.tools.SimpleResultSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
@@ -61,10 +63,20 @@ public class TestJdbcSource {
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
   private final String query = "SELECT * FROM TEST.TEST_TABLE WHERE P_ID > ${offset} ORDER BY P_ID ASC LIMIT 10;";
   private final String queryNonIncremental = "SELECT * FROM TEST.TEST_TABLE LIMIT 10;";
+  private final String queryStoredProcedure = "CALL STOREDPROC();";
   private final String initialOffset = "0";
   private final long queryInterval = 0L;
 
   private Connection connection = null;
+
+  public static ResultSet simpleResultSet() throws SQLException {
+    SimpleResultSet rs = new SimpleResultSet();
+    rs.addColumn("ID", Types.INTEGER, 10, 0);
+    rs.addColumn("NAME", Types.VARCHAR, 255, 0);
+    rs.addRow(0, "San Francisco");
+    rs.addRow(1, "Brno");
+    return rs;
+  }
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -113,6 +125,7 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_JDBC_NS_HEADERS VALUES  (1, 1.5)");
       statement.addBatch("INSERT INTO TEST.TEST_NULL VALUES  (1, NULL, NULL)");
       statement.addBatch("INSERT INTO TEST.TEST_TIMES VALUES  (1, '1993-09-01', '15:09:02', '1960-01-01 23:03:20')");
+      statement.addBatch("CREATE ALIAS STOREDPROC FOR \"" + TestJdbcSource.class.getCanonicalName() + ".simpleResultSet\"");
       statement.executeBatch();
     }
   }
@@ -127,6 +140,7 @@ public class TestJdbcSource {
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_JDBC_NS_HEADERS;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_NULL");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TIMES");
+      statement.execute("DROP ALIAS IF EXISTS STOREDPROC");
     }
 
     // Last open connection terminates H2
@@ -253,6 +267,49 @@ public class TestJdbcSource {
       output = runner.runProduce(output.getNewOffset(), 100);
       parsedRecords = output.getRecords().get("lane");
       assertEquals(8, parsedRecords.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStoredProcedure() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        false,
+        queryStoredProcedure,
+        initialOffset,
+        "ID",
+        queryInterval,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE,
+        CLOB_SIZE,
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password)
+        );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 2);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(2, parsedRecords.size());
+      assertEquals(initialOffset, output.getNewOffset());
+
+      assertEquals(0, parsedRecords.get(0).get("/ID").getValueAsLong());
+      assertEquals(1, parsedRecords.get(1).get("/ID").getValueAsLong());
+
+      assertEquals("San Francisco", parsedRecords.get(0).get("/NAME").getValueAsString());
+      assertEquals("Brno", parsedRecords.get(1).get("/NAME").getValueAsString());
     } finally {
       runner.runDestroy();
     }
