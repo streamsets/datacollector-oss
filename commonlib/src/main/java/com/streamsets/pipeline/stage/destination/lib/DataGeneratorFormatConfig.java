@@ -343,9 +343,9 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
-      label = "File Already Exists Action",
+      label = "File Exists",
       description = "The action to perform when the file already exists.",
-      displayPosition = 460,
+      displayPosition = 470,
       group = "WHOLE_FILE",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"

@@ -89,48 +89,6 @@ public class TestHDFSTargetWholeFile {
   }
 
   @Test(expected = StageException.class)
-  public void testInvalidMaxRecordsPerFileOnWholeFileFormat() throws Exception {
-    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
-        .dirPathTemplate(getTestDir() + "/hdfs/${record:attribute('key')}/a/b/c}")
-        .timeDriver("${time:now()}")
-        .dataForamt(DataFormat.WHOLE_FILE)
-        .fileNameEL("${record:value('/fileInfo/fileName')}")
-        .maxFileSize(2)
-        .maxRecordsPerFile(1)
-        .fileType(HdfsFileType.WHOLE_FILE)
-        .idleTimeout("-1")
-        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-        .build();
-
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .build();
-    runner.runInit();
-  }
-
-  @Test(expected = StageException.class)
-  public void testInvalidMaxFileSizeOnWholeFileFormat() throws Exception {
-    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
-        .dirPathTemplate(getTestDir() + "/hdfs/${record:attribute('key')}/a/b/c}")
-        .timeDriver("${time:now()}")
-        .dataForamt(DataFormat.WHOLE_FILE)
-        .fileNameEL("${record:value('/fileInfo/fileName')}")
-        .maxRecordsPerFile(2)
-        .maxFileSize(0)
-        .fileType(HdfsFileType.WHOLE_FILE)
-        .idleTimeout("-1")
-        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-        .hdfsUri(uri.toString())
-        .build();
-
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .build();
-
-    runner.runInit();
-  }
-
-  @Test(expected = StageException.class)
   public void testInvalidFileTypeOnWholeFileFormat() throws Exception {
     HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
         .dirPathTemplate(getTestDir() + "/hdfs/${record:attribute('key')}/a/b/c}")
@@ -142,27 +100,6 @@ public class TestHDFSTargetWholeFile {
         .idleTimeout("-1")
         .fileType(HdfsFileType.TEXT)
         .hdfsUri(uri.toString())
-        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-        .build();
-
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .build();
-    runner.runInit();
-  }
-
-  @Test(expected = StageException.class)
-  public void testInvalidIdleTimeoutOnWholeFileFormat() throws Exception {
-    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
-        .dirPathTemplate(getTestDir() + "/hdfs/${record:attribute('key')}/a/b/c}")
-        .timeDriver("${time:now()}")
-        .dataForamt(DataFormat.WHOLE_FILE)
-        .fileNameEL("${record:value('/fileInfo/fileName')}")
-        .maxFileSize(0)
-        .maxRecordsPerFile(1)
-        .fileType(HdfsFileType.TEXT)
-        .hdfsUri(uri.toString())
-        .idleTimeout("{1 * HOURS}")
         .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
         .build();
 

@@ -207,7 +207,9 @@ public class HdfsTargetConfigBean {
     description = "Number of records that triggers the creation of a new file. Use 0 to opt out.",
     displayPosition = 140,
     group = "OUTPUT_FILES",
-    min = 0
+    min = 0,
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
   )
   public long maxRecordsPerFile;
 
@@ -219,7 +221,9 @@ public class HdfsTargetConfigBean {
     description = "Exceeding this size triggers the creation of a new file. Use 0 to opt out.",
     displayPosition = 150,
     group = "OUTPUT_FILES",
-    min = 0
+    min = 0,
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
   )
   public long maxFileSize;
 
@@ -234,7 +238,9 @@ public class HdfsTargetConfigBean {
       group = "OUTPUT_FILES",
       displayPosition = 155,
       elDefs = {TimeEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
   )
   public String idleTimeout;
 
@@ -402,10 +408,10 @@ public class HdfsTargetConfigBean {
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, StringEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      label = "Permissions Expression for the Target File",
-      description = "Expression which determines what the permissions are for the target file." +
-          " Should be a octal/symbolic representation of the permission",
-      displayPosition = 250,
+      label = "Permissions Expression",
+      description = "Expression that determines the target file permissions." +
+          "Should be a octal/symbolic representation of the permissions.",
+      displayPosition = 460,
       group = "WHOLE_FILE",
       dependsOn = "dataFormat",
       triggeredByValue = "WHOLE_FILE"
@@ -875,29 +881,9 @@ public class HdfsTargetConfigBean {
   }
 
   protected void validateStageForWholeFileFormat(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    if (maxRecordsPerFile != 1) {
-      //One record is one file transfer.
-      issues.add(
-          context.createConfigIssue(
-              Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "maxRecordsPerFile",
-              Errors.HADOOPFS_53,
-              maxRecordsPerFile,
-              1
-          )
-      );
-    }
-    if (maxFileSize != 0) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "maxFileSize",
-              Errors.HADOOPFS_53,
-              maxFileSize,
-              0
-          )
-      );
-    }
+    maxFileSize = 0;
+    maxRecordsPerFile = 1;
+    idleTimeout = "-1";
     if (fileType != HdfsFileType.WHOLE_FILE) {
       issues.add(
           context.createConfigIssue(
@@ -906,17 +892,6 @@ public class HdfsTargetConfigBean {
               Errors.HADOOPFS_53,
               fileType,
               HdfsFileType.WHOLE_FILE.getLabel()
-          )
-      );
-    }
-    if (!idleTimeout.equals("-1")) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.OUTPUT_FILES.name(),
-              getTargetConfigBeanPrefix() + "idleTimeout",
-              Errors.HADOOPFS_53,
-              idleTimeout,
-              "-1"
           )
       );
     }
