@@ -76,6 +76,17 @@ public class S3ConfigBean {
   @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public S3Config s3Config;
 
+  @ConfigDef(
+      required = true,
+      label = "Include Metadata",
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      description = "Select to include object metadata in record header attributes",
+      displayPosition = 50,
+      group = "S3"
+  )
+  public boolean enableMetaData = false;
+
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
 
     s3FileConfig.init(context, issues);

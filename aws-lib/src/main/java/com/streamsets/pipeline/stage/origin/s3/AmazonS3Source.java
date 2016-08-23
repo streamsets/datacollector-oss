@@ -106,7 +106,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
         try {
           Record record = parser.parse();
           if (record != null) {
-            if(s3ConfigBean.s3Config.enableMetaData) {
+            if(s3ConfigBean.enableMetaData) {
               // if metadata is enabled, set the metadata to the header
               Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
               for(String key : metaData.keySet()) {
