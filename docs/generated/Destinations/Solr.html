@@ -19,16 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody"><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-​
-  ga('create', 'UA-53969024-1', 'auto');
-  ga('send', 'pageview');
-​
-</script>
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_z2g_q1r_wr">
@@ -39,13 +30,15 @@
 
   <p class="p">When
             you configure the Solr destination, you configure connection information for the node or
-            cluster. You also define the indexing mode and map incoming fields to Solr fields. </p>
+            cluster. You also define the indexing mode and map incoming fields to Solr fields. You
+            can configure the destination to index records individually or in batches. </p>
 
-  <div class="p">You can configure the destination to index records individually or in batches. <div class="note note"><span class="notetitle">Note:</span> To write
-                to an Apache Solr 6.1.0 node or cluster, you must perform additional prerequisite
-                steps.</div>
-</div>
+        <p class="p">When necessary, you can enable the destination to use Kerberos authentication.</p>
 
+            <div class="note note"><span class="notetitle">Note:</span> To write to an Apache Solr 6.1.0 node or cluster, you must perform additional
+                prerequisite steps.</div>
+
+        
  </div>
 
 <div class="related-links"></div>
@@ -120,6 +113,30 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_npl_fss_zw">
+ <h2 class="title topictitle2">Kerberos Authentication</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use Kerberos authentication to connect to a Solr node or cluster. When you use
+        Kerberos authentication, <span class="ph">Data
+                  Collector</span> uses
+        the Kerberos principal and keytab to connect to Solr. </p>
+
+  <p class="p">The
+            Kerberos principal and keytab are defined in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. To use Kerberos
+            authentication, configure all Kerberos properties in the <span class="ph">Data
+                  Collector</span>
+            configuration file, and then enable Kerberos in the Solr destination.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
+</div>
+</div>
+</div>
 <div class="topic task nested1" id="task_ld1_phr_wr">
     <h2 class="title topictitle2">Configuring a Solr Destination</h2>
 
@@ -132,46 +149,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ld1_phr_wr__d1876e3377" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ld1_phr_wr__d1874e3501" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d67897e193">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71437e243">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d67897e196">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71437e246">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_ld1_phr_wr__d1876e3399" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">Name</td>
+                                <tr id="task_ld1_phr_wr__d1874e3523" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_ld1_phr_wr__d1876e3408" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_ld1_phr_wr__d1876e3417" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">Stage Library</td>
+                                <tr id="task_ld1_phr_wr__d1874e3532" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_ld1_phr_wr__d1874e3541" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_ld1_phr_wr__d1876e3432" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ld1_phr_wr__d1874e3556" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -179,21 +196,21 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_ld1_phr_wr__d1876e3446" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ld1_phr_wr__d1874e3570" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_ld1_phr_wr__d1876e3456" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67897e193 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_ld1_phr_wr__d1876e3462" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr id="task_ld1_phr_wr__d1874e3580" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71437e243 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ld1_phr_wr__d1874e3586" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67897e196 ">Error record handling for the stage: <ul class="ul" id="task_ld1_phr_wr__d1876e3466">
+                                    <td class="entry" valign="top" width="70%" headers="d71437e246 ">Error record handling for the stage: <ul class="ul" id="task_ld1_phr_wr__d1874e3590">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -222,9 +239,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d67897e325">Solr Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71437e375">Solr Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d67897e328">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71437e378">Description</th>
 
                                 </tr>
 
@@ -232,9 +249,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">Instance Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Instance Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">Solr instance type to write to:<ul class="ul" id="task_ld1_phr_wr__ul_ymy_ykr_wr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">Solr instance type to write to:<ul class="ul" id="task_ld1_phr_wr__ul_ymy_ykr_wr">
                                             <li class="li">Single Node - Writes to a single Solr node.</li>
 
                                             <li class="li">SolrCloud - Writes to a Solr cluster.</li>
@@ -245,9 +262,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">Solr URI</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Solr URI</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">When writing to a single node, URI for the node. Use the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">When writing to a single node, URI for the node. Use the
                                         following
                                         format:<pre class="pre codeblock">http://&lt;host&gt;:&lt;port&gt;/solr/&lt;core_name&gt;</pre>
 </td>
@@ -255,9 +272,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">ZooKeeper Connection String</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">ZooKeeper Connection String</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">When writing to a Solr cluster, the ZooKeeper connection
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">When writing to a Solr cluster, the ZooKeeper connection
                                         string. Use the following
                                             format:<pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 <p class="p">If
@@ -269,30 +286,46 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">Default Collection Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Default Collection Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">When writing to a Solr cluster, the default collection
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">When writing to a Solr cluster, the default collection
                                         name for the cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">Record Indexing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Record Indexing Mode
+                                        <a class="xref" href="Solr.html#concept_z4y_bgr_wr" title="The index mode determines how the Solr destination indexes records when writing to Solr. Index mode also determines how the destination handles errors.">
+                                            <img class="image" id="task_ld1_phr_wr__image_a6x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">Determines how records are indexed.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">Determines how records are indexed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d67897e325 ">Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d67897e328 ">Map fields from the record to Solr fields. <p class="p">Mapped
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">Map fields from the record to Solr fields. <p class="p">Mapped
                                             fields must have compatible data types. For example, you
                                             must map List and Map fields in the record to Solr
                                             fields that are multi-valued.</p>
 <p class="p">Use the
                                                 <span class="ph uicontrol">Add</span> icon to create additional
                                             field mappings.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71437e375 ">Kerberos Authentication
+                                        <a class="xref" href="Solr.html#concept_npl_fss_zw" title="You can use Kerberos authentication to connect to a Solr node or cluster. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to Solr.">
+                                            <img class="image" id="task_ld1_phr_wr__image_a3x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71437e378 ">Uses Kerberos credentials to connect to a Solr node or
+                                        cluster. <p class="p">When selected, uses the Kerberos principal and
+                                            keytab defined in the <span class="ph">Data
+                  Collector</span> configuration file,
+                                                <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.</p>
 </td>
 
                                 </tr>
@@ -311,6 +344,14 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div>
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
 </body>
 </html>

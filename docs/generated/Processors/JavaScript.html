@@ -19,16 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody"><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-​
-  ga('create', 'UA-53969024-1', 'auto');
-  ga('send', 'pageview');
-​
-</script>
+<body onload="highlightSearchTerm()" class="frmBody">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_n2p_jgf_lr">
@@ -151,7 +142,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d20178e935">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d20611e995">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -329,14 +320,14 @@ for(var i = 0; i &lt; records.length; i++) {
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d20116e3037" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d20549e3161" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d166310e421">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d171156e421">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d166310e424">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d171156e424">Description</th>
 
                                 </tr>
 
@@ -344,24 +335,24 @@ for(var i = 0; i &lt; records.length; i++) {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d166310e421 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d171156e421 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d166310e424 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d166310e421 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d166310e424 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d171156e424 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d166310e421 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d20116e3083" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171156e421 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d166310e424 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d171156e424 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d171156e421 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d20549e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d171156e424 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -369,10 +360,10 @@ for(var i = 0; i &lt; records.length; i++) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d166310e421 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d20116e3097" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171156e421 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d20549e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d166310e424 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d171156e424 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -380,10 +371,10 @@ for(var i = 0; i &lt; records.length; i++) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d166310e421 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mzc_1by_nr__d20116e3112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171156e421 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mzc_1by_nr__d20549e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d166310e424 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d20116e3116">
+                                    <td class="entry" valign="top" width="70%" headers="d171156e424 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d20549e3240">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -414,9 +405,9 @@ for(var i = 0; i &lt; records.length; i++) {
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d166310e543">JavaScript Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d171156e543">JavaScript Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d166310e546">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d171156e546">Description</th>
 
                                 </tr>
 
@@ -424,9 +415,9 @@ for(var i = 0; i &lt; records.length; i++) {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d166310e543 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171156e543 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d166310e546 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171156e546 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -441,9 +432,9 @@ for(var i = 0; i &lt; records.length; i++) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d166310e543 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171156e543 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d166310e546 ">JavaScript code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171156e546 ">JavaScript code to use in the processor.</td>
 
                                 </tr>
 
@@ -461,6 +452,14 @@ for(var i = 0; i &lt; records.length; i++) {
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div>
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
 </body>
 </html>

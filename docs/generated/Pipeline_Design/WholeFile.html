@@ -1,0 +1,232 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can use the whole file data format to move entire files from an origin system to a destination system. With the whole file data format, you can transfer any type of file. You cannot perform ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Whole File Data Format"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_nfc_qkh_xw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Whole File Data Format</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_nfc_qkh_xw">
+ <h1 class="title topictitle1">Whole File Data Format</h1>
+
+ <div class="body conbody">
+  <p class="p">You can use the
+            whole file data format to move entire files from an origin system to a destination
+            system. With the whole file data format, you can transfer any type of file. You cannot
+            perform additional processing on file data in the pipeline. </p>
+
+        <p class="p">When moving whole files, <span class="ph">Data
+                  Collector</span>
+            streams file data from the origin system and writes the data to the destination system
+            based on the directory and file name defined in the destination. </p>
+
+        <p class="p">When the origin system provides checksum metadata, you can configure the origin to verify
+            the checksum. </p>
+
+        <p class="p">Most destinations allow you to define access permissions for target files. By default,
+            target files are created with default permissions. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> During data preview, a whole file pipeline displays a single record instead of the
+                number of records configured for the preview batch size.</div>
+
+        </div>
+
+        <div class="p">You can use the following origins to read whole files:<ul class="ul" id="concept_nfc_qkh_xw__ul_dmp_y5h_xw">
+                <li class="li">Amazon S3</li>
+
+                <li class="li">Directory</li>
+
+            </ul>
+</div>
+
+        <div class="p">You can use the following destinations to write whole files:<ul class="ul" id="concept_nfc_qkh_xw__ul_wrs_cvh_xw">
+                <li class="li">Amazon S3</li>
+
+                <li class="li">Hadoop FS</li>
+
+                <li class="li">Local FS</li>
+
+                <li class="li">MapR FS</li>
+
+            </ul>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_acf_1bm_zw">
+ <h2 class="title topictitle2">Basic Pipeline</h2>
+
+ <div class="body conbody">
+  <p class="p">A pipeline
+            that processes whole files include an origin and one or more destinations that support
+            the whole file data format. </p>
+
+        <p class="p">You can include certain processors to modify file information included in the record,
+            such as the file name or size. You cannot use processors to transform data in the
+            file.</p>
+
+        <p class="p">Here's a basic pipeline that moves whole files from Amazon S3 to HDFS:</p>
+
+        <p class="p"><img class="image" id="concept_acf_1bm_zw__image_zrz_3bm_zw" src="../Graphics/WholeFile-BasicPipeline.png" height="94" width="265"></img></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_kxr_kqh_xw">
+    <h2 class="title topictitle2">Whole File Records</h2>
+
+    <div class="body conbody">
+        <div class="p">When reading whole files, the origin produces a
+            record with two fields:<ul class="ul" id="concept_kxr_kqh_xw__ul_oqn_bpv_xw">
+                <li class="li">fileref - Contains a reference that enables streaming the file from the origin
+                    system to the destination system. You cannot modify the fileref field.</li>
+
+                <li class="li">fileInfo - A map of file properties, such as file path, file name, and file
+                    owner. The details differ based on the origin system. You can use processors to
+                    modify information in the fileInfo field as needed.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">You can use
+                              data preview to determine the information and field names that are
+                              included in the fileInfo field.</span></div>
+</li>
+
+            </ul>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_kgs_msy_yw">
+ <h2 class="title topictitle2">Additional Processors</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use certain processors in a whole file
+            pipeline to modify file information in the fileInfo field, such as the file owner or
+            permissions.</p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d19569e1364">You can use
+                              data preview to determine the information and field names that are
+                              included in the fileInfo field.</span> The information and field names
+                        can differ based on the origin system.</div>
+
+        <div class="p">You can use the following additional processors in a whole file pipeline:<dl class="dl">
+                
+                    <dt class="dt dlterm">Expression Evaluator</dt>
+
+                    <dd class="dd">Use to update fileInfo fields. </dd>
+
+                    <dd class="dd">For example, you might use the Expression Evaluator to update the owner of
+                        the file.</dd>
+
+                
+            </dl>
+<dl class="dl">
+                
+                    <dt class="dt dlterm">Stream Selector</dt>
+
+                    <dd class="dd">Use to route files based on information in the fileInfo fields. </dd>
+
+                    <dd class="dd">For example, you might use the Stream Selector to route records to different
+                        destinations based on the size of the file. The following pipeline routes
+                        files under 2 MB to a local file system and uses the default stream to route
+                        all larger files to HDFS:</dd>
+
+                    <dd class="dd"><img class="image" id="concept_kgs_msy_yw__image_ydw_lsf_zw" src="../Graphics/WholeFile_Pipeline_SS.png" height="283" width="480"></img></dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_a2s_4jw_1x">
+ <h2 class="title topictitle2">Writing Whole Files</h2>
+
+ <div class="body conbody">
+  <p class="p">When
+            writing whole files, you configure a <span class="ph uicontrol">File Name Expression</span>
+            property in the destination. The expression defines the name for the target file. </p>
+
+        <p class="p">You can use record:value and string functions in the expression. By default, destinations
+            use the following file name expression, which uses the original source file name as the
+            target file name:</p>
+
+        <div class="p">
+            <pre class="pre codeblock">${record:value('/fileInfo/filename')}</pre>
+
+        </div>
+
+        <div class="section"><h3 class="title sectiontitle">Example</h3>
+            
+            <div class="p">You want a pipeline to pass whole files from a local directory to Amazon S3. For the
+                target file name, you want to append the .json file extension to the original file
+                name. To do this, you can configure the File Name Expression as follows:
+                <pre class="pre codeblock">${str:concat(record:value('/fileInfo/filename'), ".json")}</pre>
+</div>
+
+            <div class="p">Or, more
+                simply...<pre class="pre codeblock">${record:value('/fileInfo/filename’)}.json</pre>
+</div>
+
+        </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ttm_ywv_1x">
+ <h3 class="title topictitle3">Access Permissions</h3>
+
+ <div class="body conbody">
+  <p class="p">By
+            default, when using the whole file data format, target files use the default access
+            permissions defined in the destination system. When using the Hadoop FS, Local FS, or
+            MapR FS destinations to write whole files, you can specify access permissions for target
+            files. </p>
+
+        <p class="p">You can enter an expression to define access permissions. Expressions should evaluate to
+            a symbolic or numeric/octal representation of the permissions you want to use. For
+            example, to make files read-only for all users, the symbolic representation is
+                <samp class="ph codeph">-r--r--r--</samp>. The numeric or octal representation is
+                <samp class="ph codeph">0444</samp>.</p>
+
+        <div class="p">To use the original source file permissions for each target file, you can use the
+            following expression:<pre class="pre codeblock">${record:value('/fileInfo/permissions')}</pre>
+</div>
+
+        <p class="p">This ensures, for example, that a source file configured to allow execute permission to
+            only the file owner is written to the destination system with the exact same set of
+            permissions. </p>
+
+ </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

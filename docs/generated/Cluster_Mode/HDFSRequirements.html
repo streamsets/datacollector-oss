@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following requirements to configure a cluster mode pipeline to read from HDFS: Install HDFS. Install the Data Collector on the YARN gateway node. In the pipeline properties, on the General ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="HDFS Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_akz_w5b_ws"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HDFS Requirements</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Cluster mode pipelines that read from HDFS require the Cloudera CDH distribution of Hadoop or the Hortonworks distribution of Apache Hadoop. Complete the following steps to configure a cluster mode ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="HDFS Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_akz_w5b_ws"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HDFS Requirements</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -19,16 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="task_akz_w5b_ws"><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-​
-  ga('create', 'UA-53969024-1', 'auto');
-  ga('send', 'pageview');
-​
-</script>
+<body onload="highlightSearchTerm()" class="frmBody" id="task_akz_w5b_ws">
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines">Cluster Pipelines</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div></td></tr></tbody></table>
 
@@ -36,19 +27,29 @@
 
     <div class="body taskbody">
         <div class="section context">
-            <div class="p">Use
-                the following requirements to configure a cluster mode pipeline to read from HDFS:
-                    <ol class="ol" id="task_akz_w5b_ws__ol_e32_llw_yr">
+            <p class="p">Cluster mode pipelines that read from HDFS require the Cloudera CDH distribution of
+                Hadoop or the Hortonworks distribution of Apache Hadoop.</p>
+
+            <div class="p">Complete the following steps to configure a cluster mode
+                pipeline to read from HDFS: <ol class="ol" id="task_akz_w5b_ws__ol_e32_llw_yr">
                     <li class="li">Install HDFS.</li>
 
                     <li class="li">Install the <span class="ph">Data
                   Collector</span> on the YARN gateway node.</li>
 
                     <li class="li">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
-                            <span class="ph uicontrol">Execution Mode</span> property to
-                            <span class="ph uicontrol">Cluster</span>.</li>
+                            <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster
+                            Batch</span>.</li>
 
-                    <li class="li">In the pipeline, use the Hadoop FS origin. </li>
+                    <li class="li">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties to
+                        read from HDFS. </li>
+
+                    <li class="li">In the pipeline, use the Hadoop FS origin for cluster mode.<p class="p">Select the
+                            appropriate Cloudera CDH distribution of Hadoop or Hortonworks
+                            distribution of Apache Hadoop stage library on the General tab of the
+                            origin.</p>
+
+                    </li>
 
                 </ol>
 </div>
@@ -63,6 +64,14 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div>
+<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
 </body>
 </html>
