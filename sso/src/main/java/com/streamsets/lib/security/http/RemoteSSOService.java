@@ -19,7 +19,6 @@
  */
 package com.streamsets.lib.security.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -27,16 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RemoteSSOService extends AbstractSSOService {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteSSOService.class);
-
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public static final String DPM_BASE_URL_CONFIG = "dpm.base.url";
   public static final String DPM_BASE_URL_DEFAULT = "http://localhost:18631";
@@ -50,17 +45,13 @@ public class RemoteSSOService extends AbstractSSOService {
   public static final String DPM_REGISTRATION_RETRY_ATTEMPTS = "registration.retry.attempts";
   public static final int DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT = 5;
 
-  public static final String CONTENT_TYPE = "Content-Type";
-  public static final String ACCEPT = "Accept";
-  public static final String APPLICATION_JSON = "application/json";
-
-  private String userAuthUrl;
-  private String appAuthUrl;
+  RestClient.Builder registerClientBuilder;
+  RestClient.Builder userAuthClientBuilder;
+  RestClient.Builder appAuthClientBuilder;
   private String appToken;
   private String componentId;
   private volatile int connTimeout;
   private int dpmRegistrationMaxRetryAttempts;
-  private String registrationUrl;
 
   @Override
   public void setConfiguration(Configuration conf) {
@@ -77,13 +68,43 @@ public class RemoteSSOService extends AbstractSSOService {
     }
     setLoginPageUrl(baseUrl + "/login");
     setLogoutUrl(baseUrl + "/_logout");
-    userAuthUrl = baseUrl + "/rest/v1/validateAuthToken/user";
-    appAuthUrl = baseUrl + "/rest/v1/validateAuthToken/component";
+
+    componentId = conf.get(SECURITY_SERVICE_COMPONENT_ID_CONFIG, null);
     appToken = conf.get(SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, null);
     connTimeout = conf.get(SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG, DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT);
     dpmRegistrationMaxRetryAttempts = conf.get(DPM_REGISTRATION_RETRY_ATTEMPTS,
         DPM_REGISTRATION_RETRY_ATTEMPTS_DEFAULT);
-    registrationUrl = baseUrl + "/public-rest/v1/components/registration";
+
+    registerClientBuilder = RestClient.builder(baseUrl)
+        .csrf(true)
+        .json(true)
+        .path("public-rest/v1/components/registration")
+        .timeout(connTimeout);
+    userAuthClientBuilder = RestClient.builder(baseUrl)
+        .csrf(true)
+        .json(true)
+        .path("rest/v1/validateAuthToken/user")
+        .timeout(connTimeout);
+    appAuthClientBuilder = RestClient.builder(baseUrl)
+        .csrf(true)
+        .json(true)
+        .path("rest/v1/validateAuthToken/component")
+        .timeout(connTimeout);
+  }
+
+  @VisibleForTesting
+  public RestClient.Builder getRegisterClientBuilder() {
+    return registerClientBuilder;
+  }
+
+  @VisibleForTesting
+  public RestClient.Builder getUserAuthClientBuilder() {
+    return userAuthClientBuilder;
+  }
+
+  @VisibleForTesting
+  public RestClient.Builder getAppAuthClientBuilder() {
+    return appAuthClientBuilder;
   }
 
   @VisibleForTesting
@@ -95,6 +116,11 @@ public class RemoteSSOService extends AbstractSSOService {
       LOG.error(msg);
       throw new RuntimeException(msg);
     }
+  }
+
+  void updateConnectionTimeout(RestClient.Response response) {
+    String timeout = response.getHeader(SSOConstants.X_APP_CONNECTION_TIMEOUT);
+    connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
   }
 
   @Override
@@ -135,106 +161,81 @@ public class RemoteSSOService extends AbstractSSOService {
         }
         attempts++;
         try {
-          if (doAuthRestCall(registrationUrl, registrationData)) {
+          RestClient restClient = getRegisterClientBuilder().build();
+          RestClient.Response response = restClient.post(registrationData);
+          if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+            updateConnectionTimeout(response);
+            LOG.info("Registered with DPM");
             registered = true;
+            break;
+          } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
+            String msg = Utils.format("DPM Registration unavailable");
+            LOG.warn(msg);
+            System.out.println(msg);
+          }  else {
+            String msg = Utils.format("Failed to registered to DPM, HTTP status '{}': {}", response.getStatus(),
+                response.getError());
+            LOG.warn(msg);
+            throw new RuntimeException(msg);
           }
-          break;
-        } catch (Exception ex) {
+        } catch (IOException ex) {
           String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
           LOG.warn(msg, ex);
           System.out.println(msg);
         }
       }
       if (!registered) {
-        throw new RuntimeException(Utils.format("DPM registration failed after '{}' attempts", attempts));
+        String msg = Utils.format("DPM registration failed after '{}' attempts", attempts);
+        LOG.warn(msg);
+        throw new RuntimeException(msg);
       }
     }
   }
 
   public void setComponentId(String componentId) {
-    Utils.checkArgument(componentId != null && !componentId.trim().isEmpty(), "Component ID cannot be NULL or empty");
-    this.componentId = componentId.trim();
+    componentId = (componentId != null) ? componentId.trim() : null;
+    Utils.checkArgument(componentId != null && !componentId.isEmpty(), "Component ID cannot be NULL or empty");
+    this.componentId = componentId;
+    registerClientBuilder.componentId(componentId);
+    userAuthClientBuilder.componentId(componentId);
+    appAuthClientBuilder.componentId(componentId);
   }
 
   public void setApplicationAuthToken(String appToken) {
-    this.appToken = (appToken != null) ? appToken.trim() : null;
+    appToken = (appToken != null) ? appToken.trim() : null;
+    this.appToken = appToken;
+    registerClientBuilder.appAuthToken(appToken);
+    userAuthClientBuilder.appAuthToken(appToken);
+    appAuthClientBuilder.appAuthToken(appToken);
   }
 
-  HttpURLConnection createAuthConnection(String url) throws IOException {
-    return (HttpURLConnection) new URL(url).openConnection();
-  }
-
-  HttpURLConnection getAuthConnection(String method, String url, int connTimeout) throws IOException {
-    HttpURLConnection conn = createAuthConnection(url);
-    conn.setRequestMethod(method);
-    switch (method) {
-      case "POST":
-      case "PUT":
-        conn.setDoOutput(true);
-      case "GET":
-        conn.setDoInput(true);
-    }
-    conn.setUseCaches(false);
-    conn.setConnectTimeout(connTimeout);
-    conn.setReadTimeout(connTimeout);
-    conn.setRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
-    conn.setRequestProperty(ACCEPT, APPLICATION_JSON);
-    conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
-    conn.setRequestProperty(SSOConstants.X_APP_AUTH_TOKEN, appToken);
-    conn.setRequestProperty(SSOConstants.X_APP_COMPONENT_ID, componentId);
-    return conn;
-  }
-
-  boolean doAuthRestCall(String url, Object uploadData) {
-    return doAuthRestCall(url, uploadData, (Class<Boolean>) null);
-  }
-
-  <T> T doAuthRestCall(String url, Object uploadData, Class<T> responseType) {
-    T ret = null;
-    String method = (uploadData == null) ? "GET" : "POST";
+  protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken) {
+    ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
+    authTokenJson.setAuthToken(userAuthToken);
+    SSOPrincipalJson principal = null;
     try {
-      HttpURLConnection conn = getAuthConnection(method, url, connTimeout);
-      if (uploadData != null) {
-        OutputStream os = conn.getOutputStream();
-        OBJECT_MAPPER.writeValue(os, uploadData);
-      }
-      if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        String timeout = conn.getHeaderField(SSOConstants.X_APP_CONNECTION_TIMEOUT);
-        connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
-        if (responseType != null) {
-          ret = OBJECT_MAPPER.readValue(conn.getInputStream(), responseType);
-        } else {
-          ret = (T) Boolean.TRUE;
-        }
-      } else if (conn.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-        LOG.warn("Security service HTTP forbidden error: '{}'", conn.getResponseMessage());
-        if (responseType == null) {
-          ret = (T) Boolean.FALSE;
-        }
+      RestClient restClient = getUserAuthClientBuilder().build();
+      RestClient.Response response = restClient.post(authTokenJson);
+      if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+        updateConnectionTimeout(response);
+        principal = response.getData(SSOPrincipalJson.class);
+      } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+        principal = null;
       } else {
         throw new RuntimeException(Utils.format(
-            "Security service HTTP error: '{}': {}",
-            conn.getResponseCode(),
-            conn.getResponseMessage()
+            "Could not validate user token '{}', HTTP status '{}' message: {}",
+            null,
+            response.getStatus(),
+            response.getError()
         ));
       }
-    } catch (IOException ex) {
-      throw new RuntimeException(Utils.format("Security service error: {}", ex), ex);
+    } catch (IOException ex){
+      throw new RuntimeException(Utils.format("Could not do user token validation: {}", ex.toString()), ex);
     }
-    return ret;
-  }
-
-
-  protected SSOPrincipal validateUserTokenWithSecurityService(String authToken) {
-    ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
-    authTokenJson.setAuthToken(authToken);
-    SSOPrincipalJson principal = doAuthRestCall(userAuthUrl, authTokenJson, SSOPrincipalJson.class);
     if (principal != null) {
-      principal.setTokenStr(authToken);
+      principal.setTokenStr(userAuthToken);
       principal.lock();
       LOG.debug("Validated user auth token for '{}'", principal.getPrincipalId());
-    } else {
-      LOG.warn("Failed to validate user token '{}'", authToken);
     }
     return principal;
   }
@@ -243,13 +244,30 @@ public class RemoteSSOService extends AbstractSSOService {
     ValidateComponentAuthTokenJson authTokenJson = new ValidateComponentAuthTokenJson();
     authTokenJson.setComponentId(componentId);
     authTokenJson.setAuthToken(authToken);
-    SSOPrincipalJson principal = doAuthRestCall(appAuthUrl, authTokenJson, SSOPrincipalJson.class);
+    SSOPrincipalJson principal = null;
+    try {
+      RestClient restClient = getAppAuthClientBuilder().build();
+      RestClient.Response response = restClient.post(authTokenJson);
+      if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+        updateConnectionTimeout(response);
+        principal = response.getData(SSOPrincipalJson.class);
+      } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+        principal = null;
+      } else {
+        throw new RuntimeException(Utils.format(
+            "Could not validate app token '{}', HTTP status '{}' message: {}",
+            null,
+            response.getStatus(),
+            response.getError()
+        ));
+      }
+    } catch (IOException ex){
+      throw new RuntimeException(Utils.format("Could not do app token validation: {}", ex.toString(), ex));
+    }
     if (principal != null) {
       principal.setTokenStr(authToken);
       principal.lock();
       LOG.debug("Validated app auth token for '{}'", principal.getPrincipalId());
-    } else {
-      LOG.warn("Failed to validate app token '{}'", authToken);
     }
     return principal;
   }

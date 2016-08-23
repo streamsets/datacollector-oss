@@ -26,11 +26,11 @@ import org.junit.Test;
 
 public class TestSSOPrincipalJson {
 
-  public static SSOPrincipal createPrincipal() {
+  public static SSOPrincipalJson createPrincipal() {
     return createPrincipal(System.currentTimeMillis() + 1000);
   }
 
-  public static SSOPrincipal createPrincipal(long expires) {
+  public static SSOPrincipalJson createPrincipal(long expires) {
     SSOPrincipalJson p = new SSOPrincipalJson();
     p.setTokenStr("tokenStr");
     p.setExpires(expires);
