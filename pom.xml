@@ -476,6 +476,7 @@
         <module>cdh_5_3-lib</module>
         <module>cdh_5_4-lib</module>
         <module>cdh_5_5-lib</module>
+        <module>cdh_5_7-lib</module>
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
         <module>mapr_5_0-lib</module>
