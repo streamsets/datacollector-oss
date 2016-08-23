@@ -42,7 +42,14 @@
                             <tbody>
                                 <row>
                                     <entry>Hadoop FS URI</entry>
-                                    <entry>HDFS URI.</entry>
+                                    <entry>HDFS URI. <p>To connect to a specific cluster, enter
+                                            <codeph>maprfs:///mapr/&lt;cluster name></codeph>. For
+                                            example:</p><codeblock>maprfs:///mapr/my.cluster.com/</codeblock><p>Leave
+                                            empty to use the default value of
+                                                <codeph>maprfs:///</codeph>, which uses the first
+                                            entry defined in the
+                                                <codeph>$MAPR_HOME/conf/mapr-clusters.conf</codeph>
+                                            file.</p></entry>
                                 </row>
                                 <row>
                                     <entry>HDFS User <xref href="MapRFS-HDFSUser.dita">
