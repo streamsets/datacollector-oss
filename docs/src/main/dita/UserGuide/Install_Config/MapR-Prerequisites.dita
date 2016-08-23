@@ -27,9 +27,9 @@
             MapR cluster uses username/password login authentication, you must enable <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             use username/password authentication.</p>
-        <note>The MapR DB destination and the Hive Streaming destination using the MapR library
+       <p><note>The MapR DB destination and the Hive Streaming destination using the MapR library
             currently only support MapR version 5.1.0. All other stages that use the MapR library
-            support MapR versions 5.0.0 and 5.1.0.</note>
+            support MapR versions 5.0.0 and 5.1.0.</note></p>
         <p>
             <ol id="ol_o2r_nq4_vw">
                 <li>Install <ph
@@ -49,8 +49,29 @@
                                     download the files for your operating system here:
                                     <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
                         </ul></p></li>
-                <li>Use the following
-                    command:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
+                <li>Use the following command to set the <codeph>$SDC_HOME</codeph> environment
+                    variable to the location where you installed <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />:<codeblock>export SDC_HOME=&lt;installation directory></codeblock><p>For
+                        example:<codeblock>export SDC_HOME=/opt/streamsets-datacollector</codeblock></p><note>The
+                        default installation directory for an RPM installation is
+                            <codeph>/opt/streamsets-datacollector</codeph>. The tarball installation
+                        directory is the location where you extracted the file.</note></li>
+                <li>Use the following command to set the <codeph>$SDC_CONF</codeph> environment
+                    variable to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration
+                        directory:<codeblock>export SDC_CONF=&lt;configuration directory></codeblock><p>For
+                        example:<codeblock>export SDC_CONF=/etc/sdc</codeblock></p><note>The default
+                        configuration directory for an RPM installation is
+                        <codeph>/etc/sdc</codeph>. If you followed the instructions for a tarball
+                        installation for a service start, the default configuration directory is
+                            <codeph>/etc/sdc</codeph>. The default configuration directory for a
+                        tarball installation for a manual start is <codeph>$SDC_DIST/etc</codeph>.
+                        However, as a best practice, you should modify the configuration directory
+                        so that it is outside of the installation directory.</note></li>
+                <li>Use the following command to set up
+                    MapR:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
                 <li>When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
                 <li>When prompted, enter the absolute path to the MapR home directory, usually
                     /opt/mapr.</li>
