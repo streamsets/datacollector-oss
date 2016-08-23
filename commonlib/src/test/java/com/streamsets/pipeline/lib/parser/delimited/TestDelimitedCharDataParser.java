@@ -26,6 +26,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
@@ -276,6 +277,15 @@ public class TestDelimitedCharDataParser {
     record = parser.parse();
     Assert.assertNull(record);
     parser.close();
+  }
+
+  @Test(expected = DataParserException.class)
+  public void testMoreColumnsThenInHeader() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b,c"), 1000, true, false);
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
+      CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST, false, null);
+    Assert.assertEquals("4", parser.getOffset());
+    parser.parse();
   }
 
 }

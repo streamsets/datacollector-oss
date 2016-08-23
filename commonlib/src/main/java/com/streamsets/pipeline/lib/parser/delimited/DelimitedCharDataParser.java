@@ -103,6 +103,10 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   protected Record createRecord(long offset, String[] columns) throws DataParserException {
     Record record = context.createRecord(readerId + "::" + offset);
 
+    if(headers != null && columns.length > headers.size()) {
+      throw new DataParserException(Errors.DELIMITED_PARSER_01, offset, columns.length, headers.size());
+    }
+
     if(recordType == CsvRecordType.LIST) {
       List<Field> row = new ArrayList<>();
       for (int i = 0; i < columns.length; i++) {

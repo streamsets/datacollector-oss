@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DELIMITED_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
+  DELIMITED_PARSER_01("Unexpected number of columns at offset {}, contains {} fields whereas only {} are available in header"),
   ;
 
   private final String msg;
