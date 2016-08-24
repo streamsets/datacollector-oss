@@ -21,7 +21,8 @@
             solution enables creating and updating Hive tables based on record requirements and
             writing data to HDFS or MapR FS based on record header attributes. You can use the full
             functionality of the solution or individual pieces, as needed. </p>
-        <p>The Hive Drift Solution supports only Avro data at this time.</p>
+        <p>The Hive Drift Solution supports only Avro data at this time. The solution is compatible
+            with Impala.</p>
         <p>The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
             the Hadoop FS or MapR FS destination as follows:</p>
         <p>
@@ -59,7 +60,7 @@
                                     destination to use the avroSchema header attribute.</p></li>
                             <li>Roll files - When a change in Avro schema occurs, the processor
                                 generates a roll indicator - the <term>roll</term> header attribute.
-                                    <p>To roll files based on schema changes, configure te
+                                    <p>To roll files based on schema changes, configure the
                                     destination use the roll header attribute.</p></li>
                         </ul></dd>
                 </dlentry>
