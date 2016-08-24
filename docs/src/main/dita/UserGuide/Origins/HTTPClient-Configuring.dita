@@ -50,38 +50,30 @@
                                         headers.</entry>
                                 </row>
                                 <row>
+                                    <entry>Mode</entry>
+                                    <entry>Processing mode:<ul id="ul_nfn_slz_5r">
+                                            <li>Streaming - Maintains a connection and processes
+                                                data as it becomes available.</li>
+                                            <li>Polling - Connects periodically to check for data. </li>
+                                            <li>Batch - Processes all available data, and then stops
+                                                the pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Polling Interval (ms) </entry>
+                                    <entry>Milliseconds to wait before checking for new data. Used
+                                        in the polling mode only. </entry>
+                                </row>
+                                <row>
                                     <entry>HTTP Method</entry>
                                     <entry>HTTP method to use to request data from the
                                         server.</entry>
                                 </row>
                                 <row>
-                                    <entry>Request Timeout</entry>
-                                    <entry>Milliseconds to wait for the server to begin sending a
-                                        response. </entry>
-                                </row>
-                                <row>
-                                    <entry>Mode</entry>
-                                    <entry>Processing mode:<ul id="ul_nfn_slz_5r">
-                                            <li>Streaming - Maintains a connection and processes
-                                                data as it becomes available.</li>
-                                            <li>Polling - Connects periodically to check for data.
-                                            </li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Polling Interval (ms) </entry>
-                                    <entry>Milliseconds the origin waits before checking for new
-                                        data. Used in the polling mode only. </entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-AuthType">
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="HTTPClient-DataFormats.dita">
+                                    <entry>Data Format <xref href="HTTPClient-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline"/></xref></entry>
+                                                placement="inline" id="image_o5n_n2t_zw"
+                                        /></xref></entry>
                                     <entry>Format of data. Use one of the following options:<ul
                                             id="ul_zbw_szg_j5">
                                             <li>JSON</li>
@@ -89,15 +81,21 @@
                                             <li>XML</li>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>HTTP Stream Delimiter</entry>
-                                    <entry>Delimiter characters that indicate the end of a stream.
-                                        Used to create records for JSON and text data. <p>For XML
-                                            data, you can also specify an XML delimiter element to
-                                            create records. For more information, see <xref
-                                                href="HTTPClient-DataFormats.dita"/>.</p><p>Default
-                                            is \r\n, representing a carriage return and line feed.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReqTransferEncod">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ConnectTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReadTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-AuthType">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-UseProxy">
@@ -111,6 +109,10 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>
                                     <entry>Maximum number of records to include in a batch and send
@@ -122,8 +124,57 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mgp_2q3_br" placement="inline"
                                         /></xref></entry>
-                                    <entry>Maximum amount of time to wait before sending a partial
-                                        or empty batch. </entry>
+                                    <entry>Maximum number of milliseconds wait before sending a
+                                        partial or empty batch. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Pagination</wintitle> tab, optionally configure pagination
+                    details:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_lsp_btt_zw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Pagination Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Pagination Mode <xref
+                                            href="HTTPClient-Pagination.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_fdl_1yt_zw"
+                                        /></xref></entry>
+                                    <entry>Method of pagination to use. Use a method supported by
+                                        the API of the HTTP client. </entry>
+                                </row>
+                                <row>
+                                    <entry>Initial Page/Offset</entry>
+                                    <entry>The initial page for page number pagination, or the
+                                        initial offset for offset number pagination.</entry>
+                                </row>
+                                <row>
+                                    <entry>Result Field Path <xref href="HTTPClient-ResultFieldPath.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_pzk_py2_bx"
+                                        /></xref></entry>
+                                    <entry>Field path in the response that contains the data that
+                                        you want to process. Must be a list or array field.<p>The
+                                            origin generates a record for each object in the
+                                            specified field.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Wait Time Between Pages (ms)</entry>
+                                    <entry>The number of milliseconds to wait before requesting the
+                                        next page of data.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -275,8 +275,8 @@
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_jf4_g24_jw">
     <tgroup cols="2">
-     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <thead>
       <row>
        <entry/>
@@ -284,9 +284,22 @@
       </row>
      </thead>
      <tbody>
-      <row>
-       <entry/>
-       <entry/>
+      <row id="HTTP-ReqTransferEncod">
+       <entry>Request Transfer Encoding</entry>
+       <entry>Use one of the following encoding types:<ul id="ul_o3l_mgv_vw">
+         <li>Buffered - The standard transfer encoding type. </li>
+         <li>Chunked - Transfers data in chunks. Not supported by all servers.</li>
+        </ul><p>The default is Chunked.</p></entry>
+      </row>
+      <row id="HTTP-ConnectTimeout">
+       <entry>Connect Timeout</entry>
+       <entry>Maximum number of milliseconds to wait for a connection. <p>Use 0 to wait
+         indefinitely.</p></entry>
+      </row>
+      <row id="HTTP-ReadTimeout">
+       <entry>Read Timeout</entry>
+       <entry>Maximum number of milliseconds to wait for data. <p>Use 0 to wait
+        indefinitely.</p></entry>
       </row>
       <row id="HTTP-AuthType">
        <entry>Authentication Type</entry>

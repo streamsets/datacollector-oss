@@ -44,6 +44,25 @@
                                         existing field.</entry>
                                 </row>
                                 <row>
+                                    <entry>Header Output Location <xref
+                                            href="HTTPClient-ResponseHeaderFields.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bf1_nwz_zw"
+                                        /></xref></entry>
+                                    <entry>Location to write response header field information.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Header Attribute Prefix</entry>
+                                    <entry>Prefix to use when writing response header field
+                                        information to record header attributes.</entry>
+                                </row>
+                                <row>
+                                    <entry>Header Output Field</entry>
+                                    <entry>Field to use when writing response header field
+                                        information to a field in the record. </entry>
+                                </row>
+                                <row>
                                     <entry>Data Format</entry>
                                     <entry>Data format of response. Use one of the following
                                             options:<ul id="ul_zbw_szg_j5">
@@ -82,12 +101,17 @@
                                         for the PUT, POST, DELETE, and Expression method
                                         types.</entry>
                                 </row>
-                                <row>
-                                    <entry>Request Timeout</entry>
-                                    <entry>Milliseconds to wait for a response before timing out.
-                                            <p>Record requests that time out are handled based on
-                                            the error handling property for the
-                                        processor.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReqTransferEncod">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ConnectTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReadTimeout">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Maximum Parallel Requests <xref
@@ -113,6 +137,11 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Maximum Request Time</entry>
+                                    <entry>Maximum number of seconds to wait for a request to
+                                        complete.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -158,7 +187,8 @@
             </step>
             <step>
                 <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
-                    properties:</cmd>
+                        properties:<draft-comment author="Loretta">Not reusing origin step because
+                        this is field-based instead of record-based.</draft-comment></cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
                         <tgroup cols="2">

@@ -113,6 +113,7 @@
     <topicref href="../Processors/HTTPClient-ExpressionMethod.dita"/>
    </topicref>
    <topicref href="../Processors/HTTPClient-ParallelRequests.dita"/>
+   <topicref href="../Processors/HTTPClient-ResponseHeaderFields.dita"/>
    <topicref href="../Processors/HTTPClient-DataFormats.dita"/>
    <topicref href="../Processors/HTTPClient-Configuring.dita"/>
   </topicref>

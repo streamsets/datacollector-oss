@@ -25,7 +25,10 @@
                     Client</indexterm></indexterm>When you configure the HTTP Client, you define the
             resource URL, header attributes, and method to use. For some methods, you can specify
             additional request information. </p>
-        <p>You can configure the timeout, maximum number of parallel requests, and authentication
-            type. You can optionally use a truststore and keystore, and proxy.</p>
+        <p>You can configure the processor to include response header fields in the record as a set
+            of record header attributes or as a map in a record field.</p>
+        <p>You can also configure the timeout, request transfer encoding, maximum number of parallel
+            requests, and authentication type. You can optionally use a truststore and keystore, and
+            proxy.</p>
     </conbody>
 </concept>

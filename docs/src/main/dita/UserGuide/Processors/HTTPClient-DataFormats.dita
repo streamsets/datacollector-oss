@@ -27,25 +27,24 @@
                 <dlentry>
                     <dt>JSON</dt>
                     <dd>Writes a parsed JSON response to the specified field. </dd>
-                    <dd>When an object exceeds the maximum object length defined for the origin, the
-                        processor processes the object based on the error handling configured for
-                        the stage. </dd>
+                    <dd>When an object exceeds the specified maximum object length, the processor
+                        processes the object based on the error handling configured for the stage. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Text</dt>
                     <dd>Writes the response as a string to the specified field. </dd>
-                    <dd>When a line exceeds the maximum line length, the processor truncates the
-                        line. The processor adds a boolean field named Truncated to indicate if the
-                        line was truncated. </dd>
+                    <dd>When a line exceeds the specified maximum line length, the processor
+                        truncates the line. The processor adds a boolean field named Truncated to
+                        indicate if the line was truncated. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>XML</dt>
                     <dd>Writes the XML response to the specified field. </dd>
                     <dd>When specified, the processor uses the delimiter element to nest additional
                         elements in the field. </dd>
-                    <dd>When a record exceeds the maximum record length, the processor skips the
-                        record and continues processing with the next record. It sends the skipped
-                        record to the pipeline for error handling. </dd>
+                    <dd>When a record exceeds the specified maximum record length, the processor
+                        skips the record and continues processing with the next record. It sends the
+                        skipped record to the pipeline for error handling. </dd>
                 </dlentry>
             </dl>
         </p>

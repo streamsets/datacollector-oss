@@ -68,8 +68,12 @@
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/HTTPClient-ProcessingMode.dita"/>
+   <topicref href="../Origins/HTTPClient-Pagination.dita">
+    <topicref href="../Origins/HTTPClient-ResultFieldPath.dita"/>
+   </topicref>
    <topicref href="../Origins/HTTPClient-Method.dita"/>
    <topicref href="../Origins/HTTPClient-DataFormats.dita"/>
+   <topicref href="../Origins/HTTPClient-ResponseHeaderFields.dita"/>
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>

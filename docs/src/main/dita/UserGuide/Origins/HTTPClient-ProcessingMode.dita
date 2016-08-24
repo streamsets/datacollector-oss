@@ -30,6 +30,11 @@
      <dd>HTTP Client polls the server at the specified interval for available data. Use to access
       data periodically, such as metrics and events at a REST endpoint. </dd>
     </dlentry>
+        <dlentry>
+          <dt>Batch</dt>
+          <dd>HTTP Client processes all available data and then stops the pipeline. Use to process
+            data as needed.</dd>
+        </dlentry>
    </dl></p>
  </conbody>
 </concept>
