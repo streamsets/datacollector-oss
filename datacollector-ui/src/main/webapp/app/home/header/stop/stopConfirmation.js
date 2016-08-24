@@ -24,12 +24,14 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
+  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, forceStop,
+                                                                   api, $q) {
     angular.extend($scope, {
       common: {
         errors: []
       },
       pipelineInfo: pipelineInfo,
+      forceStop: forceStop,
       stopping: false,
       isList: _.isArray(pipelineInfo),
 
@@ -39,7 +41,7 @@ angular
           var deferList = [];
 
           angular.forEach(pipelineInfo, function(pipeline) {
-            deferList.push(api.pipelineAgent.stopPipeline(pipeline.name, 0));
+            deferList.push(api.pipelineAgent.stopPipeline(pipeline.name, 0, forceStop));
           });
 
           $q.all(deferList)
@@ -54,7 +56,7 @@ angular
             );
 
         } else {
-          api.pipelineAgent.stopPipeline(pipelineInfo.name, 0)
+          api.pipelineAgent.stopPipeline(pipelineInfo.name, 0, forceStop)
             .success(function(res) {
               $modalInstance.close(res);
             })

@@ -161,8 +161,12 @@ angular
        * On Stop Pipeline button click.
        *
        */
-      stopPipeline: function() {
-        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipeline', 1);
+      stopPipeline: function(forceStop) {
+        if (forceStop) {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Force Stop Pipeline', 1);
+        } else {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Stop Pipeline', 1);
+        }
         var modalInstance = $modal.open({
           templateUrl: 'app/home/header/stop/stopConfirmation.tpl.html',
           controller: 'StopConfirmationModalInstanceController',
@@ -171,6 +175,9 @@ angular
           resolve: {
             pipelineInfo: function () {
               return $scope.activeConfigInfo;
+            },
+            forceStop: function() {
+              return forceStop;
             }
           }
         });

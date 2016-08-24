@@ -630,8 +630,11 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      stopPipeline: function(pipelineName, rev) {
+      stopPipeline: function(pipelineName, rev, forceStop) {
         var url = apiBase + '/pipeline/' + pipelineName + '/stop?rev=' + rev ;
+        if (forceStop) {
+          url = apiBase + '/pipeline/' + pipelineName + '/forceStop?rev=' + rev ;
+        }
         return $http({
           method: 'POST',
           url: url

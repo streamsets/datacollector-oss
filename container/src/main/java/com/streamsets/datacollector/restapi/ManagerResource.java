@@ -193,9 +193,9 @@ public class ManagerResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
 
-  @Path("/pipeline/{pipelineName}/forceQuit")
+  @Path("/pipeline/{pipelineName}/forceStop")
   @POST
-  @ApiOperation(value = "Force Quit Pipeline", response = PipelineStateJson.class,
+  @ApiOperation(value = "Force Stop Pipeline", response = PipelineStateJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
@@ -204,7 +204,7 @@ public class ManagerResource {
       AuthzRole.MANAGER_REMOTE,
       AuthzRole.ADMIN_REMOTE
   })
-  public Response forceQuitPipeline(
+  public Response forceStopPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @Context SecurityContext context) throws PipelineException {

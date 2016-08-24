@@ -354,7 +354,7 @@ angular
        * On Stop Pipeline button click.
        *
        */
-      stopPipeline: function(pipelineInfo, $event) {
+      stopPipeline: function(pipelineInfo, forceStop, $event) {
         if($event) {
           $event.stopPropagation();
         }
@@ -373,6 +373,9 @@ angular
           resolve: {
             pipelineInfo: function () {
               return pipelineInfo;
+            },
+            forceStop: function() {
+              return forceStop;
             }
           }
         });
@@ -394,7 +397,7 @@ angular
       /**
        * On Stop Pipelines button click.
        */
-      stopSelectedPipelines: function() {
+      stopSelectedPipelines: function(forceStop) {
         $rootScope.common.trackEvent(
           pipelineConstant.BUTTON_CATEGORY,
           pipelineConstant.CLICK_ACTION,
@@ -431,6 +434,9 @@ angular
           resolve: {
             pipelineInfo: function () {
               return selectedPipelineInfoList;
+            },
+            forceStop: function() {
+              return forceStop;
             }
           }
         });
