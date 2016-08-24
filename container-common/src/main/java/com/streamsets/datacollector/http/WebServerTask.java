@@ -31,6 +31,7 @@ import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
+import com.streamsets.lib.security.http.SSOUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.eclipse.jetty.jaas.JAASLoginService;
@@ -446,8 +447,7 @@ public abstract class WebServerTask extends AbstractTask {
     final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
     remoteSsoService.setComponentId(componentId);
     remoteSsoService.setApplicationAuthToken(appToken);
-    String appTokenForLogging = (appToken != null) ? (appToken + "..........").substring(0, 10) + "..." : null;
-    LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, appTokenForLogging);
+    LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, SSOUtils.tokenForLog(appToken));
     addToPostStart(new Runnable() {
       @Override
       public void run() {

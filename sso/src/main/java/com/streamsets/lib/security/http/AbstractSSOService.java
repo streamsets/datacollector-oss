@@ -157,19 +157,9 @@ public abstract class AbstractSSOService implements SSOService {
     return lockMap;
   }
 
-  private String trimTokenForLog(String token) {
-    if (token == null) {
-      return "-";
-    } else if (token.length() < 5) {
-      return token;
-    } else {
-      return token.substring(0, 5) + "...";
-    }
-  }
-
   private void trace(String message, String token, String component) {
     if (LOG.isTraceEnabled()) {
-      LOG.trace(message, trimTokenForLog(token), component);
+      LOG.trace(message, SSOUtils.tokenForLog(token), component);
     }
   }
 
@@ -178,7 +168,7 @@ public abstract class AbstractSSOService implements SSOService {
     SSOPrincipal principal = cache.get(token);
     if (principal == null) {
       if (cache.isInvalid(token)) {
-        LOG.debug("Token '{}' invalid '{}' for component '{}'", type, trimTokenForLog(token), componentId);
+        LOG.debug("Token '{}' invalid '{}' for component '{}'", type, SSOUtils.tokenForLog(token), componentId);
       } else {
         trace("Trying to get lock for token '{}' component '{}'", token, componentId);
         long start = System.currentTimeMillis();
@@ -198,7 +188,7 @@ public abstract class AbstractSSOService implements SSOService {
           } catch (InterruptedException ex) {
             LOG.warn(
                 "Got interrupted while waiting for lock for token '{}' for component '{}'",
-                trimTokenForLog(token),
+                SSOUtils.tokenForLog(token),
                 componentId
             );
             return null;
@@ -208,7 +198,7 @@ public abstract class AbstractSSOService implements SSOService {
         try {
           principal = cache.get(token);
           if (principal == null) {
-            LOG.debug("Token '{}' component '{}' not found in cache", trimTokenForLog(token), componentId);
+            LOG.debug("Token '{}' component '{}' not found in cache", SSOUtils.tokenForLog(token), componentId);
             try {
               principal = remoteValidation.call();
             } catch (Exception ex) {
@@ -226,12 +216,12 @@ public abstract class AbstractSSOService implements SSOService {
               cache.invalidate(token);
             }
           } else {
-            LOG.debug("Token '{}' component '{}' found in cache", trimTokenForLog(token), componentId);
+            LOG.debug("Token '{}' component '{}' found in cache", SSOUtils.tokenForLog(token), componentId);
           }
         } catch (Exception ex) {
           LOG.error(
               "Exception while doing remote validation for token '{}' component '{}'",
-              trimTokenForLog(token),
+              SSOUtils.tokenForLog(token),
               componentId
           );
         } finally {

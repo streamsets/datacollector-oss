@@ -221,15 +221,6 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     return authToken;
   }
 
-  String getAuthTokenForLogging(String authToken) {
-    // if less than 16 then is invalid for sure, we can fully show it
-    if (authToken == null) {
-      authToken = "null";
-    }
-    String fragment = (authToken.length() < 16) ? authToken : (authToken.substring(0, 16) + "...");
-    return "TOKEN:" + fragment;
-  }
-
   @Override
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
       throws ServerAuthException {
@@ -240,7 +231,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     Authentication ret;
 
     if (LOG.isTraceEnabled()) {
-      LOG.trace("Request: {}", getRequestInfoForLogging(httpReq, getAuthTokenForLogging(authToken)));
+      LOG.trace("Request: {}", getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken)));
     }
 
     if (isCORSOptionsRequest(httpReq)) {
@@ -276,7 +267,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
               LOG.trace(
                   "Redirection to self, principal '{}' request: {}",
                   principal.getPrincipalId(),
-                  getRequestInfoForLogging(httpReq, getAuthTokenForLogging(authToken))
+                  getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
               );
             }
             ret = redirectToSelf(httpReq, httpRes);
@@ -285,14 +276,14 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
               LOG.debug(
                   "Principal '{}' request: {}",
                   principal.getPrincipalId(),
-                  getRequestInfoForLogging(httpReq, getAuthTokenForLogging(authToken))
+                  getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
               );
             }
             ret = user;
           }
         }
       } else {
-        ret = returnUnauthorized(httpReq, httpRes, getAuthTokenForLogging(authToken), "Could not authenticate: {}");
+        ret = returnUnauthorized(httpReq, httpRes, SSOUtils.tokenForLog(authToken), "Could not authenticate: {}");
       }
     }
     return ret;

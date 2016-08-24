@@ -337,14 +337,6 @@ public class TestSSOUserAuthenticator {
   }
 
   @Test
-  public void testGetAuthTokenForLogging() {
-    SSOService ssoService = Mockito.mock(SSOService.class);
-    SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
-    Assert.assertEquals("TOKEN:null", authenticator.getAuthTokenForLogging(null));
-    Assert.assertEquals("TOKEN:abcdefghij123456...", authenticator.getAuthTokenForLogging("abcdefghij1234567"));
-  }
-
-  @Test
   public void testValidateRequestNotMandatory() throws Exception {
     SSOService ssoService = Mockito.mock(SSOService.class);
     SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, null));
