@@ -428,6 +428,9 @@
       <id>rpm</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <modules>
         <module>rpm</module>
