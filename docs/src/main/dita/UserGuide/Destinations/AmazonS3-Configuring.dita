@@ -228,7 +228,7 @@
             </step>
             <step>
                 <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure proxy
-                    information:</cmd>
+                    information and tune performance:</cmd>
                 <info>
                     <table
                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table-S3AdvProps"

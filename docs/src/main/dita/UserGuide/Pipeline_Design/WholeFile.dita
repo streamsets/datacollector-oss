@@ -22,12 +22,13 @@
             perform additional processing on file data in the pipeline. </p>
         <p>When moving whole files, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            streams file data from the origin system and writes the data to the destination system
-            based on the directory and file name defined in the destination. </p>
+            streams file data from the origin system and writes the data to the destination system.
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> writes the files based on the directory and file name defined in the destination. </p>
         <p>When the origin system provides checksum metadata, you can configure the origin to verify
             the checksum. </p>
         <p>Most destinations allow you to define access permissions for target files. By default,
-            target files are created with default permissions. </p>
+            target files use the default permissions of the destination system.</p>
         <p>
             <note>During data preview, a whole file pipeline displays a single record instead of the
                 number of records configured for the preview batch size.</note>

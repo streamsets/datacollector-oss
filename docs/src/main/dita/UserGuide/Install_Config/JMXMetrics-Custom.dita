@@ -42,24 +42,24 @@ com_streamsets_pipeline_stage_origin_logtail_FileTailDSource_\
                 <dlentry>
                     <dt>Amazon S3 destination</dt>
                     <dd>In addition to the standard metrics available for origins, Amazon S3
-                        provides the following custom metrics:</dd>
+                        provides the following custom metrics:<draft-comment author="Loretta">Hiding
+                            this for now - not available yet. Would be for all whole-file
+                            destinations. 8/24/16. File transfer statistics - Displays file transfer
+                            details. Appears when the destination writes whole files to the
+                            destination system with the whole file data format. The counter displays
+                            in external tools as
+                            follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
+com_streamsets_pipeline_stage_destination_S3Target_S3DTarget_\
+&lt;library version>....?</codeblock></draft-comment></dd>
                     <dd>
                         <ul id="ul_pmr_tnx_1x">
-                            <li>File transfer statistics - Displays file transfer details. Appears
-                                when the destination writes whole files to the destination system
-                                with the whole file data format. The counter displays in external
-                                tools as follows:<draft-comment author="Loretta">no idea what this
-                                    path is - guessed on dest names check all new
-                                    ones.</draft-comment><codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_S3Target_S3Target_\
-&lt;library version>.fileTransferStatistics.&lt;file path>.gauge</codeblock></li>
                             <li>Transfer Rate KB Meter - Displays the transfer rate in KB. Appears
                                 when the destination writes whole files to the destination system
                                 with the whole file data format. The counter displays in external
                                 tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_S3Target_S3Target_\
-&lt;library version>.transferRateKB.&lt;file path>.gauge</codeblock></li>
+com_streamsets_pipeline_stage_destination_s3_\
+AmazonS3DTarget_&lt;library version>.transferRateKb.meter</codeblock></li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -71,28 +71,19 @@ com_streamsets_pipeline_stage_destination_S3Target_S3Target_\
                                 to HDFS. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_HdfsTarget_\ 
-HDFSDTarget_&lt;library version>.lateRecords.&lt;file path>.\
-&lt;counter | metric></codeblock></li>
+HDFSDTarget_&lt;library version>.lateRecords.&lt;counter | metric></codeblock></li>
                             <li>To HDFS Records meter and counter. The number of records written to
                                 HDFS. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_HdfsTarget_\
-HDFSDTarget_&lt;library version>.hdfsRecords.&lt;file path>.\
-&lt;counter | metric> </codeblock></li>
-                            <li>File transfer statistics - Displays file transfer details. Appears
-                                when the destination writes whole files to the destination system
-                                with the whole file data format. The counter displays in external
-                                tools as
-                                follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_HdfsTarget_ HDFSDTarget_\
-&lt;library version>.fileTransferStatistics.&lt;file path>.gauge</codeblock></li>
+HDFSDTarget_&lt;library version>.hdfsRecords.&lt;counter | metric> </codeblock></li>
                             <li>Transfer Rate KB Meter - Displays the transfer rate in KB. Appears
                                 when the destination writes whole files to the destination system
                                 with the whole file data format. The counter displays in external
                                 tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_HdfsTarget_HDFSDTarget_\
-&lt;library version>.transferRateKB.&lt;file path>.gauge</codeblock></li>
+&lt;library version>.transferRateKb.meter</codeblock></li>
                         </ul></dd>
                 </dlentry>
                 <dlentry>
@@ -103,30 +94,21 @@ com_streamsets_pipeline_stage_destination_HdfsTarget_HDFSDTarget_\
                                 to the local file system. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_localfilesystem_\
-LocalFileSystemDTarget_&lt;library version>.lateRecords.&lt;file path>.\
+LocalFileSystemDTarget_&lt;library version>.lateRecords.\
 &lt;counter | metric></codeblock></li>
                             <li>To HDFS Records meter and counter. The number of records written to
                                 the local file system. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_localfilesystem_\
-LocalFileSystemDTarget_&lt;library version>.hdfsRecords.&lt;file path>.\
+LocalFileSystemDTarget_&lt;library version>.hdfsRecords.\
 &lt;counter | metric></codeblock></li>
-                            <li>File transfer statistics - Displays file transfer details. Appears
-                                when the destination writes whole files to the destination system
-                                with the whole file data format. The counter displays in external
-                                tools as
-                                follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_localfilesystem_\
-LocalFileSystemDTarget_&lt;library version>.fileTransferStatistics.\
-&lt;file path>.gauge</codeblock></li>
                             <li>Transfer Rate KB Meter - Displays the transfer rate in KB. Appears
                                 when the destination writes whole files to the destination system
                                 with the whole file data format. The counter displays in external
                                 tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_localfilesystem_\
-LocalFileSystemDTarget_&lt;library version>.transferRateKB.\
-&lt;file path>.gauge</codeblock></li>
+LocalFileSystemDTarget_&lt;library version>.transferRateKb.meter</codeblock></li>
                         </ul></dd>
                 </dlentry>
                 <dlentry>
@@ -137,29 +119,19 @@ LocalFileSystemDTarget_&lt;library version>.transferRateKB.\
                                 to MapR FS. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_marpfs_\
-MaprFSDTarget_&lt;library version>.lateRecords.&lt;file path>.\
-&lt;counter | metric></codeblock></li>
+MaprFSDTarget_&lt;library version>.lateRecords.&lt;counter | metric></codeblock></li>
                             <li>To HDFS Records meter and counter. The number of records written to
                                 MapR FS. The counter displays in external tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_marpfs_\
-MaprFSDTarget_&lt;library version>.hdfsRecords.&lt;file path>.\
-&lt;counter | metric></codeblock></li>
-                            <li>File transfer statistics - Displays file transfer details. Appears
-                                when the destination writes whole files to the destination system
-                                with the whole file data format. The counter displays in external
-                                tools as
-                                follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
-com_streamsets_pipeline_stage_destination_marpfs_\
-MaprFSDTarget_&lt;library version>.fileTransferStatistics.\
-&lt;file path>.gauge</codeblock></li>
+MaprFSDTarget_&lt;library version>.hdfsRecords.&lt;counter | metric></codeblock></li>
                             <li>Transfer Rate KB Meter - Displays the transfer rate in KB. Appears
                                 when the destination writes whole files to the destination system
                                 with the whole file data format. The counter displays in external
                                 tools as
                                 follows:<codeblock>sdc.pipeline.&lt;pipeline name>.&lt;pipeline revision>.custom.\
 com_streamsets_pipeline_stage_destination_marpfs_MaprFSDTarget_\
-&lt;library version>.transferRateKB.&lt;file path>.gauge</codeblock></li>
+&lt;library version>.transferRateKb.meter</codeblock></li>
                         </ul></dd>
                 </dlentry>
             </dl>

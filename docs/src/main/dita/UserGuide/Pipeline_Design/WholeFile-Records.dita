@@ -24,7 +24,7 @@
                     system to the destination system. You cannot modify the fileref field.</li>
                 <li>fileInfo - A map of file properties, such as file path, file name, and file
                     owner. The details differ based on the origin system. You can use processors to
-                    modify information in the fileInfo field as needed.<note><ph
+                    modify information in the fileInfo field as needed.<note type="tip"><ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/WF-ph-DataPreview"
                         /></note></li>
             </ul></p>

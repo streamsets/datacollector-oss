@@ -29,7 +29,8 @@
             <title>Example</title>
             <p>You want a pipeline to pass whole files from a local directory to Amazon S3. For the
                 target file name, you want to append the .json file extension to the original file
-                name. To do this, you can configure the File Name Expression as follows:
+                name. To do this, you can configure the <uicontrol>File Name Expression</uicontrol>
+                property as follows:
                 <codeblock>${str:concat(record:value('/fileInfo/filename'), ".json")}</codeblock></p>
             <p>Or, more
                 simply...<codeblock>${record:value('/fileInfo/filename’)}.json</codeblock></p>

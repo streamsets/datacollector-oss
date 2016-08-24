@@ -28,8 +28,7 @@
                 <codeph>0444</codeph>.</p>
         <p>To use the original source file permissions for each target file, you can use the
             following expression:<codeblock>${record:value('/fileInfo/permissions')}</codeblock></p>
-        <p>This ensures, for example, that a source file configured to allow execute permission to
-            only the file owner is written to the destination system with the exact same set of
-            permissions. </p>
+        <p>This ensures, for example, that a source file with execute permission for only the file
+            owner is written to the destination system with the exact same set of permissions. </p>
  </conbody>
 </concept>
