@@ -190,6 +190,21 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cdh_5_8-lib</entry>
+                            <entry>
+                                <p>For the Cloudera CDH version 5.8 distribution of Hadoop. </p>
+                                <p>Includes:</p>
+                                <ul id="ul_qlz_mpx_1x">
+                                    <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
+                                    <li>Flume destination </li>
+                                    <li>Hadoop FS destination </li>
+                                    <li>HBase destination </li>
+                                    <li>Solr destination</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</entry>
                             <entry>
                                 <p>For the Cloudera version 5.4 distribution of Apache Kafka
@@ -216,15 +231,16 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</entry>
+                            <entry><p>For the Cloudera version 5.7 distribution of Apache Kafka
+                                    2.0.</p>Includes the Kafka Consumer origin for cluster mode
+                                pipelines.</entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</entry>
                             <entry>
-                                <p>For the Cloudera version 5.7 distribution of Apache Kafka
-                                    2.0.</p>
-                                <p>Includes: <ul id="ul_fpd_ktg_qw">
-                                        <li>Kafka Consumer origin for cluster mode pipelines</li>
-                                        <li>SDC RFC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
-                                        <li>Kafka Producer destination</li>
-                                    </ul></p>
+                                <p>For the Cloudera version 5.8 distribution of Apache Kafka 2.0. </p>
+                                <p>Includes the Kafka Consumer origin for cluster mode
+                                    pipelines.</p>
                             </entry>
                         </row>
                         <row>
@@ -232,7 +248,7 @@
                             <entry>For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
                                     <p>Includes: <ul id="ul_pt3_nyp_vw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
@@ -242,7 +258,7 @@
                             <entry>For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
                                     <p>Includes: <ul id="ul_w1y_nyp_vw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
@@ -252,7 +268,7 @@
                             <entry>For the Cloudera distribution of Apache Kafka 2.0 (0.9.0).
                                     <p>Includes: <ul id="ul_kjf_ntg_qw">
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
                                     </ul></p></entry>
