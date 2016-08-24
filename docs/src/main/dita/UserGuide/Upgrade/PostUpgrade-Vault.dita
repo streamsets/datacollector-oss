@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_yyv_v45_zw">
+ <title>Update Vault Pipelines</title>
+ <shortdesc>Due to a known issue in version 1.5.0.0, you can use Vault functions to call Vault
+        secrets from within any pipeline or stage property. If you are upgrading from version
+        1.5.0.0, update Vault pipelines as needed.</shortdesc>
+ <conbody>
+  <p>To protect the security of sensitive information, calling Vault is now
+                        restricted to the following properties:</p>
+        <ul id="ul_nqx_cp5_zw">
+            <li>Usernames, passwords, and similar properties such as AWS Access Key ID and Secret
+                Access Key.</li>
+            <li>HTTP headers and bodies when using HTTPS. 
+            </li>
+        </ul>
+        <p>After upgrading from version 1.5.0.0, update any pipeline that uses Vault
+                        functions in other properties. Remove Vault functions from unsupported
+                        properties or the pipeline will fail validation when you validate or start
+                        the pipeline. 
+        </p>
+ </conbody>
+</concept>

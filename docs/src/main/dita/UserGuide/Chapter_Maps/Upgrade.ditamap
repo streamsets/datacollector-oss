@@ -42,5 +42,11 @@
    <topicref href="../Upgrade/CM-Step2-InstallParcel.dita"/>
    <topicref href="../Upgrade/CM-Step3-ActivateParcel.dita"/>
   </topicref>
+  <topicref href="../Upgrade/PostUpgrade.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
+  </topicref>
  </topicref>
 </map>

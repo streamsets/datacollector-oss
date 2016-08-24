@@ -17,10 +17,12 @@
     <title>Step 1. Verify the Directories in the Previous Version (Manual Start)</title>
     <shortdesc>If the previous version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> used a
-        manual start, verify that the directories used to store configuration, data, log, and
-        resource files are outside of <codeph>$SDC_DIST</codeph>, the base <ph
+        manual start, verify that the configuration, data, log, and resource directories are outside
+        of <codeph>$SDC_DIST</codeph>, the base <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        runtime directory.</shortdesc>
+        runtime directory. In addition, if you installed additional drivers or developed custom
+        stages, verify that those libraries are outside of <codeph>$SDC_DIST</codeph>
+        also.</shortdesc>
     <taskbody>
         <context>
             <note>If the previous version used a service start, the default values of the
@@ -64,6 +66,14 @@
             <step>
                 <cmd>Move all files from the previous directories to the newly created
                     directories.</cmd>
+            </step>
+            <step>
+                <cmd>To move additional drivers or custom stage libraries outside of the
+                        <codeph>$SDC_DIST</codeph> runtime directory, see the instructions in <xref
+                        href="../Install_Config/AdditionalDrivers-Installing.dita#task_idl_hqw_ft"/>
+                    or <xref
+                        href="../Install_Config/CustomStageLibraries-Storing.dita#task_hyk_sk1_1x"
+                    />.</cmd>
             </step>
             <step>
                 <cmd>Restart <ph

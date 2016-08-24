@@ -40,9 +40,9 @@
                     />, rename the directory defined by the <codeph>$SDC_CONF</codeph> environment
                     variable.</cmd>
                 <info>
-                    <p>For example, if you are upgrading version 1.4.0.0 and if
+                    <p>For example, if you are upgrading version 1.5.0.0 and if
                             <codeph>$SDC_CONF</codeph> is defined as <codeph>/etc/sdc</codeph>,
-                        rename the directory to <codeph>/etc/sdc1400</codeph>.</p>
+                        rename the directory to <codeph>/etc/sdc1500</codeph>.</p>
                 </info>
             </step>
             <step>
@@ -81,7 +81,7 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <codeph>/etc/sdc1400</codeph>,
+                                        configuration directory to <codeph>/etc/sdc1500</codeph>,
                                         use the value <codeph>/etc/sdc</codeph>.</entry>
                                 </row>
                                 <row>
@@ -104,6 +104,11 @@
             <step>
                 <cmd>Create the <codeph>/etc/sdc</codeph> directory and copy all files from
                         <codeph>$SDC_DIST/etc</codeph> into this directory.</cmd>
+            </step>
+            <step>
+                <cmd>If you installed additional drivers or developed custom stages, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable and
+                    set it to the same directory used in the previous version.</cmd>
             </step>
             <step>
                 <cmd>To run <ph

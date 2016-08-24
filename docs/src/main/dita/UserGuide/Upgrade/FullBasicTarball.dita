@@ -26,7 +26,7 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             runtime directory. You then configure the new version to use the same data, log, and
             resource directories as the previous version. As a result, the new version has access to
-            the pipeline, log, and resource files created in the previous version.</p>
+            the files created in the previous version.</p>
         <p>To upgrade a full or basic installation from the tarball, perform the following
             steps:</p>
         <ol id="ol_x5s_qpr_5v">
