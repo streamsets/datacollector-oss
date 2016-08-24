@@ -36,7 +36,7 @@ import java.util.List;
     label="Field Type Converter",
     description = "Converts the data type of a field(s)",
     icon="converter.png",
-    onlineHelpRefUrl = "index.html#Processors/FieldConverter.html#task_g23_2tq_wq"
+    onlineHelpRefUrl = "index.html#Processors/FieldTypeConverter.html#task_g23_2tq_wq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
