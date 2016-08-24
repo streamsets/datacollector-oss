@@ -22,13 +22,22 @@
             library to write to Azure Blob storage using the WASB protocol. This enables the Hadoop
             FS destination to write directly to Azure HDInsight. </p>
         <p>To write to Azure HDInsight, perform the following tasks:<ol id="ol_kvn_mnf_sw">
+                <li>To write to an HDInsight cluster, install <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> on one of the nodes in the cluster.</li>
                 <li>Configure the Hadoop FS destination to use the HDP 2.4  stage library. </li>
-                <li>Configure Azure credentials:<ul id="ul_hzr_q2g_sw">
-                        <li>Add the following Hadoop configuration property to the destination:
+                <li>Configure Azure credentials in one of the following ways:<ul id="ul_hzr_q2g_sw">
+                        <li>If the credentials are defined in the HDFS configuration file,
+                                <codeph>core-site.xml</codeph>, configure the destination to use the
+                            configuration file in the <uicontrol>Hadoop FS Configuration
+                                Directory</uicontrol> property.</li>
+                        <li>If the credentials are not defined in the HDFS configuration file,
+                                <codeph>core-site.xml</codeph>, add the following property to the
+                                <uicontrol>Hadoop FS Configuration</uicontrol> property:
                                 <codeblock>fs.azure.account.key.&lt;account name>.blob.core.windows.net</codeblock><p>Use
-                                the appropriate account name in the property name.</p></li>
-                        <li>Define the property using the account key for the Blob storage
-                            account.</li>
+                                the appropriate account name in the property name. Define the
+                                property using the account key value for the Azure storage
+                                account.</p></li>
                     </ul></li>
                 <li>In the destination, configure the <uicontrol>Hadoop FS URI</uicontrol> property
                     using "wasbs" or "wasb" instead of "hdfs", as
