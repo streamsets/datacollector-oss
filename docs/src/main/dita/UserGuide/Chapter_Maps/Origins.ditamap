@@ -84,6 +84,7 @@
    <topicref href="../Origins/JDBC-SQLQuery.dita">
     <topicref href="../Origins/JDBC-SQLQueryIncremental.dita"/>
     <topicref href="../Origins/JDBC-SQLQueryFull.dita"/>
+    <topicref href="../Origins/JDBCConsumer-StoredProcedures.dita"/>
    </topicref>
    <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
    <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita"/>
