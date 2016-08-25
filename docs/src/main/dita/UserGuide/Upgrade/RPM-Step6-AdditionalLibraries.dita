@@ -13,10 +13,12 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_a2n_3fk_5v">
- <title>Upgrade</title>
- <shortdesc>You can upgrade a previous version of <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to a
-        newer version. You can upgrade a full or basic installation from the tarball, a basic
-        installation from the RPM package, or an installation with Cloudera Manager.</shortdesc>
+<concept id="concept_pch_vnr_bx">
+ <title>Step 6. Install Additional Libraries</title>
+ <shortdesc>Install the individual stage libraries that the upgraded pipelines require. Use the
+            <codeph>stagelibs</codeph> command to install additional stage libraries.</shortdesc>
+ <conbody>
+        <p>For instructions on using the <codeph>stagelibs</codeph> command, see <xref
+                href="../Install_Config/BasicInstall-Step2.dita#concept_bnl_n3n_s5"/>.</p>
+ </conbody>
 </concept>

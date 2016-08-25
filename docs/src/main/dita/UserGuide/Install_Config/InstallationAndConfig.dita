@@ -19,15 +19,17 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and start it
     manually or run it as a service. </shortdesc>
   <conbody>
+    <p>You can install a full version of <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that
+      includes all stage libraries. Or, you can install a basic version of <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and add
+      additional stage libraries for additional functionality as needed.</p>
     <p>If you use Docker, you can also run the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> image from
       Docker Hub. </p>
     <p>If you use Cloudera Manager, you can install and administer <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
       Cloudera Manager. </p>
-    <p>You can alternatively install a basic version of <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and add
-      additional stage libraries for additional functionality as needed.</p>
     <p>After installation, you can install additional drivers for stages, create additional users,
       customize <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
       />, and configure the environment. </p>

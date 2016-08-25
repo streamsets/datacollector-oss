@@ -22,18 +22,24 @@
    </topicmeta>
    <topicref href="../Install_Config/Requirements.dita"/>
   </topicref>
-  <topicref href="../Install_Config/Installing_the_DC.dita" chunk="to-content">
-  <topicmeta>
-   <shortdesc/>
-  </topicmeta>
- </topicref>
-  <topicref href="../Install_Config/Installing_the_DC-Service.dita" chunk="to-content">
+  <topicref href="../Install_Config/FullInstall.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-    <topicref href="../Install_Config/Installing_the_DC-ServiceRPM.dita"/>
-    <topicref href="../Install_Config/Installing_the_DC-ServiceTarball.dita"/>
+   <topicref href="../Install_Config/Installing_the_DC.dita"/>
+   <topicref href="../Install_Config/Installing_the_DC-ServiceTarball.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/BasicInstall_Overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/BasicInstall_Step1.dita">
+    <topicref href="../Install_Config/BasicInstall_RPM.dita"/>
+    <topicref href="../Install_Config/BasicInstall_Tarball.dita"/>
    </topicref>
+   <topicref href="../Install_Config/BasicInstall-Step2.dita"/>
+   <topicref href="../Install_Config/BasicInstall-LibList.dita"/>
+  </topicref>
    <topicref href="../Install_Config/Installing_the_DC-Docker.dita" chunk="to-content">
     <topicmeta>
      <shortdesc/>
@@ -51,14 +57,6 @@
    <topicref href="../Install_Config/CM-EnableKerberos.dita"/>
    <topicref href="../Install_Config/AdditionalDrivers-Installing-CM.dita"/>
    <topicref href="../Install_Config/CustomStageLibraries-Storing-CM.dita"/>
-  </topicref>
-  <topicref href="../Install_Config/BasicInstall_Overview.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Install_Config/BasicInstall_Step1.dita"/>
-   <topicref href="../Install_Config/BasicInstall-Step2.dita"/>
-   <topicref href="../Install_Config/BasicInstall-LibList.dita"/>
   </topicref>
   <topicref href="../Install_Config/MapR-Prerequisites.dita">
    <topicmeta>

@@ -23,16 +23,17 @@
    <topicref href="../Upgrade/FullBasicTarball-Step6-AdditionalLibraries.dita"/>
    <topicref href="../Upgrade/FullBasicTarball-Step7-Start.dita"/>
   </topicref>
-  <topicref href="../Upgrade/FullRPM.dita" chunk="to-content">
+  <topicref href="../Upgrade/BasicRPM.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Upgrade/FullRPM-Step1-Shutdown.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step2-BackupEnvConfig.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step3-Install.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step4-EnvConfig.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step5-ConfigFiles.dita"/>
-   <topicref href="../Upgrade/FullRPM-Step6-Start.dita"/>
+   <topicref href="../Upgrade/RPM-Step1-Shutdown.dita"/>
+   <topicref href="../Upgrade/RPM-Step2-BackupEnvConfig.dita"/>
+   <topicref href="../Upgrade/RPM-Step3-Install.dita"/>
+   <topicref href="../Upgrade/RPM-Step4-EnvConfig.dita"/>
+   <topicref href="../Upgrade/RPM-Step5-ConfigFiles.dita"/>
+   <topicref href="../Upgrade/RPM-Step6-AdditionalLibraries.dita"/>
+   <topicref href="../Upgrade/RPM-Step7-Start.dita"/>
   </topicref>
   <topicref href="../Upgrade/CMUpgrade.dita" chunk="to-content">
    <topicmeta>
