@@ -146,7 +146,7 @@ For CentOS 7:
     </div>
 
 </div>
-<div class="topic task nested1" id="unique_1907111262">
+<div class="topic task nested1" id="unique_1103568225">
     <h2 class="title topictitle2">Step 3. Distribute and Activate the StreamSets Parcel</h2>
 
     <div class="body taskbody">
@@ -168,7 +168,7 @@ For CentOS 7:
 
         </div>
 
-        <ol class="ol steps" id="unique_1907111262__steps_zj3_4sm_25"><li class="li step stepexpand">
+        <ol class="ol steps" id="unique_1103568225__steps_zj3_4sm_25"><li class="li step stepexpand">
                 <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
                         <span class="ph uicontrol">Parcels</span> icon. </span>
                 <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't
@@ -389,6 +389,80 @@ grant codebase "file:///opt/sdc-extras/-" {
 
             </ol>
 </div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_qvz_xdb_1x">
+    <h2 class="title topictitle2">Storing Custom Stage Libraries with Cloudera Manager (Optional)</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">If you develop custom
+                stages, store the stage libraries in a local directory external to the <span class="ph">Data
+                  Collector</span> runtime directory. Use an external directory to enable use of the custom stage
+                libraries after <span class="ph">Data
+                  Collector</span> upgrades.</p>
+
+            <p class="p">For more information about developing your own custom stages, see the following
+                StreamSets tutorial: <a class="xref" href="https://github.com/streamsets/tutorials/blob/master/tutorial-destination/readme.md" target="_blank">Creating a Custom StreamSets
+                Destination</a>.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and
+                    then click <span class="ph uicontrol">Configuration</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data
+                        Collector Advanced Configuration Snippet (Safety Valve) for
+                        sdc-env.sh</span> field, add the USER_LIBRARIES_DIR environment
+                    variable and point it to the custom stage library directory, as follows:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">export USER_LIBRARIES_DIR="&lt;custom stage library directory&gt;"</pre>
+
+                    <div class="p">For
+                        example:<pre class="pre codeblock">export USER_LIBRARIES_DIR="/opt/sdc-user-libs/"</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On every node that runs <span class="ph">Data
+                  Collector</span>, copy the custom stage libraries to the directory defined for the
+                    USER_LIBRARIES_DIR environment variable. Use a directory structure for each
+                    custom stage.</span>
+                <div class="itemgroup info">For example to store libraries for a custom stage named customstage1, you
+                    would copy them to the following directory:
+                    <pre class="pre codeblock">/opt/sdc-user-libs/customstage1</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using the Java Security Manager, which is enabled by default, update the
+                        <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
+                        sdc-security.policy</span> property to include the custom stage library
+                    directory as follows:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">// custom stage library directory
+grant codebase "file://&lt;custom stage library directory&gt;-" {
+   permission java.security.AllPermission;
+};</pre>
+
+                    <div class="p">For
+                        example:<pre class="pre codeblock">// custom stage library directory
+grant codebase "file:///opt/sdc-user-libs/-" {
+   permission java.security.AllPermission;
+};</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span>.</span>
+            </li>
+</ol>
 
     </div>
 

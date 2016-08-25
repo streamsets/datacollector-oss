@@ -378,7 +378,7 @@
                         <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                         <thead>
                             <row>
-                                <entry>Email Alert Properties</entry>
+                                <entry>Email Alert Property</entry>
                                 <entry>Description</entry>
                             </row>
                         </thead>
@@ -563,7 +563,7 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                         <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                         <thead>
                             <row>
-                                <entry>Blacklist / Whitelist Properties <xref
+                                <entry>Blacklist / Whitelist Property <xref
                                         href="BlacklistWhitelist.dita"><image
                                             href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_pvr_lgg_qv"/>

@@ -35,8 +35,7 @@
             partition prefix to specify the S3 partition to write to. </p>
 
         <p class="p">The Amazon S3 destination can write data asynchronously to improve performance when
-            writing to multiple prefixes. You can configure advanced properties to ttune
-            performance. </p>
+            writing to multiple prefixes. You can configure advanced properties to tune performance. </p>
 
         <p class="p">You can configure the destination to use Amazon Web Services server-side encryption to
             protect the data written to Amazon S3. You can also use a proxy user and compress data
@@ -260,6 +259,14 @@ This is the
 
                   
                 
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes a single text field of a record. When you
+                              configure the stage, you select the field to use. When necessary,
+                              merge record data into the field earlier in the pipeline. </dd>
+
+                  
+                
                         <dt class="dt dlterm">Whole File</dt>
 
                         <dd class="dd">Streams whole files to the destination system. The destination writes
@@ -271,14 +278,6 @@ This is the
                               system.</dd>
 
                         <dd class="dd">For more information about the whole file data format, see <a class="xref" href="../Pipeline_Design/WholeFile.html#concept_nfc_qkh_xw">Whole File Data Format</a>.</dd>
-
-                  
-                
-                        <dt class="dt dlterm">Text</dt>
-
-                        <dd class="dd">The destination writes a single text field of a record. When you
-                              configure the stage, you select the field to use. When necessary,
-                              merge record data into the field earlier in the pipeline. </dd>
 
                   
             </dl>
@@ -715,7 +714,7 @@ This is the
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure proxy
-                    information:</span>
+                    information and tune performance:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__table_mbm_q2c_mv" class="table" frame="border" border="1" rules="all">
@@ -732,35 +731,35 @@ This is the
     </thead>
 
     <tbody class="tbody">
-     <tr id="task_pxb_j3r_rt__d1888e1097" class="row">
+     <tr id="task_pxb_j3r_rt__d1888e1131" class="row">
       <td class="entry" valign="top" width="30%" headers="d26642e1051 ">Use Proxy</td>
 
       <td class="entry" valign="top" width="70%" headers="d26642e1054 ">Specifies whether to use a proxy to connect to Amazon S3.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d1888e1106" class="row">
+     <tr id="task_pxb_j3r_rt__d1888e1140" class="row">
       <td class="entry" valign="top" width="30%" headers="d26642e1051 ">Proxy Host</td>
 
       <td class="entry" valign="top" width="70%" headers="d26642e1054 ">Proxy host.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d1888e1115" class="row">
+     <tr id="task_pxb_j3r_rt__d1888e1149" class="row">
       <td class="entry" valign="top" width="30%" headers="d26642e1051 ">Proxy Port</td>
 
       <td class="entry" valign="top" width="70%" headers="d26642e1054 ">Proxy port.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d1888e1124" class="row">
+     <tr id="task_pxb_j3r_rt__d1888e1158" class="row">
       <td class="entry" valign="top" width="30%" headers="d26642e1051 ">Proxy User</td>
 
       <td class="entry" valign="top" width="70%" headers="d26642e1054 ">User name for proxy credentials.</td>
 
      </tr>
 
-     <tr id="task_pxb_j3r_rt__d1888e1133" class="row">
+     <tr id="task_pxb_j3r_rt__d1888e1167" class="row">
       <td class="entry" valign="top" width="30%" headers="d26642e1051 ">Proxy Password</td>
 
       <td class="entry" valign="top" width="70%" headers="d26642e1054 ">Password for proxy credentials. </td>
@@ -1171,7 +1170,7 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d26642e1662 ">File Name Expression <a class="xref" href="../Pipeline_Design/WholeFile.html#concept_kxr_kqh_xw">
+                                    <td class="entry" valign="top" width="30%" headers="d26642e1662 ">File Name Expression <a class="xref" href="../Pipeline_Design/WholeFile.html#concept_a2s_4jw_1x">
                                             <img class="image" id="task_pxb_j3r_rt__d1874e4342" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="70%" headers="d26642e1665 ">

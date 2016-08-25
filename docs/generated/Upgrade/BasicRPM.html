@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade a Full Installation from the RPM Package"></meta><meta name="abstract" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default directories, the new version has access to the pipeline, log, and resource files created in the previous version."></meta><meta name="description" content="When you upgrade a full installation from the RPM package, the new version uses the default directories to store configuration, data, log, and resource files. If the previous version used the default directories, the new version has access to the pipeline, log, and resource files created in the previous version."></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ws4_vq5_xv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade a Full Installation from the RPM Package</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade a Basic Installation from the RPM Package"></meta><meta name="abstract" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="description" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ws4_vq5_xv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade a Basic Installation from the RPM Package</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,20 +23,26 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_ws4_vq5_xv">
- <h1 class="title topictitle1">Upgrade a Full Installation from the RPM Package</h1>
+ <h1 class="title topictitle1">Upgrade a Basic Installation from the RPM Package</h1>
 
  
- <div class="body conbody"><p class="shortdesc">When you upgrade a full installation from the RPM package, the new version uses the
-        default directories to store configuration, data, log, and resource files. If the previous
-        version used the default directories, the new version has access to the pipeline, log, and
-        resource files created in the previous version.</p>
+ <div class="body conbody"><p class="shortdesc">When you upgrade a basic installation from the RPM package, the new version uses the
+        default configuration, data, log, and resource directories. If the previous version used the
+        default directories, the new version has access to the files created in the previous
+        version.</p>
 
-  <p class="p">If the previous version
-            used customized values for the directory environment variables, you must make the same
-            customizations in the new version so that the new version can access the same pipeline,
-            log, and resource files.</p>
+  <p class="p">If the previous version used
+            customized values for the directory environment variables, you must make the same
+            customizations in the new version so that the new version can access the same files.</p>
 
-        <p class="p">To upgrade a full installation from the RPM package, perform the following steps:</p>
+        <div class="note note"><span class="notetitle">Note:</span> If you installed additional drivers or developed custom stages, verify that those
+            libraries are stored in a local directory external to the <span class="ph">Data
+                  Collector</span>
+            installation directory before you upgrade. That way, <span class="ph">Data
+                  Collector</span>
+            can still use the libraries after the upgrade.</div>
+
+        <p class="p">To upgrade a basic installation from the RPM package, perform the following steps:</p>
 
      <ol class="ol" id="concept_ws4_vq5_xv__ol_x5s_qpr_5v">
          <li class="li">Shut down the previous version.</li>
@@ -48,6 +54,8 @@
          <li class="li">Manually update the environment configuration file.</li>
 
          <li class="li">Manually update the configuration files.</li>
+
+            <li class="li">Install additional stage libraries as needed.</li>
 
          <li class="li">Start the new version of <span class="ph">Data
                   Collector</span>.</li>
@@ -94,8 +102,8 @@
         file, <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten
         when you install the new version. </p>
 
-  <p class="p">For example, if you are upgrading version 1.4.0.0, you might create a backup by renaming the
-            file as follows: <samp class="ph codeph">sdcd-env-1400.sh</samp>.</p>
+  <p class="p">For example, if you are upgrading version 1.5.0.0, you might create a backup by renaming the
+            file as follows: <samp class="ph codeph">sdcd-env-1500.sh</samp>.</p>
 
  </div>
 
@@ -116,8 +124,8 @@
                 <div class="itemgroup info">
                     <pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 
-                    <div class="p">For example, to install version 1.5.1.0, use the following
-                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-1.5.1.0-1.noarch.rpm</pre>
+                    <div class="p">For example, to install version 1.6.0.0, use the following
+                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</pre>
 </div>
 
                 </div>
@@ -145,7 +153,7 @@
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Open the environment configuration file that you backed up in the previous
                     version.</span>
-                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-1400.sh</samp>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-1500.sh</samp>
                     file.</div>
             </li>
 <li class="li step stepexpand">
@@ -216,8 +224,20 @@
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_pch_vnr_bx">
+ <h2 class="title topictitle2">Step 6. Install Additional Libraries</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Install the individual stage libraries that the upgraded pipelines require. Use the
+            <samp class="ph codeph">stagelibs</samp> command to install additional stage libraries.</p>
+
+        <p class="p">For instructions on using the <samp class="ph codeph">stagelibs</samp> command, see <a class="xref" href="../Install_Config/BasicInstall_Overview.html#concept_bnl_n3n_s5">Step 2. Install Additional Libraries</a>.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_n35_s55_xv">
- <h2 class="title topictitle2">Step 6. Start the New Version of Data Collector</h2>
+ <h2 class="title topictitle2">Step 7. Start the New Version of Data Collector</h2>
 
  <div class="body conbody">
         <div class="p">Use the following command to start the new version of <span class="ph">Data

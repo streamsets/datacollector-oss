@@ -33,14 +33,15 @@
 
         <p class="p">When moving whole files, <span class="ph">Data
                   Collector</span>
-            streams file data from the origin system and writes the data to the destination system
-            based on the directory and file name defined in the destination. </p>
+            streams file data from the origin system and writes the data to the destination system.
+                <span class="ph">Data
+                  Collector</span> writes the files based on the directory and file name defined in the destination. </p>
 
         <p class="p">When the origin system provides checksum metadata, you can configure the origin to verify
             the checksum. </p>
 
         <p class="p">Most destinations allow you to define access permissions for target files. By default,
-            target files are created with default permissions. </p>
+            target files use the default permissions of the destination system.</p>
 
         <div class="p">
             <div class="note note"><span class="notetitle">Note:</span> During data preview, a whole file pipeline displays a single record instead of the
@@ -101,7 +102,7 @@
 
                 <li class="li">fileInfo - A map of file properties, such as file path, file name, and file
                     owner. The details differ based on the origin system. You can use processors to
-                    modify information in the fileInfo field as needed.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">You can use
+                    modify information in the fileInfo field as needed.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span></div>
 </li>
@@ -120,7 +121,7 @@
             pipeline to modify file information in the fileInfo field, such as the file owner or
             permissions.</p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d19569e1364">You can use
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d19907e1364">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span> The information and field names
                         can differ based on the origin system.</div>
@@ -177,7 +178,8 @@
             
             <div class="p">You want a pipeline to pass whole files from a local directory to Amazon S3. For the
                 target file name, you want to append the .json file extension to the original file
-                name. To do this, you can configure the File Name Expression as follows:
+                name. To do this, you can configure the <span class="ph uicontrol">File Name Expression</span>
+                property as follows:
                 <pre class="pre codeblock">${str:concat(record:value('/fileInfo/filename'), ".json")}</pre>
 </div>
 
@@ -209,9 +211,8 @@
             following expression:<pre class="pre codeblock">${record:value('/fileInfo/permissions')}</pre>
 </div>
 
-        <p class="p">This ensures, for example, that a source file configured to allow execute permission to
-            only the file owner is written to the destination system with the exact same set of
-            permissions. </p>
+        <p class="p">This ensures, for example, that a source file with execute permission for only the file
+            owner is written to the destination system with the exact same set of permissions. </p>
 
  </div>
 

@@ -35,8 +35,12 @@
             resource URL, header attributes, and method to use. For some methods, you can specify
             additional request information. </p>
 
-        <p class="p">You can configure the timeout, maximum number of parallel requests, and authentication
-            type. You can optionally use a truststore and keystore, and proxy.</p>
+        <p class="p">You can configure the processor to include response header fields in the record as a set
+            of record header attributes or as a map in a record field.</p>
+
+        <p class="p">You can also configure the timeout, request transfer encoding, maximum number of parallel
+            requests, and authentication type. You can optionally use a truststore and keystore, and
+            proxy.</p>
 
     </div>
 
@@ -92,6 +96,45 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_ekz_wrz_zw">
+ <h2 class="title topictitle2">Response Header Fields</h2>
+
+ <div class="body conbody">
+  <div class="p">The HTTP Client processor can include response header field information in records. You can
+            write the data to a record as follows:  <dl class="dl">
+                
+                    <dt class="dt dlterm">Record header attributes</dt>
+
+                    <dd class="dd">The processor can write data in response header fields to corresponding
+                        record header attributes. </dd>
+
+                    <dd class="dd">When writing to record header attributes, you define a prefix for the
+                        attributes to avoid name conflicts. The processor then appends the response
+                        header field name to the prefix. </dd>
+
+                    <dd class="dd">For example, if you define "info-" as the prefix, then data in the
+                        content-encoding response header field is written to the
+                        "info-content-encoding" record header attribute.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Record field</dt>
+
+                    <dd class="dd">The processor can also write the response header fields to a field in the
+                        record. The processor writes  the response header fields to the record field
+                        as a map of key-value pairs where the key is the response header field name. </dd>
+
+                    <dd class="dd">When writing to a field, you specify the field to use. If the field includes
+                        data, the processor overwrites the data. If the field does not exist, the
+                        processor creates the field. </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_jrj_hmh_jw">
  <h2 class="title topictitle2">Data Formats</h2>
 
@@ -109,9 +152,8 @@
 
                     <dd class="dd">Writes a parsed JSON response to the specified field. </dd>
 
-                    <dd class="dd">When an object exceeds the maximum object length defined for the origin, the
-                        processor processes the object based on the error handling configured for
-                        the stage. </dd>
+                    <dd class="dd">When an object exceeds the specified maximum object length, the processor
+                        processes the object based on the error handling configured for the stage. </dd>
 
                 
                 
@@ -119,9 +161,9 @@
 
                     <dd class="dd">Writes the response as a string to the specified field. </dd>
 
-                    <dd class="dd">When a line exceeds the maximum line length, the processor truncates the
-                        line. The processor adds a boolean field named Truncated to indicate if the
-                        line was truncated. </dd>
+                    <dd class="dd">When a line exceeds the specified maximum line length, the processor
+                        truncates the line. The processor adds a boolean field named Truncated to
+                        indicate if the line was truncated. </dd>
 
                 
                 
@@ -132,9 +174,9 @@
                     <dd class="dd">When specified, the processor uses the delimiter element to nest additional
                         elements in the field. </dd>
 
-                    <dd class="dd">When a record exceeds the maximum record length, the processor skips the
-                        record and continues processing with the next record. It sends the skipped
-                        record to the pipeline for error handling. </dd>
+                    <dd class="dd">When a record exceeds the specified maximum record length, the processor
+                        skips the record and continues processing with the next record. It sends the
+                        skipped record to the pipeline for error handling. </dd>
 
                 
             </dl>
@@ -158,14 +200,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20549e3161" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20923e3161" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e234">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e280">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e237">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e283">Description</th>
 
                                 </tr>
 
@@ -173,24 +215,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e234 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e280 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e237 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e234 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d164079e237 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e283 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e234 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_z54_1qr_fw__d20549e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e280 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e237 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d165505e283 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e280 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_z54_1qr_fw__d20923e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e283 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -198,10 +240,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e234 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_z54_1qr_fw__d20549e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e280 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_z54_1qr_fw__d20923e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e237 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d165505e283 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -209,10 +251,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e234 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_z54_1qr_fw__d20549e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e280 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_z54_1qr_fw__d20923e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e237 ">Error record handling for the stage: <ul class="ul" id="task_z54_1qr_fw__d20549e3240">
+                                    <td class="entry" valign="top" width="70%" headers="d165505e283 ">Error record handling for the stage: <ul class="ul" id="task_z54_1qr_fw__d20923e3240">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -242,9 +284,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e356">HTTP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e402">HTTP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e359">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e405">Description</th>
 
                                 </tr>
 
@@ -252,17 +294,42 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Output Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Field to use for the response. You can use a new or
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Field to use for the response. You can use a new or
                                         existing field.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Header Output Location <a class="xref" href="HTTPClient.html#concept_ekz_wrz_zw">
+                                            <img class="image" id="task_z54_1qr_fw__image_bf1_nwz_zw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Data format of response. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Location to write response header field information.
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Header Attribute Prefix</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Prefix to use when writing response header field
+                                        information to record header attributes.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Header Output Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Field to use when writing response header field
+                                        information to a field in the record. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Data format of response. Use one of the following
                                             options:<ul class="ul" id="task_z54_1qr_fw__ul_zbw_szg_j5">
                                             <li class="li">JSON</li>
 
@@ -276,72 +343,93 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Resource URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Resource URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">HTTP resource URL.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">HTTP resource URL.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Headers</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Headers</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">The headers to include in the request. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">The headers to include in the request. Use the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         headers.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">HTTP Method</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">HTTP Method</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">HTTP request method. Use one of the standard methods or
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">HTTP request method. Use one of the standard methods or
                                         use Expression to enter an expression. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_dc2_qwn_jw">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">HTTP Method Expression <a class="xref" href="HTTPClient.html#concept_dc2_qwn_jw">
                                             <img class="image" id="task_z54_1qr_fw__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Expression that evaluates to a standard HTTP method.
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Expression that evaluates to a standard HTTP method.
                                             <p class="p">Used for the Expression method only.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Request Data </td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Request Data </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Request data to use with the specified method. Available
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Request data to use with the specified method. Available
                                         for the PUT, POST, DELETE, and Expression method
                                         types.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Request Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Request Transfer Encoding</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Milliseconds to wait for a response before timing out.
-                                            <p class="p">Record requests that time out are handled based on
-                                            the error handling property for the
-                                        processor.</p>
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">Use one of the following encoding types:<ul class="ul" id="task_z54_1qr_fw__d21110e537">
+         <li class="li">Buffered - The standard transfer encoding type. </li>
+
+         <li class="li">Chunked - Transfers data in chunks. Not supported by all servers.</li>
+
+        </ul>
+<p class="p">The default is Chunked.</p>
 </td>
 
-                                </tr>
+      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_d3m_yrn_jw" title="The HTTP Client processor sends multiple requests at a time. To preserve record order, the processor waits until it receives a response for each request before sending the next set of requests.">
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Connect Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">Maximum number of milliseconds to wait for a connection. <p class="p">Use 0 to wait
+         indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Read Timeout</td>
+
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">Maximum number of milliseconds to wait for data. <p class="p">Use 0 to wait
+        indefinitely.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Maximum Parallel Requests <a class="xref" href="HTTPClient.html#concept_d3m_yrn_jw" title="The HTTP Client processor sends multiple requests at a time. To preserve record order, the processor waits until it receives a response for each request before sending the next set of requests.">
                                             <img class="image" id="task_z54_1qr_fw__image_afb_xb4_jw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Maximum number of requests to send to the server at one
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Maximum number of requests to send to the server at one
                                         time. </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d164079e356 ">Authentication Type</td>
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Authentication Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d164079e359 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_z54_1qr_fw__d20736e544">
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">Determines the authentication type used to connect to the server:<ul class="ul" id="task_z54_1qr_fw__d21110e578">
          <li class="li">None - Performs no authentication.</li>
 
          <li class="li">Basic - Uses basic authentication. Requires a username and password. <p class="p">Use with HTTPS
@@ -365,9 +453,9 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d164079e356 ">Use Proxy</td>
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Use Proxy</td>
 
-       <td class="entry" valign="top" width="70%" headers="d164079e359 ">
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">
         <p class="p">Enables using an HTTP proxy to connect to the system. </p>
 
        </td>
@@ -375,20 +463,28 @@
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e356 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e359 ">Character encoding of the data to be processed.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Character encoding of the data to be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d164079e356 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_z54_1qr_fw__d20736e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d165505e402 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_z54_1qr_fw__d21110e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d164079e359 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d165505e405 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e402 ">Maximum Request Time</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e405 ">Maximum number of seconds to wait for a request to
+                                        complete.</td>
+
+                                </tr>
 
                             </tbody>
 
@@ -402,14 +498,14 @@
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20549e1868" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20923e1868" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e574">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e691">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e577">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e694">Description</th>
 
                                 </tr>
 
@@ -417,46 +513,46 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">User name for basic, digest, or universal authentication.
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">User name for basic, digest, or universal authentication.
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">Password for basic, digest, or universal authentication.
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">Password for basic, digest, or universal authentication.
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Consumer Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Consumer Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">Consumer key for OAuth authentication.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Consumer Secret</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">Consumer secret for OAuth authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">Consumer key for OAuth authentication.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Token</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Consumer Secret</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">Consumer token for OAuth authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">Consumer secret for OAuth authentication.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e574 ">Token Secret</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Token</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e577 ">Token secret for OAuth authentication.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">Consumer token for OAuth authentication.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e691 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e694 ">Token secret for OAuth authentication.</td>
 
                                 </tr>
 
@@ -472,14 +568,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20549e1971" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20923e1971" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e666">HTTP Proxy Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e783">HTTP Proxy Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e669">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e786">Description</th>
 
                                 </tr>
 
@@ -487,23 +583,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e666 ">Proxy URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e783 ">Proxy URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e669 ">Proxy URI.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e666 ">Username</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d164079e669 ">Proxy user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e786 ">Proxy URI.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e666 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e783 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e669 ">Proxy password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e786 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e783 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e786 ">Proxy password.</td>
 
                                 </tr>
 
@@ -519,14 +615,14 @@
                     keystore details:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20549e2047" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20923e2047" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e730">SSL/TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e847">SSL/TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e733">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e850">Description</th>
 
                                 </tr>
 
@@ -534,30 +630,30 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e730 ">Path to Truststore</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e847 ">Path to Truststore</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e733 ">Absolute path to the truststore. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e730 ">Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d164079e733 ">Truststore password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e850 ">Absolute path to the truststore. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e730 ">Path to Keystore</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e847 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e733 ">Absolute path to the keystore. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e850 ">Truststore password.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e730 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e847 ">Path to Keystore</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e733 ">Keystore password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165505e850 ">Absolute path to the keystore. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d165505e847 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165505e850 ">Keystore password.</td>
 
                                 </tr>
 
@@ -578,9 +674,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d164079e804">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d165505e921">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d164079e807">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d165505e924">Description</th>
 
                                 </tr>
 
@@ -588,9 +684,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d164079e804 ">Maximum Object Length (chars)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d165505e921 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d164079e807 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d165505e924 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -608,14 +704,14 @@
                     <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20549e1612" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__d20923e1612" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e852">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e969">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e855">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e972">Description</th>
 
                                 </tr>
 
@@ -623,9 +719,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e852 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e969 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e855 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d165505e972 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -643,7 +739,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
-                    properties:</span>
+                        properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z54_1qr_fw__table_pmz_mcj_45" class="table" frame="border" border="1" rules="all">
@@ -651,9 +747,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d164079e900">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165505e1019">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d164079e903">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165505e1022">Description</th>
 
                                 </tr>
 
@@ -661,9 +757,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e900 ">Delimiter Element</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e1019 ">Delimiter Element</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e903 ">
+                                    <td class="entry" valign="top" width="70%" headers="d165505e1022 ">
                                         <p class="p">XML element that acts as a delimiter. Omit a delimiter to
                                             treat the entire XML document as one field.</p>
 
@@ -672,9 +768,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d164079e900 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165505e1019 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d164079e903 ">
+                                    <td class="entry" valign="top" width="70%" headers="d165505e1022 ">
                                         <p class="p">The maximum number of characters in a field. Longer
                                             fields are diverted to the pipeline for error handling.
                                         </p>

@@ -39,9 +39,10 @@
                   Collector</span> to
             use username/password authentication.</p>
 
-        <div class="note note"><span class="notetitle">Note:</span> The MapR DB destination and the Hive Streaming destination using the MapR library
+       <div class="p"><div class="note note"><span class="notetitle">Note:</span> The MapR DB destination and the Hive Streaming destination using the MapR library
             currently only support MapR version 5.1.0. All other stages that use the MapR library
             support MapR versions 5.0.0 and 5.1.0.</div>
+</div>
 
         <div class="p">
             <ol class="ol" id="concept_jgs_qpg_2v__ol_o2r_nq4_vw">
@@ -69,8 +70,37 @@
 </div>
 </li>
 
-                <li class="li">Use the following
-                    command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets setup-mapr</pre>
+                <li class="li">Use the following command to set the <samp class="ph codeph">$SDC_HOME</samp> environment
+                    variable to the location where you installed <span class="ph">Data
+                  Collector</span>:<pre class="pre codeblock">export SDC_HOME=&lt;installation directory&gt;</pre>
+<div class="p">For
+                        example:<pre class="pre codeblock">export SDC_HOME=/opt/streamsets-datacollector</pre>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> The
+                        default installation directory for an RPM installation is
+                            <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball installation
+                        directory is the location where you extracted the file.</div>
+</li>
+
+                <li class="li">Use the following command to set the <samp class="ph codeph">$SDC_CONF</samp> environment
+                    variable to the <span class="ph">Data
+                  Collector</span> configuration
+                        directory:<pre class="pre codeblock">export SDC_CONF=&lt;configuration directory&gt;</pre>
+<div class="p">For
+                        example:<pre class="pre codeblock">export SDC_CONF=/etc/sdc</pre>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> The default
+                        configuration directory for an RPM installation is
+                        <samp class="ph codeph">/etc/sdc</samp>. If you followed the instructions for a tarball
+                        installation for a service start, the default configuration directory is
+                            <samp class="ph codeph">/etc/sdc</samp>. The default configuration directory for a
+                        tarball installation for a manual start is <samp class="ph codeph">$SDC_DIST/etc</samp>.
+                        However, as a best practice, you should modify the configuration directory
+                        so that it is outside of the installation directory.</div>
+</li>
+
+                <li class="li">Use the following command to set up
+                    MapR:<pre class="pre codeblock">$SDC_DIST/bin/streamsets setup-mapr</pre>
 </li>
 
                 <li class="li">When prompted, enter 5.0.0 or 5.1.0 for the MapR version.</li>
