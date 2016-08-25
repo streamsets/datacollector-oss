@@ -46,7 +46,7 @@ for(var i = 0; i &lt; records.length; i++) {
     // Create a string field to store the current date with the specified format
     records[i].value.date = date.getFullYear()+ "-" + date.getMonth() + "-" + date.getDate()
     
-    // Write record to the procesor output
+    // Write record to the processor output
     output.write(records[i]);
   } catch (e) {
     // Send record to error

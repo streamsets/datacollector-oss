@@ -2397,7 +2397,7 @@
                 <cmd/>
                 <info>
                     <draft-comment author="Loretta"><b>D-WHOLEFile-props</b> - Whole table used by
-                        Hadoop Fs, Local FS, and MapR FS. Rows used by S3.</draft-comment>
+                        Hadoop FS, Local FS, and MapR FS. Rows used by S3.</draft-comment>
                 </info>
             </step>
             <step id="D-WholeFile_props">

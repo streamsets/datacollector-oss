@@ -32,7 +32,7 @@
             process the batch, and the destination that provided the batch processes it based on the
             error record handling configured for the destination.</note>
         <p>For example, say the origin uses the default 100 MB for the maximum batch request size
-            and the default 900 KB for the maximum message size, and Kakfa uses the 1 MB default for
+            and the default 900 KB for the maximum message size, and Kafka uses the 1 MB default for
             message.max.bytes. </p>
         <p>When the origin requests a batch of data, it receives up to 100 MB of data at a time.
             When the origin writes to Kafka it groups records into as few messages as possible,

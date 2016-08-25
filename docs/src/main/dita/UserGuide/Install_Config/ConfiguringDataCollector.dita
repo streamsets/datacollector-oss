@@ -71,6 +71,14 @@
                                         the property if you change the value.</p></entry>
                             </row>
                             <row>
+                                <entry>http.maxThreads</entry>
+                                <entry>Maximum number of concurrent threads the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> web server uses to serve UI requests. <p>Default is 200.
+                                        Uncomment the property to change the value, but increasing
+                                        this value is not recommended. </p></entry>
+                            </row>
+                            <row>
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -220,6 +228,12 @@
                                     ldap.</p></entry>
                             </row>
                             <row>
+                                <entry>ldap.login.module.name</entry>
+                                <entry>Name of the JAAS configuration properties in the
+                                    $SDC_CONF/ldap-login.conf file. Assumed to be "ldap" unless
+                                    otherwise specified. </entry>
+                            </row>
+                            <row>
                                 <entry>http.access.control.allow.origin</entry>
                                 <entry>List of domains allowed to access the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -297,7 +311,7 @@
                                         is 5.</p></entry>
                             </row>
                             <row>
-                                <entry>max.webSockets.current.requests</entry>
+                                <entry>max.webSockets.concurrent.requests</entry>
                                 <entry>Maximum number of WebSocket calls allowed. </entry>
                             </row>
                             <row>
@@ -352,29 +366,6 @@
                                 <entry>ui.undo.limit</entry>
                                 <entry>Number of recent actions stored so you can undo them.
                                 </entry>
-                            </row>
-                            <row>
-                                <entry>config.includes</entry>
-                                <entry>Additional configuration files to include in the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> configuration. The files must be stored in a directory
-                                    relative to the <systemoutput>$SDC_CONF</systemoutput>
-                                        directory.<p>You can enter multiple file names separated by
-                                        commas. The files are loaded into the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration in the listed order. If the same
-                                        configuration property is defined in multiple files, the
-                                        value defined in the last loaded file takes precedence.
-                                        </p><draft-comment author="alisontaylor">Not mentioning v2
-                                        until they add it.</draft-comment></entry>
-                            </row>
-                            <row>
-                                <entry>runner.thread.pool.size</entry>
-                                <entry>Number of threads in the pool that are available to run
-                                    standalone pipelines. The default value is sufficient to run
-                                    approximately 20 standalone pipelines at the same
-                                        time.<p>Default is 20. Be sure to uncomment the property if
-                                        you change the value.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -517,16 +508,41 @@
                                 <entry>Maximum number of milliseconds to wait before dropping a data
                                     rule evaluation request when the observer queue is full.</entry>
                             </row>
+                        </tbody>
+                    </tgroup>
+                </table></p>The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file includes the following miscellaneous properties:<p>
+                <table frame="all" rowsep="1" colsep="1" id="table_k1y_drr_bx">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                        <thead>
+                            <row>
+                                <entry>Miscellaneous Property</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
                             <row>
                                 <entry>max.stage.private.classloaders</entry>
                                 <entry>Maximum number of stage libraries <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> allows. <p>Default is 50.</p></entry>
                             </row>
+                            <row>
+                                <entry>runner.thread.pool.size</entry>
+                                <entry>Number of threads in the pool that are available to run
+                                    standalone pipelines. The default value is sufficient to run
+                                    approximately 20 standalone pipelines at the same
+                                        time.<p>Default is 20. Be sure to uncomment the property if
+                                        you change the value.</p></entry>
+                            </row>
                         </tbody>
                     </tgroup>
-                </table></p><p>The configuration file includes stage and stage library aliases to
-                enable backward compatibility for pipelines created with earlier versions of <ph
+                </table>
+            </p><p>The configuration file includes stage and stage library aliases to enable
+                backward compatibility for pipelines created with earlier versions of <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />, such
                 as:<codeblock>stage.alias.streamsets-datacollector-basic-lib,
@@ -540,7 +556,8 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                 stage libraries to the blacklist or whitelist properties to limit the stage
                 libraries <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> uses:<table frame="all" rowsep="1" colsep="1" id="table_gmf_fvf_qv">
+                /> uses and include additional configuration files:<table frame="all" rowsep="1"
+                    colsep="1" id="table_gmf_fvf_qv">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                         <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -568,6 +585,21 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                                     can be used in <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />. Do not use both.</entry>
+                            </row>
+                            <row>
+                                <entry>config.includes</entry>
+                                <entry>Additional configuration files to include in the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> configuration. The files must be stored in a directory
+                                    relative to the <systemoutput>$SDC_CONF</systemoutput>
+                                        directory.<p>You can enter multiple file names separated by
+                                        commas. The files are loaded into the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> configuration in the listed order. If the same
+                                        configuration property is defined in multiple files, the
+                                        value defined in the last loaded file takes precedence.
+                                        </p><draft-comment author="alisontaylor">Not mentioning v2
+                                        until they add it.</draft-comment></entry>
                             </row>
                         </tbody>
                     </tgroup>
