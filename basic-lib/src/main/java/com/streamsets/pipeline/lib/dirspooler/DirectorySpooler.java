@@ -458,18 +458,18 @@ public class DirectorySpooler {
 
   String findAndQueueFiles(final String startingFile, final boolean includeStartingFile, boolean checkCurrent)
       throws IOException {
+    final long scanTime = System.currentTimeMillis();
     DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
       @Override
       public boolean accept(Path entry) throws IOException {
         boolean accept = false;
-        if (entry != null) {
-          if (fileMatcher.matches(entry.getFileName())) {
-            if (startingFile == null || startingFile.isEmpty()) {
-              accept = true;
-            } else {
-              int compares = pathComparator.compare(entry, spoolDirPath.resolve(startingFile));
-              accept = (compares == 0 && includeStartingFile) || (compares > 0);
-            }
+        // SDC-3551: Pick up only files with mtime strictly less than scan time.
+        if (entry != null && Files.getLastModifiedTime(entry).toMillis() < scanTime && fileMatcher.matches(entry.getFileName())) {
+          if (startingFile == null || startingFile.isEmpty()) {
+            accept = true;
+          } else {
+            int compares = pathComparator.compare(entry, spoolDirPath.resolve(startingFile));
+            accept = (compares == 0 && includeStartingFile) || (compares > 0);
           }
         }
         return accept;
