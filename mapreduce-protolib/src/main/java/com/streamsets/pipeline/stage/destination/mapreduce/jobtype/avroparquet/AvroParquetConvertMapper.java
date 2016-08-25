@@ -23,16 +23,24 @@ import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.FileReader;
 import org.apache.avro.file.SeekableInput;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.mapred.FsInput;
+import org.apache.avro.specific.SpecificData;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.parquet.SemanticVersion;
+import org.apache.parquet.Version;
 import org.apache.parquet.avro.AvroParquetWriter;
+import org.apache.parquet.avro.AvroSchemaConverterLogicalTypesPre19;
+import org.apache.parquet.avro.AvroWriteSupport;
 import org.apache.parquet.hadoop.ParquetWriter;
+import org.apache.parquet.hadoop.api.WriteSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +52,39 @@ import java.io.IOException;
 public class AvroParquetConvertMapper extends Mapper<String, String, NullWritable, NullWritable> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AvroParquetConvertMapper.class);
+
+  /**
+   * Custom Builder to inject our own writer support that can work with logical types in older parquet version(s). The
+   * logic is functionally equivalent to AvroParquetWriter.Builder
+   */
+  public static class Builder<T> extends org.apache.parquet.hadoop.ParquetWriter.Builder<T, Builder<T>> {
+    private Schema schema;
+    private GenericData model;
+
+    private Builder(Path file) {
+      super(file);
+      this.schema = null;
+      this.model = SpecificData.get();
+    }
+
+    public Builder<T> withSchema(Schema schema) {
+      this.schema = schema;
+      return this;
+    }
+
+    public Builder<T> withDataModel(GenericData model) {
+      this.model = model;
+      return this;
+    }
+
+    protected Builder<T> self() {
+      return this;
+    }
+
+    protected WriteSupport<T> getWriteSupport(Configuration conf) {
+      return new AvroWriteSupport((new AvroSchemaConverterLogicalTypesPre19(conf)).convert(this.schema), this.schema, this.model);
+    }
+  }
 
   public enum Counters {
     PROCESSED_RECORDS
@@ -76,9 +117,26 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     FileReader<GenericRecord> fileReader = DataFileReader.openReader(seekableInput, reader);
     Schema avroSchema = fileReader.getSchema() ;
 
+    // Detect Parquet version to see if it supports logical types
+    LOG.info("Detected Parquet version: " + Version.FULL_VERSION);
+
+    // Parquet Avro pre-1.9 doesn't work with logical types, so in that case we use custom Builder that injects our own
+    // avro schema -> parquet schema generator class (which is a copy of the one that was provided in PARQUET-358).
+    ParquetWriter.Builder builder = null;
+    try {
+      SemanticVersion parquetVersion = SemanticVersion.parse(Version.VERSION_NUMBER);
+      if(parquetVersion.major > 1 || (parquetVersion.major == 1 && parquetVersion.minor >= 9)) {
+        builder = AvroParquetWriter.builder(tempFile).withSchema(avroSchema);
+      } else {
+        builder = new Builder(tempFile).withSchema(avroSchema);
+      }
+    } catch (SemanticVersion.SemanticVersionParseException e) {
+      LOG.warn("Can't parse parquet version string: " + Version.VERSION_NUMBER, e);
+      builder = new Builder(tempFile).withSchema(avroSchema);
+    }
+
     // Parquet writer
-    ParquetWriter parquetWriter = AvroParquetWriter.builder(tempFile)
-      .withSchema(avroSchema)
+    ParquetWriter parquetWriter = builder
       .withConf(context.getConfiguration())
       .build();
 

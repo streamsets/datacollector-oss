@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceDExecutor;
@@ -81,37 +82,50 @@ public class AllAvroTypesIT extends BaseAvroParquetConvertIT {
 
   private final static Schema FIXED = Schema.parse("{\"type\": \"fixed\", \"size\": 2, \"name\": \"bb\"}");
 
+  private final static Schema DECIMAL = Schema.parse("{\"type\" : \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}");
+
+  private final static Schema DATE = Schema.parse("{\"type\" : \"int\", \"logicalType\": \"date\"}");
+
+  private final static Schema TIME_MILLIS = Schema.parse("{\"type\" : \"int\", \"logicalType\": \"time-millis\"}");
+
+  private final static Schema TIMESTAMP_MILLIS = Schema.parse("{\"type\" : \"long\", \"logicalType\": \"timestamp-millis\"}");
+
   @Parameterized.Parameters(name = "type({0})")
   public static Collection<Object[]> data() throws Exception {
     return Arrays.asList(new Object[][]{
       // Primitive types
       // Skipping null
-      {"\"boolean\"",   true},
-      {"\"int\"",       Integer.MIN_VALUE},
-      {"\"long\"",      Long.MAX_VALUE},
-      {"\"float\"",     Float.NaN},
-      {"\"double\"",    Double.NEGATIVE_INFINITY},
-      {"\"bytes\"",     ByteBuffer.wrap(new byte[]{(byte)0x00, (byte)0xFF})},
-      {"\"string\"",    new Utf8("")},
+      {"\"boolean\"",   true,                                                  ImmutableList.of("required boolean value;")},
+      {"\"int\"",       Integer.MIN_VALUE,                                     ImmutableList.of("required int32 value;")},
+      {"\"long\"",      Long.MAX_VALUE,                                        ImmutableList.of("required int64 value;")},
+      {"\"float\"",     Float.NaN,                                             ImmutableList.of("required float value;")},
+      {"\"double\"",    Double.NEGATIVE_INFINITY,                              ImmutableList.of("required double value;")},
+      {"\"bytes\"",     ByteBuffer.wrap(new byte[]{(byte)0x00, (byte)0xFF}),   ImmutableList.of("required binary value;")},
+      {"\"string\"",    new Utf8(""),                                          ImmutableList.of("required binary value (UTF8);")},
 
       // Complex types
-      {RECORD.toString(),   RECORD_DATA},
-      {ENUM.toString(),     new GenericData.EnumSymbol(ENUM, "SPADES")},
-      {ARRAY.toString(),    new ArrayList<>(ImmutableList.of(new Utf8("a"), new Utf8("b"), new Utf8("c")))},
-      {MAP.toString(),      ImmutableMap.of(new Utf8("key"), 1L)},
-      {UNION.toString(),    new Utf8("union")},
-      {FIXED.toString(),    new GenericData.Fixed(FIXED, new byte[]{(byte)0x00, (byte)0xFF})},
+      {RECORD.toString(),   RECORD_DATA,                                       ImmutableList.of("required group value", "required binary name (UTF8);", "required int64 value;")},
+      {ENUM.toString(),     new GenericData.EnumSymbol(ENUM, "SPADES"),        ImmutableList.of("required binary value (ENUM);")},
+      {ARRAY.toString(),    new ArrayList<>(ImmutableList.of(new Utf8("a"), new Utf8("b"), new Utf8("c"))), ImmutableList.of("repeated binary array (UTF8);")},
+      {MAP.toString(),      ImmutableMap.of(new Utf8("key"), 1L),              ImmutableList.of("repeated group map (MAP_KEY_VALUE)", "required binary key (UTF8);", "required int64 value;")},
+      {UNION.toString(),    new Utf8("union"),                                 ImmutableList.of("optional int64 member0;", "optional binary member1 (UTF8);")},
+      {FIXED.toString(),    new GenericData.Fixed(FIXED, new byte[]{(byte)0x00, (byte)0xFF}), ImmutableList.of("required fixed_len_byte_array(2) value;")},
 
       // Logical types
-      // We're currently not validating logical types as we would just test the underlying primitive type that we're already having
+      {DECIMAL.toString(), ByteBuffer.wrap(new byte[]{(byte)0x0F}),            ImmutableList.of("required binary value (DECIMAL(2,1)")},
+      {DATE.toString(),               35000,                                   ImmutableList.of("required int32 value (DATE);")},
+      {TIME_MILLIS.toString(),        35000,                                   ImmutableList.of("required int32 value (TIME_MILLIS);")},
+      {TIMESTAMP_MILLIS.toString(),  35000L,                                   ImmutableList.of("required int64 value (TIMESTAMP_MILLIS);")},
     });
   }
 
   private String type;
   private Object value;
-  public AllAvroTypesIT(String type, Object value) {
+  private List<String> expectedSchemaStrings;
+  public AllAvroTypesIT(String type, Object value, List<String> expectedSchemaStrings) {
     this.type = type;
     this.value = value;
+    this.expectedSchemaStrings = expectedSchemaStrings;
   }
 
   @Test
@@ -154,12 +168,12 @@ public class AllAvroTypesIT extends BaseAvroParquetConvertIT {
 
     Path outputFile = new Path(getOutputDir(), "input.parquet");
 
-    // Ensure that the parquet file have proper structure
+    // Ensure that the parquet file have proper structure - not sure how to get required information including logical
+    // types from Parquet APIs easily, so we're doing string matching.
     ParquetMetadata readFooter = ParquetFileReader.readFooter(new Configuration(), outputFile);
-    System.out.println("Test for: " + type);
-    System.out.println("Metadata: " + readFooter.toString());
-    for(ColumnDescriptor desc : readFooter.getFileMetaData().getSchema().getColumns()) {
-      System.out.println("Column: " + desc.toString());
+    String metadataString = readFooter.toString();
+    for(String expectedFragment : expectedSchemaStrings) {
+      Assert.assertTrue(Utils.format("Missing fragment {} in schema string {}", expectedFragment, metadataString), metadataString.contains(expectedFragment));
     }
 
     // Validate that content is the same as input
