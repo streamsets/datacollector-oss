@@ -44,6 +44,8 @@
           records with data from generated database columns.</li>
         <li>JSON Parser - Parses a JSON object embedded in a string field.</li>
         <li>Jython Evaluator - Processes records based on custom Jython code.</li>
+        <li>List Pivoter -  Pivots data in a list field and creates a record for each item in the
+          list.</li>
         <li>Log Parser - Parses log data in a field based on the specified log format.</li>
         <li>Record Deduplicator - Removes duplicate records.</li>
         <li>Redis Lookup - Performs key-value lookups in Redis.</li>

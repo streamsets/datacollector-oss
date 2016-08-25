@@ -16,7 +16,8 @@
 <map>
  <title>Hive Drift Solution</title>
     <topicref href="../Hive_Metadata/HiveDriftSolution_title.dita">
-        <topicref href="../Hive_Metadata/HiveDrift-Overview.dita">
+        <topicref href="../Hive_Metadata/HiveDrift-Overview.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Hive_Metadata/ImpalaSupport.dita"/>
         </topicref>
         <topicref href="../Hive_Metadata/BasicImplementation.dita">

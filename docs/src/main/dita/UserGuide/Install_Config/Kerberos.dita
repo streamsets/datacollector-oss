@@ -29,6 +29,12 @@
         <li>Kafka Consumer, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>
+        <li>SDC RPC to Kafka, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+          only</li>
+        <li>UDP to Kafka, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+          only</li>
         <li>HBase Lookup processor</li>
         <li>Hive Metadata processor</li>
         <li>Hadoop FS destination</li>
