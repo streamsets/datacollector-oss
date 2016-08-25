@@ -18,8 +18,9 @@
  <shortdesc>You can download and install a basic version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
         then install individual stage libraries as needed. Use the basic installation to install
-        only the stage libraries that you want to use. The basic installation also results in
-        smaller downloads for installation files.</shortdesc>
+        only the stage libraries that you want to use. The basic installation allows <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+        less disk space.</shortdesc>
  <conbody>
   <p><indexterm>installation<indexterm>basic with custom libraries</indexterm></indexterm>The basic
             installation includes <ph
