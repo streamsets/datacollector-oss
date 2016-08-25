@@ -41,6 +41,7 @@ import org.apache.parquet.avro.AvroSchemaConverterLogicalTypesPre19;
 import org.apache.parquet.avro.AvroWriteSupport;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
+import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,9 +91,17 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     PROCESSED_RECORDS
   }
 
+  // Return true if and only if given property is defined with non empty non default value
+  private boolean propertyDefined(Configuration conf, String propertyName) {
+    String prop = conf.get(propertyName);
+    // String property will have default empty, integer -1, we'll skip both of them
+    return prop != null && !prop.isEmpty() && !prop.equals("-1");
+  }
+
   @Override
   protected void map(String input, String output, Context context) throws IOException, InterruptedException {
     FileSystem fs = FileSystem.get(context.getConfiguration());
+    Configuration conf = context.getConfiguration();
 
     LOG.info("Converting input file: {}", input);
     LOG.info("Output directory: {}", output);
@@ -112,7 +121,7 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     LOG.info("Final path will be: {}", finalFile);
 
     // Avro reader
-    SeekableInput seekableInput = new FsInput(inputPath, context.getConfiguration());
+    SeekableInput seekableInput = new FsInput(inputPath, conf);
     DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     FileReader<GenericRecord> fileReader = DataFileReader.openReader(seekableInput, reader);
     Schema avroSchema = fileReader.getSchema() ;
@@ -133,6 +142,33 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     } catch (SemanticVersion.SemanticVersionParseException e) {
       LOG.warn("Can't parse parquet version string: " + Version.VERSION_NUMBER, e);
       builder = new Builder(tempFile).withSchema(avroSchema);
+    }
+
+    // Generic arguments from the Job
+    if(propertyDefined(conf, AvroParquetConstants.COMPRESSION_CODEC_NAME)) {
+      String codec = conf.get(AvroParquetConstants.COMPRESSION_CODEC_NAME);
+      LOG.info("Using compression codec: {}", codec);
+      builder.withCompressionCodec(CompressionCodecName.fromConf(codec));
+    }
+    if(propertyDefined(conf, AvroParquetConstants.ROW_GROUP_SIZE)) {
+      int size = conf.getInt(AvroParquetConstants.ROW_GROUP_SIZE, -1);
+      LOG.info("Using row group size: {}", size);
+      builder.withRowGroupSize(size);
+    }
+    if(propertyDefined(conf, AvroParquetConstants.PAGE_SIZE)) {
+      int size = conf.getInt(AvroParquetConstants.PAGE_SIZE, -1);
+      LOG.info("Using page size: {}", size);
+      builder.withPageSize(size);
+    }
+    if(propertyDefined(conf, AvroParquetConstants.DICTIONARY_PAGE_SIZE)) {
+      int size = conf.getInt(AvroParquetConstants.DICTIONARY_PAGE_SIZE, -1);
+      LOG.info("Using dictionary page size: {}", size);
+      builder.withDictionaryPageSize(size);
+    }
+    if(propertyDefined(conf, AvroParquetConstants.MAX_PADDING_SIZE)) {
+      int size = conf.getInt(AvroParquetConstants.MAX_PADDING_SIZE, -1);
+      LOG.info("Using max padding size: {}", size);
+      builder.withMaxPaddingSize(size);
     }
 
     // Parquet writer

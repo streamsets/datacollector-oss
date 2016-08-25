@@ -25,10 +25,12 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -44,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -76,25 +79,59 @@ public class MapReduceExecutor extends BaseTarget {
     return issues;
   }
 
+  /**
+   * Handy class to keep track of various ELs with the shared variables object.
+   */
+  private static class EvalContext {
+    private ELVars variables;
+    private Map<String, ELEval> evals;
+    private Stage.Context context;
+
+    public EvalContext(Stage.Context context) {
+      this.context = context;
+      this.variables = context.createELVars();
+      this.evals = new HashMap<>();
+    }
+
+    public void setRecord(Record record) {
+      RecordEL.setRecordInContext(variables, record);
+    }
+
+    public String evaluateToString(String name, String expr) throws ELEvalException {
+      return evaluate(name, expr, String.class);
+    }
+
+    public <T> T evaluate(String name, String expr, Class<T> klass) throws ELEvalException {
+      return getEval(name).eval(variables, expr, klass);
+    }
+
+    public ELEval getEval(String name) {
+      if(evals.containsKey(name)) {
+        return evals.get(name);
+      }
+
+      ELEval eval = context.createELEval(name);
+      evals.put(name, eval);
+      return eval;
+    }
+  }
+
   @Override
   public void write(Batch batch) throws StageException {
-    ELVars variables = getContext().createELVars();
-    ELEval jobConfigEval = getContext().createELEval("jobConfigs");
-    ELEval inputFileEval = getContext().createELEval("inputFile");
-    ELEval outputDirEval = getContext().createELEval("outputDirectory");
+    EvalContext eval = new EvalContext(getContext());
 
     Iterator<Record> it = batch.getRecords();
     while(it.hasNext()) {
       final Record record = it.next();
-      RecordEL.setRecordInContext(variables, record);
+      eval.setRecord(record);
 
       // Job configuration object is a clone of the original one that we're keeping in mapReduceConfig class
       final Configuration jobConfiguration = new Configuration(mapReduceConfig.getConfiguration());
 
       // Evaluate all dynamic properties and store them in the configuration job
       for(Map.Entry<String, String> entry : jobConfig.jobConfigs.entrySet()) {
-        String key = jobConfigEval.eval(variables, entry.getKey(), String.class);
-        String value = jobConfigEval.eval(variables, entry.getValue(), String.class);
+        String key = eval.evaluateToString("jobConfigs", entry.getKey());
+        String value = eval.evaluateToString("jobConfigs", entry.getValue());
 
         jobConfiguration.set(key, value);
       }
@@ -102,9 +139,14 @@ public class MapReduceExecutor extends BaseTarget {
       // For build-in job creators, evaluate their properties and persist them in the MR config
       switch(jobConfig.jobType) {
         case AVRO_PARQUET:
-          jobConfiguration.set(AvroParquetConstants.INPUT_FILE, inputFileEval.eval(variables, jobConfig.avroParquetConfig.inputFile, String.class));
-          jobConfiguration.set(AvroParquetConstants.OUTPUT_DIR, outputDirEval.eval(variables, jobConfig.avroParquetConfig.outputDirectory, String.class));
+          jobConfiguration.set(AvroParquetConstants.INPUT_FILE, eval.evaluateToString("inputFile", jobConfig.avroParquetConfig.inputFile));
+          jobConfiguration.set(AvroParquetConstants.OUTPUT_DIR, eval.evaluateToString("outputDirectory", jobConfig.avroParquetConfig.outputDirectory));
           jobConfiguration.setBoolean(AvroParquetConstants.KEEP_INPUT_FILE, jobConfig.avroParquetConfig.keepInputFile);
+          jobConfiguration.set(AvroParquetConstants.COMPRESSION_CODEC_NAME, eval.evaluateToString("compressionCodec", jobConfig.avroParquetConfig.compressionCodec));
+          jobConfiguration.setInt(AvroParquetConstants.ROW_GROUP_SIZE, jobConfig.avroParquetConfig.rowGroupSize);
+          jobConfiguration.setInt(AvroParquetConstants.PAGE_SIZE, jobConfig.avroParquetConfig.pageSize);
+          jobConfiguration.setInt(AvroParquetConstants.DICTIONARY_PAGE_SIZE, jobConfig.avroParquetConfig.dictionaryPageSize);
+          jobConfiguration.setInt(AvroParquetConstants.MAX_PADDING_SIZE, jobConfig.avroParquetConfig.maxPaddingSize);
           break;
         case CUSTOM:
           // Nothing because custom is generic one that have no special config properties

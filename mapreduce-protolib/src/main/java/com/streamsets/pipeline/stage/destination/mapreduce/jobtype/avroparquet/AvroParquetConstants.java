@@ -36,4 +36,28 @@ public class AvroParquetConstants {
    */
   public final static String KEEP_INPUT_FILE = AvroParquetConstants.class.getCanonicalName() + ".keep_input_file";
 
+  /**
+   * Name of the compression codec that should be passed down to Parquet writer.
+   */
+  public final static String COMPRESSION_CODEC_NAME = AvroParquetConstants.class.getCanonicalName() + ".compression_codec";
+
+  /**
+   * Row group size that will be passed down to Parquet writer.
+   */
+  public final static String ROW_GROUP_SIZE = AvroParquetConstants.class.getCanonicalName() + ".row_group_size";
+
+  /**
+   * Page size that will be passed down to Parquet writer.
+   */
+  public final static String PAGE_SIZE = AvroParquetConstants.class.getCanonicalName() + ".page_size";
+
+  /**
+   * Dictionary page size that will be passed down to Parquet writer.
+   */
+  public final static String DICTIONARY_PAGE_SIZE = AvroParquetConstants.class.getCanonicalName() + ".dictionary_page_size";
+
+  /**
+   * Max padding size that will be passed down to Parquet writer.
+   */
+  public final static String MAX_PADDING_SIZE = AvroParquetConstants.class.getCanonicalName() + ".max_padding_size";
 }

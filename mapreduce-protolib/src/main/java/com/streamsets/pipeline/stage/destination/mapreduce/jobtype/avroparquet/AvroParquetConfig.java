@@ -45,7 +45,7 @@ public class AvroParquetConfig {
     label = "Output directory",
     description = "Absolute path to the destination directory on HDFS.",
     defaultValue = "",
-    displayPosition = 10,
+    displayPosition = 20,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET",
@@ -67,4 +67,68 @@ public class AvroParquetConfig {
   )
   public boolean keepInputFile;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = "Compression codec",
+    description = "Compression codec that will be used in Parquet. Valid values are for example 'SNAPPY' or 'LZO'. Empty value will use Parquet default.",
+    defaultValue = "",
+    displayPosition = 30,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public String compressionCodec = "";
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    label = "Row group size",
+    description = "Row group size that will be used in Parquet. '-1' value will use Parquet default.",
+    defaultValue = "-1",
+    displayPosition = 40,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public int rowGroupSize = -1;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    label = "Page size",
+    description = "Page size that will be used in Parquet. '-1' value will use Parquet default.",
+    defaultValue = "-1",
+    displayPosition = 50,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public int pageSize = -1;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    label = "Dictionary page size",
+    description = "Dictionary page size that will be used in Parquet. '-1' value will use Parquet default.",
+    defaultValue = "-1",
+    displayPosition = 60,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public int dictionaryPageSize = -1;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    label = "Max padding size",
+    description = "Max padding size that will be used in Parquet. '-1' value will use Parquet default.",
+    defaultValue = "-1",
+    displayPosition = 70,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public int maxPaddingSize = -1;
 }
