@@ -40,7 +40,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_13("Failed to convert CLOB to string: {}"),
   JDBC_14("Error processing batch.\n{}"),
   JDBC_15("Invalid JDBC Namespace prefix, should end with '.'"),
-  JDBC_16("Table '{}' does not exist."),
+  JDBC_16("Table '{}' does not exist or PDB is incorrect. Make sure the correct PDB was specified"),
   JDBC_17("Failed to lookup primary keys for table '{}' : {}"),
   JDBC_19("Record did not contain primary key field mapped to primary key column '{}'"),
   JDBC_20("Could not parse the table name template expression: {}"),

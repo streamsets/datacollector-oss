@@ -67,15 +67,15 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_44;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_45;
 
 public class OracleCDCSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(OracleCDCSource.class);
   private static final String CDB_ROOT = "CDB$ROOT";
-  private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
+  private static final String HIKARI_CONFIG_PREFIX = "hikariConf.";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
+  private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String COMMA = ",";
   private static final String QUOTE = "'";
   private static final String CURRENT_SCN =
@@ -277,7 +277,7 @@ public class OracleCDCSource extends BaseSource {
       } catch (StageException | SQLException e) {
         LOG.error("Error while connecting to DB", e);
         issues.add(getContext().createConfigIssue(
-            Groups.CDC.getLabel(), "configBean.database", JDBC_00, configBean.baseConfigBean.database));
+            Groups.CREDENTIALS.name(), USERNAME, JDBC_00, configBean.baseConfigBean.database));
         return issues;
       }
     }
@@ -295,14 +295,12 @@ public class OracleCDCSource extends BaseSource {
         return issues;
       }
       if (majorVersion >= 12) {
-        if (StringUtils.isEmpty(container)) {
-          issues.add(getContext().createConfigIssue(Groups.JDBC.getLabel(), "pdb", JDBC_45));
-          return issues;
+        if (!StringUtils.isEmpty(container)) {
+          String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
+          reusedStatement.execute(switchToPdb);
         }
-        String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
-        reusedStatement.execute(switchToPdb);
       }
-      tables = new ArrayList<>(configBean.baseConfigBean.tables);
+      tables = new ArrayList<>(configBean.baseConfigBean.tables.size());
       for (String table : configBean.baseConfigBean.tables) {
         table = table.trim();
         if (!configBean.baseConfigBean.caseSensitive) {
@@ -310,6 +308,9 @@ public class OracleCDCSource extends BaseSource {
         }
       }
       validateTablePresence(reusedStatement, tables, issues);
+      if (!issues.isEmpty()) {
+        return issues;
+      }
       for (String table : tables) {
         table = table.trim();
         tableSchemas.put(table, getTableSchema(table));
@@ -320,7 +321,7 @@ public class OracleCDCSource extends BaseSource {
       }
     } catch (SQLException ex) {
       LOG.error("Error while switching to container: " + container, ex);
-      issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.getLabel(), USERNAME, JDBC_40, container));
+      issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
       return issues;
     }
 
@@ -372,7 +373,7 @@ public class OracleCDCSource extends BaseSource {
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
       issues.add(getContext().createConfigIssue(
-          Groups.CDC.getLabel(), "configBean.database", JDBC_00, configBean.baseConfigBean.database));
+          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
     return issues;
   }
@@ -434,8 +435,12 @@ public class OracleCDCSource extends BaseSource {
       try {
         statement.execute("SELECT * FROM " + configBean.baseConfigBean.database + "." + table + " WHERE 1 = 0");
       } catch (SQLException ex) {
-        LOG.error("Table: " + table + " does not exist", ex);
-        issues.add(getContext().createConfigIssue("CDC", "configBean.tables", JDBC_16, table));
+        StringBuilder sb = new StringBuilder("Table: ").append(table).append(" does not exist.");
+        if (StringUtils.isEmpty(configBean.pdb)) {
+          sb.append(" PDB was not specified. If the database was created inside a PDB, please specify PDB");
+        }
+        LOG.error(sb.toString(), ex);
+        issues.add(getContext().createConfigIssue(Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.tables", JDBC_16, table));
       }
     }
   }
@@ -484,7 +489,7 @@ public class OracleCDCSource extends BaseSource {
       }
     } catch (SQLException ex) {
       LOG.error("Error while getting db version info", ex);
-      issues.add(getContext().createConfigIssue("JDBC", "configBean.dbHost", JDBC_41));
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, JDBC_41));
     }
     return -1;
   }
