@@ -51,8 +51,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -60,13 +64,19 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_02;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_04;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_42;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_44;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_45;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_46;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_47;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_48;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_49;
+import static com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.Groups.CDC;
+import static com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.Groups.CREDENTIALS;
 
 public class OracleCDCSource extends BaseSource {
 
@@ -80,6 +90,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String QUOTE = "'";
   private static final String CURRENT_SCN =
       "SELECT MAX(ktuxescnw * POWER(2, 32) + ktuxescnb) FROM sys.x$ktuxe";
+  public static final int MISSING_LOG_CODE = 1291;
   private String redoLogEntriesSql = null;
   private static final String START_SCN_OPT_STR = "STARTSCN => ";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
@@ -88,10 +99,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String USER = PREFIX + "USER";
   private static final String OPERATION = PREFIX + "OPERATION";
   private static final String DATE = "DATE";
-  private static final String DATE_SQL = "SELECT TO_DATE('{}') FROM DUAL";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
-  private static final String TIMESTAMP_SQL = "SELECT TO_TIMESTAMP('{}') FROM DUAL";
   private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP;
   private static final String TABLE = PREFIX + "TABLE";
   private static final String INSERT = "INSERT";
@@ -103,6 +112,11 @@ public class OracleCDCSource extends BaseSource {
   private static final int UPDATE_CODE = 3;
   private static final int SELECT_FOR_UPDATE_CODE = 25;
   private static final String NULL = "NULL";
+
+  private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS'";
+  private static final String NLS_TIMESTAMP_FORMAT =
+      "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -122,7 +136,8 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement getLatestSCN;
   private CallableStatement startLogMnr;
   private CallableStatement endLogMnr;
-  private Statement dateStatement;
+  private PreparedStatement dateStatement;
+  private PreparedStatement tsStatement;
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
 
@@ -145,6 +160,8 @@ public class OracleCDCSource extends BaseSource {
       if (connection == null || !connection.isValid(30)) {
         connection = dataSource.getConnection();
         initializeStatements();
+        initializeLogMnrStatements();
+        alterSession();
       }
       selectChanges.setMaxRows(batchSize);
       BigDecimal endingSCN = getEndingSCN();
@@ -220,12 +237,13 @@ public class OracleCDCSource extends BaseSource {
       endLogMnr.execute();
       connection.commit();
     } catch (Exception ex) {
+      LOG.error("Error while attempting to produce records", ex);
       errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
     }
     return nextOffset;
   }
 
-  private boolean startLogMiner(String lastSourceOffset, BigDecimal endingSCN) throws SQLException, StageException {
+  private boolean startLogMiner(String lastSourceOffset, BigDecimal endingSCN) throws SQLException {
     String startString;
     String endingSCNStr = endingSCN.toPlainString();
     if (StringUtils.isEmpty(lastSourceOffset)) {
@@ -288,6 +306,43 @@ public class OracleCDCSource extends BaseSource {
             configBean.baseConfigBean.database.trim() :
             configBean.baseConfigBean.database.trim().toUpperCase();
     List<String> tables;
+
+    try {
+      initializeStatements();
+      alterSession();
+    } catch (SQLException ex) {
+      LOG.error("Error while creating statement", ex);
+      issues.add(getContext().createConfigIssue(
+          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
+    }
+
+    try {
+      BigDecimal scn = getEndingSCN();
+      switch (configBean.startValue) {
+        case SCN:
+          if (new BigDecimal(configBean.startSCN).compareTo(scn) > 0) {
+            issues.add(
+                getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startSCN", JDBC_47, scn.toPlainString()));
+          }
+          break;
+        case DATE:
+          try {
+            Date start = getDate(configBean.startDate);
+            if (start.after(new Date(System.currentTimeMillis()))) {
+              issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_48));
+            }
+          } catch (ParseException ex) {
+            LOG.error("Invalid date", ex);
+            issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_49));
+          }
+          break;
+        default:
+      }
+    } catch (SQLException ex) {
+      LOG.error("Error while getting SCN", ex);
+      issues.add(getContext().createConfigIssue(CREDENTIALS.name(), USERNAME, JDBC_42));
+    }
+
     try(Statement reusedStatement = connection.createStatement()) {
       int majorVersion = getDBVersion(issues);
       // If version is 12+, then the check for table presence must be done in an alternate container!
@@ -369,20 +424,47 @@ public class OracleCDCSource extends BaseSource {
         + " ORDER BY SCN ASC";
 
     try {
-      initializeStatements();
+      initializeLogMnrStatements();
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
       issues.add(getContext().createConfigIssue(
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
+
+    try {
+      startLogMiner(null, getEndingSCN());
+    } catch (SQLException ex) {
+      LOG.error("Error while starting LogMiner", ex);
+      // 1291 is the oracle error code for missing redo logs.
+      if (ex.getErrorCode() == MISSING_LOG_CODE) {
+        String errorParam = null;
+        JdbcErrors error = null;
+        switch (configBean.startValue) {
+          case SCN:
+            error = JDBC_46;
+            errorParam = "oracleCDCConfigBean.startSCN";
+            break;
+          case DATE:
+            error = JDBC_45;
+            errorParam = "oracleCDCConfigBean.startDate";
+            break;
+          default:
+        }
+        issues.add(getContext().createConfigIssue(CDC.name(), errorParam, error));
+      }
+    }
     return issues;
   }
 
   private void initializeStatements() throws SQLException {
-    selectChanges = connection.prepareStatement(redoLogEntriesSql);
     getLatestSCN = connection.prepareStatement(CURRENT_SCN);
+    dateStatement = connection.prepareStatement(NLS_DATE_FORMAT);
+    tsStatement = connection.prepareStatement(NLS_TIMESTAMP_FORMAT);
+  }
+
+  private void initializeLogMnrStatements() throws SQLException {
+    selectChanges = connection.prepareStatement(redoLogEntriesSql);
     endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
-    dateStatement = connection.createStatement();
   }
 
   private String formatTableList(List<String> tables) {
@@ -399,13 +481,10 @@ public class OracleCDCSource extends BaseSource {
     return formattedTablesBuilder.toString();
   }
 
-  private String getInitialString() throws SQLException, StageException {
-    switch(configBean.startValue) {
+  private String getInitialString() throws SQLException {
+    switch (configBean.startValue) {
       case DATE:
-        try (Statement s = connection.createStatement()) {
-          s.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH24:MI:SS'");
-        }
-        return "STARTTIME => " + QUOTE + configBean.startDate + QUOTE;
+        return Utils.format("STARTTIME => '{}'", configBean.startDate);
       case SCN:
         return START_SCN_OPT_STR + configBean.startSCN;
       case LATEST:
@@ -415,18 +494,14 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private BigDecimal getEndingSCN() throws StageException {
+  private BigDecimal getEndingSCN() throws SQLException {
     try (ResultSet rs = getLatestSCN.executeQuery()) {
-      if(!rs.next()) {
-        throw new StageException(JDBC_04, CURRENT_SCN);
+      if (!rs.next()) {
+        throw new SQLException("Missing SCN");
       }
-
       BigDecimal scn = rs.getBigDecimal(1);
       LOG.info("Current latest SCN is: " + scn.toPlainString());
       return scn;
-    } catch (SQLException ex) {
-      LOG.error("Error while getting ending SCN", ex);
-      throw new StageException(JDBC_02, CURRENT_SCN, ex.getMessage(), ex);
     }
   }
 
@@ -530,7 +605,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private Field objectToField(String table, String column, String columnValue) throws SQLException {
+  private Field objectToField(String table, String column, String columnValue) throws ParseException {
     int columnType = tableSchemas.get(table).get(column);
     Field field;
     Field.Type type;
@@ -627,21 +702,21 @@ public class OracleCDCSource extends BaseSource {
     return field;
   }
 
-  private Field getDateTimeField(Field.Type type, Object value) throws SQLException {
-    String sql = Utils.format(type == Field.Type.DATE ? DATE_SQL : TIMESTAMP_SQL, value);
-    // This is not the most efficient way, but this works
-    // Using valueOf does not work because JDBC returns TIMESTAMP_HEADER as type even when the type is DATE :|
-    try (ResultSet rs = dateStatement.executeQuery(sql)) {
-      if (rs.next()) {
-        if (type == Field.Type.DATE) {
-          return Field.create(type, rs.getDate(1));
-        } else {
-          return Field.create(type, rs.getTimestamp(1));
-        }
-      } else {
-        return null;
-      }
+  private Field getDateTimeField(Field.Type type, Object value) throws ParseException {
+    if (type == Field.Type.DATE) {
+      return Field.create(type, getDate((String) value));
+    } else {
+      return Field.create(type, Timestamp.valueOf((String) value));
     }
+  }
+
+  private Date getDate(String s) throws ParseException {
+    return dateFormat.parse(s);
+  }
+
+  private void alterSession() throws SQLException {
+    dateStatement.execute();
+    tsStatement.execute();
   }
 
   @VisibleForTesting

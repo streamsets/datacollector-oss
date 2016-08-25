@@ -66,11 +66,17 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_39("Oracle SID must be specified for Oracle 12c"),
   JDBC_40("Error while switching to container {} using given credentials"),
   JDBC_41("Error while getting DB version"),
-  JDBC_42("Error while getting initial SCN"),
+  JDBC_42("Error while getting initial SCN. Please verify the privileges for the user"),
   JDBC_43("Could not parse redo log statement: {}"),
   JDBC_44("Error while getting changes from Oracle due to error: {}"),
-  JDBC_45("PDB is required for Oracle 12 and above.")
-  ;
+  JDBC_45("The start date is invalid, due to redo logs not being available. " +
+      "Provide a more recent start date"),
+  JDBC_46("The initial SCN is invalid, due to redo logs not being available.  " +
+      "Provide a more recent initial SCN"),
+  JDBC_47("The current latest SCN {} is less than the initial SCN"),
+  JDBC_48("The start date is in the future"),
+  JDBC_49("Date is invalid. Please use format DD-MM-YYYY HH24:MM:SS");
+
   private final String msg;
 
   JdbcErrors(String msg) {

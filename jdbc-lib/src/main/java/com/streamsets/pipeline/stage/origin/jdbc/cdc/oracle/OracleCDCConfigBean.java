@@ -54,9 +54,9 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Start Date (DD-MON-YYYY HH24:MM:SS)",
+      label = "Start Date (DD-MM-YYYY HH24:MM:SS)",
       description = "The Date from which the first change must be downloaded. Date must be in this format: " +
-          "DD-MON-YYYY HH24:MM:SS. Example: 01-Jan-2016 22:15:35. Archived Redo logs must be available from that date",
+          "DD-MM-YYYY HH24:MM:SS. Example: 01-01-2016 22:15:35. Archived Redo logs must be available from that date",
       displayPosition = 40,
       group = "CDC",
       dependsOn = "startValue",
