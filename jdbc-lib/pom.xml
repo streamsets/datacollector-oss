@@ -129,36 +129,17 @@
         </configuration>
       </plugin>
       <plugin>
-      <groupId>com.googlecode.maven-download-plugin</groupId>
-      <artifactId>download-maven-plugin</artifactId>
-      <version>1.3.0</version>
-      <executions>
-        <execution>
-          <id>antlr</id>
-          <phase>validate</phase>
-          <goals>
-            <goal>wget</goal>
-          </goals>
-          <configuration>
-            <url>https://raw.githubusercontent.com/antlr/grammars-v4/master/plsql/plsql.g4</url>
-            <outputDirectory>${project.basedir}/src/main/antlr4/plsql</outputDirectory>
-            <skipCache>true</skipCache>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr4-maven-plugin</artifactId>
-      <version>${antlr.version}</version>
-      <executions>
-        <execution>
-          <goals>
-            <goal>antlr4</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>${antlr.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
