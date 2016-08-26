@@ -36,6 +36,6 @@ do
   if [ -d "${STAGE_LIB}" ] && [ "${STAGE_NAME}" != "${RPM}" ];
   then
     echo "Processing stage library: ${STAGE_NAME}"
-    mv ${STAGE_LIB}/* .
+    cp -Rf ${STAGE_LIB}/* .
   fi
 done
