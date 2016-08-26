@@ -142,7 +142,7 @@ public class OracleCDCSource extends BaseSource {
       if (dataSource == null || dataSource.isClosed()) {
         dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
       }
-      if (connection == null || connection.isClosed()) {
+      if (connection == null || !connection.isValid(30)) {
         connection = dataSource.getConnection();
         initializeStatements();
       }
