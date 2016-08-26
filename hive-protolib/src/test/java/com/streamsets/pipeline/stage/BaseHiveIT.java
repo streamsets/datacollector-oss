@@ -129,9 +129,11 @@ public abstract class BaseHiveIT {
     miniDFS.getFileSystem().setPermission(new Path("/"), FsPermission.createImmutable((short)0777));
     writeConfiguration(miniDFS.getConfiguration(0), confDir + "/core-site.xml");
     writeConfiguration(miniDFS.getConfiguration(0), confDir + "/hdfs-site.xml");
+    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/mapred-site.xml");
+    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/yarn-site.xml");
 
     // Configuration for both HMS and HS2
-    final HiveConf hiveConf = new HiveConf(conf, HiveConf.class);
+    final HiveConf hiveConf = new HiveConf(miniDFS.getConfiguration(0), HiveConf.class);
     hiveConf.set(HiveConf.ConfVars.METASTORECONNECTURLKEY.varname, "jdbc:derby:;databaseName=target/metastore_db;create=true");
     hiveConf.set(HiveConf.ConfVars.METASTOREURIS.varname, Utils.format("thrift://{}:{}", HOSTNAME, METASTORE_PORT));
     hiveConf.set(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST.varname, "localhost");
@@ -217,6 +219,10 @@ public abstract class BaseHiveIT {
 
   public static String getExternalWareHouseDir() {
     return EXTERNAL_DIR;
+  }
+
+  public static String getConfDir() {
+    return confDir;
   }
 
   /**
