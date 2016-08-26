@@ -113,8 +113,8 @@
             <step>
                 <cmd>To run <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service, change the owner of the <codeph>/etc/sdc</codeph> directory to
-                    the system user and group that starts <ph
+                    /> as a service, change the owner of the <codeph>/etc/sdc</codeph> directory and
+                    all files in the directory to the system user and group that starts <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />. </cmd>
                 <info>By default, <ph
