@@ -35,9 +35,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -201,6 +201,9 @@ public class DirectorySpooler {
             }
           }
           return file1.getFileName().compareTo(file2.getFileName());
+        } catch (NoSuchFileException ex) {
+          // Logged later, so don't log here.
+          throw new RuntimeException(ex);
         } catch (IOException ex) {
           LOG.warn("Could not sort files due to IO Exception", ex);
           throw new RuntimeException(ex);
@@ -358,7 +361,15 @@ public class DirectorySpooler {
   void addFileToQueue(Path file, boolean checkCurrent) {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
-      Preconditions.checkState(currentFile == null || pathComparator.compare(spoolDirPath.resolve(currentFile), file) < 0);
+      try {
+        Preconditions.checkState(currentFile == null || compare(spoolDirPath.resolve(currentFile), file) < 0);
+      } catch (NoSuchFileException ex) {
+        // Happens only in timestamp ordering.
+        // Very unlikely this will happen, new file has to be added to the queue at the exact time when
+        // the currentFile was consumed and archived while a new file has not yet been picked up for processing.
+        // Ignore - we just add the new file, since this means this file is indeed newer
+        // (else this would have been consumed and archived first)
+      }
     }
     if (!filesQueue.contains(file)) {
       if (filesQueue.size() >= maxSpoolFiles) {
@@ -456,6 +467,23 @@ public class DirectorySpooler {
     }
   }
 
+  // This method is a simple wrapper that lets us find the NoSuchFileException if that was the cause.
+  private int compare(Path path1, Path path2) throws NoSuchFileException {
+    // why not just check if the file exists? Well, there is a possibility file gets moved/archived/deleted right after
+    // that check. In that case we will still fail. So fail, and recover.
+    try {
+      return pathComparator.compare(path1, path2);
+    } catch (RuntimeException ex) {
+      Throwable cause = ex.getCause();
+      if (cause != null && cause instanceof NoSuchFileException) {
+        LOG.debug("Starting file may have already been archived.", cause);
+        throw (NoSuchFileException) cause;
+      }
+      LOG.warn("Error while comparing files" , ex);
+      throw ex;
+    }
+  }
+
   String findAndQueueFiles(final String startingFile, final boolean includeStartingFile, boolean checkCurrent)
       throws IOException {
     final long scanTime = System.currentTimeMillis();
@@ -468,8 +496,15 @@ public class DirectorySpooler {
           if (startingFile == null || startingFile.isEmpty()) {
             accept = true;
           } else {
-            int compares = pathComparator.compare(entry, spoolDirPath.resolve(startingFile));
-            accept = (compares == 0 && includeStartingFile) || (compares > 0);
+            try {
+              int compares = compare(entry, spoolDirPath.resolve(startingFile));
+              accept = (compares == 0 && includeStartingFile) || (compares > 0);
+            } catch (NoSuchFileException ex) {
+              // This happens only if timestamp is used, when the mtime is looked up for the startingFile
+              // which has been archived, so this file must be newer since it is still in the directory
+              // (if it was older it would have been consumed and archived earlier)
+              return true;
+            }
           }
         }
         return accept;
@@ -512,8 +547,14 @@ public class DirectorySpooler {
         public boolean accept(Path entry) throws IOException {
           boolean isOlder = false;
           if (startingFile != null) {
-            int compared = pathComparator.compare(entry, spoolDirPath.resolve(startingFile));
-            isOlder = compared < 0;
+            try {
+              int compared = compare(entry, spoolDirPath.resolve(startingFile));
+              isOlder = compared < 0;
+            } catch (NoSuchFileException ignored) {
+              // Happens only when timestamp is used.
+              // This file is newer since this file exists and the startingFile does not --
+              // since the starting file was consumed and archived, while this one was not.
+            }
           }
           return entry != null && fileMatcher.matches(entry.getFileName()) && isOlder;
         }

@@ -421,6 +421,34 @@ public class TestDirectorySpooler {
     spooler.destroy();
   }
 
+  // Fails without SDC-3496 (with NoSuchFileException)
+  @Test
+  public void testMissingFileDoesNotThrow() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+    logFile2.setLastModified(System.currentTimeMillis() - 10000);
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    logFile2.setLastModified(System.currentTimeMillis() - 9000);
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setUseLastModifiedTimestamp(true)
+        .setMaxSpoolFiles(3);
+    DirectorySpooler spooler = builder.build();
+
+    Assert.assertEquals(2, spoolDir.list().length);
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    spooler.init("x1.log");
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(logFile3, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    spooler.destroy();
+  }
+
   @Test
   public void testRetentionPurging() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
