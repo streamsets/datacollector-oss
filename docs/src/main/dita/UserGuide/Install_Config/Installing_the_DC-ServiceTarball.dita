@@ -67,8 +67,12 @@
             <step>
                 <cmd>Create the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> configuration directory at <codeph>/etc/sdc</codeph> directory, copy all
-                    files from etc into this directory, and change the owner to sdc:sdc.</cmd>
+                    /> configuration directory at <codeph>/etc/sdc</codeph> and copy all files from
+                    etc into this directory.</cmd>
+            </step>
+            <step>
+                <cmd>Change the owner of the <codeph>/etc/sdc</codeph> directory and all files in
+                    the directory to sdc:sdc.</cmd>
             </step>
             <step>
                 <cmd>Use the following command to set owner only permission on the
