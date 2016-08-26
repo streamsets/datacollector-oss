@@ -34,7 +34,8 @@ import com.streamsets.pipeline.stage.lib.hive.Groups;
     description = "Updates the Hive Metastore.",
     icon = "hive.png",
     privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv"
+    onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv",
+    producesEvents = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

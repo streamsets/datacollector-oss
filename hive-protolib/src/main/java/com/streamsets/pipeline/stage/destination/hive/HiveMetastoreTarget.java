@@ -20,7 +20,10 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -216,6 +219,10 @@ public class HiveMetastoreTarget extends BaseTarget {
           qualifiedTableName,
           new TypeInfoCacheSupport.TypeInfo(newColumnTypeInfo, partitionTypeInfo)
       );
+      createEvent("new-table", new ImmutableMap.Builder()
+        .put("table", Field.create(Field.Type.STRING, qualifiedTableName))
+        .build()
+      );
     } else {
       //Diff to get new columns.
       LinkedHashMap<String, HiveTypeInfo> columnDiff = cachedColumnTypeInfo.getDiff(newColumnTypeInfo);
@@ -242,6 +249,16 @@ public class HiveMetastoreTarget extends BaseTarget {
           hiveQueryExecutor.executeAlterTableSetTblPropertiesQuery(qualifiedTableName, schemaPath);
         }
         cachedColumnTypeInfo.updateState(columnDiff);
+
+        LinkedHashMap<String, Field> newColumns = new LinkedHashMap<>();
+        for(Map.Entry<String, HiveTypeInfo> entry : columnDiff.entrySet()) {
+          newColumns.put(entry.getKey(), Field.create(Field.Type.STRING, entry.getValue().toString()));
+        }
+        createEvent("new-columns", new ImmutableMap.Builder()
+          .put("table", Field.create(Field.Type.STRING, qualifiedTableName))
+          .put("columns", Field.create(Field.Type.MAP, newColumns))
+          .build()
+        );
       }
     }
   }
@@ -292,6 +309,22 @@ public class HiveMetastoreTarget extends BaseTarget {
       } else {
         hmsCache.put(hmsCacheType, qualifiedTableName, new PartitionInfoCacheSupport.PartitionInfo(partitionInfoDiff));
       }
+
+      LinkedHashMap<String, Field> partitionListMap = new LinkedHashMap<>();
+      for(Map.Entry<String, String> entry : partitionValMap.entrySet()) {
+        partitionListMap.put(entry.getKey(), Field.create(Field.Type.STRING, entry.getValue()));
+      }
+      createEvent("new-partition", new ImmutableMap.Builder()
+        .put("table", Field.create(Field.Type.STRING, qualifiedTableName))
+        .put("partition", Field.create(Field.Type.LIST_MAP, partitionListMap))
+        .build()
+      );
     }
+  }
+
+  private void createEvent(String type, Map<String, Field> root) {
+    EventRecord event = getContext().createEventRecord(type, 1);
+    event.set(Field.create(Field.Type.MAP, root));
+    getContext().toEvent(event);
   }
 }
