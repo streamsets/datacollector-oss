@@ -26,15 +26,15 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
-@StageDef(
-  version = 1,
-  label = "Hdfs Metadata Executor",
-  description = "Executes HDFS metadata operations",
-  icon = "hdfs.png", // TODO change
-  privateClassLoader = true,
-  onlineHelpRefUrl = "index.html#Destinations/Hive.html#task_cx3_lhh_ht", // TODO change
-  producesEvents = true
-)
+//@StageDef(
+//  version = 1,
+//  label = "Hdfs Metadata Executor",
+//  description = "Executes HDFS metadata operations",
+//  icon = "hdfs.png", // TODO change
+//  privateClassLoader = true,
+//  onlineHelpRefUrl = "index.html#Destinations/Hive.html#task_cx3_lhh_ht", // TODO change
+//  producesEvents = true
+//)
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class HdfsMetadataDExecutor extends DTarget {

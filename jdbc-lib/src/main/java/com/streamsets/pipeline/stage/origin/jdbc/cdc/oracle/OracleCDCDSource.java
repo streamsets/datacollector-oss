@@ -27,15 +27,15 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
-@StageDef(
-    version = 1,
-    label = "Oracle CDC Client",
-    description = "Origin that an read change events from an Oracle Database",
-    icon = "rdbms.png",
-    recordsByRef = true,
-    resetOffset = true,
-    onlineHelpRefUrl = "index.html#Origins/OracleCDC.html#task_ehh_mjj_tw"
-)
+//@StageDef(
+//    version = 1,
+//    label = "Oracle CDC Client",
+//    description = "Origin that an read change events from an Oracle Database",
+//    icon = "rdbms.png",
+//    recordsByRef = true,
+//    resetOffset = true,
+//    onlineHelpRefUrl = "index.html#Origins/OracleCDC.html#task_ehh_mjj_tw"
+//)
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 public class OracleCDCDSource extends DSource {
