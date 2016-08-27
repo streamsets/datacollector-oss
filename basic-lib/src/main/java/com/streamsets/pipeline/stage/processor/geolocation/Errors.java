@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   GEOIP_00("Database file '{}' does not exist"),
-  GEOIP_01("Error reading database file '{}': '{}'"),
+  GEOIP_01("Error reading database file: '{}'"),
   GEOIP_02("Address '{}' not found: '{}'"),
   GEOIP_03("Unknown geolocation occurred: '{}'"),
   GEOIP_04("At least one field is required"),
@@ -36,7 +36,7 @@ public enum Errors implements ErrorCode {
   GEOIP_09("Output field name is empty"),
   GEOIP_10("Database file '{}' must be relative to SDC resources directory in cluster mode"),
   GEOIP_11("Record '{}' does not contain input field '{}'"),
-  GEOIP_12("Field type '{}' is not supported by specified database type '{}'"),
+  GEOIP_12("Field type '{}' is only supported for the following database types: {}"),
   ;
 
 

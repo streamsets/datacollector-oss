@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=3,
+    version=4,
     label="Geo IP",
     description = "IP address geolocation using a Maxmind GeoIP2 database file",
     icon="globe.png",
@@ -44,33 +44,22 @@ public class GeolocationDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "GeoIP2 Database File",
-      description = "An absolute path or a file under SDC resources directory in GeoIP2 format",
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = "GeoIP2 Databases",
+      description = "MaxMind GeoIP2 database file paths and database types.",
       displayPosition = 10,
       group = "GEOLOCATION"
   )
-  public String geoIP2DBFile;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "",
-      label = "GeoIP2 Database Type",
-      description = "The type of GeoIP2 database being used",
-      displayPosition = 11,
-      group = "GEOLOCATION"
-  )
-  @ValueChooserModel(GeolocationDBTypeEnumChooserValues.class)
-  public GeolocationDBType geoIP2DBType;
+  @ListBeanModel
+  public List<GeolocationDatabaseConfig> dbConfigs;
 
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue="",
-    label = "",
-    description = "",
+    label = "Database Field Mappings",
+    description = "Mappings of database fields to record fields.",
     displayPosition = 20,
     group = "GEOLOCATION"
   )
@@ -91,9 +80,6 @@ public class GeolocationDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new GeolocationProcessor(geoIP2DBFile,
-      geoIP2DBType,
-      missingAddressAction,
-      fieldTypeConverterConfigs);
+    return new GeolocationProcessor(dbConfigs, missingAddressAction, fieldTypeConverterConfigs);
   }
 }

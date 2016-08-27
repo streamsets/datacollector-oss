@@ -64,6 +64,24 @@ public class TestGeolocationProcessorUpgrader {
     assertEquals(missingAddressAction, "REPLACE_WITH_NULLS");
   }
 
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("geoIP2DBFile", "/foo/bar"));
+    configs.add(new Config("geoIP2DBType", "COUNTRY"));
+    configs.add(new Config("fieldTypeConverterConfigs", null));
+
+    GeolocationProcessorUpgrader upgrader = new GeolocationProcessorUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 3, 4, configs);
+
+    List<Map<String, String>> dbConfigs = (List)getConfigsAsMap(configs).get("dbConfigs");
+    assertEquals(1, dbConfigs.size());
+    assertEquals("/foo/bar", dbConfigs.get(0).get("geoIP2DBFile"));
+    assertEquals("COUNTRY", dbConfigs.get(0).get("geoIP2DBType"));
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

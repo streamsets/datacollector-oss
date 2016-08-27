@@ -19,16 +19,23 @@
  */
 package com.streamsets.pipeline.stage.processor.geolocation;
 
+import com.google.api.client.util.Sets;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Maps;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.AbstractResponse;
+import com.maxmind.geoip2.model.AnonymousIpResponse;
 import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.model.ConnectionTypeResponse;
 import com.maxmind.geoip2.model.CountryResponse;
+import com.maxmind.geoip2.model.DomainResponse;
+import com.maxmind.geoip2.model.IspResponse;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -47,6 +54,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class  GeolocationProcessor extends SingleLaneRecordProcessor {
@@ -61,23 +70,19 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
     }
   }
 
-  private final String geoIP2DBFile;
-  private final GeolocationDBType geoIP2DBType;
+  private final List<GeolocationDatabaseConfig> dbConfigs;
   private final List<GeolocationFieldConfig> configs;
   private final GeolocationMissingAddressAction missingAddressAction;
-  private LoadingCache<Field, CountryResponse> countries;
-  private LoadingCache<Field, CityResponse> cities;
-  private DatabaseReader reader;
+  private Map<GeolocationDBType, DatabaseReader> readers = Maps.newHashMap();
+  LoadingCache<Field, Map<GeolocationDBType, AbstractResponse>> responseCache;
   private DefaultErrorRecordHandler errorRecordHandler;
 
   public GeolocationProcessor(
-      String geoIP2DBFile,
-      GeolocationDBType geoIP2DBType,
+      List<GeolocationDatabaseConfig> dbConfigs,
       GeolocationMissingAddressAction missingAddressAction,
       List<GeolocationFieldConfig> configs
   ) {
-    this.geoIP2DBFile = geoIP2DBFile;
-    this.geoIP2DBType = geoIP2DBType;
+    this.dbConfigs = dbConfigs;
     this.missingAddressAction = missingAddressAction;
     this.configs = configs;
   }
@@ -87,55 +92,81 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
     List<ConfigIssue> result = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
+    // Will be used to determine the full set of supported fields for the provided DBs
+    Set<GeolocationField> supportedFields = Sets.newHashSet();
 
-    File database = new File(geoIP2DBFile);
-    if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH
-        || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
-        || getContext().getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING)
-      && database.isAbsolute()) {
-    //Do not allow absolute geoIP2DBFile in cluster mode
-      result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_10, geoIP2DBFile));
-    } else {
-      if (!database.isAbsolute()) {
-        database = new File(getContext().getResourcesDirectory(), geoIP2DBFile).getAbsoluteFile();
-      }
-      if (database.isFile()) {
-        try {
-          reader = new DatabaseReader.Builder(database).build();
-          switch (geoIP2DBType) {
-            case COUNTRY:
-              reader.country(KNOWN_GOOD_ADDRESS);
-              break;
-            case CITY:
-              reader.city(KNOWN_GOOD_ADDRESS);
-              break;
-            default:
-              throw new IllegalStateException(Utils.format("Unknown configuration value: ", geoIP2DBType));
-          }
-
-          for (GeolocationFieldConfig config : this.configs) {
-            if (!config.targetType.isSupported(geoIP2DBType)) {
-              result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_12,
-                  config.targetType, geoIP2DBType));
-            }
-          }
-        } catch (IOException ex) {
-          result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_01, database.getPath(),
-            ex));
-          LOG.info(Utils.format(Errors.GEOIP_01.getMessage(), ex), ex);
-        } catch (UnsupportedOperationException ex) {
-          result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_05,
-              geoIP2DBFile, geoIP2DBType));
-          LOG.info(Utils.format(Errors.GEOIP_05.getMessage(), geoIP2DBFile, geoIP2DBType), ex);
-        } catch (GeoIp2Exception ex) {
-          result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_07,
-              ex));
-          LOG.error(Utils.format(Errors.GEOIP_07.getMessage(), ex), ex);
-        }
+    // Validate each database file
+    for (GeolocationDatabaseConfig dbConfig : dbConfigs) {
+      File database = new File(dbConfig.geoIP2DBFile);
+      if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH
+          || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
+          || getContext().getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING)
+          && database.isAbsolute()) {
+        //Do not allow absolute geoIP2DBFile in cluster mode
+        result.add(getContext().createConfigIssue("GEOLOCATION", "dbConfigs", Errors.GEOIP_10, dbConfig.geoIP2DBFile));
       } else {
-        result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_00, geoIP2DBFile));
+        if (!database.isAbsolute()) {
+          database = new File(getContext().getResourcesDirectory(), dbConfig.geoIP2DBFile).getAbsoluteFile();
+        }
+        if (database.isFile()) {
+          try {
+            // The MaxMind APIs require making specific calls to get results for different databases. This unfortunately
+            // prevents much in the way of generalizing field retrieval, and forces us to have switch statements all over
+            // the place.
+            DatabaseReader reader = new DatabaseReader.Builder(database).build();
+            supportedFields.addAll(dbConfig.geoIP2DBType.supportedFields);
+            switch (dbConfig.geoIP2DBType) {
+              case COUNTRY:
+                reader.country(KNOWN_GOOD_ADDRESS);
+                break;
+              case CITY:
+                reader.city(KNOWN_GOOD_ADDRESS);
+                break;
+              case DOMAIN:
+                reader.domain(KNOWN_GOOD_ADDRESS);
+                break;
+              case ANONYMOUS_IP:
+                reader.anonymousIp(KNOWN_GOOD_ADDRESS);
+                break;
+              case ISP:
+                reader.isp(KNOWN_GOOD_ADDRESS);
+                break;
+              case CONNECTION_TYPE:
+                reader.connectionType(KNOWN_GOOD_ADDRESS);
+                break;
+              default:
+                throw new IllegalStateException(Utils.format("Unknown configuration value: ", dbConfig.geoIP2DBType));
+            }
+
+            // Store the reader for later -- currently only supports one database per type, but it's unclear if there's
+            // any reason to have more than one per type.
+            readers.put(dbConfig.geoIP2DBType, reader);
+          } catch (IOException ex) {
+            result.add(getContext().createConfigIssue("GEOLOCATION", "dbConfigs", Errors.GEOIP_01, database.getPath(),
+                ex));
+            LOG.info(Utils.format(Errors.GEOIP_01.getMessage(), ex), ex);
+          } catch (UnsupportedOperationException ex) {
+            result.add(getContext().createConfigIssue("GEOLOCATION", "dbConfigs", Errors.GEOIP_05,
+                dbConfig.geoIP2DBFile, dbConfig.geoIP2DBType));
+            LOG.info(Utils.format(Errors.GEOIP_05.getMessage(), dbConfig.geoIP2DBFile, dbConfig.geoIP2DBType), ex);
+          } catch (GeoIp2Exception ex) {
+            result.add(getContext().createConfigIssue("GEOLOCATION", "dbConfigs", Errors.GEOIP_07,
+                ex));
+            LOG.error(Utils.format(Errors.GEOIP_07.getMessage(), ex), ex);
+          }
+        } else {
+          result.add(getContext().createConfigIssue("GEOLOCATION", "dbConfigs", Errors.GEOIP_00, dbConfig.geoIP2DBFile));
+        }
       }
     }
+
+    for (GeolocationFieldConfig config : this.configs) {
+      if (!supportedFields.contains(config.targetType)) {
+        result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_12,
+            config.targetType, config.targetType.supportedDbTypes));
+      }
+    }
+
     if (configs.isEmpty()) {
       result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_04));
     }
@@ -146,24 +177,56 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
         result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_09));
       }
     }
-    countries = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<Field, CountryResponse>() {
-      @Override
-      public CountryResponse load(Field field) throws Exception {
-        return Utils.checkNotNull(reader, "DatabaseReader").country(toAddress(field));
-      }
-    });
-    cities = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<Field, CityResponse>() {
-      @Override
-      public CityResponse load(Field field) throws Exception {
-        return Utils.checkNotNull(reader, "DatabaseReader").city(toAddress(field));
-      }
-    });
+
+    createResponseCache();
+
     return result;
+  }
+
+  private void createResponseCache() {
+    responseCache = CacheBuilder.newBuilder().maximumSize(1000).build(
+        new CacheLoader<Field, Map<GeolocationDBType, AbstractResponse>>() {
+          @Override
+          public Map<GeolocationDBType, AbstractResponse> load(Field field) throws Exception {
+            Map<GeolocationDBType, AbstractResponse> responses = Maps.newHashMap();
+            // Each time we load an entry, we'll opportunistically just load that entry for all
+            // available databases.
+            for (Map.Entry<GeolocationDBType, DatabaseReader> entry : readers.entrySet()) {
+              DatabaseReader reader = Utils.checkNotNull(entry.getValue(), "DatabaseReader");
+              AbstractResponse resp = null;
+              switch (entry.getKey()) {
+                case COUNTRY:
+                  resp = reader.country(toAddress(field));
+                  break;
+                case CITY:
+                  resp = reader.city(toAddress(field));
+                  break;
+                case ANONYMOUS_IP:
+                  resp = reader.anonymousIp(toAddress(field));
+                  break;
+                case DOMAIN:
+                  resp = reader.domain(toAddress(field));
+                  break;
+                case ISP:
+                  resp = reader.isp(toAddress(field));
+                  break;
+                case CONNECTION_TYPE:
+                  resp =  reader.connectionType(toAddress(field));
+                  break;
+              }
+              responses.put(entry.getKey(), resp);
+            }
+
+            return responses;
+          }
+        });
   }
 
   @Override
   public void destroy() {
-    IOUtils.closeQuietly(reader);
+    for (DatabaseReader reader : readers.values()) {
+      IOUtils.closeQuietly(reader);
+    }
     super.destroy();
   }
 
@@ -178,14 +241,111 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
         }
 
         try {
-          switch (geoIP2DBType) {
-            case COUNTRY:
-              CountryResponse countryResp = countries.get(field);
-              setFieldForCountryDB(countryResp, config.targetType, config.outputFieldName, record);
+          Map<GeolocationDBType, AbstractResponse> responses = responseCache.get(field);
+          switch (config.targetType) {
+            // Multiple databases support country name and ISO code, so we need to figure out which ones are available
+            case COUNTRY_NAME:
+              String name = null;
+              if (responses.containsKey(GeolocationDBType.COUNTRY)) {
+                CountryResponse countryResp = (CountryResponse) responses.get(GeolocationDBType.COUNTRY);
+                name = countryResp.getCountry().getName();
+              } else {
+                CityResponse cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+                name = cityResp.getCountry().getName();
+              }
+              record.set(config.outputFieldName, Field.create(name));
               break;
-            case CITY:
-              CityResponse cityResp = cities.get(field);
-              setFieldForCityDB(cityResp, config.targetType, config.outputFieldName, record);
+            case COUNTRY_ISO_CODE:
+              String isoCode = null;
+              if (responses.containsKey(GeolocationDBType.COUNTRY)) {
+                CountryResponse countryResp = (CountryResponse) responses.get(GeolocationDBType.COUNTRY);
+                isoCode = countryResp.getCountry().getIsoCode();
+              } else {
+                CityResponse cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+                isoCode = cityResp.getCountry().getIsoCode();
+              }
+              record.set(config.outputFieldName, Field.create(isoCode));
+              break;
+            case CITY_NAME:
+              CityResponse cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+              record.set(config.outputFieldName, Field.create(cityResp.getCity().getName()));
+              break;
+            case LATITUDE:
+              cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+              record.set(config.outputFieldName, Field.create(cityResp.getLocation().getLatitude()));
+              break;
+            case LONGITUDE:
+              cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+              record.set(config.outputFieldName, Field.create(cityResp.getLocation().getLongitude()));
+              break;
+            case IS_ANONYMOUS:
+              AnonymousIpResponse anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.isAnonymous()));
+              break;
+            case IS_ANONYMOUS_VPN:
+              anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.isAnonymousVpn()));
+              break;
+            case IS_HOSTING_PROVIDER:
+              anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.isHostingProvider()));
+              break;
+            case IS_PUBLIC_PROXY:
+              anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.isPublicProxy()));
+              break;
+            case IS_TOR_EXIT_NODE:
+              anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.isTorExitNode()));
+              break;
+            case DOMAIN:
+              DomainResponse domainResp = (DomainResponse) responses.get(GeolocationDBType.DOMAIN);
+              record.set(config.outputFieldName, Field.create(domainResp.getDomain()));
+              break;
+            case CONNECTION_TYPE:
+              ConnectionTypeResponse connResp = (ConnectionTypeResponse) responses.get(GeolocationDBType.CONNECTION_TYPE);
+              record.set(config.outputFieldName, Field.create(connResp.getConnectionType().toString()));
+              break;
+            case AUTONOMOUS_SYSTEM_NUMBER:
+              IspResponse ispResp = (IspResponse) responses.get(GeolocationDBType.ISP);
+              record.set(config.outputFieldName, Field.create(ispResp.getAutonomousSystemNumber()));
+              break;
+            case AUTONOMOUS_SYSTEM_ORG:
+              ispResp = (IspResponse) responses.get(GeolocationDBType.ISP);
+              record.set(config.outputFieldName, Field.create(ispResp.getAutonomousSystemOrganization()));
+              break;
+            case ISP:
+              ispResp = (IspResponse) responses.get(GeolocationDBType.ISP);
+              record.set(config.outputFieldName, Field.create(ispResp.getIsp()));
+              break;
+            case ORGANIZATION:
+              ispResp = (IspResponse) responses.get(GeolocationDBType.ISP);
+              record.set(config.outputFieldName, Field.create(ispResp.getOrganization()));
+              break;
+
+            case CITY_FULL_JSON:
+              cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
+              record.set(config.outputFieldName, Field.create(cityResp.toJson()));
+              break;
+            case COUNTRY_FULL_JSON:
+              CountryResponse countryResp = (CountryResponse) responses.get(GeolocationDBType.COUNTRY);
+              record.set(config.outputFieldName, Field.create(countryResp.toJson()));
+              break;
+            case ANONYMOUS_IP_FULL_JSON:
+              anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
+              record.set(config.outputFieldName, Field.create(anonResp.toJson()));
+              break;
+            case DOMAIN_FULL_JSON:
+              domainResp = (DomainResponse) responses.get(GeolocationDBType.DOMAIN);
+              record.set(config.outputFieldName, Field.create(domainResp.toJson()));
+              break;
+            case CONNECTION_TYPE_FULL_JSON:
+              connResp = (ConnectionTypeResponse) responses.get(GeolocationDBType.CONNECTION_TYPE);
+              record.set(config.outputFieldName, Field.create(connResp.toJson()));
+              break;
+            case ISP_FULL_JSON:
+              ispResp = (IspResponse) responses.get(GeolocationDBType.ISP);
+              record.set(config.outputFieldName, Field.create(ispResp.toJson()));
               break;
             default:
               throw new IllegalStateException(Utils.format("Unknown configuration value: ", config.targetType));
@@ -202,7 +362,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
                 LOG.debug(Utils.format(Errors.GEOIP_02.getMessage(), field.getValue(), cause.getMessage()), cause);
                 continue;
               case REPLACE_WITH_NULLS:
-                setNullField(config.targetType, config.outputFieldName, record);
+                record.set(config.outputFieldName, Field.create(config.targetType.fieldType, null));
               case IGNORE:
                 continue;
               default:
@@ -217,7 +377,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
     } catch (GeoIp2Exception ex) {
       throw new StageException(Errors.GEOIP_03, ex);
     } catch (IOException ex) {
-      throw new StageException(Errors.GEOIP_01, geoIP2DBFile, ex);
+      throw new StageException(Errors.GEOIP_01, ex);
     }
     batchMaker.addRecord(record);
   }
@@ -246,61 +406,6 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
         }
       default:
         throw new IllegalStateException(Utils.format("Unknown field type: ", field.getType()));
-    }
-  }
-
-  public void setFieldForCountryDB(CountryResponse resp, GeolocationField fieldType, String outputField, Record record) {
-    switch (fieldType) {
-      case COUNTRY_NAME:
-        record.set(outputField, Field.create(resp.getCountry().getName()));
-        break;
-      case COUNTRY_ISO_CODE:
-        record.set(outputField, Field.create(resp.getCountry().getIsoCode()));
-        break;
-      case LATITUDE:
-      case LONGITUDE:
-      case CITY_NAME:
-        throw new UnsupportedOperationException("Field type "+fieldType+" not supported by country database");
-      default:
-        throw new IllegalStateException(Utils.format("Unknown configuration value: ",fieldType));
-    }
-  }
-
-  public void setFieldForCityDB(CityResponse resp, GeolocationField fieldType, String outputField, Record record) {
-    switch (fieldType) {
-      case COUNTRY_NAME:
-        record.set(outputField, Field.create(resp.getCountry().getName()));
-        break;
-      case COUNTRY_ISO_CODE:
-        record.set(outputField, Field.create(resp.getCountry().getIsoCode()));
-        break;
-      case LATITUDE:
-        record.set(outputField, Field.create(resp.getLocation().getLatitude()));
-        break;
-      case LONGITUDE:
-        record.set(outputField, Field.create(resp.getLocation().getLongitude()));
-        break;
-      case CITY_NAME:
-        record.set(outputField, Field.create(resp.getCity().getName()));
-        break;
-      default:
-        throw new IllegalStateException(Utils.format("Unknown configuration value: ", fieldType));
-    }
-  }
-
-  public void setNullField(GeolocationField fieldType, String outputField, Record record) {
-    switch (fieldType) {
-      case COUNTRY_NAME:
-      case COUNTRY_ISO_CODE:
-      case CITY_NAME:
-        record.set(outputField, Field.create(Field.Type.STRING, null));
-        break;
-      case LATITUDE:
-      case LONGITUDE:
-        record.set(outputField, Field.create(Field.Type.DOUBLE, null));
-        break;
-      default:
-        throw new IllegalStateException(Utils.format("Unknown configuration value: ", fieldType));
     }
   }
 

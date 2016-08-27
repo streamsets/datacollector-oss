@@ -20,7 +20,26 @@
 package com.streamsets.pipeline.stage.processor.geolocation;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum GeolocationDBType {
-  CITY,
-  COUNTRY;
+  CITY(GeolocationField.CITY_NAME, GeolocationField.COUNTRY_ISO_CODE,
+      GeolocationField.COUNTRY_NAME, GeolocationField.LATITUDE, GeolocationField.LONGITUDE,
+      GeolocationField.CITY_FULL_JSON),
+  COUNTRY(GeolocationField.COUNTRY_NAME, GeolocationField.COUNTRY_ISO_CODE, GeolocationField.COUNTRY_FULL_JSON),
+  CONNECTION_TYPE(GeolocationField.CONNECTION_TYPE, GeolocationField.CONNECTION_TYPE_FULL_JSON),
+  DOMAIN(GeolocationField.DOMAIN, GeolocationField.DOMAIN_FULL_JSON),
+  ANONYMOUS_IP(GeolocationField.IS_ANONYMOUS, GeolocationField.IS_ANONYMOUS_VPN, GeolocationField.IS_HOSTING_PROVIDER,
+      GeolocationField.IS_PUBLIC_PROXY, GeolocationField.IS_TOR_EXIT_NODE, GeolocationField.ANONYMOUS_IP_FULL_JSON),
+  ISP(GeolocationField.ISP, GeolocationField.ISP_FULL_JSON);
+
+  List<GeolocationField> supportedFields;
+
+  GeolocationDBType(GeolocationField... fields) {
+    this.supportedFields = Arrays.asList(fields);
+    for (GeolocationField field : fields) {
+      field.addSupportedDatabase(this);
+    }
+  }
 }

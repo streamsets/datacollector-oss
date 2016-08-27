@@ -19,12 +19,16 @@
  */
 package com.streamsets.pipeline.stage.processor.geolocation;
 
+import com.google.api.client.util.Lists;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GeolocationProcessorUpgrader implements StageUpgrader {
   @Override
@@ -38,6 +42,12 @@ public class GeolocationProcessorUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -51,5 +61,32 @@ public class GeolocationProcessorUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("missingAddressAction", "REPLACE_WITH_NULLS"));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+
+    String geoIP2DBFile = null;
+    String geoIP2DBType = null;
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "geoIP2DBFile":
+          configsToRemove.add(config);
+          geoIP2DBFile = config.getValue().toString();
+          break;
+        case "geoIP2DBType":
+          configsToRemove.add(config);
+          geoIP2DBType = config.getValue().toString();
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+
+    List<Map<String, String>> dbConfigs = Lists.newArrayList();
+    Map<String, String> dbConfig = ImmutableMap.of("geoIP2DBFile", geoIP2DBFile, "geoIP2DBType", geoIP2DBType);
+    dbConfigs.add(dbConfig);
+    configs.add(new Config("dbConfigs", dbConfigs));
   }
 }
