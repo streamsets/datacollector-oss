@@ -260,4 +260,28 @@ public class TestAmazonS3Target {
 
     return new AmazonS3Target(s3TargetConfigBean);
   }
+
+  @Test
+  public void testEventRecords() throws Exception {
+    String prefix = "testEventRecords";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    targetRunner.runInit();
+
+    List<Record> logRecords = TestUtil.createStringRecords();
+
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
+    Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
+
+    targetRunner.runWrite(logRecords);
+
+    Assert.assertEquals(1, targetRunner.getEventRecords().size());
+    Record eventRecord = targetRunner.getEventRecords().get(0);
+
+    Assert.assertTrue(eventRecord.has("/bucket"));
+    Assert.assertTrue(eventRecord.has("/objectKey"));
+    Assert.assertEquals(BUCKET_NAME, eventRecord.get("/bucket").getValueAsString());
+    targetRunner.runDestroy();
+  }
 }

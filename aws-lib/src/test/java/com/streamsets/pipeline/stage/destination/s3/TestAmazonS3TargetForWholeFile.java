@@ -27,6 +27,8 @@ import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
@@ -279,7 +281,8 @@ public class TestAmazonS3TargetForWholeFile {
   }
 
 
-  private void verifyObjects() throws Exception {
+  private int verifyAndReturnNoOfObjects() throws Exception {
+    int numberOfObjects = 0;
     Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, TARGET_BUCKET_NAME).iterator();
     while (s3ObjectSummaryIterator.hasNext()) {
       S3ObjectSummary s3ObjectSummary = s3ObjectSummaryIterator.next();
@@ -299,7 +302,9 @@ public class TestAmazonS3TargetForWholeFile {
           );
           break;
       }
+      numberOfObjects++;
     }
+    return numberOfObjects;
   }
 
   @Test
@@ -309,7 +314,19 @@ public class TestAmazonS3TargetForWholeFile {
     targetRunner.runInit();
     try {
       targetRunner.runWrite(getRecords());
-      verifyObjects();
+
+      int numberOfRecords = verifyAndReturnNoOfObjects();
+
+      Assert.assertEquals(numberOfRecords, targetRunner.getEventRecords().size());
+      Iterator<Record> eventRecordIterator = targetRunner.getEventRecords().iterator();
+
+      while (eventRecordIterator.hasNext()) {
+        Record eventRecord = eventRecordIterator.next();
+        Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
+        Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
+        Map<String, Field> targetFileInfo = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH).getValueAsMap();
+        Assert.assertEquals(targetFileInfo.get("bucket").getValueAsString(), TARGET_BUCKET_NAME);
+      }
     } finally {
       targetRunner.runDestroy();
     }

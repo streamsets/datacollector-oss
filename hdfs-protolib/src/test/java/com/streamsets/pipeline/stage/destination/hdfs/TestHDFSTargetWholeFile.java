@@ -61,6 +61,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -384,6 +385,64 @@ public class TestHDFSTargetWholeFile {
       //Write the same file no error, overwritten
       runner.runWrite(Collections.singletonList(getFileRefRecordForFile(filePath)));
       Assert.assertEquals(0, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
+  public void testWholeFileEventRecords() throws Exception {
+    java.nio.file.Path filePath = Paths.get(getTestDir() + "/source_testWholeFileEventRecords.txt");
+    Files.write(filePath, "This is a sample file 1 with some text".getBytes());
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri(uri.toString())
+        .dirPathTemplate(getTestDir())
+        .timeDriver("${time:now()}")
+        .dataForamt(DataFormat.WHOLE_FILE)
+        .fileType(HdfsFileType.WHOLE_FILE)
+        .fileNameEL("${record:value('"+ FileRefUtil.FILE_INFO_FIELD_PATH +"/filename')}")
+        .maxRecordsPerFile(1)
+        .maxFileSize(0)
+        .uniquePrefix("sdc-")
+        .idleTimeout("-1")
+        .wholeFileExistsAction(WholeFileExistsAction.TO_ERROR)
+        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    runner.runInit();
+
+    try {
+      Record record = getFileRefRecordForFile(filePath);
+      runner.runWrite(Collections.singletonList(record));
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+
+      //One whole file event, one file close event.
+      Assert.assertEquals(2, runner.getEventRecords().size());
+
+      Iterator<Record> eventRecordIterator = runner.getEventRecords().iterator();
+      while (eventRecordIterator.hasNext()) {
+        Record eventRecord = eventRecordIterator.next();
+
+        String type = eventRecord.getHeader().getAttribute("sdc.event.type");
+
+        if (type.equals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT)) {
+          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
+          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
+
+          Assert.assertEquals(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet(), eventRecord.get(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH).getValueAsMap().keySet());
+
+          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path"));
+
+          Assert.assertEquals(getTestDir()+ "/sdc-"+ filePath.getFileName(), eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
+        }
+      }
+
     } finally {
       runner.runDestroy();
     }

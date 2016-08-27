@@ -19,6 +19,9 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -30,6 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -52,6 +56,7 @@ final class WholeFileFormatFsHelper implements FsHelper {
   private final RecordWriterManager mgr;
 
   private FsPermission fsPermissions;
+  private final EventRecord wholeFileEventRecord;
 
 
   WholeFileFormatFsHelper(
@@ -69,6 +74,7 @@ final class WholeFileFormatFsHelper implements FsHelper {
     this.uniquePrefix = uniquePrefix;
     this.mgr = mgr;
     fsPermissions = null;
+    wholeFileEventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
   }
 
   private String getTempFile(Date recordDate, Record record) throws StageException {
@@ -127,6 +133,8 @@ final class WholeFileFormatFsHelper implements FsHelper {
     }
   }
 
+  //This is going to be done only once per record, so skipping cache save
+  //because the path is going to be used only once (because only one record is used).
   @Override
   public Path getPath(FileSystem fs, Date recordDate, Record record) throws StageException, IOException {
     //Check whether the real file already exists
@@ -134,8 +142,11 @@ final class WholeFileFormatFsHelper implements FsHelper {
     //this will check the file exists.
     getRenamablePath(fs, path);
     updateFsPermissionsIfNeeded(record);
-    //This is going to be done only once per record, so skipping cache save
-    //because the path is going to be used only once (because only one record is used).
+
+    //Update the event record with source file info information
+    Field sourceFileInfo = Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap());
+    wholeFileEventRecord.set(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH, sourceFileInfo);
+
     return path;
   }
 
@@ -158,16 +169,26 @@ final class WholeFileFormatFsHelper implements FsHelper {
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
     }
+
     //updatePermissions
     if (fsPermissions != null) {
       fs.setPermission(finalPath, fsPermissions);
     }
     fsPermissions = null;
 
+    //Set target info in wholeFileEvent Record
+    wholeFileEventRecord.set(
+        FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH,
+        Field.create(Field.Type.MAP, ImmutableMap.of("path", Field.create(Field.Type.STRING ,finalPath.toString())))
+    );
+
+    //Throw file copied event here.
+    context.toEvent(wholeFileEventRecord);
+
     return finalPath;
   }
 
-  public Path getRenamablePath(FileSystem fs, Path tempPath) throws IOException, OnRecordErrorException {
+  private Path getRenamablePath(FileSystem fs, Path tempPath) throws IOException, OnRecordErrorException {
     String finalFileName = tempPath.getName().replaceFirst(RecordWriterManager.TMP_FILE_PREFIX, "");
     Path finalPath = new Path(tempPath.getParent(), finalFileName);
     //Checks during rename.

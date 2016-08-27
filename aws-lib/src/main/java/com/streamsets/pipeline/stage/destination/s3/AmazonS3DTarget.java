@@ -34,6 +34,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   icon = "s3.png",
   privateClassLoader = true,
   upgrader = AmazonS3TargetUpgrader.class,
+  producesEvents = true,
   onlineHelpRefUrl = "index.html#Destinations/AmazonS3.html#task_pxb_j3r_rt"
 )
 @ConfigGroups(Groups.class)

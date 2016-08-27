@@ -20,10 +20,11 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.Stage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -49,11 +50,25 @@ public final class FileRefUtil {
 
   public static final String BRACKETED_TEMPLATE = "%s (%s)";
 
+  //Whole File Record constants
   public static final String FILE_REF_FIELD_NAME = "fileRef";
   public static final String FILE_INFO_FIELD_NAME = "fileInfo";
 
   public static final String FILE_REF_FIELD_PATH = "/" + FILE_REF_FIELD_NAME;
   public static final String FILE_INFO_FIELD_PATH = "/" + FILE_INFO_FIELD_NAME;
+
+
+  //Whole File event Record constants
+  public static final String WHOLE_FILE_WRITE_FINISH_EVENT = "wholeFileProcessed";
+
+  public static final String WHOLE_FILE_SOURCE_FILE_INFO = "sourceFileInfo";
+  public static final String WHOLE_FILE_TARGET_FILE_INFO = "targetFileInfo";
+
+  public static final String WHOLE_FILE_SOURCE_FILE_INFO_PATH = "/" + WHOLE_FILE_SOURCE_FILE_INFO;
+  public static final String WHOLE_FILE_TARGET_FILE_INFO_PATH = "/" + WHOLE_FILE_TARGET_FILE_INFO;
+
+  public static final String WHOLE_FILE_CHECKSUM = "checksum";
+  public static final String WHOLE_FILE_CHECKSUM_ALGO = "checksumAlgorithm";
 
 
   public static final ImmutableSet<String> MANDATORY_METADATA_INFO =
@@ -116,6 +131,17 @@ public final class FileRefUtil {
     } else {
       return Field.create(metadataObject.toString());
     }
+  }
+
+  public static EventRecord createAndInitWholeFileEventRecord(Stage.Context context) {
+    EventRecord wholeFileEventRecord = context.createEventRecord(WHOLE_FILE_WRITE_FINISH_EVENT, 1);
+    Map<String, Field> fieldMap = new HashMap<>();
+    fieldMap.put(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
+    fieldMap.put(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
+    fieldMap.put(FileRefUtil.WHOLE_FILE_CHECKSUM, Field.create(Field.Type.STRING, ""));
+    fieldMap.put(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO, Field.create(Field.Type.STRING, ""));
+    wholeFileEventRecord.set(Field.create(Field.Type.MAP, fieldMap));
+    return wholeFileEventRecord;
   }
 
 

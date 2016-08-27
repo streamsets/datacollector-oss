@@ -30,16 +30,8 @@ import java.nio.channels.ReadableByteChannel;
 public abstract class AbstractWrapperStream<T extends AutoCloseable> extends InputStream implements ReadableByteChannel {
   private final T stream;
 
-  public AbstractWrapperStream(T stream) {
+  AbstractWrapperStream(T stream) {
     this.stream = stream;
-  }
-
-  /**
-   * Get the unwrapped stream wrapped by this {@link AbstractWrapperStream}
-   * @return Stream implemention of {@link AutoCloseable}
-   */
-  public T getUnwrappedStream() {
-    return stream;
   }
 
   private void checkState(Class<? extends AutoCloseable> baseClass) {
