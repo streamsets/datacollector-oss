@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.hadoop.fs.Path;
@@ -42,9 +43,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -89,10 +88,10 @@ public class RecordWriter {
   }
 
   public RecordWriter(Path path, long timeToLiveMillis, OutputStream textOutputStream,
-      DataGeneratorFactory generatorFactory) throws StageException, IOException {
+                      DataGeneratorFactory generatorFactory, StreamCloseEventHandler streamCloseEventHandler) throws StageException, IOException {
     this(path, timeToLiveMillis, generatorFactory);
     this.textOutputStream = new CountingOutputStream(textOutputStream);
-    generator = generatorFactory.getGenerator(this.textOutputStream);
+    generator = generatorFactory.getGenerator(this.textOutputStream, streamCloseEventHandler);
     textFile = true;
     this.idleTimeout = -1L;
   }

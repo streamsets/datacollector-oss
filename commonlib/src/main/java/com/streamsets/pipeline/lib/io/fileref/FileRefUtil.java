@@ -25,7 +25,12 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,11 +143,27 @@ public final class FileRefUtil {
     Map<String, Field> fieldMap = new HashMap<>();
     fieldMap.put(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
     fieldMap.put(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
-    fieldMap.put(FileRefUtil.WHOLE_FILE_CHECKSUM, Field.create(Field.Type.STRING, ""));
-    fieldMap.put(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO, Field.create(Field.Type.STRING, ""));
     wholeFileEventRecord.set(Field.create(Field.Type.MAP, fieldMap));
     return wholeFileEventRecord;
   }
 
-
+  @SuppressWarnings("unchecked")
+  public static  <T extends AutoCloseable> T getReadableStream(
+      Stage.Context context,
+      FileRef fileRef,
+      Class<T> streamClass,
+      boolean includeChecksumInTheEvents,
+      ChecksumAlgorithm checksumAlgorithm,
+      StreamCloseEventHandler<?> streamCloseEventHandler
+  ) throws IOException {
+    T stream = fileRef.createInputStream(context, streamClass);
+    if (includeChecksumInTheEvents) {
+      Utils.checkArgument(
+          FileRefStreamCloseEventHandler.class.isAssignableFrom(streamCloseEventHandler.getClass()),
+          "Stream Close Event handler should be of type " + FileRefStreamCloseEventHandler.class.getCanonicalName()
+      );
+      stream = (T) new ChecksumCalculatingWrapperStream(stream, checksumAlgorithm.getHashType(), streamCloseEventHandler);
+    }
+    return stream;
+  }
 }

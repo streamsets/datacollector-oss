@@ -61,6 +61,8 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
     "kafkaConfigBean.dataGeneratorFormatConfig.messageType",
     "kafkaConfigBean.dataGeneratorFormatConfig.fileNameEL",
     "kafkaConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
+    "kafkaConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+    "kafkaConfigBean.dataGeneratorFormatConfig.checksumAlgorithm",
     "kafkaConfigBean.dataFormat",
     "kafkaConfigBean.kafkaConfig.runtimeTopicResolution",
     "kafkaConfigBean.kafkaConfig.partitionStrategy",

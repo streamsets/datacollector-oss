@@ -24,19 +24,23 @@ import com.codahale.metrics.Meter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
-  public static final Map<String, Object> CONFIGS = ImmutableMap.of();
+  public static final Map<String, Object> CONFIGS = new HashMap<>();
   public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
   private static final Map<String, Integer> GAUGE_MAP_ORDERING
       = new ImmutableMap.Builder<String, Integer>()
@@ -46,6 +50,14 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
       .put(FileRefUtil.REMAINING_BYTES, 4)
       .put(FileRefUtil.COMPLETED_FILE_COUNT, 5)
       .build();
+
+  public static final String INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY = "includeChecksumInTheEvents";
+  public static final String CHECKSUM_ALGO_KEY = "checksumAlgorithm";
+
+  static {
+    CONFIGS.put(INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, false);
+    CONFIGS.put(CHECKSUM_ALGO_KEY, ChecksumAlgorithm.MD5);
+  }
 
   /**
    * Creates a gauge if it is already not. This is done only once for the stage
@@ -87,8 +99,19 @@ public class WholeFileDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @Override
-  public DataGenerator getGenerator(OutputStream os) throws IOException {
+  public DataGenerator getGenerator(OutputStream os, StreamCloseEventHandler<?> streamCloseEventHandler) throws IOException {
     initMetricsIfNeeded(getSettings().getContext());
-    return new WholeFileDataGenerator(getSettings().getContext(), os);
+    return new WholeFileDataGenerator(
+        getSettings().getContext(),
+        os,
+        (boolean) getSettings().getConfig(INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY),
+        (ChecksumAlgorithm) getSettings().getConfig(CHECKSUM_ALGO_KEY),
+        streamCloseEventHandler
+    );
+  }
+
+  @Override
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
+    return getGenerator(os, null);
   }
 }

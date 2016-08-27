@@ -33,6 +33,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import org.apache.hadoop.fs.FileSystem;
@@ -56,7 +58,7 @@ final class WholeFileFormatFsHelper implements FsHelper {
   private final RecordWriterManager mgr;
 
   private FsPermission fsPermissions;
-  private final EventRecord wholeFileEventRecord;
+  private EventRecord wholeFileEventRecord;
 
 
   WholeFileFormatFsHelper(
@@ -74,7 +76,6 @@ final class WholeFileFormatFsHelper implements FsHelper {
     this.uniquePrefix = uniquePrefix;
     this.mgr = mgr;
     fsPermissions = null;
-    wholeFileEventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
   }
 
   private String getTempFile(Date recordDate, Record record) throws StageException {
@@ -140,14 +141,30 @@ final class WholeFileFormatFsHelper implements FsHelper {
     //Check whether the real file already exists
     Path path = new Path(mgr.getDirPath(recordDate, record), getTempFile(recordDate, record));
     //this will check the file exists.
-    getRenamablePath(fs, path);
+    Path renamableFinalPath = getRenamablePath(fs, path);
     updateFsPermissionsIfNeeded(record);
+
+    wholeFileEventRecord = createWholeFileEventRecord(record, renamableFinalPath);
+
+    return path;
+  }
+
+  private EventRecord createWholeFileEventRecord(Record record, Path renamableFinalPath) {
+    EventRecord wholeFileEventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
 
     //Update the event record with source file info information
     Field sourceFileInfo = Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap());
     wholeFileEventRecord.set(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH, sourceFileInfo);
 
-    return path;
+    //Set target path in wholeFileEvent Record
+    wholeFileEventRecord.set(
+        FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH,
+        Field.create(
+            Field.Type.MAP,
+            ImmutableMap.of("path", Field.create(Field.Type.STRING ,renamableFinalPath.toString()))
+        )
+    );
+    return wholeFileEventRecord;
   }
 
   @Override
@@ -174,13 +191,8 @@ final class WholeFileFormatFsHelper implements FsHelper {
     if (fsPermissions != null) {
       fs.setPermission(finalPath, fsPermissions);
     }
-    fsPermissions = null;
 
-    //Set target info in wholeFileEvent Record
-    wholeFileEventRecord.set(
-        FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH,
-        Field.create(Field.Type.MAP, ImmutableMap.of("path", Field.create(Field.Type.STRING ,finalPath.toString())))
-    );
+    fsPermissions = null;
 
     //Throw file copied event here.
     context.toEvent(wholeFileEventRecord);
@@ -200,5 +212,10 @@ final class WholeFileFormatFsHelper implements FsHelper {
   public OutputStream create(FileSystem fs, Path path) throws IOException {
     //Make sure if the tmp file already exists, overwrite it
     return fs.create(path, true);
+  }
+
+  @Override
+  public StreamCloseEventHandler<?> getStreamCloseEventHandler() {
+    return new FileRefStreamCloseEventHandler(wholeFileEventRecord);
   }
 }

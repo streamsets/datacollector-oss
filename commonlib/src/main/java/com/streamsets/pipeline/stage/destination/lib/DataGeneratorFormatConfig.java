@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.AvroCompressionChooserValues;
 import com.streamsets.pipeline.config.CharsetChooserValues;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.config.ChecksumAlgorithmChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -47,6 +49,8 @@ import com.streamsets.pipeline.lib.generator.avro.BaseAvroDataGenerator;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.wholefile.WholeFileDataGeneratorFactory;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -353,6 +357,33 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(WholeFileExistsActionChooserValues.class)
   public WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Event Includes Checksum",
+      description = "File Transfer Event should include the checksum of the stream.",
+      displayPosition = 480,
+      group = "WHOLE_FILE",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE"
+  )
+  public boolean includeChecksumInTheEvents = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MD5",
+      label = "Checksum Algorithm",
+      description = "The checksum algorithm for calculating checksum for the file.",
+      displayPosition = 490,
+      group = "WHOLE_FILE",
+      dependsOn = "includeChecksumInTheEvents",
+      triggeredByValue = "true"
+  )
+  @ValueChooserModel(ChecksumAlgorithmChooserValues.class)
+  public ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.MD5;
+
   private boolean validateDataGenerator (
       Stage.Context context,
       DataFormat dataFormat,
@@ -456,6 +487,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
         break;
       case WHOLE_FILE:
+        builder.setConfig(WholeFileDataGeneratorFactory.INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, includeChecksumInTheEvents);
+        builder.setConfig(WholeFileDataGeneratorFactory.CHECKSUM_ALGO_KEY, checksumAlgorithm);
         break;
       default:
         // no action needed

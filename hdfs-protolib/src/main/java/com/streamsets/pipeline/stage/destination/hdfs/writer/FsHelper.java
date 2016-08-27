@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -34,4 +35,5 @@ interface FsHelper {
   void handleAlreadyExistingFile(FileSystem fs, Path tempPath) throws IOException, StageException;
   Path renameAndGetPath(FileSystem fs, Path tempPath) throws IOException, StageException;
   OutputStream create(FileSystem fs, Path path) throws IOException;
+  StreamCloseEventHandler<?> getStreamCloseEventHandler();
 }

@@ -22,8 +22,13 @@ package com.streamsets.pipeline.lib.generator.wholefile;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import org.apache.commons.io.IOUtils;
 
@@ -34,17 +39,28 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.util.HashMap;
+import java.util.Map;
 
-public class WholeFileDataGenerator implements DataGenerator {
+final class WholeFileDataGenerator implements DataGenerator {
   private final Stage.Context context;
   private final OutputStream outputStream;
+  private final boolean includeChecksumInTheEvents;
+  private final ChecksumAlgorithm checksumAlgorithm;
+  private final StreamCloseEventHandler<?> streamCloseEventHandler;
 
   WholeFileDataGenerator(
       Stage.Context context,
-      OutputStream os
+      OutputStream os,
+      boolean includeChecksumInTheEvents,
+      ChecksumAlgorithm checksumAlgorithm,
+      StreamCloseEventHandler<?> streamCloseEventHandler
   ) throws IOException {
     this.context = context;
     this.outputStream = os;
+    this.includeChecksumInTheEvents = includeChecksumInTheEvents;
+    this.checksumAlgorithm = checksumAlgorithm;
+    this.streamCloseEventHandler = streamCloseEventHandler;
   }
 
   private void validateRecord(Record record) throws DataGeneratorException {
@@ -55,6 +71,17 @@ public class WholeFileDataGenerator implements DataGenerator {
     }
   }
 
+  private <T extends AutoCloseable> T getReadableStream(FileRef fileRef, Class<T> streamClass) throws IOException {
+    return FileRefUtil.getReadableStream(
+        context,
+        fileRef,
+        streamClass,
+        includeChecksumInTheEvents,
+        checksumAlgorithm,
+        streamCloseEventHandler
+    );
+  }
+
   @Override
   public void write(Record record) throws IOException, DataGeneratorException {
     validateRecord(record);
@@ -63,7 +90,7 @@ public class WholeFileDataGenerator implements DataGenerator {
     boolean canUseDirectByteBuffer = fileRef.getSupportedStreamClasses().contains(ReadableByteChannel.class);
     if (canUseDirectByteBuffer) {
       WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
-      try (ReadableByteChannel readableByteChannel = fileRef.createInputStream(context, ReadableByteChannel.class)){
+      try (ReadableByteChannel readableByteChannel = getReadableStream(fileRef, ReadableByteChannel.class)){
         ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
         while ((readableByteChannel.read(buffer)) > 0) {
           //Flip to use the buffer from 0 to position.
@@ -77,7 +104,7 @@ public class WholeFileDataGenerator implements DataGenerator {
       }
     } else {
       byte[] b = new byte[bufferSize];
-      try (InputStream stream = fileRef.createInputStream(context, InputStream.class)) {
+      try (InputStream stream = getReadableStream(fileRef, InputStream.class)) {
         IOUtils.copyLarge(stream, outputStream, b);
       }
     }

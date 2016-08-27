@@ -27,11 +27,14 @@ import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -56,11 +59,13 @@ import org.junit.runners.Parameterized;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +83,11 @@ public class TestAmazonS3TargetForWholeFile {
   private static final String OBJECT_KEY_1 = "file1.txt";
   private static final String OBJECT_KEY_2 = "file2.txt";
   private static final String DELIMITER = "/";
+  private static final String SAMPLE_TEXT_TO_FILE_PATH_1 = "Sample text to file path 1";
+  private static final String SAMPLE_TEXT_TO_FILE_PATH_2 = "Sample text to file path 2";
+  private static final Map<String, String> SAMPLE_TEXT_FOR_FILE =
+      ImmutableMap.of(FILE_NAME_1, SAMPLE_TEXT_TO_FILE_PATH_1, FILE_NAME_2, SAMPLE_TEXT_TO_FILE_PATH_2);
+
 
   private static String fakeS3Root;
   private static FakeS3 fakeS3;
@@ -91,20 +101,37 @@ public class TestAmazonS3TargetForWholeFile {
     S3
   }
 
-  private String fileNameEL;
-  private SourceType source;
+  private final String fileNameEL;
+  private final SourceType source;
+  private final ChecksumAlgorithm checksumAlgorithm;
 
-  public TestAmazonS3TargetForWholeFile(String fileNameEL, SourceType source) {
+  public TestAmazonS3TargetForWholeFile(String fileNameEL, SourceType source, ChecksumAlgorithm checksumAlgorithm) {
     this.fileNameEL = fileNameEL;
     this.source = source;
+    this.checksumAlgorithm = checksumAlgorithm;
   }
 
-  @Parameterized.Parameters(name = "Source Type: {1}")
-  public static Object[][] data() throws Exception {
-    return new Object[][]{
+  @Parameterized.Parameters(name = "Source Type: {1}, Checksum Algorithm: {2}")
+  public static Collection<Object[]> data() throws Exception {
+    List<Object[]> finalData = new ArrayList<>();
+    List<Object[]> array = Arrays.asList(new Object[][]{
         {"${record:value('/fileInfo/filename')}", SourceType.LOCAL},
         {"${record:value('/fileInfo/objectKey')}", SourceType.S3}
-    };
+    });
+    List<ChecksumAlgorithm> supportedChecksumAlgorithms =
+        Arrays.asList(
+            ChecksumAlgorithm.values()
+        );
+    for (ChecksumAlgorithm checksumAlgorithm : supportedChecksumAlgorithms) {
+      for (int j = 0; j < array.size(); j++) {
+        Object[] data = new Object[3];
+        data[0] = array.get(j)[0];
+        data[1] = array.get(j)[1];
+        data[2] = checksumAlgorithm;
+        finalData.add(data);
+      }
+    }
+    return finalData;
   }
 
   @BeforeClass
@@ -133,8 +160,8 @@ public class TestAmazonS3TargetForWholeFile {
     String filePath1 = testDir.getAbsolutePath() + "/" + FILE_NAME_1;
     String filePath2 = testDir.getAbsolutePath() + "/" + FILE_NAME_2;
 
-    writeTextToFile(filePath1, "Sample text to file path 1");
-    writeTextToFile(filePath2, "Sample text to file path 2");
+    writeTextToFile(filePath1, SAMPLE_TEXT_TO_FILE_PATH_1);
+    writeTextToFile(filePath2, SAMPLE_TEXT_TO_FILE_PATH_2);
 
     s3client.putObject(new PutObjectRequest(SOURCE_BUCKET_NAME, OBJECT_KEY_1, new File(filePath1)));
     s3client.putObject(new PutObjectRequest(SOURCE_BUCKET_NAME, OBJECT_KEY_2, new File(filePath2)));
@@ -263,6 +290,8 @@ public class TestAmazonS3TargetForWholeFile {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.fileNameEL = fileNameEL;
     dataGeneratorFormatConfig.wholeFileExistsAction = WholeFileExistsAction.OVERWRITE;
+    dataGeneratorFormatConfig.includeChecksumInTheEvents = true;
+    dataGeneratorFormatConfig.checksumAlgorithm = checksumAlgorithm;
 
     s3TargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 
@@ -326,6 +355,22 @@ public class TestAmazonS3TargetForWholeFile {
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
         Map<String, Field> targetFileInfo = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH).getValueAsMap();
         Assert.assertEquals(targetFileInfo.get("bucket").getValueAsString(), TARGET_BUCKET_NAME);
+
+        Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
+        Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM));
+
+        Assert.assertEquals(
+            checksumAlgorithm.name(),
+            eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO).getValueAsString()
+        );
+
+        //strip out the filePrefix sdc-
+        String objectKey =
+            eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/objectKey").getValueAsString().substring(4);
+
+        String checksum = HashingUtil.getHasher(checksumAlgorithm.getHashType())
+            .hashString(SAMPLE_TEXT_FOR_FILE.get(objectKey), Charset.defaultCharset()).toString();
+        Assert.assertEquals(checksum, eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
       }
     } finally {
       targetRunner.runDestroy();

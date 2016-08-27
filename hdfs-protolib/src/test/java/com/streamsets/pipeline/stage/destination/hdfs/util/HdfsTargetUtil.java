@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.stage.destination.hdfs.util;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.CompressionMode;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsSequenceFileCompressionType;
@@ -68,6 +70,8 @@ public class HdfsTargetUtil {
     String fileNameEL = "";
     WholeFileExistsAction wholeFileExistsAction = WholeFileExistsAction.TO_ERROR;
     String permissionEL = "";
+    boolean includeSchemaInEvents = false;
+    ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.MD5;
 
     public HdfsTarget build() {
       HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
@@ -102,6 +106,8 @@ public class HdfsTargetUtil {
       hdfsTargetConfigBean.dataGeneratorFormatConfig.fileNameEL = fileNameEL;
       hdfsTargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction = wholeFileExistsAction;
       hdfsTargetConfigBean.permissionEL = permissionEL;
+      hdfsTargetConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents = includeSchemaInEvents;
+      hdfsTargetConfigBean.dataGeneratorFormatConfig.checksumAlgorithm = checksumAlgorithm;
       return new HdfsTarget(hdfsTargetConfigBean);
     }
 
@@ -237,6 +243,16 @@ public class HdfsTargetUtil {
 
     public Builder permissionEL(String permissionEL) {
       this.permissionEL = permissionEL;
+      return this;
+    }
+
+    public Builder includeChecksumInTheEvents(boolean includeSchemaInEvents) {
+      this.includeSchemaInEvents = includeSchemaInEvents;
+      return this;
+    }
+
+    public Builder checksumAlgorithm(ChecksumAlgorithm checksumAlgorithm) {
+      this.checksumAlgorithm = checksumAlgorithm;
       return this;
     }
   }

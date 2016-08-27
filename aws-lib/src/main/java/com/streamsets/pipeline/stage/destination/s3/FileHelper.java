@@ -28,6 +28,7 @@ import com.amazonaws.services.s3.model.SSEAlgorithm;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -40,11 +41,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 abstract class FileHelper {
   private static final Logger LOG = LoggerFactory.getLogger(FileHelper.class);
+  private static final String BUCKET = "bucket";
+  private static final String OBJECT_KEY = "objectKey";
 
   private final TransferManager transferManager;
 
@@ -104,6 +109,13 @@ abstract class FileHelper {
       }
     }
     return metadata;
+  }
+
+  Field getTargetInfoField(String objectKey) {
+    Map<String, Field> targetFileInfo = new HashMap<>();
+    targetFileInfo.put(BUCKET, Field.create(Field.Type.STRING, s3TargetConfigBean.s3Config.bucket));
+    targetFileInfo.put(OBJECT_KEY, Field.create(Field.Type.STRING, objectKey));
+    return Field.create(Field.Type.MAP, targetFileInfo);
   }
 
   void addEvent(EventRecord eventRecord) {

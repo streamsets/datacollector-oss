@@ -34,10 +34,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 final class DefaultFileHelper extends FileHelper {
@@ -117,10 +115,9 @@ final class DefaultFileHelper extends FileHelper {
 
   private void createFileCloseEventRecord(String fileName) {
     EventRecord eventRecord = context.createEventRecord("file-closed", 1);
-    Map<String, Field> targetFileInfo = new HashMap<>();
-    targetFileInfo.put("bucket", Field.create(Field.Type.STRING, s3TargetConfigBean.s3Config.bucket));
-    targetFileInfo.put("objectKey", Field.create(Field.Type.STRING, fileName));
-    eventRecord.set(Field.create(Field.Type.MAP, targetFileInfo));
+    eventRecord.set(getTargetInfoField(fileName));
+
+    //add event to event lane.
     addEvent(eventRecord);
   }
 

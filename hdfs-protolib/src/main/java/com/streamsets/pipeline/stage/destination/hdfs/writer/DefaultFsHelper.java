@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -117,5 +118,10 @@ final class DefaultFsHelper implements FsHelper {
   @Override
   public OutputStream create(FileSystem fs, Path path) throws IOException {
     return fs.create(path, false);
+  }
+
+  @Override
+  public StreamCloseEventHandler<?> getStreamCloseEventHandler() {
+    return null;
   }
 }

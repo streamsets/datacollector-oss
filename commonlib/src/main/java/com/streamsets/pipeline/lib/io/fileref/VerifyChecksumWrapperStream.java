@@ -19,88 +19,33 @@
  */
 package com.streamsets.pipeline.lib.io.fileref;
 
-import com.google.common.base.Enums;
-import com.google.common.base.Optional;
-import com.google.common.hash.Hasher;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
- * The Implementation of {@link AbstractWrapperStream} which uses a checksum algorithm
- * to verify the checksum of the stream which is being read.
- * This function throws an error if there is a checksum mismatch when the stream is closed.
+ * The Implementation of {@link ChecksumCalculatingWrapperStream} which uses a checksum algorithm
+ * verifies the checksum of the stream which is being read.
+ * This function {@link #close()} throws an error if there is a checksum mismatch when the stream is closed.
  * @param <T> Stream implementation of {@link AutoCloseable}
  */
-final class VerifyChecksumWrapperStream<T extends AutoCloseable> extends AbstractWrapperStream<T> {
+final class VerifyChecksumWrapperStream<T extends AutoCloseable> extends ChecksumCalculatingWrapperStream<T> {
   private final String checksum;
-  private final Hasher hasher;
 
   VerifyChecksumWrapperStream(T stream, String checksum, HashingUtil.HashType checksumAlgorithm) {
-    super(stream);
+    super(stream, checksumAlgorithm, null);
     Utils.checkNotNull(checksum, "checksum");
-    Utils.checkNotNull(checksumAlgorithm, "checksumAlgorithm");
     this.checksum = checksum;
-    hasher = HashingUtil.getHasher(checksumAlgorithm).newHasher();
-  }
-
-  private void updateChecksum(byte[] b, int offset, int len) {
-    if (len > 0) {
-      hasher.putBytes(b, offset, len);
-    }
-  }
-
-  @Override
-  public int read() throws IOException {
-    int readByte = super.read();
-    if (readByte != -1) {
-      hasher.putByte((byte) readByte);
-    }
-    return readByte;
-  }
-
-  @Override
-  public int read(ByteBuffer dst) throws IOException {
-    int bytesRead = super.read(dst);
-    if (bytesRead > 0) {
-      ByteBuffer readOnlyBuffer = dst.asReadOnlyBuffer();
-      readOnlyBuffer.flip();
-      readOnlyBuffer = readOnlyBuffer.slice();
-      byte[] b;
-      if (readOnlyBuffer.hasArray()) {
-        b = readOnlyBuffer.array();
-      } else {
-        b = new byte[bytesRead];
-        readOnlyBuffer.get(b);
-      }
-      updateChecksum(b, 0, bytesRead);
-    }
-    return bytesRead;
-  }
-
-  @Override
-  public int read(byte[] b) throws IOException {
-    int bytesRead = super.read(b);
-    updateChecksum(b, 0, bytesRead);
-    return bytesRead;
-  }
-
-  @Override
-  public int read(byte[] b, int offset, int len) throws IOException {
-    int bytesRead = super.read(b, offset, len);
-    updateChecksum(b, offset, bytesRead);
-    return bytesRead;
   }
 
   @Override
   public void close() throws IOException {
-    //toString returns the hex string representation.
-    String calculatedChecksum = hasher.hash().toString();
+    //Calculates the checksum
+    super.close();
+    String calculatedChecksum = getCalculatedChecksum();
     if (!calculatedChecksum.equals(checksum)) {
       throw new IOException(Utils.format("The checksum did not match. Expected: {}, Actual: {}", checksum, calculatedChecksum));
     }
-    super.close();
   }
 }

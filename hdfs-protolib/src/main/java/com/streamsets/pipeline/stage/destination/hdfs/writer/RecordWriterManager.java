@@ -217,7 +217,7 @@ public class RecordWriterManager {
         OutputStream wholeFileOs = fsHelper.create(fs, path);
         //No need to set idle timeout, because it does not make sense
         //we are copying the whole file.
-        return new RecordWriter(path, timeToLiveMillis, wholeFileOs, generatorFactory);
+        return new RecordWriter(path, timeToLiveMillis, wholeFileOs, generatorFactory, fsHelper.getStreamCloseEventHandler());
       case TEXT:
         OutputStream os = fsHelper.create(fs, path);
         if (compressionCodec != null) {
@@ -228,7 +228,7 @@ public class RecordWriterManager {
               unsatisfiedLinkError);
           }
         }
-        RecordWriter recordWriter = new RecordWriter(path, timeToLiveMillis, os, generatorFactory);
+        RecordWriter recordWriter = new RecordWriter(path, timeToLiveMillis, os, generatorFactory, null);
         if (idleTimeoutSeconds != -1) {
           recordWriter.setIdleTimeout(idleTimeoutSeconds);
         }

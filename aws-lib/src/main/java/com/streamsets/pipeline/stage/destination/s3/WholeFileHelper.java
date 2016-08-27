@@ -36,6 +36,7 @@ import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -48,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 final class WholeFileHelper extends FileHelper {
-
   private ELEval fileNameELEval;
+  private static final String SIZE = "size";
 
   WholeFileHelper(Stage.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager, List<Stage.ConfigIssue> configIssues) {
     super(context, s3TargetConfigBean, transferManager);
@@ -105,15 +106,11 @@ final class WholeFileHelper extends FileHelper {
 
   private EventRecord createEventRecordForFileTransfer(Record record, String objectKey) {
     EventRecord eventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
-
-    eventRecord.set(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH, Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap()));
-
-    Map<String, Field> targetFileInfo = new HashMap<String, Field>();
-    targetFileInfo.put("bucket", Field.create(Field.Type.STRING, s3TargetConfigBean.s3Config.bucket));
-    targetFileInfo.put("objectKey", Field.create(Field.Type.STRING, objectKey));
-
-    eventRecord.set(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH, Field.create(Field.Type.MAP, targetFileInfo));
-
+    eventRecord.set(
+        FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH,
+        Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+    );
+    eventRecord.set(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH, getTargetInfoField(objectKey));
     return eventRecord;
   }
 
@@ -134,12 +131,24 @@ final class WholeFileHelper extends FileHelper {
         ObjectMetadata metadata = getObjectMetadata();
         metadata = (metadata == null) ? new ObjectMetadata() : metadata;
         //Mandatory field path specifying size.
-        metadata.setContentLength(record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/size").getValueAsLong());
-        InputStream is = fileRef.createInputStream(context, InputStream.class);
+        metadata.setContentLength(record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SIZE).getValueAsLong());
+
+        EventRecord eventRecord = createEventRecordForFileTransfer(record, fileName);
+
+        InputStream is = FileRefUtil.getReadableStream(
+            context,
+            fileRef,
+            InputStream.class,
+            s3TargetConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents,
+            s3TargetConfigBean.dataGeneratorFormatConfig.checksumAlgorithm,
+            new FileRefStreamCloseEventHandler(eventRecord)
+        );
         //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.
         Upload upload = doUpload(fileName, is, metadata);
         uploads.add(upload);
-        addEvent(createEventRecordForFileTransfer(record, fileName));
+
+        //Add event to event lane.
+        addEvent(eventRecord);
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(
             new OnRecordErrorException(

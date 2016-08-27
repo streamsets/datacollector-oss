@@ -48,6 +48,13 @@ public abstract class DataGeneratorFactory extends DataFactory {
     }
   }
 
+  public DataGenerator getGenerator(OutputStream os, StreamCloseEventHandler<?> streamCloseEventHandler) throws IOException {
+    if (streamCloseEventHandler != null) {
+      throw new UnsupportedOperationException();
+    }
+    return getGenerator(os);
+  }
+
   public abstract DataGenerator getGenerator(OutputStream os) throws IOException;
 
   public Writer createWriter(OutputStream os) {

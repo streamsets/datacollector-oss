@@ -113,7 +113,7 @@ public class TestRecordWriter {
       OutputStream os = fs.create(file, false);
       long timeToLive = 10000;
       long expires = System.currentTimeMillis() + timeToLive;
-      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyDataGeneratorFactory(null));
+      RecordWriter writer = new RecordWriter(file, timeToLive, os, new DummyDataGeneratorFactory(null), null);
       Assert.assertTrue(writer.isTextFile());
       Assert.assertFalse(writer.isSeqFile());
       Assert.assertEquals(file, writer.getPath());

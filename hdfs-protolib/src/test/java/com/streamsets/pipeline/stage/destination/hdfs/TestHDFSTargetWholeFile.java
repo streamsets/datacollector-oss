@@ -454,7 +454,7 @@ public class TestHDFSTargetWholeFile {
     return fileRefRecord;
   }
 
-  private Record getFileRefRecordForFile(Path filePath) throws Exception {
+  static Record getFileRefRecordForFile(Path filePath) throws Exception {
     Record fileRefRecord = RecordCreator.create();
     FileRef fileRef =
         new LocalFileRef.Builder()

@@ -24,15 +24,19 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +50,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestWholeFileDataGenerator {
   private File testDir;
@@ -156,5 +161,26 @@ public class TestWholeFileDataGenerator {
       );
       gen.write(record);
     }
+  }
+
+  @Test
+  public void testGeneratorWithStreamHandler() throws Exception {
+    Record eventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
+
+    OutputStream os = new FileOutputStream(getTargetFilePath());
+    DataGeneratorFactory factory =
+        new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.WHOLE_FILE)
+            .setConfig(WholeFileDataGeneratorFactory.INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, true)
+            .setConfig(WholeFileDataGeneratorFactory.CHECKSUM_ALGO_KEY, ChecksumAlgorithm.MD5)
+            .build();
+
+    try (DataGenerator gen = factory.getGenerator(os, new FileRefStreamCloseEventHandler(eventRecord))) {
+      Record record = createRecord(null, null);
+      gen.write(record);
+    }
+    Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
+    Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
+    Assert.assertTrue(eventRecord.has("/"+ FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
+    Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM));
   }
 }
