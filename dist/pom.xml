@@ -135,16 +135,7 @@
       <artifactId>streamsets-datacollector-groovy_2_4-lib</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-apache-kudu-0_7-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-apache-kudu-0_8-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-apache-kudu-0_9-lib</artifactId>
@@ -160,16 +151,7 @@
       <artifactId>streamsets-datacollector-apache-kafka_0_10-lib</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cdh_5_7-lib</artifactId>
-      <scope>provided</scope>
-    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</artifactId>
@@ -265,6 +247,16 @@
         </property>
       </activation>
       <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cdh_5_7-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-cdh_5_5-lib</artifactId>
@@ -363,6 +355,16 @@
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-elasticsearch_2_2-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-apache-kudu-0_7-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-apache-kudu-0_8-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>
