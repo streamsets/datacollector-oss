@@ -30,6 +30,8 @@ public enum HdfsMetadataErrors implements ErrorCode {
   HDFS_METADATA_003("Hadoop configuration directory '{}' is not a directory"),
   HDFS_METADATA_004("Hadoop configuration file '{}' is not a file"),
   HDFS_METADATA_005("Failed to configure or connect to the Hadoop file system: {}"),
+
+  HDFS_METADATA_006("Can't set permissions and ACLs at the same time. Use ACLs to set standard permissions as well."),
   ;
 
   private final String msg;

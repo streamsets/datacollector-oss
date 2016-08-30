@@ -134,9 +134,44 @@ public class HdfsActionsConfig {
   )
   public String newPermissions;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Set ACLs",
+    description = "Set to set extended access attributes.",
+    displayPosition = 145,
+    group = "ACTIONS"
+  )
+  public boolean shouldSetAcls;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "user::rwx,user:foo:rw-,group::r--,other::---",
+    label = "New ACLs",
+    description = "List of ACLs separated by commas.",
+    displayPosition = 150,
+    group = "ACTIONS",
+    dependsOn = "shouldSetAcls",
+    triggeredByValue = "true",
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    elDefs = {RecordEL.class}
+  )
+  public String newAcls;
+
 
   public void init(Stage.Context context, String prefix, List<Stage.ConfigIssue> issues) {
-    // No-op currently
+    // Setting permissions and ACLs does not make sense
+    if(shouldSetPermissions && shouldSetAcls) {
+      issues.add(
+        context.createConfigIssue(
+          Groups.ACTIONS.name(),
+          null,
+          HdfsMetadataErrors.HDFS_METADATA_006
+        )
+      );
+    }
   }
 
   public void destroy() {

@@ -35,6 +35,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
@@ -101,6 +102,7 @@ public class HdfsMetadataExecutorIT {
     Configuration conf = new HdfsConfiguration();
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+    conf.set("dfs.namenode.acls.enabled", "true");
     fooUgi = UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     FileSystem.closeAll();
@@ -197,6 +199,21 @@ public class HdfsMetadataExecutorIT {
   }
 
   /**
+   * Assert proper ACLs being set on the object.
+   */
+  private void assertAcls(Path path, List<AclEntry> expectedAcls) throws IOException {
+    Assert.assertTrue("File doesn't exists: " + path, fs.exists(path));
+    Assert.assertTrue("Not a file: " + path, fs.isFile(path));
+
+    List<AclEntry> acls = fs.getAclStatus(path).getEntries();
+    Assert.assertEquals(expectedAcls.size(), acls.size());
+
+    for(int i = 0; i < expectedAcls.size(); i++) {
+      Assert.assertEquals(expectedAcls.get(i), acls.get(i));
+    }
+  }
+
+  /**
    * Write given content to given path on HDFS
    */
   private void writeFile(Path path, String content) throws IOException {
@@ -228,6 +245,7 @@ public class HdfsMetadataExecutorIT {
       .put("group", Field.create(Field.Type.STRING, "empire"))
       .put("perms_octal", Field.create(Field.Type.STRING, "777"))
       .put("perms_string", Field.create(Field.Type.STRING, "a-rwx"))
+      .put("acls", Field.create(Field.Type.STRING, "user::rwx,group::r--,other::---,user:sith:rw-"))
       .build()
     ));
     return record;
@@ -337,6 +355,34 @@ public class HdfsMetadataExecutorIT {
 
     assertFile(inputPath, "CONTENT");
     assertPermissions(inputPath, "777");
+  }
+
+  @Test
+  public void testSetAcls() throws Exception {
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/path')}";
+    actions.shouldSetAcls = true;
+    actions.newAcls = "${record:value('/acls')}";
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), inputPath);
+    runner.runDestroy();
+
+
+    assertFile(inputPath, "CONTENT");
+    assertPermissions(inputPath, "760");
+    // From some reason HDFS returns group in the ACL listing
+    assertAcls(inputPath, AclEntry.parseAclSpec("user:sith:rw-,group::r--", true));
   }
 
 }

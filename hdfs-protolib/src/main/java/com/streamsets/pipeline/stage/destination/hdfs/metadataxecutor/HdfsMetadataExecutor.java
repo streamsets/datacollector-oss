@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,6 +129,13 @@ public class HdfsMetadataExecutor extends BaseTarget {
               FsPermission fsPerms = new FsPermission(stringPerms);
               LOG.debug("Applying permissions: {} loaded from value '{}'", fsPerms, stringPerms);
               fs.setPermission(workingFile, fsPerms);
+            }
+
+            if(actions.shouldSetAcls) {
+              String stringAcls = evaluate(variables, "newAcls", actions.newAcls);
+              List<AclEntry> acls = AclEntry.parseAclSpec(stringAcls, true);
+              LOG.debug("Applying ACLs: {}", stringAcls);
+              fs.setAcl(workingFile, acls);
             }
 
             // Issue event with the final file name (e.g. the renamed one if applicable)
