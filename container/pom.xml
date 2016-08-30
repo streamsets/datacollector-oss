@@ -441,11 +441,36 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>copy-agent</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-bootstrap</artifactId>
+                  <version>${project.version}</version>
+                  <outputDirectory>${project.build.directory}/agents</outputDirectory>
+                  <destFileName>streamsets-datacollector-bootstrap-${project.version}.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.version}</version>
         <configuration>
           <!-- Sets the VM argument line used when unit tests are run. -->
-          <argLine>${surefireArgLine} -javaagent:${basedir}/../bootstrap/target/streamsets-datacollector-bootstrap-${project.version}.jar -Dsun.net.http.allowRestrictedHeaders=true</argLine>
+          <argLine>${surefireArgLine} -javaagent:${project.build.directory}/agents/streamsets-datacollector-bootstrap-${project.version}.jar -Dsun.net.http.allowRestrictedHeaders=true</argLine>
           <systemPropertyVariables>
             <streamsets.test.mode>true</streamsets.test.mode>
           </systemPropertyVariables>
