@@ -91,7 +91,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
           }
           break;
         case S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "postProcessFolder":
-          configsToAdd.add(new Config(S3ConfigBean.ERROR_CONFIG_PREFIX + "postProcessPrefix", config.getValue()));
+          configsToAdd.add(new Config(S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "postProcessPrefix", config.getValue()));
           configsToRemove.add(config);
           break;
         case S3ConfigBean.POST_PROCESSING_CONFIG_PREFIX + "archivingOption":
