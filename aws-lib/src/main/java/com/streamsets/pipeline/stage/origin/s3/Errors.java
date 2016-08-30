@@ -34,7 +34,7 @@ public enum Errors implements ErrorCode {
 
   S3_SPOOLDIR_11("Bucket name cannot be empty"),
   S3_SPOOLDIR_12("Bucket '{}' does not exist"),
-  S3_SPOOLDIR_13("Folder name cannot be empty"),
+  S3_SPOOLDIR_13("Prefix cannot be empty"),
   S3_SPOOLDIR_14("Absolute source path cannot be same as the absolute post processing path, '{}'"),
 
   S3_SPOOLDIR_20("Cannot connect to Amazon S3, reason : {}"),
