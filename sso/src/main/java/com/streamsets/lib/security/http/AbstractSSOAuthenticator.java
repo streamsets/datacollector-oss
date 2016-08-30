@@ -87,10 +87,6 @@ public abstract class AbstractSSOAuthenticator implements Authenticator {
     if (request.getQueryString() != null) {
       requestUrl.append("?<QUERY_STRING>");
     }
-    String qs = request.getQueryString();
-    if (qs != null) {
-      requestUrl.append("?").append(qs);
-    }
     String method = request.getMethod();
     String remoteAddress = SSOPrincipalUtils.getClientIpAddress(request);
     return "Address: " + remoteAddress + " Principal: " + principalId + " " + method + " " + requestUrl;
