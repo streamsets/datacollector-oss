@@ -51,7 +51,7 @@ public class TestHttpClientSourceUpgrader {
     configs.add(new Config("dataFormat", DataFormat.JSON));
     configs.add(new Config("resourceUrl", "stream.twitter.com/1.1/statuses/sample.json"));
     configs.add(new Config("httpMethod", HttpMethod.GET));
-    configs.add(new Config("requestBody", ""));
+    configs.add(new Config("requestData", ""));
     configs.add(new Config("requestTimeoutMillis", 1000L));
     configs.add(new Config("httpMode", HttpClientMode.STREAMING));
     configs.add(new Config("pollingInterval", 5000L));
@@ -83,8 +83,8 @@ public class TestHttpClientSourceUpgrader {
     assertTrue(configValues.containsKey("conf.httpMethod"));
     Assert.assertEquals(HttpMethod.GET, configValues.get("conf.httpMethod"));
 
-    assertTrue(configValues.containsKey("conf.requestBody"));
-    Assert.assertEquals("", configValues.get("conf.requestBody"));
+    assertTrue(configValues.containsKey("conf.requestData"));
+    Assert.assertEquals("", configValues.get("conf.requestData"));
 
     assertTrue(configValues.containsKey("conf.requestTimeoutMillis"));
     Assert.assertEquals(1000L, configValues.get("conf.requestTimeoutMillis"));
@@ -224,7 +224,7 @@ public class TestHttpClientSourceUpgrader {
     List<Config> configs = new ArrayList<>();
 
     configs.add(new Config("conf.entityDelimiter", "\\r\\n"));
-    configs.add(new Config("conf.client.requestTimeoutMillis", "1000"));
+    configs.add(new Config("conf.client.requestTimeoutMillis", 1000));
 
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
 
