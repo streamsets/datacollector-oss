@@ -35,6 +35,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
+import org.apache.sshd.common.session.Session;
+import org.apache.sshd.common.session.SessionListener;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
@@ -44,6 +46,7 @@ import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -65,14 +68,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.currentThread;
+import static org.awaitility.Awaitility.await;
 
 public class TestRemoteDownloadSource {
   private SshServer sshd;
   private int port;
   private String path;
   private String oldWorkingDir;
+  private AtomicInteger opened = new AtomicInteger(0);
+  private AtomicInteger closed = new AtomicInteger(0);
+  private AtomicBoolean closedAll = new AtomicBoolean(true);
 
   @Rule
   public TemporaryFolder testFolder = new TemporaryFolder();
@@ -89,6 +99,13 @@ public class TestRemoteDownloadSource {
     }
 
     System.setProperty("user.dir", path);
+  }
+
+  @Before
+  public void before() {
+    opened.set(0);
+    closed.set(0);
+    closedAll.set(true);
   }
 
   @After
@@ -113,6 +130,32 @@ public class TestRemoteDownloadSource {
     sshd.setPasswordAuthenticator(new PasswdAuth());
     sshd.setPublickeyAuthenticator(new TestPublicKeyAuth());
     sshd.setKeyPairProvider(new HostKeyProvider());
+
+    sshd.addSessionListener(new SessionListener() {
+      @Override
+      public void sessionCreated(Session session) {
+        opened.incrementAndGet();
+        closedAll.set(false);
+      }
+
+      @Override
+      public void sessionEvent(Session session, Event event) {
+
+      }
+
+      @Override
+      public void sessionException(Session session, Throwable t) {
+
+      }
+
+      @Override
+      public void sessionClosed(Session session) {
+        closed.incrementAndGet();
+        if (opened.get() == closed.get()) {
+          closedAll.set(true);
+        }
+      }
+    });
     sshd.start();
   }
 
@@ -144,6 +187,14 @@ public class TestRemoteDownloadSource {
     for (int i = 0; i < 2; i++) {
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
+    destroyAndValidate(runner);
+  }
+
+  private void destroyAndValidate(SourceRunner runner) throws Exception {
+    runner.runDestroy();
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .untilTrue(closedAll);
   }
 
   @Test(expected = StageException.class)
@@ -174,6 +225,7 @@ public class TestRemoteDownloadSource {
     for (int i = 0; i < 2; i++) {
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -205,9 +257,9 @@ public class TestRemoteDownloadSource {
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
     for (int i = 0; i < 2; i++) {
-      System.out.print(actual.get(i));
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
+    destroyAndValidate(runner);
   }
 
   @Test(expected = StageException.class)
@@ -233,6 +285,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
+    destroyAndValidate(runner);
   }
 
   @Test(expected = StageException.class)
@@ -257,6 +310,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
+    destroyAndValidate(runner);
   }
 
   @Test(expected = StageException.class)
@@ -281,6 +335,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
+    runner.runDestroy();
   }
   @Test
   public void testNoErrorOrdering() throws Exception {
@@ -336,9 +391,9 @@ public class TestRemoteDownloadSource {
       offset = op.getNewOffset();
       List<Record> actual = op.getRecords().get("lane");
       Assert.assertEquals(1, actual.size());
-      System.out.println(actual.get(0).get());
       Assert.assertEquals(expected.get(i).get(), actual.get(0).get());
     }
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -369,7 +424,7 @@ public class TestRemoteDownloadSource {
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
-    runner.runDestroy();
+    destroyAndValidate(runner);
 
     // Create a new source.
     origin =
@@ -394,7 +449,7 @@ public class TestRemoteDownloadSource {
     actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(1).get(), actual.get(0).get());
-    runner.runDestroy();
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -451,9 +506,8 @@ public class TestRemoteDownloadSource {
     offset = op.getNewOffset();
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
-    System.out.println(actual.get(0));
     Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
-    runner.runDestroy();
+    destroyAndValidate(runner);
 
     // Create a new source.
     origin =
@@ -481,13 +535,12 @@ public class TestRemoteDownloadSource {
     offset = op.getNewOffset();
     actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
-    System.out.println(actual.get(0));
     Assert.assertEquals(expected.get(1).get(), actual.get(0).get());
     op = runner.runProduce(offset, 2);
     actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(2).get(), actual.get(0).get());
-    runner.runDestroy();
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -529,7 +582,6 @@ public class TestRemoteDownloadSource {
     StageRunner.Output op = runner.runProduce("-1", 1000);
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
-    System.out.println(actual.get(0).get());
     Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
     Assert.assertEquals(1, archiveDir.listFiles().length);
     File expectedFile =
@@ -538,6 +590,7 @@ public class TestRemoteDownloadSource {
     File actualFile = archiveDir.listFiles()[0];
     Assert.assertEquals(expectedFile.getName(), actualFile.getName());
     Assert.assertTrue(FileUtils.contentEquals(expectedFile, actualFile));
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -548,7 +601,6 @@ public class TestRemoteDownloadSource {
             getResource("remote-download-source/parseRecoveryFromFailure").getPath());
     File[] files = dir.listFiles();
     for (File f : files) {
-      System.out.println(f.getName());
       if (f.getName().equals("polarbear.txt")) {
         f.setLastModified(18000000L);
       } else if (f.getName().equals("longobject.txt")) {
@@ -619,6 +671,7 @@ public class TestRemoteDownloadSource {
     File actualFile = archiveDir.listFiles(filter)[0];
     Assert.assertEquals(expectedFile.getName(), actualFile.getName());
     Assert.assertTrue(FileUtils.contentEquals(expectedFile, actualFile));
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -648,6 +701,7 @@ public class TestRemoteDownloadSource {
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
+    destroyAndValidate(runner);
   }
 
   private List<Record> getExpectedRecords() {
@@ -725,6 +779,7 @@ public class TestRemoteDownloadSource {
     for (int i = 0; i < 2; i++) {
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
+    destroyAndValidate(runner);
   }
 
   @Test
@@ -767,9 +822,9 @@ public class TestRemoteDownloadSource {
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
     for (int i = 0; i < 2; i++) {
-      System.out.println(actual.get(i));
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
+    runner.runDestroy();
   }
 
   private RemoteDownloadConfigBean getBean(

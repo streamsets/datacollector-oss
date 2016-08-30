@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -394,6 +395,20 @@ public class RemoteDownloadSource extends BaseSource {
             remoteFile.filename.equals(currentOffset.fileName) && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset);
   }
 
+  @Override
+  public void destroy() {
+    LOG.info(Utils.format("Destroying {}", getInfo().getInstanceName()));
+    try {
+      if (remoteDir != null) {
+        remoteDir.close();
+        FileSystem fs = remoteDir.getFileSystem();
+        remoteDir.getFileSystem().getFileSystemManager().closeFileSystem(fs);
+      }
+    } catch (FileSystemException ex) {
+      LOG.warn("Error closing remote directory", ex);
+    }
+    remoteDir = null;
+  }
 
   private class RemoteFile {
     final String filename;
