@@ -187,10 +187,18 @@ public class TestSSOUserAuthenticator {
         .getLoginUrl(Mockito.any(HttpServletRequest.class), Mockito.anyBoolean());
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getServerPort()).thenReturn(1000);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     Mockito.when(res.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
     Assert.assertEquals(Authentication.SEND_FAILURE, authenticator.returnUnauthorized(req, res, "principal", "template"));
     Mockito.verify(authenticator).redirectToLogin(Mockito.eq(req), Mockito.eq(res));
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+    Mockito.verify(authenticator, Mockito.times(1)).createAuthCookie(Mockito.eq(req), Mockito.eq(""), Mockito.eq(0L));
+    Mockito.verify(res, Mockito.times(1)).addCookie(cookieCaptor.capture());
+    Assert.assertEquals(authenticator.getAuthCookieName(req), cookieCaptor.getValue().getName());
+    Assert.assertEquals("", cookieCaptor.getValue().getValue());
+    Assert.assertEquals("/", cookieCaptor.getValue().getPath());
+    Assert.assertEquals(0, cookieCaptor.getValue().getMaxAge());
   }
 
   @Test

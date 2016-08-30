@@ -152,6 +152,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
       HttpServletRequest httpReq, HttpServletResponse httpRes, String principalId, String logMessageTemplate
   ) throws ServerAuthException {
     Authentication ret;
+    httpRes.addCookie(createAuthCookie(httpReq, "", 0));
     if (httpReq.getHeader(SSOConstants.X_REST_CALL) != null) {
       ret = super.returnUnauthorized(httpReq, httpRes, null, logMessageTemplate);
     } else {
@@ -168,6 +169,9 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     if (expiresMillis > 0) {
       int secondsToLive = (int) ((expiresMillis - System.currentTimeMillis()) / 1000);
       authCookie.setMaxAge(secondsToLive);
+    } else if (expiresMillis == 0) {
+      // to delete the cookie
+      authCookie.setMaxAge(0);
     }
     authCookie.setSecure(httpReq.isSecure() || loadBalancerSecure);
     return authCookie;
@@ -192,18 +196,21 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     return SSOConstants.AUTHENTICATION_COOKIE_PREFIX + httpReq.getServerPort();
   }
 
-  String getAuthTokenFromCookie(HttpServletRequest httpReq) {
-    String authToken = null;
+  Cookie getAuthCookie(HttpServletRequest httpReq) {
     Cookie[] cookies = httpReq.getCookies();
     if (cookies != null) {
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals(getAuthCookieName(httpReq))) {
-          authToken = cookie.getValue();
-          break;
+          return cookie;
         }
       }
     }
-    return authToken;
+    return null;
+  }
+
+  String getAuthTokenFromCookie(HttpServletRequest httpReq) {
+    Cookie cookie = getAuthCookie(httpReq);
+    return (cookie == null) ? null : cookie.getValue();
   }
 
   boolean isAuthTokenInQueryString(HttpServletRequest httpReq) {
