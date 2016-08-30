@@ -27,7 +27,9 @@
             use.</note>
         <p>To use the Geo IP processor, you specify the location of the database file and the
             database type. You enter one or more IP address input fields, name the corresponding
-            output field, and specify the geolocation information that you want. </p>
+            output field, and specify the geolocation information that you want. You can also
+            configure the action that the processor takes if an IP address is missing from the
+            database file.</p>
     <p>The input field must be an Integer or String datatype with IP addresses formatted as follows:
                 <codeph>n.n.n.n.</codeph></p>
   <p>Geo IP can provide the following geolocation information for each IP address:<ul
