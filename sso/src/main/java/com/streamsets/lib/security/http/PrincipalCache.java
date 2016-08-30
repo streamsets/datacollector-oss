@@ -30,10 +30,6 @@ public class PrincipalCache {
   private final Cache<String, SSOPrincipal> principalsCache;
   private final Cache<String, Object> invalidatedTokens;
 
-  public PrincipalCache(long principalCacheExpirationMillis) {
-    this(principalCacheExpirationMillis, TimeUnit.HOURS.toMillis(1));
-  }
-
   public PrincipalCache(long principalCacheExpirationMillis, long invalidatedTokensCacheExpirationMillis) {
     principalsCache =
         CacheBuilder.newBuilder().expireAfterWrite(principalCacheExpirationMillis, TimeUnit.MILLISECONDS).build();

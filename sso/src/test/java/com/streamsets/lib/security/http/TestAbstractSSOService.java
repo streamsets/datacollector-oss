@@ -324,7 +324,7 @@ public class TestAbstractSSOService {
     final CountDownLatch ready = new CountDownLatch(2);
     final CountDownLatch done = new CountDownLatch(1);
 
-    final PrincipalCache cache = new PrincipalCache(10000);
+    final PrincipalCache cache = new PrincipalCache(1000, 1000);
     final SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
     final Callable<SSOPrincipal> goThruCallable = new Callable<SSOPrincipal>() {
       @Override

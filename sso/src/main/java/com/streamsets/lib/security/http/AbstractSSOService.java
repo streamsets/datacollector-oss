@@ -79,8 +79,12 @@ public abstract class AbstractSSOService implements SSOService {
   }
 
   void initializePrincipalCaches(long ttlMillis) {
-    userPrincipalCache = new PrincipalCache(ttlMillis);
-    appPrincipalCache = new PrincipalCache(ttlMillis);
+    //for user tokens, once a token is invalid that it, so we should cache the invalid one for a while to avoid the
+    // full check
+    userPrincipalCache = new PrincipalCache(ttlMillis, TimeUnit.HOURS.toMillis(1));
+    // for app tokens, an app token can be invalid because of being deactivated but once reactivated it will be
+    // valid again, so the caching time should be the same as for valid app tokens
+    appPrincipalCache = new PrincipalCache(ttlMillis, ttlMillis);
   }
 
   protected PrincipalCache getUserPrincipalCache() {
@@ -220,9 +224,11 @@ public abstract class AbstractSSOService implements SSOService {
           }
         } catch (Exception ex) {
           LOG.error(
-              "Exception while doing remote validation for token '{}' component '{}'",
+              "Exception while doing remote validation for token '{}' component '{}': {}",
               SSOUtils.tokenForLog(token),
-              componentId
+              componentId,
+              ex.toString(),
+              ex
           );
         } finally {
           trace("Released lock for token '{}' component '{}'", token, componentId);
