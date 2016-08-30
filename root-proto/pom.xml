@@ -61,7 +61,7 @@
     <jacoco.version>0.7.7.201606060606</jacoco.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
-    <testcontainers.version>1.1.6-SNAPSHOT</testcontainers.version>
+    <testcontainers.version>1.1.6</testcontainers.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
