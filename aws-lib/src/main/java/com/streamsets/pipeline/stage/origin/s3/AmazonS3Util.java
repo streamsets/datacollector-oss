@@ -134,16 +134,19 @@ public class AmazonS3Util {
     return isEligible;
   }
 
-  static void move(
+  static void copy(
       AmazonS3Client s3Client,
       String srcBucket,
       String sourceKey,
       String destBucket,
-      String destKey
+      String destKey,
+      boolean isMove
   ) {
     CopyObjectRequest cp = new CopyObjectRequest(srcBucket, sourceKey, destBucket, destKey);
     s3Client.copyObject(cp);
-    s3Client.deleteObject(new DeleteObjectRequest(srcBucket, sourceKey));
+    if (isMove) {
+      s3Client.deleteObject(new DeleteObjectRequest(srcBucket, sourceKey));
+    }
   }
 
   static S3Object getObject(AmazonS3Client s3Client, String bucket, String objectKey) {

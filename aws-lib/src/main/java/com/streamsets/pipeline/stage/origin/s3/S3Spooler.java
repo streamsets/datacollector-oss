@@ -146,12 +146,19 @@ public class S3Spooler {
 
   private void archive(String postProcessObjectKey, String postProcessBucket, String postProcessFolder,
                        S3ArchivingOption archivingOption) {
+    boolean isMove = true;
     String destBucket = s3ConfigBean.s3Config.bucket;
     switch (archivingOption) {
       case MOVE_TO_PREFIX:
-        //no-op
         break;
       case MOVE_TO_BUCKET:
+        destBucket = postProcessBucket;
+        break;
+      case COPY_TO_PREFIX:
+        isMove = false;
+        break;
+      case COPY_TO_BUCKET:
+        isMove = false;
         destBucket = postProcessBucket;
         break;
       default:
@@ -160,7 +167,7 @@ public class S3Spooler {
     String srcObjKey = postProcessObjectKey.substring(
       postProcessObjectKey.lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
     String destKey = postProcessFolder + srcObjKey;
-    AmazonS3Util.move(s3Client, s3ConfigBean.s3Config.bucket, postProcessObjectKey, destBucket, destKey);
+    AmazonS3Util.copy(s3Client, s3ConfigBean.s3Config.bucket, postProcessObjectKey, destBucket, destKey, isMove);
   }
 
   private void delete(String postProcessObjectKey) {

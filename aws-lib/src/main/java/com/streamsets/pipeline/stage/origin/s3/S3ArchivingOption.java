@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.Label;
 public enum S3ArchivingOption implements Label {
   MOVE_TO_PREFIX("Move into another prefix"),
   MOVE_TO_BUCKET("Move into another bucket"),
+  COPY_TO_PREFIX("Copy into another prefix"),
+  COPY_TO_BUCKET("Copy into another bucket"),
   ;
 
   private final String label;
