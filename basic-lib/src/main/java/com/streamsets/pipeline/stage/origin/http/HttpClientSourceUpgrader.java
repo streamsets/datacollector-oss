@@ -28,8 +28,8 @@ import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpClientSourceUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
@@ -102,7 +102,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         case "dataFormat":
         case "resourceUrl":
         case "httpMethod":
-        case "requestBody":
+        case "requestData":
         case "requestTimeoutMillis":
         case "httpMode":
         case "pollingInterval":
@@ -171,7 +171,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV4ToV5(List<Config> configs) {
-    configs.add(new Config("conf.headers", new HashMap<String, String>()));
+    configs.add(new Config("conf.headers", new ArrayList<Map<String, String>>()));
   }
 
   private void upgradeV5ToV6(List<Config> configs) {
@@ -204,11 +204,11 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
       }
     }
 
-    configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "connectTimeoutMillis"), "0"));
-    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "mode"), "NONE"));
-    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "startAt"), "0"));
+    configsToAdd.add(new Config(joiner.join(CONF, CLIENT, "connectTimeoutMillis"), 0));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "mode"), PaginationMode.NONE));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "startAt"), 0));
     configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "resultFieldPath"), ""));
-    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "rateLimit"), "2000"));
+    configsToAdd.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "rateLimit"), 2000));
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);

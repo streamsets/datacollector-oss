@@ -500,6 +500,8 @@ public abstract class PipelineBeanCreator {
       List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof List)) {
+      // This should be a list of maps because in JSON we represent it as
+      // [{"key": "actual key name", "value": "your value"}]
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_030));
       value = null;
     } else {
