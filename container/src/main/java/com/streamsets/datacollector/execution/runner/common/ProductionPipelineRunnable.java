@@ -65,7 +65,7 @@ public class ProductionPipelineRunnable implements Runnable {
     }
     String originalThreadName = Thread.currentThread().getName();
     try {
-      Thread.currentThread().setName(originalThreadName + "-" + RUNNABLE_NAME);
+      Thread.currentThread().setName(RUNNABLE_NAME + "-" + name);
       try {
         runningThread = Thread.currentThread();
         pipeline.run();
@@ -85,6 +85,7 @@ public class ProductionPipelineRunnable implements Runnable {
     } finally {
       postStop();
       countDownLatch.countDown();
+      Thread.currentThread().setName(originalThreadName);
     }
   }
 
