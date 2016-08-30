@@ -37,7 +37,9 @@
 
         <p class="p">To use the Geo IP processor, you specify the location of the database file and the
             database type. You enter one or more IP address input fields, name the corresponding
-            output field, and specify the geolocation information that you want. </p>
+            output field, and specify the geolocation information that you want. You can also
+            configure the action that the processor takes if an IP address is missing from the
+            database file.</p>
 
     <p class="p">The input field must be an Integer or String datatype with IP addresses formatted as follows:
                 <samp class="ph codeph">n.n.n.n.</samp></p>
@@ -222,6 +224,27 @@
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d162136e275 ">Geolocation data to be passed by the output field.
                                     </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162136e272 ">Missing Address Action</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162136e275 ">Specify the action to take if an IP address is missing
+                                        from the database file:<ul class="ul" id="task_wpz_nhs_ns__ul_ydv_gsw_cx">
+                                            <li class="li">Send to Error - Handles the record based on the
+                                                error handling configured for the stage. </li>
+
+                                            <li class="li">Replace with Nulls - Adds all of the specified
+                                                output fields to the record, replacing the missing
+                                                values with null.</li>
+
+                                            <li class="li">Ignore - Ignores the missing data, and does not add
+                                                the specified output fields to the record.</li>
+
+                                        </ul>
+<p class="p">Default is Send to Error.</p>
+</td>
 
                                 </tr>
 
