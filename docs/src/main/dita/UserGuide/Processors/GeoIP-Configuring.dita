@@ -69,6 +69,19 @@
                                     <entry>Geolocation data to be passed by the output field.
                                     </entry>
                                 </row>
+                                <row>
+                                    <entry>Missing Address Action</entry>
+                                    <entry>Specify the action to take if an IP address is missing
+                                        from the database file:<ul id="ul_ydv_gsw_cx">
+                                            <li>Send to Error - Handles the record based on the
+                                                error handling configured for the stage. </li>
+                                            <li>Replace with Nulls - Adds all of the specified
+                                                output fields to the record, replacing the missing
+                                                values with null.</li>
+                                            <li>Ignore - Ignores the missing data, and does not add
+                                                the specified output fields to the record.</li>
+                                        </ul><p>Default is Send to Error.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
