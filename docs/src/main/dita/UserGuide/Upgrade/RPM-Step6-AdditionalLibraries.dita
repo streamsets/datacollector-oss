@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pch_vnr_bx">
- <title>Step 6. Install Additional Libraries</title>
- <shortdesc>Install the individual stage libraries that the upgraded pipelines require. Use the
-            <codeph>stagelibs</codeph> command to install additional stage libraries.</shortdesc>
+ <title>Step 6. Install Additional Libraries for the Core Installation</title>
+ <shortdesc>If you installed the core RPM package, install the individual stage libraries that the
+        upgraded pipelines require. </shortdesc>
  <conbody>
-        <p>For instructions on using the <codeph>stagelibs</codeph> command, see <xref
-                href="../Install_Config/BasicInstall-Step2.dita#concept_bnl_n3n_s5"/>.</p>
+        <p>For instructions on installing additional stage libraries, see <xref
+                href="../Install_Config/CoreInstall_RPMStep2.dita#concept_amc_cf3_dx"/>.</p>
  </conbody>
 </concept>

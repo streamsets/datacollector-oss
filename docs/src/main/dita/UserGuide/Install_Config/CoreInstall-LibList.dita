@@ -96,8 +96,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
-                            <entry>Installs automatically with the basic installation.<p>Includes
-                                    the following origins:<ul
+                            <entry>Installs automatically with the core installation.<p>Includes the
+                                    following origins:<ul
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicOrigins"
                                         id="ul_kkp_bqh_cw">
                                         <li/>
@@ -315,7 +315,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-groovy_2_4-lib</entry>
-                            <entry>For Groovy version 2.4. Installs with the basic installation.
+                            <entry>For Groovy version 2.4. Installs with the core installation.
                                     <p>Includes the Groovy Evaluator processor.</p></entry>
                         </row>
                         <row>
@@ -394,7 +394,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
-                            <entry>For Jython version 2.7. Installs with the basic installation.
+                            <entry>For Jython version 2.7. Installs with the core installation.
                                     <p>Includes the Jython Evaluator processor.</p></entry>
                         </row>
                         <row>
@@ -439,7 +439,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>
-                            <entry>Includes the Static Lookup processor. Installs with the basic
+                            <entry>Includes the Static Lookup processor. Installs with the core
                                 installation. </entry>
                         </row>
                     </tbody>

@@ -13,50 +13,51 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_ijj_cvr_kv">
+<task id="task_th5_1yj_dx">
     <title>Installing from the RPM Package</title>
-    <shortdesc>Download the RPM package from the StreamSets website. When you install from the RPM
-        package, you install the basic <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service. </shortdesc>
+    <shortdesc> When you install from the RPM package, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+        the default directories and the default system user and group. </shortdesc>
     <taskbody>
-        <prereq><p>When you install from the RPM package, <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> uses the default directories and the default system user and group. The default
-                system user and group are named sdc. If an sdc user and an sdc group do not exist on
-                the machine, the installation creates the user and group for you and assigns them
-                the next available user ID and group ID.</p>
+        <prereq>
+            <p>The default system user and group are named sdc. If an sdc user and an sdc group do
+                not exist on the machine, the installation creates the user and group for you and
+                assigns them the next available user ID and group ID.</p>
             <note type="tip">To use specific IDs for the sdc user and group, create the user and
                 group before installation and specify the IDs that you want to use. For example, if
                 you’re installing <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> on multiple machines, you might want to create the system user and group before
                 installation to ensure that the user ID and group ID are consistent across the
-                machines.</note></prereq>
-        <context/>
+                machines.</note>
+        </prereq>
         <steps>
             <step>
-                <cmd>Use
-                    the following URL to download the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> RPM package from the StreamSets website: <xref
-                        href="https://streamsets.com/opensource" format="html" scope="external"
-                    />.</cmd>
+                <cmd>Use the following URL to download the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> RPM zip file from the StreamSets website: <xref
+                    href="https://streamsets.com/opensource" format="html" scope="external"
+                />.</cmd>
             </step>
             <step>
-                <cmd>Use the following command to install the <ph
+                <cmd>Use the following command to extract the zip file to the desired
+                    location:</cmd>
+                <info>
+                    <codeblock>unzip streamsets-datacollector-1.6.0.0-all-rpms.zip</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to install the full <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> RPM package:</cmd>
                 <info>
-                    <codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>
-                    <p>For example, to install version 1.6.0.0, use the following
-                        command:<codeblock>yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</codeblock></p>
+                    <codeblock>yum localinstall streamsets*</codeblock>
                 </info>
             </step>
             <step>
                 <cmd>To start <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service, use the following command:</cmd>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service, use the following command:</cmd>
                 <info>
                     <codeblock>service sdc start</codeblock>
                 </info>

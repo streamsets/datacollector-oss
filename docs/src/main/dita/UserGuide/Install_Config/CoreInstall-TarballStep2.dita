@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bnl_n3n_s5">
- <title>Step 2. Install Additional Libraries</title>
+ <title>Step 2. Install Additional Tarball Libraries</title>
  <conbody>
-        <p><indexterm>basic install<indexterm>installing additional
+        <p><indexterm>core tarball install<indexterm>installing additional
                 libraries</indexterm></indexterm>Use the <codeph>stagelibs</codeph> command to
-            install additional libraries to use stages that are not included in the basic
+            install additional libraries to use stages that are not included in the core
             installation. This is an optional step, but generally you'll want to install additional
             libraries to process data.</p>
         <note>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
@@ -31,7 +31,7 @@
                         command:<codeblock>$SDC_DIST/bin/streamsets stagelibs -list</codeblock></dd>
                     <dd>This provides a list of all available stage libraries and whether they are
                         already installed. For more information about the stages installed with each
-                        stage library, see <xref href="BasicInstall-LibList.dita"/>.</dd>
+                        stage library, see <xref href="CoreInstall-LibList.dita"/>.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>To install one or more stage libraries:</dt>
@@ -87,8 +87,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                     <dt>To uninstall libraries when necessary:</dt>
                     <dd>To uninstall a library, use the following
                         command:<codeblock>$SDC_DIST/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
-                    <dd>Use the full name of the libraries that you want to install, separating them
-                        with commas. Do not include spaces in the command. </dd>
+                    <dd>Use the full name of the libraries that you want to uninstall, separating
+                        them with commas. Do not include spaces in the command. </dd>
                 </dlentry>
             </dl></p>
  </conbody>

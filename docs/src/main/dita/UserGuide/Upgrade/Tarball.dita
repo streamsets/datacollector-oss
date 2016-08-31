@@ -14,21 +14,20 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ryn_4fk_5v">
- <title>Upgrade a Full or Basic Installation from the Tarball</title>
+ <title>Upgrade an Installation from the Tarball</title>
  <conbody>
      <p><indexterm>upgrade<indexterm>full installation from
-                    tarball</indexterm></indexterm><indexterm>upgrade<indexterm>basic installation
-                    from tarball</indexterm></indexterm><indexterm>basic install from
+                    tarball</indexterm></indexterm><indexterm>upgrade<indexterm>core installation
+                    from tarball</indexterm></indexterm><indexterm>core install from
                     tarball<indexterm>upgrade</indexterm></indexterm><indexterm>full install from
-                    tarball<indexterm>upgrade</indexterm></indexterm>When you upgrade a full or
-            basic installation from the tarball, you configure the new version to use a new
-            configuration directory outside of the base <ph
+                    tarball<indexterm>upgrade</indexterm></indexterm>When you upgrade a full or core
+            installation from the tarball, you configure the new version to use a new configuration
+            directory outside of the base <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             runtime directory. You then configure the new version to use the same data, log, and
             resource directories as the previous version. As a result, the new version has access to
             the files created in the previous version.</p>
-        <p>To upgrade a full or basic installation from the tarball, perform the following
-            steps:</p>
+        <p>To upgrade a full or core installation from the tarball, perform the following steps:</p>
         <ol id="ol_x5s_qpr_5v">
             <li>If the previous version of <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -40,7 +39,7 @@
             <li>Install the new version.</li>
             <li>Manually update the environment configuration file.</li>
             <li>Manually update the configuration files.</li>
-            <li>For an upgrade of the basic installation, install additional stage libraries as
+            <li>For an upgrade of the core installation, install additional stage libraries as
                 needed.</li>
             <li>Start the new version of <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

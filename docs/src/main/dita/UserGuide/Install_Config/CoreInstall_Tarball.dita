@@ -13,17 +13,13 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_e45_3dr_bx">
- <title>Full Installation</title>
- <shortdesc>You can download and install a full version of <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Use
-        the full installation to install all stage libraries. </shortdesc>
- <conbody>
-  <p><indexterm>installation<indexterm>full</indexterm></indexterm>To install and launch a full
-            version of <ph
+<concept id="concept_wcw_1lm_bx">
+ <title>Core Tarball Installation</title>
+    <conbody>
+            <p><indexterm>installation<indexterm>core tarball</indexterm></indexterm>To install the
+            core version of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            download the full installation tarball from the StreamSets website. You can install the
-            full <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> and start it manually, or you can start it as a service.</p>
- </conbody>
+            you can download the core tarball. After you perform the core installation and launch,
+            you install individual stage libraries as needed.</p>
+    </conbody>
 </concept>

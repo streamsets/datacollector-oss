@@ -21,19 +21,30 @@
             <step>
                 <cmd>Use the following URL to download the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> RPM package from the StreamSets website: <xref
+                    /> RPM zip file from the StreamSets website: <xref
                         href="https://streamsets.com/opensource" format="html" scope="external"
                     />.</cmd>
             </step>
             <step>
-                <cmd>Use the following command to install the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> RPM package in a different directory than the previous version:</cmd>
+                <cmd>Use the following command to extract the zip file to a different directory than
+                    the previous version:</cmd>
                 <info>
-                    <codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>
-                    <p>For example, to install version 1.6.0.0, use the following
-                        command:<codeblock>yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</codeblock></p>
+                    <codeblock>unzip streamsets-datacollector-1.6.0.0-all-rpms.zip</codeblock>
                 </info>
+            </step>
+            <step>
+                <cmd>To install the full RPM package and all available stage libraries, use the
+                    following command:</cmd>
+                <info>
+                    <codeblock>yum localinstall streamsets*</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Or, to install the core RPM package and then install individual stage libraries
+                    as needed, use the following command:</cmd>
+                <info><codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>For
+                    example, to install version 1.6.0.0, use the following
+                    command:<codeblock>yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</codeblock></info>
             </step>
         </steps>
     </taskbody>

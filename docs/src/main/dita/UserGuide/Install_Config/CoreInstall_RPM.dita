@@ -13,9 +13,12 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_wcw_1lm_bx">
- <title>Step 1. Perform the Basic Installation and Launch</title>
- <shortdesc>To install and launch a basic version of <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
-        can download the RPM package or the basic tarball.</shortdesc>
+<concept id="concept_fbq_zd3_dx">
+ <title>Core RPM Installation</title>
+ <conbody>
+  <p><indexterm>installation<indexterm>core RPM</indexterm></indexterm>To install the core version
+            of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />, you can download the RPM zip file. After you perform the core installation and
+            launch, you can then install individual stage libraries as needed.</p>
+ </conbody>
 </concept>

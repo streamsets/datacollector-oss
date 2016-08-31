@@ -14,30 +14,33 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vvw_p3m_s5">
- <title>Basic Installation</title>
- <shortdesc>You can download and install a basic version of <ph
+ <title>Core Installation</title>
+ <shortdesc>You can download and install a core version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
-        then install individual stage libraries as needed. Use the basic installation to install
-        only the stage libraries that you want to use. The basic installation allows <ph
+        then install individual stage libraries as needed. Use the core installation to install only
+        the stage libraries that you want to use. The core installation allows <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
         less disk space.</shortdesc>
  <conbody>
-  <p><indexterm>installation<indexterm>basic with custom libraries</indexterm></indexterm>The basic
-            installation includes <ph
+  <p><indexterm>installation<indexterm>core with additional libraries</indexterm></indexterm>To
+            install and launch a core version of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            you can download the RPM zip file or the core tarball.</p>
+        <p>The core installation includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             development stages, most processors, and the origins and destinations in the basic stage
             library, such as Directory and Local FS. You can then use the command line interface to
-            install additional stage libraries.  </p>
-        <p>The basic installation includes the following origins:<draft-comment author="Loretta"
+            install additional stage libraries. </p>
+        <p>The core installation includes the following origins:<draft-comment author="Loretta"
                 >Check this list with each release</draft-comment><ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicOrigins"
                 id="ul_h4k_sdk_3w">
                 <li/>
-            </ul>The basic installation includes all processors <ph
+            </ul>The core installation includes all processors <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicNotProcessor"
             /></p>
         
-        <p>The basic installation includes the following destinations:<ul
+        <p>The core installation includes the following destinations:<ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                 id="ul_dn2_5dk_3w">
                 <li/>

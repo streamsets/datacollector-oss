@@ -13,10 +13,13 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_a2n_3fk_5v">
- <title>Upgrade</title>
- <shortdesc>You can upgrade a previous version of <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to a
-        newer version. You can upgrade an installation from the tarball, an installation from the
-        RPM package, or an installation with Cloudera Manager.</shortdesc>
+<concept id="concept_e45_3dr_bx">
+ <title>Full Installation and Launch (Service Start)</title>
+ <conbody>
+  <p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
+                    Collector<indexterm>service start</indexterm></indexterm>To install the full
+            Data Collector as a service, you can download the Data Collector RPM zip file or the
+            Data Collector tarball from the StreamSets website. Installing the full Data Collector
+            as a service requires sudo privileges on the root directory.</p>
+ </conbody>
 </concept>

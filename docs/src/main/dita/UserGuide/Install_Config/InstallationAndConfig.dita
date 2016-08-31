@@ -21,9 +21,10 @@
   <conbody>
     <p>You can install a full version of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that
-      includes all stage libraries. Or, you can install a basic version of <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and add
-      additional stage libraries for additional functionality as needed.</p>
+      includes all stage libraries. Or, you can install a core version of <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to install
+      only the stage libraries that you want to use. The core installation allows Data Collector to
+      use less disk space.</p>
     <p>If you use Docker, you can also run the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> image from
       Docker Hub. </p>
