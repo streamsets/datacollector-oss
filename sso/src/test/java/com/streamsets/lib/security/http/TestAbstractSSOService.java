@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
@@ -42,13 +43,14 @@ public class TestAbstractSSOService {
     }
 
     @Override
-    protected SSOPrincipal validateUserTokenWithSecurityService(String authToken) {
-      return null;
+    protected SSOPrincipal validateUserTokenWithSecurityService(String authToken) throws ForbiddenException {
+      throw new ForbiddenException(Collections.emptyMap());
     }
 
     @Override
-    protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId) {
-      return null;
+    protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
+        throws ForbiddenException {
+      throw new ForbiddenException(Collections.emptyMap());
     }
   }
 
@@ -112,7 +114,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
-    when(service.validateUserTokenWithSecurityService(eq("a"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateUserTokenWithSecurityService(eq("a"));
 
     Assert.assertEquals(principal, service.validateUserToken("a"));
     Mockito.verify(service).validateUserTokenWithSecurityService(eq("a"));
@@ -125,7 +127,7 @@ public class TestAbstractSSOService {
     service.initializePrincipalCaches(1); //1 millisec cache
 
     //valid, unknown
-    when(service.validateUserTokenWithSecurityService(eq("b"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateUserTokenWithSecurityService(eq("b"));
 
     Assert.assertEquals(principal, service.validateUserToken("b"));
     Mockito.verify(service).validateUserTokenWithSecurityService(eq("b"));
@@ -135,7 +137,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     Mockito.reset(service);
-    when(service.validateUserTokenWithSecurityService(eq("b"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateUserTokenWithSecurityService(eq("b"));
     Assert.assertEquals(principal, service.validateUserToken("b"));
     Mockito.verify(service).validateUserTokenWithSecurityService(eq("b"));
   }
@@ -150,14 +152,17 @@ public class TestAbstractSSOService {
     Assert.assertNull(service.validateUserToken("x"));
 
     // valid, unknown
-    when(service.validateUserTokenWithSecurityService(eq("y")))
-        .thenReturn(Mockito.mock(SSOPrincipal.class));
+    Mockito
+        .doReturn(Mockito.mock(SSOPrincipal.class))
+        .when(service)
+        .validateUserTokenWithSecurityService(Mockito.eq("y"));
     service.invalidateUserToken("y");
     Assert.assertNull(service.validateUserToken("y"));
 
     // valid, cached
-    when(service.validateUserTokenWithSecurityService(eq("z")))
-        .thenReturn(Mockito.mock(SSOPrincipal.class));
+    Mockito
+        .doReturn(Mockito.mock(SSOPrincipal.class))
+        .when(service).validateUserTokenWithSecurityService(eq("z"));
     Assert.assertNotNull(service.validateUserToken("z"));
     service.invalidateUserToken("z");
     Assert.assertNull(service.validateUserToken("z"));
@@ -182,7 +187,7 @@ public class TestAbstractSSOService {
     //valid, unknown
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
     when(principal.getPrincipalId()).thenReturn("c");
-    when(service.validateAppTokenWithSecurityService(eq("a"), eq("c"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateAppTokenWithSecurityService(Mockito.eq("a"), Mockito.eq("c"));
 
     Assert.assertEquals(principal, service.validateAppToken("a", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(eq("a"), eq("c"));
@@ -198,7 +203,7 @@ public class TestAbstractSSOService {
     service.initializePrincipalCaches(1); //1 millisec cache
 
     //valid, unknown
-    when(service.validateAppTokenWithSecurityService(eq("b"), eq("c"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"));
 
     Assert.assertEquals(principal, service.validateAppToken("b", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(eq("b"), eq("c"));
@@ -208,7 +213,7 @@ public class TestAbstractSSOService {
 
     //valid, unknown
     Mockito.reset(service);
-    when(service.validateAppTokenWithSecurityService(eq("b"), eq("c"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateAppTokenWithSecurityService(Mockito.eq("b"), Mockito.eq("c"));
     Assert.assertEquals(principal, service.validateAppToken("b", "c"));
     Mockito.verify(service).validateAppTokenWithSecurityService(eq("b"), eq("c"));
   }
@@ -223,15 +228,17 @@ public class TestAbstractSSOService {
     Assert.assertNull(service.validateAppToken("x", "c"));
 
     // valid, unknown
-    when(service.validateAppTokenWithSecurityService(eq("y"), eq("c")))
-        .thenReturn(Mockito.mock(SSOPrincipal.class));
+    Mockito
+        .doReturn(Mockito.mock(SSOPrincipal.class))
+        .when(service)
+        .validateAppTokenWithSecurityService(Mockito.eq("y"), Mockito.eq("c"));
     service.invalidateAppToken("y");
     Assert.assertNull(service.validateAppToken("y", "c"));
 
     // valid, cached
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
     Mockito.when(principal.getPrincipalId()).thenReturn("c");
-    Mockito.when(service.validateAppTokenWithSecurityService(eq("z"), eq("c"))).thenReturn(principal);
+    Mockito.doReturn(principal).when(service).validateAppTokenWithSecurityService(Mockito.eq("z"), Mockito.eq("c"));
     Assert.assertNotNull(service.validateAppToken("z", "c"));
     service.invalidateAppToken("z");
     Assert.assertNull(service.validateAppToken("z", "c"));
@@ -304,7 +311,7 @@ public class TestAbstractSSOService {
     Callable<SSOPrincipal> callable = new Callable<SSOPrincipal>() {
       @Override
       public SSOPrincipal call() throws Exception {
-        return null;
+        throw new ForbiddenException(Collections.emptyMap());
       }
     };
 

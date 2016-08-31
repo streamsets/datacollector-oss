@@ -34,21 +34,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public abstract class AbstractSSOAuthenticator implements Authenticator {
+  private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  protected static final String UNAUTHORIZED_JSON_STR;
-
-  static {
-    try {
-      UNAUTHORIZED_JSON_STR = new ObjectMapper().writeValueAsString(ImmutableMap.of(
-          "ISSUES",
-          ImmutableList.of(ImmutableMap.of("code", "SSO_01`", "message", "User not authenticated"))
-      ));
-    } catch (Exception ex) {
-      throw new RuntimeException("Shouldn't happen: " + ex.toString(), ex);
-    }
-  }
+  static final Map UNAUTHORIZED_JSON = ImmutableMap.of("ISSUES",
+      ImmutableList.of(ImmutableMap.of("code", "SSO_01", "message", "User not authenticated"))
+  );
 
   private final SSOService ssoService;
 
@@ -98,6 +91,16 @@ public abstract class AbstractSSOAuthenticator implements Authenticator {
   protected Authentication returnUnauthorized(
       HttpServletRequest httpReq, HttpServletResponse httpRes, String principalId, String logMessageTemplate
   ) throws ServerAuthException {
+    return returnUnauthorized(httpReq, httpRes, UNAUTHORIZED_JSON, principalId, logMessageTemplate);
+  }
+
+  protected Authentication returnUnauthorized(
+      HttpServletRequest httpReq,
+      HttpServletResponse httpRes,
+      Map errorReason,
+      String principalId,
+      String logMessageTemplate
+  ) throws ServerAuthException {
     if (getLog().isDebugEnabled()) {
       getLog().debug(logMessageTemplate, getRequestInfoForLogging(httpReq, principalId));
     }
@@ -105,11 +108,11 @@ public abstract class AbstractSSOAuthenticator implements Authenticator {
       httpRes.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "dpm");
       httpRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       httpRes.setContentType("application/json");
-      httpRes.getWriter().println(UNAUTHORIZED_JSON_STR);
+      OBJECT_MAPPER.writeValue(httpRes.getWriter(), errorReason);
+      return Authentication.SEND_FAILURE;
     } catch (IOException ex) {
       throw new ServerAuthException(Utils.format("Could send a Unauthorized (401) response: {}", ex.toString(), ex));
     }
-    return Authentication.SEND_FAILURE;
   }
 
 }

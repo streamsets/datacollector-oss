@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
 import org.junit.Assert;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 
 public class TestAbstractSSOAuthenticator {
 
@@ -112,7 +114,10 @@ public class TestAbstractSSOAuthenticator {
 
     ArgumentCaptor<Integer> error = ArgumentCaptor.forClass(Integer.class);
     Mockito.verify(res).setStatus(error.capture());
-    Assert.assertEquals(SSOUserAuthenticator.UNAUTHORIZED_JSON_STR, writer.toString().trim());
+    Assert.assertEquals(
+        SSOUserAuthenticator.UNAUTHORIZED_JSON,
+        new ObjectMapper().readValue(writer.toString().trim(), Map.class)
+    );
     Mockito.verify(res).setContentType(Mockito.eq("application/json"));
   }
 

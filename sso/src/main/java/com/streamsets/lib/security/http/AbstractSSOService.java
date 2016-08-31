@@ -127,7 +127,9 @@ public abstract class AbstractSSOService implements SSOService {
     return userPrincipalCache.invalidate(authToken);
   }
 
-  protected abstract SSOPrincipal validateUserTokenWithSecurityService(String authToken);
+  // returns principal if OK, throws ForbiddenException if invalid credentials (will add to invalid cache) or
+  // throws RuntimeException (if connection issues, won't add to invalid cache
+  protected abstract SSOPrincipal validateUserTokenWithSecurityService(String authToken) throws ForbiddenException;
 
   @Override
   public SSOPrincipal validateAppToken(String authToken, String componentId) {
@@ -151,7 +153,10 @@ public abstract class AbstractSSOService implements SSOService {
     LOG.info("Flushed user and application principal caches");
   }
 
-  protected abstract SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId);
+  // returns principal if OK, throws ForbiddenException if invalid credentials (will add to invalid cache) or
+  // throws RuntimeException (if connection issues, won't add to invalid cache
+  protected abstract SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
+      throws ForbiddenException;
 
   private static final Object DUMMY = new Object();
   private ConcurrentMap<String, Object> lockMap = new ConcurrentHashMap<>();
@@ -170,16 +175,17 @@ public abstract class AbstractSSOService implements SSOService {
   SSOPrincipal validate(PrincipalCache cache, Callable<SSOPrincipal> remoteValidation, String token, String
       componentId, String type) {
     SSOPrincipal principal = cache.get(token);
+    String tokenForLog = SSOUtils.tokenForLog(token);
     if (principal == null) {
       if (cache.isInvalid(token)) {
-        LOG.debug("Token '{}' invalid '{}' for component '{}'", type, SSOUtils.tokenForLog(token), componentId);
+        LOG.debug("Token '{}' invalid '{}' for component '{}'", type, tokenForLog, componentId);
       } else {
-        trace("Trying to get lock for token '{}' component '{}'", token, componentId);
+        trace("Trying to get lock for token '{}' component '{}'", tokenForLog, componentId);
         long start = System.currentTimeMillis();
         int counter = 0;
         while (getLockMap().putIfAbsent(token, DUMMY) != null) {
           if (++counter % 1000 == 0) {
-            trace("Retrying getting lock for token '{}' component '{}'", token, componentId);
+            trace("Retrying getting lock for token '{}' component '{}'", tokenForLog, componentId);
           }
           counter++;
           if (System.currentTimeMillis() - start > 10000) {
@@ -192,7 +198,7 @@ public abstract class AbstractSSOService implements SSOService {
           } catch (InterruptedException ex) {
             LOG.warn(
                 "Got interrupted while waiting for lock for token '{}' for component '{}'",
-                SSOUtils.tokenForLog(token),
+                tokenForLog,
                 componentId
             );
             return null;
@@ -202,9 +208,15 @@ public abstract class AbstractSSOService implements SSOService {
         try {
           principal = cache.get(token);
           if (principal == null) {
-            LOG.debug("Token '{}' component '{}' not found in cache", SSOUtils.tokenForLog(token), componentId);
+            LOG.debug("Token '{}' component '{}' not found in cache", tokenForLog, componentId);
             try {
               principal = remoteValidation.call();
+              trace("Adding token '{}' for component '{}' to cache", tokenForLog, componentId);
+              cache.put(token, principal);
+            } catch (ForbiddenException fex) {
+              cache.invalidate(token);
+              trace("ForbiddenToken '{}' invalid '{}', invalidating in cache", tokenForLog, componentId);
+              throw fex;
             } catch (Exception ex) {
               if (ex instanceof RuntimeException) {
                 throw (RuntimeException) ex;
@@ -212,26 +224,19 @@ public abstract class AbstractSSOService implements SSOService {
                 throw new RuntimeException(ex);
               }
             }
-            if (principal != null) {
-              trace("Adding token '{}' for component '{}' to cache", token, componentId);
-              cache.put(token, principal);
-            } else {
-              trace("Token '{}' invalid '{}', invalidating in cache", token, componentId);
-              cache.invalidate(token);
-            }
           } else {
-            LOG.debug("Token '{}' component '{}' found in cache", SSOUtils.tokenForLog(token), componentId);
+            LOG.debug("Token '{}' component '{}' found in cache", tokenForLog, componentId);
           }
         } catch (Exception ex) {
           LOG.error(
               "Exception while doing remote validation for token '{}' component '{}': {}",
-              SSOUtils.tokenForLog(token),
+              tokenForLog,
               componentId,
               ex.toString(),
               ex
           );
         } finally {
-          trace("Released lock for token '{}' component '{}'", token, componentId);
+          trace("Released lock for token '{}' component '{}'", tokenForLog, componentId);
           getLockMap().remove(token);
         }
       }

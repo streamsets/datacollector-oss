@@ -209,10 +209,11 @@ public class RemoteSSOService extends AbstractSSOService {
     appAuthClientBuilder.appAuthToken(appToken);
   }
 
-  protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken) {
+  protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken)
+      throws ForbiddenException {
     ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
     authTokenJson.setAuthToken(userAuthToken);
-    SSOPrincipalJson principal = null;
+    SSOPrincipalJson principal;
     try {
       RestClient restClient = getUserAuthClientBuilder().build();
       RestClient.Response response = restClient.post(authTokenJson);
@@ -220,7 +221,7 @@ public class RemoteSSOService extends AbstractSSOService {
         updateConnectionTimeout(response);
         principal = response.getData(SSOPrincipalJson.class);
       } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
-        principal = null;
+        throw new ForbiddenException(response.getError());
       } else {
         throw new RuntimeException(Utils.format(
             "Could not validate user token '{}', HTTP status '{}' message: {}",
@@ -240,11 +241,12 @@ public class RemoteSSOService extends AbstractSSOService {
     return principal;
   }
 
-  protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId) {
+  protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
+      throws ForbiddenException {
     ValidateComponentAuthTokenJson authTokenJson = new ValidateComponentAuthTokenJson();
     authTokenJson.setComponentId(componentId);
     authTokenJson.setAuthToken(authToken);
-    SSOPrincipalJson principal = null;
+    SSOPrincipalJson principal;
     try {
       RestClient restClient = getAppAuthClientBuilder().build();
       RestClient.Response response = restClient.post(authTokenJson);
@@ -252,11 +254,11 @@ public class RemoteSSOService extends AbstractSSOService {
         updateConnectionTimeout(response);
         principal = response.getData(SSOPrincipalJson.class);
       } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
-        principal = null;
+        throw new ForbiddenException(response.getError());
       } else {
         throw new RuntimeException(Utils.format(
-            "Could not validate app token '{}', HTTP status '{}' message: {}",
-            null,
+            "Could not validate app token for component ID '{}', HTTP status '{}' message: {}",
+            componentId,
             response.getStatus(),
             response.getError()
         ));

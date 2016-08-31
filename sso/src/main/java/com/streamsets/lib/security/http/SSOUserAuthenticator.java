@@ -235,7 +235,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     HttpServletResponse httpRes = (HttpServletResponse) response;
     String authToken = getAuthTokenFromRequest(httpReq);
 
-    Authentication ret;
+    Authentication ret = null;
 
     if (LOG.isTraceEnabled()) {
       LOG.trace("Request: {}", getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken)));
@@ -255,43 +255,47 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     if (!mandatory) {
       ret = Authentication.NOT_CHECKED;
     } else {
-      SSOPrincipal principal = null;
       if (authToken != null) {
-        principal = getSsoService().validateUserToken(authToken);
-      }
-      if (principal != null) {
-        SSOAuthenticationUser user = new SSOAuthenticationUser(principal);
-        if (isLogoutRequest(httpReq)) {
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("Principal '{}' Logout", principal.getPrincipalId());
-          }
-          getSsoService().invalidateUserToken(authToken);
-          ret = redirectToLogout(httpRes);
-        } else {
-          setAuthCookieIfNecessary(httpReq, httpRes, authToken, user.getSSOUserPrincipal().getExpires());
-          if (isAuthTokenInQueryString(httpReq)) {
-            if (LOG.isTraceEnabled()) {
-              LOG.trace(
-                  "Redirection to self, principal '{}' request: {}",
-                  principal.getPrincipalId(),
-                  getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
-              );
+        try {
+          SSOPrincipal principal = getSsoService().validateUserToken(authToken);
+          if (principal != null) {
+            SSOAuthenticationUser user = new SSOAuthenticationUser(principal);
+            if (isLogoutRequest(httpReq)) {
+              if (LOG.isTraceEnabled()) {
+                LOG.trace("Principal '{}' Logout", principal.getPrincipalId());
+              }
+              getSsoService().invalidateUserToken(authToken);
+              ret = redirectToLogout(httpRes);
+            } else {
+              setAuthCookieIfNecessary(httpReq, httpRes, authToken, user.getSSOUserPrincipal().getExpires());
+              if (isAuthTokenInQueryString(httpReq)) {
+                if (LOG.isTraceEnabled()) {
+                  LOG.trace(
+                      "Redirection to self, principal '{}' request: {}",
+                      principal.getPrincipalId(),
+                      getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
+                  );
+                }
+                ret = redirectToSelf(httpReq, httpRes);
+              } else {
+                if (LOG.isDebugEnabled()) {
+                  LOG.debug(
+                      "Principal '{}' request: {}",
+                      principal.getPrincipalId(),
+                      getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
+                  );
+                }
+                ret = user;
+              }
             }
-            ret = redirectToSelf(httpReq, httpRes);
-          } else {
-            if (LOG.isDebugEnabled()) {
-              LOG.debug(
-                  "Principal '{}' request: {}",
-                  principal.getPrincipalId(),
-                  getRequestInfoForLogging(httpReq, SSOUtils.tokenForLog(authToken))
-              );
-            }
-            ret = user;
           }
+        } catch (ForbiddenException fex) {
+          ret = returnUnauthorized(httpReq, httpRes, fex.getErrorInfo(), null, "Request: {}");
         }
-      } else {
-        ret = returnUnauthorized(httpReq, httpRes, SSOUtils.tokenForLog(authToken), "Could not authenticate: {}");
       }
+    }
+    if (ret == null) {
+      ret = returnUnauthorized(httpReq, httpRes, SSOUtils.tokenForLog(authToken), "Could not authenticate: {}");
     }
     return ret;
   }

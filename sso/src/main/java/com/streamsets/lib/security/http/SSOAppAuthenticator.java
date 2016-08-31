@@ -67,15 +67,19 @@ public class SSOAppAuthenticator extends AbstractSSOAuthenticator {
       } else {
         String authToken = getAppAuthToken(httpReq);
         if (authToken == null) {
-          ret = returnUnauthorized(httpReq, httpRes, componentId, "Missing App authentication token: {}");
+          ret = returnUnauthorized(httpReq, httpRes, componentId, "Missing app authentication token: {}");
         } else if (componentId == null) {
-          ret = returnUnauthorized(httpReq, httpRes, null, "Missing App ID: {}");
+          ret = returnUnauthorized(httpReq, httpRes, null, "Missing component ID: {}");
         } else {
-          SSOPrincipal principal = getSsoService().validateAppToken(authToken, componentId);
-          if (principal != null) {
-            ret = new SSOAuthenticationUser(principal);
-          } else {
-            ret = returnUnauthorized(httpReq, httpRes, componentId, "Invalid App token: {}");
+          try {
+            SSOPrincipal principal = getSsoService().validateAppToken(authToken, componentId);
+            if (principal != null) {
+              ret = new SSOAuthenticationUser(principal);
+            } else {
+              ret = returnUnauthorized(httpReq, httpRes, componentId, "Invalid app authentication token: {}");
+            }
+          } catch (ForbiddenException fex) {
+            ret = returnUnauthorized(httpReq, httpRes, fex.getErrorInfo(), componentId, "Request: {}");
           }
         }
       }
