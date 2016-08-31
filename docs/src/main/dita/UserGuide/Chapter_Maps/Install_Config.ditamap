@@ -22,7 +22,11 @@
    </topicmeta>
    <topicref href="../Install_Config/Requirements.dita"/>
   </topicref>
-  <topicref href="../Install_Config/Installing_the_DC.dita"/>
+  <topicref href="../Install_Config/Installing_the_DC.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Install_Config/FullInstall_ServiceStart.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

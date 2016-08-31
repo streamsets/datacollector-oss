@@ -20,24 +20,29 @@
                path="Install_Config/InstallationAndConfig.html#concept_gbn_4lv_1r"/>
    <appContext helpID="concept_vzg_n2p_kq"
                path="Install_Config/InstallationAndConfig.html#concept_vzg_n2p_kq"/>
+   <appContext helpID="task_bt1_zcp_kq" path="Install_Config/Installing_the_DC.html"/>
    <appContext helpID="concept_e45_3dr_bx"
-               path="Install_Config/FullInstall.html#concept_e45_3dr_bx"/>
-   <appContext helpID="task_bt1_zcp_kq"
-               path="Install_Config/FullInstall.html#task_bt1_zcp_kq"/>
+               path="Install_Config/FullInstall_ServiceStart.html#concept_e45_3dr_bx"/>
+   <appContext helpID="task_th5_1yj_dx"
+               path="Install_Config/FullInstall_ServiceStart.html#task_th5_1yj_dx"/>
    <appContext helpID="task_pnf_344_1r"
-               path="Install_Config/FullInstall.html#task_pnf_344_1r"/>
+               path="Install_Config/FullInstall_ServiceStart.html#task_pnf_344_1r"/>
    <appContext helpID="concept_vvw_p3m_s5"
-               path="Install_Config/BasicInstall_Overview.html#concept_vvw_p3m_s5"/>
-   <appContext helpID="concept_wcw_1lm_bx"
-               path="Install_Config/BasicInstall_Overview.html#concept_wcw_1lm_bx"/>
+               path="Install_Config/CoreInstall_Overview.html#concept_vvw_p3m_s5"/>
+   <appContext helpID="concept_fbq_zd3_dx"
+               path="Install_Config/CoreInstall_Overview.html#concept_fbq_zd3_dx"/>
    <appContext helpID="task_ijj_cvr_kv"
-               path="Install_Config/BasicInstall_Overview.html#task_ijj_cvr_kv"/>
+               path="Install_Config/CoreInstall_Overview.html#task_ijj_cvr_kv"/>
+   <appContext helpID="concept_amc_cf3_dx"
+               path="Install_Config/CoreInstall_Overview.html#concept_amc_cf3_dx"/>
+   <appContext helpID="concept_wcw_1lm_bx"
+               path="Install_Config/CoreInstall_Overview.html#concept_wcw_1lm_bx"/>
    <appContext helpID="task_eyy_qbn_s5"
-               path="Install_Config/BasicInstall_Overview.html#task_eyy_qbn_s5"/>
+               path="Install_Config/CoreInstall_Overview.html#task_eyy_qbn_s5"/>
    <appContext helpID="concept_bnl_n3n_s5"
-               path="Install_Config/BasicInstall_Overview.html#concept_bnl_n3n_s5"/>
+               path="Install_Config/CoreInstall_Overview.html#concept_bnl_n3n_s5"/>
    <appContext helpID="concept_evs_xkm_s5"
-               path="Install_Config/BasicInstall_Overview.html#concept_evs_xkm_s5"/>
+               path="Install_Config/CoreInstall_Overview.html#concept_evs_xkm_s5"/>
    <appContext helpID="concept_jxh_qxr_kv"
                path="Install_Config/Installing_the_DC-Docker.html#concept_jxh_qxr_kv"/>
    <appContext helpID="concept_nb5_c3m_25"
@@ -47,7 +52,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_487707562"/>
+               path="Install_Config/CMInstall-Overview.html#unique_829922395"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -138,37 +143,28 @@
    <appContext helpID="concept_a2n_3fk_5v"
                path="Upgrade/Upgrade.html#concept_a2n_3fk_5v"/>
    <appContext helpID="concept_ryn_4fk_5v"
-               path="Upgrade/FullBasicTarball.html#concept_ryn_4fk_5v"/>
-   <appContext helpID="task_c5x_hgk_5v"
-               path="Upgrade/FullBasicTarball.html#task_c5x_hgk_5v"/>
-   <appContext helpID="task_uzq_gwl_5v"
-               path="Upgrade/FullBasicTarball.html#task_uzq_gwl_5v"/>
+               path="Upgrade/Tarball.html#concept_ryn_4fk_5v"/>
+   <appContext helpID="task_c5x_hgk_5v" path="Upgrade/Tarball.html#task_c5x_hgk_5v"/>
+   <appContext helpID="task_uzq_gwl_5v" path="Upgrade/Tarball.html#task_uzq_gwl_5v"/>
    <appContext helpID="concept_bfv_jyl_5v"
-               path="Upgrade/FullBasicTarball.html#concept_bfv_jyl_5v"/>
-   <appContext helpID="task_lxz_qyl_5v"
-               path="Upgrade/FullBasicTarball.html#task_lxz_qyl_5v"/>
-   <appContext helpID="task_hsl_ccm_5v"
-               path="Upgrade/FullBasicTarball.html#task_hsl_ccm_5v"/>
-   <appContext helpID="task_wzl_hst_xv"
-               path="Upgrade/FullBasicTarball.html#task_wzl_hst_xv"/>
+               path="Upgrade/Tarball.html#concept_bfv_jyl_5v"/>
+   <appContext helpID="task_lxz_qyl_5v" path="Upgrade/Tarball.html#task_lxz_qyl_5v"/>
+   <appContext helpID="task_hsl_ccm_5v" path="Upgrade/Tarball.html#task_hsl_ccm_5v"/>
+   <appContext helpID="task_wzl_hst_xv" path="Upgrade/Tarball.html#task_wzl_hst_xv"/>
    <appContext helpID="concept_pb5_qk5_xv"
-               path="Upgrade/FullBasicTarball.html#concept_pb5_qk5_xv"/>
+               path="Upgrade/Tarball.html#concept_pb5_qk5_xv"/>
    <appContext helpID="concept_zyd_ngr_5v"
-               path="Upgrade/FullBasicTarball.html#concept_zyd_ngr_5v"/>
+               path="Upgrade/Tarball.html#concept_zyd_ngr_5v"/>
    <appContext helpID="concept_uct_wfr_5v"
-               path="Upgrade/FullBasicTarball.html#concept_uct_wfr_5v"/>
-   <appContext helpID="concept_ws4_vq5_xv"
-               path="Upgrade/BasicRPM.html#concept_ws4_vq5_xv"/>
-   <appContext helpID="task_zk4_tr5_xv" path="Upgrade/BasicRPM.html#task_zk4_tr5_xv"/>
-   <appContext helpID="concept_nzl_hkb_mw"
-               path="Upgrade/BasicRPM.html#concept_nzl_hkb_mw"/>
-   <appContext helpID="task_ofc_2zl_5v" path="Upgrade/BasicRPM.html#task_ofc_2zl_5v"/>
-   <appContext helpID="task_krt_sj5_xv" path="Upgrade/BasicRPM.html#task_krt_sj5_xv"/>
-   <appContext helpID="task_lkl_wk5_xv" path="Upgrade/BasicRPM.html#task_lkl_wk5_xv"/>
-   <appContext helpID="concept_pch_vnr_bx"
-               path="Upgrade/BasicRPM.html#concept_pch_vnr_bx"/>
-   <appContext helpID="concept_n35_s55_xv"
-               path="Upgrade/BasicRPM.html#concept_n35_s55_xv"/>
+               path="Upgrade/Tarball.html#concept_uct_wfr_5v"/>
+   <appContext helpID="concept_ws4_vq5_xv" path="Upgrade/RPM.html#concept_ws4_vq5_xv"/>
+   <appContext helpID="task_zk4_tr5_xv" path="Upgrade/RPM.html#task_zk4_tr5_xv"/>
+   <appContext helpID="concept_nzl_hkb_mw" path="Upgrade/RPM.html#concept_nzl_hkb_mw"/>
+   <appContext helpID="task_ofc_2zl_5v" path="Upgrade/RPM.html#task_ofc_2zl_5v"/>
+   <appContext helpID="task_krt_sj5_xv" path="Upgrade/RPM.html#task_krt_sj5_xv"/>
+   <appContext helpID="task_lkl_wk5_xv" path="Upgrade/RPM.html#task_lkl_wk5_xv"/>
+   <appContext helpID="concept_pch_vnr_bx" path="Upgrade/RPM.html#concept_pch_vnr_bx"/>
+   <appContext helpID="concept_n35_s55_xv" path="Upgrade/RPM.html#concept_n35_s55_xv"/>
    <appContext helpID="concept_c45_chv_xv"
                path="Upgrade/CMUpgrade.html#concept_c45_chv_xv"/>
    <appContext helpID="task_rrx_m3v_xv" path="Upgrade/CMUpgrade.html#task_rrx_m3v_xv"/>
@@ -1209,7 +1205,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_563205589"/>
+               path="Troubleshooting/Destinations.html#unique_1366049292"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

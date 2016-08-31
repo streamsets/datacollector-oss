@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can download and install a basic version of Data Collector , and then install individual stage libraries as needed. Use the basic installation to install only the stage libraries that you want to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Installation"></meta><meta name="abstract" content="You can download and install a basic version of Data Collector, and then install individual stage libraries as needed. Use the basic installation to install only the stage libraries that you want to use. The basic installation allows Data Collector to use less disk space."></meta><meta name="description" content="You can download and install a basic version of Data Collector, and then install individual stage libraries as needed. Use the basic installation to install only the stage libraries that you want to use. The basic installation allows Data Collector to use less disk space."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vvw_p3m_s5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Installation</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can download and install a core version of Data Collector , and then install individual stage libraries as needed. Use the core installation to install only the stage libraries that you want to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Core Installation"></meta><meta name="abstract" content="You can download and install a core version of Data Collector, and then install individual stage libraries as needed. Use the core installation to install only the stage libraries that you want to use. The core installation allows Data Collector to use less disk space."></meta><meta name="description" content="You can download and install a core version of Data Collector, and then install individual stage libraries as needed. Use the core installation to install only the stage libraries that you want to use. The core installation allows Data Collector to use less disk space."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vvw_p3m_s5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Core Installation</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,24 +23,30 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_vvw_p3m_s5">
- <h1 class="title topictitle1">Basic Installation</h1>
+ <h1 class="title topictitle1">Core Installation</h1>
 
  
- <div class="body conbody"><p class="shortdesc">You can download and install a basic version of <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">You can download and install a core version of <span class="ph">Data
                   Collector</span>, and
-        then install individual stage libraries as needed. Use the basic installation to install
-        only the stage libraries that you want to use. The basic installation allows <span class="ph">Data
+        then install individual stage libraries as needed. Use the core installation to install only
+        the stage libraries that you want to use. The core installation allows <span class="ph">Data
                   Collector</span> to use
         less disk space.</p>
 
-  <p class="p">The basic
-            installation includes <span class="ph">Data
+  <p class="p">To
+            install and launch a core version of <span class="ph">Data
+                  Collector</span>,
+            you can download the RPM zip file or the core tarball.</p>
+
+        <p class="p">The core installation includes <span class="ph">Data
                   Collector</span>,
             development stages, most processors, and the origins and destinations in the basic stage
             library, such as Directory and Local FS. You can then use the command line interface to
-            install additional stage libraries.  </p>
+            install additional stage libraries. </p>
 
-        <div class="p">The basic installation includes the following origins:<ul class="ul" id="concept_vvw_p3m_s5__ul_h4k_sdk_3w">
+        <p class="p">The core installation includes the following origins:</p>
+
+        <div class="p"><ul class="ul" id="concept_vvw_p3m_s5__ul_h4k_sdk_3w">
                         <li class="li">Directory</li>
 
                         <li class="li">File Tail</li>
@@ -54,11 +60,13 @@
                         <li class="li">UDP Source</li>
 
                   </ul>
-The basic installation includes all processors <span class="ph">except the Groovy Evaluator, Jython Evaluator, HBase
-                        Lookup, and Redis Lookup.</span></div>
+</div>
+
+            <p class="p">The core installation includes all processors <span class="ph">except the Groovy Evaluator, Jython Evaluator, HBase
+                        Lookup, and Redis Lookup.</span></p>
 
         
-        <div class="p">The basic installation includes the following destinations:<ul class="ul" id="concept_vvw_p3m_s5__ul_dn2_5dk_3w">
+        <div class="p">The core installation includes the following destinations:<ul class="ul" id="concept_vvw_p3m_s5__ul_dn2_5dk_3w">
                         <li class="li">Local FS</li>
 
                         <li class="li">SDC RPC</li>
@@ -75,25 +83,26 @@ The basic installation includes all processors <span class="ph">except the Groov
  </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_wcw_1lm_bx">
- <h2 class="title topictitle2">Step 1. Perform the Basic Installation and Launch</h2>
+<div class="topic concept nested1" id="concept_fbq_zd3_dx">
+ <h2 class="title topictitle2">Core RPM Installation</h2>
 
- <p class="shortdesc">To install and launch a basic version of <span class="ph">Data
-                  Collector</span>, you
-        can download the RPM package or the basic tarball.</p>
+ <div class="body conbody">
+  <p class="p">To install the core version
+            of <span class="ph">Data
+                  Collector</span>, you can download the RPM zip file. After you perform the core installation and
+            launch, you can then install individual stage libraries as needed.</p>
+
+ </div>
 
 <div class="topic task nested2" id="task_ijj_cvr_kv">
-    <h3 class="title topictitle3">Installing from the RPM Package</h3>
+    <h3 class="title topictitle3">Step 1. Install and Launch the RPM Package</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">Download the RPM package from the StreamSets website. When you install from the RPM
-        package, you install the basic <span class="ph">Data
-                  Collector</span> as a
-        service. </p>
+    <div class="body taskbody"><p class="shortdesc">When you install from the RPM package, <span class="ph">Data
+                  Collector</span> uses
+        the default directories and the default system user and group. </p>
 
-        <div class="section prereq p"><p class="p">When you install from the RPM package, <span class="ph">Data
-                  Collector</span> uses the default directories and the default system user and group. The default
-                system user and group are named sdc. If an sdc user and an sdc group do not exist on
+        <div class="section prereq p"><p class="p">The default system user and group are named sdc. If an sdc user and an sdc group do not exist on
                 the machine, the installation creates the user and group for you and assigns them
                 the next available user ID and group ID.</p>
 
@@ -108,12 +117,19 @@ The basic installation includes all processors <span class="ph">except the Groov
         <div class="section context"></div>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Use
-                    the following URL to download the <span class="ph">Data
-                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data
+                  Collector</span> RPM zip file from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to install the <span class="ph">Data
+                <span class="ph cmd">Use the following command to extract the zip file to the desired
+                    location:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">unzip streamsets-datacollector-1.6.0.0-all-rpms.zip</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to install the core <span class="ph">Data
                   Collector</span> RPM package:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
@@ -145,17 +161,94 @@ The basic installation includes all processors <span class="ph">except the Groov
     </div>
 
 </div>
+<div class="topic concept nested2" id="concept_amc_cf3_dx">
+ <h3 class="title topictitle3">Step 2. Install Additional RPM Libraries</h3>
+
+ <div class="body conbody">
+  <p class="p">Install additional libraries to use stages that are not
+            included in the core installation. This is an optional step, but generally you'll want
+            to install additional libraries to process data.</p>
+
+        <p class="p">For a complete list of the stages installed with each stage library, see <a class="xref" href="CoreInstall_Overview.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</p>
+
+        <p class="p">Use the following commands to install additional libraries:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">To install one or more stage libraries:</dt>
+
+                <dd class="dd">Use the following command to install the stage libraries downloaded to the
+                    current directory:</dd>
+
+                <dd class="dd">
+                    <pre class="pre codeblock">yum localinstall &lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,&lt;libraryID&gt;-&lt;version&gt;-1.noarch.rpm,...</pre>
+
+                </dd>
+
+                <dd class="dd">Use the full name of the library package that you want to install, separating
+                    them with commas. Do not include spaces in the command. </dd>
+
+                <dd class="dd">For example, to install the Amazon S3 origin and destination, as well as the
+                    Elasticsearch destination for Elasticsearch 1.6.2 for <span class="ph">Data
+                  Collector</span> version 1.6.0.0, use the following command:
+                    <pre class="pre codeblock">yum localinstall streamsets-datacollector-aws-lib-1.6.0.0-1.noarch.rpm,streamsets-datacollector-elasticsearch_1_6-lib-1.6.0.0-1.noarch.rpm </pre>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">To list the stage libraries installed on the current <span class="ph">Data
+                  Collector</span>:</dt>
+
+                <dd class="dd">Use the following
+                    command:<pre class="pre codeblock">yum list installed | grep streamsets</pre>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">To uninstall libraries when necessary:</dt>
+
+                <dd class="dd">Use the following
+                    command:<pre class="pre codeblock">yum remove &lt;libraryID&gt;,&lt;libraryID&gt;,...</pre>
+</dd>
+
+                <dd class="dd">Use the full name of the libraries that you want to uninstall, separating them
+                    with commas. Do not include spaces in the command. </dd>
+
+                <dd class="dd">For example, to uninstall the Amazon S3 origin and destination, use the
+                    following
+                    command:<pre class="pre codeblock">yum remove streamsets-datacollector-aws-lib</pre>
+</dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_wcw_1lm_bx">
+ <h2 class="title topictitle2">Core Tarball Installation</h2>
+
+    <div class="body conbody">
+            <p class="p">To install the
+            core version of <span class="ph">Data
+                  Collector</span>,
+            you can download the core tarball. After you perform the core installation and launch,
+            you install individual stage libraries as needed.</p>
+
+    </div>
+
 <div class="topic task nested2" id="task_eyy_qbn_s5">
-    <h3 class="title topictitle3">Installing from the Basic Tarball</h3>
+    <h3 class="title topictitle3">Step 1. Install and Launch the Core Tarball</h3>
 
     <div class="body taskbody">
         <div class="section context">
-            <div class="p">Download the basic installation tarball from the StreamSets website, and then use one
-                of the following installation methods to install the basic <span class="ph">Data
+            <div class="p">Download the core installation tarball from the StreamSets website, and then use one
+                of the following installation methods to install the core <span class="ph">Data
                   Collector</span>:<ul class="ul" id="task_eyy_qbn_s5__ul_uzc_vbn_s5">
-                    <li class="li">Install and launch manually. For details, see <a class="xref" href="FullInstall.html#task_bt1_zcp_kq" title="To install the full Data Collector and start it manually, download the full Data Collector tarball.">Full Installation and Launch (Manual Start)</a>.</li>
+                    <li class="li">Install and launch manually. For details, see <a class="xref" href="Installing_the_DC.html" title="To install the full Data Collector and start it manually, download the full Data Collector tarball.">Full Installation and Launch (Manual Start)</a>.</li>
 
-                    <li class="li">Install and launch as a service. For details, see <a class="xref" href="FullInstall.html#task_pnf_344_1r" title="To install the full Data Collector as a service, download the full Data Collector tarball. Installing Data Collector as a service requires sudo privileges on the root directory.">Full Installation and Launch (Service Start)</a>. </li>
+                    <li class="li">Install and launch as a service. For details, see <a class="xref" href="FullInstall_ServiceStart.html#task_pnf_344_1r" title="This procedure walks through setting the default directories and the default system user and group used to start Data Collector as a service.">Installing from the Tarball</a>. </li>
 
                 </ul>
 </div>
@@ -165,13 +258,12 @@ The basic installation includes all processors <span class="ph">except the Groov
     </div>
 
 </div>
-</div>
-<div class="topic concept nested1" id="concept_bnl_n3n_s5">
- <h2 class="title topictitle2">Step 2. Install Additional Libraries</h2>
+<div class="topic concept nested2" id="concept_bnl_n3n_s5">
+ <h3 class="title topictitle3">Step 2. Install Additional Tarball Libraries</h3>
 
  <div class="body conbody">
         <p class="p">Use the <samp class="ph codeph">stagelibs</samp> command to
-            install additional libraries to use stages that are not included in the basic
+            install additional libraries to use stages that are not included in the core
             installation. This is an optional step, but generally you'll want to install additional
             libraries to process data.</p>
 
@@ -189,7 +281,7 @@ The basic installation includes all processors <span class="ph">except the Groov
 
                     <dd class="dd">This provides a list of all available stage libraries and whether they are
                         already installed. For more information about the stages installed with each
-                        stage library, see <a class="xref" href="BasicInstall_Overview.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</dd>
+                        stage library, see <a class="xref" href="CoreInstall_Overview.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</dd>
 
                 
                 
@@ -262,8 +354,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets -uninstall=&lt;libraryID&gt;,&lt;libraryID&gt;,...</pre>
 </dd>
 
-                    <dd class="dd">Use the full name of the libraries that you want to install, separating them
-                        with commas. Do not include spaces in the command. </dd>
+                    <dd class="dd">Use the full name of the libraries that you want to uninstall, separating
+                        them with commas. Do not include spaces in the command. </dd>
 
                 
             </dl>
@@ -271,6 +363,7 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
  </div>
 
+</div>
 </div>
 <div class="topic concept nested1" id="concept_evs_xkm_s5">
  <h2 class="title topictitle2">Available Stage Libraries</h2>
@@ -282,9 +375,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="50%" id="d81686e406">Stage Library Name</th>
+                            <th class="entry" valign="top" width="50%" id="d83013e537">Stage Library Name</th>
 
-                            <th class="entry" valign="top" width="50%" id="d81686e409">Included Stages </th>
+                            <th class="entry" valign="top" width="50%" id="d83013e540">Included Stages </th>
 
                         </tr>
 
@@ -292,9 +385,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kafka_0_8_1-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_hfn_3yp_vw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kafka version 0.8.1.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_hfn_3yp_vw">
                                         <li class="li">Kafka Consumer origin</li>
 
                                         <li class="li">SDC RPC to Kafka origin</li>
@@ -310,9 +403,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kafka_0_8_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_jfg_jyp_vw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kafka version 0.8.2.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_jfg_jyp_vw">
                                         <li class="li">Kafka Consumer origin</li>
 
                                         <li class="li">SDC RPC to Kafka origin</li>
@@ -328,9 +421,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kafka version 0.9.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kafka version 0.9.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_hpb_htg_qw">
                                         <li class="li">Kafka Consumer origin</li>
 
                                         <li class="li">SDC RPC to Kafka origin</li>
@@ -346,9 +439,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kafka version 0.10.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kafka version 0.10.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_jyh_nml_zw">
                                         <li class="li">Kafka Consumer origin</li>
 
                                         <li class="li">SDC RPC to Kafka origin</li>
@@ -364,45 +457,45 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kudu-0_7-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kudu-0_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kudu version 0.7.<p class="p">Includes the Kudu
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kudu version 0.7.<p class="p">Includes the Kudu
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kudu-0_8-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kudu-0_8-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kudu version 0.8.<p class="p">Includes the Kudu
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kudu version 0.8.<p class="p">Includes the Kudu
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-kudu-0_9-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-kudu-0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Kudu version 0.9.<p class="p">Includes the Kudu
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Kudu version 0.9.<p class="p">Includes the Kudu
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-apache-solr_6_1_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Apache Solr version 6.1<p class="p">Includes the Solr
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Apache Solr version 6.1<p class="p">Includes the Solr
                                 destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-aws-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-aws-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Amazon Web Services 1.10.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Amazon Web Services 1.10.<div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_lvd_frq_rw">
                                         <li class="li">Amazon S3 origin</li>
 
                                         <li class="li">Kinesis Consumer origin</li>
@@ -420,10 +513,10 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-basic-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-basic-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">Installs automatically with the basic installation.<div class="p">Includes
-                                    the following origins:<ul class="ul" id="concept_evs_xkm_s5__ul_kkp_bqh_cw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">Installs automatically with the core installation.<div class="p">Includes the
+                                    following origins:<ul class="ul" id="concept_evs_xkm_s5__ul_kkp_bqh_cw">
                         <li class="li">Directory</li>
 
                         <li class="li">File Tail</li>
@@ -456,18 +549,18 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cassandra_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cassandra_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Cassandra 1.2, 2.x, and 3.x. <p class="p">Includes the Cassandra
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_2-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.2 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -492,9 +585,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.3 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -519,9 +612,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_4-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.4 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -546,9 +639,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_5-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.5 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -573,9 +666,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_7-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.7 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -600,9 +693,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_8-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_8-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera CDH version 5.8 distribution of Hadoop. </p>
 
                                 <p class="p">Includes:</p>
@@ -627,9 +720,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka
                                     1.2.</p>
 
@@ -641,9 +734,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera version 5.4 distribution of Apache Kafka 1.3. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode pipelines.
@@ -654,9 +747,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera version 5.5 distribution of Apache Kafka 1.3. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -667,9 +760,9 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_7-cluster-cdh_kafka_2_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 "><p class="p">For the Cloudera version 5.7 distribution of Apache Kafka
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 "><p class="p">For the Cloudera version 5.7 distribution of Apache Kafka
                                     2.0.</p>
 Includes the Kafka Consumer origin for cluster mode
                                 pipelines.</td>
@@ -677,9 +770,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">
                                 <p class="p">For the Cloudera version 5.8 distribution of Apache Kafka 2.0. </p>
 
                                 <p class="p">Includes the Kafka Consumer origin for cluster mode
@@ -690,9 +783,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_kafka_1_2-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_pt3_nyp_vw">
                                         <li class="li">Kafka Consumer origin</li>
 
@@ -709,9 +802,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_kafka_1_3-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_w1y_nyp_vw">
                                         <li class="li">Kafka Consumer origin</li>
 
@@ -728,9 +821,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-cdh_kafka_2_0-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Cloudera distribution of Apache Kafka 2.0 (0.9.0).
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Cloudera distribution of Apache Kafka 2.0 (0.9.0).
                                     <div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_kjf_ntg_qw">
                                         <li class="li">Kafka Consumer origin</li>
 
@@ -747,90 +840,90 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_1_4-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_1_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 1.4.<p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 1.4.<p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_1_5-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_1_5-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 1.5.<p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 1.5.<p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_1_6-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_1_6-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 1.6.<p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 1.6.<p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_1_7-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_1_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 1.7.<p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 1.7.<p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_2_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_2_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 2.0. <p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 2.0. <p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_2_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_2_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 2.1. <p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 2.1. <p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_2_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_2_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 2.2. <p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 2.2. <p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-elasticsearch_2_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-elasticsearch_2_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Elasticsearch 2.3. <p class="p">Includes the Elasticsearch
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Elasticsearch 2.3. <p class="p">Includes the Elasticsearch
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-groovy_2_4-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-groovy_2_4-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Groovy version 2.4. Installs with the basic installation.
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Groovy version 2.4. Installs with the core installation.
                                     <p class="p">Includes the Groovy Evaluator processor.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-hdp_2_2-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-hdp_2_2-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Hortonworks version 2.2 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_j4w_kqm_s5">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -866,9 +959,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-hdp_2_3-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-hdp_2_3-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Hortonworks version 2.3 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_nwd_jhh_cw">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -904,9 +997,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-hdp_2_4-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-hdp_2_4-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For the Hortonworks version 2.4 distribution of Apache Hadoop.
                                         <div class="p">Includes:<ul class="ul" id="concept_evs_xkm_s5__ul_uh3_lhh_cw">
                                         <li class="li">
                                             <p class="p">Hadoop FS origin for cluster mode pipelines</p>
@@ -942,42 +1035,42 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-influxdb-0_9-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-influxdb-0_9-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For InfluxDB version 0.9 or greater.<p class="p">Includes the InfluxDB
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-jdbc-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-jdbc-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">Includes the JDBC Consumer origin and JDBC Producer
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">Includes the JDBC Consumer origin and JDBC Producer
                                 destination.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-jms-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-jms-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">Includes the JMS Consumer origin.</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">Includes the JMS Consumer origin.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-jython_2_7-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-jython_2_7-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Jython version 2.7. Installs with the basic installation.
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Jython version 2.7. Installs with the core installation.
                                     <p class="p">Includes the Jython Evaluator processor.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-mapr_5_0-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-mapr_5_0-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For MapR version 5.0.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_ynq_xhh_cw">
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For MapR version 5.0.<div class="p">Includes: <ul class="ul" id="concept_evs_xkm_s5__ul_ynq_xhh_cw">
                                         <li class="li">MapR Streams Consumer origin</li>
 
                                         <li class="li">MapR Streams Producer destination</li>
@@ -991,9 +1084,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-mapr_5_1-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-mapr_5_1-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For MapR version 5.1.<p class="p">Includes:</p>
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For MapR version 5.1.<p class="p">Includes:</p>
 <div class="p">
                                     <ul class="ul" id="concept_evs_xkm_s5__ul_egx_c3h_cw">
                                         <li class="li">MapR Streams Consumer origin</li>
@@ -1014,34 +1107,34 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-mongodb_3-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-mongodb_3-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For MongoDB 3.0.<p class="p">Includes the MongoDB origin and
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For MongoDB 3.0.<p class="p">Includes the MongoDB origin and
                                     destination.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-omniture-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-omniture-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">Includes the Omniture origin.</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">Includes the Omniture origin.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-rabbitmq-lib </td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-rabbitmq-lib </td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer and
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For RabbitMQ version 3.5.6.<p class="p">Includes the RabbitMQ Consumer and
                                     Producer.</p>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-redis-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-redis-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">For Redis versions 2.8 and 3.0.<p class="p">Includes the Redis Consumer
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">For Redis versions 2.8 and 3.0.<p class="p">Includes the Redis Consumer
                                     origin, Redis Lookup processor, and the Redis
                                 destination.</p>
 </td>
@@ -1049,9 +1142,9 @@ Includes the Kafka Consumer origin for cluster mode
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="50%" headers="d81686e406 ">streamsets-datacollector-stats-lib</td>
+                            <td class="entry" valign="top" width="50%" headers="d83013e537 ">streamsets-datacollector-stats-lib</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d81686e409 ">Includes the Static Lookup processor. Installs with the basic
+                            <td class="entry" valign="top" width="50%" headers="d83013e540 ">Includes the Static Lookup processor. Installs with the core
                                 installation. </td>
 
                         </tr>
