@@ -441,17 +441,18 @@ public abstract class WebServerTask extends AbstractTask {
     Utils.checkArgument(appToken != null && !appToken.trim().isEmpty(),
         Utils.format("{} cannot be NULL or empty", RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG));
 
-    LOG.debug("Initializing RemoteSSOService");
+    LOG.debug("Initializing DPM componentId '{}'", componentId);
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     SSOService ssoService = null;
     final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
     remoteSsoService.setComponentId(componentId);
     remoteSsoService.setApplicationAuthToken(appToken);
-    LOG.info("DPM Component ID '{}' Application Authentication Token '{}'", componentId, SSOUtils.tokenForLog(appToken));
+    LOG.info("DPM component ID '{}' application authentication token '{}'", componentId, SSOUtils.tokenForLog
+        (appToken));
     addToPostStart(new Runnable() {
       @Override
       public void run() {
-        LOG.debug("Validating Application Token with SSO Remote Service");
+        LOG.debug("Validating application token for DPM component ID '{}'", componentId);
         remoteSsoService.register(getRegistrationAttributes());
         runtimeInfo.setRemoteRegistrationStatus(true);
       }
