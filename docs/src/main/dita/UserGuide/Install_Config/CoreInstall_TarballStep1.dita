@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_eyy_qbn_s5">
-    <title>Installing from the Basic Tarball</title>
+    <title>Step 1. Install and Launch the Core Tarball</title>
     <taskbody>
         <context>
-            <p>Download the basic installation tarball from the StreamSets website, and then use one
-                of the following installation methods to install the basic <ph
+            <p>Download the core installation tarball from the StreamSets website, and then use one
+                of the following installation methods to install the core <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />:<ul id="ul_uzc_vbn_s5">
                     <li>Install and launch manually. For details, see <xref

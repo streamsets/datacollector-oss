@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zyd_ngr_5v">
- <title>Step 6. Install Additional Libraries for the Basic Installation</title>
- <shortdesc>If you upgraded a basic installation of <ph
+ <title>Step 6. Install Additional Libraries for the Core Installation</title>
+ <shortdesc>If you upgraded a core installation of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
         install the individual stage libraries that the upgraded pipelines require. Use the
             <codeph>stagelibs</codeph> command to install additional stage libraries.</shortdesc>
  <conbody>
   <p>For instructions on using the <codeph>stagelibs</codeph> command, see <xref
-                href="../Install_Config/BasicInstall-Step2.dita#concept_bnl_n3n_s5"/>.</p>
+                href="../Install_Config/CoreInstall-TarballStep2.dita#concept_bnl_n3n_s5"/>.</p>
  </conbody>
 </concept>

@@ -14,23 +14,17 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pnf_344_1r">
-    <title>Full Installation and Launch (Service Start)</title>
-    <shortdesc>To install the full <ph
+    <title>Installing from the Tarball</title>
+    <shortdesc>This procedure walks through setting the default directories and the default system
+        user and group used to start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service, download the full <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        tarball. Installing <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service requires sudo privileges on the root directory.</shortdesc>
+        service.</shortdesc>
     <taskbody>
-        <context><p><indexterm>installation<indexterm>service
-                start</indexterm></indexterm><indexterm>launch Data Collector<indexterm>service
-                    start</indexterm></indexterm>This procedure walks through setting the default
-            directories and the default system user and group used to start <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as
-            a service. Before you install, you can alternatively use the
-                <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath> file to modify the environment
-            variables that define directories and the system user and group.</p></context>
+        <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
+                        Collector<indexterm>service start</indexterm></indexterm> Before you
+                install, you can alternatively use the
+                    <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath> file to modify the
+                environment variables that define directories and the system user and group.</p></context>
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd>Use the following URL to download the <ph
