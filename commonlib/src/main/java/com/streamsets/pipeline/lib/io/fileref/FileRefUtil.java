@@ -72,7 +72,7 @@ public final class FileRefUtil {
 
 
   public static final ImmutableSet<String> MANDATORY_METADATA_INFO =
-      new ImmutableSet.Builder<String>().add("owner").add("size").build();
+      new ImmutableSet.Builder<String>().add("size").build();
 
 
   public static final List<String> MANDATORY_FIELD_PATHS =

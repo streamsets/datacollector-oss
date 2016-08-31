@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
@@ -37,6 +38,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     upgrader = RemoteDownloadSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
 )
+@HideConfigs(value = {"conf.dataFormatConfig.verifyChecksum"})
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 public class RemoteDownloadDSource extends DSource{

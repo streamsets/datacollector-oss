@@ -1,6 +1,6 @@
 /**
- * Copyright 2015 StreamSets Inc.
- * <p>
+ * Copyright 2016 StreamSets Inc.
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,23 +19,16 @@
  */
 package com.streamsets.pipeline.stage.origin.remote;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+import org.apache.commons.vfs2.FileObject;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+class RemoteFile {
+  final String filename;
+  final long lastModified;
+  final FileObject remoteObject;
 
-  public DataFormatChooserValues() {
-    super(
-        DataFormat.TEXT,
-        DataFormat.JSON,
-        DataFormat.LOG,
-        DataFormat.AVRO,
-        DataFormat.DELIMITED,
-        DataFormat.SDC_JSON,
-        DataFormat.XML,
-        DataFormat.PROTOBUF,
-        DataFormat.WHOLE_FILE
-    );
+  RemoteFile(String filename, long lastModified, final FileObject remoteObject) {
+    this.filename = filename;
+    this.lastModified = lastModified;
+    this.remoteObject = remoteObject;
   }
-
 }

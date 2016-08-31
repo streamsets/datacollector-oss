@@ -19,8 +19,11 @@
  */
 package com.streamsets.pipeline.lib.io.fileref;
 
+import com.codahale.metrics.Gauge;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -98,5 +102,30 @@ public final class FileRefTestUtil {
       default:
         throw new IllegalArgumentException("Should match one of the cases");
     }
+  }
+
+  public static void checkFileContent(InputStream is1, InputStream is2) throws Exception {
+    int totalBytesRead1 = 0, totalBytesRead2 = 0;
+    int a = 0, b = 0;
+    while (a != -1 || b != -1) {
+      totalBytesRead1 = ((a = is1.read()) != -1)? totalBytesRead1 + 1 : totalBytesRead1;
+      totalBytesRead2 = ((b = is2.read()) != -1)? totalBytesRead2 + 1 : totalBytesRead2;
+      Assert.assertEquals(a, b);
+    }
+    Assert.assertEquals(totalBytesRead1, totalBytesRead2);
+  }
+
+  public static void initGauge(Stage.Context context) {
+    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
+    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
+    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+      @Override
+      public Map<String, Object> getValue() {
+        return gaugeStatistics;
+      }
+    });
+    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
   }
 }

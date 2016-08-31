@@ -28,9 +28,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.sshd.common.NamedFactory;
@@ -59,8 +62,12 @@ import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
@@ -180,7 +187,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    StageRunner.Output op = runner.runProduce("-1", 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> expected = getExpectedRecords();
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
@@ -218,7 +225,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    StageRunner.Output op = runner.runProduce("-1", 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> expected = getExpectedRecords();
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
@@ -252,7 +259,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    StageRunner.Output op = runner.runProduce("-1", 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> expected = getExpectedRecords();
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
@@ -385,7 +392,7 @@ public class TestRemoteDownloadSource {
         Field.create("playful")
     )));
     expected.add(record);
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     for (int i = 0; i < 3; i++) {
       StageRunner.Output op = runner.runProduce(offset, 1000);
       offset = op.getNewOffset();
@@ -418,7 +425,7 @@ public class TestRemoteDownloadSource {
         .build();
     runner.runInit();
     List<Record> expected = getExpectedRecords();
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     StageRunner.Output op = runner.runProduce(offset, 1);
     offset = op.getNewOffset();
     List<Record> actual = op.getRecords().get("lane");
@@ -501,7 +508,7 @@ public class TestRemoteDownloadSource {
         Field.create("playful")
     )));
     expected.add(record);
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     StageRunner.Output op = runner.runProduce(offset, 1);
     offset = op.getNewOffset();
     List<Record> actual = op.getRecords().get("lane");
@@ -579,7 +586,7 @@ public class TestRemoteDownloadSource {
         Field.create("playful")
     )));
     expected.add(record);
-    StageRunner.Output op = runner.runProduce("-1", 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
@@ -649,7 +656,7 @@ public class TestRemoteDownloadSource {
     )));
     expected.add(record);
     Assert.assertEquals(0, archiveDir.listFiles().length);
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     for (int i = 0; i < 3; i++) {
       StageRunner.Output op = runner.runProduce(offset, 1000);
       offset = op.getNewOffset();
@@ -696,7 +703,7 @@ public class TestRemoteDownloadSource {
         .setOnRecordError(OnRecordError.DISCARD)
         .build();
     runner.runInit();
-    StageRunner.Output op = runner.runProduce("-1", 1000);
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
     List<Record> expected = getExpectedRecords();
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
@@ -760,7 +767,7 @@ public class TestRemoteDownloadSource {
         .addOutputLane("lane")
         .build();
     runner.runInit();
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     StageRunner.Output op = runner.runProduce(offset, 1000);
     offset = op.getNewOffset();
     List<Record> expected = getExpectedRecords();
@@ -769,7 +776,7 @@ public class TestRemoteDownloadSource {
     for (int i = 0; i < 2; i++) {
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
-    File eventualFile = new File(tempDir, "z" + originDirFile.getName() + "-1");
+    File eventualFile = new File(tempDir, "z" + originDirFile.getName() + RemoteDownloadSource.NOTHING_READ);
     Files.copy(originDirFile, eventualFile);
     eventualFile.setLastModified(lastModified);
     op = runner.runProduce(offset, 1000);
@@ -817,7 +824,7 @@ public class TestRemoteDownloadSource {
         .build();
     runner.runInit();
     List<Record> expected = getExpectedRecords();
-    String offset = "-1";
+    String offset = RemoteDownloadSource.NOTHING_READ;
     StageRunner.Output op = runner.runProduce(offset, 1000);
     List<Record> actual = op.getRecords().get("lane");
     Assert.assertEquals(expected.size(), actual.size());
@@ -825,6 +832,148 @@ public class TestRemoteDownloadSource {
       Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
     }
     runner.runDestroy();
+  }
+
+
+  @Test
+  public void testWholeFile() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testWholeFile";
+
+    Path filePath =  Paths.get(path + "/testWholeFile.txt");
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    java.nio.file.Files.write(
+        filePath,
+        "This is sample text".getBytes(),
+        StandardOpenOption.CREATE_NEW
+    );
+
+    setupSSHD(path, true);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.WHOLE_FILE,
+            null
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    try {
+      runner.runInit();
+
+      FileRefTestUtil.initGauge(runner.getContext());
+
+      StageRunner.Output op = runner.runProduce("null", 1000);
+
+      List<Record> actual = op.getRecords().get("lane");
+
+      Assert.assertEquals(1, actual.size());
+      Record record = actual.get(0);
+
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_REF_FIELD_PATH));
+
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.SIZE));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.LAST_MODIFIED_TIME));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.CONTENT_TYPE));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.CONTENT_ENCODING));
+
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.REMOTE_URI));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE_NAME));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE));
+
+      Assert.assertEquals("testWholeFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
+      Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/testWholeFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE));
+
+      Assert.assertEquals("testWholeFile.txt", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE_NAME).getValueAsString());
+      Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/testWholeFile.txt", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE).getValueAsString());
+      Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.REMOTE_URI).getValueAsString());
+
+      InputStream is1 = new FileInputStream(filePath.toFile());
+
+      InputStream is2 = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef().createInputStream(runner.getContext(), InputStream.class);
+
+      FileRefTestUtil.checkFileContent(is1, is2);
+
+      List<Record> records = runner.runProduce(op.getNewOffset(), 1000).getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
+  public void testWholeFileMultipleInputStreams() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testWholeFileMultipleInputStreams";
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    Path filePath =  Paths.get(path + "/testWholeFileMultipleInputStreams.txt");
+
+    java.nio.file.Files.write(
+        Paths.get(path + "/testWholeFileMultipleInputStreams.txt"),
+        "This is sample text".getBytes(),
+        StandardOpenOption.CREATE_NEW
+    );
+
+    setupSSHD(path, true);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.WHOLE_FILE,
+            null
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    try {
+      runner.runInit();
+
+      FileRefTestUtil.initGauge(runner.getContext());
+
+      StageRunner.Output op = runner.runProduce("null", 1000);
+
+      List<Record> actual = op.getRecords().get("lane");
+
+      Assert.assertEquals(1, actual.size());
+      Record record = actual.get(0);
+
+      InputStream is1 = new FileInputStream(filePath.toFile());
+
+      InputStream is2 = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef().createInputStream(runner.getContext(), InputStream.class);
+
+      FileRefTestUtil.checkFileContent(is1, is2);
+
+      //create the input streams again
+
+      is1 = new FileInputStream(filePath.toFile());
+
+      is2 = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef().createInputStream(runner.getContext(), InputStream.class);
+
+      FileRefTestUtil.checkFileContent(is1, is2);
+
+      List<Record> records = runner.runProduce(op.getNewOffset(), 1000).getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+
   }
 
   private RemoteDownloadConfigBean getBean(

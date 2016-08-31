@@ -22,16 +22,19 @@ package com.streamsets.pipeline.stage.origin.remote;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystem;
@@ -56,7 +59,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -67,8 +72,16 @@ public class RemoteDownloadSource extends BaseSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDownloadSource.class);
   private static final String OFFSET_DELIMITER = "::";
-  private static final String MINUS_ONE = "-1";
   private static final String CONF_PREFIX = "conf.";
+
+  static final String NOTHING_READ = "null";
+  static final String SIZE = "size";
+  static final String LAST_MODIFIED_TIME = "lastModifiedTime";
+  static final String REMOTE_URI = "remoteUri";
+  static final String CONTENT_TYPE = "contentType";
+  static final String CONTENT_ENCODING = "contentEncoding";
+
+
 
   private final RemoteDownloadConfigBean conf;
   private final File knownHostsFile;
@@ -213,23 +226,22 @@ public class RemoteDownloadSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // Just started up, currentOffset has not yet been set.
-    // This method returns MINUS_ONE when only no events have ever been read
+    // This method returns NOTHING_READ when only no events have ever been read
     if (currentOffset == null
         && lastSourceOffset != null
         && !lastSourceOffset.isEmpty()
-        && !lastSourceOffset.equals(MINUS_ONE)) {
+        && !lastSourceOffset.equals(NOTHING_READ)) {
       currentOffset = new Offset(lastSourceOffset);
     }
-    String offset = MINUS_ONE;
+    String offset = NOTHING_READ;
     RemoteFile next = null;
     try {
+      Optional<RemoteFile> nextOpt = null;
       // Time to read the next file
       if (currentStream == null) {
-        Optional<RemoteFile> nextOpt = getNextFile();
+          nextOpt = getNextFile();
         if (nextOpt.isPresent()) {
           next = nextOpt.get();
-          LOG.info("Started reading file: " + next.filename);
-          currentStream = next.remoteObject.getContent().getInputStream();
           // When starting up, reset to offset 0 of the file picked up for read only if:
           // -- we are starting up for the very first time, hence current offset is null
           // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
@@ -237,8 +249,31 @@ public class RemoteDownloadSource extends BaseSource {
             currentOffset = new Offset(next.remoteObject.getName().getBaseName(),
                 next.remoteObject.getContent().getLastModifiedTime(), 0L);
           }
-          parser = conf.dataFormatConfig.getParserFactory().getParser(
-              currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
+          if (conf.dataFormat == DataFormat.WHOLE_FILE) {
+            Map<String, Object> metadata = new HashMap<>(next.remoteObject.getContent().getAttributes());
+            metadata.put(SIZE, next.remoteObject.getContent().getSize());
+            metadata.put(LAST_MODIFIED_TIME, next.remoteObject.getContent().getLastModifiedTime());
+            metadata.put(CONTENT_TYPE, next.remoteObject.getContent().getContentInfo().getContentType());
+            metadata.put(CONTENT_ENCODING, next.remoteObject.getContent().getContentInfo().getContentEncoding());
+
+            metadata.put(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), next));
+            metadata.put(HeaderAttributeConstants.FILE_NAME, next.filename);
+            metadata.put(REMOTE_URI, remoteURI.toString());
+
+            FileRef fileRef = new RemoteSourceFileRef.Builder()
+                .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
+                .totalSizeInBytes(next.remoteObject.getContent().getSize())
+                .remoteFile(next)
+                .remoteUri(remoteURI)
+                .createMetrics(true)
+                .build();
+            parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
+          } else {
+            currentStream = next.remoteObject.getContent().getInputStream();
+            LOG.info("Started reading file: " + next.filename);
+            parser = conf.dataFormatConfig.getParserFactory().getParser(
+                currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
+          }
         } else {
           if (currentOffset == null) {
             return offset;
@@ -247,11 +282,11 @@ public class RemoteDownloadSource extends BaseSource {
           }
         }
       }
-      offset = addRecordsToBatch(maxBatchSize, batchMaker);
+      offset = addRecordsToBatch(maxBatchSize, batchMaker, next);
     } catch (IOException | DataParserException ex) {
       handleFatalException(ex, next);
     } finally {
-      if (!MINUS_ONE.equals(offset) && currentOffset != null) {
+      if (!NOTHING_READ.equals(offset) && currentOffset != null) {
         currentOffset.setOffset(Long.parseLong(offset));
       }
     }
@@ -261,18 +296,32 @@ public class RemoteDownloadSource extends BaseSource {
     return offset;
   }
 
-  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker) throws IOException, StageException {
-    String offset = MINUS_ONE;
+  static String getFileName(String remoteUri, RemoteFile remoteFile) {
+    String filename = remoteUri;
+    if (remoteUri.charAt(remoteUri.length() - 1) != '/') {
+      filename = filename + "/";
+    }
+    filename = filename + remoteFile.filename;
+    return filename;
+  }
+
+  private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker, RemoteFile remoteFile) throws IOException, StageException {
+    String offset = NOTHING_READ;
     for (int i = 0; i < maxBatchSize; i++) {
       try {
         Record record = parser.parse();
         if (record != null) {
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), remoteFile));
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, remoteFile.filename);
+          record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
           offset = parser.getOffset();
         } else {
           parser.close();
           parser = null;
-          currentStream.close();
+          if (currentStream != null) {
+            currentStream.close();
+          }
           currentStream = null;
           break;
         }
@@ -335,9 +384,9 @@ public class RemoteDownloadSource extends BaseSource {
         exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
       } else {
         try {
-          exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
+          exOffset = (parser != null) ? parser.getOffset() : NOTHING_READ;
         } catch (IOException ex1) {
-          exOffset = MINUS_ONE;
+          exOffset = NOTHING_READ;
         }
       }
       switch (getContext().getOnErrorRecord()) {
@@ -392,7 +441,7 @@ public class RemoteDownloadSource extends BaseSource {
             // Case 3: The file has the same timestamp as the last one we read, but is lexicographically higher, and we have not queued it before.
             (remoteFile.lastModified == currentOffset.timestamp && remoteFile.filename.compareTo(currentOffset.fileName) > 0) ||
             // Case 4: It is the same file as we were reading, but we have not read the whole thing, so queue it again - recovering from a shutdown.
-            remoteFile.filename.equals(currentOffset.fileName) && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset);
+            remoteFile.filename.equals(currentOffset.fileName) && currentOffset.offset != -1 && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset);
   }
 
   @Override
@@ -408,18 +457,6 @@ public class RemoteDownloadSource extends BaseSource {
       LOG.warn("Error closing remote directory", ex);
     }
     remoteDir = null;
-  }
-
-  private class RemoteFile {
-    final String filename;
-    final long lastModified;
-    final FileObject remoteObject;
-
-    RemoteFile(String filename, long lastModified, final FileObject remoteObject) {
-      this.filename = filename;
-      this.lastModified = lastModified;
-      this.remoteObject = remoteObject;
-    }
   }
 
   // Offset format: Filename::timestamp::offset. I miss case classes here.
