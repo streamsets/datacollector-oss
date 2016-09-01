@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class CDCSourceConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Database",
       description = "The database to track changes to",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "CDC"
   )
   public String database;
@@ -51,10 +52,22 @@ public class CDCSourceConfigBean {
       type = ConfigDef.Type.LIST,
       label = "Tables",
       description = "List of tables to track changes to",
-      displayPosition = 50,
+      displayPosition = 55,
       group = "CDC"
   )
   public List<String> tables;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\", \"SELECT_FOR_UPDATE\"]",
+      label = "Types of changes to copy",
+      description = "Types of changes that should generate records. Changes of other types will be ignored",
+      displayPosition = 60,
+      group = "CDC"
+  )
+  @MultiValueChooserModel(ChangeTypesChooserValues.class)
+  public List<ChangeTypeValues> changeTypes;
 
   @ConfigDef(
       required = true,
@@ -62,7 +75,7 @@ public class CDCSourceConfigBean {
       label = "Case Sensitive DB/Table names",
       description = "If unchecked, upper case will be used. " +
           "Check this only if the schema and table names were quoted during creation (not common)",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "CDC",
       defaultValue = "false"
   )

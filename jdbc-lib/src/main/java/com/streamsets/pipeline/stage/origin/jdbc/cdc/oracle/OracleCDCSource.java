@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.zaxxer.hikari.HikariDataSource;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -58,7 +60,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -86,18 +87,15 @@ public class OracleCDCSource extends BaseSource {
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final String COMMA = ",";
-  private static final String QUOTE = "'";
   private static final String CURRENT_SCN =
       "SELECT MAX(ktuxescnw * POWER(2, 32) + ktuxescnb) FROM sys.x$ktuxe";
-  public static final int MISSING_LOG_CODE = 1291;
-  private String redoLogEntriesSql = null;
+  private static final int MISSING_LOG_CODE = 1291;
   private static final String START_SCN_OPT_STR = "STARTSCN => ";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
-  private static final String SCN = PREFIX + "SCN";
-  private static final String USER = PREFIX + "USER";
-  private static final String OPERATION = PREFIX + "OPERATION";
+  private static final String SCN = PREFIX + "scn";
+  private static final String USER = PREFIX + "user";
+  private static final String OPERATION = PREFIX + "operation";
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
@@ -127,7 +125,7 @@ public class OracleCDCSource extends BaseSource {
 
   private String initialLogMinerProcedure;
   private String produceLogMinerProcedure;
-
+  private String redoLogEntriesSql = null;
   private ErrorRecordHandler errorRecordHandler;
 
   private HikariDataSource dataSource = null;
@@ -167,9 +165,6 @@ public class OracleCDCSource extends BaseSource {
       BigDecimal endingSCN = getEndingSCN();
       if (!startLogMiner(lastSourceOffset, endingSCN)) {
         return lastSourceOffset;
-      }
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Generated Redo SQL statement: " + redoLogEntriesSql);
       }
       String operation;
       try (ResultSet resultSet = selectChanges.executeQuery()) {
@@ -316,8 +311,9 @@ public class OracleCDCSource extends BaseSource {
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
 
+    BigDecimal scn = null;
     try {
-      BigDecimal scn = getEndingSCN();
+      scn = getEndingSCN();
       switch (configBean.startValue) {
         case SCN:
           if (new BigDecimal(configBean.startSCN).compareTo(scn) > 0) {
@@ -411,17 +407,16 @@ public class OracleCDCSource extends BaseSource {
         + ");"
         + " END;";
 
-    redoLogEntriesSql = "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME"
+    redoLogEntriesSql = Utils.format(
+        "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME"
         + " FROM V$LOGMNR_CONTENTS"
-        + " WHERE OPERATION_CODE IN (1, 2, 3, 25)"
-        + " AND SEG_OWNER = "
-        + QUOTE
-        + configBean.baseConfigBean.database
-        + QUOTE
+        + " WHERE OPERATION_CODE IN ({})"
+        + " AND SEG_OWNER = '{}' "
         + " AND TABLE_NAME"
-        + " IN "
-        + formatTableList(tables)
-        + " ORDER BY SCN ASC";
+        + " IN ({})"
+        + " ORDER BY SCN ASC",
+        getSupportedOperations(), configBean.baseConfigBean.database, formatTableList(tables)
+    );
 
     try {
       initializeLogMnrStatements();
@@ -432,7 +427,7 @@ public class OracleCDCSource extends BaseSource {
     }
 
     try {
-      startLogMiner(null, getEndingSCN());
+      startLogMiner(null, scn);
     } catch (SQLException ex) {
       LOG.error("Error while starting LogMiner", ex);
       // 1291 is the oracle error code for missing redo logs.
@@ -464,21 +459,41 @@ public class OracleCDCSource extends BaseSource {
 
   private void initializeLogMnrStatements() throws SQLException {
     selectChanges = connection.prepareStatement(redoLogEntriesSql);
+    LOG.debug("Redo select query = " + selectChanges.toString());
     endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
   }
 
   private String formatTableList(List<String> tables) {
-    StringBuilder formattedTablesBuilder = new StringBuilder();
-    formattedTablesBuilder.append("(");
-    Iterator<String> tableIter = tables.iterator();
-    while (tableIter.hasNext()) {
-      formattedTablesBuilder.append(QUOTE).append(tableIter.next().trim()).append(QUOTE);
-      if (tableIter.hasNext()) {
-        formattedTablesBuilder.append(COMMA);
+    List<String> quoted = new ArrayList<>(tables.size());
+    for (String table : tables) {
+      quoted.add("'" + table + "'");
+    }
+    Joiner joiner = Joiner.on(',');
+    return joiner.join(quoted);
+  }
+
+  private String getSupportedOperations() {
+    List<Integer> supportedOps = new ArrayList<>();
+
+    for (ChangeTypeValues change : configBean.baseConfigBean.changeTypes) {
+      switch (change) {
+        case INSERT:
+          supportedOps.add(INSERT_CODE);
+          break;
+        case UPDATE:
+          supportedOps.add(UPDATE_CODE);
+          break;
+        case DELETE:
+          supportedOps.add(DELETE_CODE);
+          break;
+        case SELECT_FOR_UPDATE:
+          supportedOps.add(SELECT_FOR_UPDATE_CODE);
+          break;
+        default:
       }
     }
-    formattedTablesBuilder.append(")");
-    return formattedTablesBuilder.toString();
+    Joiner joiner = Joiner.on(',');
+    return joiner.join(supportedOps);
   }
 
   private String getInitialString() throws SQLException {

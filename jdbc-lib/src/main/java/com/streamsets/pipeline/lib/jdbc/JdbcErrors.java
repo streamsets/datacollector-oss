@@ -69,9 +69,9 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_42("Error while getting initial SCN. Please verify the privileges for the user"),
   JDBC_43("Could not parse redo log statement: {}"),
   JDBC_44("Error while getting changes from Oracle due to error: {}"),
-  JDBC_45("The start date is invalid, due to redo logs not being available. " +
+  JDBC_45("Redo logs are not available for the specified start date. " +
       "Provide a more recent start date"),
-  JDBC_46("The initial SCN is invalid, due to redo logs not being available.  " +
+  JDBC_46("Redo logs are not available for the specified initial SCN. " +
       "Provide a more recent initial SCN"),
   JDBC_47("The current latest SCN {} is less than the initial SCN"),
   JDBC_48("The start date is in the future"),

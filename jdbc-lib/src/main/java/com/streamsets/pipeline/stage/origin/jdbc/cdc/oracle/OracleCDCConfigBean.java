@@ -83,7 +83,7 @@ public class OracleCDCConfigBean {
       description = "Where to find the dictionary from. " +
           "If online dictionary is used, schema changes will render older difficult to read. " +
           "If redo logs are used, you must add the new schema to the redo logs when schema is changed",
-      displayPosition = 50,
+      displayPosition = 65,
       group = "CDC"
   )
   @ValueChooserModel(DictionaryChooserValues.class)
