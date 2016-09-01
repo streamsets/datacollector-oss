@@ -203,14 +203,21 @@ angular.module('pipelineGraphDirectives', [])
     GraphCreator.prototype.dragmove = function(d) {
       var thisGraph = this;
       if ($scope.state.shiftNodeDrag){
-        var sourceX = (d.uiInfo.xPos + thisGraph.consts.rectWidth),
-          sourceY = (d.uiInfo.yPos + $scope.state.shiftNodeDragYPos),
-          targetX = d3.mouse(thisGraph.svgG.node())[0],
-          targetY = d3.mouse(this.svgG.node())[1],
-          sourceTangentX = sourceX + (targetX - sourceX)/2,
-          sourceTangentY = sourceY,
-          targetTangentX = targetX - (targetX - sourceX)/2,
-          targetTangentY = targetY;
+        var sourceX = (d.uiInfo.xPos + $scope.state.shiftNodeDragXPos);
+        var sourceY = (d.uiInfo.yPos + $scope.state.shiftNodeDragYPos);
+        var targetX = d3.mouse(thisGraph.svgG.node())[0];
+        var targetY = d3.mouse(this.svgG.node())[1];
+        var sourceTangentX;
+
+        if ($scope.state.mouseDownNodeLane) {
+          sourceTangentX = sourceX + (targetX - sourceX) / 2;
+        } else if ($scope.state.mouseDownNodeEventLane) {
+          sourceTangentX = sourceX;
+        }
+
+        var sourceTangentY = sourceY;
+        var targetTangentX = targetX - (targetX - sourceX) / 2;
+        var targetTangentY = targetY;
 
         thisGraph.dragLine.attr('d', 'M ' + sourceX + ',' + sourceY +
         'C' + sourceTangentX + ',' + sourceTangentY + ' ' +
@@ -378,7 +385,8 @@ angular.module('pipelineGraphDirectives', [])
       d3node.classed(consts.connectClass, false);
 
       var mouseDownNode = state.mouseDownNode,
-        mouseDownNodeLane = state.mouseDownNodeLane;
+        mouseDownNodeLane = state.mouseDownNodeLane,
+        mouseDownNodeEventLane = state.mouseDownNodeEventLane;
 
       if (!mouseDownNode) {
         return;
@@ -391,15 +399,21 @@ angular.module('pipelineGraphDirectives', [])
         // we're in a different node: create new edge for mousedown edge and add to graph
         var newEdge = {
           source: mouseDownNode,
-          target: d,
-          outputLane: mouseDownNodeLane
+          target: d
         };
+        if (mouseDownNodeLane) {
+          newEdge.outputLane = mouseDownNodeLane;
+        } else if (mouseDownNodeEventLane) {
+          newEdge.eventLane = mouseDownNodeEventLane;
+        }
+
         var filtRes = thisGraph.paths.filter(function(d){
           return d.source.instanceName === newEdge.source.instanceName &&
             d.target.instanceName === newEdge.target.instanceName;
         });
         if (!filtRes[0].length){
           thisGraph.edges.push(newEdge);
+          console.log(newEdge);
           thisGraph.updateGraph();
 
           $scope.$apply(function() {
@@ -409,9 +423,10 @@ angular.module('pipelineGraphDirectives', [])
                 newEdge.target.inputLanes = [];
               }
 
-              if(newEdge.source.outputLanes && newEdge.source.outputLanes.length &&
-                mouseDownNodeLane) {
+              if(newEdge.source.outputLanes && newEdge.source.outputLanes.length && mouseDownNodeLane) {
                 newEdge.target.inputLanes.push(mouseDownNodeLane);
+              } else if(newEdge.source.eventLanes && newEdge.source.eventLanes.length && mouseDownNodeEventLane) {
+                newEdge.target.inputLanes.push(mouseDownNodeEventLane);
               }
             }
           });
@@ -428,6 +443,8 @@ angular.module('pipelineGraphDirectives', [])
         }
       }
       state.mouseDownNode = null;
+      state.mouseDownNodeLane = null;
+      state.mouseDownNodeEventLane = null;
     }; // end of rects mouseup
 
     // mousedown on main svg
@@ -652,6 +669,43 @@ angular.module('pipelineGraphDirectives', [])
           'ry': this.consts.rectRound
         });
 
+      //Event Connectors
+      newGs.append('circle')
+        .filter(function(d) {
+          return d.eventLanes.length;
+        })
+        .attr({
+          'cx': consts.rectWidth/2,
+          'cy': consts.rectHeight,
+          'r': 10,
+          'class': 'graph-bootstrap-tooltip',
+          'title': 'Events'
+        })
+        .on('mousedown', function(d){
+          $scope.state.shiftNodeDrag = true;
+          $scope.state.shiftNodeDragXPos = consts.rectWidth/2;
+          $scope.state.shiftNodeDragYPos = consts.rectHeight;
+          $scope.state.mouseDownNodeEventLane = d.eventLanes[0];
+        });
+
+      newGs.append('text')
+        .filter(function(d) {
+          return d.eventLanes.length;
+        })
+        .attr({
+          'x': consts.rectWidth/2 - 5,
+          'y': consts.rectHeight + 5,
+          'class': 'lane-number graph-bootstrap-tooltip',
+          'title': 'Events'
+        })
+        .text('E')
+        .on('mousedown', function(d){
+          $scope.state.shiftNodeDrag = true;
+          $scope.state.shiftNodeDragXPos = consts.rectWidth/2;
+          $scope.state.shiftNodeDragYPos = consts.rectHeight;
+          $scope.state.mouseDownNodeEventLane = d.eventLanes[0];
+        });
+
       //Input Connectors
       newGs.append('circle')
         .filter(function(d) {
@@ -691,6 +745,7 @@ angular.module('pipelineGraphDirectives', [])
                 'title': lanePredicate ? lanePredicate.predicate : ''
               }).on('mousedown', function(d){
                 $scope.state.shiftNodeDrag = true;
+                $scope.state.shiftNodeDragXPos = thisGraph.consts.rectWidth;
                 $scope.state.shiftNodeDragYPos = y;
                 $scope.state.mouseDownNodeLane = lane;
               });
@@ -707,6 +762,7 @@ angular.module('pipelineGraphDirectives', [])
                 .text(index+1)
                 .on('mousedown', function(d){
                   $scope.state.shiftNodeDrag = true;
+                  $scope.state.shiftNodeDragXPos = thisGraph.consts.rectWidth;
                   $scope.state.shiftNodeDragYPos = y;
                   $scope.state.mouseDownNodeLane = lane;
                 });
@@ -852,14 +908,22 @@ angular.module('pipelineGraphDirectives', [])
           return d === state.selectedEdge;
         })
         .attr('x', function(d) {
-          return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
+          if (d.outputLane) {
+            return (d.source.uiInfo.xPos + (consts.rectWidth) + (d.target.uiInfo.xPos -30))/2;
+          } else if (d.eventLane) {
+            return (d.source.uiInfo.xPos + (consts.rectWidth/2) + (d.target.uiInfo.xPos -30))/2;
+          }
         })
         .attr('y', function(d) {
-          var totalLanes = d.source.outputLanes.length,
-            outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-            y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
+          if (d.outputLane) {
+            var totalLanes = d.source.outputLanes.length,
+              outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+              y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-          return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
+            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
+          } else if (d.eventLane) {
+            return ((d.source.uiInfo.yPos + d.target.uiInfo.yPos + consts.rectHeight))/2 + 30;
+          }
         });
 
       var pathNewGs= paths.enter()
@@ -897,14 +961,22 @@ angular.module('pipelineGraphDirectives', [])
           .attr('width', 25)
           .attr('height', 25)
           .attr('x', function(d) {
-            return (d.source.uiInfo.xPos + consts.rectWidth + (d.target.uiInfo.xPos -30))/2;
+            if (d.outputLane) {
+              return (d.source.uiInfo.xPos + (consts.rectWidth) + (d.target.uiInfo.xPos -30))/2;
+            } else if (d.eventLane) {
+              return (d.source.uiInfo.xPos + (consts.rectWidth/2) + (d.target.uiInfo.xPos -30))/2;
+            }
           })
           .attr('y', function(d) {
-            var totalLanes = d.source.outputLanes.length,
-              outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-              y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
+            if (d.outputLane) {
+              var totalLanes = d.source.outputLanes.length,
+                outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
+                y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes));
 
-            return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
+              return ((d.source.uiInfo.yPos + y + d.target.uiInfo.yPos + consts.rectHeight/2))/2 - 20;
+            } else if (d.eventLane) {
+              return ((d.source.uiInfo.yPos + d.target.uiInfo.yPos + consts.rectHeight))/2 + 30;
+            }
           })
           .append('xhtml:span')
           .attr('class', function(d) {
@@ -960,39 +1032,63 @@ angular.module('pipelineGraphDirectives', [])
     };
 
     GraphCreator.prototype.getPathDValue = function(d) {
-      var thisGraph = this,
-        consts = thisGraph.consts,
-        totalLanes = d.source.outputLanes.length,
-        outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane),
-        y = Math.round(((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex))/totalLanes)),
-        sourceX,sourceY,targetX,targetY, sourceTangentX, sourceTangentY, targetTangentX, targetTangentY;
+      var thisGraph = this;
+      var consts = thisGraph.consts;
+      var sourceX;
+      var sourceY;
+      var targetX;
+      var targetY;
+      var sourceTangentX;
+      var sourceTangentY;
+      var targetTangentX;
+      var targetTangentY;
 
-      sourceX = (d.source.uiInfo.xPos + consts.rectWidth);
-      sourceY = (d.source.uiInfo.yPos + y);
+      if (d.outputLane) {
+        var totalLanes = d.source.outputLanes.length;
+        var outputLaneIndex = _.indexOf(d.source.outputLanes, d.outputLane);
+        var y = Math.round(
+          ((consts.rectHeight) / (2 * totalLanes) ) + ((consts.rectHeight * (outputLaneIndex)) / totalLanes)
+        );
+        sourceX = (d.source.uiInfo.xPos + consts.rectWidth);
+        sourceY = (d.source.uiInfo.yPos + y);
 
-      if(d.target.uiInfo.xPos > (sourceX + 30)) {
-        targetX = (d.target.uiInfo.xPos - 30);
-      } else if(d.target.uiInfo.xPos > sourceX) {
-        targetX = (d.target.uiInfo.xPos + 10);
-      } else {
-        targetX = (d.target.uiInfo.xPos + 30);
+        if(d.target.uiInfo.xPos > (sourceX + 30)) {
+          targetX = (d.target.uiInfo.xPos - 30);
+        } else if(d.target.uiInfo.xPos > sourceX) {
+          targetX = (d.target.uiInfo.xPos + 10);
+        } else {
+          targetX = (d.target.uiInfo.xPos + 30);
+        }
+        targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+
+        sourceTangentX = sourceX + (targetX - sourceX)/2;
+        sourceTangentY = sourceY;
+        targetTangentX = targetX - (targetX - sourceX)/2;
+        targetTangentY = targetY;
+
+      } else if (d.eventLane) {
+        sourceX = (d.source.uiInfo.xPos + (consts.rectWidth / 2));
+        sourceY = (d.source.uiInfo.yPos + consts.rectHeight);
+
+        if(d.target.uiInfo.xPos > (sourceX + 30)) {
+          targetX = (d.target.uiInfo.xPos - 30);
+        } else if(d.target.uiInfo.xPos > sourceX) {
+          targetX = (d.target.uiInfo.xPos + 10);
+        } else {
+          targetX = (d.target.uiInfo.xPos + 30);
+        }
+        targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
+
+        sourceTangentX = sourceX;
+        sourceTangentY = sourceY;
+        targetTangentX = targetX - (targetX - sourceX)/2;
+        targetTangentY = targetY;
       }
-
-
-      targetY = (d.target.uiInfo.yPos + consts.rectWidth/2 - 20);
-      sourceTangentX = sourceX + (targetX - sourceX)/2;
-      sourceTangentY = sourceY;
-      targetTangentX = targetX - (targetX - sourceX)/2;
-      targetTangentY = targetY;
 
       return 'M ' + sourceX + ',' + sourceY +
         'C' + sourceTangentX + ',' + sourceTangentY + ' ' +
         targetTangentX + ',' + targetTangentY + ' ' +
         targetX + ',' + targetY;
-
-
-      /*return 'M ' + sourceX + ',' + sourceY +
-        'L' + (d.target.uiInfo.xPos - 30) + ',' + targetY;*/
     };
 
     GraphCreator.prototype.zoomed = function() {
@@ -1264,6 +1360,7 @@ angular.module('pipelineGraphDirectives', [])
         selectedEdge: null,
         mouseDownNode: null,
         mouseDownNodeLane: null,
+        mouseDownNodeEventLane: null,
         mouseDownLink: null,
         justDragged: false,
         justScaleTransGraph: false,

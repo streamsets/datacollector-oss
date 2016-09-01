@@ -575,6 +575,10 @@ angular.module('dataCollectorApp.common')
         stageInstance.inputLanes.push(firstOpenLane.laneName);
       }
 
+      if (stage.producingEvents) {
+        stageInstance.eventLanes.push(stageInstance.instanceName + 'EventLane' + (new Date()).getTime());
+      }
+
       if (stage.outputStreams > 0) {
         for(var i=0; i< stage.outputStreams; i++) {
           stageInstance.outputLanes.push(stageInstance.instanceName + 'OutputLane' + (new Date()).getTime() + i);

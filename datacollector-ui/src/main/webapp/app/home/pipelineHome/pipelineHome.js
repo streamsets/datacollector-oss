@@ -1093,6 +1093,23 @@ angular
             });
           });
         }
+
+        if (sourceStageInstance.eventLanes && sourceStageInstance.eventLanes.length) {
+          angular.forEach(sourceStageInstance.eventLanes, function (eventLane) {
+            angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
+              if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length &&
+                _.contains(targetStageInstance.inputLanes, eventLane)) {
+                edges.push({
+                  source: sourceStageInstance,
+                  target: targetStageInstance,
+                  eventLane: eventLane
+                });
+              }
+            });
+          });
+        }
+
+
       });
 
       $scope.edges = edges;
