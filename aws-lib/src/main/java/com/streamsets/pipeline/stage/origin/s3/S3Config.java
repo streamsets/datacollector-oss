@@ -107,11 +107,8 @@ public class S3Config {
       ProxyConfig proxyConfig,
       List<Stage.ConfigIssue> issues
   ) {
+    commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
     validateConnection(context, configPrefix, proxyConfig, issues);
-    //if the commonPrefix does not end with delimiter, add one
-    if (commonPrefix != null && !commonPrefix.isEmpty() && !commonPrefix.endsWith(delimiter)) {
-      commonPrefix = commonPrefix + delimiter;
-    }
   }
 
   public void destroy() {

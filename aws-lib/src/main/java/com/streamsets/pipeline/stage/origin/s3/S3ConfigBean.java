@@ -28,6 +28,7 @@ import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -103,15 +104,8 @@ public class S3ConfigBean {
     //S3 source specific validation
     s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues);
 
-    if(errorConfig.errorPrefix != null && !errorConfig.errorPrefix.isEmpty() &&
-      !errorConfig.errorPrefix.endsWith(s3Config.delimiter)) {
-      errorConfig.errorPrefix = errorConfig.errorPrefix + s3Config.delimiter;
-    }
-
-    if(postProcessingConfig.postProcessPrefix != null && !postProcessingConfig.postProcessPrefix.isEmpty() &&
-      !postProcessingConfig.postProcessPrefix.endsWith(s3Config.delimiter)) {
-      postProcessingConfig.postProcessPrefix = postProcessingConfig.postProcessPrefix + s3Config.delimiter;
-    }
+    errorConfig.errorPrefix = AWSUtil.normalizePrefix(errorConfig.errorPrefix, s3Config.delimiter);
+    postProcessingConfig.postProcessPrefix = AWSUtil.normalizePrefix(postProcessingConfig.postProcessPrefix, s3Config.delimiter);
 
     if(s3Config.getS3Client() != null) {
       validateBucket(

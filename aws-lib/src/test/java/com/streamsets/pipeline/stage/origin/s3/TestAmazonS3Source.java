@@ -38,6 +38,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -375,6 +376,19 @@ public class TestAmazonS3Source {
     SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
     List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
     Assert.assertEquals(0, configIssues.size());
+  }
+
+  @Test
+  public void testNormalizePrefix() {
+    String prefix = "/";
+    String delimiter = "/";
+    prefix = AWSUtil.normalizePrefix(prefix, delimiter);
+    Assert.assertEquals("", prefix);
+
+    prefix = "/foo";
+    delimiter = "/";
+    prefix = AWSUtil.normalizePrefix(prefix, delimiter);
+    Assert.assertEquals("foo/", prefix);
   }
 
   private AmazonS3Source createSource() {

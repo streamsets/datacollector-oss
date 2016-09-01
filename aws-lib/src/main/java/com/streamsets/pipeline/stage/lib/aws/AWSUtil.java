@@ -108,4 +108,17 @@ public class AWSUtil {
     configs.addAll(configsToAdd);
   }
 
+  public static String normalizePrefix(String prefix, String delimiter) {
+    if (prefix != null) {
+      // if prefix starts with delimiter, remove it
+      if (prefix.startsWith(delimiter)) {
+        prefix = prefix.substring(delimiter.length());
+      }
+      // if prefix does not end with delimiter, add one
+      if (!prefix.isEmpty() && !prefix.endsWith(delimiter)) {
+        prefix = prefix + delimiter;
+      }
+    }
+    return prefix;
+  }
 }
