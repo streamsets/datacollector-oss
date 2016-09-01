@@ -308,6 +308,7 @@
         "noRecord": "No Preview Record.",
         "noFieldFound": "No Field found",
         "pipelineInformation": "Pipeline Information",
+        "producingEventsConfig": "Consume Event",
         "rawSourcePreview": "Raw Preview",
         "requiredFieldsSelectionButton": "Select Fields Using Preview Data",
         "selectFields": "Select Fields...",

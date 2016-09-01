@@ -413,7 +413,6 @@ angular.module('pipelineGraphDirectives', [])
         });
         if (!filtRes[0].length){
           thisGraph.edges.push(newEdge);
-          console.log(newEdge);
           thisGraph.updateGraph();
 
           $scope.$apply(function() {
@@ -1486,9 +1485,16 @@ angular.module('pipelineGraphDirectives', [])
           var edgeIndex = graph.edges.indexOf(selectedEdge);
           if(edgeIndex !== -1) {
             //Update pipeline target input lanes.
-            selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
-              return !_.contains(selectedEdge.source.outputLanes, inputLane);
-            });
+
+            if (selectedEdge.eventLane) {
+              selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
+                return !_.contains(selectedEdge.source.eventLanes, inputLane);
+              });
+            } else {
+              selectedEdge.target.inputLanes = _.filter(selectedEdge.target.inputLanes, function(inputLane) {
+                return !_.contains(selectedEdge.source.outputLanes, inputLane);
+              });
+            }
 
             graph.edges.splice(edgeIndex, 1);
             state.selectedEdge = null;

@@ -54,6 +54,9 @@ angular
       dFieldPaths: [],
       fieldPathsType: [],
       fieldSelectorPaths: [],
+      producingEventsConfig: {
+        value: false
+      },
 
       /**
        * Callback function when tab is selected.
@@ -590,6 +593,28 @@ angular
         }
 
         return val;
+      },
+
+      producingEventsConfigChange: function() {
+        console.log($scope.producingEventsConfig);
+        if ($scope.producingEventsConfig.value && $scope.detailPaneConfigDefn.producingEvents &&
+          (!$scope.detailPaneConfig.eventLanes || $scope.detailPaneConfig.eventLanes.length === 0)) {
+          $scope.detailPaneConfig.eventLanes = [
+            $scope.detailPaneConfigDefn.instanceName + 'EventLane' + (new Date()).getTime()
+          ];
+        } else if (!$scope.producingEventsConfig.value) {
+          if ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length) {
+            var eventLane = $scope.detailPaneConfig.eventLanes[0];
+            angular.forEach($scope.pipelineConfig.stages, function (targetStageInstance) {
+              if (targetStageInstance.inputLanes && targetStageInstance.inputLanes.length) {
+                targetStageInstance.inputLanes = _.filter(targetStageInstance.inputLanes, function (inputLane) {
+                  return inputLane !== eventLane;
+                });
+              }
+            });
+          }
+          $scope.detailPaneConfig.eventLanes = [];
+        }
       }
     });
 
@@ -711,11 +736,20 @@ angular
         $scope.fieldPaths = [];
         $scope.dFieldPaths = [];
         $scope.fieldPathsType = [];
+
+        if ($scope.detailPaneConfigDefn.producingEvents) {
+          $scope.producingEventsConfig.value =
+            ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length > 0);
+        }
       }
     });
 
     if ($scope.detailPaneConfigDefn) {
       initializeGroupInformation({});
+      if ($scope.detailPaneConfigDefn.producingEvents) {
+        $scope.producingEventsConfig.value =
+          ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length > 0);
+      }
     }
 
     $scope.$watch('previewMode', function() {

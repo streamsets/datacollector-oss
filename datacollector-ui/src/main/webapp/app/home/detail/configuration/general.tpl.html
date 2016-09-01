@@ -71,6 +71,16 @@
     </div>
   </div>
 
+  <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && detailPaneConfigDefn.producingEvents">
+    <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.configurationTab.producingEventsConfig">Consume Events</label>
+    <div class="controls col-lg-7 col-md-8">
+      <input type="checkbox" name="producingEventsConfig"
+             ng-change="producingEventsConfigChange()"
+             ng-disabled="isPipelineReadOnly || isPipelineRunning"
+             ng-model="producingEventsConfig.value">
+    </div>
+  </div>
+
 </form>
 
 <form class="form-horizontal" role="form"
