@@ -314,7 +314,7 @@ public class TestPipelineConfigurationValidator {
     // Event lane declared on stage that doesn't produce events
     Assert.assertEquals(ValidationError.VALIDATION_0102.name(), issues.get(0).getErrorCode());
     // The definition contains open lane "e" that is not connected anywhere
-    Assert.assertEquals(ValidationError.VALIDATION_0011.name(), issues.get(1).getErrorCode());
+    Assert.assertEquals(ValidationError.VALIDATION_0104.name(), issues.get(1).getErrorCode());
   }
 
   // Stage having event lane without declaring support for event is an error

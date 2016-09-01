@@ -112,6 +112,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0101("Stage have more then one event lane."),
   VALIDATION_0102("Stage have configured event lane even though that it doesn't produce events."),
   VALIDATION_0103("Stage '{}' have merged input from both data and event part of the pipeline."),
+  VALIDATION_0104("Stage has open event streams"),
   ;
 
   private final String msg;

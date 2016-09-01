@@ -1108,13 +1108,23 @@ public class PipelineConfigurationValidator {
     List<StageConfiguration> stagesConf = pipelineConfiguration.getStages();
     for (int i = 0; i < stagesConf.size(); i++) {
       StageConfiguration stageConf = stagesConf.get(i);
-      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputAndEventLanes());
+
+      Set<String> openOutputs = new LinkedHashSet<>(stageConf.getOutputLanes());
+      Set<String> openEvents = new LinkedHashSet<>(stageConf.getEventLanes());
+
       for (int j = i + 1; j < stagesConf.size(); j++) {
         StageConfiguration downStreamStageConf = stagesConf.get(j);
+
         Set<String> duplicateOutputs = Sets.intersection(
-            new HashSet<>(stageConf.getOutputAndEventLanes()),
-            new HashSet<>(downStreamStageConf.getOutputAndEventLanes())
+            new HashSet<>(stageConf.getOutputLanes()),
+            new HashSet<>(downStreamStageConf.getOutputLanes())
         );
+
+        Set<String> duplicateEvents = Sets.intersection(
+            new HashSet<>(stageConf.getEventLanes()),
+            new HashSet<>(downStreamStageConf.getEventLanes())
+        );
+
         if (!duplicateOutputs.isEmpty()) {
           // there is more than one stage defining the same output lane
           issues.add(IssueCreator
@@ -1128,7 +1138,21 @@ public class PipelineConfigurationValidator {
           preview = false;
         }
 
+        if (!duplicateEvents.isEmpty()) {
+          // there is more than one stage defining the same output lane
+          issues.add(IssueCreator
+              .getPipeline()
+              .create(
+                  downStreamStageConf.getInstanceName(),
+                  ValidationError.VALIDATION_0010,
+                  duplicateEvents, stageConf.getInstanceName()
+              )
+          );
+          preview = false;
+        }
+
         openOutputs.removeAll(downStreamStageConf.getInputLanes());
+        openEvents.removeAll(downStreamStageConf.getInputLanes());
       }
       if (!openOutputs.isEmpty()) {
         openLanes.addAll(openOutputs);
@@ -1137,6 +1161,16 @@ public class PipelineConfigurationValidator {
         issue.setAdditionalInfo("openStreams", openOutputs);
         issues.add(issue);
       }
+
+      if (!openEvents.isEmpty()) {
+        openLanes.addAll(openEvents);
+        // the stage has open Event lanes
+        Issue issue = IssueCreator.getStage(stageConf.getInstanceName()).create(ValidationError.VALIDATION_0104);
+        issue.setAdditionalInfo("openStreams", openEvents);
+        issues.add(issue);
+      }
+
+
     }
     return preview;
   }

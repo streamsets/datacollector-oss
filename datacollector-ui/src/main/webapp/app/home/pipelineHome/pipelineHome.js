@@ -184,11 +184,19 @@ angular
         });
 
         if(firstOpenLane && firstOpenLane.stageInstance) {
-          edge = {
-            source: firstOpenLane.stageInstance,
-            target: stageInstance,
-            outputLane: firstOpenLane.laneName
-          };
+          if (firstOpenLane.isEventLane) {
+            edge = {
+              source: firstOpenLane.stageInstance,
+              target: stageInstance,
+              eventLane: firstOpenLane.laneName
+            };
+          } else {
+            edge = {
+              source: firstOpenLane.stageInstance,
+              target: stageInstance,
+              outputLane: firstOpenLane.laneName
+            };
+          }
           edges.push(edge);
         }
 
@@ -1454,12 +1462,13 @@ angular
     };
 
     var getFirstOpenLane = function() {
-      var pipelineConfig = $scope.pipelineConfig,
-        selectedType = $scope.selectedType,
-        selectedObject = $scope.selectedObject,
-        firstOpenLane = {},
-        issueObj,
-        firstOpenLaneStageInstanceName;
+      var pipelineConfig = $scope.pipelineConfig;
+      var selectedType = $scope.selectedType;
+      var selectedObject = $scope.selectedObject;
+      var firstOpenLane = {};
+      var issueObj;
+      var firstOpenLaneStageInstanceName;
+      var isEventLane = false;
 
       if(pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
         angular.forEach(pipelineConfig.issues.stageIssues, function(issues, instanceName) {
@@ -1469,6 +1478,10 @@ angular
               if(issue.message.indexOf('VALIDATION_0011') !== -1) {
                 issueObj = issue;
                 firstOpenLaneStageInstanceName = instanceName;
+              } else if(issue.message.indexOf('VALIDATION_0104') !== -1) {
+                issueObj = issue;
+                firstOpenLaneStageInstanceName = instanceName;
+                isEventLane = true;
               }
             });
           }
@@ -1481,11 +1494,20 @@ angular
             });
 
           if(stageInstance) {
-            firstOpenLane = {
-              stageInstance: stageInstance,
-              laneName: issueObj.additionalInfo.openStreams[0],
-              laneIndex: _.indexOf(stageInstance.outputLanes, issueObj.additionalInfo.openStreams[0])
-            };
+            if (!isEventLane) {
+              firstOpenLane = {
+                stageInstance: stageInstance,
+                laneName: issueObj.additionalInfo.openStreams[0],
+                laneIndex: _.indexOf(stageInstance.outputLanes, issueObj.additionalInfo.openStreams[0])
+              };
+            } else {
+              firstOpenLane = {
+                stageInstance: stageInstance,
+                laneName: issueObj.additionalInfo.openStreams[0],
+                laneIndex: 1,
+                isEventLane: true
+              };
+            }
           }
         }
       }

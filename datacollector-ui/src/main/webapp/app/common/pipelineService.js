@@ -510,7 +510,9 @@ angular.module('dataCollectorApp.common')
     var getYPos = function(pipelineConfig, firstOpenLane, xPos) {
       var maxYPos = 0;
 
-      if (firstOpenLane) {
+      if (firstOpenLane && firstOpenLane.isEventLane) {
+        maxYPos = firstOpenLane.stageInstance.uiInfo.yPos;
+      } else if (firstOpenLane) {
         maxYPos = firstOpenLane.stageInstance.uiInfo.yPos - 150;
       }
 
