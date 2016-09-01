@@ -33,10 +33,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -372,4 +376,69 @@ public class TestMultiFileReader {
 
   }
 
+  private String getRandomData(int numOfLines, int lineLength) {
+    final Random r = new Random();
+    StringBuilder sb = new StringBuilder();
+    for (int i =0 ;i < numOfLines; i++) {
+      for (int j=0; j < lineLength; j++) {
+        sb.append((char)(97 + r.nextInt(25)));
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
+  }
+
+  @Test(timeout = 2000)
+  public void testArchivingWithOffsetLagAndPendingFiles() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    File archiveDir = new File(testDir, "archive").getAbsoluteFile();
+
+    int totalNumOfFiles = 8, numOfFilesPerDir = 2, numOfLinesPerFile = 20;
+
+    Assert.assertTrue(testDir.mkdirs());
+    Assert.assertTrue(archiveDir.mkdirs());
+
+    String data = getRandomData(numOfLinesPerFile, 50);
+    File innerDir = null;
+    Set<String> dirs = new LinkedHashSet<>();
+
+    int numOfFileForCurrentDir = 0;
+    for (int i = 0; i < totalNumOfFiles; i++) {
+      if (innerDir == null || numOfFileForCurrentDir == numOfFilesPerDir) {
+        innerDir = new File(testDir, String.valueOf(i));
+        Assert.assertTrue(innerDir.mkdirs());
+        dirs.add(innerDir.getAbsolutePath());
+        numOfFileForCurrentDir = 0;
+      }
+      String fileName = "file_" + i;
+      Files.write(Paths.get(innerDir.getAbsolutePath() + "/" + fileName), data.getBytes());
+      numOfFileForCurrentDir++;
+    }
+    List<MultiFileInfo> multiFileInfos = new ArrayList<>();
+    int i = 0;
+    for (String dir : dirs) {
+      MultiFileInfo multiFileInfo =
+          new MultiFileInfo("tag" + i, dir + "/${PATTERN}", FileRollMode.PATTERN, ".*", "", "");
+      multiFileInfos.add(multiFileInfo);
+      i++;
+    }
+
+    MultiFileReader mdr = new MultiFileReader(multiFileInfos, UTF8, 1024,
+        PostProcessingOptions.DELETE, archiveDir.getAbsolutePath(),
+        true, 1, false);
+
+    Map<String, String> offsets = new HashMap<>();
+    int numOfLinesProcessed = 0, totalNumberOfLines = totalNumOfFiles * numOfLinesPerFile;
+
+    do {
+      mdr.setOffsets(offsets);
+      LiveFileChunk chunk = mdr.next(0);
+      if (chunk != null) {
+        numOfLinesProcessed += chunk.getLines().size();
+      }
+      offsets = mdr.getOffsets();
+      mdr.getOffsetsLag(offsets);
+      mdr.getPendingFiles();
+    } while (numOfLinesProcessed < totalNumberOfLines);
+  }
 }

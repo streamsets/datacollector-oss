@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,11 +78,13 @@ public class BaseFileContextProvider implements FileContextProvider{
     Map<String, Long> offsetLagMap = new HashMap<String, Long>();
     for (FileContext fileContext : fileContexts) {
       String fileKey = fileContext.getMultiFileInfo().getFileKey();
-      //Whatever does not have offsets (i.e empty offsets) mean their live (current) file is null
-      //they will appear in pending files.
-      if (offsetMap.containsKey(fileKey) && !offsetMap.get(fileKey).isEmpty()) {
-        offsetLagMap.put(fileKey, FileContextProviderUtil.getOffsetLagForFile(offsetMap.get(fileKey)));
-      }
+      if (fileContext.hasReader()) {
+        //Whatever does not have offsets (i.e empty offsets) mean their live (current) file is null
+        //they will appear in pending files.
+        if (offsetMap.containsKey(fileKey) && !offsetMap.get(fileKey).isEmpty()) {
+          offsetLagMap.put(fileKey, FileContextProviderUtil.getOffsetLagForFile(offsetMap.get(fileKey)));
+        }
+     }
     }
     return offsetLagMap;
   }
