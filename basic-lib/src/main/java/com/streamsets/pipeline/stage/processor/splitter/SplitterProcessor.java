@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.splitter;
 
+import com.google.api.client.util.Lists;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -27,21 +28,28 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SplitterProcessor extends SingleLaneRecordProcessor {
   private final String fieldPath;
   private final char separator;
   private final List<String> fieldPathsForSplits;
+  private final TooManySplitsAction tooManySplitsAction;
+  private final String remainingSplitsPath;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
   private final OriginalFieldAction originalFieldAction;
 
   public SplitterProcessor(String fieldPath, char separator, List<String> fieldPathsForSplits,
+      TooManySplitsAction tooManySplitsAction,
+      String remainingSplitsPath,
       OnStagePreConditionFailure onStagePreConditionFailure,
       OriginalFieldAction originalFieldAction) {
     this.fieldPath = fieldPath;
     this.separator = separator;
     this.fieldPathsForSplits = fieldPathsForSplits;
+    this.tooManySplitsAction = tooManySplitsAction;
+    this.remainingSplitsPath = remainingSplitsPath;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
     this.originalFieldAction = originalFieldAction;
   }
@@ -54,10 +62,6 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    if (fieldPathsForSplits.size() < 2) {
-      issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",
-                                                Errors.SPLITTER_00));
-    }
 
     int count = 1;
     for(String fieldPath: fieldPathsForSplits) {
@@ -66,6 +70,11 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
           Errors.SPLITTER_03, count));
       }
       count++;
+    }
+
+    if (fieldPathsForSplits.size() == 0 && tooManySplitsAction == TooManySplitsAction.TO_LAST_FIELD) {
+      issues.add(getContext().createConfigIssue(Groups.FIELD_SPLITTER.name(), "fieldPathsForSplits",
+          Errors.SPLITTER_00));
     }
 
     if (issues.isEmpty()) {
@@ -94,13 +103,25 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
       } catch (IllegalArgumentException e) {
         throw new OnRecordErrorException(Errors.SPLITTER_04, fieldPath, field.getType().name());
       }
-      splits = str.split(separatorStr, fieldPaths.length);
+
+      switch (tooManySplitsAction) {
+        case TO_LAST_FIELD:
+          splits = str.split(separatorStr, fieldPaths.length);
+          break;
+        case TO_LIST:
+          splits = str.split(separatorStr);
+          break;
+        default:
+          throw new IllegalArgumentException("Unsupported value for too many splits action: " + tooManySplitsAction);
+      }
+
       if (splits.length < fieldPaths.length) {
         error = Errors.SPLITTER_02;
       }
     }
     if (error == null || onStagePreConditionFailure == OnStagePreConditionFailure.CONTINUE) {
-      for (int i = 0; i < fieldPaths.length; i++) {
+      int i = 0;
+      for (i = 0; i < fieldPaths.length; i++) {
         try {
           if (splits != null && splits.length > i) {
             record.set(fieldPaths[i], Field.create(splits[i]));
@@ -112,6 +133,15 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
             e.toString());
         }
       }
+
+      if (splits != null && i < splits.length && tooManySplitsAction == TooManySplitsAction.TO_LIST) {
+        List<Field> remainingSplits = Lists.newArrayList();
+        for (int j = i; j < splits.length; j++) {
+          remainingSplits.add(Field.create(splits[j]));
+        }
+        record.set(remainingSplitsPath, Field.create(remainingSplits));
+      }
+
       if (removeUnsplitValue) {
         record.delete(fieldPath);
       }

@@ -82,12 +82,39 @@ public class SplitterDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
       label = "Not Enough Splits ",
-      description="Action for data that cannot be split as configured",
+      description="Action for data that has fewer splits than configured field paths",
       displayPosition = 40,
       group = "FIELD_SPLITTER"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
+
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "TO_LAST_FIELD",
+      label = "Too Many Splits ",
+      description="Action for data that more splits than configured field paths",
+      displayPosition = 50,
+      group = "FIELD_SPLITTER"
+  )
+  @ValueChooserModel(TooManySplitsActionChooserValues.class)
+  public TooManySplitsAction tooManySplitsAction;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Field for Remaining Splits",
+      description = "List field used to store any remaining splits",
+      displayPosition = 55,
+      dependsOn = "tooManySplitsAction",
+      triggeredByValue = "TO_LIST",
+      group = "FIELD_SPLITTER"
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String remainingSplitsPath;
 
   @ConfigDef(
       required = true,
@@ -95,7 +122,7 @@ public class SplitterDProcessor extends DProcessor {
       defaultValue = "REMOVE",
       label = "Original Field",
       description="Action for the original field being split",
-      displayPosition = 50,
+      displayPosition = 60,
       group = "FIELD_SPLITTER"
   )
   @ValueChooserModel(OriginalFieldActionChooserValues.class)
@@ -103,8 +130,8 @@ public class SplitterDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new SplitterProcessor(fieldPath, separator, fieldPathsForSplits, onStagePreConditionFailure,
-                                 originalFieldAction);
+    return new SplitterProcessor(fieldPath, separator, fieldPathsForSplits, tooManySplitsAction, remainingSplitsPath,
+                                 onStagePreConditionFailure, originalFieldAction);
   }
 
 }

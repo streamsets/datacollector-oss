@@ -50,9 +50,10 @@ public class TestSplitterProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
         .addConfiguration("separator", '^')
-        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a"))
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of())
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
         .addOutputLane("out")
         .build();
     Assert.assertEquals(1, runner.runValidateConfigs().size());
@@ -67,6 +68,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -99,6 +101,80 @@ public class TestSplitterProcessor {
   }
 
   @Test
+  public void testSplittingToList() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+        .addConfiguration("fieldPath", "/line")
+        .addConfiguration("separator", '^')
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a"))
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LIST)
+        .addConfiguration("remainingSplitsPath", "/splits_list")
+        .addOutputLane("out")
+        .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecordWithLine("a b");
+      Record r1 = createRecordWithLine("a b c");
+      Record r2 = createRecordWithLine("a");
+      Record r3 = createRecordWithLine("");
+      Record r4 = createRecordWithLine(" ");
+      Record r5 = createRecordWithLine(null);
+      List<Record> input = ImmutableList.of(r0, r1, r2, r3, r4, r5);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(6, output.getRecords().get("out").size());
+      Assert.assertEquals("a", output.getRecords().get("out").get(0).get("/a").getValue());
+      Assert.assertEquals("b", output.getRecords().get("out").get(0).get("/splits_list").getValueAsList().get(0).getValue());
+      Assert.assertEquals("a", output.getRecords().get("out").get(1).get("/a").getValue());
+      Assert.assertEquals(2, output.getRecords().get("out").get(1).get("/splits_list").getValueAsList().size());
+      Assert.assertEquals("b", output.getRecords().get("out").get(1).get("/splits_list").getValueAsList().get(0).getValue());
+      Assert.assertEquals("c", output.getRecords().get("out").get(1).get("/splits_list").getValueAsList().get(1).getValue());
+      Assert.assertEquals("a", output.getRecords().get("out").get(2).get("/a").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(2).has("/splits_list"));
+      Assert.assertEquals("", output.getRecords().get("out").get(3).get("/a").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(3).has("/splits_list"));
+      Assert.assertEquals(null, output.getRecords().get("out").get(4).get("/a").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(4).has("/splits_list"));
+      Assert.assertEquals(null, output.getRecords().get("out").get(5).get("/a").getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(5).has("/splits_list"));
+    } finally {
+      runner.runDestroy();
+    }
+
+    runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+        .addConfiguration("fieldPath", "/line")
+        .addConfiguration("separator", '^')
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of())
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LIST)
+        .addConfiguration("remainingSplitsPath", "/splits_list")
+        .addOutputLane("out")
+        .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecordWithLine("a b c");
+      Record r1 = createRecordWithLine("");
+      Record r2 = createRecordWithLine(" ");
+      Record r3 = createRecordWithLine(null);
+      List<Record> input = ImmutableList.of(r0, r1, r2, r3);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals(4, output.getRecords().get("out").size());
+      Assert.assertEquals(3, output.getRecords().get("out").get(0).get("/splits_list").getValueAsList().size());
+      Assert.assertEquals("a", output.getRecords().get("out").get(0).get("/splits_list").getValueAsList().get(0).getValue());
+      Assert.assertEquals("b", output.getRecords().get("out").get(0).get("/splits_list").getValueAsList().get(1).getValue());
+      Assert.assertEquals("c", output.getRecords().get("out").get(0).get("/splits_list").getValueAsList().get(2).getValue());
+      Assert.assertEquals("", output.getRecords().get("out").get(1).get("/splits_list").getValueAsList().get(0).getValue());
+      Assert.assertFalse(output.getRecords().get("out").get(2).has("/splits_list"));
+      Assert.assertFalse(output.getRecords().get("out").get(3).has("/splits_list"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testSplittingToError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -107,6 +183,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -142,6 +219,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -167,6 +245,7 @@ public class TestSplitterProcessor {
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
         .addOutputLane("out")
         .build();
     runner.runInit();
@@ -193,6 +272,7 @@ public class TestSplitterProcessor {
       .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+      .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
       .addOutputLane("out")
       .build();
     runner.runInit();

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,32 +19,12 @@
  */
 package com.streamsets.pipeline.stage.processor.splitter;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  SPLITTER_00("Define at least one new split fields"),
-  SPLITTER_01("Field cannot split. The record '{}' does not include the field '{}'."),
-  SPLITTER_02("The record '{}' does not have enough splits"),
-  SPLITTER_03("Field Path at index '{}' cannot be empty"),
-  SPLITTER_04("Field '{}' cannot be split because it is of type '{}'"),
-  SPLITTER_05("Cannot set field '{}' for record '{}', reason : {}"),
-  ;
+public class TooManySplitsActionChooserValues extends BaseEnumChooserValues {
 
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+  public TooManySplitsActionChooserValues() {
+    super(TooManySplitsAction.class);
   }
 
 }
