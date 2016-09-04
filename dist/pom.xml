@@ -164,7 +164,12 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cluster-bootstrap</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>

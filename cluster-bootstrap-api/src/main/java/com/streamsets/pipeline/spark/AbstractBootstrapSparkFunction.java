@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.BootstrapCluster;
-import com.streamsets.pipeline.Utils;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
 
@@ -40,8 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tuple2<T1, T2>>>, Serializable {
-  private static final Logger LOG = LoggerFactory.getLogger(BootstrapSparkFunction.class);
+public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tuple2<T1, T2>>>,
+    Serializable {
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractBootstrapSparkFunction.class);
   private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
   private static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
@@ -51,7 +51,13 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
   private int batchSize;
   private volatile static boolean isPreprocessingMesosDone;
   private static Object lockObject = new Object();
-  public BootstrapSparkFunction() {
+  public AbstractBootstrapSparkFunction() {
+  }
+
+  protected abstract int getBatchSize();
+
+  protected Properties getProperties() {
+    return properties;
   }
 
   private synchronized void initialize() throws Exception {
@@ -73,7 +79,7 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
     properties = BootstrapCluster.getProperties();
-    batchSize = Utils.getKafkaMaxBatchSize(properties);
+    batchSize = getBatchSize();
     initialized = true;
   }
 

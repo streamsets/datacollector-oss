@@ -19,13 +19,23 @@
  */
 package com.streamsets.pipeline.spark;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.VoidFunction;
 
-public class TestSparkStreamingBinding {
+import java.io.Serializable;
 
-  @Test
-  public void testEncode() {
-    Assert.assertEquals("a%2Fb%2Fc", SparkStreamingBinding.encode("a/b/c"));
+/**
+ * This function executes in the driver.
+ */
+public class SparkDriverFunction<T1, T2>  implements Function<JavaPairRDD<T1, T2>, Void>, Serializable {
+
+  public SparkDriverFunction() {
+  }
+
+  @Override
+  public Void call(JavaPairRDD<T1, T2> byteArrayJavaRDD) throws Exception {
+    byteArrayJavaRDD.foreachPartition(new BootstrapSparkFunction());
+    return null;
   }
 }

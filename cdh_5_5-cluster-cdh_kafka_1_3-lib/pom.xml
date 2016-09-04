@@ -173,7 +173,7 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
    </dependency>

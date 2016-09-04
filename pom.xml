@@ -188,7 +188,8 @@
     <module>kudu-protolib</module>
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
-    <module>spark-bootstrap</module>
+    <module>cluster-bootstrap-api</module>
+    <module>cluster-bootstrap</module>
     <module>mesos-bootstrap</module>
     <module>cli</module>
     <module>common-ui</module>

@@ -90,10 +90,9 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- required because we don't inherit from root and root-lib does not define dep spark-bootstrap -->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>

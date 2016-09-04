@@ -468,7 +468,8 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
-        <include>com.streamsets:streamsets-datacollector-spark-bootstrap</include>
+        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-api</include>
+        <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
       </includes>
     </dependencySet>
 
