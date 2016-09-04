@@ -43,12 +43,15 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   private final List<String> fieldsToNull;
   private final List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
+  private final List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace;
 
   public FieldValueReplacerProcessor(List<String> fieldsToNull,
       List<FieldValueReplacerConfig> fieldsToReplaceIfNull,
+      List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace,
       OnStagePreConditionFailure onStagePreConditionFailure) {
     this.fieldsToNull = fieldsToNull;
     this.fieldsToReplaceIfNull = fieldsToReplaceIfNull;
+    this.fieldsToConditionallyReplace = fieldsToConditionallyReplace;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
   }
 
@@ -78,14 +81,84 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
               if (field.getValue() == null) {
                 try {
                   record.set(matchingField, Field.create(field, convertToType(
-                    fieldValueReplacerConfig.newValue, field.getType())));
+                      fieldValueReplacerConfig.newValue, field.getType(), "Replace If Null"))
+                  );
                 } catch (IllegalArgumentException | ParseException e) {
                   throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
-                    field.getType(), e.toString(), e);
+                      field.getType(), e.toString(), e);
                 }
               }
             } else {
               fieldsThatDoNotExist.add(matchingField);
+            }
+          }
+        }
+      }
+    }
+
+    if (fieldsToConditionallyReplace != null && !fieldsToConditionallyReplace.isEmpty()) {
+      for (FieldValueConditionalReplacerConfig fieldValueConditionalReplacerConfig : fieldsToConditionallyReplace) {
+        String operator = fieldValueConditionalReplacerConfig.operator;
+
+        for (String fieldToReplace : fieldValueConditionalReplacerConfig.fieldNames) {
+          for (String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, fieldPaths)) {
+            if (record.has(matchingField)) {
+
+              Field field = record.get(matchingField);
+              Field.Type type = field.getType();
+
+              // always need a valid "replacementValue"
+              if ((fieldValueConditionalReplacerConfig.replacementValue == null) ||
+                  fieldValueConditionalReplacerConfig.replacementValue
+                  .trim()
+                  .equals("") || fieldValueConditionalReplacerConfig.replacementValue.isEmpty()) {
+                throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_05.getMessage()));
+              }
+
+              try {
+                // won't use "comparisonValue" when processing "ALL"-style replacement.
+                if (operator.equals(OperatorChooserValues.ALL.name())) {
+                  record.set(matchingField,
+                      Field.create(field, convertToType(fieldValueConditionalReplacerConfig.replacementValue, type, matchingField))
+                  );
+                  continue;
+                }
+
+                // from here on we need a valid "comparisonValue" value for comparison.
+                if ((
+                    (fieldValueConditionalReplacerConfig.comparisonValue == null) || fieldValueConditionalReplacerConfig.comparisonValue
+                        .trim()
+                        .equals("") || fieldValueConditionalReplacerConfig.comparisonValue.isEmpty()
+                )) {
+                  throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_04.getMessage()));
+                }
+
+                int val = compareIt(field, fieldValueConditionalReplacerConfig.comparisonValue, matchingField);
+                if (val == 0 && operator.equals(OperatorChooserValues.EQUALS.name())) {
+                  record.set(
+                      matchingField,
+                      Field.create(field, convertToType(fieldValueConditionalReplacerConfig.replacementValue, type, matchingField))
+                  );
+
+                } else if (val < 0 && operator.equals(OperatorChooserValues.LESS_THAN.name())) {
+                  record.set(
+                      matchingField,
+                      Field.create(field, convertToType(fieldValueConditionalReplacerConfig.replacementValue, type, matchingField))
+                  );
+
+                } else if (val > 0 && operator.equals(OperatorChooserValues.GREATER_THAN.name())) {
+                  record.set(
+                      matchingField,
+                      Field.create(field, convertToType(fieldValueConditionalReplacerConfig.replacementValue, type, matchingField))
+                  );
+                }
+
+              } catch (Exception e) {
+                throw new IllegalArgumentException(Utils.format(
+                    Errors.VALUE_REPLACER_03.getMessage(),
+                    field.getType(), matchingField
+                ));
+              }
             }
           }
         }
@@ -99,7 +172,75 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     batchMaker.addRecord(record);
   }
 
-  private Object convertToType(String stringValue, Field.Type fieldType) throws ParseException {
+  private int compareIt(Field field, String stringValue, String matchingField) {
+    try {
+      switch (field.getType()) {
+        case BYTE:
+          if (field.getValueAsByte() == (Byte) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsByte() < (Byte) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case SHORT:
+          if (field.getValueAsShort() == (Short) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsShort() < (Short) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case INTEGER:
+          if (field.getValueAsInteger() == (Integer) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsInteger() < (Integer) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case LONG:
+          if (field.getValueAsLong() == (Long) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsLong() < (Long) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case FLOAT:
+          if (field.getValueAsFloat() == (Float) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsFloat() < (Float) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case DOUBLE:
+          if (field.getValueAsDouble() == (Double) convertToType(stringValue, field.getType(), matchingField)) {
+            return 0;
+          } else if (field.getValueAsDouble() < (Double) convertToType(stringValue, field.getType(), matchingField)) {
+            return -1;
+          } else {
+            return 1;
+          }
+
+        case STRING:
+          return field.getValueAsString().compareTo(stringValue);
+
+        default:
+          throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), field.getType(), matchingField));
+      }
+    } catch (Exception e) {
+      throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), field.getType()));
+    }
+  }
+
+  private Object convertToType(String stringValue, Field.Type fieldType, String matchingField) throws ParseException {
     switch (fieldType) {
       case BOOLEAN:
         return Boolean.valueOf(stringValue);
@@ -131,7 +272,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       case SHORT:
         return Short.valueOf(stringValue);
       case FILE_REF:
-        throw new IllegalArgumentException(Utils.format("Cannot convert String value to type {}", fieldType));
+        throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_03.getMessage(), fieldType, matchingField));
       case LIST_MAP:
       case LIST:
       case MAP:

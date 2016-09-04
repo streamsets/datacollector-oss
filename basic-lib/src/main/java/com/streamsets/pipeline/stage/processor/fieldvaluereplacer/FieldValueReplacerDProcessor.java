@@ -59,7 +59,8 @@ public class FieldValueReplacerDProcessor extends DProcessor {
 
   @ConfigDef(
       required = false,
-      type = Type.MODEL, defaultValue="",
+      type = Type.MODEL,
+      defaultValue="",
       label = "Replace Null Values",
       description="Replaces the null values in a field with a specified value.",
       displayPosition = 20,
@@ -69,19 +70,35 @@ public class FieldValueReplacerDProcessor extends DProcessor {
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "TO_ERROR",
-    label = "Field Does Not Exist",
-    description="Action for data that does not contain the specified fields",
-    displayPosition = 30,
-    group = "REPLACE"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "TO_ERROR",
+      label = "Field Does Not Exist",
+      description="Action for data that does not contain the specified fields",
+      displayPosition = 40,
+      group = "REPLACE"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
 
+  @ConfigDef(
+      required = false,
+      type = Type.MODEL,
+      defaultValue="",
+      label = "Conditionally Replace Values",
+      description="Conditionally replaces values with new specified value.",
+      displayPosition = 30,
+      group = "REPLACE"
+  )
+  @ListBeanModel
+  public List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace;
+
   @Override
   protected Processor createProcessor() {
-    return new FieldValueReplacerProcessor(fieldsToNull, fieldsToReplaceIfNull, onStagePreConditionFailure);
+    return new FieldValueReplacerProcessor(
+        fieldsToNull,
+        fieldsToReplaceIfNull,
+        fieldsToConditionallyReplace,
+        onStagePreConditionFailure);
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  VALUE_REPLACER_00("Failed to convert value '{}' to type '{}': {}"),
-  VALUE_REPLACER_01("Record '{}' does not contain fields '{}'"),
-  VALUE_REPLACER_02("Cannot Conditionally Replace Data Type {}"),
-  VALUE_REPLACER_03("Cannot convert String value to type {} in field {}"),
-  VALUE_REPLACER_04("Literal value required for < = > operands"),
-  VALUE_REPLACER_05("Replacement value required"),
+public enum OperatorChooserValues  implements Label  {
+  LESS_THAN("<"),
+  EQUALS("="),
+  GREATER_THAN(">"),
+  ALL("ALL"),
+
   ;
 
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
+  private final String label;
+
+  OperatorChooserValues(String label) {
+    this.label = label;
   }
 
   @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+  public String getLabel() {
+    return label;
   }
 
 }
