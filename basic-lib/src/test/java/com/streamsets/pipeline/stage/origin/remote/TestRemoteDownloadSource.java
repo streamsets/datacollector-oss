@@ -976,6 +976,57 @@ public class TestRemoteDownloadSource {
 
   }
 
+  @Test
+  public void testReadFileInMultipleRuns() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testReadFileInMultipleRuns";
+
+    Path filePath =  Paths.get(path + "/testReadFileInMultipleRuns.txt");
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    java.nio.file.Files.write(
+        filePath,
+        ("1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "10\n").getBytes(),
+        StandardOpenOption.CREATE_NEW
+    );
+
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.TEXT,
+            null
+        ));
+
+    int totalRecordsRead = 0, runTimes = 0, expectedRecordCount = 10, totalRunTimes = expectedRecordCount * 2;
+    String lastOffset = RemoteDownloadSource.NOTHING_READ;
+    while (runTimes < totalRunTimes) {
+      SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        //no more files to process, this will fail.
+        StageRunner.Output op = runner.runProduce(lastOffset, 5);
+        lastOffset = op.getNewOffset();
+        List<Record> actual = op.getRecords().get("lane");
+        totalRecordsRead += actual.size();
+      } finally {
+        runner.runDestroy();
+      }
+      runTimes++;
+    }
+    Assert.assertEquals(expectedRecordCount, totalRecordsRead);
+  }
+
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,

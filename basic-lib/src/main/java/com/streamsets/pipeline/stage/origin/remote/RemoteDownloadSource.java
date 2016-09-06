@@ -239,7 +239,7 @@ public class RemoteDownloadSource extends BaseSource {
       Optional<RemoteFile> nextOpt = null;
       // Time to read the next file
       if (currentStream == null) {
-          nextOpt = getNextFile();
+        nextOpt = getNextFile();
         if (nextOpt.isPresent()) {
           next = nextOpt.get();
           // When starting up, reset to offset 0 of the file picked up for read only if:
@@ -448,15 +448,24 @@ public class RemoteDownloadSource extends BaseSource {
   public void destroy() {
     LOG.info(Utils.format("Destroying {}", getInfo().getInstanceName()));
     try {
+      if (currentStream != null) {
+        currentStream.close();
+      }
       if (remoteDir != null) {
         remoteDir.close();
         FileSystem fs = remoteDir.getFileSystem();
         remoteDir.getFileSystem().getFileSystemManager().closeFileSystem(fs);
+
       }
-    } catch (FileSystemException ex) {
-      LOG.warn("Error closing remote directory", ex);
+    } catch (IOException ex) {
+      LOG.warn("Error during destroy", ex);
+    } finally {
+      remoteDir = null;
+      //This forces the use of same RemoteDownloadSource object
+      //not to have dangling reference to old stream (which is closed)
+      //Also forces to initialize the next in produce call.
+      currentStream = null;
     }
-    remoteDir = null;
   }
 
   // Offset format: Filename::timestamp::offset. I miss case classes here.
