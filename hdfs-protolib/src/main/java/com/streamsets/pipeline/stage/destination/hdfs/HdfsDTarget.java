@@ -34,6 +34,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     icon = "hdfs.png",
     privateClassLoader = true,
     upgrader = HdfsTargetUpgrader.class,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Destinations/HadoopFS-destination.html#task_m2m_skm_zq"
 )
 @ConfigGroups(Groups.class)
