@@ -144,6 +144,8 @@ public class PipelineConfigurationValidator {
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
+    upgradeBadRecordsHandlingStage(pipelineConfiguration);
+
     if (LOG.isTraceEnabled() && issues.hasIssues()) {
       for (Issue issue : issues.getPipelineIssues()) {
         LOG.trace("Pipeline '{}', {}", name, issue);
@@ -1295,4 +1297,17 @@ public class PipelineConfigurationValidator {
     return valid;
   }
 
+  private void upgradeBadRecordsHandlingStage(PipelineConfiguration pipelineConfiguration) {
+    // If there are upgrades on Error Record Stage Lib, upgrade "badRecordsHandling" config value
+    final String label = "badRecordsHandling";
+    Config config = pipelineConfiguration.getConfiguration(label);
+    StageConfiguration errorStageConfig = pipelineConfiguration.getErrorStage();
+    final String errorStageName = errorStageConfig == null ? "" : errorStageConfig.getLibrary() + "::"
+        + errorStageConfig.getStageName() + "::" + errorStageConfig.getStageVersion();
+
+    if (!(config == null || config.getValue() == null|| config.getValue().equals(errorStageName))) {
+      pipelineConfiguration.getConfiguration().remove(config);
+      pipelineConfiguration.getConfiguration().add(new Config(label, errorStageName));
+    }
+  }
 }
