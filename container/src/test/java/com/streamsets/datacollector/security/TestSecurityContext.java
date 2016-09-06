@@ -30,7 +30,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.security.auth.Subject;
+import javax.security.auth.kerberos.KerberosTicket;
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -146,6 +148,28 @@ public class TestSecurityContext {
     Assert.assertNotNull(subject);
     System.out.println(subject);
     context.logout();
+  }
+
+  @Test
+  public void testRenewalCalculation() {
+    Configuration conf = new Configuration();
+    SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
+    context = Mockito.spy(context);
+
+    Assert.assertEquals(context.getRenewalWindow(), context.getRenewalWindow(), 0.001);
+    Assert.assertTrue(context.getRenewalWindow() >= 0.5);
+    Assert.assertTrue(context.getRenewalWindow() < 0.7);
+
+    // brute force test
+    for (int i = 0; i < 1000; i++) {
+      double window = context.computeRenewalWindow();
+      Assert.assertTrue(window >= 0.5);
+      Assert.assertTrue(window < 0.7);
+    }
+
+    // renewal time
+    Mockito.doReturn(0.5D).when(context).getRenewalWindow();
+    Assert.assertEquals(10 + (long)(0.5D * (20 - 10)), context.getRenewalTime(10, 20), 0.001);
   }
 
 }

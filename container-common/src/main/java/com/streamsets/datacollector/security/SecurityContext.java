@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -56,20 +57,30 @@ public class SecurityContext {
   private static final Logger LOG = LoggerFactory.getLogger(SecurityContext.class);
   private static final long THIRTY_SECONDS_MS = TimeUnit.SECONDS.toMillis(30);
 
-  private final RuntimeInfo runtimeInfo;
   private final SecurityConfiguration securityConfiguration;
-  private final Random random;
   private LoginContext loginContext;
   private Subject subject;
   private Thread renewalThread;
   private double renewalWindow;
 
   public SecurityContext(RuntimeInfo runtimeInfo, Configuration serviceConf) {
-    this.runtimeInfo = runtimeInfo;
     this.securityConfiguration = new SecurityConfiguration(runtimeInfo, serviceConf);
-    this.random = new Random();
-    // choose a random window between 0.5 and 0.8
-    renewalWindow = (random.nextDouble() * 30 + 50)/100;
+    renewalWindow =  computeRenewalWindow();
+  }
+
+  @VisibleForTesting
+  double computeRenewalWindow() {
+    return (50D + new Random().nextInt(20)) / 100;
+  }
+
+  @VisibleForTesting
+  double getRenewalWindow() {
+    return renewalWindow;
+  }
+
+  @VisibleForTesting
+  long getRenewalTime(long start, long end) {
+    return start + (long) (getRenewalWindow() * (end - start));
   }
 
   public SecurityConfiguration getSecurityConfiguration() {
@@ -105,7 +116,7 @@ public class SecurityContext {
   private synchronized long calculateRenewalTime(KerberosTicket kerberosTicket) {
     long start = kerberosTicket.getStartTime().getTime();
     long end = kerberosTicket.getEndTime().getTime();
-    long renewTime = start + (long) ((end - start) * renewalWindow);
+    long renewTime = getRenewalTime(start, end);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Ticket: {}, numPrivateCredentials: {}, ticketStartTime: {}, ticketEndTime: {}, now: {}, renewalTime: {}",
         System.identityHashCode(kerberosTicket), subject.getPrivateCredentials().size(), new Date(start), new Date(end),
