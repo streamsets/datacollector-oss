@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.security;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import org.apache.hadoop.minikdc.MiniKdc;
@@ -30,11 +31,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.security.auth.Subject;
+import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KerberosTicket;
 import java.io.File;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TestSecurityContext {
   private static File testDir;
@@ -170,6 +175,46 @@ public class TestSecurityContext {
     // renewal time
     Mockito.doReturn(0.5D).when(context).getRenewalWindow();
     Assert.assertEquals(10 + (long)(0.5D * (20 - 10)), context.getRenewalTime(10, 20), 0.001);
+  }
+
+  private KerberosTicket createMockTGT(String name, Date start, Date end) {
+    KerberosPrincipal userPrincipal = new KerberosPrincipal(name);
+    KerberosPrincipal serverPrincipal = new KerberosPrincipal("krbtgt/" + userPrincipal.getRealm());
+    return new KerberosTicket(new byte[0], userPrincipal,  serverPrincipal, new byte[0], 0, new boolean[0],
+        start, start, end, end, new InetAddress[0]);
+  }
+
+  @Test
+  public void testGetKerberosTicket() {
+    long now = System.currentTimeMillis();
+    Date expired = new Date(now - TimeUnit.MINUTES.toMillis(30));
+    Date valid = new Date(now + TimeUnit.DAYS.toMillis(1));
+
+    KerberosTicket expiredTicket = createMockTGT("short", expired, expired);
+    KerberosTicket validTicket = createMockTGT("valid", valid, valid);
+
+
+    Configuration conf = new Configuration();
+    SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
+    context = Mockito.spy(context);
+    Mockito.doReturn(now).when(context).getTimeNow();
+
+    // 1 ticket, expired, we should return null and remove it from the subject
+    Subject subject = new Subject();
+    Mockito.doReturn(subject).when(context).getSubject();
+    subject.getPrivateCredentials().add(expiredTicket);
+    Assert.assertNull(context.getKerberosTicket());
+    Assert.assertTrue(subject.getPrivateCredentials().isEmpty());
+
+    // 2 tickets, 1 expired one not, one short other long expired, we should return the non expired one
+    // and remove the expired on from subject
+    subject = new Subject();
+    Mockito.doReturn(subject).when(context).getSubject();
+    Mockito.doReturn(now).when(context).getTimeNow();
+    subject.getPrivateCredentials().add(expiredTicket);
+    subject.getPrivateCredentials().add(validTicket);
+    Assert.assertEquals(validTicket, context.getKerberosTicket());
+    Assert.assertEquals(ImmutableSet.of(validTicket), subject.getPrivateCredentials());
   }
 
 }

@@ -59,7 +59,7 @@ public class SecurityContext {
 
   private final SecurityConfiguration securityConfiguration;
   private LoginContext loginContext;
-  private Subject subject;
+  private volatile Subject subject;
   private Thread renewalThread;
   private double renewalWindow;
 
@@ -87,30 +87,53 @@ public class SecurityContext {
     return securityConfiguration;
   }
 
+  @VisibleForTesting
+  long getTimeNow() {
+    return System.currentTimeMillis();
+  }
+
   /**
-   * Get the Kerberos TGT
+   * Get the Kerberos TGT, it purges old expired tickets from Subject
    * @return the user's TGT or null if none was found
    */
-  private synchronized KerberosTicket getKerberosTicket() {
+  @VisibleForTesting
+  synchronized KerberosTicket getKerberosTicket() {
+    KerberosTicket found = null;
+    Set<KerberosTicket> expiredTickets = new HashSet<>();
     SortedSet<KerberosTicket> tickets = new TreeSet<>(new Comparator<KerberosTicket>() {
       @Override
       public int compare(KerberosTicket ticket1, KerberosTicket ticket2) {
         return Long.compare(ticket1.getEndTime().getTime(), ticket2.getEndTime().getTime());
       }
     });
-    for (KerberosTicket ticket : subject.getPrivateCredentials(KerberosTicket.class)) {
+    for (KerberosTicket ticket : getSubject().getPrivateCredentials(KerberosTicket.class)) {
       KerberosPrincipal principal = ticket.getServer();
       String principalName = Utils.format("krbtgt/{}@{}", principal.getRealm(), principal.getRealm());
       if (principalName.equals(principal.getName())) {
+        if (ticket.getEndTime().getTime() < getTimeNow()) {
+          // the ticket in question expired, we should remove it from the subject as it is useless
+          expiredTickets.add(ticket);
+          LOG.debug("Found expired Kerberos ticket '{}', will remove it", ticket.getServer().getName());
+        }
         tickets.add(ticket);
-        calculateRenewalTime(ticket);
       }
     }
-    if (tickets.isEmpty()) {
-      return null;
-    } else {
-      return tickets.last(); // most recent ticket
+    if (!tickets.isEmpty()) {
+      // lets get the most recent ticket
+      found = tickets.last();
+      // take out the last ticket from expired tickets as we don' want to purge it as we want to renew that one
+      // this should not really happen as we renew before the expire
+      if (expiredTickets.contains(found)) {
+        LOG.warn("Last Kerberos ticket '{}' already expired", found.getServer().getName());
+        found = null;
+      }
     }
+    if (!expiredTickets.isEmpty()) {
+      // removing expired tickets from subject
+      getSubject().getPrivateCredentials().removeAll(expiredTickets);
+      LOG.debug("Removed '{}' expired Kerberos tickets from SDC subject", expiredTickets.size());
+    }
+    return found;
   }
 
   private synchronized long calculateRenewalTime(KerberosTicket kerberosTicket) {
@@ -118,9 +141,15 @@ public class SecurityContext {
     long end = kerberosTicket.getEndTime().getTime();
     long renewTime = getRenewalTime(start, end);
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Ticket: {}, numPrivateCredentials: {}, ticketStartTime: {}, ticketEndTime: {}, now: {}, renewalTime: {}",
-        System.identityHashCode(kerberosTicket), subject.getPrivateCredentials().size(), new Date(start), new Date(end),
-        new Date(), new Date(renewTime));
+      LOG.trace(
+          "Ticket: {}, numPrivateCredentials: {}, ticketStartTime: {}, ticketEndTime: {}, now: {}, renewalTime: {}",
+          System.identityHashCode(kerberosTicket),
+          getSubject().getPrivateCredentials(KerberosTicket.class).size(),
+          new Date(start),
+          new Date(end),
+          new Date(),
+          new Date(renewTime)
+      );
     }
     return Math.max(1, renewTime - System.currentTimeMillis());
   }
@@ -135,12 +164,22 @@ public class SecurityContext {
     }
   }
 
+  @VisibleForTesting
+  boolean sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+      return true;
+    } catch (InterruptedException ex) {
+      return false;
+    }
+  }
+
   /**
    * Logs in. If Kerberos is enabled it logs in against the KDC, otherwise is a NOP.
    */
   public synchronized void login() {
     if (subject != null) {
-      throw new IllegalStateException(Utils.format("Service already logged-in, Principal '{}'",
+      throw new IllegalStateException(Utils.format("Service already login, Principal '{}'",
                                                    subject.getPrincipals()));
     }
     if (securityConfiguration.isKerberosEnabled()) {
@@ -154,22 +193,37 @@ public class SecurityContext {
         renewalThread = new Thread() {
           @Override
           public void run() {
+            LOG.debug("Starting renewal thread");
+            if (!SecurityContext.this.sleep(THIRTY_SECONDS_MS)) {
+              LOG.info("Interrupted, exiting renewal thread");
+              return;
+            }
             while (true) {
+              LOG.trace("Renewal check starts");
               try {
                 KerberosTicket kerberosTicket = getKerberosTicket();
                 if (kerberosTicket == null) {
-                  LOG.error("Could not obtain kerberos ticket");
-                  TimeUnit.MILLISECONDS.sleep(THIRTY_SECONDS_MS);
+                  LOG.warn(
+                      "Could not obtain kerberos ticket, it may have expired already or it was logged out, will wait" +
+                      "30 secs to attempt a relogin"
+                  );
+                  LOG.trace("Ticket not found, sleeping 30 secs and trying to login");
+                  if (!SecurityContext.this.sleep(THIRTY_SECONDS_MS)) {
+                    LOG.info("Interrupted, exiting renewal thread");
+                    return;
+                  }
                 } else {
                   long renewalTimeMs = calculateRenewalTime(kerberosTicket) - THIRTY_SECONDS_MS;
+                  LOG.trace("Ticket found time to renewal '{}ms', sleeping that time", renewalTimeMs);
                   if (renewalTimeMs > 0) {
-                    TimeUnit.MILLISECONDS.sleep(renewalTimeMs);
+                    if (!SecurityContext.this.sleep(renewalTimeMs)) {
+                      LOG.info("Interrupted, exiting renewal thread");
+                      return;
+                    }
                   }
-                  relogin();
                 }
-              } catch (InterruptedException ie) {
-                LOG.info("Interrupted, exiting renewal thread");
-                return;
+                LOG.debug("Triggering relogin");
+                relogin();
               } catch (Exception exception) {
                 LOG.error("Stopping renewal thread because of exception: " + exception, exception);
                 return;
@@ -193,7 +247,7 @@ public class SecurityContext {
     } else {
       subject = new Subject();
     }
-    LOG.debug("Logged-in. Kerberos enabled '{}', Principal '{}'", securityConfiguration.isKerberosEnabled(),
+    LOG.debug("Login. Kerberos enabled '{}', Principal '{}'", securityConfiguration.isKerberosEnabled(),
       subject.getPrincipals());
   }
 
@@ -249,6 +303,7 @@ public class SecurityContext {
         )
     );
     context.login();
+    LOG.info("Login, principal '{}'", principalName);
     return context;
   }
 
