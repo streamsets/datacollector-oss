@@ -20,6 +20,7 @@
 package com.streamsets.lib.security.http;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -52,6 +53,7 @@ public class RemoteSSOService extends AbstractSSOService {
   private String componentId;
   private volatile int connTimeout;
   private int dpmRegistrationMaxRetryAttempts;
+  private volatile boolean serviceActive;
 
   @Override
   public void setConfiguration(Configuration conf) {
@@ -123,6 +125,10 @@ public class RemoteSSOService extends AbstractSSOService {
     connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
   }
 
+  public boolean isServiceActive() {
+    return serviceActive;
+  }
+
   @Override
   public void register(Map<String, String> attributes) {
     if (appToken.isEmpty() || componentId.isEmpty()) {
@@ -151,12 +157,7 @@ public class RemoteSSOService extends AbstractSSOService {
         if (attempts > 0) {
           delaySecs = delaySecs * 2;
           delaySecs = Math.min(delaySecs, 16);
-          String msg = Utils.format("DPM registration attempt '{}', waiting for '{}' seconds before retrying ...",
-              attempts,
-              delaySecs
-          );
-          LOG.warn(msg);
-          System.out.println(msg);
+          LOG.warn("DPM registration attempt '{}', waiting for '{}' seconds before retrying ...", attempts, delaySecs);
           sleep(delaySecs);
         }
         attempts++;
@@ -169,25 +170,26 @@ public class RemoteSSOService extends AbstractSSOService {
             registered = true;
             break;
           } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
-            String msg = Utils.format("DPM Registration unavailable");
-            LOG.warn(msg);
-            System.out.println(msg);
-          }  else {
-            String msg = Utils.format("Failed to registered to DPM, HTTP status '{}': {}", response.getStatus(),
-                response.getError());
-            LOG.warn(msg);
-            throw new RuntimeException(msg);
+            LOG.warn("DPM Registration unavailable");
+          }  else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+            throw new RuntimeException(Utils.format(
+                "Failed registration for component ID '{}': {}",
+                componentId,
+                response.getError()
+            ));
+          } else {
+            LOG.warn("Failed to registered to DPM, HTTP status '{}': {}", response.getStatus(), response.getError());
+            break;
           }
         } catch (IOException ex) {
-          String msg = Utils.format("DPM Registration failed: {}", ex.getMessage());
-          LOG.warn(msg, ex);
-          System.out.println(msg);
+          LOG.warn("DPM Registration failed: {}", ex.toString());
         }
       }
-      if (!registered) {
-        String msg = Utils.format("DPM registration failed after '{}' attempts", attempts);
-        LOG.warn(msg);
-        throw new RuntimeException(msg);
+      if (registered) {
+        clearCaches();
+        serviceActive = true;
+      } else {
+        LOG.warn("DPM registration failed after '{}' attempts", attempts);
       }
     }
   }
@@ -211,6 +213,7 @@ public class RemoteSSOService extends AbstractSSOService {
 
   protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken)
       throws ForbiddenException {
+    Utils.checkState(isServiceActive(), "Security service not active");
     ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
     authTokenJson.setAuthToken(userAuthToken);
     SSOPrincipalJson principal;
@@ -231,7 +234,10 @@ public class RemoteSSOService extends AbstractSSOService {
         ));
       }
     } catch (IOException ex){
-      throw new RuntimeException(Utils.format("Could not do user token validation: {}", ex.toString()), ex);
+      LOG.warn("Could not do user token validation, going inactive: {}", ex.toString());
+      serviceActive = false;
+      Map error = ImmutableMap.of("message", "Could not connect to security service: " + ex.toString());
+      throw new ForbiddenException(error);
     }
     if (principal != null) {
       principal.setTokenStr(userAuthToken);
@@ -243,6 +249,7 @@ public class RemoteSSOService extends AbstractSSOService {
 
   protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
       throws ForbiddenException {
+    Utils.checkState(isServiceActive(), "Security service not active");
     ValidateComponentAuthTokenJson authTokenJson = new ValidateComponentAuthTokenJson();
     authTokenJson.setComponentId(componentId);
     authTokenJson.setAuthToken(authToken);
@@ -264,7 +271,10 @@ public class RemoteSSOService extends AbstractSSOService {
         ));
       }
     } catch (IOException ex){
-      throw new RuntimeException(Utils.format("Could not do app token validation: {}", ex.toString(), ex));
+      LOG.warn("Could not do app token validation, going inactive: {}", ex.toString());
+      serviceActive = false;
+      Map error = ImmutableMap.of("message", "Could not connect to seucirty service: " + ex.toString());
+      throw new ForbiddenException(error);
     }
     if (principal != null) {
       principal.setTokenStr(authToken);

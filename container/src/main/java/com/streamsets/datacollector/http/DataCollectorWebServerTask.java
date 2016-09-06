@@ -65,4 +65,8 @@ public class DataCollectorWebServerTask extends WebServerTask {
         .build();
   }
 
+  protected boolean isDisconnectedSSOModeEnabled() {
+    return true;
+  }
+
 }

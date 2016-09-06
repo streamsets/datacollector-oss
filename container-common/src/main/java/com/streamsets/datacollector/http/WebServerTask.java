@@ -26,6 +26,9 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DisconnectedSSOManager;
+import com.streamsets.lib.security.http.DisconnectedSSOService;
+import com.streamsets.lib.security.http.FailoverSSOService;
 import com.streamsets.lib.security.http.ProxySSOService;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAuthenticator;
@@ -433,6 +436,10 @@ public abstract class WebServerTask extends AbstractTask {
     return remoteSsoService;
   }
 
+  protected boolean isDisconnectedSSOModeEnabled() {
+    return false;
+  }
+
   private ConstraintSecurityHandler configureSSO(
       final Configuration appConf, ServletContextHandler appHandler, final String appContext
   ) {
@@ -443,25 +450,44 @@ public abstract class WebServerTask extends AbstractTask {
 
     LOG.debug("Initializing DPM componentId '{}'", componentId);
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    SSOService ssoService = null;
-    final RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
+
+    final SSOService ssoService;
+
+    RemoteSSOService remoteSsoService = createRemoteSSOService(appConf);
     remoteSsoService.setComponentId(componentId);
     remoteSsoService.setApplicationAuthToken(appToken);
     LOG.info("DPM component ID '{}' application authentication token '{}'", componentId, SSOUtils.tokenForLog
         (appToken));
+
+    if (isDisconnectedSSOModeEnabled()) {
+      LOG.info("Support for DPM disconnected mode is enabled");
+      DisconnectedSSOManager disconnectedSSOManager =
+          new DisconnectedSSOManager(getRuntimeInfo().getDataDir(), appConf);
+      disconnectedSSOManager.setEnabled(true);
+      disconnectedSSOManager.registerResources(appHandler);
+      DisconnectedSSOService disconnectedSSOService = disconnectedSSOManager.getSsoService();
+
+      ssoService = new FailoverSSOService(remoteSsoService, disconnectedSSOService);
+    } else {
+      LOG.debug("Support for DPM disconnected mode is disabled");
+      ssoService = remoteSsoService;
+    }
+
     addToPostStart(new Runnable() {
       @Override
       public void run() {
         LOG.debug("Validating application token for DPM component ID '{}'", componentId);
-        remoteSsoService.register(getRegistrationAttributes());
+        ssoService.register(getRegistrationAttributes());
         runtimeInfo.setRemoteRegistrationStatus(true);
       }
     });
-    ssoService = new ProxySSOService(remoteSsoService);
+
+    SSOService proxySsoService = new ProxySSOService(ssoService);
+
     // registering ssoService with runtime, to enable cache flushing
-    ((List)getRuntimeInfo().getAttribute(SSO_SERVICES_ATTR)).add(ssoService);
-    appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
-    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, appConf));
+    ((List)getRuntimeInfo().getAttribute(SSO_SERVICES_ATTR)).add(proxySsoService);
+    appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, proxySsoService);
+    security.setAuthenticator(new SSOAuthenticator(appContext, proxySsoService, appConf));
     return security;
   }
 

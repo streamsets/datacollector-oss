@@ -221,7 +221,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       try {
         callRemoteControl();
       } catch (Exception ex) {
-        LOG.error(Utils.format("Unexpected exception: '{}'", ex), ex);
+        LOG.warn("Cannot connect to send/receive events: {}", ex.toString());
       } finally {
         executorService.schedule(new EventHandlerCallable(remoteDataCollector,
             eventClient,

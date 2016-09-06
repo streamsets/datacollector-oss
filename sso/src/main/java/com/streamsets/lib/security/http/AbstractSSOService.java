@@ -232,8 +232,7 @@ public abstract class AbstractSSOService implements SSOService {
               "Exception while doing remote validation for token '{}' component '{}': {}",
               tokenForLog,
               componentId,
-              ex.toString(),
-              ex
+              ex.toString()
           );
         } finally {
           trace("Released lock for token '{}' component '{}'", tokenForLog, componentId);

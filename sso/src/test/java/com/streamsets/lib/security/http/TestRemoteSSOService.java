@@ -86,6 +86,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
+    Mockito.doReturn(true).when(service).isServiceActive();
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 
@@ -119,6 +120,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
+    Mockito.doReturn(true).when(service).isServiceActive();
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 
@@ -219,15 +221,11 @@ public class TestRemoteSSOService {
     } else {
       Mockito.when(response.getStatus()).thenThrow(new IOException());
     }
-    try {
-      service.register(Collections.<String, String>emptyMap());
-      Assert.fail();
-    } catch (RuntimeException ex) {
-      ArgumentCaptor<Integer> sleepCaptor = ArgumentCaptor.forClass(Integer.class);
-      Mockito.verify(service, Mockito.times(6)).sleep(sleepCaptor.capture());
-      Assert.assertEquals(ImmutableList.of(2, 4, 8, 16, 16, 16), sleepCaptor.getAllValues());
-      Assert.assertEquals("DPM registration failed after '7' attempts", ex.getMessage());
-    }
+    service.register(Collections.<String, String>emptyMap());
+    Assert.assertFalse(service.isServiceActive());
+    ArgumentCaptor<Integer> sleepCaptor = ArgumentCaptor.forClass(Integer.class);
+    Mockito.verify(service, Mockito.times(6)).sleep(sleepCaptor.capture());
+    Assert.assertEquals(ImmutableList.of(2, 4, 8, 16, 16, 16), sleepCaptor.getAllValues());
   }
 
   @Test
