@@ -163,6 +163,7 @@ public class MapReduceConfig {
         confFile.getAbsolutePath())
       );
     } else {
+      LOG.debug("Loading configuration file: {}", confFile.getAbsoluteFile());
       configuration.addResource(new Path(confFile.getAbsolutePath()));
     }
   }

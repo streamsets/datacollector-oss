@@ -19,11 +19,19 @@
  */
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
+import com.streamsets.pipeline.stage.destination.mapreduce.MapreduceUtils;
+import org.apache.avro.mapred.FsInput;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
+import org.apache.parquet.SemanticVersion;
+import org.apache.parquet.avro.AvroParquetWriter;
+import org.apache.parquet.bytes.BytesInput;
+import org.apache.parquet.column.ParquetProperties;
+import org.apache.parquet.format.CompressionCodec;
+import org.apache.parquet.hadoop.ParquetWriter;
 
 import java.util.concurrent.Callable;
 
@@ -45,6 +53,15 @@ public class AvroParquetConvertCreator implements Configurable, Callable<Job> {
   public Job call() throws Exception {
     // We're explicitly disabling speculative execution
     conf.set("mapreduce.map.speculative", "false");
+    MapreduceUtils.addJarsToJob(conf,
+      SemanticVersion.class,
+      ParquetWriter.class,
+      AvroParquetWriter.class,
+      FsInput.class,
+      CompressionCodec.class,
+      ParquetProperties.class,
+      BytesInput.class
+    );
 
     Job job = Job.getInstance(conf);
 

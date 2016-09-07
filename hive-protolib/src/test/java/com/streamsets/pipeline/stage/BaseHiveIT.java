@@ -36,6 +36,8 @@ import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStore;
 import org.apache.hadoop.hive.shims.ShimLoader;
+import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.MiniMRCluster;
 import org.apache.hive.service.server.HiveServer2;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -78,6 +80,7 @@ public abstract class BaseHiveIT {
   // Mini cluster instances
   private static String confDir = "target/" + UUID.randomUUID().toString();
   private static MiniDFSCluster miniDFS;
+  private static MiniMRCluster miniMR;
   private static ExecutorService hiveMetastoreExecutor = Executors.newSingleThreadExecutor();
   private static HiveServer2 hiveServer2;
   private static Connection hiveConnection;
@@ -127,10 +130,11 @@ public abstract class BaseHiveIT {
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
     miniDFS = new MiniDFSCluster.Builder(conf).build();
     miniDFS.getFileSystem().setPermission(new Path("/"), FsPermission.createImmutable((short)0777));
-    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/core-site.xml");
-    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/hdfs-site.xml");
-    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/mapred-site.xml");
-    writeConfiguration(miniDFS.getConfiguration(0), confDir + "/yarn-site.xml");
+    miniMR = new MiniMRCluster(0, 0, 1, miniDFS.getFileSystem().getUri().toString(), 1, null, null, null, new JobConf(miniDFS.getConfiguration(0)));
+    writeConfiguration(miniMR.createJobConf(), confDir + "/core-site.xml");
+    writeConfiguration(miniMR.createJobConf(), confDir + "/hdfs-site.xml");
+    writeConfiguration(miniMR.createJobConf(), confDir + "/mapred-site.xml");
+    writeConfiguration(miniMR.createJobConf(), confDir + "/yarn-site.xml");
 
     // Configuration for both HMS and HS2
     final HiveConf hiveConf = new HiveConf(miniDFS.getConfiguration(0), HiveConf.class);
@@ -191,6 +195,11 @@ public abstract class BaseHiveIT {
     }
 
     hiveMetastoreExecutor.shutdownNow();
+
+    if(miniMR != null) {
+      miniMR.shutdown();
+      miniMR = null;
+    }
 
     if (miniDFS != null) {
       miniDFS.shutdown();
