@@ -198,8 +198,8 @@ public class AvroSchemaConverterLogicalTypesPre19 {
     if (logicalType != null) {
       if (LOGICAL_TYPE_DECIMAL.equals(logicalType)) {
         builder = (Types.PrimitiveBuilder<PrimitiveType>) builder.as(DECIMAL)
-          .precision(schema.getJsonProp(LOGICAL_PROP_PRECISION).asInt())
-          .scale(schema.getJsonProp(LOGICAL_PROP_SCALE).asInt());
+          .precision(schema.getJsonProp(LOGICAL_PROP_PRECISION).getIntValue())
+          .scale(schema.getJsonProp(LOGICAL_PROP_SCALE).getIntValue());
 
       } else {
         OriginalType annotation = convertLogicalType(logicalType);
