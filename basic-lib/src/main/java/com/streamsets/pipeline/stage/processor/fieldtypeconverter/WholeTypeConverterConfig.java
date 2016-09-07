@@ -22,12 +22,7 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.config.DateFormat;
-import com.streamsets.pipeline.config.LocaleChooserValues;
-import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
-
-import java.util.Locale;
 
 /**
  * Describe what types (all fields of given type) should be converted to what type.
@@ -44,3 +39,4 @@ public class WholeTypeConverterConfig extends BaseConverterConfig {
   @ValueChooserModel(PrimitiveFieldTypeChooserValues.class)
   public Field.Type sourceType;
 }
+

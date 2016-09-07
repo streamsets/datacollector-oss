@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
@@ -91,6 +92,18 @@ public class BaseConverterConfig {
       triggeredByValue = "OTHER"
   )
   public String otherDateFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "CharSet",
+      displayPosition = 80,
+      dependsOn = "targetType",
+      triggeredByValue = "STRING"
+  )
+  @ValueChooserModel(CharsetChooserValues.class)
+  public String encoding = "UTF-8";
 
   /**
    * Return configured date mask.

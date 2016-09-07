@@ -148,6 +148,14 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    if(field.getType() == Field.Type.BYTE_ARRAY && converterConfig.targetType == Field.Type.STRING) {
+      try {
+        return Field.create(converterConfig.targetType, new String(field.getValueAsByteArray(), converterConfig.encoding));
+      } catch (Exception e) {
+        throw new StageException(Errors.CONVERTER_01, converterConfig.encoding);
+      }
+    }
+
     // Use the built in type conversion provided by TypeSupport
     try {
       // Use the built in type conversion provided by TypeSupport

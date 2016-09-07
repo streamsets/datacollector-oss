@@ -82,12 +82,13 @@ public class FieldTypeConverterDProcessor extends DProcessor {
   @ListBeanModel
   public List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
 
+
   @Override
   protected Processor createProcessor() {
     return new FieldTypeConverterProcessor(
       convertBy,
       fieldTypeConverterConfigs,
       wholeTypeConverterConfigs
-    );
+        );
   }
 }

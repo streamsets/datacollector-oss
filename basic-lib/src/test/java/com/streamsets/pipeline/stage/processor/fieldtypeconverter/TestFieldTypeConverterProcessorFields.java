@@ -32,6 +32,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1413,6 +1414,74 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(Field.Type.DATE, result.get("date7").getType());
       SimpleDateFormat date7DateFormat = new SimpleDateFormat(date7.dateFormat.getFormat());
       Assert.assertEquals("2016-08-15T18:32:12.777Z", date7DateFormat.format(result.get("date7").getValue()));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testByteArrayToString() throws StageException {
+    FieldTypeConverterConfig converter1 =
+        new FieldTypeConverterConfig();
+    converter1.fields = ImmutableList.of("/byteUTF8");
+    converter1.encoding = "UTF-8";
+    converter1.targetType = Field.Type.STRING;
+    converter1.dataLocale = "en";
+
+    FieldTypeConverterConfig converter2 =
+        new FieldTypeConverterConfig();
+    converter2.fields = ImmutableList.of("/byteGBK");
+    converter2.encoding = "GBK";
+    converter2.targetType = Field.Type.STRING;
+    converter2.dataLocale = "en";
+
+    FieldTypeConverterConfig converter3 =
+        new FieldTypeConverterConfig();
+    converter3.fields = ImmutableList.of("/badEncoding");
+    converter3.encoding = "GBK";
+    converter3.targetType = Field.Type.STRING;
+    converter3.dataLocale = "en";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(converter1, converter2, converter3))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    final String someUTF8 = "UTF8: euro: € greek όλα τα ελληνικά σε μένα japanese 天気の良い日 thai วันที่ดี data.";
+    final byte [] byteUTF8 = someUTF8.getBytes(Charset.forName("UTF8"));
+
+    try {
+      final String x = "GBK: japanese 天気の良い日 trad chinese 傳統 simplified 镕 chinese 中国是美丽的 data.";
+      String someGBK = new String(x.getBytes("UTF8"), "GBK");
+      final byte[] byteGBK = x.getBytes();
+
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("byteUTF8", Field.create(Field.Type.BYTE_ARRAY, byteUTF8));
+      map.put("byteGBK", Field.create(Field.Type.BYTE_ARRAY, byteGBK));
+      map.put("badEncoding", Field.create(Field.Type.BYTE_ARRAY, byteUTF8));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+
+      Assert.assertTrue(result.size() == 3);
+      Assert.assertTrue(result.containsKey("byteUTF8"));
+      Assert.assertEquals(someUTF8, result.get("byteUTF8").getValueAsString());
+
+      Assert.assertTrue(result.containsKey("byteGBK"));
+      Assert.assertEquals(someGBK, result.get("byteGBK").getValueAsString());
+
+      Assert.assertTrue(result.containsKey("badEncoding"));
+      // this is UTF8 data decoded as GBK - which does not work.
+      Assert.assertNotEquals(someGBK, result.get("badEncoding").getValueAsString());
+    } catch (Exception e) {
+      e.printStackTrace();
 
     } finally {
       runner.runDestroy();
