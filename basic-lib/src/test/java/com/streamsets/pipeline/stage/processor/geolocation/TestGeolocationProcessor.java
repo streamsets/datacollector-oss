@@ -367,6 +367,38 @@ public class TestGeolocationProcessor {
   }
 
   @Test
+  public void testMissingInputFieldValue() throws Exception {
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ipAsInt";
+    config.outputFieldName = "/intIpCountry";
+    config.targetType = GeolocationField.COUNTRY_NAME;
+    configs.add(config);
+
+    List<GeolocationDatabaseConfig> dbConfigs = new ArrayList<>();
+    GeolocationDatabaseConfig dbConfig = new GeolocationDatabaseConfig();
+    dbConfig.geoIP2DBFile = countryDb.getAbsolutePath();
+    dbConfig.geoIP2DBType = GeolocationDBType.COUNTRY;
+    dbConfigs.add(dbConfig);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("dbConfigs", dbConfigs)
+        .addConfiguration("missingAddressAction", GeolocationMissingAddressAction.REPLACE_WITH_NULLS)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    runner.runProcess(ImmutableList.of(record));
+
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+  }
+
+  @Test
   public void testMissingAddress() throws Exception {
     String ip = "0.0.0.0";
     List<GeolocationFieldConfig> configs = new ArrayList<>();

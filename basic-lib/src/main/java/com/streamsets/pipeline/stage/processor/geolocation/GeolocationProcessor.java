@@ -238,6 +238,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
 
         if(field == null) {
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.GEOIP_11, record.getHeader().getSourceId(), config.inputFieldName));
+          return;
         }
 
         try {
