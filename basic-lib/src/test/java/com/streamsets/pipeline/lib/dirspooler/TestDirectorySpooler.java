@@ -367,6 +367,68 @@ public class TestDirectorySpooler {
   }
 
   @Test
+  public void testArchiveWithoutStartingFile() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    Assert.assertTrue(archiveDir.mkdirs());
+
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+
+    long currentMills = System.currentTimeMillis();
+
+    //Set the last modified time to be different seconds for each file
+    Files.setLastModifiedTime(
+        Paths.get(logFile1.getAbsolutePath()),
+        FileTime.from(currentMills - 3000, TimeUnit.MILLISECONDS)
+    );
+    Files.setLastModifiedTime(
+        Paths.get(logFile2.getAbsolutePath()),
+        FileTime.from(currentMills - 2000, TimeUnit.MILLISECONDS)
+    );
+    Files.setLastModifiedTime(
+        Paths.get(logFile2.getAbsolutePath()),
+        FileTime.from(currentMills - 1000, TimeUnit.MILLISECONDS)
+    );
+
+    //Directory has the most recent timestamp, because with every new file directory's modified time changes.
+    Files.setLastModifiedTime(
+        Paths.get(spoolDir.getAbsolutePath()),
+        FileTime.from(currentMills, TimeUnit.MILLISECONDS)
+    );
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setMaxSpoolFiles(5)
+        .setUseLastModifiedTimestamp(true)
+        .setFilePattern("*")
+        .setPostProcessing(DirectorySpooler.FilePostProcessing.ARCHIVE)
+        .setArchiveDir(archiveDir.getAbsolutePath());
+    DirectorySpooler spooler = builder.build();
+
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertEquals(0, archiveDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    //No starting file
+    spooler.init("");
+    //Nothing should be archived.
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertEquals(0, archiveDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    spooler.destroy();
+  }
+
+  @Test
   public void testArchive() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     Assert.assertTrue(archiveDir.mkdirs());

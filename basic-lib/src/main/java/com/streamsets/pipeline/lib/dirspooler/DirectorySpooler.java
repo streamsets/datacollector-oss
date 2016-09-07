@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.io.DirectoryPathCreationWatcher;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -362,7 +363,10 @@ public class DirectorySpooler {
     Preconditions.checkNotNull(file, "file cannot be null");
     if (checkCurrent) {
       try {
-        Preconditions.checkState(currentFile == null || compare(spoolDirPath.resolve(currentFile), file) < 0);
+        boolean valid = (StringUtils.isEmpty(currentFile) || compare(spoolDirPath.resolve(currentFile), file) < 0);
+        if (!valid) {
+          LOG.warn("File cannot be added to the queue: " + file.toString());
+        }
       } catch (NoSuchFileException ex) {
         // Happens only in timestamp ordering.
         // Very unlikely this will happen, new file has to be added to the queue at the exact time when
@@ -546,7 +550,7 @@ public class DirectorySpooler {
         @Override
         public boolean accept(Path entry) throws IOException {
           boolean isOlder = false;
-          if (startingFile != null) {
+          if (!StringUtils.isEmpty(startingFile)) {
             try {
               int compared = compare(entry, spoolDirPath.resolve(startingFile));
               isOlder = compared < 0;
