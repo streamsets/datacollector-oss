@@ -40,6 +40,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class TestClusterProviderImpl {
 
@@ -79,7 +82,7 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(tempDir.mkdir());
     providerTemp = new File(tempDir, "provider-temp");
     Assert.assertTrue(providerTemp.mkdir());
-   Assert.assertTrue(sparkManagerShell.createNewFile());
+    Assert.assertTrue(sparkManagerShell.createNewFile());
     sparkManagerShell.setExecutable(true);
     MockSystemProcess.reset();
     etcDir = new File(tempDir, "etc-src");
@@ -103,20 +106,21 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(bootstrapLibDir.mkdir());
     File bootstrapMainLibDir = new File(bootstrapLibDir, "main");
     Assert.assertTrue(bootstrapMainLibDir.mkdirs());
-    File bootstrapSparkLibDir = new File(bootstrapLibDir, "spark");
-    Assert.assertTrue(bootstrapSparkLibDir.mkdirs());
-    File bootstrapMesosLibDir = new File(bootstrapLibDir, "mesos");
-    Assert.assertTrue(bootstrapMesosLibDir.mkdirs());
+    File bootstrapClusterLibDir = new File(bootstrapLibDir, "cluster");
+    Assert.assertTrue(bootstrapClusterLibDir.mkdirs());
     Assert.assertTrue(new File(bootstrapMainLibDir, "streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar")
         .createNewFile());
-    Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar")
+    Assert.assertTrue(new File(bootstrapClusterLibDir,
+        "streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"
+    ).createNewFile());
+    Assert.assertTrue(new File(bootstrapClusterLibDir,
+        "streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"
+    ).createNewFile());
+    Assert.assertTrue(new File(bootstrapClusterLibDir, "streamsets-datacollector-mesos-bootstrap-1.7.0.0.jar")
         .createNewFile());
-    Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT" +
-        ".jar")
-        .createNewFile
-        ());
-    Assert.assertTrue(new File(bootstrapMesosLibDir, "streamsets-datacollector-mesos-bootstrap-1.7.0.0.jar")
-        .createNewFile());
+    Assert.assertTrue(new File(bootstrapClusterLibDir,
+        "streamsets-datacollector-mapr-cluster-bootstrap-1.7.0.0.jar"
+    ).createNewFile());
     List<Config> configs = new ArrayList<Config>();
     configs.add(new Config("clusterSlaveMemory", 512));
     configs.add(new Config("clusterSlaveJavaOpts", ""));
@@ -140,10 +144,13 @@ public class TestClusterProviderImpl {
     File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
     File avroJar = new File(tempDir, "avro-1.7.7.jar");
     File avroMapReduceJar = new File(tempDir, "avro-mapred-1.7.7.jar");
+    File maprFsJar = new File(tempDir, "maprfs-5.1.0.jar");
     Assert.assertTrue(sparkKafkaJar.createNewFile());
     Assert.assertTrue(avroJar.createNewFile());
     Assert.assertTrue(avroMapReduceJar.createNewFile());
-    classLoader = new URLClassLoader(new URL[] {sparkKafkaJar.toURL(), avroJar.toURL(), avroMapReduceJar.toURL()}) {
+    Assert.assertTrue(maprFsJar.createNewFile());
+    classLoader = new URLClassLoader(new URL[]{sparkKafkaJar.toURL(), avroJar.toURL(), avroMapReduceJar.toURL(),
+        maprFsJar.toURL()}) {
       public String getType() {
         return ClusterModeConstants.USER_LIBS;
       }
@@ -154,7 +161,23 @@ public class TestClusterProviderImpl {
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
     URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
-    sparkProvider = new ClusterProviderImpl(runtimeInfo, null);
+    sparkProvider = Mockito.spy(new ClusterProviderImpl(runtimeInfo, null));
+    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_API_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+        Mockito.eq(ExecutionMode.CLUSTER_BATCH),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.any(StageLibraryTask.class)
+    );
+    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_JAR_PATTERN).when(sparkProvider).findClusterBootstrapJar(
+        Mockito.eq(ExecutionMode.CLUSTER_YARN_STREAMING),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.any(StageLibraryTask.class)
+    );
+    Mockito.doReturn(ClusterProviderImpl.CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN).when(sparkProvider)
+        .findClusterBootstrapJar(
+        Mockito.eq(ExecutionMode.CLUSTER_MESOS_STREAMING),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.any(StageLibraryTask.class)
+    );
   }
 
   @After
@@ -227,7 +250,7 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
             "<masked>/spark-streaming-kafka-1.2" +
-            ".jar,<masked>/bootstrap-lib/spark/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
+            ".jar,<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
   }
 
   @Test
@@ -263,6 +286,68 @@ public class TestClusterProviderImpl {
   }
 
   @Test
+  public void testMapRStreamingMode() throws Exception {
+    MockSystemProcess.output.add(" application_1429587312661_0024 ");
+    List<Config> list = new ArrayList<Config>();
+    list.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING.name()));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        list,
+        null,
+        MockStages.getSourceStageConfig(),
+        MockStages.getErrorStageConfig(),
+        MockStages.getStatsAggregatorStageConfig()
+    );
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null, "aaa", null, null, null, true, null));
+    Mockito.doReturn(Pattern.compile("streamsets-datacollector-mapr-cluster-bootstrap-\\d+.*")).when(sparkProvider)
+        .findClusterBootstrapJar(
+        Mockito.eq(ExecutionMode.CLUSTER_YARN_STREAMING),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.any(StageLibraryTask.class)
+    );
+    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(),
+        sparkManagerShell,
+        providerTemp,
+        env,
+        sourceInfo,
+        pipelineConf,
+        MockStages.createClusterMapRStreamingStageLibrary(classLoader),
+        etcDir,
+        resourcesDir,
+        webDir,
+        bootstrapLibDir,
+        classLoader,
+        classLoader,
+        60,
+        new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+            new ArrayList<DataRuleDefinition>(),
+            new ArrayList<DriftRuleDefinition>(),
+            new ArrayList<String>(),
+            UUID.randomUUID()
+        )
+    ).getId());
+    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
+        MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE)
+    );
+    Assert.assertTrue(MockSystemProcess.args.contains(
+        "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/maprfs-5.1" +
+            ".0.jar," +
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"));
+    Assert.assertTrue(MockSystemProcess.args.contains(
+        "<masked>/bootstrap-lib/cluster/streamsets-datacollector-mapr-cluster-bootstrap-1.7.0.0.jar"));
+  }
+
+  @Test
+  public void testClusterBoostrapRegex() throws Exception {
+    Properties props = ClusterProviderImpl.readDataCollectorProperties(Thread.currentThread().getContextClassLoader());
+    Assert.assertEquals("abc", props.getProperty(ClusterProviderImpl.CLUSTER_BOOTSTRAP_JAR_REGEX +
+        ExecutionMode.CLUSTER_YARN_STREAMING +
+        "_Foo"));
+  }
+
+  @Test
   public void testBatchExecutionMode() throws Throwable {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     List<Config> list = new ArrayList<Config>();
@@ -291,7 +376,7 @@ public class TestClusterProviderImpl {
             ".jar," + "<masked>/avro-mapred-1.7.7.jar"
             ));
     Assert.assertTrue(MockSystemProcess.args.contains(
-       "<masked>/bootstrap-lib/spark/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"
+       "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar"
     ));
   }
 
@@ -327,12 +412,12 @@ public class TestClusterProviderImpl {
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
             "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," +
-                "<masked>/bootstrap-lib/spark/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
+                "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
             "--conf", "spark" +
             ".executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar ",
             "--class", "com" +
             ".streamsets.pipeline.BootstrapClusterStreaming",
-            "<masked>/bootstrap-lib/spark/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
+            "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
         MockSystemProcess.args.toArray()
     );
   }

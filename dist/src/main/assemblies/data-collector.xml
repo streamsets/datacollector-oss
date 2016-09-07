@@ -464,22 +464,13 @@
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>false</useTransitiveDependencies>
-      <outputDirectory>/libexec/bootstrap-libs/spark</outputDirectory>
+      <outputDirectory>/libexec/bootstrap-libs/cluster</outputDirectory>
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap-api</include>
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
-      </includes>
-    </dependencySet>
-
-     <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
-      <useTransitiveDependencies>false</useTransitiveDependencies>
-      <outputDirectory>/libexec/bootstrap-libs/mesos</outputDirectory>
-      <unpack>false</unpack>
-      <scope>compile</scope>
-      <includes>
+        <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
       </includes>
     </dependencySet>

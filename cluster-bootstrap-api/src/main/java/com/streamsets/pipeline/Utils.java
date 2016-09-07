@@ -31,6 +31,9 @@ public class Utils {
   public static final String CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX = CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
   public static final String KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX = KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+  public static final String MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX = "maprstreamsSourceConfigBean.";
+  public static final String MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX = MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX +
+      "dataFormatConfig.";
 
   private Utils() {}
 
@@ -80,6 +83,14 @@ public class Utils {
     return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "topic");
   }
 
+  public static String getMaprStreamsTopic(Properties properties) {
+    return getPropertyNotNull(properties, MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "topic");
+  }
+
+  public static String getMaprStreamsGroupId(Properties properties) {
+    return getPropertyNotNull(properties, MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "consumerGroup");
+  }
+
   public static String getKafkaMetadataBrokerList(Properties properties) {
     return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList");
   }
@@ -94,12 +105,39 @@ public class Utils {
     }
   }
 
+  public static int getMaprStreamsMaxBatchSize(Properties properties) {
+    String maxBatchAsString = properties.getProperty(MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxBatchSize",
+        "1000"
+    ).trim();
+    try {
+      return Integer.parseInt(maxBatchAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxBatchSize '" + maxBatchAsString + "' : "
+          + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
   public static long getKafkaMaxWaitTime(Properties properties) {
     String durationAsString = properties.getProperty(KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime", "2000").trim();
     try {
       return Long.parseLong(durationAsString);
     } catch (NumberFormatException e) {
       String msg = "Invalid " + KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime '" + durationAsString + "' : " + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
+  public static long getMaprStreamsWaitTime(Properties properties) {
+    String durationAsString = properties.getProperty(
+        MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxWaitTime",
+        "2000"
+    ).trim();
+    try {
+      return Long.parseLong(durationAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxWaitTime '" + durationAsString + "' : "
+          + e;
       throw new IllegalArgumentException(msg, e);
     }
   }

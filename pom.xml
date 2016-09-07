@@ -190,6 +190,7 @@
     <module>cluster-kafka-protolib</module>
     <module>cluster-bootstrap-api</module>
     <module>cluster-bootstrap</module>
+    <module>mapr-cluster-bootstrap</module>
     <module>mesos-bootstrap</module>
     <module>cli</module>
     <module>common-ui</module>

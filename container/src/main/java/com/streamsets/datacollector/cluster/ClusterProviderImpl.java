@@ -46,6 +46,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
@@ -111,10 +112,14 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
-  static final String CLUSTER_BOOTSTRAP_API_JAR_PATTERN = "streamsets-datacollector-cluster-bootstrap-api-\\d+.*";
-  private static final String BOOTSTRAP_MAIN_JAR_PATTERN = "streamsets-datacollector-bootstrap-\\d+.*";
-  private static final String CLUSTER_BOOTSTRAP_JAR_PATTERN = "streamsets-datacollector-cluster-bootstrap-\\d+.*";
-  private static final String CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN = "streamsets-datacollector-mesos-bootstrap-\\d+.*";
+  static final String CLUSTER_BOOTSTRAP_JAR_REGEX = "cluster.bootstrap.jar.regex_";
+  static final Pattern CLUSTER_BOOTSTRAP_API_JAR_PATTERN = Pattern.compile(
+      "streamsets-datacollector-cluster-bootstrap-api-\\d+.*.jar$");
+  static final Pattern BOOTSTRAP_MAIN_JAR_PATTERN = Pattern.compile("streamsets-datacollector-bootstrap-\\d+.*.jar$");
+  static final Pattern CLUSTER_BOOTSTRAP_JAR_PATTERN = Pattern.compile
+      ("streamsets-datacollector-cluster-bootstrap-\\d+.*.jar$");
+  static final Pattern CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN = Pattern.compile
+      ("streamsets-datacollector-mesos-bootstrap-\\d+.*.jar$");
   private static final String ALL_STAGES = "*";
   private static final String TOPIC = "topic";
   private static final String MESOS_HOSTING_DIR_PARENT = "mesos";
@@ -308,15 +313,28 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private static File getBootstrapJar(File bootstrapDir, final String name) {
-    Utils.checkState(bootstrapDir.isDirectory(), Utils.format("SDC bootstrap lib does not exist: {}", bootstrapDir));
+  private static File getBootstrapClusterJar(File bootstrapDir, final Pattern pattern) {
+    File clusterBootstrapDir = new File(bootstrapDir, "cluster");
+    return getBootstrapJar(clusterBootstrapDir, pattern);
+  }
+
+  private static File getBootstrapMainJar(File bootstrapDir, final Pattern pattern) {
+    File bootstrapMainDir = new File(bootstrapDir, "main");
+    return getBootstrapJar(bootstrapMainDir, pattern);
+  }
+
+  private static File getBootstrapJar(File bootstrapDir, final Pattern pattern) {
+    Utils.checkState(
+        bootstrapDir.isDirectory(),
+        Utils.format("SDC bootstrap cluster lib does not exist: {}", bootstrapDir)
+    );
     File[] candidates = bootstrapDir.listFiles(new FileFilter() {
       @Override
       public boolean accept(File candidate) {
-        return Pattern.compile(name).matcher(candidate.getName()).matches();
+        return pattern.matcher(candidate.getName()).matches();
       }
     });
-    Utils.checkState(candidates != null, Utils.format("Did not find jar matching {} in {}", name, bootstrapDir));
+    Utils.checkState(candidates != null, Utils.format("Did not find jar matching {} in {}", pattern, bootstrapDir));
     Utils.checkState(candidates.length == 1, Utils.format("Did not find exactly one bootstrap jar: {}",
         Arrays.toString(candidates)));
     return candidates[0];
@@ -388,7 +406,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     return false;
   }
 
-  private static Properties readDataCollectorProperties(ClassLoader cl) throws IOException {
+  @VisibleForTesting
+  static Properties readDataCollectorProperties(ClassLoader cl) throws IOException {
     Properties properties = new Properties();
     while (cl != null) {
       Enumeration<URL> urls = cl.getResources(DATA_COLLECTOR_LIBRARY_PROPERTIES);
@@ -627,25 +646,20 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     File etcTarGz = new File(stagingDir, "etc.tar.gz");
     File sdcPropertiesFile;
-    File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), BOOTSTRAP_MAIN_JAR_PATTERN);
+    File bootstrapJar = getBootstrapMainJar(bootstrapDir, BOOTSTRAP_MAIN_JAR_PATTERN);
     File clusterBootstrapJar;
     String mesosHostingJarDir = null;
     String mesosURL = null;
+    Pattern clusterBootstrapJarFile = findClusterBootstrapJar(executionMode, pipelineConfiguration, stageLibrary);
+    clusterBootstrapJar = getBootstrapClusterJar(bootstrapDir, clusterBootstrapJarFile);
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "mesos"),
-          CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN);
       String topic = sourceConfigs.get(TOPIC);
       String pipelineName = sourceInfo.get(ClusterModeConstants.CLUSTER_PIPELINE_NAME);
       mesosHostingJarDir = MESOS_HOSTING_DIR_PARENT + File.separatorChar + getSha256(getMesosHostingDir(topic, pipelineName));
       mesosURL = runtimeInfo.getBaseHttpUrl() + File.separatorChar + mesosHostingJarDir + File.separatorChar
                  + clusterBootstrapJar.getName();
-    } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING){
-      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
-          CLUSTER_BOOTSTRAP_JAR_PATTERN);
-      addBootstrapApiJar(bootstrapDir, jarsToShip);
-    } else {
-      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
-          CLUSTER_BOOTSTRAP_API_JAR_PATTERN);
+    } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
+      jarsToShip.add(getBootstrapClusterJar(bootstrapDir, CLUSTER_BOOTSTRAP_API_JAR_PATTERN).getAbsolutePath());
     }
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
@@ -859,9 +873,36 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private void addBootstrapApiJar(File bootstrapDir, List<String> jarsToShip) {
-    File bootstrapJarApi = getBootstrapJar(new File(bootstrapDir, "spark"), CLUSTER_BOOTSTRAP_API_JAR_PATTERN);
-    jarsToShip.add(bootstrapJarApi.getAbsolutePath());
+  @VisibleForTesting
+  Pattern findClusterBootstrapJar(
+      ExecutionMode executionMode, PipelineConfiguration pipelineConf, StageLibraryTask stageLibraryTask
+  ) throws IOException {
+    StageConfiguration stageConf = PipelineConfigurationUtil.getSourceStageConf(pipelineConf);
+    StageDefinition stageDefinition = stageLibraryTask.getStage(stageConf.getLibrary(),
+        stageConf.getStageName(),
+        false
+    );
+    ClassLoader stageClassLoader = stageDefinition.getStageClassLoader();
+    Properties dataCollectorProps = readDataCollectorProperties(stageClassLoader);
+
+    for (Map.Entry entry : dataCollectorProps.entrySet()) {
+      String key = (String) entry.getKey();
+      String value = (String) entry.getValue();
+      LOG.debug("Datacollector library properties key : '{}', value: '{}'", key, value);
+      if (key.equals(CLUSTER_BOOTSTRAP_JAR_REGEX + executionMode + "_" + stageDefinition.getClassName())) {
+        LOG.info("Using bootstrap jar pattern: '{}'", value);
+        return Pattern.compile(value + "-\\d+.*");
+      }
+    }
+    Pattern defaultJarPattern;
+    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      defaultJarPattern = CLUSTER_BOOTSTRAP_MESOS_JAR_PATTERN;
+    } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
+      defaultJarPattern = CLUSTER_BOOTSTRAP_JAR_PATTERN;
+    } else {
+      defaultJarPattern = CLUSTER_BOOTSTRAP_API_JAR_PATTERN;
+    }
+    return defaultJarPattern;
   }
 
   private List<String> generateMesosArgs(String clusterManager, String mesosDispatcherURL, String mesosJar) {

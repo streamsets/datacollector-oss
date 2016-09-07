@@ -96,7 +96,8 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
         clusterFunction.invoke(batch);
         batch = new ArrayList<>();
       }
-      batch.add(new Pair(tuple._1(), tuple._2()));
+      // Mapr doesn't provide partitionId in tuple
+      batch.add(new Pair(tuple._1() != null ? tuple._1(): "UNKNOWN_PARTITION".getBytes(), tuple._2()));
     }
     clusterFunction.invoke(batch);
   }

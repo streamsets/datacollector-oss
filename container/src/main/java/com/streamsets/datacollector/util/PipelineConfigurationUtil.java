@@ -28,6 +28,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -65,14 +66,20 @@ public class PipelineConfigurationUtil {
   }
 
   public static String getSourceLibName(String pipelineJson) throws JsonParseException, JsonMappingException,
-    IOException {
+      IOException {
     ObjectMapper json = ObjectMapperFactory.getOneLine();
     PipelineConfigurationJson pipelineConfigBean = json.readValue(pipelineJson, PipelineConfigurationJson.class);
     PipelineConfiguration pipelineConf = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
+    StageConfiguration stageConfiguration = Utils.checkNotNull(getSourceStageConf(pipelineConf), "StageConfiguration" +
+        "for origin");
+    return stageConfiguration.getLibrary();
+  }
+
+  public static StageConfiguration getSourceStageConf(PipelineConfiguration pipelineConf) {
     for (int i = 0; i < pipelineConf.getStages().size(); i++) {
       StageConfiguration stageConf = pipelineConf.getStages().get(i);
       if (stageConf.getInputLanes().isEmpty()) {
-        return stageConf.getLibrary();
+        return stageConf;
       }
     }
     return null;

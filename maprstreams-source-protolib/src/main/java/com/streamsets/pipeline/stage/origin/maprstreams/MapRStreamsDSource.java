@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.maprstreams;
 
+import com.streamsets.pipeline.Utils;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -38,13 +39,14 @@ import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
   version = 4,
   label = "MapR Streams Consumer",
   description = "Reads data from MapR Streams",
-  execution = {ExecutionMode.STANDALONE},
+  execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_YARN_STREAMING},
+  libJarsRegex = {"maprfs-\\d+.*"},
   icon = "mapr.png",
   recordsByRef = true,
   onlineHelpRefUrl = "index.html#Origins/MapRStreamsCons.html#task_bfz_gch_2v"
 )
 @ConfigGroups(value = MapRStreamsSourceGroups.class)
-@HideConfigs(value = {"maprstreamsSourceConfigBean.dataFormatConfig.compression"})
+@HideConfigs(value = {Utils.MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX + "compression"})
 @GenerateResourceBundle
 public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
 
@@ -57,13 +59,14 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
   protected Source createSource() {
     KafkaConfigBean kafkaConfigBean = convertToKafkaConfigBean(maprstreamsSourceConfigBean);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(kafkaConfigBean),
-      new ClusterKafkaSourceFactory(kafkaConfigBean));
+        new ClusterKafkaSourceFactory(kafkaConfigBean)
+    );
     return delegatingKafkaSource;
   }
 
   @Override
   public Source getSource() {
-    return source != null?  delegatingKafkaSource.getSource(): null;
+    return source != null ? delegatingKafkaSource.getSource() : null;
   }
 
   @Override
@@ -72,7 +75,7 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
     if (delegatingSource != null) {
       Source source = delegatingSource.getSource();
       if (source instanceof ErrorListener) {
-        ((ErrorListener)source).errorNotification(throwable);
+        ((ErrorListener) source).errorNotification(throwable);
       }
     }
   }
@@ -83,7 +86,7 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
     if (delegatingSource != null) {
       Source source = delegatingSource.getSource();
       if (source instanceof ClusterSource) {
-        ((ClusterSource)source).shutdown();
+        ((ClusterSource) source).shutdown();
       }
     }
   }

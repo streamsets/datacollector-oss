@@ -524,6 +524,10 @@ public class MockStages {
     return new MockStageLibraryTask.ClusterStreamingBuilder(cl).build();
   }
 
+  public static StageLibraryTask createClusterMapRStreamingStageLibrary(ClassLoader cl) {
+    return new MockStageLibraryTask.ClusterMapRStreamingBuilder(cl).build();
+  }
+
   public static StageLibraryTask createClusterBatchStageLibrary(ClassLoader cl) {
     return new MockStageLibraryTask.ClusterBatchBuilder(cl).build();
   }
@@ -857,6 +861,33 @@ public class MockStages {
           .withRawSourceDefintion(getRawSourceDefinition())
           .withLibJarsRegexp(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX)
           .build();
+
+        errorTargetStageDef = getErrorStageDefinition(cl);
+        statsTargetStageDef = getStatsAggStageDefinition(cl);
+      }
+
+
+      public StageLibraryTask build() {
+        return new MockStageLibraryTask(ImmutableList.of(clusterStageDef, errorTargetStageDef, statsTargetStageDef));
+      }
+    }
+
+
+    public static class ClusterMapRStreamingBuilder {
+      private final StageDefinition clusterStageDef;
+      private final StageDefinition errorTargetStageDef;
+      private final StageDefinition statsTargetStageDef;
+
+      public ClusterMapRStreamingBuilder() {
+        this(Thread.currentThread().getContextClassLoader());
+      }
+
+      public ClusterMapRStreamingBuilder(ClassLoader cl) {
+        clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE)
+            .withRawSourceDefintion(getRawSourceDefinition())
+            .withLibJarsRegexp("maprfs-\\d+.*")
+            .build();
 
         errorTargetStageDef = getErrorStageDefinition(cl);
         statsTargetStageDef = getStatsAggStageDefinition(cl);

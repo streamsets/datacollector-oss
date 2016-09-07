@@ -118,42 +118,33 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext()
     );
 
-    if(!kafkaBrokers.isEmpty()) {
-      try {
-        int partitionCount = kafkaValidationUtil.getPartitionCount(
+    try {
+      int partitionCount = kafkaValidationUtil.getPartitionCount(
           conf.metadataBrokerList,
           conf.topic,
-          conf.kafkaConsumerConfigs == null ?
-            Collections.<String, Object>emptyMap() :
-            new HashMap<String, Object>(conf.kafkaConsumerConfigs),
+          conf.kafkaConsumerConfigs == null ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>
+              (conf.kafkaConsumerConfigs),
           3,
           1000
-        );
-        if (partitionCount < 1) {
-          issues.add(
-            getContext().createConfigIssue(
-              KafkaOriginGroups.KAFKA.name(),
-              KAFKA_CONFIG_BEAN_PREFIX + "topic",
-              KafkaErrors.KAFKA_42,
-              conf.topic
-            )
-          );
-        } else {
-          //cache the partition count as parallelism for future use
-          originParallelism = partitionCount;
-        }
-      } catch (StageException e) {
-        issues.add(
-          getContext().createConfigIssue(
-            KafkaOriginGroups.KAFKA.name(),
+      );
+      if (partitionCount < 1) {
+        issues.add(getContext().createConfigIssue(KafkaOriginGroups.KAFKA.name(),
             KAFKA_CONFIG_BEAN_PREFIX + "topic",
-            KafkaErrors.KAFKA_41,
-            conf.topic,
-            e.toString(),
-            e
-          )
-        );
+            KafkaErrors.KAFKA_42,
+            conf.topic
+        ));
+      } else {
+        //cache the partition count as parallelism for future use
+        originParallelism = partitionCount;
       }
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + "topic",
+          KafkaErrors.KAFKA_41,
+          conf.topic,
+          e.toString(),
+          e
+      ));
     }
 
     // Validate zookeeper config
