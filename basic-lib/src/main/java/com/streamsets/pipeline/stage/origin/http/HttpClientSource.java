@@ -574,7 +574,7 @@ public class HttpClientSource extends BaseSource {
     }
 
 
-    if (response.hasEntity() && response.bufferEntity()) {
+    if (response.hasEntity()) {
       newSourceOffset = Optional.of(parseResponse(maxRecords, batchMaker));
     }
 
