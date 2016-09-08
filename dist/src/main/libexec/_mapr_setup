@@ -31,7 +31,7 @@
 BLACKLIST_PROP="system.stagelibs.blacklist"
 PROP_FILENAME="sdc.properties"
 POLICY_FILENAME="sdc-security.policy"
-MAPR_VERSION=5.1.0
+MAPR_VERSION=5.2.0
 MAPR_HOME=""
 MAPR_LIB="streamsets-datacollector-mapr"
 
@@ -77,8 +77,8 @@ elif [[ $OSTYPE == "cygwin" ]];then
 fi
 
 # Input from user
-read -p "Please enter the MapR version (default 5.1.0): " MAPR_VERSION
-MAPR_VERSION=${MAPR_VERSION:=5.1.0}
+read -p "Please enter the MapR version (default 5.2.0): " MAPR_VERSION
+MAPR_VERSION=${MAPR_VERSION:=5.2.0}
 # Check if input version is valid
 if ! [[ ${MAPR_VERSION} =~ ^[1-9][0-9]*\.[0-9]*(\.[0-9]*)*$ ]];
 then
@@ -106,9 +106,18 @@ fi
 
 # Remove MapR Version from sdc.properies file
 printf "Updating sdc.properties file ...."
-original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_PROP_FILE}")
-blacklist_property=${original_property/${MAPR_LIB},/}
-sed -i ${BACKUP_EXT} "s/${original_property}/${blacklist_property}/" "${SDC_PROP_FILE}"
+line_num=$(grep -nr ${MAPR_LIB} "${SDC_PROP_FILE}" | cut -f1 -d:)
+if [ ! -z ${line_num} ];then
+  sed -i ${BACKUP_EXT} -i ${line_num}d "${SDC_PROP_FILE}"
+  # Removing ",\newline" at the end of the above line only when removed the last option
+  prev_num=$((line_num-1))
+  prev_line=$(sed "${prev_num}q;d" "${SDC_PROP_FILE}")
+  curr_line=$(sed "${line_num}q;d" "${SDC_PROP_FILE}")
+  if ([[ $curr_line == "#"* ]] || [[ -z $curr_line ]]) && [[ $prev_line == *',\' ]];then
+    replace=${prev_line/,\\/}
+    sed -i {BACKUP_EXT} "${prev_num}s/.*/${replace}/" "${SDC_PROP_FILE}"
+  fi
+fi
 printf "Done.\n"
 
 # Create symbolic links. Ignore the stderr (there will be a lot of symlinks already exist errors)
