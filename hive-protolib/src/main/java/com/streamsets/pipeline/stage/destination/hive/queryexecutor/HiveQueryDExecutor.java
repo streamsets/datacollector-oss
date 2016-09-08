@@ -35,7 +35,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Executes Hive or Impala queries.",
     icon = "hive.png", // TODO change
     privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Destinations/Hive.html#task_cx3_lhh_ht" // TODO change
+    onlineHelpRefUrl = "index.html#Executors/HiveQuery.html#task_mgm_4lk_fx"
 )
 @ConfigGroups(value = Groups.class)
 @HideConfigs({

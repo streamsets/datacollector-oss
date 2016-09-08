@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfi
     icon = "mapreduce.png",
     privateClassLoader = true,
     producesEvents = true,
-    onlineHelpRefUrl = "" // TODO: Get from the doc team
+    onlineHelpRefUrl = "index.html#Executors/MapReduce.html#task_olh_bmk_fx"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

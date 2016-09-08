@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     label="Field Flattener",
     description="Flattens nested structures.",
     icon="filter.png",    // TODO better picture
-    onlineHelpRefUrl = "index.html#Processors/FieldRemover.html#task_c1j_btr_wq" // TODO update
+    onlineHelpRefUrl = "index.html#Processors/FieldFlattener.html#task_xdv_kkk_fx"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
