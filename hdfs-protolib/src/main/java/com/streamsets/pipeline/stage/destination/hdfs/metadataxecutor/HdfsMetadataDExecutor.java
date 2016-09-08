@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   version = 1,
   label = "Hdfs Metadata Executor",
   description = "Executes HDFS metadata operations",
-  icon = "hdfs.png", // TODO change
+  icon = "hdfs.png",
   privateClassLoader = true,
   onlineHelpRefUrl = "index.html#Executors/HDFSMetadata.html#task_m3v_5lk_fx",
   producesEvents = true

@@ -33,7 +33,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     version = 1,
     label = "Hive Query Executor",
     description = "Executes Hive or Impala queries.",
-    icon = "hive.png", // TODO change
+    icon = "hive.png",
     privateClassLoader = true,
     onlineHelpRefUrl = "index.html#Executors/HiveQuery.html#task_mgm_4lk_fx"
 )
