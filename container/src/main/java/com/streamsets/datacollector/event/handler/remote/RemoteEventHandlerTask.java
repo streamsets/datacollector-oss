@@ -33,6 +33,7 @@ import com.streamsets.datacollector.event.client.api.EventException;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
 import com.streamsets.datacollector.event.dto.ClientEvent;
+import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
@@ -49,6 +50,8 @@ import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.datacollector.io.DataStore;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -60,13 +63,16 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
+import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -101,6 +107,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final long defaultPingFrequency;
   private final Stopwatch stopWatch;
   private final long sendAllStatusEventsInterval;
+  private final DataStore dataStore;
+
 
   public RemoteEventHandlerTask(RemoteDataCollector remoteDataCollector,
     EventClient eventSenderReceiver,
@@ -134,7 +142,29 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put("X-SS-App-Auth-Token", runtimeInfo.getAppAuthToken());
     requestHeader.put("X-SS-App-Component-Id", this.runtimeInfo.getId());
     stopWatch = Stopwatch.createUnstarted();
+
+    File storeFile = new File(runtimeInfo.getDataDir(), DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE);
+    dataStore = new DataStore(storeFile);
+    try {
+      dataStore.exists(); // to trigger recovery if last write was incomplete
+    } catch (IOException ex) {
+      LOG.warn("Could not recover disconnected credentials file '{}': {}", dataStore.getFile(), ex.toString(), ex);
+      try {
+        dataStore.delete();
+      } catch (IOException ex1) {
+        throw new RuntimeException(Utils.format("Could not clear invalid disconected credentials file '{}': {}",
+            dataStore.getFile(),
+            ex.toString(),
+            ex
+        ));
+      }
+    }
     remoteDataCollector.init();
+  }
+
+  @VisibleForTesting
+  DataStore getDisconnectedSsoCredentialsDataStore() {
+    return dataStore;
   }
 
   @Override
@@ -151,7 +181,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         appDestinationList,
         requestHeader,
         stopWatch,
-        sendAllStatusEventsInterval
+        sendAllStatusEventsInterval,
+        dataStore
     ));
   }
 
@@ -183,6 +214,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     private final List<String> jobEventDestinationList;
     private final Stopwatch stopWatch;
     private final long waitBetweenSendingStatusEvents;
+    private final DataStore disconnectedCredentialsDataStore;
     private List<ClientEvent> ackEventList;
     private List<ClientEvent> remoteEventList;
     private ClientEvent sdcInfoEvent;
@@ -200,7 +232,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         List<String> jobEventDestinationList,
         Map<String, String> requestHeader,
         Stopwatch stopWatch,
-        long waitBetweenSendingStatusEvents
+        long waitBetweenSendingStatusEvents,
+        DataStore disconnectedCredentialsDataStore
         ) {
       this.remoteDataCollector = remoteDataCollector;
       this.eventClient = eventSenderReceiver;
@@ -214,6 +247,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       this.requestHeader = requestHeader;
       this.stopWatch = stopWatch;
       this.waitBetweenSendingStatusEvents = waitBetweenSendingStatusEvents;
+      this.disconnectedCredentialsDataStore = disconnectedCredentialsDataStore;
     }
 
     @Override
@@ -234,7 +268,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             jobEventDestinationList,
             requestHeader,
             stopWatch,
-            waitBetweenSendingStatusEvents
+            waitBetweenSendingStatusEvents,
+            disconnectedCredentialsDataStore
         ), delay, TimeUnit.MILLISECONDS);
       }
       return null;
@@ -412,6 +447,22 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             remoteDataCollector.stopAndDelete(pipelineStopDeleteEvent.getUser(), pipelineStopDeleteEvent.getName(),
               pipelineStopDeleteEvent.getRev());
             break;
+          case SSO_DISCONNECTED_MODE_CREDENTIALS:
+            DisconnectedSsoCredentialsEvent disconectedSsoCredentialsEvent = (DisconnectedSsoCredentialsEvent) event;
+            try (OutputStream os = disconnectedCredentialsDataStore.getOutputStream()) {
+              ObjectMapperFactory.get().writeValue(os, disconectedSsoCredentialsEvent);
+              disconnectedCredentialsDataStore.commit(os);
+            } catch (IOException ex) {
+              LOG.warn(
+                  "Disconnected credentials maybe out of sync, could not write to '{}': {}",
+                  disconnectedCredentialsDataStore.getFile(),
+                  ex.toString(),
+                  ex
+              );
+            } finally {
+              disconnectedCredentialsDataStore.release();
+            }
+            break;
           default:
             ackEventMessage = Utils.format("Unrecognized event: '{}'", eventType);
             LOG.warn(ackEventMessage);
@@ -434,4 +485,5 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       }
     }
   }
+
 }

@@ -325,4 +325,18 @@ public class DataStore {
     return Files.exists(file) && Files.size(file) > 0;
   }
 
+  public void delete() throws IOException {
+    if (Files.exists(fileTmp)) {
+      Files.delete(fileTmp);
+    }
+    if (Files.exists(fileOld)) {
+      Files.delete(fileOld);
+    }
+    if (Files.exists(fileNew)) {
+      Files.delete(fileNew);
+    }
+    if (Files.exists(file)) {
+      Files.delete(file);
+    }
+  }
 }

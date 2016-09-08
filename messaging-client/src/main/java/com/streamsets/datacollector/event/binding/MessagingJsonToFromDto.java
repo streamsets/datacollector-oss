@@ -44,6 +44,7 @@ import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
@@ -198,6 +199,14 @@ public class MessagingJsonToFromDto {
         };
         PipelineBaseEventJson pipelineBaseEventJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineBaseEventDto(pipelineBaseEventJson));
+        break;
+      }
+      case SSO_DISCONNECTED_MODE_CREDENTIALS: {
+        TypeReference<DisconnectedSsoCredentialsEventJson> typeRef =
+            new TypeReference<DisconnectedSsoCredentialsEventJson>() {
+            };
+        DisconnectedSsoCredentialsEventJson eventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asDisconectedSsoCredentialsDto(eventJson));
         break;
       }
       default:

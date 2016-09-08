@@ -19,25 +19,11 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.google.common.base.Stopwatch;
-import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
-import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -61,16 +47,20 @@ import com.streamsets.datacollector.event.dto.StageInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.EventHandlerCallable;
 import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.runner.MockStages;
@@ -81,6 +71,25 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestRemoteEventHandler {
 
@@ -91,6 +100,7 @@ public class TestRemoteEventHandler {
   private static final UUID id5 = UUID.randomUUID();
   private static final UUID id6 = UUID.randomUUID();
   private static final UUID id7 = UUID.randomUUID();
+  private static final UUID id8 = UUID.randomUUID();
 
   private static final long PING_FREQUENCY = 10;
   private static final MessagingJsonToFromDto jsonDto = MessagingJsonToFromDto.INSTANCE;
@@ -301,6 +311,7 @@ public class TestRemoteEventHandler {
             ruleDefinitions)));
         ServerEventJson serverEventJson1 = new ServerEventJson();
         ServerEventJson serverEventJson2 = new ServerEventJson();
+        ServerEventJson serverEventJson3 = new ServerEventJson();
         setServerEvent(
             serverEventJson1,
             id1.toString(),
@@ -317,7 +328,15 @@ public class TestRemoteEventHandler {
             true,
             jsonDto.serialize(pipelineSaveRulesEventJson)
         );
-        serverEventJsonList.addAll(Arrays.asList(serverEventJson1, serverEventJson2));
+        setServerEvent(
+            serverEventJson3,
+            id3.toString(),
+            EventType.SSO_DISCONNECTED_MODE_CREDENTIALS,
+            false,
+            false,
+            jsonDto.serialize(new DisconnectedSsoCredentialsEventJson())
+        );
+        serverEventJsonList.addAll(Arrays.asList(serverEventJson1, serverEventJson2, serverEventJson3));
         return serverEventJsonList;
 
       } catch (Exception e) {
@@ -473,7 +492,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
-        -1
+        -1,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
@@ -542,7 +562,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
-        -1
+        -1,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
@@ -571,7 +592,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
-        -1
+        -1,
+        null
     );
     // start event in error
     mockRemoteDataCollector.errorInjection = true;
@@ -600,7 +622,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
-        -1
+        -1,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(PING_FREQUENCY, remoteEventHandler.getDelay());
@@ -634,7 +657,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         stopwatch,
-        60000
+        60000,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -658,7 +682,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         stopwatch,
-        5
+        5,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(1, mockBaseEventSenderReceiver.clientJson.size());
@@ -716,7 +741,8 @@ public class TestRemoteEventHandler {
         Arrays.asList("JOB_RUNNER"),
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
-        -1
+        -1,
+        null
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(2, mockBaseEventSenderReceiver.clientJson.size());
@@ -746,4 +772,35 @@ public class TestRemoteEventHandler {
     );
     assertTrue(statusEventJson.getPipelineStatusEventList().isEmpty());
   }
+
+  @Test
+  public void testDisconnectedSsoCredentialsEvent() throws IOException {
+    DataStore dataStore = Mockito.mock(DataStore.class);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    Mockito.when(dataStore.getOutputStream()).thenReturn(baos);
+    MessagingJsonToFromDto jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
+    List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
+    MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
+    EventHandlerCallable remoteEventHandler = new EventHandlerCallable(mockRemoteDataCollector,
+        new MockSaveEventSenderReceiver(),
+        jsonToFromDto,
+        ackEventJsonList,
+        new ArrayList<ClientEvent>(),
+        null,
+        null,
+        -1,
+        Arrays.asList("JOB_RUNNER"),
+        new HashMap<String, String>(),
+        Stopwatch.createStarted(),
+        -1,
+        dataStore
+    );
+    remoteEventHandler.callRemoteControl();
+    Mockito.verify(dataStore, Mockito.times(1)).commit(Mockito.any(OutputStream.class));
+    Assert.assertEquals(
+        ImmutableMap.of("entries", Collections.emptyList()),
+        new ObjectMapper().readValue(baos.toByteArray(), Map.class)
+    );
+  }
+
 }

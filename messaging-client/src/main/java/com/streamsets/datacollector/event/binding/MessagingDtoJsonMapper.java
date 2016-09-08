@@ -21,6 +21,7 @@ package com.streamsets.datacollector.event.binding;
 
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
+import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
@@ -31,6 +32,7 @@ import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
@@ -59,6 +61,13 @@ public abstract class MessagingDtoJsonMapper {
   public abstract PipelineBaseEventJson toPipelineBaseEventJson(PipelineBaseEvent event);
 
   public abstract PipelineBaseEvent asPipelineBaseEventDto(PipelineBaseEventJson pipelineActionEventJson);
+
+  public abstract DisconnectedSsoCredentialsEvent.Entry asDisconectedSsoCredentialsDto(
+      DisconnectedSsoCredentialsEventJson.EntryJson json
+  );
+
+  public abstract DisconnectedSsoCredentialsEvent asDisconectedSsoCredentialsDto(DisconnectedSsoCredentialsEventJson
+      json);
 
   public abstract PingFrequencyAdjustmentEventJson toPingFrequencyAdjustmentEventJson(PingFrequencyAdjustmentEvent pingFrequencyEvent);
 
