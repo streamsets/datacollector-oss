@@ -404,6 +404,18 @@
         <!-- TODO: for now we copy committed generated docs  -->
         <docs.dist-dir>${basedir}/../docs/generated</docs.dist-dir>
       </properties>
+      <!--
+       Since we're not using really a "jar" from the UI this is mainly to force maven
+       to build the modules in the right order - UI before the dist. See SDC-3760 for
+       more details
+      -->
+      <dependencies>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-ui</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>release</id>
