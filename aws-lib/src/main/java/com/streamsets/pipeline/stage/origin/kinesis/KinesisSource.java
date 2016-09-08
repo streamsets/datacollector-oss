@@ -180,30 +180,43 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     }
 
     checkpointer = null;
+    RecordsAndCheckpointer recordsAndCheckpointer = null;
+    com.amazonaws.services.kinesis.model.Record record = null;
     while ((startTime + waitTime) > System.currentTimeMillis() && recordCounter < maxBatchSize) {
       try {
         long timeRemaining = (startTime + waitTime) - System.currentTimeMillis();
-        final RecordsAndCheckpointer recordsAndCheckpointer = batchQueue.poll(timeRemaining, TimeUnit.MILLISECONDS);
+        recordsAndCheckpointer = batchQueue.poll(timeRemaining, TimeUnit.MILLISECONDS);
         if (null != recordsAndCheckpointer) {
           final List<com.amazonaws.services.kinesis.model.Record> batch = recordsAndCheckpointer.getRecords();
-          checkpointer = recordsAndCheckpointer.getCheckpointer();
 
           if (batch.isEmpty()) {
             // Signaled that this is the end of a shard.
             lastSourceOffset = ExtendedSequenceNumber.SHARD_END.toString();
+            checkpointer = recordsAndCheckpointer.getCheckpointer();
             break;
           }
-          for (com.amazonaws.services.kinesis.model.Record record : batch) {
+
+          for (int index = 0; index < batch.size(); index++) {
+            record = batch.get(index);
             batchMaker.addRecord(processKinesisRecord(record));
-            lastSourceOffset = "sequenceNumber=" + record.getSequenceNumber() + "::" +
-                "subSequenceNumber=" + ((UserRecord) record).getSubSequenceNumber();
             ++recordCounter;
           }
+
+
         }
       } catch (IOException | DataParserException e) {
+        LOG.warn(Errors.KINESIS_03.getMessage(), lastSourceOffset, e.toString(), e);
         errorRecordHandler.onError(Errors.KINESIS_03, lastSourceOffset, e);
       } catch (InterruptedException ignored) {
         // pipeline shutdown request.
+      } finally {
+        if (recordsAndCheckpointer != null) {
+          if (!recordsAndCheckpointer.getRecords().isEmpty() && record != null) {
+            checkpointer = recordsAndCheckpointer.getCheckpointer();
+            lastSourceOffset = "sequenceNumber=" + record.getSequenceNumber() + "::" +
+                "subSequenceNumber=" + ((UserRecord) record).getSubSequenceNumber();
+          }
+        }
       }
     }
     if (checkpointer == null) {
@@ -211,6 +224,10 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     }
 
     return lastSourceOffset;
+  }
+
+  protected IRecordProcessorCheckpointer getCheckpointer() {
+    return checkpointer;
   }
 
   private Record processKinesisRecord(com.amazonaws.services.kinesis.model.Record kRecord)

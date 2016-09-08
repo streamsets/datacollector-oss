@@ -82,13 +82,33 @@ public class KinesisTestUtil {
     return records;
   }
 
+  public static com.amazonaws.services.kinesis.model.Record getBadConsumerTestRecord(int seqNo) {
+    com.amazonaws.services.kinesis.model.Record record = new com.amazonaws.services.kinesis.model.Record()
+        .withData(ByteBuffer.wrap(String.format("{\"seq\": %s", seqNo).getBytes()))
+        .withPartitionKey(StringUtils.repeat("0", 19))
+        .withSequenceNumber(String.valueOf(seqNo))
+        .withApproximateArrivalTimestamp(Calendar.getInstance().getTime());
+
+    return new UserRecord(record);
+  }
+
+  public static com.amazonaws.services.kinesis.model.Record getConsumerTestRecord(int seqNo) {
+    com.amazonaws.services.kinesis.model.Record record = new com.amazonaws.services.kinesis.model.Record()
+        .withData(ByteBuffer.wrap(String.format("{\"seq\": %s}", seqNo).getBytes()))
+        .withPartitionKey(StringUtils.repeat("0", 19))
+        .withSequenceNumber(String.valueOf(seqNo))
+        .withApproximateArrivalTimestamp(Calendar.getInstance().getTime());
+
+    return new UserRecord(record);
+  }
+
   @SuppressWarnings("unchecked")
   public static void mockKinesisUtil(long numShards) {
     PowerMockito.mockStatic(KinesisUtil.class);
 
     when(
         KinesisUtil.checkStreamExists(
-            any(Regions.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
+          any(Regions.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(numShards);
   }

@@ -23,8 +23,10 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
+import com.amazonaws.services.kinesis.clientlibrary.types.ExtendedSequenceNumber;
 import com.amazonaws.services.kinesis.model.Record;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -42,6 +44,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 
@@ -95,6 +98,113 @@ public class TestKinesisSource {
     assertEquals("sequenceNumber=2::subSequenceNumber=0", output.getNewOffset());
     records = output.getRecords().get("lane");
     assertEquals(2, records.size());
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testConsumeWithBadRecord() throws Exception {
+    // If there are valid records and invalid records at the end of the batch,
+    // then the result should return the valid records with corresponding checkpointer
+    // We can't validate whether the seqNo is in correct shardId, so instead we check the assigned checkpointer
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig();
+
+    KinesisSource source = PowerMockito.spy(new KinesisSource(config));
+    SourceRunner sourceRunner = new SourceRunner.Builder(KinesisDSource.class, source)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+
+    final int numShards = 2;
+    KinesisTestUtil.mockKinesisUtil(numShards);
+
+    PowerMockito.doReturn(null).when(source, "createKinesisWorker", any(IRecordProcessorFactory.class));
+
+    sourceRunner.runInit();
+
+    // Set this flag to avoid actually launching a KCL worker
+    Whitebox.setInternalState(source, "isStarted", true);
+
+    // Generate test records
+    final int numGoodRecords = 2;
+    final int numBadRecords = 1;
+    final int numTotalRecords = numGoodRecords + numBadRecords;
+    List<Record> testRecords = KinesisTestUtil.getConsumerTestRecords(numGoodRecords);
+    // Add invalid records
+    for(int seqNo = numGoodRecords; seqNo < numTotalRecords; seqNo++) {
+      testRecords.add(KinesisTestUtil.getBadConsumerTestRecord(seqNo));
+    }
+
+    // Drop them into the work queue
+    LinkedTransferQueue<RecordsAndCheckpointer> queue = new LinkedTransferQueue<>();
+
+    // Create checkpointers for each records
+    List<IRecordProcessorCheckpointer> checkpointers = new ArrayList<>(numTotalRecords);
+    for(int i = 0; i < numTotalRecords+1; i++) {
+      checkpointers.add(mock(IRecordProcessorCheckpointer.class));
+    }
+
+    // Add one record per batch with different checkpointers
+    for(int i = 0; i < numTotalRecords; i++) {
+      queue.add(new RecordsAndCheckpointer(ImmutableList.of(testRecords.get(i)), checkpointers.get(i)));
+    }
+
+    Whitebox.setInternalState(source, "batchQueue", queue);
+
+    final int maxBatchSize = numTotalRecords;
+    StageRunner.Output output = sourceRunner.runProduce("", maxBatchSize);
+
+    assertEquals("sequenceNumber=" + (numGoodRecords) + "::subSequenceNumber=0", output.getNewOffset());
+    List<com.streamsets.pipeline.api.Record> records = output.getRecords().get("lane");
+    assertEquals(numGoodRecords, records.size());
+    assertEquals(((KinesisSource) sourceRunner.getStage()).getCheckpointer(), checkpointers.get(numGoodRecords));
+
+    // add one good record and rerun the pipeline
+    queue.add(new RecordsAndCheckpointer(ImmutableList.of(KinesisTestUtil.getConsumerTestRecord(numTotalRecords)), checkpointers.get(numTotalRecords)));
+    output = sourceRunner.runProduce(output.getNewOffset(), maxBatchSize);
+    assertEquals("sequenceNumber=" + numTotalRecords + "::subSequenceNumber=0", output.getNewOffset());
+    records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+    assertEquals(((KinesisSource) sourceRunner.getStage()).getCheckpointer(), checkpointers.get(numTotalRecords));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testEmptyRecordBatch() throws Exception {
+    // If there are valid records and invalid records at the end of the batch,
+    // then the result should return the valid records with corresponding checkpointer
+    // We can't validate whether the seqNo is in correct shardId, so instead we check the assigned checkpointer
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig();
+
+    KinesisSource source = PowerMockito.spy(new KinesisSource(config));
+    SourceRunner sourceRunner = new SourceRunner.Builder(KinesisDSource.class, source).addOutputLane("lane").build();
+
+    final int numShards = 1;
+    KinesisTestUtil.mockKinesisUtil(numShards);
+
+    PowerMockito.doReturn(null).when(source, "createKinesisWorker", any(IRecordProcessorFactory.class));
+
+    sourceRunner.runInit();
+
+    // Set this flag to avoid actually launching a KCL worker
+    Whitebox.setInternalState(source, "isStarted", true);
+
+    // Drop them into the work queue
+    LinkedTransferQueue<RecordsAndCheckpointer> queue = new LinkedTransferQueue<>();
+
+    // Create checkpointers for each records
+    IRecordProcessorCheckpointer checkpointer = mock(IRecordProcessorCheckpointer.class);
+
+    // Add one record per batch with different checkpointers
+    queue.add(new RecordsAndCheckpointer(new ArrayList<Record>(), checkpointer));
+
+    Whitebox.setInternalState(source, "batchQueue", queue);
+
+    final int maxBatchSize = 10;
+    StageRunner.Output output = sourceRunner.runProduce("", maxBatchSize);
+
+    assertEquals(ExtendedSequenceNumber.SHARD_END.toString(), output.getNewOffset());
+    List<com.streamsets.pipeline.api.Record> records = output.getRecords().get("lane");
+    assertEquals(0, records.size());
   }
 
   private KinesisConsumerConfigBean getKinesisConsumerConfig() {
