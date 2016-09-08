@@ -60,6 +60,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("generateEvents", false)
+      .addConfiguration("delay", 0)
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -88,6 +89,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("generateEvents", false)
+      .addConfiguration("delay", 0)
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -116,6 +118,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("generateEvents", true)
+      .addConfiguration("delay", 0)
       .addOutputLane("a")
       .build();
     runner.runInit();

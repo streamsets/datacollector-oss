@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -45,7 +46,7 @@ import java.util.UUID;
 
 @GenerateResourceBundle
 @StageDef(
-  version = 3,
+  version = 4,
   label="Dev Data Generator",
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
@@ -92,6 +93,14 @@ public class RandomDataGeneratorSource extends BaseSource {
   )
   public boolean generateEvents;
 
+  @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
+    defaultValue = "1000",
+    label = "Delay Between Batches",
+    description = "Milliseconds to wait before sending the next batch",
+    min = 0,
+    max = Integer.MAX_VALUE)
+  public int delay;
+
   /**
    * Counter for LONG_SEQUENCE type
    */
@@ -105,6 +114,10 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    if (delay > 0) {
+      ThreadUtil.sleep(delay);
+    }
+
     for(int i =0; i < maxBatchSize; i++) {
       createRecord(i, batchMaker);
     }

@@ -37,6 +37,9 @@ public class RandomDataGeneratorSourceUpgrader implements StageUpgrader {
       case 2:
         upgradeV2ToV3(configs);
         break;
+      case 3:
+        upgradeV3ToV4(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -49,5 +52,9 @@ public class RandomDataGeneratorSourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("headerAttributes", new ArrayList<>()));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("delay", 1000));
   }
 }
