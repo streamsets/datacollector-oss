@@ -21,13 +21,25 @@ package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.origin.http.AuthenticationTypeChooserValues;
+import com.streamsets.pipeline.stage.origin.http.Errors;
+import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.glassfish.jersey.client.RequestEntityProcessing.CHUNKED;
 
 public class JerseyClientConfigBean {
+  private static final Logger LOG = LoggerFactory.getLogger(JerseyClientConfigBean.class);
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
@@ -104,4 +116,15 @@ public class JerseyClientConfigBean {
 
   @ConfigDefBean(groups = "SSL")
   public SslConfigBean sslConfig = new SslConfigBean();
+
+  public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
+    if (useProxy && !StringUtils.isEmpty(proxy.uri)) {
+      try {
+        new URI(proxy.uri).toURL();
+      } catch (URISyntaxException | MalformedURLException e) {
+        LOG.error("Invalid URL: " + proxy.uri, e);
+        issues.add(context.createConfigIssue(groupName, prefix + "proxy.uri", Errors.HTTP_13, e.toString()));
+      }
+    }
+  }
 }

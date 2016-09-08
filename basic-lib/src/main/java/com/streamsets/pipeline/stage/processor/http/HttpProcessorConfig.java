@@ -23,6 +23,7 @@ import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -180,4 +182,8 @@ public class HttpProcessorConfig {
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;
+
+  public void init(Stage.Context context, String group, String prefix, List<Stage.ConfigIssue> issues) {
+    client.init(context, group, prefix + "client", issues);
+  }
 }

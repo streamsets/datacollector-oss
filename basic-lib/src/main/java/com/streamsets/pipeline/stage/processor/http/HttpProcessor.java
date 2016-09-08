@@ -143,10 +143,10 @@ public class HttpProcessor extends SingleLaneProcessor {
     headerVars = getContext().createELVars();
     headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
 
+    conf.client.init(getContext(), Groups.PROXY.name(), "conf.client.", issues);
 
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
-
       RequestConfig requestConfig = RequestConfig.custom()
           .setConnectionRequestTimeout(conf.client.connectTimeoutMillis)
           .setSocketTimeout(conf.client.readTimeoutMillis)
@@ -255,7 +255,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    *
    * @param record the current record to set in context for any expression evaluation
    * @param responseFuture the async HTTP request future
-   * @param maxWaitSeconds maximum time to wait for request completion (start to finish)
+   * @param maxRequestCompletionSecs maximum time to wait for request completion (start to finish)
    * @return parsed record from the request
    * @throws StageException if the request fails, times out, or cannot be parsed
    */

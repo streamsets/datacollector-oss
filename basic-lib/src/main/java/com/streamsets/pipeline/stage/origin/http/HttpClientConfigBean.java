@@ -167,6 +167,8 @@ public class HttpClientConfigBean {
       }
     }
 
+    client.init(context, Groups.PROXY.name(), prefix + "client.", issues);
+
     // Validate the EL for each header entry
     ELVars headerVars = context.createELVars();
     ELEval headerEval = context.createELEval("headers");

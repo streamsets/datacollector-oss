@@ -37,6 +37,7 @@ public enum Errors implements ErrorCode {
   HTTP_10("{} is not a supported data format when using pagination"),
   HTTP_11("Record already contains field {}, cannot write response header."),
   HTTP_12("Record does not contain result field path '{}'"),
+  HTTP_13("Invalid Proxy URI. Reason : {}"),
   ;
 
   private final String msg;
