@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestChecksumCalculatingStream {
 
@@ -97,5 +98,31 @@ public class TestChecksumCalculatingStream {
         stream.close();
       }
     }
+  }
+
+  @Test
+  public void testMultipleStreamCloseNoError() throws Exception {
+    ChecksumCalculatingWrapperStream<InputStream> stream = null;
+
+    final AtomicInteger atomicInteger = new AtomicInteger(0);
+
+    final StreamCloseEventHandler streamCloseEventHandler = new StreamCloseEventHandler<Map<String, Object>>() {
+      @Override
+      public void handleCloseEvent(Map<String, Object> eventInfo) {
+        atomicInteger.incrementAndGet();
+      }
+    };
+
+    try {
+      stream = new ChecksumCalculatingWrapperStream<InputStream>(
+          new ByteArrayInputStream(FileRefTestUtil.TEXT.getBytes()), HashingUtil.HashType.MD5, streamCloseEventHandler);
+      stream.read(new byte[FileRefTestUtil.TEXT.length()]);
+    } finally {
+      if (stream != null) {
+        stream.close();
+        stream.close();
+      }
+    }
+    Assert.assertEquals(1, atomicInteger.get());
   }
 }

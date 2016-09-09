@@ -109,16 +109,18 @@ class ChecksumCalculatingWrapperStream<T extends AutoCloseable> extends Abstract
   @Override
   @SuppressWarnings("unchecked")
   public void close() throws IOException {
-    //toString returns the hex string representation.
-    calculatedChecksum = hasher.hash().toString();
-    isCalculated = true;
-    if (streamCloseEventHandler != null) {
-      streamCloseEventHandler.handleCloseEvent(
-          new ImmutableMap.Builder<String, Object>()
-              .put(FileRefUtil.WHOLE_FILE_CHECKSUM, getCalculatedChecksum())
-              .put(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO, checksumAlgorithm)
-              .build()
-      );
+    if (!isCalculated) {
+      //toString returns the hex string representation.
+      calculatedChecksum = hasher.hash().toString();
+      isCalculated = true;
+      if (streamCloseEventHandler != null) {
+        streamCloseEventHandler.handleCloseEvent(
+            new ImmutableMap.Builder<String, Object>()
+                .put(FileRefUtil.WHOLE_FILE_CHECKSUM, getCalculatedChecksum())
+                .put(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO, checksumAlgorithm)
+                .build()
+        );
+      }
     }
     super.close();
   }
