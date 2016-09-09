@@ -465,6 +465,7 @@ public class RemoteDownloadSource extends BaseSource {
       //not to have dangling reference to old stream (which is closed)
       //Also forces to initialize the next in produce call.
       currentStream = null;
+      currentOffset = null;
     }
   }
 

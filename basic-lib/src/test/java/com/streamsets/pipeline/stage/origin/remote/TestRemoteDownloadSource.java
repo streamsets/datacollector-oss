@@ -1027,6 +1027,65 @@ public class TestRemoteDownloadSource {
     Assert.assertEquals(expectedRecordCount, totalRecordsRead);
   }
 
+
+  @Test
+  public void testMockReset() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testMockReset";
+
+    Path filePath =  Paths.get(path + "/testMockReset.txt");
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    java.nio.file.Files.write(
+        filePath,
+        ("This is sample text").getBytes(),
+        StandardOpenOption.CREATE_NEW
+    );
+
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.TEXT,
+            null
+        ));
+
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      //no more files to process, this will fail.
+      StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 5);
+      List<Record> actual = op.getRecords().get("lane");
+      Assert.assertEquals(1, actual.size());
+    } finally {
+      runner.runDestroy();
+    }
+
+    runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      //no more files to process, this will fail.
+      StageRunner.Output op = runner.runProduce(null, 5);
+      List<Record> actual = op.getRecords().get("lane");
+      Assert.assertEquals(1, actual.size());
+    } finally {
+      runner.runDestroy();
+    }
+
+  }
+
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,

@@ -35,6 +35,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    resetOffset = true,
     upgrader = RemoteDownloadSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SFTP.html#task_lfx_fzd_5v"
 )
