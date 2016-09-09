@@ -78,7 +78,7 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     }
 
     if (issues.isEmpty()) {
-      separatorStr = (separator == '^') ? " " : "" + separator;
+      separatorStr = "" + separator;
       //forcing a fastpath for String.split()
       if (".$|()[{^?*+\\".contains(separatorStr)) {
         separatorStr = "\\" + separatorStr;

@@ -64,7 +64,7 @@ public class TestSplitterProcessor {
   public void testSplitting() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
@@ -104,7 +104,7 @@ public class TestSplitterProcessor {
   public void testSplittingToList() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
@@ -144,7 +144,7 @@ public class TestSplitterProcessor {
 
     runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of())
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
@@ -179,7 +179,7 @@ public class TestSplitterProcessor {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
@@ -215,7 +215,7 @@ public class TestSplitterProcessor {
   public void testKeepUnplitValue() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
@@ -241,7 +241,7 @@ public class TestSplitterProcessor {
   public void testRemoveUnplitValue() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
-        .addConfiguration("separator", '^')
+        .addConfiguration("separator", ' ')
         .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
         .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.TO_ERROR)
         .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
@@ -268,7 +268,7 @@ public class TestSplitterProcessor {
   public void testSplittingNonStringField() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
       .addConfiguration("fieldPath", "/")
-      .addConfiguration("separator", '^')
+      .addConfiguration("separator", ' ')
       .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
       .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
       .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
@@ -286,4 +286,49 @@ public class TestSplitterProcessor {
     }
   }
 
+  @Test
+  public void testSplittingWithSymbol() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+        .addConfiguration("fieldPath", "/line")
+        .addConfiguration("separator", '^')
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
+        .addOutputLane("out")
+        .build();
+    runner.runInit();
+    try {
+      Record r0 = createRecordWithLine("test^test");
+      List<Record> input = ImmutableList.of(r0);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals("test", output.getRecords().get("out").get(0).get("/a").getValue());
+      Assert.assertEquals("test", output.getRecords().get("out").get(0).get("/b").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testSplittingWithSymbol2() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+        .addConfiguration("fieldPath", "/line")
+        .addConfiguration("separator", '*')
+        .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
+        .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+        .addConfiguration("originalFieldAction", OriginalFieldAction.REMOVE)
+        .addConfiguration("tooManySplitsAction", TooManySplitsAction.TO_LAST_FIELD)
+        .addOutputLane("out")
+        .build();
+    runner.runInit();
+    try {
+      Record r0 = createRecordWithLine("test*test");
+      List<Record> input = ImmutableList.of(r0);
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertEquals("test", output.getRecords().get("out").get(0).get("/a").getValue());
+      Assert.assertEquals("test", output.getRecords().get("out").get(0).get("/b").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
