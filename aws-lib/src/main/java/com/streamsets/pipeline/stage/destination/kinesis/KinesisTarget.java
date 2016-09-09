@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
@@ -104,8 +105,17 @@ public class KinesisTarget extends BaseTarget {
       );
     }
 
+    if (conf.region == AWSRegions.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+      issues.add(getContext().createConfigIssue(
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".endpoint",
+          Errors.KINESIS_09
+      ));
+      return issues;
+    }
+
     KinesisUtil.checkStreamExists(
-        conf.region,
+        conf.region.getLabel(),
         conf.streamName,
         conf.awsConfig,
         issues,
@@ -124,8 +134,13 @@ public class KinesisTarget extends BaseTarget {
 
       KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
           .fromProperties(additionalConfigs)
-          .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig))
-          .setRegion(conf.region.getName());
+          .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
+
+      if (conf.region == AWSRegions.OTHER) {
+        producerConfig.setCustomEndpoint(conf.endpoint);
+      } else {
+        producerConfig.setRegion(conf.region.getLabel());
+      }
 
       // Mock injected during testing, we shouldn't clobber it.
       if (kinesisProducer == null) {

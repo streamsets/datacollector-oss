@@ -48,9 +48,9 @@ public class TestAmazonS3TargetUpgrader {
     configs.add(new Config("s3TargetConfigBean.binaryFieldPath", "/binaryField"));
 
     AmazonS3TargetUpgrader amazonS3TargetUpgrader = new AmazonS3TargetUpgrader();
-    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 7, configs);
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 8, configs);
 
-    Assert.assertEquals(20, configs.size());
+    Assert.assertEquals(21, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -85,6 +85,8 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertEquals("10", configValues.get("s3TargetConfigBean.tmConfig.threadPoolSize"));
     Assert.assertEquals("5242880", configValues.get("s3TargetConfigBean.tmConfig.minimumUploadPartSize"));
     Assert.assertEquals("268435456", configValues.get("s3TargetConfigBean.tmConfig.multipartUploadThreshold"));
+
+    Assert.assertEquals("", configValues.get("s3TargetConfigBean.s3Config.endpoint"));
 
     //renamed configs
 

@@ -51,6 +51,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        // fall through
+      case 4:
+        upgradeV4toV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -103,6 +106,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
       configs.remove(roundRobinPartitioner);
       configs.add(new Config(KINESIS_CONFIG_BEAN + ".partitionStrategy", PartitionStrategy.RANDOM));
     }
+  }
 
+  private void upgradeV4toV5(List<Config> configs) {
+    configs.add(new Config(KINESIS_CONFIG_BEAN + ".endpoint", ""));
   }
 }

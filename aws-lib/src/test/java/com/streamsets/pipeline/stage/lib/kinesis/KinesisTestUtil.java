@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -108,7 +107,7 @@ public class KinesisTestUtil {
 
     when(
         KinesisUtil.checkStreamExists(
-          any(Regions.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
+          any(String.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(numShards);
   }

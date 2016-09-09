@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,12 +19,33 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public class AWSRegionChooserValues extends BaseEnumChooserValues {
+public enum AWSRegions implements Label {
+  // Copied from com.amazonaws.regions.Region except for OTHER
+  GovCloud("us-gov-west-1"),
+  US_EAST_1("us-east-1"),
+  US_WEST_1("us-west-1"),
+  US_WEST_2("us-west-2"),
+  EU_WEST_1("eu-west-1"),
+  EU_CENTRAL_1("eu-central-1"),
+  AP_SOUTHEAST_1("ap-southeast-1"),
+  AP_SOUTHEAST_2("ap-southeast-2"),
+  AP_NORTHEAST_1("ap-northeast-1"),
+  AP_NORTHEAST_2("ap-northeast-2"),
+  SA_EAST_1("sa-east-1"),
+  CN_NORTH_1("cn-north-1"),
+  OTHER("other - specify endpoint")
+  ;
 
-  public AWSRegionChooserValues() {
-    super(AWSRegions.class);
+  private final String label;
+
+  AWSRegions(String label) {
+    this.label = label;
   }
 
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

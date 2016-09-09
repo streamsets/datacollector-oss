@@ -34,6 +34,7 @@ public enum Errors implements ErrorCode {
   KINESIS_06("Error evaluating the partition expression '{}' for record '{}': {}"),
   KINESIS_07("Error JSON Content - JSON array of objects not supported for Firehose Target"),
   KINESIS_08("Serialized record is {} bytes, which is larger than the allowed 1MB"),
+  KINESIS_09("Endpoint cannot be empty"),
   ;
   private final String msg;
 

@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
@@ -32,6 +31,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
@@ -214,7 +214,7 @@ public class TestKinesisSource {
 
     conf.awsConfig.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
     conf.awsConfig.awsSecretAccessKey = StringUtils.repeat("a", 40);
-    conf.region = Regions.US_WEST_1;
+    conf.region = AWSRegions.US_WEST_1;
     conf.streamName = STREAM_NAME;
 
     conf.dataFormat = DataFormat.JSON;

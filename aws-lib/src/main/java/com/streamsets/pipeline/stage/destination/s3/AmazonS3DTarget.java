@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-  version = 7,
+  version = 8,
   label = "Amazon S3",
   description = "Writes to Amazon S3",
   icon = "s3.png",

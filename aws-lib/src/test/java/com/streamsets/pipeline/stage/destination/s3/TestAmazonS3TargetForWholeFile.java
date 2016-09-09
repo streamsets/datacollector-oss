@@ -28,7 +28,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
@@ -43,6 +42,7 @@ import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
@@ -267,7 +267,8 @@ public class TestAmazonS3TargetForWholeFile {
 
   private AmazonS3Target createS3targetWithWholeFile() {
     S3Config s3Config = new S3Config();
-    s3Config.setEndPointForTest("http://localhost:" + port);
+    s3Config.region = AWSRegions.OTHER;
+    s3Config.endpoint = "http://localhost:" + port;
     s3Config.bucket = TARGET_BUCKET_NAME;
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";

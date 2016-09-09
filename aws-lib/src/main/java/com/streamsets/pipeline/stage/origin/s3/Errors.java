@@ -32,6 +32,7 @@ public enum Errors implements ErrorCode {
   S3_SPOOLDIR_06("File Pattern configuration is required"),
   S3_SPOOLDIR_07("Error Handling cannot be {} when Post Processing is {}"),
 
+  S3_SPOOLDIR_10("Endpoint cannot be empty"),
   S3_SPOOLDIR_11("Bucket name cannot be empty"),
   S3_SPOOLDIR_12("Bucket '{}' does not exist"),
   S3_SPOOLDIR_13("Prefix cannot be empty"),

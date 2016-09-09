@@ -27,6 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
 
@@ -93,6 +94,16 @@ public class FirehoseConfigBean extends KinesisConfigBean {
               DataFormatGroups.JSON.name(),
               KINESIS_CONFIG_BEAN + ".dataFormatConfig.jsonMode",
               Errors.KINESIS_07
+          )
+      );
+    }
+
+    if (region == AWSRegions.OTHER && (endpoint == null || endpoint.isEmpty())) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.KINESIS.name(),
+              KINESIS_CONFIG_BEAN + ".endpoint",
+              Errors.KINESIS_09
           )
       );
     }

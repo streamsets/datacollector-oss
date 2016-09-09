@@ -21,8 +21,7 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
@@ -53,13 +52,13 @@ public class KinesisUtil {
   /**
    * Checks for existence of the requested stream and adds
    * any configuration issues to the list.
-   * @param region
+   * @param regionName
    * @param streamName
    * @param issues
    * @param context
    */
   public static long checkStreamExists(
-      Regions region,
+      String regionName,
       String streamName,
       AWSConfig awsConfig,
       List<Stage.ConfigIssue> issues,
@@ -68,7 +67,7 @@ public class KinesisUtil {
     long numShards = 0;
 
     try {
-      numShards = getShardCount(region, awsConfig, streamName);
+      numShards = getShardCount(regionName, awsConfig, streamName);
     } catch (AmazonClientException e) {
       issues.add(context.createConfigIssue(
           Groups.KINESIS.name(),
@@ -78,14 +77,14 @@ public class KinesisUtil {
     return numShards;
   }
 
-  public static long getShardCount(Regions region, AWSConfig awsConfig, String streamName)
+  public static long getShardCount(String regionName, AWSConfig awsConfig, String streamName)
     throws AmazonClientException {
     ClientConfiguration kinesisConfiguration = new ClientConfiguration();
     AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
         AWSUtil.getCredentialsProvider(awsConfig),
         kinesisConfiguration
     );
-    kinesisClient.setRegion(Region.getRegion(region));
+    kinesisClient.setRegion(RegionUtils.getRegion(regionName));
 
     try {
       long numShards = 0;

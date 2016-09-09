@@ -56,6 +56,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        // fall through
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -164,5 +167,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "threadPoolSize", "10"));
     configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "minimumUploadPartSize", "5242880"));
     configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "multipartUploadThreshold", "268435456"));
+  }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    configs.add(new Config(S3TargetConfigBean.S3_CONFIG_PREFIX + "endpoint", ""));
   }
 }

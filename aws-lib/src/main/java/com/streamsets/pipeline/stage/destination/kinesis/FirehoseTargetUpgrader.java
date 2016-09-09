@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,20 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kinesis;
+package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.List;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
-public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
+public class FirehoseTargetUpgrader extends KinesisBaseUpgrader {
 
   @Override
   public List<Config> upgrade(
@@ -44,12 +42,6 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
-        // fall through
-      case 2:
-        upgradeV2toV3(configs);
-        // fall through
-      case 3:
-        upgradeV3toV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -58,41 +50,6 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
   }
 
   private void upgradeV1toV2(List<Config> configs) {
-    upgradeToCommonConfigBeanV1(configs, KINESIS_CONFIG_BEAN);
-    upgradeToConsumerConfigBeanV1(configs);
-  }
-
-  private void upgradeToConsumerConfigBeanV1(List<Config> configs) {
-    for (Config config : configs) {
-      // Migrate existing configs that were moved into the Kinesis Consumer config bean
-      switch (config.getName()) {
-        case "applicationName":
-          // fall through
-        case "maxBatchSize":
-          // fall through
-        case "idleTimeBetweenReads":
-          // fall through
-        case "maxWaitTime":
-          // fall through
-        case "previewWaitTime":
-          moveConfigToBean(config, KINESIS_CONFIG_BEAN);
-          break;
-        default:
-          // no-op
-      }
-    }
-    commitMove(configs);
-
-    configs.add(new Config(KINESIS_CONFIG_BEAN + ".initialPositionInStream", InitialPositionInStream.LATEST));
-  }
-
-  private void upgradeV2toV3(List<Config> configs) {
-    AWSUtil.renameAWSCredentialsConfigs(configs);
-
-    configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.csvSkipStartLines", 0));
-  }
-
-  private void upgradeV3toV4(List<Config> configs) {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".endpoint", ""));
   }
 }

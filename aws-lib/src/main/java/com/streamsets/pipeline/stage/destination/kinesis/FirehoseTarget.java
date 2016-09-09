@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClient;
 import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchRequest;
 import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchResponseEntry;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import org.slf4j.Logger;
@@ -66,12 +68,21 @@ public class FirehoseTarget extends BaseTarget {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    if (!issues.isEmpty()) {
+      return issues;
+    }
 
-    if (issues.isEmpty()) {
-      conf.init(getContext(), issues);
-      generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
-      firehoseClient = new AmazonKinesisFirehoseClient(AWSUtil.getCredentialsProvider(conf.awsConfig));
-      firehoseClient.configureRegion(conf.region);
+    conf.init(getContext(), issues);
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
+    generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
+    firehoseClient = new AmazonKinesisFirehoseClient(AWSUtil.getCredentialsProvider(conf.awsConfig));
+    if (conf.region == AWSRegions.OTHER) {
+      firehoseClient.setEndpoint(conf.endpoint);
+    } else {
+      firehoseClient.setRegion(RegionUtils.getRegion(conf.region.getLabel()));
     }
 
     return issues;

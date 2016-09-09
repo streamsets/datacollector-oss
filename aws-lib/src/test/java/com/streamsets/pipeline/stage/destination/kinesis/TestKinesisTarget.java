@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.producer.KinesisProducer;
 import com.amazonaws.services.kinesis.producer.UserRecordResult;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -31,6 +30,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -108,7 +108,7 @@ public class TestKinesisTarget {
 
     when(
         KinesisUtil.checkStreamExists(
-            any(Regions.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
+            any(String.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(1L);
 
@@ -188,7 +188,7 @@ public class TestKinesisTarget {
 
     conf.awsConfig.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
     conf.awsConfig.awsSecretAccessKey = StringUtils.repeat("a", 40);
-    conf.region = Regions.US_WEST_1;
+    conf.region = AWSRegions.US_WEST_1;
     conf.streamName = STREAM_NAME;
 
     conf.dataFormat = DataFormat.JSON;

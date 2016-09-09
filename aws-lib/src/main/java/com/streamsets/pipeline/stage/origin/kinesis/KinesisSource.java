@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
@@ -55,6 +56,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 
 public class KinesisSource extends BaseSource implements OffsetCommitter {
@@ -80,7 +82,16 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
-    KinesisUtil.checkStreamExists(conf.region, conf.streamName, conf.awsConfig, issues, getContext());
+    if (conf.region == AWSRegions.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+      issues.add(getContext().createConfigIssue(
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".endpoint",
+          Errors.KINESIS_09
+      ));
+      return issues;
+    }
+
+    KinesisUtil.checkStreamExists(conf.region.getLabel(), conf.streamName, conf.awsConfig, issues, getContext());
 
     if (issues.isEmpty()) {
       batchQueue = new ArrayBlockingQueue<>(1);
@@ -116,11 +127,16 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         );
 
     kclConfig
-        .withRegionName(conf.region.getName())
         .withMaxRecords(conf.maxBatchSize)
         .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
         .withInitialPositionInStream(conf.initialPositionInStream)
         .withKinesisClientConfig(AWSUtil.getClientConfiguration(conf.proxyConfig));
+
+    if (conf.region == AWSRegions.OTHER) {
+      kclConfig.withKinesisEndpoint(conf.endpoint);
+    } else {
+      kclConfig.withRegionName(conf.region.getLabel());
+    }
 
     return new Worker.Builder()
         .recordProcessorFactory(recordProcessorFactory)

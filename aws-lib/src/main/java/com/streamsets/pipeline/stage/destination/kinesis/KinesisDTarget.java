@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",

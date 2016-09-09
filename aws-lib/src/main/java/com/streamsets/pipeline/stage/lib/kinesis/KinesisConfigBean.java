@@ -19,12 +19,12 @@
  */
 package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.amazonaws.regions.Regions;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 
 public class KinesisConfigBean {
 
@@ -40,7 +40,20 @@ public class KinesisConfigBean {
       group = "KINESIS"
   )
   @ValueChooserModel(AWSRegionChooserValues.class)
-  public Regions region;
+  public AWSRegions region;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Endpoint",
+      description = "",
+      defaultValue = "",
+      displayPosition = 15,
+      dependsOn = "region",
+      triggeredByValue = "OTHER",
+      group = "KINESIS"
+  )
+  public String endpoint;
 
   @ConfigDef(
       required = true,

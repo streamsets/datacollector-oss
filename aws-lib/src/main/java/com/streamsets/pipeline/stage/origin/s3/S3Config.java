@@ -21,8 +21,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
@@ -35,6 +34,7 @@ import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import org.slf4j.Logger;
@@ -61,7 +61,20 @@ public class S3Config {
     group = "#0"
   )
   @ValueChooserModel(AWSRegionChooserValues.class)
-  public Regions region;
+  public AWSRegions region;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Endpoint",
+      description = "",
+      defaultValue = "",
+      displayPosition = 15,
+      dependsOn = "region",
+      triggeredByValue = "OTHER",
+      group = "#0"
+  )
+  public String endpoint;
 
   @ConfigDef(
     required = true,
@@ -93,13 +106,6 @@ public class S3Config {
     group = "#0"
   )
   public String delimiter;
-
-  //Undocumented configuration used only by the unit tests to point AmazonS3Client to the fakes3 server
-  private String endPoint;
-
-  public void setEndPointForTest(String endPoint) {
-    this.endPoint = endPoint;
-  }
 
   /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
    */
@@ -142,10 +148,14 @@ public class S3Config {
 
     s3Client = new AmazonS3Client(credentials, clientConfig);
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
-    if(endPoint != null && !endPoint.isEmpty()) {
-      s3Client.setEndpoint(endPoint);
+    if (region == AWSRegions.OTHER) {
+      if (endpoint == null || endpoint.isEmpty()) {
+        issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
+        return;
+      }
+      s3Client.setEndpoint(endpoint);
     } else {
-      s3Client.setRegion(Region.getRegion(region));
+      s3Client.setRegion(RegionUtils.getRegion(region.getLabel()));
     }
     try {
       //check if the credentials are right by trying to list an object in the common prefix
