@@ -231,7 +231,7 @@ public class HttpClientSource extends BaseSource {
     while (!waitTimeExpired(start) && uninterrupted && (recordCount < chunksToFetch)) {
       if (parser != null) {
         // We already have an response that we haven't finished reading.
-        newSourceOffset = Optional.of(parseResponse(chunksToFetch, batchMaker));
+        newSourceOffset = Optional.of(parseResponse(start, chunksToFetch, batchMaker));
       } else if (shouldMakeRequest()) {
 
         if (conf.pagination.mode != PaginationMode.NONE) {
@@ -241,7 +241,7 @@ public class HttpClientSource extends BaseSource {
         }
 
         makeRequest(target);
-        newSourceOffset = processResponse(chunksToFetch, batchMaker);
+        newSourceOffset = processResponse(start, chunksToFetch, batchMaker);
       } else if (conf.httpMode == HttpClientMode.BATCH) {
         // We are done.
         return null;
@@ -363,7 +363,7 @@ public class HttpClientSource extends BaseSource {
    * @return the next source offset to commit
    * @throws StageException if an unhandled error is encountered
    */
-  private String parseResponse(int maxRecords, BatchMaker batchMaker) throws StageException {
+  private String parseResponse(long start, int maxRecords, BatchMaker batchMaker) throws StageException {
     HttpSourceOffset sourceOffset = new HttpSourceOffset(
         resolvedUrl,
         currentParameterHash,
@@ -379,7 +379,7 @@ public class HttpClientSource extends BaseSource {
     try {
       Record record = parser.parse();
       int subRecordCount = 0;
-      while (record != null && recordCount <= maxRecords) {
+      while (record != null && recordCount <= maxRecords && !waitTimeExpired(start)) {
         if (conf.pagination.mode != PaginationMode.NONE && record.has(conf.pagination.resultFieldPath)) {
           subRecordCount = parsePaginatedResult(batchMaker, sourceOffset.toString(), record);
           recordCount += subRecordCount;
@@ -548,7 +548,7 @@ public class HttpClientSource extends BaseSource {
    * @return a new source offset if the response was successful
    * @throws StageException if an unhandled error is encountered
    */
-  private Optional<String> processResponse(int maxRecords, BatchMaker batchMaker) throws
+  private Optional<String> processResponse(long start, int maxRecords, BatchMaker batchMaker) throws
       StageException {
     Optional<String> newSourceOffset = Optional.absent();
 
@@ -575,7 +575,7 @@ public class HttpClientSource extends BaseSource {
 
 
     if (response.hasEntity()) {
-      newSourceOffset = Optional.of(parseResponse(maxRecords, batchMaker));
+      newSourceOffset = Optional.of(parseResponse(start, maxRecords, batchMaker));
     }
 
     return newSourceOffset;
