@@ -414,6 +414,7 @@
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-ui</artifactId>
           <scope>provided</scope>
+          <type>pom</type>
         </dependency>
       </dependencies>
     </profile>
