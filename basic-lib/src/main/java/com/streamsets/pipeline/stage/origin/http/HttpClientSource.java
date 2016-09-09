@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -67,6 +68,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**
  * HTTP Client Origin implementation supporting streaming, polled, and paginated HTTP resources.
@@ -374,7 +377,15 @@ public class HttpClientSource extends BaseSource {
     if (parser == null) {
       // Only get a new parser if we are done with the old one.
       in = response.readEntity(InputStream.class);
-      parser = parserFactory.getParser(sourceOffset.toString(), in, "0");
+      try {
+        parser = parserFactory.getParser(sourceOffset.toString(), in, "0");
+      } catch (DataParserException e) {
+        if (e.getErrorCode() == JSON_PARSER_00) {
+          LOG.warn("No data returned in HTTP response body.", e);
+          return sourceOffset.toString();
+        }
+        throw e;
+      }
     }
     try {
       Record record = parser.parse();
