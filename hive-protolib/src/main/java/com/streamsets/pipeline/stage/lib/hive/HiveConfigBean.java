@@ -75,7 +75,7 @@ public class HiveConfigBean {
       label = "Hadoop Configuration Directory",
       description = "An absolute path or a directory under SDC resources directory to load core-site.xml," +
           " hdfs-site.xml and hive-site.xml files.",
-      displayPosition = 30,
+      displayPosition = 60,
       group = "HIVE"
   )
   public String confDir;
@@ -85,7 +85,7 @@ public class HiveConfigBean {
       type = ConfigDef.Type.MAP,
       label = "Additional Hadoop Configuration",
       description = "Additional configuration properties. Values here override values loaded from config files.",
-      displayPosition = 40,
+      displayPosition = 70,
       group = "HIVE"
   )
   public Map<String, String> additionalConfigProperties;
@@ -97,7 +97,7 @@ public class HiveConfigBean {
       label = "Max Cache Size (entries)",
       description = "Configures the cache size for storing table related information." +
           " Use -1 for unlimited number of table entries in the cache.",
-      displayPosition = 60,
+      displayPosition = 80,
       group = "ADVANCED"
   )
   public long maxCacheSize = -1L;
