@@ -227,7 +227,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     runner.runInit();
 
     Calendar cal = Calendar.getInstance(timeZone);
-    cal.setTime(new Date(System.currentTimeMillis()));
+    cal.setTime(new Date());
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("name", Field.create(Field.Type.STRING, "StreamSets"));
@@ -241,7 +241,6 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
 
     // Set the target timezone
     cal.setTimeZone(targetTimeZone);
-    cal.setTime(new Date(System.currentTimeMillis()));
 
     String year = String.valueOf(cal.get(Calendar.YEAR));
     String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
