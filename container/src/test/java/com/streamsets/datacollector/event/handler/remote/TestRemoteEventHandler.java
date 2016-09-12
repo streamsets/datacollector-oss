@@ -547,7 +547,10 @@ public class TestRemoteEventHandler {
   }
 
   @Test
-  public void testPipelineSaveEventTriggered() {
+  public void testPipelineSaveEventTriggered() throws Exception {
+    DataStore dataStore = Mockito.mock(DataStore.class);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    Mockito.when(dataStore.getOutputStream()).thenReturn(baos);
     MessagingJsonToFromDto jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
     List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
     MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
@@ -563,7 +566,7 @@ public class TestRemoteEventHandler {
         new HashMap<String, String>(),
         Stopwatch.createStarted(),
         -1,
-        null
+        dataStore
     );
     remoteEventHandler.callRemoteControl();
     assertEquals(-1, remoteEventHandler.getDelay());
