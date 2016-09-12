@@ -22,7 +22,7 @@ package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Executor (destination) that executes given queries against hive or impala.
  */
-public class HiveQueryExecutor extends BaseTarget {
+public class HiveQueryExecutor extends BaseExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(HiveQueryExecutor.class);
 

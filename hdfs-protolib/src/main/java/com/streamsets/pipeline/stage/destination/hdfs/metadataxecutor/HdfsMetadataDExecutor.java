@@ -21,10 +21,10 @@ package com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.configurablestage.DExecutor;
 
 @StageDef(
   version = 1,
@@ -37,7 +37,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class HdfsMetadataDExecutor extends DTarget {
+public class HdfsMetadataDExecutor extends DExecutor {
 
   @ConfigDefBean
   public HdfsConnectionConfig connection;
@@ -46,7 +46,7 @@ public class HdfsMetadataDExecutor extends DTarget {
   public HdfsActionsConfig  actions;
 
   @Override
-  protected Target createTarget() {
+  protected Executor createExecutor() {
     return new HdfsMetadataExecutor(connection, actions);
   }
 }

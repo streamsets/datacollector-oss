@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -47,7 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class HdfsMetadataExecutor extends BaseTarget {
+public class HdfsMetadataExecutor extends BaseExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(HdfsMetadataExecutor.class);
 

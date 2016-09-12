@@ -21,9 +21,11 @@ package com.streamsets.pipeline.stage.destination.mapreduce;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.configurablestage.DExecutor;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
@@ -39,7 +41,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfi
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class MapReduceDExecutor extends DTarget {
+public class MapReduceDExecutor extends DExecutor {
 
   @ConfigDefBean
   public MapReduceConfig mapReduceConfig;
@@ -48,7 +50,7 @@ public class MapReduceDExecutor extends DTarget {
   public JobConfig jobConfig;
 
   @Override
-  protected Target createTarget() {
+  protected Executor createExecutor() {
     return new MapReduceExecutor(mapReduceConfig, jobConfig);
   }
 }

@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class MapReduceExecutor extends BaseTarget {
+public class MapReduceExecutor extends BaseExecutor {
   private static final Logger LOG = LoggerFactory.getLogger(MapReduceExecutor.class);
 
   private final MapReduceConfig mapReduceConfig;

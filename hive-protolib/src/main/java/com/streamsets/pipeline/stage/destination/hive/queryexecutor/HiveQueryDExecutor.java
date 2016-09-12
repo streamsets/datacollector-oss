@@ -21,11 +21,11 @@ package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.configurablestage.DExecutor;
 
 /**
  */
@@ -42,13 +42,13 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   "config.hiveConfigBean.maxCacheSize"
 })
 @GenerateResourceBundle
-public class HiveQueryDExecutor extends DTarget {
+public class HiveQueryDExecutor extends DExecutor {
 
   @ConfigDefBean
   public HiveQueryExecutorConfig config;
 
   @Override
-  protected Target createTarget() {
+  protected Executor createExecutor() {
     return new HiveQueryExecutor(config);
   }
 }

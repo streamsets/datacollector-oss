@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceDExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
@@ -56,7 +56,7 @@ public class MapReduceExecutorIT extends BaseMapReduceIT {
       .put(SimpleTestInputFormat.THROW_EXCEPTION, "true")
     .build());
 
-    TargetRunner runner = new TargetRunner.Builder(MapReduceDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     runner.runInit();
@@ -83,7 +83,7 @@ public class MapReduceExecutorIT extends BaseMapReduceIT {
       .put(SimpleTestInputFormat.FILE_VALUE, "secret")
     .build());
 
-    TargetRunner runner = new TargetRunner.Builder(MapReduceDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     runner.runInit();
@@ -118,7 +118,7 @@ public class MapReduceExecutorIT extends BaseMapReduceIT {
       .put(SimpleTestInputFormat.FILE_VALUE, "${record:value('/key')}")
     .build());
 
-    TargetRunner runner = new TargetRunner.Builder(MapReduceDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     runner.runInit();

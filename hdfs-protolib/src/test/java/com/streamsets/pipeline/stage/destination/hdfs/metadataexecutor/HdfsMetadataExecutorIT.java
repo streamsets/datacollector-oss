@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor.HdfsActionsConfig;
 import com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor.HdfsMetadataDExecutor;
 import com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor.HdfsMetadataExecutor;
@@ -269,7 +269,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -294,7 +294,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -319,7 +319,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -344,7 +344,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -369,7 +369,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsMetadataDExecutor.class, executor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();

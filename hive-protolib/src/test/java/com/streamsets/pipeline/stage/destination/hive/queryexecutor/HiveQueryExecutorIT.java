@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
   public void testExecuteSimpleQuery() throws Exception {
     HiveQueryExecutor queryExecutor = createExecutor("CREATE TABLE copy AS SELECT * FROM origin");
 
-    TargetRunner runner = new TargetRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -73,7 +73,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
   public void testEL() throws Exception {
     HiveQueryExecutor queryExecutor = createExecutor("CREATE TABLE ${record:value('/table')} AS SELECT * FROM origin");
 
-    TargetRunner runner = new TargetRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
     runner.runInit();
@@ -97,7 +97,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
   public void testIncorrectQuery() throws Exception {
     HiveQueryExecutor queryExecutor = createExecutor("THIS REALLY IS NOT VALID QUERY");
 
-    TargetRunner runner = new TargetRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
+    ExecutorRunner runner = new ExecutorRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     runner.runInit();
