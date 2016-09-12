@@ -88,6 +88,9 @@ public class RemoteDownloadSource extends BaseSource {
   private final File errorArchive;
   private final byte[] moveBuffer;
 
+  private RemoteFile next = null;
+
+
   private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
     @Override
     public int compare(RemoteFile f1, RemoteFile f2) {
@@ -234,7 +237,6 @@ public class RemoteDownloadSource extends BaseSource {
       currentOffset = new Offset(lastSourceOffset);
     }
     String offset = NOTHING_READ;
-    RemoteFile next = null;
     try {
       Optional<RemoteFile> nextOpt = null;
       // Time to read the next file
@@ -317,12 +319,16 @@ public class RemoteDownloadSource extends BaseSource {
           batchMaker.addRecord(record);
           offset = parser.getOffset();
         } else {
-          parser.close();
-          parser = null;
-          if (currentStream != null) {
-            currentStream.close();
+          try {
+            parser.close();
+            if (currentStream != null) {
+              currentStream.close();
+            }
+          } finally {
+            parser = null;
+            currentStream = null;
+            next = null;
           }
-          currentStream = null;
           break;
         }
       } catch (ObjectLengthException ex) {
@@ -466,6 +472,7 @@ public class RemoteDownloadSource extends BaseSource {
       //Also forces to initialize the next in produce call.
       currentStream = null;
       currentOffset = null;
+      next = null;
     }
   }
 

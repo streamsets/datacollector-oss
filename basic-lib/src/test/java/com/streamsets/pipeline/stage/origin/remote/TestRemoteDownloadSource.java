@@ -1086,6 +1086,62 @@ public class TestRemoteDownloadSource {
 
   }
 
+  @Test
+  public void testMultiBatchSameFile() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testMultiBatchSameFile";
+
+    Path filePath =  Paths.get(path + "/testMultiBatchSameFile.txt");
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0 ; i < 100; i++) {
+      sb.append("This is sample text" + i);
+      sb.append("\n");
+    }
+
+    java.nio.file.Files.write(
+        filePath,
+        sb.toString().getBytes(),
+        StandardOpenOption.CREATE_NEW
+    );
+
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.TEXT,
+            null
+        ));
+
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    List<Record> actual;
+    String lastOffset = RemoteDownloadSource.NOTHING_READ;
+    try {
+      do {
+        //Batch size 25, records 100. (4 batches)
+        StageRunner.Output op = runner.runProduce(lastOffset, 25);
+        lastOffset = op.getNewOffset();
+        actual = op.getRecords().get("lane");
+      } while (actual.size() > 0);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
       boolean userDirIsRoot,
