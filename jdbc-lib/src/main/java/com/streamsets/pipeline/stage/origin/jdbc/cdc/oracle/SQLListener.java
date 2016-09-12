@@ -34,6 +34,7 @@ public class SQLListener extends plsqlBaseListener {
 
   private final HashMap<String, String> columns = new HashMap<>();
   private boolean insideStatement = false;
+  private boolean caseSensitive = false;
   private String table;
 
   private static final String IS_NULL = "ISNULL";
@@ -51,7 +52,7 @@ public class SQLListener extends plsqlBaseListener {
   @Override
   public void enterUpdate_set_clause(plsqlParser.Update_set_clauseContext ctx) {
     for(plsqlParser.Column_based_update_set_clauseContext x : ctx.column_based_update_set_clause()) {
-      columns.put(format(x.column_name(0).getText().trim()), format(x.expression().getText().trim()));
+      columns.put(formatColumnName(x.column_name(0).getText().trim()), format(x.expression().getText().trim()));
     }
   }
 
@@ -75,12 +76,20 @@ public class SQLListener extends plsqlBaseListener {
       if (columnValues.length > 1) {
         column = columnValues[0].trim();
         value = columnValues[1].trim();
-        String key = format(column);
+        String key = formatColumnName(column);
         if (!columns.containsKey(key)) {
           columns.put(key, format(value));
         }
       }
     }
+  }
+
+  public String formatColumnName(String columnName) {
+    String returnValue = format(columnName);
+    if (caseSensitive) {
+      return returnValue;
+    }
+    return returnValue.toUpperCase();
   }
 
   @VisibleForTesting
@@ -114,4 +123,7 @@ public class SQLListener extends plsqlBaseListener {
     return table;
   }
 
+  void setCaseSensitive() {
+    this.caseSensitive = true;
+  }
 }

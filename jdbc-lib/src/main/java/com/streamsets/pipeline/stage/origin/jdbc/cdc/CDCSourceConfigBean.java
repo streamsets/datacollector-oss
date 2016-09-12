@@ -72,9 +72,9 @@ public class CDCSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Case Sensitive DB/Table names",
+      label = "Case Sensitive DB/Table names/Column names",
       description = "If unchecked, upper case will be used. " +
-          "Check this only if the schema and table names were quoted during creation (not common)",
+          "Check this only if the schema, table and column names were quoted during creation (not common)",
       displayPosition = 70,
       group = "CDC",
       defaultValue = "false"

@@ -448,6 +448,10 @@ public class OracleCDCSource extends BaseSource {
         issues.add(getContext().createConfigIssue(CDC.name(), errorParam, error));
       }
     }
+
+    if (configBean.baseConfigBean.caseSensitive) {
+      sqlListener.setCaseSensitive();
+    }
     return issues;
   }
 
@@ -545,6 +549,9 @@ public class OracleCDCSource extends BaseSource {
       for (int i = 1; i <= colCount; i++) {
         int colType = md.getColumnType(i);
         String colName = md.getColumnName(i);
+        if (!configBean.baseConfigBean.caseSensitive) {
+          colName = colName.toUpperCase();
+        }
         if (colType == Types.DATE || colType == Types.TIME || colType == Types.TIMESTAMP) {
           if (dateTimeColumns.get(tableName) == null) {
             dateTimeColumns.put(tableName, new HashMap<String, String>());
