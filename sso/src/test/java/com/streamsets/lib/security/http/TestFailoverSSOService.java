@@ -157,9 +157,7 @@ public class TestFailoverSSOService {
 
     Thread thread = failover.runRecovery();
     thread.join();
-    Mockito.verify(remote, Mockito.times(1)).register(Mockito.eq(attribures));
     Assert.assertEquals(remote, failover.getActiveService());
-    Mockito.verify(failover, Mockito.times(2)).setRecoveryInProgress(Mockito.eq(false));
   }
 
   @Test
@@ -184,10 +182,7 @@ public class TestFailoverSSOService {
 
     Thread thread = failover.runRecovery();
     thread.join();
-    Mockito.verify(remote, Mockito.times(1)).register(Mockito.eq(attribures));
     Assert.assertEquals(disconnected, failover.getActiveService());
-    Mockito.verify(failover, Mockito.times(2)).setRecoveryInProgress(Mockito.eq(false));
-
   }
 
 }
