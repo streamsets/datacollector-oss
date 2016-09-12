@@ -76,6 +76,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_46;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_47;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_48;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_49;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_50;
 import static com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.Groups.CDC;
 import static com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.Groups.CREDENTIALS;
 
@@ -339,16 +340,24 @@ public class OracleCDCSource extends BaseSource {
       issues.add(getContext().createConfigIssue(CREDENTIALS.name(), USERNAME, JDBC_42));
     }
 
-    try(Statement reusedStatement = connection.createStatement()) {
+    try (Statement reusedStatement = connection.createStatement()) {
       int majorVersion = getDBVersion(issues);
       // If version is 12+, then the check for table presence must be done in an alternate container!
       if (majorVersion == -1) {
         return issues;
       }
+      boolean switchedContainer = false;
       if (majorVersion >= 12) {
         if (!StringUtils.isEmpty(container)) {
           String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
-          reusedStatement.execute(switchToPdb);
+          try {
+            reusedStatement.execute(switchToPdb);
+          } catch (SQLException ex) {
+            LOG.error("Error while switching to container: " + container, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
+            return issues;
+          }
+          switchedContainer = true;
         }
       }
       tables = new ArrayList<>(configBean.baseConfigBean.tables.size());
@@ -364,15 +373,33 @@ public class OracleCDCSource extends BaseSource {
       }
       for (String table : tables) {
         table = table.trim();
-        tableSchemas.put(table, getTableSchema(table));
+        try {
+          tableSchemas.put(table, getTableSchema(table));
+        } catch (SQLException ex) {
+          LOG.error("Error while switching to container: " + container, ex);
+          issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_50));
+        }
       }
       container = CDB_ROOT;
       if (majorVersion >= 12) {
-        reusedStatement.execute(SWITCH_TO_CDB_ROOT);
+        try {
+          reusedStatement.execute(SWITCH_TO_CDB_ROOT);
+        } catch (SQLException ex) {
+          // Fatal only if we switched to a PDB earlier
+          if (switchedContainer) {
+            LOG.error("Error while switching to container: " + container, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
+            return issues;
+          }
+          // Log it anyway
+          LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
+        }
       }
     } catch (SQLException ex) {
-      LOG.error("Error while switching to container: " + container, ex);
-      issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
+      LOG.error("Error while creating statement", ex);
+      issues.add(getContext().createConfigIssue(
+          Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database",
+          JDBC_00, configBean.baseConfigBean.database));
       return issues;
     }
 
