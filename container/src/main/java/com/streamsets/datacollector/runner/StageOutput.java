@@ -31,19 +31,29 @@ public class StageOutput {
   private final Map<String, List<Record>> output;
   private final List<Record> errorRecords;
   private final List<ErrorMessage> stageErrors;
+  private final List<Record> eventRecords;
 
   @SuppressWarnings("unchecked")
-  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink) {
-    this(instanceName, (Map) output, (List) errorSink.getErrorRecords(instanceName),
-         errorSink.getStageErrors().get(instanceName));
+  public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink, EventSink eventSink) {
+    this(instanceName,
+      (Map) output,
+      (List) errorSink.getErrorRecords(instanceName),
+      errorSink.getStageErrors().get(instanceName),
+      eventSink.getEventRecords()
+    );
   }
 
-  public StageOutput(String instanceName, Map<String, List<Record>> output, List<Record> errorRecords,
-        List<ErrorMessage> stageErrors) {
+  public StageOutput(String instanceName,
+                     Map<String, List<Record>> output,
+                     List<Record> errorRecords,
+                     List<ErrorMessage> stageErrors,
+                     List<Record> eventRecords
+  ) {
     this.instanceName = instanceName;
     this.output = (Map) output;
     this.errorRecords = (List) errorRecords;
     this.stageErrors = stageErrors;
+    this.eventRecords = eventRecords;
   }
 
   public String getInstanceName() {
@@ -60,6 +70,10 @@ public class StageOutput {
 
   public List<ErrorMessage> getStageErrors() {
     return stageErrors;
+  }
+
+  public List<Record> getEventRecords() {
+    return eventRecords;
   }
 
   @Override

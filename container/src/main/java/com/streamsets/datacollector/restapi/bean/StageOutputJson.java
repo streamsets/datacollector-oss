@@ -22,6 +22,7 @@ package com.streamsets.datacollector.restapi.bean;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.runner.StageOutput;
 
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,15 @@ public class StageOutputJson {
     @JsonProperty("instanceName") String instanceName,
     @JsonProperty("output") Map<String, List<RecordJson>> output,
     @JsonProperty("errorRecords") List<RecordJson> errorRecordJsons,
-    @JsonProperty("stageErrors") List<ErrorMessageJson> stageErrors) {
-    this.stageOutput = new com.streamsets.datacollector.runner.StageOutput(instanceName, BeanHelper.unwrapRecordsMap(output),
-      BeanHelper.unwrapRecords(errorRecordJsons), BeanHelper.unwrapErrorMessages(stageErrors));
+    @JsonProperty("stageErrors") List<ErrorMessageJson> stageErrors,
+    @JsonProperty("events") List<RecordJson> eventRecords
+    ) {
+    this.stageOutput = new StageOutput(instanceName,
+      BeanHelper.unwrapRecordsMap(output),
+      BeanHelper.unwrapRecords(errorRecordJsons),
+      BeanHelper.unwrapErrorMessages(stageErrors),
+      BeanHelper.unwrapRecords(eventRecords)
+    );
   }
 
   public StageOutputJson(com.streamsets.datacollector.runner.StageOutput stageOutput) {
@@ -58,6 +65,10 @@ public class StageOutputJson {
 
   public List<ErrorMessageJson> getStageErrors() {
     return BeanHelper.wrapErrorMessages(stageOutput.getStageErrors());
+  }
+
+  public List<RecordJson> getEventRecords() {
+    return BeanHelper.wrapRecords(stageOutput.getEventRecords());
   }
 
   @JsonIgnore

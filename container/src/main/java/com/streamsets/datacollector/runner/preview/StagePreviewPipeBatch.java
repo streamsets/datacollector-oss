@@ -77,8 +77,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
 
   @Override
   public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
-    stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
-    // TODO: Implement even propagation in preview
+    stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
   }
 
   @Override

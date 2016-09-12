@@ -37,6 +37,7 @@ public class StageOutputJson   {
   private Map<String, List<RecordJson>> output = new HashMap<String, List<RecordJson>>();
   private List<RecordJson> errorRecords = new ArrayList<RecordJson>();
   private List<ErrorMessageJson> stageErrors = new ArrayList<ErrorMessageJson>();
+  private List<RecordJson> eventRecords = new ArrayList<RecordJson>();
 
 
   /**
@@ -86,6 +87,16 @@ public class StageOutputJson   {
     this.stageErrors = stageErrors;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("eventRecords")
+  public List<RecordJson> getEventRecords() {
+    return eventRecords;
+  }
+  public void setEventRecords(List<RecordJson> eventRecords) {
+    this.eventRecords = eventRecords;
+  }
 
 
   @Override
@@ -97,6 +108,7 @@ public class StageOutputJson   {
     sb.append("    output: ").append(StringUtil.toIndentedString(output)).append("\n");
     sb.append("    errorRecords: ").append(StringUtil.toIndentedString(errorRecords)).append("\n");
     sb.append("    stageErrors: ").append(StringUtil.toIndentedString(stageErrors)).append("\n");
+    sb.append("    eventRecords: ").append(StringUtil.toIndentedString(eventRecords)).append("\n");
     sb.append("}");
     return sb.toString();
   }

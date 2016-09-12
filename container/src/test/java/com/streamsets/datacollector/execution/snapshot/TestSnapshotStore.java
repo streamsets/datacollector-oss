@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Field;
@@ -250,7 +251,7 @@ public abstract class TestSnapshotStore {
     Map<String, List<Record>> so1 = new HashMap<>(1);
     so1.put("lane", records1);
 
-    StageOutput s1 = new StageOutput("source", so1, new ErrorSink());
+    StageOutput s1 = new StageOutput("source", so1, new ErrorSink(), new EventSink());
     snapshot.add(s1);
 
     List<Record> records2 = new ArrayList<>(1);
@@ -270,7 +271,7 @@ public abstract class TestSnapshotStore {
 
     Map<String, List<Record>> so2 = new HashMap<>(1);
     so2.put("lane", records2);
-    StageOutput s2 = new StageOutput("processor", so2, new ErrorSink());
+    StageOutput s2 = new StageOutput("processor", so2, new ErrorSink(), new EventSink());
     snapshot.add(s2);
 
     return snapshot;

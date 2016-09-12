@@ -26,6 +26,8 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class FullPipeBatch implements PipeBatch {
+  //DELETE ME
+  private static final Logger LOG = LoggerFactory.getLogger(FullPipeBatch.class);
+
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
   private final Map<String, List<Record>> fullPayload;
@@ -137,7 +142,7 @@ public class FullPipeBatch implements PipeBatch {
     }
     if (stageOutputSnapshot != null) {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
-      stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
+      stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
     }
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
@@ -195,7 +200,10 @@ public class FullPipeBatch implements PipeBatch {
     if (stageOutputSnapshot != null) {
       stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(),
                                               (Map) createSnapshot(stageOutput.getOutput()),
-                                              (List) stageOutput.getErrorRecords(), stageOutput.getStageErrors()));
+                                              (List) stageOutput.getErrorRecords(),
+                                              stageOutput.getStageErrors(),
+                                              stageOutput.getEventRecords()
+      ));
     }
   }
 
