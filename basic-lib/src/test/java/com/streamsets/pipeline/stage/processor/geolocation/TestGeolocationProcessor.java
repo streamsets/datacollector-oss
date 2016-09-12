@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.geolocation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import com.google.common.net.InetAddresses;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -33,23 +34,34 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@RunWith(Parameterized.class)
 public class TestGeolocationProcessor {
+
+  @Parameterized.Parameters
+  public static Collection<String> ipAddresses() {
+    return ImmutableList.of("128.101.101.101", "2602:ae:14a5::");
+  }
+
+  @Parameterized.Parameter
+  public String ip;
 
   private File tempDir;
   private File countryDb;
@@ -87,23 +99,14 @@ public class TestGeolocationProcessor {
     for (String ipAsString : ips) {
       InetAddress ip = InetAddress.getByName(ipAsString);
       byte[] ipAsBytes = ip.getAddress();
-      int ipAsInt = GeolocationProcessor.ipAsBytesToInt(ipAsBytes);
-      Assert.assertArrayEquals(ipAsBytes, GeolocationProcessor.ipAsIntToBytes(ipAsInt));
-      Assert.assertArrayEquals(ipAsBytes, GeolocationProcessor.ipAsStringToBytes(ipAsString));
-      Assert.assertEquals(ipAsString, GeolocationProcessor.ipAsIntToString(ipAsInt));
-      Assert.assertEquals(ipAsString, GeolocationProcessor.ipAsIntToString(ipAsInt));
-      Assert.assertEquals(ipAsInt, GeolocationProcessor.ipAsStringToInt(ipAsString));
-      Assert.assertArrayEquals(ipAsBytes, GeolocationProcessor.ipAsStringToBytes(ipAsString));
+      int ipAsInt = ipAsBytesToInt(ipAsBytes);
+      Assert.assertArrayEquals(ipAsBytes, ipAsIntToBytes(ipAsInt));
+      Assert.assertArrayEquals(ipAsBytes, ipAsStringToBytes(ipAsString));
+      Assert.assertEquals(ipAsString, ipAsIntToString(ipAsInt));
+      Assert.assertEquals(ipAsString, ipAsIntToString(ipAsInt));
+      Assert.assertEquals(ipAsInt, InetAddresses.coerceToInteger(InetAddresses.forString(ipAsString)));
+      Assert.assertArrayEquals(ipAsBytes, ipAsStringToBytes(ipAsString));
     }
-  }
-  @Test(expected = OnRecordErrorException.class)
-  public void testInvalidStringIP1() throws Exception {
-    GeolocationProcessor.ipAsStringToInt("1.2");
-  }
-
-  @Test(expected = OnRecordErrorException.class)
-  public void testInvalidStringIP2() throws Exception {
-    GeolocationProcessor.ipAsStringToInt("1.2.3.d");
   }
 
   @Test
@@ -146,7 +149,6 @@ public class TestGeolocationProcessor {
 
   @Test
   public void testLookup() throws Exception {
-    String ip = "128.101.101.101";
     List<GeolocationFieldConfig> configs = new ArrayList<>();
     GeolocationFieldConfig config;
     config = new GeolocationFieldConfig();
@@ -179,8 +181,8 @@ public class TestGeolocationProcessor {
     runner.runInit();
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("ipAsInt", Field.create(GeolocationProcessor.ipAsStringToInt(ip)));
-      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsInt", Field.create(ipAsStringToInt(ip)));
+      map.put("ipAsIntString", Field.create(String.valueOf(ipAsStringToInt(ip))));
       map.put("ipAsString", Field.create(ip));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
@@ -191,8 +193,11 @@ public class TestGeolocationProcessor {
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
       Assert.assertEquals(String.valueOf(result), 6, result.size());
-      Assert.assertEquals("United States", Utils.checkNotNull(result.get("intStringIpCountry"), "intStringIpCountry").getValue());
-      Assert.assertEquals("United States", Utils.checkNotNull(result.get("intIpCountry"), "intIpCountry").getValue());
+      // IPv6 addresses cannot be represented by an integer.
+      if (!ip.contains(":")) {
+        Assert.assertEquals("United States", Utils.checkNotNull(result.get("intStringIpCountry"), "intStringIpCountry").getValue());
+        Assert.assertEquals("United States", Utils.checkNotNull(result.get("intIpCountry"), "intIpCountry").getValue());
+      }
       Assert.assertEquals("United States", Utils.checkNotNull(result.get("stringIpCountry"), "stringIpCountry").getValue());
     } finally {
       runner.runDestroy();
@@ -201,7 +206,6 @@ public class TestGeolocationProcessor {
 
   @Test
   public void testMultiDBLookup() throws Exception {
-    String ip = "128.101.101.101";
     List<GeolocationFieldConfig> configs = new ArrayList<>();
     GeolocationFieldConfig config;
     config = new GeolocationFieldConfig();
@@ -254,8 +258,8 @@ public class TestGeolocationProcessor {
     runner.runInit();
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("ipAsInt", Field.create(GeolocationProcessor.ipAsStringToInt(ip)));
-      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsInt", Field.create(ipAsStringToInt(ip)));
+      map.put("ipAsIntString", Field.create(String.valueOf(ipAsStringToInt(ip))));
       map.put("ipAsString", Field.create(ip));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
@@ -266,12 +270,25 @@ public class TestGeolocationProcessor {
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
       Assert.assertEquals(String.valueOf(result), 9, result.size());
-      Assert.assertEquals("United States", Utils.checkNotNull(result.get("intStringIpCountry"), "intStringIpCountry").getValue());
-      Assert.assertEquals("United States", Utils.checkNotNull(result.get("intIpCountry"), "intIpCountry").getValue());
-      Assert.assertEquals("United States", Utils.checkNotNull(result.get("stringIpCountry"), "stringIpCountry").getValue());
-      Assert.assertEquals("Minneapolis", Utils.checkNotNull(result.get("intStringIpCityName"), "intStringIpCityName").getValue());
-      Assert.assertEquals("Minneapolis", Utils.checkNotNull(result.get("intIpCityName"), "intIpCityName").getValue());
-      Assert.assertEquals("Minneapolis", Utils.checkNotNull(result.get("stringIpCityName"), "stringIpCityName").getValue());
+      // IPv6 addresses cannot be represented by an integer.
+      if (!ip.contains(":")) {
+        Assert.assertEquals("United States",
+            Utils.checkNotNull(result.get("intStringIpCountry"), "intStringIpCountry").getValue()
+        );
+        Assert.assertEquals("United States", Utils.checkNotNull(result.get("intIpCountry"), "intIpCountry").getValue());
+        Assert.assertEquals("Minneapolis",
+            Utils.checkNotNull(result.get("intStringIpCityName"), "intStringIpCityName").getValue()
+        );
+        Assert.assertEquals("Minneapolis", Utils.checkNotNull(result.get("intIpCityName"), "intIpCityName").getValue());
+      }
+      Assert.assertEquals(
+          "United States",
+          Utils.checkNotNull(result.get("stringIpCountry"), "stringIpCountry").getValue()
+      );
+      Assert.assertEquals(
+          "Minneapolis",
+          Utils.checkNotNull(result.get("stringIpCityName"), "stringIpCityName").getValue()
+      );
     } finally {
       runner.runDestroy();
     }
@@ -280,7 +297,6 @@ public class TestGeolocationProcessor {
 
   @Test
   public void testInvalidInputField() throws Exception {
-    String ip = "128.101.101.101";
     List<GeolocationFieldConfig> configs = new ArrayList<>();
     GeolocationFieldConfig config;
     config = new GeolocationFieldConfig();
@@ -305,8 +321,8 @@ public class TestGeolocationProcessor {
     boolean exceptionTriggered = false;
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("ipAsInt", Field.create(GeolocationProcessor.ipAsStringToInt(ip)));
-      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsInt", Field.create(ipAsStringToInt(ip)));
+      map.put("ipAsIntString", Field.create(String.valueOf(ipAsStringToInt(ip))));
       map.put("ipAsString", Field.create(ip));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
@@ -324,7 +340,6 @@ public class TestGeolocationProcessor {
 
   @Test
   public void testNullInputFieldValue() throws Exception {
-    String ip = "128.101.101.101";
     List<GeolocationFieldConfig> configs = new ArrayList<>();
     GeolocationFieldConfig config;
     config = new GeolocationFieldConfig();
@@ -351,13 +366,13 @@ public class TestGeolocationProcessor {
     try {
       Map<String, Field> map = new LinkedHashMap<>();
       map.put("ipAsInt", Field.create((String)null));
-      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsIntString", Field.create(String.valueOf(ipAsStringToInt(ip))));
       map.put("ipAsString", Field.create(ip));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
     } catch(RuntimeException ex) {
-      Assert.assertTrue(ex.getCause().getMessage().contains("GEOIP_06"));
+      Assert.assertTrue(ex.getCause().getMessage().contains("GEOIP_13"));
       exceptionTriggered = true;
     } finally {
       runner.runDestroy();
@@ -474,5 +489,38 @@ public class TestGeolocationProcessor {
     } catch (StageException e) {
       Assert.assertTrue(e.getMessage().contains("GEOIP_10"));
     }
+  }
+
+  private static int ipAsStringToInt(String s) {
+    return InetAddresses.coerceToInteger(InetAddresses.forString(s));
+  }
+
+  private static byte[] ipAsIntToBytes(int ip) {
+    return new byte[] {
+        (byte)(ip >> 24),
+        (byte)(ip >> 16),
+        (byte)(ip >> 8),
+        (byte)(ip & 0xff)
+    };
+  }
+
+  private static int ipAsBytesToInt(byte[] ip) {
+    int result = 0;
+    for (byte b: ip) {
+      result = result << 8 | (b & 0xFF);
+    }
+    return result;
+  }
+
+  private static String ipAsIntToString(int ip) {
+    return String.format("%d.%d.%d.%d",
+        (ip >> 24 & 0xff),
+        (ip >> 16 & 0xff),
+        (ip >> 8 & 0xff),
+        (ip & 0xff));
+  }
+
+  private static byte[] ipAsStringToBytes(String ip) throws OnRecordErrorException {
+    return ipAsIntToBytes(ipAsStringToInt(ip));
   }
 }

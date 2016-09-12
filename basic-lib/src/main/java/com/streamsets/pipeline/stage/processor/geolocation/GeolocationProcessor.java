@@ -26,6 +26,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
+import com.google.common.net.InetAddresses;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
@@ -74,7 +75,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
   private final List<GeolocationFieldConfig> configs;
   private final GeolocationMissingAddressAction missingAddressAction;
   private Map<GeolocationDBType, DatabaseReader> readers = Maps.newHashMap();
-  LoadingCache<Field, Map<GeolocationDBType, AbstractResponse>> responseCache;
+  private LoadingCache<Field, Map<GeolocationDBType, AbstractResponse>> responseCache;
   private DefaultErrorRecordHandler errorRecordHandler;
 
   public GeolocationProcessor(
@@ -246,7 +247,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
           switch (config.targetType) {
             // Multiple databases support country name and ISO code, so we need to figure out which ones are available
             case COUNTRY_NAME:
-              String name = null;
+              String name;
               if (responses.containsKey(GeolocationDBType.COUNTRY)) {
                 CountryResponse countryResp = (CountryResponse) responses.get(GeolocationDBType.COUNTRY);
                 name = countryResp.getCountry().getName();
@@ -257,7 +258,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
               record.set(config.outputFieldName, Field.create(name));
               break;
             case COUNTRY_ISO_CODE:
-              String isoCode = null;
+              String isoCode;
               if (responses.containsKey(GeolocationDBType.COUNTRY)) {
                 CountryResponse countryResp = (CountryResponse) responses.get(GeolocationDBType.COUNTRY);
                 isoCode = countryResp.getCountry().getIsoCode();
@@ -388,75 +389,24 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
     switch (field.getType()) {
       case LONG:
       case INTEGER:
-        return InetAddress.getByAddress(ipAsIntToBytes(field.getValueAsInteger()));
+        return InetAddresses.fromInteger(field.getValueAsInteger());
       case STRING:
         String ip = field.getValueAsString();
-        if(ip != null) {
-          ip = ip.trim();
-          if (ip.contains(".")) {
-            return InetAddress.getByAddress(ipAsStringToBytes(ip));
-          } else {
-            try {
-              return InetAddress.getByAddress(ipAsIntToBytes(Integer.parseInt(ip)));
-            } catch (NumberFormatException nfe) {
-              throw new OnRecordErrorException(Errors.GEOIP_06, ip, nfe);
-            }
-          }
-        } else {
+        if (ip == null) {
+          throw new OnRecordErrorException(Errors.GEOIP_13);
+        }
+
+        ip = ip.trim();
+        if (!ip.contains(".") && !ip.contains(":")) {
+          return InetAddresses.fromInteger(Integer.parseInt(ip));
+        }
+
+        if (!InetAddresses.isInetAddress(ip)) {
           throw new OnRecordErrorException(Errors.GEOIP_06, ip);
         }
+        return InetAddresses.forString(ip);
       default:
         throw new IllegalStateException(Utils.format("Unknown field type: ", field.getType()));
     }
-  }
-
-  @VisibleForTesting
-  static byte[] ipAsIntToBytes(int ip) {
-    return new byte[] {
-      (byte)(ip >> 24),
-      (byte)(ip >> 16),
-      (byte)(ip >> 8),
-      (byte)(ip & 0xff)
-    };
-  }
-
-  @VisibleForTesting
-  static int ipAsBytesToInt(byte[] ip) {
-    int result = 0;
-    for (byte b: ip) {
-      result = result << 8 | (b & 0xFF);
-    }
-    return result;
-  }
-
-  @VisibleForTesting
-  static String ipAsIntToString(int ip) {
-    return String.format("%d.%d.%d.%d",
-      (ip >> 24 & 0xff),
-      (ip >> 16 & 0xff),
-      (ip >> 8 & 0xff),
-      (ip & 0xff));
-  }
-
-  @VisibleForTesting
-  static int ipAsStringToInt(String ip) throws OnRecordErrorException {
-    try {
-      int ipAsInt = 0;
-      String[] parts = ip.trim().split("\\.");
-      if (parts.length != 4) {
-        throw new OnRecordErrorException(Errors.GEOIP_06, ip);
-      }
-      for (String byteString : parts) { // TODO validate 3 dots
-        ipAsInt = (ipAsInt << 8) | Integer.parseInt(byteString);
-      }
-      return ipAsInt;
-    } catch (NumberFormatException ex) {
-      throw new OnRecordErrorException(Errors.GEOIP_06, ip);
-    }
-  }
-
-  @VisibleForTesting
-  static byte[] ipAsStringToBytes(String ip) throws OnRecordErrorException {
-    return ipAsIntToBytes(ipAsStringToInt(ip));
   }
 }
