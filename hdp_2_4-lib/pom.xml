@@ -47,14 +47,12 @@
 
   <dependencies>
 
-    <!-- Supposedly this will be released in HDP 2.4.2
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-streaming-kafka_2.10</artifactId>
       <version>${spark.version}</version>
       <scope>compile</scope>
     </dependency>
-    -->
 
     <!-- Provided Dependencies -->
     <dependency>

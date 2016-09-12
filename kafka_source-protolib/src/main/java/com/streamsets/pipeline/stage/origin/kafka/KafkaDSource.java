@@ -37,7 +37,7 @@ import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
   label = "Kafka Consumer",
   description = "Reads data from Kafka",
   execution = {ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.STANDALONE},
-  libJarsRegex = {"spark-streaming-kafka.*"},
+  libJarsRegex = {"spark-streaming-kafka.*", "kafka_\\d+.*", "kafka-clients-\\d+.*", "metrics-core-\\d+.*"},
   icon = "kafka.png",
   recordsByRef = true,
   upgrader = KafkaSourceUpgrader.class,

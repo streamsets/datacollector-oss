@@ -24,6 +24,7 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -195,6 +196,15 @@ public class TestKafkaSource {
   private BaseKafkaSource createSource(KafkaConfigBean conf) {
     KafkaSourceFactory factory = new StandaloneKafkaSourceFactory(conf);
     return factory.create();
+  }
+
+  @Test
+  public void testLibJarsRegex() throws Exception {
+    StageDef sDef = KafkaDSource.class.getAnnotation(StageDef.class);
+    Assert.assertEquals(
+        Arrays.asList("spark-streaming-kafka.*", "kafka_\\d+.*", "kafka-clients-\\d+.*", "metrics-core-\\d+.*"),
+        Arrays.asList(sDef.libJarsRegex())
+    );
   }
 
   @Test
