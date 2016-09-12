@@ -42,6 +42,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -196,6 +197,15 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  @HideConfigs(preconditions = true)
+  public static class Executor1 extends BaseExecutor {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
   public static class ToErrorTarget1 extends Target1 {
     @Override
@@ -321,6 +331,12 @@ public class TestStageDefinitionExtractor {
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
     Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
+  }
+
+  @Test
+  public void testExtractExecutor1() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Executor1.class, "x");
+    Assert.assertEquals(StageType.EXECUTOR, def.getType());
   }
 
   @Test

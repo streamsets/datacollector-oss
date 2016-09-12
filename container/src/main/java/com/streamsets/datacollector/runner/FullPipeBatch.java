@@ -90,7 +90,7 @@ public class FullPipeBatch implements PipeBatch {
     for (String inputLane : inputLanes) {
       records.addAll(fullPayload.remove(inputLane));
     }
-    if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
+    if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords += records.size();
     }
     return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker.getOffset(), records);
@@ -139,7 +139,7 @@ public class FullPipeBatch implements PipeBatch {
       String instanceName = pipe.getStage().getInfo().getInstanceName();
       stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink));
     }
-    if (pipe.getStage().getDefinition().getType() == StageType.TARGET) {
+    if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords -= errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
     }
     completeStage(pipe, eventSink);

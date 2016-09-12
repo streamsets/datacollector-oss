@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,11 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.pipeline.configurablestage;
 
-public enum StageTypeJson {
-  SOURCE,
-  PROCESSOR,
-  EXECUTOR,
-  TARGET,
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Executor;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+
+public abstract class DExecutor extends DStage<Executor.Context> implements Executor {
+
+  protected abstract Executor createExecutor();
+
+  @Override
+  Stage<Executor.Context> createStage() {
+    return createExecutor();
+  }
+
+  @Override
+  public final void write(Batch batch) throws StageException {
+    ((Executor)getStage()).write(batch);
+  }
+
 }

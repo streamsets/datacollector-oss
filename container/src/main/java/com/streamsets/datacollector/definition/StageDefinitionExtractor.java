@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
@@ -35,6 +34,7 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
@@ -338,6 +338,8 @@ public abstract class StageDefinitionExtractor {
       type = StageType.SOURCE;
     } else if (Processor.class.isAssignableFrom(klass)) {
       type = StageType.PROCESSOR;
+    } else if (Executor.class.isAssignableFrom(klass)) {
+      type = StageType.EXECUTOR;
     } else if (Target.class.isAssignableFrom(klass)) {
       type = StageType.TARGET;
     } else if (PipelineConfigBean.class.isAssignableFrom(klass)) {

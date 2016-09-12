@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.ModelType;
+import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -1097,6 +1098,8 @@ public class BeanHelper {
         return StageTypeJson.TARGET;
       case SOURCE:
         return StageTypeJson.SOURCE;
+      case EXECUTOR:
+        return StageTypeJson.EXECUTOR;
       case PROCESSOR:
         return StageTypeJson.PROCESSOR;
       default:
@@ -1113,6 +1116,8 @@ public class BeanHelper {
         return com.streamsets.datacollector.config.StageType.TARGET;
       case SOURCE:
         return com.streamsets.datacollector.config.StageType.SOURCE;
+      case EXECUTOR:
+        return StageType.EXECUTOR;
       case PROCESSOR:
         return com.streamsets.datacollector.config.StageType.PROCESSOR;
       default:

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,11 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.datacollector.config;
 
-public enum StageTypeJson {
-  SOURCE,
-  PROCESSOR,
-  EXECUTOR,
-  TARGET,
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class TestStageType {
+
+  @Test
+  public void testIsOneOf() {
+    assertTrue(StageType.EXECUTOR.isOneOf(StageType.TARGET, StageType.EXECUTOR));
+
+    assertFalse(StageType.EXECUTOR.isOneOf());
+    assertFalse(StageType.EXECUTOR.isOneOf(null));
+    assertFalse(StageType.EXECUTOR.isOneOf(StageType.TARGET));
+  }
 }

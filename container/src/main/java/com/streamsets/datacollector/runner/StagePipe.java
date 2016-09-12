@@ -249,7 +249,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     errorRecordsHistogram.update(stageErrorRecordCount);
 
     int outputRecordsCount = batchMaker.getSize();
-    if (isTarget()) {
+    if (isTargetOrExecutor()) {
       //Assumption is that the target will not drop any record.
       //Records are sent to destination or to the error sink.
       outputRecordsCount = batchSize - stageErrorRecordCount;
@@ -384,8 +384,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     return false;
   }
 
-  private boolean isTarget() {
-    if(getStage().getDefinition().getType() == StageType.TARGET) {
+  private boolean isTargetOrExecutor() {
+    if(getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.TARGET)) {
       return true;
     }
     return false;

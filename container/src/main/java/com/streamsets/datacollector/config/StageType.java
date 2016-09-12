@@ -23,5 +23,22 @@ public enum StageType {
   SOURCE,
   PROCESSOR,
   TARGET,
-  PIPELINE
+  EXECUTOR,
+  PIPELINE,
+  ;
+
+  public boolean isOneOf(StageType ...types) {
+    if(types == null) {
+      return false;
+    }
+
+    for(StageType t : types) {
+      if(this == t) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

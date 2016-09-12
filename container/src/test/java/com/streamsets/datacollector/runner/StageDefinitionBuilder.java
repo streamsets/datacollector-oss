@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.Executor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -191,6 +192,9 @@ public class StageDefinitionBuilder {
     }
     if(Processor.class.isAssignableFrom(klass)) {
       return StageType.PROCESSOR;
+    }
+    if(Executor.class.isAssignableFrom(klass)) {
+      return StageType.EXECUTOR;
     }
     if(Target.class.isAssignableFrom(klass)) {
       return StageType.TARGET;

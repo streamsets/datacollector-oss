@@ -168,6 +168,7 @@ public class StageRuntime {
               break;
 
             }
+            case EXECUTOR:
             case TARGET: {
               ((Target) getStage()).write(batch);
               break;
