@@ -26,17 +26,23 @@ import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -201,35 +207,104 @@ public abstract class ConfigDefinitionExtractor {
 
   void resolveDependencies(String configPrefix, List<ConfigDefinition>  defs, Object contextMsg) {
     Map<String, ConfigDefinition> definitionsMap = new HashMap<>();
+    Map<String, Map<String, Set<Object>>> dependencyMap = new HashMap<>();
+    Map<String, Boolean> isFullyProcessed = new HashMap<>();
     for (ConfigDefinition def : defs) {
       definitionsMap.put(def.getName(), def);
+      dependencyMap.put(def.getName(), new HashMap<String, Set<Object>>());
+      isFullyProcessed.put(def.getName(), false);
     }
+
     for (ConfigDefinition def : defs) {
+
       if (!def.getDependsOn().isEmpty()) {
         ConfigDefinition dependsOnDef = definitionsMap.get(def.getDependsOn());
-
         // evaluate dependsOn triggers
         ConfigDef annotation = def.getConfigField().getAnnotation(ConfigDef.class);
-        List<Object> triggers = new ArrayList<>();
+        Set<Object> triggers = new HashSet<>();
         for (String trigger : annotation.triggeredByValue()) {
           triggers.add(ConfigValueExtractor.get().extract(dependsOnDef.getConfigField(), dependsOnDef.getType(),
-                                                          trigger, contextMsg, true));
+              trigger, contextMsg, true));
         }
-        def.setTriggeredByValues(triggers);
+        dependencyMap.get(def.getName()).put(dependsOnDef.getName(), triggers);
+      }
+      // Add direct dependencies to dependencyMap
+      if (!def.getDependsOnMap().isEmpty()) {
+        // Copy same as above.
+        for (Map.Entry<String, List<Object>> dependsOn : def.getDependsOnMap().entrySet()) {
+          Set<Object> triggers = new HashSet<>();
+          ConfigDefinition dependsOnDef = definitionsMap.get(dependsOn.getKey());
+
+          if (!StringUtils.isEmpty(dependsOn.getKey())) {
+            for (Object trigger : dependsOn.getValue()) {
+              triggers.add(ConfigValueExtractor.get().extract(dependsOnDef.getConfigField(), dependsOnDef.getType(),
+                  (String) trigger, contextMsg, true));
+            }
+            Map<String, Set<Object>> dependencies = dependencyMap.get(def.getName());
+            if (dependencies.containsKey(dependsOn.getKey())) {
+              dependencies.get(dependsOn.getKey()).addAll(triggers);
+            } else {
+              dependencies.put(dependsOn.getKey(), triggers);
+            }
+          }
+        }
       }
     }
 
-    // compute dependsOnChain
     for (ConfigDefinition def : defs) {
-      ConfigDefinition tempConfigDef = def;
-      Map<String, List<Object>> dependsOnMap = new HashMap<>();
-      while(tempConfigDef != null && tempConfigDef.getDependsOn() != null && !tempConfigDef.getDependsOn().isEmpty()) {
-        dependsOnMap.put(tempConfigDef.getDependsOn(), tempConfigDef.getTriggeredByValues());
-        tempConfigDef = definitionsMap.get(tempConfigDef.getDependsOn());
+
+      if (isFullyProcessed.get(def.getName())) {
+        continue;
       }
-      if(!dependsOnMap.isEmpty()) {
-        def.setDependsOnMap(dependsOnMap);
+      // Now find all indirect dependencies
+      Deque<StackNode> stack = new ArrayDeque<>();
+      stack.push(new StackNode(def));
+      while (!stack.isEmpty()) {
+        StackNode current = stack.peek();
+        // We processed this one's dependencies before, don't bother adding its children
+        // The dependencies of this one have all been processed
+        if (current.childrenAddedToStack) {
+          stack.pop();
+          Map<String, Set<Object>> currentDependencies = dependencyMap.get(current.def.getName());
+          Set<String> children = new HashSet<>(current.def.getDependsOnMap().keySet());
+          for (String child : children) {
+            if (StringUtils.isEmpty(child)) {
+              continue;
+            }
+            Map<String, Set<Object>> depsOfChild = dependencyMap.get(child);
+            for (Map.Entry<String, Set<Object>> depOfChild : depsOfChild.entrySet()) {
+              if (currentDependencies.containsKey(depOfChild.getKey())) {
+                currentDependencies.get(depOfChild.getKey()).addAll(depOfChild.getValue());
+              } else {
+                currentDependencies.put(depOfChild.getKey(), new HashSet<>(depOfChild.getValue()));
+              }
+            }
+          }
+          isFullyProcessed.put(current.def.getName(), true);
+        } else {
+          Set<String> children = current.def.getDependsOnMap().keySet();
+          String dependsOn = current.def.getDependsOn();
+          if (!StringUtils.isEmpty(dependsOn) && !isFullyProcessed.get(current.def.getDependsOn())) {
+            stack.push(new StackNode(definitionsMap.get(current.def.getDependsOn())));
+          }
+          for (String child : children) {
+            if (!StringUtils.isEmpty(child) && !isFullyProcessed.get(child)) {
+              stack.push(new StackNode(definitionsMap.get(child)));
+            }
+          }
+          current.childrenAddedToStack = true;
+        }
       }
+    }
+    for (Map.Entry<String, Map<String, Set<Object>>> entry : dependencyMap.entrySet()) {
+      Map<String, List<Object>> dependencies = new HashMap<>();
+      definitionsMap.get(entry.getKey()).setDependsOnMap(dependencies);
+      for (Map.Entry<String, Set<Object>> trigger : entry.getValue().entrySet()) {
+        List<Object> triggerValues = new ArrayList<>();
+        triggerValues.addAll(trigger.getValue());
+        dependencies.put(trigger.getKey(), triggerValues);
+      }
+      definitionsMap.get(entry.getKey()).setDependsOn("");
     }
   }
 
@@ -280,6 +355,7 @@ public abstract class ConfigDefinitionExtractor {
     return errors;
   }
 
+  @SuppressWarnings("unchecked")
   ConfigDefinition extractConfigDef(String configPrefix, List<String> stageGroups, Field field, Object contextMsg) {
     List<ErrorMessage> errors = validateConfigDef(configPrefix, stageGroups, field, false, contextMsg);
     if (errors.isEmpty()) {
@@ -297,6 +373,15 @@ public abstract class ConfigDefinitionExtractor {
         String fieldName = field.getName();
         String dependsOn = resolveDependsOn(configPrefix, annotation.dependsOn());
         List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
+        // done at resolveDependencies() invocation - keys are inserted now, values in resolveDependencies
+        Map<String, List<Object>> dependsOnMap = new HashMap<>();
+        dependsOnMap.put(dependsOn, (List) Arrays.asList(annotation.triggeredByValue()));
+        Dependency[] dependencies = annotation.dependencies();
+        for (Dependency dependency : dependencies) {
+          if (!StringUtils.isEmpty(dependency.configName())) {
+            dependsOnMap.put(resolveDependsOn(configPrefix, dependency.configName()), (List) Arrays.asList(dependency.triggeredByValues()));
+          }
+        }
         ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".",
                                                                        field, contextMsg);
         if (model != null) {
@@ -311,7 +396,7 @@ public abstract class ConfigDefinitionExtractor {
         String mode = (annotation.mode() != null) ? getMimeString(annotation.mode()) : null;
         int lines = annotation.lines();
         ConfigDef.Evaluation evaluation = annotation.evaluation();
-        Map<String, List<Object>> dependsOnMap = null; // done at resolveDependencies() invocation
+
         def = new ConfigDefinition(field, configPrefix + name, type, label, description, defaultValue, required, group,
                                    fieldName, model, dependsOn, triggeredByValues, displayPosition,
                                    elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,
@@ -442,6 +527,45 @@ public abstract class ConfigDefinitionExtractor {
       functions = ELDefinitionExtractor.get().extractConstants(annotation.elDefs(), contextMsg);
     }
     return functions;
+  }
+
+  private class StackNode {
+    final ConfigDefinition def;
+    boolean childrenAddedToStack;
+
+    StackNode(ConfigDefinition def) {
+      this.def = def;
+      this.childrenAddedToStack = false;
+    }
+
+  }
+
+  private class DefinitionValues {
+    final ConfigDefinition def;
+    final Set<Object> triggerValues;
+    final Set<ConfigDefinition> tree;
+
+    DefinitionValues(ConfigDefinition def, Set<Object> triggerValues, Set<ConfigDefinition> tree) {
+      this.def = def;
+      this.triggerValues = triggerValues;
+      this.tree = tree;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == null || !(o instanceof DefinitionValues)) {
+        return false;
+      }
+      DefinitionValues castO = (DefinitionValues) o;
+      if (def.getFieldName().equals(castO.def.getFieldName())) {
+        return true;
+      }
+      return false;
+    }
+
+    public int hashCode() {
+      return def.getFieldName().hashCode();
+    }
   }
 
 }

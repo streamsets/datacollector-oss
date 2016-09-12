@@ -52,6 +52,8 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import io.swagger.models.auth.In;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -354,7 +356,7 @@ public class PipelineConfigurationValidator {
         validateRequiredField(confDef, pipelineConfs, issueCreator);
       }
       if (confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
-        validatedNumberConfig(config, confDef, issueCreator);
+        validatedNumberConfig(config, confDef, pipelineConfs, issueCreator);
       }
     }
     issues.addAll(errors);
@@ -624,10 +626,11 @@ public class PipelineConfigurationValidator {
         }
 
         if(confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
-          preview &= validatedNumberConfig(config, confDef, issueCreator);
+          preview &= validatedNumberConfig(config, confDef, stageConf, issueCreator);
         }
 
       }
+
       for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         Set<String> hideConfigs = stageDef.getHideConfigs();
@@ -667,28 +670,37 @@ public class PipelineConfigurationValidator {
       IssueCreator issueCreator
   ) {
     boolean preview = true;
-    String dependsOn = confDef.getDependsOn();
-    List<Object> triggeredBy = confDef.getTriggeredByValues();
+
     // If the config doesn't depend on anything or the config should be triggered, config is invalid
-    if (dependsOn == null || dependsOn.isEmpty() ||
-      /*At times the dependsOn config may be hidden [for ex. ToErrorKafkaTarget hides the dataFormat property].
-      * In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.*/
-        (stageConf.getConfig(dependsOn) != null &&
-            triggeredByContains(triggeredBy, stageConf.getConfig(dependsOn).getValue()))) {
+    if (confDef.getDependsOnMap().isEmpty() || configTriggered(stageConf, confDef)) {
       issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0007));
       preview = false;
     }
     return preview;
   }
 
+  private boolean configTriggered(StageConfiguration stageConf, ConfigDefinition confDef) {
+    boolean triggered = true;
+
+    for (Map.Entry<String, List<Object>> dependency : confDef.getDependsOnMap().entrySet()) {
+      //At times the dependsOn config may be hidden [for ex. ToErrorKafkaTarget hides the dataFormat property].
+      // In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.
+      triggered &= (stageConf.getConfig(dependency.getKey()) != null &&
+          triggeredByContains(dependency.getValue(), stageConf.getConfig(dependency.getKey()).getValue()));
+    }
+    return triggered;
+  }
 
   private boolean validatedNumberConfig(
       Config conf,
       ConfigDefinition confDef,
+      StageConfiguration stageConf,
       IssueCreator issueCreator) {
 
     boolean preview = true;
-
+    if (!configTriggered(stageConf, confDef)) {
+      return true;
+    }
     if (conf.getValue() instanceof String && ((String)conf.getValue()).startsWith("${")
         && ((String)conf.getValue()).endsWith("}")) {
       // If value is EL, ignore max and min validation
@@ -798,30 +810,28 @@ public class PipelineConfigurationValidator {
       );
       return false;
     }
+    boolean validateConfig = true;
     if (confDef != null) {
-      boolean validateConfig = true;
-      if (confDef.getDependsOn() != null &&
-          (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().size() > 0)) {
-        String dependsOn = confDef.getDependsOn();
-        List<Object> triggeredBy = confDef.getTriggeredByValues();
-        Config dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
-        if (dependsOnConfig == null) {
-          //complex field case?
-          //look at the configurations in model definition
-          if (parentConf != null && parentConf.containsKey(dependsOn)) {
-            dependsOnConfig = new Config(dependsOn, parentConf.get(dependsOn));
+      for (Map.Entry<String, List<Object>> dependsOnEntry : confDef.getDependsOnMap().entrySet()){
+        if (!dependsOnEntry.getValue().isEmpty()) {
+          String dependsOn = dependsOnEntry.getKey();
+          List<Object> triggeredBy = dependsOnEntry.getValue();
+          Config dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
+          if (dependsOnConfig == null) {
+            //complex field case?
+            //look at the configurations in model definition
+            if (parentConf != null && parentConf.containsKey(dependsOn)) {
+              dependsOnConfig = new Config(dependsOn, parentConf.get(dependsOn));
+            }
           }
-        }
-        if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
-          validateConfig = false;
-          Object value = dependsOnConfig.getValue();
-          for (Object trigger : triggeredBy) {
-            validateConfig |= String.valueOf(value).equals(String.valueOf(trigger));
+          if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
+            Object value = dependsOnConfig.getValue();
+            validateConfig &= triggeredByContains(triggeredBy, value);
           }
         }
       }
-      if (conf.getValue() != null && confDef.getModel() != null) {
-        preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
+      if (validateConfig && conf.getValue() != null && confDef.getModel() != null) {
+        preview = validateModel(stageConf, stageDef, confDef, conf, issueCreator);
       }
     }
     return preview;

@@ -128,7 +128,7 @@
             <td class="col-md-5"
                 ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
 
-              <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
+              <div ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
                 <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
               </div>
 
@@ -160,7 +160,7 @@
             <td>
               <div class="form-group "
                    ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
-                   ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
+                   ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
 
                 <label class="col-lg-3 control-label">{{customFieldConfigDefinition.label}}
                   <i class="fa fa-info-circle help-icon"

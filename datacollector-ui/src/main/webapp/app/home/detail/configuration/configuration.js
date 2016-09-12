@@ -356,7 +356,7 @@ angular
        * @param $index
        */
       removeFromMap: function(stageInstance, configValue, mapObject, $index) {
-        configValue.splice($index, 1);
+        configValue.splice($index, 1); fvisib
       },
 
 
@@ -450,23 +450,25 @@ angular
           configDefinitions = $scope.detailPaneConfigDefn.configDefinitions;
         }
 
-        var dependsOnConfigName = configDefinition.dependsOn,
-          triggeredByValues = configDefinition.triggeredByValues,
-          dependsOnConfigurationValue = _.find(stageInstance.configuration, function(config) {
-            return config.name === dependsOnConfigName;
-          }),
-          dependsOnConfiguration = _.find(configDefinitions, function(configDefn) {
-            return configDefn.name === dependsOnConfigName;
-          });
+        return $scope.verifyDependsOnMap(stageInstance, configDefinition);
 
-        if (dependsOnConfiguration.dependsOn) {
-          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
-            _.contains(triggeredByValues, dependsOnConfigurationValue.value) &&
-            $scope.verifyDependsOn(stageInstance, dependsOnConfiguration, configDefinitions);
-        } else {
-          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
-            _.contains(triggeredByValues, dependsOnConfigurationValue.value);
-        }
+//        var dependsOnConfigName = configDefinition.dependsOn,
+//          triggeredByValues = configDefinition.triggeredByValues,
+//          dependsOnConfigurationValue = _.find(stageInstance.configuration, function(config) {
+//            return config.name === dependsOnConfigName;
+//          }),
+//          dependsOnConfiguration = _.find(configDefinitions, function(configDefn) {
+//            return configDefn.name === dependsOnConfigName;
+//          });
+//
+//        if (dependsOnConfiguration.dependsOn) {
+//          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
+//            _.contains(triggeredByValues, dependsOnConfigurationValue.value) &&
+//            $scope.verifyDependsOn(stageInstance, dependsOnConfiguration, configDefinitions);
+//        } else {
+//          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
+//            _.contains(triggeredByValues, dependsOnConfigurationValue.value);
+//        }
 
       },
 
@@ -534,7 +536,7 @@ angular
 
         angular.forEach(configDefinitions, function(configDefinition) {
           if (configDefinition.group === groupName &&
-            (!configDefinition.dependsOn || $scope.verifyDependsOnMap(stageInstance, configDefinition))) {
+            ($scope.verifyDependsOnMap(stageInstance, configDefinition))) {
             visible = true;
           }
         });

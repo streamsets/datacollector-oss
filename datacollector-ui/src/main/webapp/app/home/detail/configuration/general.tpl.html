@@ -89,7 +89,7 @@
   <div class="form-group"
        ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
        ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: ''} | orderBy: 'displayPosition'"
-       ng-if="(!configDefinition.dependsOn || verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === ''"
+       ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === ''"
        ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
 
     <ng-include ng-if="selectedType !== pipelineConstant.LINK"

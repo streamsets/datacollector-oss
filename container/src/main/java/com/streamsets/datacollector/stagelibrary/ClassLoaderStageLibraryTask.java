@@ -27,7 +27,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -308,7 +307,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                 stagesInLibrary.put(key, stage.getClassName());
                 this.stageList.add(stage);
                 stageMap.put(key, stage);
-                computeDependsOnChain(stage);
               }
             }
           }
@@ -350,28 +348,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
       LOG.error("There cannot be 2 different versions of the same stage: {}", errors);
       throw new RuntimeException(Utils.format("There cannot be 2 different versions of the same stage: {}", errors));
-    }
-  }
-
-  private void computeDependsOnChain(StageDefinition stageDefinition) {
-    Map<String, ConfigDefinition> configDefinitionsMap = stageDefinition.getConfigDefinitionsMap();
-    for(Map.Entry<String, ConfigDefinition> entry :  configDefinitionsMap.entrySet()) {
-      ConfigDefinition configDef = entry.getValue();
-      ConfigDefinition tempConfigDef = configDef;
-      Map<String, List<Object>> dependsOnMap = new HashMap<>();
-      while(tempConfigDef != null &&
-        tempConfigDef.getDependsOn() != null &&
-        !tempConfigDef.getDependsOn().isEmpty()) {
-
-        dependsOnMap.put(tempConfigDef.getDependsOn(), tempConfigDef.getTriggeredByValues());
-        tempConfigDef = configDefinitionsMap.get(tempConfigDef.getDependsOn());
-      }
-      if(dependsOnMap.isEmpty()) {
-        //Request from UI to set null for efficiency
-        configDef.setDependsOnMap(null);
-      } else {
-        configDef.setDependsOnMap(dependsOnMap);
-      }
     }
   }
 

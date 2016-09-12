@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
@@ -647,7 +648,7 @@ public class MockStages {
         ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
           "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, null);
+          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition tDef = new StageDefinitionBuilder(cl, MTarget.class, "targetName")
           .withConfig(stageReqField)
@@ -663,7 +664,7 @@ public class MockStages {
           "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
           "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, null);
+          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition targetWithReqField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithReqField")
           .withConfig(reqField)
@@ -675,7 +676,7 @@ public class MockStages {
           "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
           "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition eDef = new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
           .withErrorStage(true)
@@ -694,14 +695,18 @@ public class MockStages {
           "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
           "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, null);
+          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
         List<Object> triggeredBy = new ArrayList<>();
         triggeredBy.add(1);
+        Map<String, List<Object>> triggered = new HashMap<>(1);
+        List<Object> triggerValues = new ArrayList<Object>();
+        triggerValues.add(1);
+        triggered.put("dependencyConfName", triggerValues);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
           "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", 10, true,
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, triggered);
 
         StageDefinition swcDef = new StageDefinitionBuilder(cl, MSource.class, "sourceWithConfigsName")
           .withConfig(depConfDef, triggeredConfDef)
@@ -722,7 +727,7 @@ public class MockStages {
           "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
           "groupName", "regularConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, null);
+          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         List<ConfigDefinition> list = new ArrayList<>();
         list.add(regularConf);
@@ -733,7 +738,7 @@ public class MockStages {
           "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
           "groupName", "complexConfFieldName", modelDefinition, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, null);
+          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition complexStage = new StageDefinitionBuilder(cl,ComplexSource.class, "complexStageName")
           .withConfig(complexConf)

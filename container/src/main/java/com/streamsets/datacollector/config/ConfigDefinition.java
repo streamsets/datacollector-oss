@@ -44,7 +44,7 @@ public class ConfigDefinition {
   private final boolean required;
   private final String group;
   private final String fieldName;
-  private final String dependsOn;
+  private String dependsOn;
   private List<Object> triggeredByValues;
   private final ModelDefinition model;
   private final int displayPosition;
@@ -59,6 +59,7 @@ public class ConfigDefinition {
   private List<Class> elDefs;
   private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
+  private String prefix;
 
   public ConfigDefinition(String name, ConfigDef.Type type, String label, String description,
       Object defaultValue,
@@ -191,6 +192,9 @@ public class ConfigDefinition {
     return fieldName;
   }
 
+  public void setDependsOn(String dependsOn) {
+    this.dependsOn = dependsOn;
+  }
   public String getDependsOn() {
     return dependsOn;
   }
@@ -308,10 +312,30 @@ public class ConfigDefinition {
                                 getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap());
   }
 
+  public String getPrefix() {
+    return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+  }
   @Override
   public String toString() {
     return Utils.format("ConfigDefinition[name='{}' type='{}' required='{}' default='{}']", getName(), getType(),
                         isRequired(), getDefaultValue());
+  }
+
+  /**
+   * Only checks if the fields have the same name. Do not compare against various stages!!
+   * @param o
+   * @return
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || !(o instanceof ConfigDefinition)) {
+      return false;
+    }
+    return this.fieldName.equals(((ConfigDefinition) o).fieldName);
   }
 
 }

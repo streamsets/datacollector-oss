@@ -30,7 +30,7 @@
           <div class="form-group "
                ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
-               ng-if="(!configDefinition.dependsOn || verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
+               ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
                ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
@@ -55,7 +55,7 @@
           <div class="form-group"
                ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
                ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(!configDefinition.dependsOn || verifyDependsOnMap(errorStageConfig, configDefinition))"
+               ng-if="(verifyDependsOnMap(errorStageConfig, configDefinition))"
                ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
@@ -80,7 +80,7 @@
           <div class="form-group"
                ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
                ng-repeat="configDefinition in statsAggregatorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(!configDefinition.dependsOn || verifyDependsOnMap(statsAggregatorStageConfig, configDefinition))"
+               ng-if="(verifyDependsOnMap(statsAggregatorStageConfig, configDefinition))"
                ng-init="configIndex = getConfigIndex(statsAggregatorStageConfig, configDefinition);">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
