@@ -60,6 +60,7 @@ import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -74,6 +75,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +98,8 @@ public class TestKafkaSource {
     +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
     +"]}";
 
-  private static final String SYSLOG = "<34>Oct 11 22:14:15 mymachine su: 'su root' failed for lonvick on /dev/pts/8";
+  private static final Date timestamp = new Date(1372392896000L);
+  private static String SYSLOG;
   private static final String TEN_PACKETS = "netflow-v5-file-1";
 
   private static final int SINGLE_PARTITION = 1;
@@ -183,6 +186,11 @@ public class TestKafkaSource {
     Resources.copy(Resources.getResource("Employee.desc"), out);
     out.flush();
     out.close();
+
+    // Setup RFC5424 Syslog
+    DateTime datetime = new DateTime(timestamp.getTime());
+    String RFC5424_formatter = datetime.toDateTimeISO().toString();
+    SYSLOG = "<34>1 " + RFC5424_formatter + " mymachine su: 'su root' failed for lonvick on /dev/pts/8";
   }
 
   @AfterClass
@@ -1356,7 +1364,7 @@ public class TestKafkaSource {
     Assert.assertEquals(2, records.get(0).get("/severity").getValueAsInteger());
     Assert.assertEquals("34", records.get(0).get("/priority").getValueAsString());
     Assert.assertEquals(4, records.get(0).get("/facility").getValueAsInteger());
-    Assert.assertEquals(1444601655000L, records.get(0).get("/timestamp").getValueAsLong());
+    Assert.assertEquals(timestamp, records.get(0).get("/timestamp").getValueAsDate());
     Assert.assertEquals(
       "su: 'su root' failed for lonvick on /dev/pts/8",
       records.get(0).get("/remaining").getValueAsString()
