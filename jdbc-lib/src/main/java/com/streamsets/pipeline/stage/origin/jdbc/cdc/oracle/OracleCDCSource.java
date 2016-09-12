@@ -559,7 +559,7 @@ public class OracleCDCSource extends BaseSource {
           dateTimeColumns.get(tableName).put(colName, md.getColumnTypeName(i));
         }
 
-        if (colType == Types.DECIMAL) {
+        if (colType == Types.DECIMAL || colType == Types.NUMERIC) {
           if (decimalColumns.get(tableName) == null) {
             decimalColumns.put(tableName, new HashMap<String, PrecisionAndScale>());
           }
