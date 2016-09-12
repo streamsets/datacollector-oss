@@ -89,7 +89,7 @@ angular.module('dataCollectorApp')
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $modalStack,
                  $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http) {
 
-    var defaultTitle = 'StreamSets Data Collector';
+    var defaultTitle = 'StreamSets | Data Collector';
     var pipelineStatusTimer;
     var alertsTimer;
     var isWebSocketSupported;
