@@ -29,7 +29,7 @@ import org.glassfish.jersey.servlet.ServletProperties;
 import java.io.File;
 
 public class DisconnectedSSOManager {
-  public static final String SECURITY_RESOURCES = "/security/rest/*";
+  public static final String SECURITY_RESOURCES = "/security/public-rest/*";
 
   public static final String DISCONNECTED_SSO_AUTHENTICATION_FILE = "disconnected-sso-credentials.json";
 

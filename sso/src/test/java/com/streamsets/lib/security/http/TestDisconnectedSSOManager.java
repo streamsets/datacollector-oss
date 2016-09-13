@@ -126,7 +126,7 @@ public class TestDisconnectedSSOManager {
       Assert.assertEquals(HttpURLConnection.HTTP_UNAVAILABLE, conn.getResponseCode());
       conn = (HttpURLConnection) new URL(baseUrl + "/security/_logout").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_UNAVAILABLE, conn.getResponseCode());
-      conn = (HttpURLConnection) new URL(baseUrl + "/security/rest/v1/authentication/login").openConnection();
+      conn = (HttpURLConnection) new URL(baseUrl + "/security/public-rest/v1/authentication/login").openConnection();
       conn.setDoOutput(true);
       conn.setRequestMethod("POST");
       Assert.assertEquals(HttpURLConnection.HTTP_UNAVAILABLE, conn.getResponseCode());
@@ -143,7 +143,7 @@ public class TestDisconnectedSSOManager {
       conn = (HttpURLConnection) new URL(baseUrl + "/security/_logout").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
       //login OK
-      conn = (HttpURLConnection) new URL(baseUrl + "/security/rest/v1/authentication/login").openConnection();
+      conn = (HttpURLConnection) new URL(baseUrl + "/security/public-rest/v1/authentication/login").openConnection();
       conn.setDoOutput(true);
       conn.setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "application/json");
@@ -151,7 +151,7 @@ public class TestDisconnectedSSOManager {
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
       //login INCORRECT
       login.setPassword("invalid");
-      conn = (HttpURLConnection) new URL(baseUrl + "/security/rest/v1/authentication/login").openConnection();
+      conn = (HttpURLConnection) new URL(baseUrl + "/security/public-rest/v1/authentication/login").openConnection();
       conn.setDoOutput(true);
       conn.setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "application/json");
