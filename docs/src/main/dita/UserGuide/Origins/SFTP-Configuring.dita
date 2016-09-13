@@ -229,6 +229,9 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-WholeFile">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
                 <cmd/>
             </step>
