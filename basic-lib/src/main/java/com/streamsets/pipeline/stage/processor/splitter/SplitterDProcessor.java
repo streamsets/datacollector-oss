@@ -33,11 +33,12 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=1,
+    version=2,
     label="Field Splitter",
     description = "Splits a string field based on a separator character",
     icon="splitter.png",
-    onlineHelpRefUrl = "index.html#Processors/FieldSplitter.html#task_av1_5g3_yq"
+    onlineHelpRefUrl = "index.html#Processors/FieldSplitter.html#task_av1_5g3_yq",
+    upgrader = SplitterProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
@@ -57,14 +58,15 @@ public class SplitterDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CHARACTER,
+      type = ConfigDef.Type.STRING,
       defaultValue = " ",
       label = "Separator",
-      description = "A single character",
+      description = "Regular expression to use for splitting the field. If trying to split on a RegEx meta" +
+          " character \".$|()[{^?*+\\\", the character must be escaped with \\",
       displayPosition = 20,
       group = "FIELD_SPLITTER"
   )
-  public char separator;
+  public String separator;
 
   @ConfigDef(
       required = false,

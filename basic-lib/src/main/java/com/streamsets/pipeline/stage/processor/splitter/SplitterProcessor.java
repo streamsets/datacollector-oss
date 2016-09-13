@@ -33,14 +33,14 @@ import java.util.List;
 
 public class SplitterProcessor extends SingleLaneRecordProcessor {
   private final String fieldPath;
-  private final char separator;
+  private final String separator;
   private final List<String> fieldPathsForSplits;
   private final TooManySplitsAction tooManySplitsAction;
   private final String remainingSplitsPath;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
   private final OriginalFieldAction originalFieldAction;
 
-  public SplitterProcessor(String fieldPath, char separator, List<String> fieldPathsForSplits,
+  public SplitterProcessor(String fieldPath, String separator, List<String> fieldPathsForSplits,
       TooManySplitsAction tooManySplitsAction,
       String remainingSplitsPath,
       OnStagePreConditionFailure onStagePreConditionFailure,
@@ -56,7 +56,6 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
 
   private boolean removeUnsplitValue;
 
-  private String separatorStr;
   private String[] fieldPaths;
 
   @Override
@@ -78,11 +77,6 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     }
 
     if (issues.isEmpty()) {
-      separatorStr = "" + separator;
-      //forcing a fastpath for String.split()
-      if (".$|()[{^?*+\\".contains(separatorStr)) {
-        separatorStr = "\\" + separatorStr;
-      }
       fieldPaths = fieldPathsForSplits.toArray(new String[fieldPathsForSplits.size()]);
       removeUnsplitValue = originalFieldAction == OriginalFieldAction.REMOVE;
     }
@@ -106,10 +100,10 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
 
       switch (tooManySplitsAction) {
         case TO_LAST_FIELD:
-          splits = str.split(separatorStr, fieldPaths.length);
+          splits = str.split(separator, fieldPaths.length);
           break;
         case TO_LIST:
-          splits = str.split(separatorStr);
+          splits = str.split(separator);
           break;
         default:
           throw new IllegalArgumentException("Unsupported value for too many splits action: " + tooManySplitsAction);
