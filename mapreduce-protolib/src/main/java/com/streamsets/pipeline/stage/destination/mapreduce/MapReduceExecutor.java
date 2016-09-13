@@ -155,35 +155,51 @@ public class MapReduceExecutor extends BaseExecutor {
           throw new UnsupportedOperationException("Unsupported JobType: " + jobConfig.jobType);
       }
 
+      Job job = null;
       try {
-        mapReduceConfig.getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            // Create and submit MapReduce job
-            Callable<Job> jobCreator = ReflectionUtils.newInstance(jobConfig.getJobCreator(), jobConfiguration);
-            Job job = jobCreator.call();
-            job.submit();
-
-            // Blocking mode is only for testing
-            if(waitForCompletition) {
-              job.waitForCompletion(true);
-            }
-
-            // And generate event with further job details
-            EventRecord event = getContext().createEventRecord("job-created", 1);
-            Map<String, Field> eventMap = ImmutableMap.of(
-              "tracking-url", Field.create(job.getTrackingURL()),
-              "job-id", Field.create(job.getJobID().toString())
-            );
-            event.set(Field.create(eventMap));
-            getContext().toEvent(event);
-            return null;
-          }
-        });
+        job = createAndSubmitJob(jobConfiguration);
       } catch (IOException|InterruptedException e) {
         LOG.error("Can't submit mapreduce job", e);
         errorRecordHandler.onError(new OnRecordErrorException(record, MapReduceErrors.MAPREDUCE_0005, e.getMessage()));
       }
+
+      if(job != null) {
+        // And generate event with further job details
+        EventRecord event = getContext().createEventRecord("job-created", 1);
+        Map<String, Field> eventMap = ImmutableMap.of(
+          "tracking-url", Field.create(job.getTrackingURL()),
+          "job-id", Field.create(job.getJobID().toString())
+        );
+        event.set(Field.create(eventMap));
+        getContext().toEvent(event);
+      }
     }
+  }
+
+  private Job createAndSubmitJob(final Configuration configuration) throws IOException, InterruptedException {
+    return mapReduceConfig.getUGI().doAs(new PrivilegedExceptionAction<Job>() {
+      @Override
+      public Job run() throws Exception {
+        // Create new mapreduce job object
+        Callable<Job> jobCreator = ReflectionUtils.newInstance(jobConfig.getJobCreator(), configuration);
+        Job job = jobCreator.call();
+
+        // In trace mode, dump all the configuration that we're using for the job
+        if(LOG.isTraceEnabled()) {
+          LOG.trace("Using the following configuration object for mapreduce job.");
+          for(Map.Entry<String, String> entry : configuration) {
+            LOG.trace("  Config: {}={} from {}", entry.getKey(), entry.getValue());
+          }
+        }
+
+        // Submit it for processing. Blocking mode is only for testing.
+        job.submit();
+        if(waitForCompletition) {
+          job.waitForCompletion(true);
+        }
+
+        return job;
+      }
+    });
   }
 }
