@@ -198,6 +198,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/cli-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/cli-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>/etc/sdc</directory>
                   <filemode>755</filemode>
                   <username>root</username>
