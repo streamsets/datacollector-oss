@@ -28,7 +28,6 @@
         <p>You can configure the JDBC Consumer to perform change data capture for databases that
             store the information in a table. You can configure the origin to add JDBC namespace
             header attributes. You can also configure custom properties that your driver requires. </p>
-    <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
-            health check query.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBC-legacyInfo"/>
   </conbody>
 </concept>

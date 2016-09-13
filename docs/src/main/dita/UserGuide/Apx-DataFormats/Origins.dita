@@ -250,6 +250,10 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
+              <entry>Oracle CDC Client</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>RabbitMQ Consumer</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lvv_4qc_kv"
                 /></entry>

@@ -1178,7 +1178,8 @@
                 <cmd>
                     <draft-comment author="Loretta">The following steps are used in <uicontrol>JDBC
                             Consumer, JDBC Producer, JDBC Lookup, and JDBC Tee </uicontrol>config
-                        topics.</draft-comment>
+                        topics. <uicontrol>Oracle CDC Client</uicontrol> is using some info from the
+                        Credentials table, and the whole Legacy Drivers step.</draft-comment>
                 </cmd>
             </step>
             <step id="JDBC-Credentials">
@@ -1200,9 +1201,9 @@
                                     <entry>Username</entry>
                                     <entry>User name for the JDBC connection.</entry>
                                 </row>
-                                <row>
+                                <row id="row-JDBCpassword">
                                     <entry>Password</entry>
-                                    <entry>Password for the JDBC account</entry>
+                                    <entry>Password for the JDBC account.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

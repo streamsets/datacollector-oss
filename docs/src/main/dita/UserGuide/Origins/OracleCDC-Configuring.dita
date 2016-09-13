@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_ehh_mjj_tw">
+    <title>Configuring an Oracle CDC Client</title>
+    <taskbody>
+        <context>
+            <p>Configure an Oracle CDC Client origin to process LogMiner change data capture
+                information from an Oracle database.</p>
+        </context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>JDBC</wintitle> tab, configure the following JDBC
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qrz_kpj_dx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JDBC Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Connection String</entry>
+                                    <entry>
+                                        <p>Connection string to use to connect to the database.
+                                                <note>If you include the JDBC credentials in the
+                                                connection string, the associated user account must
+                                                have the EXECUTE_CATALOG_ROLE role. For more
+                                                information, see <xref
+                                                  href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
+                                                />.</note></p>
+                                    </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>PDB</entry>
+                                    <entry>Name of the pluggable database that contains the database
+                                        you want to use. Use only when the database was created in a
+                                        pluggable database. <p>Required for databases created in
+                                            pluggable databases. </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To enter JDBC credentials separately from the JDBC connection string, on the
+                        <wintitle>Credentials</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dvj_msj_dx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>
+                                        <p>User name for the JDBC connection. The user account must
+                                            have the EXECUTE_CATALOG_ROLE role. </p>
+                                        <p>For more information, see <xref
+                                                href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
+                                            />.</p>
+                                    </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-JDBCpassword">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Change Data Capture</wintitle> tab, configure the following
+                    change data capture properties:<draft-comment author="Loretta">Move this up and
+                        update labels and order if things change based on
+                    SDC-3841.</draft-comment></cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bvw_wwj_dx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Change Data Capture Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Initial Change  <xref
+                                            href="OracleCDC-InitialChange.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_cwg_hrk_dx"/></xref></entry>
+                                    <entry>The starting point for the read. Use one of the following
+                                            options:<ul id="ul_nty_bnk_dx">
+                                            <li>From Latest Change - Processes changes that arrive
+                                                after you start the pipeline.</li>
+                                            <li>From Date - Processes changes starting from the
+                                                specified date. </li>
+                                            <li>From SCN - Processes changes starting from the
+                                                specified system change number (SCN).</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Start Date</entry>
+                                    <entry>The datetime to read from when you start the pipeline.
+                                        For a date-based initial change. <p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OracleCDC-DateFormat"
+                                            /></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Start SCN</entry>
+                                    <entry>The system change number to read from when you start the
+                                        pipeline. For an SCN-based initial change.</entry>
+                                </row>
+                                <row>
+                                    <entry>Database</entry>
+                                    <entry>Database to use.</entry>
+                                </row>
+                                <row>
+                                    <entry>Table</entry>
+                                    <entry>Tables to use.</entry>
+                                </row>
+                                <row>
+                                    <entry>Types of Changes to Copy</entry>
+                                    <entry>Change operations to include when creating records. All
+                                        unlisted operation types are ignored. </entry>
+                                </row>
+                                <row>
+                                    <entry>Case-Sensitive DB/Table Names</entry>
+                                    <entry>Enables case-sensitive database and table names. Use when
+                                        the database or tables were created with quotation marks
+                                        surrounding the names.<p>By default, the origin uses all
+                                            caps for database and table names. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Dictionary Source  <xref
+                                            href="OracleCDC-Dictionary.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ur4_4yn_lw"/></xref></entry>
+                                    <entry>Location of the LogMiner dictionary:<ul
+                                            id="ul_s5d_mqk_dx">
+                                            <li>Redo logs</li>
+                                            <li>Online catalog</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Legacy">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
+                    properties.</cmd>
+                <info>The defaults for these properties should work in most cases:<table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table-JDBCAdvProps"
+                        id="table_y35_3tj_dx">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

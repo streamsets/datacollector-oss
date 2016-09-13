@@ -518,6 +518,26 @@
                   </dl>
             </p>
             <p>
+                  <draft-comment author="Loretta">JDBC Consumer and Oracle CDC use these in the
+                        overview:</draft-comment>
+            </p>
+            <p id="JDBC-legacyInfo"><ph id="ph-JDBC-legacyInfo">To use a JDBC version older than
+                        4.0, you can specify the driver class name and define a health check
+                        query.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Oracle CDC Client uses this in Initial Change and
+                        Configuring</draft-comment>
+            </p>
+            <p><ph id="OracleCDC-DateFormat">Use the following format: <codeph>DD-MM-YYYY
+                              HH24:MI:SS</codeph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Oracle CDC Client uses this in the overview and
+                        Initial Change.</draft-comment>
+            </p>
+            <p><ph><ph id="OracleCDC-fulldata"><ph>use the JDBC Consumer origin in a separate
+                                    pipeline to read the existing data before you start the pipeline
+                                    with Oracle CDC Client</ph></ph></ph></p>
+            <p>
                   <draft-comment author="Loretta">UDP to Kafka origin and SDC RPC to Kafka origins
                         use the following text in the Pipeline Configuration topics.
                               <uicontrol>O-ph-PipeConfig</uicontrol> and </draft-comment>
@@ -529,8 +549,6 @@
             <p id="O-p-PipeConfig">However, since a pipeline requires a destination, you should
                   connect the origin to the Trash destination to satisfy pipeline validation
                   requirements.</p>
-            <p/>
-            <p/>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
             </p>

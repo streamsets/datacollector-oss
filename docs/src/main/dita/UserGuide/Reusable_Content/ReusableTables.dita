@@ -457,7 +457,7 @@
   </p>
   <p>
    <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Consumer, Lookup, Producer,
-    and Tee use most rows in this table.</draft-comment>
+    and Tee use most rows in this table. Oracle CDC is using a couple too. </draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -488,7 +488,8 @@
       </row>
       <row id="JDBCUseCredentials_row">
        <entry>Use Credentials</entry>
-       <entry>Indicates whether to use a login to access the database.</entry>
+       <entry>Enables entering credentials on the Credentials tab. Use when you do not include
+        credentials in the JDBC connection string.</entry>
       </row>
       <row id="JDBCMaxClob_row">
        <entry>Max Clob Size (characters)</entry>
@@ -524,7 +525,8 @@
     </tgroup>
    </table>
    <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer, JDBC Lookup, and JDBC
-    Tee use the whole table, row by row. Producer uses all rows but last.</draft-comment>
+    Tee use the whole table, row by row. Producer uses all rows but last. Oracle CDC uses the whole
+    table. </draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>

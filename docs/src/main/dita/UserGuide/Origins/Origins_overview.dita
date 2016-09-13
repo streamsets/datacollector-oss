@@ -33,6 +33,8 @@
         <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
+        <li>Oracle CDC Client - Reads LogMiner redo logs to generate change data capture
+          records.</li>
         <li>RabbitMQ Consumer - Reads messages from RabbitMQ.</li>
         <li>Redis Consumer - Reads messages from Redis.</li>
         <li>SDC RPC - Reads data from an SDC RPC destination in an SDC RPC pipeline.</li>

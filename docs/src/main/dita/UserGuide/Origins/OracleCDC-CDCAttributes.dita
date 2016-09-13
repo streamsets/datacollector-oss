@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nn1_lxd_dx">
+ <title>CDC Record Header Attributes</title>
+ <conbody>
+        <p><indexterm>Oracle CDC Client origin<indexterm>CDC record header
+                attributes</indexterm></indexterm>Oracle CDC Client includes change data capture
+            information in record header attributes. You can use these attributes in the pipeline as
+            needed. </p>
+        <p>For example, if you want to route records to different destinations based on the
+            operation, you can use the oracle.cdc.operation header attribute in a Stream
+            Selector.</p>
+        <p>The origin provides the following record header attributes for each record:<ul
+                id="ul_j3y_yxd_dx">
+                <li>oracle.cdc.user</li>
+                <li>oracle.cdc.operation</li>
+                <li>oracle.cdc.timestamp</li>
+                <li>oracle.cdc.table</li>
+                <li>oracle.cdc.scn</li>
+            </ul></p>
+        <p>It also includes the following record header attributes for each decimal field in the
+                record:<ul id="ul_jvj_p1j_fx">
+                <li>oracle.cdc.&lt;fieldname>.precision</li>
+                <li>oracle.cdc.&lt;fieldname>.scale</li>
+            </ul></p>
+ </conbody>
+</concept>

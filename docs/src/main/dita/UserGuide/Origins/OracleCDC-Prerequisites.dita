@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xwg_33w_cx">
+ <title>Oracle CDC Client Prerequisites</title>
+ <conbody>
+  <p><indexterm>Oracle CDC Client
+                    origin<indexterm>prerequisites</indexterm></indexterm><indexterm>LogMiner<indexterm>prerequisites
+                    for the Oracle CDC Client origin</indexterm></indexterm>To use Oracle CDC
+            Client, you must enable LogMiner for the database you want to use and ensure the JDBC
+            user account has the necessary role assignment. </p>
+        <p>LogMiner provides redo logs that summarize database activity. The origin uses these logs
+            to generate records.</p>
+        <p>Before using the Oracle CDC Client, perform the following tasks: <ol id="ol_avp_3f2_dx">
+                <li>LogMiner requires an open database in ARCHIVELOG mode with archiving
+                    enabled.</li>
+                <li>LogMiner requires supplemental logging for the database or tables. <p>The Oracle
+                        CDC Client requires, at minimum, primary key or "identification key" logging
+                        at a table level. You can enable identification key logging for the database
+                        to include all tables.</p><note>To include all fields in records, enable
+                        full supplemental logging at a table or database level. Without supplemental
+                        logging enabled, records include only the fields with changes. </note></li>
+                <li>If necessary, grant the EXECUTE_CATALOG_ROLE role to the JDBC user account that
+                    you plan to use. You must specify this account when you configure the Oracle CDC
+                    Client origin.</li>
+            </ol></p>
+ </conbody>
+</concept>

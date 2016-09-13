@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rs5_hjj_tw">
+    <title>Oracle CDC Client</title>
+    <conbody>
+        <p><indexterm>origins<indexterm>Oracle CDC Client</indexterm></indexterm><indexterm>Oracle
+                CDC Client origin<indexterm>overview</indexterm></indexterm>The Oracle CDC Client
+            processes change data capture (CDC) information provided by Oracle LogMiner redo logs.
+            The Oracle CDC Client origin produces records with a map of fields and record header
+            attributes with CDC information.</p>
+        <p>When needed, you can use a separate pipeline with the JDBC Consumer origin to read
+            existing data before you start a pipeline with Oracle CDC Client.</p>
+        <p>The Oracle CDC Client origin can create records for insert, update, select-for-update,
+            and delete operations for one or more tables in a database. You can select the
+            operations that you want to use.</p>
+        <p>
+            <note>To use the Oracle CDC Client origin, you must enable LogMiner for the database
+                that you want to use. The origin uses JDBC to access the database.</note>
+        </p>
+        <p>When you configure Oracle CDC Client, you configure change data capture details, such as
+            the database and tables to read from, how to perform the initial change, the dictionary
+            source location, and the operations to include. </p>
+        <p>You also specify JDBC connection information and user credentials. If the database was
+            created in a pluggable database, state the pluggable database name. You can configure
+            custom properties that the driver requires.</p>
+        <p>
+            <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBC-legacyInfo"
+            /></p>
+    </conbody>
+</concept>
