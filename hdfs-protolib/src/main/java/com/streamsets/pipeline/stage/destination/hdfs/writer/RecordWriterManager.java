@@ -177,13 +177,10 @@ public class RecordWriterManager {
 
   private void produceCloseFileEvent(FileSystem fs, Path finalPath) throws IOException {
     FileStatus status = fs.getFileStatus(finalPath);
-    EventRecord event = context.createEventRecord("file-closed", 1);
-    Map<String, Field> map = new ImmutableMap.Builder<String, Field>()
-      .put("filepath", Field.create(Field.Type.STRING, finalPath.toString()))
-      .put("length", Field.create(Field.Type.LONG, status.getLen()))
-      .build();
-    event.set(Field.create(map));
-    context.toEvent(event);
+    HdfsEvents.CLOSED_FILE.create(context)
+      .with("filepath", finalPath.toString())
+      .with("length", status.getLen())
+      .createAndSend();
   }
 
   /**
