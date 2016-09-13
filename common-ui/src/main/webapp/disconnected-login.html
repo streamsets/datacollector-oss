@@ -13,8 +13,128 @@
   See the License for the specific language governing permissions and
   limitations under the License. See accompanying LICENSE file.
 -->
-<HTML>
-<BODY>
-<H1>HELLO</H1>
-</BODY>
-</HTML>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="StreamSets">
+  <title ng-bind="common.title">StreamSets</title>
+
+  <script type="text/javascript">
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    var baseHref = document.location.pathname.replace('j_security_check', ''),
+      collectorIndex = baseHref.indexOf('/collector/');
+
+    if(collectorIndex !== -1) {
+      baseHref = baseHref.substr(0, collectorIndex + 1);
+    } else {
+      var restIndex = baseHref.indexOf('/rest/');
+      if(restIndex !== -1) {
+        baseHref = baseHref.substr(0, restIndex + 1);
+      }
+    }
+
+    document.write("<base href='" + escapeHtml(baseHref) + "' />");
+  </script>
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+  <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
+</head>
+<body>
+
+<div class="container login-container">
+  <div class="row">
+    <div id="loginErrorMessageDivId"
+         class="col-xs-6 col-xs-offset-3 col-sm-5 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4 alert alert-danger"
+         role="alert">Log In Failed.</div>
+  </div>
+
+  <div class="row">
+    <div
+      class="col-xs-6 col-xs-offset-3 col-sm-5 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4 form-login">
+      <form class="form-horizontal clearfix" action="javascript:;" onsubmit="login(this)"
+            autocomplete="off"
+            method="POST">
+        <div class="img_container">
+          <img src="assets/logo.png" />
+        </div>
+        <input style="display:none">
+        <input type="password" style="display:none" autocomplete="off">
+        <input type="text" id="usernameId" name="j_username" class="form-control" placeholder="username"
+               autofocus="true"/>
+        <input type="password" id="passwordId" name="j_password" class="form-control" placeholder="password"
+               autocomplete="off"/>
+        <input type="hidden" id="basePathInputID" name="basePath" class="form-control" value="" />
+        <button type="submit" id="loginId"
+                class="btn btn-primary pull-right">Log In <i class="fa fa-sign-in"></i></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  var pathname = window.location.pathname;
+  var errorDiv = document.getElementById('loginErrorMessageDivId');
+  if(pathname && pathname.indexOf('j_security_check') !== -1) {
+    errorDiv.style.visibility = 'visible';
+  }
+
+  var basePathInput = document.getElementById("basePathInputID");
+  if(basePathInput) {
+    basePathInput.value = baseHref;
+  }
+
+  function login(loginForm) {
+    console.log('login called');
+    console.log(loginForm.j_username.value);
+    console.log(loginForm.j_password.value);
+    var userName = loginForm.j_username.value;
+    var password = loginForm.j_password.value;
+    var loginData = {
+      userName: userName,
+      password: password
+    };
+
+    var request = new XMLHttpRequest();
+    request.open('POST', '/security/public-rest/v1/authentication/login', true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.setRequestHeader('X-SS-REST-CALL', 'true');
+    request.setRequestHeader('X-Requested-By', 'Disconnected Login Page UI');
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        var resp = request.responseText;
+        var href = location.href;
+        if (href.indexOf('&ss-repeated-redirect=') !== -1) {
+          location.href = href.replace('&ss-repeated-redirect=', '');
+        } else {
+          location.reload();
+        }
+        errorDiv.style.visibility = 'hidden';
+      } else {
+        console.log(request.status);
+        console.log(request.responseText);
+        errorDiv.style.visibility = 'visible';
+      }
+    };
+
+    request.onerror = function() {
+      console.log('error - ' + request.status);
+      console.log(request.responseText);
+    };
+
+    request.send(loginData);
+  }
+</script>
+
+</body>
+</html>

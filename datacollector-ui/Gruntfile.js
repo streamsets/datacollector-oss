@@ -602,7 +602,9 @@ module.exports = function(grunt) {
        */
       html: {
         files: [
-          '<%= base_dir %>index.html', '<%= common_base_dir %>login.html'
+          '<%= base_dir %>index.html',
+          '<%= common_base_dir %>login.html',
+          '<%= common_base_dir %>disconnected-login.html'
         ],
         tasks: [ 'index:build', 'login:build' ]
       },
@@ -790,6 +792,18 @@ module.exports = function(grunt) {
     });
 
     grunt.file.copy(grunt.config( 'common_base_dir' ) +'login.html', grunt.config( 'build_dir' ) + '/login.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            scripts: jsFiles,
+            styles: cssFiles,
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'disconnected-login.html', grunt.config( 'build_dir' ) + '/disconnected-login.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
