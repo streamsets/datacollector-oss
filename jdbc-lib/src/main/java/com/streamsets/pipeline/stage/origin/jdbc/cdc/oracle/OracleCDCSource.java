@@ -100,8 +100,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
-  private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP;
-  private static final String TABLE = PREFIX + "TABLE";
+  private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
+  private static final String TABLE = PREFIX + "table";
   private static final String INSERT = "INSERT";
   private static final String DELETE = "DELETE";
   private static final String UPDATE = "UPDATE";
