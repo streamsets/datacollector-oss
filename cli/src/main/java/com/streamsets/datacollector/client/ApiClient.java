@@ -21,6 +21,7 @@ package com.streamsets.datacollector.client;
 
 import com.streamsets.datacollector.client.auth.Authentication;
 import com.streamsets.datacollector.client.auth.HttpBasicAuth;
+import com.streamsets.datacollector.client.auth.HttpDPMAuth;
 import com.streamsets.datacollector.client.auth.HttpDigestAuth;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -87,6 +88,9 @@ public class ApiClient {
       case "digest":
         authentication = new HttpDigestAuth();
         break;
+      case "dpm":
+        authentication = new HttpDPMAuth();
+        break;
       default:
         authentication = null;
     }
@@ -130,6 +134,15 @@ public class ApiClient {
   public void setPassword(String password) {
     if(authentication != null) {
       authentication.setPassword(password);
+    }
+  }
+
+  /**
+   * Helper method to set dpmBaseURL for the first HTTP DPM authentication.
+   */
+  public void setDPMBaseURL(String dpmBaseURL) {
+    if(dpmBaseURL != null) {
+      authentication.setDPMBaseURL(dpmBaseURL);
     }
   }
 
@@ -390,6 +403,7 @@ public class ApiClient {
     }
 
     if(authentication != null) {
+      authentication.login();
       authentication.setFilter(target);
     }
 
@@ -409,6 +423,10 @@ public class ApiClient {
       }
     }
 
+    if(authentication != null) {
+      authentication.setHeader(builder);
+    }
+
     if ("GET".equals(method)) {
       response = builder.get();
     } else if ("POST".equals(method)) {
@@ -423,6 +441,10 @@ public class ApiClient {
       response = builder.delete();
     } else {
       throw new ApiException(500, "unknown method type " + method);
+    }
+
+    if(authentication != null) {
+      authentication.logout();
     }
 
     return response;

@@ -1,4 +1,6 @@
 /**
+ * Copyright 2016 StreamSets Inc.
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,14 +19,45 @@
  */
 package com.streamsets.datacollector.client.auth;
 
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 
-public class HttpDigestAuth extends AbstractAuthentication {
+public abstract class AbstractAuthentication implements Authentication {
+  String username;
+  String password;
+
+  @Override
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  @Override
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @Override
+  public void setDPMBaseURL(String dpmBaseURL) {
+
+  }
+
   @Override
   public void setFilter(WebTarget webTarget) {
-    HttpAuthenticationFeature feature = HttpAuthenticationFeature.digest(username, password);
-    webTarget.register(feature);
+
+  }
+
+  @Override
+  public void setHeader(Invocation.Builder builder) {
+
+  }
+
+  @Override
+  public void login() {
+
+  }
+
+  @Override
+  public void logout() {
+
   }
 }

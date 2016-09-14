@@ -23,32 +23,11 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import javax.ws.rs.client.WebTarget;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
-public class HttpBasicAuth implements Authentication {
-  private String username;
-  private String password;
-
-  public String getUsername() {
-    return username;
-  }
-
-  @Override
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  @Override
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
+public class HttpBasicAuth extends AbstractAuthentication {
   @Override
   public void setFilter(WebTarget webTarget) {
     HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic(username, password);
     webTarget.register(feature);
   }
+
 }

@@ -64,6 +64,14 @@ public class BaseCommand implements Runnable {
   )
   public boolean printStackTrace;
 
+  @Option(
+      type = OptionType.GLOBAL,
+      name = {"-D", "--dpmURL"},
+      description = "DPM URL",
+      required = false
+  )
+  public String dpmURL;
+
   @Override
   public void run() {
     System.out.println(getClass().getSimpleName());
@@ -82,10 +90,16 @@ public class BaseCommand implements Runnable {
       sdcPassword = "admin";
     }
 
+    if (dpmURL == null && sdcAuthType.equals("dpm")) {
+      dpmURL = "https://cloud.streamsets.com";
+    }
+
     ApiClient apiClient = new ApiClient(sdcAuthType);
+    apiClient.setUserAgent("SDC CLI");
     apiClient.setBasePath(sdcURL + "/rest");
     apiClient.setUsername(sdcUser);
     apiClient.setPassword(sdcPassword);
+    apiClient.setDPMBaseURL(dpmURL);
     return  apiClient;
   }
 }

@@ -19,13 +19,21 @@
  */
 package com.streamsets.datacollector.client.auth;
 
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public interface Authentication {
   void setUsername(String username);
 
   void setPassword(String password);
 
+  void setDPMBaseURL(String dpmBaseURL);
+
   void setFilter(WebTarget webTarget);
+
+  void setHeader(Invocation.Builder builder);
+
+  void login();
+
+  void logout();
 }
