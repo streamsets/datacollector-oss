@@ -73,9 +73,9 @@ public class FailoverSSOService implements SSOService {
   }
 
   @VisibleForTesting
-  void failoverIfRemoteNotActive() {
+  void failoverIfRemoteNotActive(boolean checkNow) {
     if (activeService == remoteService) {
-      if (!remoteService.isServiceActive()) {
+      if (!remoteService.isServiceActive(checkNow)) {
         LOG.info("RemoteSSOService is not active, changing to disconnected mode");
         activeService = disconnectedService;
         activeService.register(registrationAttributes);
@@ -106,7 +106,7 @@ public class FailoverSSOService implements SSOService {
       public void run() {
         try {
           remoteService.register(registrationAttributes);
-          if (remoteService.isServiceActive()) {
+          if (remoteService.isServiceActive(false)) {
             LOG.info("RemoteSSOService is active, changing to connected mode");
             activeService = remoteService;
           } else {
@@ -128,48 +128,48 @@ public class FailoverSSOService implements SSOService {
   public void register(Map<String, String> attributes) {
     registrationAttributes = attributes;
     remoteService.register(attributes);
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
   }
 
   @Override
   public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(true);
     return getActiveService().createRedirectToLoginUrl(requestUrl, duplicateRedirect);
   }
 
   @Override
   public String getLogoutUrl() {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     return getActiveService().getLogoutUrl();
   }
 
   @Override
   public SSOPrincipal validateUserToken(String authToken) {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     return getActiveService().validateUserToken(authToken);
   }
 
   @Override
   public boolean invalidateUserToken(String authToken) {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     return getActiveService().invalidateUserToken(authToken);
   }
 
   @Override
   public SSOPrincipal validateAppToken(String authToken, String componentId) {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     return getActiveService().validateAppToken(authToken, componentId);
   }
 
   @Override
   public boolean invalidateAppToken(String authToken) {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     return getActiveService().invalidateAppToken(authToken);
   }
 
   @Override
   public void clearCaches() {
-    failoverIfRemoteNotActive();
+    failoverIfRemoteNotActive(false);
     getActiveService().clearCaches();
   }
 

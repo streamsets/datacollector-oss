@@ -86,7 +86,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
-    Mockito.doReturn(true).when(service).isServiceActive();
+    Mockito.doReturn(true).when(service).isServiceActive(false);
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 
@@ -120,7 +120,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
-    Mockito.doReturn(true).when(service).isServiceActive();
+    Mockito.doReturn(true).when(service).isServiceActive(false);
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 
@@ -222,7 +222,7 @@ public class TestRemoteSSOService {
       Mockito.when(response.getStatus()).thenThrow(new IOException());
     }
     service.register(Collections.<String, String>emptyMap());
-    Assert.assertFalse(service.isServiceActive());
+    Assert.assertFalse(service.isServiceActive(false));
     ArgumentCaptor<Integer> sleepCaptor = ArgumentCaptor.forClass(Integer.class);
     Mockito.verify(service, Mockito.times(6)).sleep(sleepCaptor.capture());
     Assert.assertEquals(ImmutableList.of(2, 4, 8, 16, 16, 16), sleepCaptor.getAllValues());
@@ -236,6 +236,23 @@ public class TestRemoteSSOService {
   @Test
   public void testRegisterRetriesException() throws Exception {
     testRegisterRetries(false);
+  }
+
+  @Test
+  public void testServiceActive() throws Exception {
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "http://foo");
+    RemoteSSOService service = Mockito.spy(new RemoteSSOService());
+    service.setConfiguration(conf);
+    service.setApplicationAuthToken("appToken");
+    service.setComponentId("componentId");
+
+    Assert.assertFalse(service.isServiceActive(false));
+    Mockito.verify(service, Mockito.never()).checkServiceActive();
+    Mockito.verify(service, Mockito.never()).getLoginPageUrl();
+    Assert.assertFalse(service.isServiceActive(true));
+    Mockito.verify(service, Mockito.times(1)).checkServiceActive();
+    Mockito.verify(service, Mockito.times(1)).getLoginPageUrl();
   }
 
 }

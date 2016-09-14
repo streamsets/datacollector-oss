@@ -41,46 +41,53 @@ public class TestFailoverSSOService {
     Mockito.verify(remote, Mockito.times(1)).setConfiguration(Mockito.eq(conf));
     Mockito.verify(disconnected, Mockito.times(1)).setConfiguration(Mockito.eq(conf));
 
-    Mockito.doNothing().when(failover).failoverIfRemoteNotActive();
-    Mockito.verify(failover, Mockito.never()).failoverIfRemoteNotActive();
+    Mockito.doNothing().when(failover).failoverIfRemoteNotActive(false);
+    Mockito.verify(failover, Mockito.never()).failoverIfRemoteNotActive(Mockito.eq(false));
 
     // register
     Map<String, String> attribures = Collections.emptyMap();
     failover.register(attribures);
     Mockito.verify(remote, Mockito.times(1)).register(Mockito.eq(attribures));
     Mockito.verify(disconnected, Mockito.times(1)).setConfiguration(Mockito.eq(conf));
-    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(false));
 
     // test if active & delegation to active
     SSOService active = Mockito.mock(SSOService.class);
     Mockito.doReturn(active).when(failover).getActiveService();
 
     failover.createRedirectToLoginUrl("url", true);
-    Mockito.verify(failover, Mockito.times(2)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).createRedirectToLoginUrl(Mockito.eq("url"), Mockito.eq(true));
 
     failover.getLogoutUrl();
-    Mockito.verify(failover, Mockito.times(3)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(2)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).getLogoutUrl();
 
     failover.validateUserToken("t");
-    Mockito.verify(failover, Mockito.times(4)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(3)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).validateUserToken(Mockito.eq("t"));
 
     failover.invalidateUserToken("t");
-    Mockito.verify(failover, Mockito.times(5)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(4)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).invalidateUserToken(Mockito.eq("t"));
 
     failover.validateAppToken("a", "c");
-    Mockito.verify(failover, Mockito.times(6)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(5)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).validateAppToken(Mockito.eq("a"), Mockito.eq("c"));
 
     failover.invalidateAppToken("a");
-    Mockito.verify(failover, Mockito.times(7)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(6)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).invalidateAppToken(Mockito.eq("a"));
 
     failover.clearCaches();
-    Mockito.verify(failover, Mockito.times(8)).failoverIfRemoteNotActive();
+    Mockito.verify(failover, Mockito.times(7)).failoverIfRemoteNotActive(Mockito.eq(false));
+    Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
     Mockito.verify(failover, Mockito.times(1)).clearCaches();
   }
 
@@ -102,43 +109,54 @@ public class TestFailoverSSOService {
 
     // remote active
     Mockito.reset(remote);
-    Mockito.when(remote.isServiceActive()).thenReturn(true);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(true);
 
     failover.register(attribures);
 
-    Mockito.verify(remote, Mockito.times(1)).isServiceActive();
+    Mockito.verify(remote, Mockito.times(1)).isServiceActive(false);
     Mockito.verifyZeroInteractions(disconnected);
     Assert.assertEquals(remote, failover.getActiveService());
 
     // remote not active
     Mockito.reset(remote);
-    Mockito.when(remote.isServiceActive()).thenReturn(false);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(false);
 
     Assert.assertFalse(failover.isRecoveryInProgress());
 
     failover.register(attribures);
 
-    Mockito.verify(remote, Mockito.times(1)).isServiceActive();
+    Mockito.verify(remote, Mockito.times(1)).isServiceActive(false);
     Mockito.verify(disconnected, Mockito.times(1)).register(Mockito.eq(attribures));
     Assert.assertEquals(disconnected, failover.getActiveService());
     Assert.assertTrue(failover.isRecoveryInProgress());
     Mockito.verify(failover, Mockito.times(1)).runRecovery();
 
     // recovery is already in progress, it should not be triggered again
-    failover.failoverIfRemoteNotActive();
+    failover.failoverIfRemoteNotActive(false);
     Mockito.verify(failover, Mockito.times(1)).runRecovery();
 
     failover.setRecoveryInProgress(false);
 
     // recovery not in progress, it should  be triggered again
-    failover.failoverIfRemoteNotActive();
+    failover.failoverIfRemoteNotActive(false);
     Mockito.verify(failover, Mockito.times(2)).runRecovery();
+
+    // failover with immediate check
+    remote = Mockito.mock(RemoteSSOService.class);
+    disconnected = Mockito.mock(DisconnectedSSOService.class);
+    failover = new FailoverSSOService(remote, disconnected);
+    failover = Mockito.spy(failover);
+    Mockito.reset(remote);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(true);
+    Mockito.verify(remote, Mockito.never()).isServiceActive(Mockito.eq(true));
+    failover.failoverIfRemoteNotActive(true);
+    Mockito.verify(remote, Mockito.times(1)).isServiceActive(Mockito.eq(true));
   }
 
   @Test
   public void testRunRecoveryRemoteRecovers() throws Exception {
     RemoteSSOService remote = Mockito.mock(RemoteSSOService.class);
-    Mockito.when(remote.isServiceActive()).thenReturn(false);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(false);
     DisconnectedSSOService disconnected = Mockito.mock(DisconnectedSSOService.class);
     FailoverSSOService failover = new FailoverSSOService(remote, disconnected);
     failover = Mockito.spy(failover);
@@ -153,7 +171,7 @@ public class TestFailoverSSOService {
     // remote recovers
     Mockito.verify(failover, Mockito.times(1)).setRecoveryInProgress(Mockito.eq(true));
     Mockito.reset(remote);
-    Mockito.when(remote.isServiceActive()).thenReturn(true);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(true);
 
     Thread thread = failover.runRecovery();
     thread.join();
@@ -163,7 +181,7 @@ public class TestFailoverSSOService {
   @Test
   public void testRunRecoveryRemoteDoesNotRecover() throws Exception {
     RemoteSSOService remote = Mockito.mock(RemoteSSOService.class);
-    Mockito.when(remote.isServiceActive()).thenReturn(false);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(false);
     DisconnectedSSOService disconnected = Mockito.mock(DisconnectedSSOService.class);
     FailoverSSOService failover = new FailoverSSOService(remote, disconnected);
     failover = Mockito.spy(failover);
@@ -178,7 +196,7 @@ public class TestFailoverSSOService {
     // remote does not recover
     Mockito.verify(failover, Mockito.times(1)).setRecoveryInProgress(Mockito.eq(true));
     Mockito.reset(remote);
-    Mockito.when(remote.isServiceActive()).thenReturn(false);
+    Mockito.when(remote.isServiceActive(false)).thenReturn(false);
 
     Thread thread = failover.runRecovery();
     thread.join();

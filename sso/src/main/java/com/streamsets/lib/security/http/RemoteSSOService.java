@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,7 +126,27 @@ public class RemoteSSOService extends AbstractSSOService {
     connTimeout = (timeout == null) ? connTimeout: Integer.parseInt(timeout);
   }
 
-  public boolean isServiceActive() {
+  boolean checkServiceActive() {
+    boolean active;
+    try {
+      URL url = new URL(getLoginPageUrl());
+      int status = ((HttpURLConnection)url.openConnection()).getResponseCode();
+      active = status == HttpURLConnection.HTTP_OK;
+      if (!active) {
+        LOG.warn("DPM reachable but returning '{}' HTTP status on login", status);
+      }
+    } catch (IOException ex) {
+      LOG.warn("DPM not reachable: {}", ex.toString());
+      active = false;
+    }
+    LOG.debug("DPM current status '{}'", (active) ? "ACTIVE" : "NON ACTIVE");
+    return active;
+  }
+
+  public boolean isServiceActive(boolean checkNow) {
+    if (checkNow) {
+      serviceActive = checkServiceActive();
+    }
     return serviceActive;
   }
 
@@ -213,7 +234,7 @@ public class RemoteSSOService extends AbstractSSOService {
 
   protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken)
       throws ForbiddenException {
-    Utils.checkState(isServiceActive(), "Security service not active");
+    Utils.checkState(isServiceActive(false), "Security service not active");
     ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
     authTokenJson.setAuthToken(userAuthToken);
     SSOPrincipalJson principal;
@@ -249,7 +270,7 @@ public class RemoteSSOService extends AbstractSSOService {
 
   protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
       throws ForbiddenException {
-    Utils.checkState(isServiceActive(), "Security service not active");
+    Utils.checkState(isServiceActive(false), "Security service not active");
     ValidateComponentAuthTokenJson authTokenJson = new ValidateComponentAuthTokenJson();
     authTokenJson.setComponentId(componentId);
     authTokenJson.setAuthToken(authToken);
