@@ -53,51 +53,8 @@
 
   <properties>
     <rat-plugin.version>0.12</rat-plugin.version>
-    <cdh_5_2-lib>none</cdh_5_2-lib>
-    <cdh_5_3-lib>none</cdh_5_3-lib>
-    <cdh_5_4-lib>none</cdh_5_4-lib>
-    <cdh_5_5-lib>none</cdh_5_5-lib>
-    <cdh_5_7-lib>none</cdh_5_7-lib>
-    <cdh_5_8-lib>none</cdh_5_8-lib>
-    <hdp_2_2-lib>none</hdp_2_2-lib>
-    <hdp_2_3-lib>none</hdp_2_3-lib>
-    <hdp_2_4-lib>none</hdp_2_4-lib>
-    <mapr_5_0-lib>none</mapr_5_0-lib>
-    <mapr_5_1-lib>none</mapr_5_1-lib>
-    <mapr_5_2-lib>none</mapr_5_2-lib>
-    <cdh_kafka_1_2-lib>none</cdh_kafka_1_2-lib>
-    <cdh_kafka_1_3-lib>none</cdh_kafka_1_3-lib>
-    <cdh_kafka_2_0-lib>none</cdh_kafka_2_0-lib>
-    <cdh_5_4-cluster-cdh_kafka_1_2-lib>none</cdh_5_4-cluster-cdh_kafka_1_2-lib>
-    <cdh_5_4-cluster-cdh_kafka_1_3-lib>none</cdh_5_4-cluster-cdh_kafka_1_3-lib>
-    <cdh_5_5-cluster-cdh_kafka_1_3-lib>none</cdh_5_5-cluster-cdh_kafka_1_3-lib>
-    <cdh_5_7-cluster-cdh_kafka_2_0-lib>none</cdh_5_7-cluster-cdh_kafka_2_0-lib>
-    <cdh_5_8-cluster-cdh_kafka_2_0-lib>none</cdh_5_8-cluster-cdh_kafka_2_0-lib>
-    <apache-kudu-0_7-lib>none</apache-kudu-0_7-lib>
-    <apache-kudu-0_8-lib>none</apache-kudu-0_8-lib>
-    <apache-kudu-0_9-lib>none</apache-kudu-0_9-lib>
-    <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
-    <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
-    <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
-    <apache-kafka_0_10-lib>none</apache-kafka_0_10-lib>
-    <jython_2_7-lib>none</jython_2_7-lib>
-    <groovy_2_4-lib>none</groovy_2_4-lib>
-    <elasticsearch_1_4-lib>none</elasticsearch_1_4-lib>
-    <elasticsearch_1_5-lib>none</elasticsearch_1_5-lib>
-    <elasticsearch_1_6-lib>none</elasticsearch_1_6-lib>
-    <elasticsearch_1_7-lib>none</elasticsearch_1_7-lib>
-    <elasticsearch_2_0-lib>none</elasticsearch_2_0-lib>
-    <elasticsearch_2_1-lib>none</elasticsearch_2_1-lib>
-    <elasticsearch_2_2-lib>none</elasticsearch_2_2-lib>
-    <elasticsearch_2_3-lib>none</elasticsearch_2_3-lib>
-    <cassandra_3-lib>none</cassandra_3-lib>
-    <mongodb_3-lib>none</mongodb_3-lib>
-    <influxdb_0_9-lib>none</influxdb_0_9-lib>
-    <redis-lib>none</redis-lib>
-    <apache-solr_6_1_0-lib>none</apache-solr_6_1_0-lib>
-    <sdc-solr-api>none</sdc-solr-api>
-    <sdc-solr_cdh_4-lib>none</sdc-solr_cdh_4-lib>
-    <sdc-solr_6-lib>none</sdc-solr_6-lib>
+    <basic-lib>basic-lib</basic-lib>
+    <dev-lib>dev-lib</dev-lib>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -112,6 +69,9 @@
   </dependencyManagement>
 
   <modules>
+
+    <!-- IMPORTANT: The main section of the POM must not include any stage library module -->
+
     <module>rbgen-maven-plugin</module>
     <module>root-proto</module>
     <module>root</module>
@@ -134,19 +94,11 @@
 
     <module>commonlib</module>
 
+    <!-- IMPORTANT: basic-lib and dev-lib are the two ONLY stagelibs built with the core -->
+    <module>basic-lib</module>
     <module>dev-lib</module>
 
-    <module>basic-lib</module>
-
     <module>lookup-protolib</module>
-
-    <module>stats-lib</module>
-
-    <module>omniture-lib</module>
-
-    <module>jdbc-lib</module>
-    <module>jms-lib</module>
-    <module>rabbitmq-lib</module>
 
     <module>hdfs-protolib</module>
     <module>mapreduce-protolib</module>
@@ -175,7 +127,6 @@
     <module>elasticsearch-protolib</module>
 
     <module>solr-protolib</module>
-    <module>apache-solr_6_1_0-lib</module>
 
     <module>cassandra-protolib</module>
 
@@ -183,7 +134,6 @@
 
     <module>flume-protolib</module>
 
-    <module>aws-lib</module>
     <module>cluster-hdfs-protolib</module>
     <module>hbase-protolib</module>
     <module>kudu-protolib</module>
@@ -195,11 +145,9 @@
     <module>mesos-bootstrap</module>
     <module>cli</module>
     <module>common-ui</module>
-    <module>redis-lib</module>
     <module>sdc-solr-api</module>
-    <module>sdc-solr_cdh_4-lib</module>
-    <module>sdc-solr_6-lib</module>
-    <module>cloudera-integration</module>
+    <module>sdc-solr_cdh_4</module>
+    <module>sdc-solr_6</module>
   </modules>
 
   <build>
@@ -312,18 +260,6 @@
   </reporting>
 
   <profiles>
-    <profile>
-      <id>ui</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>datacollector-ui</module>
-      </modules>
-    </profile>
 
     <profile>
       <id>java8</id>
@@ -337,42 +273,6 @@
       </modules>
     </profile>
 
-    <profile>
-      <id>docs</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>docs</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>dist</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>dist</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>miniIT</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>miniIT</name>
-        </property>
-      </activation>
-      <modules>
-        <module>miniIT</module>
-      </modules>
-    </profile>
     <profile>
       <id>rat-check</id>
       <activation>
@@ -415,30 +315,7 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>release</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>release</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>rpm</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <modules>
-        <module>rpm</module>
-      </modules>
-    </profile>
+
     <profile>
       <id>all-libs</id>
       <activation>
@@ -448,23 +325,36 @@
         </property>
       </activation>
       <properties>
-        <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
-        <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
-        <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
-        <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
-        <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
-        <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
-        <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
-        <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
-        <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
+        <!--
+             IMPORTANT: keep this in alphabetical order
+
+             IMPORTANT: define a property matching the module directory name
+             for every stage library here with the directory name as value
+        -->
+        <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
+        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
+        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
+        <apache-kudu-0_8-lib>apache-kudu-0_8-lib</apache-kudu-0_8-lib>
+        <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
+        <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
+        <aws-lib>aws-lib</aws-lib>
+        <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
+        <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
+        <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
+        <cdh_5_4-cluster-cdh_kafka_1_2-lib>cdh_5_4-cluster-cdh_kafka_1_2-lib</cdh_5_4-cluster-cdh_kafka_1_2-lib>
+        <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
+        <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
+        <cdh_5_5-cluster-cdh_kafka_1_3-lib>cdh_5_5-cluster-cdh_kafka_1_3-lib</cdh_5_5-cluster-cdh_kafka_1_3-lib>
+        <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
+        <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
+        <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
+        <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
+        <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
-        <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
-        <cdh_5_4-cluster-cdh_kafka_1_2-lib>cdh_5_4-cluster-cdh_kafka_1_2-lib</cdh_5_4-cluster-cdh_kafka_1_2-lib>
-        <cdh_5_5-cluster-cdh_kafka_1_3-lib>cdh_5_5-cluster-cdh_kafka_1_3-lib</cdh_5_5-cluster-cdh_kafka_1_3-lib>
-        <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
+        <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <elasticsearch_1_4-lib>elasticsearch_1_4-lib</elasticsearch_1_4-lib>
         <elasticsearch_1_5-lib>elasticsearch_1_5-lib</elasticsearch_1_5-lib>
         <elasticsearch_1_6-lib>elasticsearch_1_6-lib</elasticsearch_1_6-lib>
@@ -472,30 +362,54 @@
         <elasticsearch_2_0-lib>elasticsearch_2_0-lib</elasticsearch_2_0-lib>
         <elasticsearch_2_1-lib>elasticsearch_2_1-lib</elasticsearch_2_1-lib>
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
-        <apache-kudu-0_7-lib>apache-kudu-0_7-lib</apache-kudu-0_7-lib>
-        <apache-kudu-0_8-lib>apache-kudu-0_8-lib</apache-kudu-0_8-lib>
-        <redis_lib>redis-lib</redis_lib>
-        <aws-lib>aws-lib</aws-lib>
-        <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
+        <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
+        <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
+        <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
+        <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
+        <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
+        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
+        <jdbc-lib>jdbc-lib</jdbc-lib>
+        <jms-lib>jms-lib</jms-lib>
+        <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
+        <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
+        <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
+        <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
+        <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
+        <ommiture-lib>ommiture-lib</ommiture-lib>
+        <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
+        <redis-lib>redis-lib</redis-lib>
+        <stats-lib>stats-lib</stats-lib>
       </properties>
       <modules>
-        <module>cdh_5_2-lib</module>
-        <module>cdh_5_3-lib</module>
-        <module>cdh_5_4-lib</module>
-        <module>cdh_5_5-lib</module>
-        <module>cdh_5_7-lib</module>
-        <module>hdp_2_2-lib</module>
-        <module>hdp_2_3-lib</module>
-        <module>mapr_5_0-lib</module>
-        <module>mapr_5_1-lib</module>
+        <!--
+             IMPORTANT: keep this in alphabetical order
+
+             IMPORTANT: the modules for all stage libraries
+        -->
+        <module>apache-kafka_0_10-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
-        <module>cdh_kafka_1_2-lib</module>
-        <module>cdh_kafka_1_3-lib</module>
+        <module>apache-kafka_0_9-lib</module>
+        <module>apache-kudu-0_7-lib</module>
+        <module>apache-kudu-0_8-lib</module>
+        <module>apache-kudu-0_9-lib</module>
+        <module>apache-solr_6_1_0-lib</module>
+        <module>aws-lib</module>
+        <module>cassandra_3-lib</module>
+        <module>cdh_5_2-lib</module>
+        <module>cdh_5_3-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_2-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_3-lib</module>
+        <module>cdh_5_4-lib</module>
         <module>cdh_5_5-cluster-cdh_kafka_1_3-lib</module>
+        <module>cdh_5_5-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_7-lib</module>
+        <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_8-lib</module>
+        <module>cdh_kafka_1_2-lib</module>
+        <module>cdh_kafka_1_3-lib</module>
+        <module>cdh_kafka_2_0-lib</module>
         <module>elasticsearch_1_4-lib</module>
         <module>elasticsearch_1_5-lib</module>
         <module>elasticsearch_1_6-lib</module>
@@ -503,15 +417,26 @@
         <module>elasticsearch_2_0-lib</module>
         <module>elasticsearch_2_1-lib</module>
         <module>elasticsearch_2_2-lib</module>
-        <module>apache-kudu-0_7-lib</module>
-        <module>apache-kudu-0_8-lib</module>
-        <module>aws-lib</module>
+        <module>elasticsearch_2_3-lib</module>
+        <module>groovy_2_4-lib</module>
+        <module>hdp_2_2-lib</module>
+        <module>hdp_2_3-lib</module>
+        <module>hdp_2_4-lib</module>
+        <module>influxdb_0_9-lib</module>
+        <module>jdbc-lib</module>
+        <module>jms-lib</module>
+        <module>jython_2_7-lib</module>
+        <module>mapr_5_0-lib</module>
+        <module>mapr_5_1-lib</module>
+        <module>mapr_5_2-lib</module>
+        <module>mongodb_3-lib</module>
+        <module>omniture-lib</module>
+        <module>rabbitmq-lib</module>
         <module>redis-lib</module>
-        <module>apache-solr_6_1_0-lib</module>
+        <module>stats-lib</module>
       </modules>
     </profile>
 
-    <!-- List all the latest versions here. If new version needs to be added, move the older version in all-libs -->
     <profile>
       <id>sample-dev-libs</id>
       <activation>
@@ -520,40 +445,55 @@
         </property>
       </activation>
       <properties>
-        <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
-        <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
-        <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
-        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
-        <redis-lib>redis-lib</redis-lib>
-        <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
-        <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
-        <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
-        <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
-        <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
-        <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
-        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
+        <!--
+             Use only the latest versions here. If new version needs to be added, move the older version in all-libs
+
+             IMPORTANT: keep this in alphabetical order
+
+             IMPORTANT: define a property matching the module directory name
+             for all the sample dev stage libraries here with the directory name as value
+        -->
         <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
+        <aws-lib>aws-lib</aws-lib>
+        <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
+        <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
+        <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
+        <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
+        <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
+        <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
+        <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
+        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
+        <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
+        <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
+        <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
+        <redis-lib>redis-lib</redis-lib>
       </properties>
       <modules>
-        <module>hdp_2_4-lib</module>
-        <module>cdh_5_8-lib</module>
-        <module>mapr_5_2-lib</module>
-        <module>jython_2_7-lib</module>
-        <module>groovy_2_4-lib</module>
-        <module>elasticsearch_2_3-lib</module>
-        <module>cassandra_3-lib</module>
-        <module>cdh_kafka_2_0-lib</module>
-        <module>mongodb_3-lib</module>
-        <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
-        <module>apache-kafka_0_9-lib</module>
+        <!--
+             Use only the latest versions here. If new version needs to be added, move the older version in all-libs
+
+             IMPORTANT: keep this in alphabetical order
+
+             IMPORTANT: the modules for the sample dev stage libraries
+        -->
         <module>apache-kafka_0_10-lib</module>
         <module>apache-kudu-0_9-lib</module>
-        <module>influxdb_0_9-lib</module>
-        <module>redis-lib</module>
         <module>apache-solr_6_1_0-lib</module>
+        <module>aws-lib</module>
+        <module>cassandra_3-lib</module>
+        <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_8-lib</module>
+        <module>cdh_kafka_1_3-lib</module>
+        <module>elasticsearch_2_3-lib</module>
+        <module>groovy_2_4-lib</module>
+        <module>hdp_2_4-lib</module>
+        <module>influxdb_0_9-lib</module>
+        <module>jython_2_7-lib</module>
+        <module>mapr_5_2-lib</module>
+        <module>mongodb_3-lib</module>
+        <module>redis-lib</module>
       </modules>
     </profile>
 
@@ -586,6 +526,88 @@
         </plugins>
       </build>
     </profile>
+
+    <!-- IMPORTANT: keep the following profiles at the end -->
+
+    <profile>
+      <id>ui</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>datacollector-ui</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>docs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>dist</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>dist</module>
+        <module>cloudera-integration</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>miniIT</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>miniIT</name>
+        </property>
+      </activation>
+      <modules>
+        <module>miniIT</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>release</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>rpm</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>rpm</module>
+      </modules>
+    </profile>
+
   </profiles>
 
   <repositories>
