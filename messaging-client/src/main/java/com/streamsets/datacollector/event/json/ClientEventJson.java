@@ -89,4 +89,24 @@ public class ClientEventJson {
   public void setOrgId(String orgId) {
     this.orgId = orgId;
   }
+
+  @Override
+  public int hashCode() {
+    return eventId.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (this == obj) {
+      return true;
+    }
+    if (obj instanceof ClientEventJson) {
+      ClientEventJson other = (ClientEventJson) obj;
+      return this.eventId.equals(other.getEventId());
+    }
+    return false;
+  }
 }
