@@ -69,6 +69,14 @@ public abstract class MessagingDtoJsonMapper {
   public abstract DisconnectedSsoCredentialsEvent asDisconectedSsoCredentialsDto(DisconnectedSsoCredentialsEventJson
       json);
 
+  public abstract DisconnectedSsoCredentialsEventJson.EntryJson toDisconectedSsoCredentialsJson(
+      DisconnectedSsoCredentialsEvent.Entry json
+  );
+
+  public abstract DisconnectedSsoCredentialsEventJson toDisconectedSsoCredentialsJson(
+      DisconnectedSsoCredentialsEvent json
+  );
+
   public abstract PingFrequencyAdjustmentEventJson toPingFrequencyAdjustmentEventJson(PingFrequencyAdjustmentEvent pingFrequencyEvent);
 
   public abstract PingFrequencyAdjustmentEvent asPingFrequencyAdjustmentEventDto(PingFrequencyAdjustmentEventJson pingFrequencyEventJson);

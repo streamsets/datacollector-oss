@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
+import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
@@ -115,6 +116,10 @@ public class MessagingJsonToFromDto {
       case DELETE_PIPELINE:
       case STOP_DELETE_PIPELINE:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toPipelineBaseEventJson((PipelineBaseEvent) event);
+        break;
+      case SSO_DISCONNECTED_MODE_CREDENTIALS:
+        eventJson =
+            MessagingDtoJsonMapper.INSTANCE.toDisconectedSsoCredentialsJson((DisconnectedSsoCredentialsEvent) event);
         break;
       default:
         throw new IllegalStateException("Unrecognized event type: " + clientEvent.getEventType());
