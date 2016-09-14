@@ -67,7 +67,7 @@
       "errorRecord": "Error",
       "errors": "Errors",
       "export": "Export",
-      "exportWithLibraryDefinitions": "Export With Library Definitions",
+      "exportWithLibraryDefinitions": "Export for DPM",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "fromStage": "From Stage",
