@@ -48,7 +48,7 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 2:
         upgradeV2toV3(configs);
-        break;
+        // fall through
       case 3:
         upgradeV3toV4(configs);
         break;
