@@ -35,12 +35,17 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSelectInfo;
+import org.apache.commons.vfs2.FileSelector;
 import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
@@ -222,9 +227,42 @@ public class RemoteDownloadSource extends BaseSource {
           Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, conf.remoteAddress));
       LOG.error("Error trying to login to remote host", ex);
     }
+    validateFilePattern(issues);
     return issues;
   }
 
+  private void validateFilePattern(List<ConfigIssue> issues) {
+    if (conf.filePattern == null || conf.filePattern.trim().isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_13, conf.filePattern));
+    } else {
+      try {
+        globToRegex(conf.filePattern);
+      } catch (IllegalArgumentException ex) {
+        issues.add(getContext().createConfigIssue(
+            Groups.REMOTE.getLabel(), CONF_PREFIX + "filePattern", Errors.REMOTE_14, conf.filePattern, ex.toString(), ex ));
+      }
+    }
+  }
+
+  /**
+   * Convert a limited file glob into a
+   * simple regex.
+   *
+   * @param glob file specification glob
+   * @return regex.
+   */
+  private String globToRegex(String glob) {
+    if (glob.substring(0, 1).equals(".") || glob.substring(0, 1).equals("/") || glob.substring(0, 1).equals("~")) {
+      throw new IllegalArgumentException("Invalid leading character");
+    }
+
+    // treat dot as a literal.
+    glob = glob.replace(".", "\\.");
+    glob = glob.replace("*", ".+");
+    glob = glob.replace("?", ".{1}+");
+    return glob;
+  }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -248,7 +286,7 @@ public class RemoteDownloadSource extends BaseSource {
           // -- we are starting up for the very first time, hence current offset is null
           // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
           if (currentOffset == null || !currentOffset.fileName.equals(next.filename)) {
-            currentOffset = new Offset(next.remoteObject.getName().getBaseName(),
+            currentOffset = new Offset(next.remoteObject.getName().getPath(),
                 next.remoteObject.getContent().getLastModifiedTime(), 0L);
           }
           if (conf.dataFormat == DataFormat.WHOLE_FILE) {
@@ -259,7 +297,7 @@ public class RemoteDownloadSource extends BaseSource {
             metadata.put(CONTENT_ENCODING, next.remoteObject.getContent().getContentInfo().getContentEncoding());
 
             metadata.put(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), next));
-            metadata.put(HeaderAttributeConstants.FILE_NAME, next.filename);
+            metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.filename));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
             FileRef fileRef = new RemoteSourceFileRef.Builder()
@@ -300,10 +338,19 @@ public class RemoteDownloadSource extends BaseSource {
 
   static String getFileName(String remoteUri, RemoteFile remoteFile) {
     String filename = remoteUri;
-    if (remoteUri.charAt(remoteUri.length() - 1) != '/') {
-      filename = filename + "/";
+    if (remoteUri.charAt(remoteUri.length() - 1) == '/') {
+      if (remoteFile.filename.charAt(0) == '/') {
+        filename += remoteFile.filename.substring(1);
+      } else {
+        filename += remoteFile.filename;
+      }
+    } else {
+      if (remoteFile.filename.charAt(0) == '/') {
+        filename += remoteFile.filename;
+      } else {
+        filename += "/" + remoteFile.filename;
+      }
     }
-    filename = filename + remoteFile.filename;
     return filename;
   }
 
@@ -314,7 +361,7 @@ public class RemoteDownloadSource extends BaseSource {
         Record record = parser.parse();
         if (record != null) {
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), remoteFile));
-          record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, remoteFile.filename);
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(remoteFile.filename));
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
           offset = parser.getOffset();
@@ -344,7 +391,7 @@ public class RemoteDownloadSource extends BaseSource {
       File errorFile = new File(errorArchive, fileToMove.filename);
       if (errorFile.exists()) {
         errorFile = new File(errorArchive, fileToMove.filename + "-" + UUID.randomUUID().toString());
-        LOG.info(fileToMove.filename + " is being written out as " + errorFile.getName() +
+        LOG.info(fileToMove.filename + " is being written out as " + errorFile.getPath() +
             " as another file of the same name exists");
       }
       try (InputStream is = fileToMove.remoteObject.getContent().getInputStream();
@@ -423,10 +470,40 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private void queueFiles() throws FileSystemException {
+    FileSelector selector = new FileSelector() {
+      @Override
+      public boolean includeFile(FileSelectInfo fileInfo) throws Exception {
+        return true;
+      }
+
+      @Override
+      public boolean traverseDescendents(FileSelectInfo fileInfo) throws Exception {
+        return conf.processSubDirectories;
+      }
+    };
+
+    FileObject[] theFiles;
+    // get files from current directory.
     remoteDir.refresh();
-    for (FileObject remoteFile : remoteDir.getChildren()) {
+    theFiles = remoteDir.getChildren();
+
+    if (conf.processSubDirectories) {
+      // append files from subdirectories.
+      theFiles = (FileObject[]) ArrayUtils.addAll(theFiles, remoteDir.findFiles(selector));
+    }
+
+    for (FileObject remoteFile : theFiles) {
+      if (remoteFile.getType() != FileType.FILE) {
+        continue;
+      }
+
+      //check if base name matches - not full path.
+      if (!remoteFile.getName().getBaseName().matches(globToRegex(conf.filePattern))) {
+        continue;
+      }
+
       long lastModified = remoteFile.getContent().getLastModifiedTime();
-      RemoteFile tempFile = new RemoteFile(remoteFile.getName().getBaseName(), lastModified, remoteFile);
+      RemoteFile tempFile = new RemoteFile(remoteFile.getName().getPath(), lastModified, remoteFile);
       if (shouldQueue(tempFile)) {
         // If we are done with all files, the files with the final mtime might get re-ingested over and over.
         // So if it is the one of those, don't pull it in.

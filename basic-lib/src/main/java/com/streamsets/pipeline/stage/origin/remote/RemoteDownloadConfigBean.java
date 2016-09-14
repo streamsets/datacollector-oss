@@ -150,7 +150,7 @@ public class RemoteDownloadConfigBean {
       defaultValue = "JSON",
       label = "Data Format",
       group = "REMOTE",
-      displayPosition = 30
+      displayPosition = 50
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
@@ -178,5 +178,29 @@ public class RemoteDownloadConfigBean {
       triggeredByValue = "true"
   )
   public String errorArchiveDir = "";
+
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Process Subdirectories",
+      description = "Process files in subdirectories of the specified path",
+      group = "REMOTE",
+      displayPosition = 30
+  )
+  public boolean processSubDirectories;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "File Name Selector",
+      defaultValue = "*",
+      description =  "A glob that defines the pattern of the file names in the directory. ('*' selects all files)" +
+          "Files are processed in chronological order.",
+      group = "REMOTE",
+      displayPosition = 40
+  )
+  public String filePattern;
 
 }

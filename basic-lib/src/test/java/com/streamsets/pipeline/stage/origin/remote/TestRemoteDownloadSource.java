@@ -181,7 +181,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -219,7 +221,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -253,7 +257,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -286,7 +292,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -311,7 +319,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -336,7 +346,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -373,7 +385,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -418,7 +432,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -445,7 +461,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -489,7 +507,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -528,7 +548,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -566,7 +588,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            archiveDir.toString()
+            archiveDir.toString(),
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -635,7 +659,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            archiveDir.toString()
+            archiveDir.toString(),
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -696,7 +722,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -761,7 +789,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -817,7 +847,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.JSON,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -861,7 +893,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.WHOLE_FILE,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -937,7 +971,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.WHOLE_FILE,
-            null
+            null,
+            false,
+            "*"
         ));
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
         .addOutputLane("lane")
@@ -1003,7 +1039,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.TEXT,
-            null
+            null,
+            false,
+            "*"
         ));
 
     int totalRecordsRead = 0, runTimes = 0, expectedRecordCount = 10, totalRunTimes = expectedRecordCount * 2;
@@ -1055,7 +1093,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.TEXT,
-            null
+            null,
+            false,
+            "*"
         ));
 
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -1120,7 +1160,9 @@ public class TestRemoteDownloadSource {
             null,
             true,
             DataFormat.TEXT,
-            null
+            null,
+            false,
+            "*"
         ));
 
     SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
@@ -1141,6 +1183,148 @@ public class TestRemoteDownloadSource {
     }
   }
 
+  @Test
+  public void testFileSelection() throws Exception {
+
+    String [] fileNames = {
+        "aaa",
+        "aab",
+        "bbb",
+        "bba",
+        "aaaa"
+    };
+
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/fileNameSelection";
+    Assert.assertTrue(new File(path).mkdirs());
+
+    for(String f : fileNames) {
+      File dest = new File(path, f);
+      Files.write(someSampleData(), dest);
+    }
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "??a"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    String offset = RemoteDownloadSource.NOTHING_READ;
+    StageRunner.Output op = runner.runProduce(offset, 1000);
+    List<Record> expected = getExpectedRecords();
+    List<Record> actual = op.getRecords().get("lane");
+    Assert.assertEquals(expected.size(), actual.size());
+    for (int i = 0; i < 2; i++) {
+      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
+    }
+
+    op = runner.runProduce(offset, 1000);
+    actual = op.getRecords().get("lane");
+    Assert.assertEquals(expected.size(), actual.size());
+    for (int i = 0; i < 2; i++) {
+      System.out.println(actual.get(i));
+      Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
+    }
+
+    op = runner.runProduce(offset, 1000);
+    actual = op.getRecords().get("lane");
+    Assert.assertNotEquals(expected.size(), actual.size());
+  }
+
+  @Test
+  public void testFileSelectionRecursive() throws Exception {
+
+    String [] directories = {
+        "fileNameSelection",
+        "fileNameSelection/dir1",
+        "fileNameSelection/dir2",
+        "fileNameSelection/dir3"
+    };
+
+    String [] fileNames = {
+        "aaa",
+        "aab",
+        "bbb",
+        "bba",
+        "aaaa"
+    };
+
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source";
+    for(String dir : directories) {
+      String myPath = path + '/' + dir;
+      Assert.assertTrue(new File(myPath).mkdirs());
+
+      for(String f : fileNames) {
+        File dest = new File(myPath, f);
+        Files.write(someSampleData(), dest);
+      }
+    }
+
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            true,
+            "??a"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    String offset = RemoteDownloadSource.NOTHING_READ;
+    StageRunner.Output op;
+    List<Record> expected = getExpectedRecords();
+    List<Record> actual = null;
+
+    // 2 files per directory.  root directory and 3 child directories.
+    final int MATCHING_FILES = 8;
+
+    for(int j = 0 ; j < MATCHING_FILES; ++j) {
+      op = runner.runProduce(offset, 1000);
+      actual = op.getRecords().get("lane");
+      Assert.assertEquals(expected.size(), actual.size());
+      for (int i = 0; i < 2; i++) {
+        Assert.assertEquals(expected.get(i).get(), actual.get(i).get());
+      }
+    }
+
+    // try again, but there are no more matching files.
+    op = runner.runProduce(offset, 1000);
+    actual = op.getRecords().get("lane");
+    Assert.assertNotEquals(expected.size(), actual.size());
+  }
+
+  private byte [] someSampleData() {
+    String data =
+        "{\"name\": \"sloth\",\"age\": \"5\",\"characterisitics\": [\"cute\", \"slooooow\", \"sloooooow\", \"sloooooooow\"]}\n"
+            + "{\"name\": \"panda\",\"age\": \"3\",\"characterisitics\": [\"cool\", \"cute\", \"round\", \"playful\", \"hungry\"]}";
+    return data.getBytes();
+  }
 
   private RemoteDownloadConfigBean getBean(
       String remoteHost,
@@ -1152,7 +1336,9 @@ public class TestRemoteDownloadSource {
       String knownHostsFile,
       boolean noHostChecking,
       DataFormat dataFormat,
-      String errorArchive
+      String errorArchive,
+      boolean processSubDirectories,
+      String filePattern
   ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteAddress = remoteHost;
@@ -1166,6 +1352,8 @@ public class TestRemoteDownloadSource {
     configBean.dataFormat = dataFormat;
     configBean.errorArchiveDir = errorArchive;
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    configBean.processSubDirectories = processSubDirectories;
+    configBean.filePattern = filePattern;
     if (password != null) {
       configBean.auth = Authentication.PASSWORD;
     } else {

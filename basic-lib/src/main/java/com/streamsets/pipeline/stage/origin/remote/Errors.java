@@ -39,7 +39,9 @@ public enum Errors implements ErrorCode {
   REMOTE_09("Poll Interval must be positive"),
   REMOTE_10("Private Key file: {} does not exist or is not accessible"),
   REMOTE_11("Private Key authentication is supported only with SFTP"),
-  REMOTE_12("Strict Host Checking is supported only with SFTP")
+  REMOTE_12("Strict Host Checking is supported only with SFTP"),
+  REMOTE_13("File Pattern cannot be empty"),
+  REMOTE_14("Invalid GLOB file pattern '{}': {}"),
   ;
 
   private final String msg;
