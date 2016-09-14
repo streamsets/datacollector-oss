@@ -58,7 +58,7 @@ public class S3PostProcessingConfig {
     required = false,
     type = ConfigDef.Type.STRING,
     label = "Post Process Prefix",
-    description = "",
+    description = "Files will be moved/copied into this prefix",
     displayPosition = 30,
     group = "#0",
     dependsOn = "postProcessing",
@@ -70,11 +70,11 @@ public class S3PostProcessingConfig {
     required = false,
     type = ConfigDef.Type.STRING,
     label = "Post Process Bucket",
-    description = "",
+    description = "Files will be moved/copied into this bucket",
     displayPosition = 40,
     group = "#0",
     dependsOn = "archivingOption",
-    triggeredByValue = { "MOVE_TO_BUCKET" }
+    triggeredByValue = { "MOVE_TO_BUCKET", "COPY_TO_BUCKET" }
   )
   public String postProcessBucket;
 

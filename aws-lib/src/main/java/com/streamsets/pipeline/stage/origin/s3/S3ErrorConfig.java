@@ -58,7 +58,7 @@ public class S3ErrorConfig {
     required = false,
     type = ConfigDef.Type.STRING,
     label = "Error Prefix",
-    description = "Files in error will be moved into this prefix",
+    description = "Files in error will be moved/copied into this prefix",
     displayPosition = 30,
     group = "#0",
     dependsOn = "errorHandlingOption",
@@ -70,11 +70,11 @@ public class S3ErrorConfig {
     required = false,
     type = ConfigDef.Type.STRING,
     label = "Error Bucket",
-    description = "Files in error will be moved into this bucket",
+    description = "Files in error will be moved/copied into this bucket",
     displayPosition = 40,
     group = "#0",
     dependsOn = "archivingOption",
-    triggeredByValue = { "MOVE_TO_BUCKET" }
+    triggeredByValue = { "MOVE_TO_BUCKET", "COPY_TO_BUCKET" }
   )
   public String errorBucket;
 
