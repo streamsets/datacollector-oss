@@ -33,7 +33,7 @@ public class OracleCDCConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "PDB",
-      description = "The pluggable database containing the database. Required for Oracle 12+",
+      description = "The pluggable database containing the database. Required for Oracle 12c if PDB is used.",
       displayPosition = 50,
       group = "JDBC"
   )
@@ -43,8 +43,8 @@ public class OracleCDCConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Initial Change",
-      description = "Criteria to download Initial change",
-      displayPosition = 35,
+      description = "Determines where to start reading",
+      displayPosition = 40,
       group = "CDC",
       defaultValue = "LATEST"
   )
@@ -54,10 +54,9 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Start Date (DD-MM-YYYY HH24:MM:SS)",
-      description = "The Date from which the first change must be downloaded. Date must be in this format: " +
-          "DD-MM-YYYY HH24:MM:SS. Example: 01-01-2016 22:15:35. Archived Redo logs must be available from that date",
-      displayPosition = 40,
+      label = "Start Date",
+      description = "Datetime to use for the initial change. Use the following format: DD-MM-YYYY HH24:MM:SS.",
+      displayPosition = 50,
       group = "CDC",
       dependsOn = "startValue",
       triggeredByValue = "DATE"
@@ -67,9 +66,9 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Start SCN/Change number",
-      description = "The SCN of the oldest change to download",
-      displayPosition = 45,
+      label = "Start SCN",
+      description = "System change number to use for the initial change",
+      displayPosition = 60,
       group = "CDC",
       dependsOn = "startValue",
       triggeredByValue = "SCN"
@@ -80,10 +79,8 @@ public class OracleCDCConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Dictionary Source",
-      description = "Where to find the dictionary from. " +
-          "If online dictionary is used, schema changes will render older difficult to read. " +
-          "If redo logs are used, you must add the new schema to the redo logs when schema is changed",
-      displayPosition = 65,
+      description = "Location of the LogMiner dictionary",
+      displayPosition = 80,
       group = "CDC"
   )
   @ValueChooserModel(DictionaryChooserValues.class)

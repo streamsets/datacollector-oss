@@ -25,7 +25,7 @@ public enum  StartValues implements Label {
 
   LATEST("From Latest Change"),
   DATE("From Date"),
-  SCN("From Previous Change/SCN")
+  SCN("From SCN")
   ;
 
   private final String label;

@@ -24,11 +24,11 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
+  CDC("Oracle CDC"),
   JDBC("JDBC"),
   CREDENTIALS("Credentials"),
-  CDC("Change Data Capture"),
   LEGACY("Legacy"),
-  ADVANCED("ADVANCED")
+  ADVANCED("Advanced")
   ;
 
   private final String label;

@@ -29,8 +29,8 @@ public class CDCSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Maximum Batch Size",
-      description = "Maximum number of change events per batch",
+      label = "Max Batch Size (records)",
+      description = "Maximum number of records in a batch",
       displayPosition = 30,
       defaultValue = "100",
       group = "JDBC"
@@ -41,8 +41,7 @@ public class CDCSourceConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Database",
-      description = "The database to track changes to",
-      displayPosition = 50,
+      displayPosition = 10,
       group = "CDC"
   )
   public String database;
@@ -51,8 +50,7 @@ public class CDCSourceConfigBean {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Tables",
-      description = "List of tables to track changes to",
-      displayPosition = 55,
+      displayPosition = 20,
       group = "CDC"
   )
   public List<String> tables;
@@ -61,9 +59,9 @@ public class CDCSourceConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\", \"SELECT_FOR_UPDATE\"]",
-      label = "Types of changes to copy",
-      description = "Types of changes that should generate records. Changes of other types will be ignored",
-      displayPosition = 60,
+      label = "Operations",
+      description = "Operations to capture as records. All other operations are ignored.",
+      displayPosition = 70,
       group = "CDC"
   )
   @MultiValueChooserModel(ChangeTypesChooserValues.class)
@@ -72,10 +70,11 @@ public class CDCSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Case Sensitive DB/Table names/Column names",
-      description = "If unchecked, upper case will be used. " +
-          "Check this only if the schema, table and column names were quoted during creation (not common)",
-      displayPosition = 70,
+      label = "Case Sensitive Names",
+      description = "Use for lower or mixed-case database, table and field names. " +
+          "By default, names are changed to all caps. " +
+          "Select only when the database or tables were created with quotation marks around the names.",
+      displayPosition = 30,
       group = "CDC",
       defaultValue = "false"
   )
