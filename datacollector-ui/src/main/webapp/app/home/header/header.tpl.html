@@ -286,7 +286,7 @@
 
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status === 'STOPPING'">
       <a class="btn btn-link icon-button-danger"
-         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+         ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING""
          ng-click="stopPipeline(true)">{{'home.header.forceStop' | translate}}</a>
     </div>
 
