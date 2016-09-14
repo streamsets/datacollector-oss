@@ -24,7 +24,7 @@
             determine the files that the origin processes. You can optionally include Amazon S3
             object metadata in the record as record header attributes. </p>
   <p>After processing a file or upon encountering errors, the origin can keep, archive, or delete
-            the file. </p>
+            the file. When archiving, the origin can copy or move the file. </p>
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline
    starts again, the origin continues processing from where it stopped by default. You can reset the
    origin to process all requested files. </p>

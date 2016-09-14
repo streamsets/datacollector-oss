@@ -136,7 +136,8 @@
                                     <entry>The action taken when an error occurs while processing a
                                             file:<ul id="ul_hvm_gqv_ht">
                                             <li>None - Keeps the file in place.</li>
-                                            <li>Archive - Moves the file to another location.</li>
+                                            <li>Archive - Copies or moves the file to another
+                                                location.</li>
                                             <li>Delete - Deletes the file.</li>
                                         </ul><p>When archiving processed files, best practice is to
                                             also  archive files that cannot be processed.
@@ -145,16 +146,19 @@
                                 <row>
                                     <entry>Archiving Option</entry>
                                     <entry>The action to take when archiving a file that cannot be
-                                        processed. You can configure a prefix or bucket for the
-                                        files.</entry>
+                                        processed. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
+                                            /><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Error Prefix</entry>
-                                    <entry>Location for files that cannot be processed.</entry>
+                                    <entry>Prefix for the files that cannot be processed.</entry>
                                 </row>
                                 <row>
                                     <entry>Error Bucket</entry>
-                                    <entry>Bucket for files that cannot be processed.</entry>
+                                    <entry>Bucket for the files that cannot be processed.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -181,19 +185,22 @@
                                     <entry>The action taken after successfully processing a file:
                                             <ul id="ul_gll_wqv_ht">
                                             <li>None - Keeps the file in place.</li>
-                                            <li>Archive - Moves the file to another location.</li>
+                                            <li>Archive - Copies or moves the file to another
+                                                location.</li>
                                             <li>Delete - Deletes the file.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Archiving Option</entry>
-                                    <entry>The action to take when archiving a processed file. You
-                                        can configure a prefix or bucket for processed
-                                        files.</entry>
+                                    <entry>The action to take when archiving a processed file. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
+                                            /><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Post Process Prefix</entry>
-                                    <entry>Location for processed files. </entry>
+                                    <entry>Prefix for processed files. </entry>
                                 </row>
                                 <row>
                                     <entry>Post Process Bucket</entry>
