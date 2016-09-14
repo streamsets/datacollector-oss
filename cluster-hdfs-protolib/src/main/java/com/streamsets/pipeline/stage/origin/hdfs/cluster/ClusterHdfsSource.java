@@ -346,12 +346,42 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                 Groups.HADOOP_FS.name(),
                 CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
                 Errors.HADOOPFS_29,
-                conf.hdfsConfDir
+                conf.hdfsConfDir,
+                conf.hdfsConfDir,
+                getContext().getResourcesDirectory()
             )
         );
       } else {
-        hadoopConfigDir = new File(getContext().getResourcesDirectory(), conf.hdfsConfDir).getAbsoluteFile();
+        // Verify that user is not specifying directory outside of resources dir by doing ../../ - as that
+        // will not work in cluster mode.
+        try {
+          hadoopConfigDir = new File(getContext().getResourcesDirectory(), conf.hdfsConfDir).getCanonicalFile();
+        } catch (IOException e) {
+          LOG.error("Can't resolve configuration directory", e);
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                Errors.HADOOPFS_26,
+                conf.hdfsConfDir
+            )
+          );
+        }
+
+        if(!hadoopConfigDir.getPath().startsWith(getContext().getResourcesDirectory())) {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                Errors.HADOOPFS_29,
+                conf.hdfsConfDir,
+                hadoopConfigDir.getAbsolutePath(),
+                getContext().getResourcesDirectory()
+            )
+          );
+        }
       }
+
       if (!hadoopConfigDir.exists()) {
         issues.add(
             getContext().createConfigIssue(

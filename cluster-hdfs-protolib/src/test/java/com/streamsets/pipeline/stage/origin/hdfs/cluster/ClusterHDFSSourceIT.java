@@ -184,6 +184,28 @@ public class ClusterHDFSSourceIT {
   }
 
   @Test
+  public void testConfigsNotInResourceDirectory() throws Exception {
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsConfDir = "../" + hadoopConfDir;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    SourceRunner sourceRunner =
+      new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
+      .addOutputLane("lane")
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
+      .setResourcesDir(resourcesDir + "/subdirectory/")
+      .build();
+
+    List<ConfigIssue> issues = sourceRunner.runValidateConfigs();
+    assertEquals(String.valueOf(issues), 1, issues.size());
+    assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_29"));
+  }
+
+  @Test
   public void testWrongHDFSDirLocation() throws Exception {
     ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
     conf.hdfsUri = miniDFS.getURI().toString();
