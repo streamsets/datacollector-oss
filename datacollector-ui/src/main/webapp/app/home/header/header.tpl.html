@@ -128,7 +128,7 @@
            ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && common.isDPMEnabled"
            ng-hide="isPipelineRunning || previewMode || snapshotMode">
        <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
-             tooltip-placement="bottom" tooltip="{{'home.header.remoteOptions' | translate}}"
+             tooltip-placement="right" tooltip="{{'home.header.remoteOptions' | translate}}"
              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
              tooltip-popup-delay="500"
              ng-disabled="!pipelineConfig.valid"

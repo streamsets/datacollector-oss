@@ -440,6 +440,7 @@ angular.module('dataCollectorApp')
       .then(function(results) {
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
         $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();
+        $rootScope.common.dpmBaseURL = configuration.getRemoteBaseUrl();
         $rootScope.common.isSlaveNode = configuration.isSlaveNode();
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
