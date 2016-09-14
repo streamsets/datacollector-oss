@@ -16,7 +16,6 @@
         <input type="text"
                autocomplete="new-password"
                ng-disabled="isEnableInProgress"
-               autofocus
                name="name"
                class="form-control"
                ng-required
@@ -29,6 +28,7 @@
         <input type="text"
                autocomplete="new-password"
                ng-disabled="isEnableInProgress"
+               autofocus
                name="dpmUserID"
                class="form-control"
                required
@@ -91,7 +91,7 @@
             translate="global.form.cancel">Cancel</button>
 
     <button type="submit" class="btn btn-primary" ng-if="!isEnableInProgress && !dpmEnabled"
-            translate="global.form.save">Save</button>
+            translate="home.enableDPM.headerLabel">Enable DPM</button>
 
     <button class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
             translate="home.enableDPM.isEnableInProgress">Enabling DPM...</button>

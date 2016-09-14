@@ -31,7 +31,7 @@ angular
       },
       isRemoteUserOrgAdmin: authService.isRemoteUserOrgAdmin(),
       dpmInfoModel: {
-        baseURL: 'http://localhost:18631',
+        baseURL: 'https://cloud.streamsets.com',
         userID: '',
         userPassword: '',
         labels: ['label1', 'label2']

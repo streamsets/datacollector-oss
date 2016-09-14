@@ -116,6 +116,28 @@ angular
               _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], pipelineStatus.status));
             });
             break;
+          case 'Published Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+              pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id'] &&
+              !(pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE));
+            });
+            break;
+          case 'DPM Controlled Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+              pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE);
+            });
+            break;
+          case 'Local Pipelines':
+            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
+              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+              !(pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id']));
+            });
+            break;
           default:
             // User labels
             $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {

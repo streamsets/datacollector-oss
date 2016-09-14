@@ -26,10 +26,21 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('LibraryController', function ($scope, $rootScope,  $route, $location, $modal, _, api,
-                                             pipelineService, $q) {
+                                             pipelineService, configuration, $q) {
 
     var predefinedLabels = [
       'All Pipelines',
+      'Running Pipelines',
+      'Non Running Pipelines',
+      'Invalid Pipelines',
+      'Error Pipelines'
+    ];
+
+    var dpmEnabledPredefinedLabels = [
+      'All Pipelines',
+      'Published Pipelines',
+      'DPM Controlled Pipelines',
+      'Local Pipelines',
       'Running Pipelines',
       'Non Running Pipelines',
       'Invalid Pipelines',
@@ -113,13 +124,19 @@ angular
     });
 
 
-    $q.all([pipelineService.init(true)])
-      .then(
-        function (results) {
-          $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
-        },
-        function (results) {
-
+    $q.all([
+      pipelineService.init(true),
+      configuration.init()
+    ]).then(
+      function (results) {
+        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
+        if ( configuration.isDPMEnabled()) {
+          $scope.pipelineLabels = dpmEnabledPredefinedLabels;
         }
-      );
+      },
+      function (results) {
+
+      }
+    );
+
   });
