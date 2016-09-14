@@ -29,7 +29,7 @@
     }
 
     var baseHref = document.location.pathname.replace('j_security_check', ''),
-      collectorIndex = baseHref.indexOf('/collector/');
+      collectorIndex = baseHref.indexOf('/security/login');
 
     if(collectorIndex !== -1) {
       baseHref = baseHref.substr(0, collectorIndex + 1);
@@ -132,7 +132,7 @@
       console.log(request.responseText);
     };
 
-    request.send(loginData);
+    request.send(JSON.stringify(loginData));
   }
 </script>
 
