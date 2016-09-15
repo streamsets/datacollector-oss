@@ -27,8 +27,8 @@
         <p>JDBC Consumer can provide the following JDBC namespace header attributes:<table
                 frame="all" rowsep="1" colsep="1" id="table_p1c_q5c_kw">
                 <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                    <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                     <thead>
                         <row>
                             <entry>JDBC Namespace Header Attribute</entry>

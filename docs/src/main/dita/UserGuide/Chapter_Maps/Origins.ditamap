@@ -87,7 +87,9 @@
     <topicref href="../Origins/JDBCConsumer-StoredProcedures.dita"/>
    </topicref>
    <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
-   <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita"/>
+   <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita">
+    <topicref href="../Origins/JDBCConsumer-HeaderHDS.dita"/>
+   </topicref>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JMS.dita" chunk="to-content">

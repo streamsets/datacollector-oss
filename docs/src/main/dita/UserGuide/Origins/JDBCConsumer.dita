@@ -26,7 +26,7 @@
             the data returned by the database. You can also call stored procedures from the SQL
             query.</p>
         <p>You can configure the JDBC Consumer to perform change data capture for databases that
-            store the information in a table. You can configure the origin to add JDBC namespace
+            store the information in a table. You can configure the origin to create JDBC namespace
             header attributes. You can also configure custom properties that your driver requires. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBC-legacyInfo"/>
   </conbody>

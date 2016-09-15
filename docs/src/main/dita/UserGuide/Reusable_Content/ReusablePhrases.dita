@@ -569,6 +569,14 @@
                   the addition or removal of fields in the record. Changes in data type are not
                   compatible.</p>
             <p>
+                  <draft-comment author="Loretta">The note <uicontrol>P-HM-MaxHivePS</uicontrol> is
+                        used in HM processor > Configuring.</draft-comment>
+            </p>
+            <p>
+                  <note id="P-HM-MaxHivePS">At this time, the maximum precision and scale for
+                        decimal data in Hive is 38.</note>
+            </p>
+            <p>
                   <draft-comment author="Loretta">D-HM-CreatesAndNot_Note , D-HM-CreatesAndNot_PH:
                         the following is used in a couple places.</draft-comment>
             </p>

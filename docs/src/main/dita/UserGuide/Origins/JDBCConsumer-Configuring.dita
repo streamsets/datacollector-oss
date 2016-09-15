@@ -197,8 +197,10 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_n2r_rjj_kw"/>
                                         </xref></entry>
-                                    <entry>Use to add JDBC namespace header attributes to
-                                        records.</entry>
+                                    <entry>Use to add JDBC namespace header attributes to records. <p>
+                                            <note>Select this option when using the origin with the
+                                                Hive Drift Solution.</note>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>JDBC Header Prefix</entry>

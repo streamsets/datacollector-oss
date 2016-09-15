@@ -25,8 +25,8 @@
             header attributes that the Hadoop FS destination and the MapR FS destination can use to
             process the data.</p>
   <p>When you configure the Hive Metadata processor, you define the connection information for Hive
-            and the expressions that define the database, table, and partitions that the records
-            require. </p>
+            and the expressions that define the database, table, partitions, and decimal field
+            expressions that the records require.</p>
         <p>You define the location of the Hive and Hadoop configuration files and optionally specify
             additional required properties. You can also configure advanced options, such as the
             maximum cache size, time basis, and decimal precision and scale expressions.</p>
