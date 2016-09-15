@@ -165,6 +165,8 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
 
   @Test
   public void testSubpartitions() throws Exception {
+    final TimeZone timezone = TimeZone.getTimeZone("UTC");
+
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .partitions(new PartitionConfigBuilder()
             .addPartition("year", HiveType.STRING, "${YYYY()}")
@@ -172,6 +174,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
             .addPartition("day", HiveType.STRING, "${DD()}")
             .build()
         )
+        .timeZone(timezone)
         .build();
 
     ProcessorRunner runner = getProcessorRunner(processor);

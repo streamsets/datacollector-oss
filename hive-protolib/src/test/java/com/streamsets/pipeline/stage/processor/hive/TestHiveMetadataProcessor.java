@@ -72,6 +72,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.security.*")
@@ -89,6 +90,7 @@ public class TestHiveMetadataProcessor {
   static final String dbName = "testDB";
   static final String tableName = "testTable";
   static final String location = "/user/hive/warehouse/testDB.db/testTable";
+  static final TimeZone timezone = TimeZone.getTimeZone("UTC");
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD1
       = new LinkedHashMap<>(ImmutableMap.of(
@@ -489,6 +491,7 @@ public class TestHiveMetadataProcessor {
             .addPartition("day", HiveType.STRING, "${DD()}")
             .build()
         )
+        .timeZone(timezone)
         .build();
     ProcessorRunner runner = getProcessRunner(processor);
     runner.runInit();
@@ -503,6 +506,7 @@ public class TestHiveMetadataProcessor {
 
     Calendar cal = Calendar.getInstance();
     cal.setTime(new Date(System.currentTimeMillis()));
+    cal.setTimeZone(timezone);
 
     TimeEL.setCalendarInContext(elVars, cal);
     TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
@@ -693,6 +697,7 @@ public class TestHiveMetadataProcessor {
         .external(true)
         .tablePathTemplate(tableTemplate)
         .partitionPathTemplate(partitionTemplate)
+        .timeZone(timezone)
         .build();
     ProcessorRunner runner = getProcessRunner(processor);
     runner.runInit();
@@ -714,6 +719,7 @@ public class TestHiveMetadataProcessor {
     // Obtain Today's date
     Calendar cal = Calendar.getInstance();
     cal.setTime(new Date(System.currentTimeMillis()));
+    cal.setTimeZone(timezone);
     TimeEL.setCalendarInContext(elVars, cal);
     TimeNowEL.setTimeNowInContext(elVars, new Date(System.currentTimeMillis()));
     String year = String.valueOf(cal.get(Calendar.YEAR));
