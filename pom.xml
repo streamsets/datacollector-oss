@@ -53,8 +53,27 @@
 
   <properties>
     <rat-plugin.version>0.12</rat-plugin.version>
+
+    <!--
+         Stage libraries that always built with the data collector (they dont have protolibs)
+
+         IMPORTANT: keep this in alphabetical order
+
+         IMPORTANT: define a property matching the module directory name
+         for every stage library here with the directory name as value
+    -->
+
+    <aws-lib>aws-lib</aws-lib>
     <basic-lib>basic-lib</basic-lib>
     <dev-lib>dev-lib</dev-lib>
+    <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
+    <jdbc-lib>jdbc-lib</jdbc-lib>
+    <jms-lib>jms-lib</jms-lib>
+    <omniture-lib>omniture-lib</omniture-lib>
+    <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
+    <redis-lib>redis-lib</redis-lib>
+    <stats-lib>stats-lib</stats-lib>
+
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -93,10 +112,6 @@
     <module>root-lib</module>
 
     <module>commonlib</module>
-
-    <!-- IMPORTANT: basic-lib and dev-lib are the two ONLY stagelibs built with the core -->
-    <module>basic-lib</module>
-    <module>dev-lib</module>
 
     <module>lookup-protolib</module>
 
@@ -148,6 +163,25 @@
     <module>sdc-solr-api</module>
     <module>sdc-solr_cdh_4</module>
     <module>sdc-solr_6</module>
+
+    <!--
+         Stage libraries that always built with the data collector (they dont have protolibs)
+
+         IMPORTANT: keep this in alphabetical order
+
+         IMPORTANT: define a property matching the module directory name
+         for every stage library here with the directory name as value
+    -->
+    <module>aws-lib</module>
+    <module>basic-lib</module>
+    <module>dev-lib</module>
+    <module>influxdb_0_9-lib</module>
+    <module>jdbc-lib</module>
+    <module>jms-lib</module>
+    <module>omniture-lib</module>
+    <module>rabbitmq-lib</module>
+    <module>redis-lib</module>
+    <module>stats-lib</module>
   </modules>
 
   <build>
@@ -339,7 +373,6 @@
         <apache-kudu-0_8-lib>apache-kudu-0_8-lib</apache-kudu-0_8-lib>
         <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
-        <aws-lib>aws-lib</aws-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
@@ -367,18 +400,11 @@
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
-        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
-        <jdbc-lib>jdbc-lib</jdbc-lib>
-        <jms-lib>jms-lib</jms-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
-        <ommiture-lib>ommiture-lib</ommiture-lib>
-        <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
-        <redis-lib>redis-lib</redis-lib>
-        <stats-lib>stats-lib</stats-lib>
       </properties>
       <modules>
         <!--
@@ -394,7 +420,6 @@
         <module>apache-kudu-0_8-lib</module>
         <module>apache-kudu-0_9-lib</module>
         <module>apache-solr_6_1_0-lib</module>
-        <module>aws-lib</module>
         <module>cassandra_3-lib</module>
         <module>cdh_5_2-lib</module>
         <module>cdh_5_3-lib</module>
@@ -422,18 +447,11 @@
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
         <module>hdp_2_4-lib</module>
-        <module>influxdb_0_9-lib</module>
-        <module>jdbc-lib</module>
-        <module>jms-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_5_0-lib</module>
         <module>mapr_5_1-lib</module>
         <module>mapr_5_2-lib</module>
         <module>mongodb_3-lib</module>
-        <module>omniture-lib</module>
-        <module>rabbitmq-lib</module>
-        <module>redis-lib</module>
-        <module>stats-lib</module>
       </modules>
     </profile>
 
@@ -456,7 +474,6 @@
         <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kudu-0_9-lib>apache-kudu-0_9-lib</apache-kudu-0_9-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
-        <aws-lib>aws-lib</aws-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
         <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
@@ -464,11 +481,9 @@
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
-        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
-        <redis-lib>redis-lib</redis-lib>
       </properties>
       <modules>
         <!--
@@ -481,7 +496,6 @@
         <module>apache-kafka_0_10-lib</module>
         <module>apache-kudu-0_9-lib</module>
         <module>apache-solr_6_1_0-lib</module>
-        <module>aws-lib</module>
         <module>cassandra_3-lib</module>
         <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_8-lib</module>
@@ -489,11 +503,9 @@
         <module>elasticsearch_2_3-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_4-lib</module>
-        <module>influxdb_0_9-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_5_2-lib</module>
         <module>mongodb_3-lib</module>
-        <module>redis-lib</module>
       </modules>
     </profile>
 
