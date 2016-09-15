@@ -28,6 +28,8 @@ public enum Errors implements ErrorCode {
   EXPR_01("Invalid constant '{}': {}"),
   EXPR_02("Record '{}' cannot set value in field '{}'"),
   EXPR_03("Cannot evaluate expression '{}' for record '{}': {}"),
+  EXPR_04("Record '{}' cannot set value in field '{}'. Reason : {}"),
+
   ;
 
   private final String msg;

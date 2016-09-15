@@ -213,7 +213,11 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
             break;
         }
       } else {
-        record.set(toFieldName, fromField);
+        try {
+          record.set(toFieldName, fromField);
+        } catch (IllegalArgumentException e) {
+          throw new OnRecordErrorException(record, Errors.FIELD_RENAMER_04, toFieldName, e.toString());
+        }
         record.delete(fromFieldName);
       }
     }
@@ -235,7 +239,6 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
             .append(Joiner.on(",").join(multipleRegexMatchingSameFieldEntry.getValue()));
       }
       throw new OnRecordErrorException(record, Errors.FIELD_RENAMER_03, sb.toString());
-
     }
 
     if (!fieldsRequiringOverwrite.isEmpty()) {

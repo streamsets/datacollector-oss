@@ -989,4 +989,39 @@ public class TestFieldRenamer {
       Assert.assertEquals(expectedOrder.get(i), fieldPaths.get(i));
     }
   }
+
+  @Test
+  public void testUnreachableFields() throws Exception {
+    FieldRenamerConfig renameConfig = new FieldRenamerConfig();
+    renameConfig.fromFieldExpression = "/a";
+    renameConfig.toFieldExpression = "/b/c/d";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig),  errorHandler);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a", Field.create(123));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Record errorRecord = runner.getErrorRecords().get(0);
+      Assert.assertEquals(Errors.FIELD_RENAMER_04.name(), errorRecord.getHeader().getErrorCode());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }

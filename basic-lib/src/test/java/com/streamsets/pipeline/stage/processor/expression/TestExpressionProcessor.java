@@ -355,30 +355,6 @@ public class TestExpressionProcessor {
     }
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testFailingFieldSet() throws StageException {
-
-    ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
-    complexExpressionConfig.expression = "${record:id()}";
-    complexExpressionConfig.fieldToSet = "/id/xx";
-
-    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(complexExpressionConfig))
-        .addOutputLane("a").build();
-    runner.runInit();
-
-    try {
-      Map<String, Field> map = new LinkedHashMap<>();
-      Record record = RecordCreator.create("s", "s:1");
-      record.set(Field.create(map));
-
-      runner.runProcess(ImmutableList.of(record));
-    } finally {
-      runner.runDestroy();
-    }
-  }
-
   @Test
   public void testEmptyMapAndEmptyList() throws StageException {
     ExpressionProcessorConfig expressionProcessorConfig1 = new ExpressionProcessorConfig();
@@ -691,6 +667,34 @@ public class TestExpressionProcessor {
       Assert.assertEquals(1, output.getRecords().get("a").size());
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertEquals(Field.Type.INTEGER, field.getValueAsMap().get("a").getType());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUnreachableFields() throws Exception {
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${record:value('/a')}";
+    expressionProcessorConfig.fieldToSet = "/b/c/d";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+        .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a", Field.create(123));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(0, output.getRecords().get("a").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Record errorRecord = runner.getErrorRecords().get(0);
+      Assert.assertEquals(Errors.EXPR_04.name(), errorRecord.getHeader().getErrorCode());
     } finally {
       runner.runDestroy();
     }

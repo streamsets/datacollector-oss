@@ -28,6 +28,7 @@ public enum Errors implements ErrorCode {
   FIELD_RENAMER_01("Target Fields '{}' cannot be overwritten for record '{}'"),
   FIELD_RENAMER_02("Invalid From Field Expression : {}"),
   FIELD_RENAMER_03("Same fields matched my multiple expressions. {} "),
+  FIELD_RENAMER_04("Cannot set value in field '{}'. Reason : {}"),
   ;
 
   private final String msg;

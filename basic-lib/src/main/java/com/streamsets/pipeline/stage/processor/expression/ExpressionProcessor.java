@@ -124,7 +124,12 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         } else {
           //A new field will be created only if the parent field exists and supports creation of a new child field.
           //For a new field can be created in the parent field which is a map or if the parent field is an array.
-          record.set(fieldToSet, newField);
+          try {
+            record.set(fieldToSet, newField);
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(record, Errors.EXPR_04, record.getHeader().getSourceId(),
+                expressionProcessorConfig.fieldToSet, e.toString());
+          }
           if (!record.has(fieldToSet)) {
             throw new OnRecordErrorException(Errors.EXPR_02, record.getHeader().getSourceId(),
               expressionProcessorConfig.fieldToSet);
