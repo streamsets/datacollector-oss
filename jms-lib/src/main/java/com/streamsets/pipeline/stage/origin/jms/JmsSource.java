@@ -114,7 +114,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    int batchSize = Math.max(basicConfig.maxBatchSize, maxBatchSize);
+    int batchSize = Math.min(basicConfig.maxBatchSize, maxBatchSize);
     messagesConsumed += jmsMessageConsumer.take(batchMaker, getContext(), batchSize, messagesConsumed);
     return Utils.format("{}::{}", jmsConfig.destinationName, messagesConsumed);
   }

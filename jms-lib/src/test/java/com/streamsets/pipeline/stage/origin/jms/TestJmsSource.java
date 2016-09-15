@@ -245,4 +245,26 @@ public class TestJmsSource {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testBatchSizeSpecification() throws Exception {
+    int numRecords = 10;
+    List<String> expected = Lists.newArrayList();
+    for (int i = 0; i < numRecords; i++) {
+      expected.add(String.format("{ \"i\": %d}", i));
+    }
+    putQueue(expected);
+
+    // Validate that we will pick the smaller number of maxBatchSize (global config) and in the component config
+    SourceRunner runner = createRunner();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 2);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+      Assert.assertEquals(2, parsedRecords.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
