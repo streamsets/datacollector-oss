@@ -43,7 +43,7 @@ public class TestTextCharDataParser {
   @Test
   public void testParse() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
-    DataParser parser = new TextCharDataParser(getContext(), "id", false, reader, 0, 1000, "text", "truncated", new StringBuilder(1000));
+    DataParser parser = new TextCharDataParser(getContext(), "id", false, false, "", false, reader, 0, 1000, "text", "truncated", new StringBuilder(1000));
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -66,7 +66,7 @@ public class TestTextCharDataParser {
   @Test
   public void testParseWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
-    DataParser parser = new TextCharDataParser(getContext(), "id", false, reader, 6, 1000, "text", "truncated", new StringBuilder(1000));
+    DataParser parser = new TextCharDataParser(getContext(), "id", false, false, "", false, reader, 6, 1000, "text", "truncated", new StringBuilder(1000));
     Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -83,7 +83,7 @@ public class TestTextCharDataParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nByte"), 1000, true, false);
-    DataParser parser = new TextCharDataParser(getContext(), "id", false ,reader, 0, 1000, "text", "truncated", new StringBuilder(1000));
+    DataParser parser = new TextCharDataParser(getContext(), "id", false, false, "", false ,reader, 0, 1000, "text", "truncated", new StringBuilder(1000));
     parser.close();
     parser.parse();
   }
@@ -91,7 +91,7 @@ public class TestTextCharDataParser {
   @Test
   public void testTruncate() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
-    DataParser parser = new TextCharDataParser(getContext(), "id", false, reader, 0, 3, "text", "truncated", new StringBuilder(3));
+    DataParser parser = new TextCharDataParser(getContext(), "id", false, false, "", false, reader, 0, 3, "text", "truncated", new StringBuilder(3));
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -130,7 +130,7 @@ public class TestTextCharDataParser {
   public void testOverrun() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader(createTextLines(1000, 20, 5000)), 2 * 1000, true, false);
     int lines = 0;
-    try (DataParser parser = new TextCharDataParser(getContext(), "id", false, reader, 0, 3, "text", "truncated", new StringBuilder(3))) {
+    try (DataParser parser = new TextCharDataParser(getContext(), "id", false, false, "", false, reader, 0, 3, "text", "truncated", new StringBuilder(3))) {
       // we read 20 lines under the limit then one over the limit
       while (parser.parse() != null) {
         lines++;
@@ -141,12 +141,63 @@ public class TestTextCharDataParser {
   }
 
   @Test
-  public void testCollapseAll() throws Exception {
+  public void testCollapseAllDefault() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
-    DataParser parser = new TextCharDataParser(getContext(), "id", true, reader, 0, 100, "text", "truncated", new StringBuilder(100));
+    DataParser parser = new TextCharDataParser(getContext(), "id", true, false, "", false, reader, 0, 100, "text", "truncated", new StringBuilder(100));
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("Hello\nBye\n", record.get().getValueAsMap().get("text").getValueAsString());
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
+  }
+
+
+  @Test
+  public void testCollapseAllWithCustomDelimiter() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("Hello\nBye"), 1000, true, false);
+    DataParser parser = new TextCharDataParser(getContext(), "id", true, true, "\r\n", false, reader, 0, 100, "text", "truncated", new StringBuilder(100));
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("Hello\nBye\n", record.get().getValueAsMap().get("text").getValueAsString());
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
+  }
+
+  @Test
+  public void testCustomDelimiterForJson() throws Exception {
+    String record1 = "{\"menu\": {\n" +
+        "  \"id\": \"file\",\n" +
+        "  \"value\": \"Record1\",\n" +
+        "  \"popup\": {\n" +
+        "    \"menuitem\": [\n" +
+        "      {\"value\": \"New\", \"onclick\": \"CreateNewDoc()\"},\n" +
+        "      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\n" +
+        "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}]}}}";
+    String record2 = "{\"menu\": {\n" +
+        "  \"id\": \"file\",\n" +
+        "  \"value\": \"Record2\",\n" +
+        "  \"popup\": {\n" +
+        "    \"menuitem\": [\n" +
+        "      {\"value\": \"New\", \"onclick\": \"CreateNewDoc()\"},\n" +
+        "      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\n" +
+        "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}]}}}";
+    OverrunReader reader = new OverrunReader(new StringReader(record1 + "\n" +record2 + "\n"), 1000, true, false);
+    DataParser parser = new TextCharDataParser(
+        getContext(),
+        "id",
+        false,
+        true,
+        "}]}}}\n",
+        true,
+        reader, 0, 10000, "text", "truncated", new StringBuilder(1000));
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals(record1 + "\n", record.get().getValueAsMap().get("text").getValueAsString());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals(record2 + "\n", record.get().getValueAsMap().get("text").getValueAsString());
     record = parser.parse();
     Assert.assertNull(record);
     parser.close();

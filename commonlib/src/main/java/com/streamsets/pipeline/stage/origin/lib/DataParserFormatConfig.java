@@ -147,6 +147,45 @@ public class DataParserFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Custom Delimiter",
+      description = "Use Custom Delimiter",
+      displayPosition = 342,
+      group = "TEXT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "TEXT"
+  )
+  public boolean useCustomDelimiter = TextDataParserFactory.USE_CUSTOM_DELIMITER_DEFAULT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = TextDataParserFactory.CUSTOM_DELIMITER_DEFAULT,
+      label = "CustomDelimiter",
+      description = "Custom Delimiter",
+      displayPosition = 344,
+      group = "TEXT",
+      dependsOn = "useCustomDelimiter",
+      triggeredByValue = "true"
+  )
+  public String customDelimiter = TextDataParserFactory.CUSTOM_DELIMITER_DEFAULT;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "\r\n",
+      label = "Include Custom Delimiter",
+      description = "Include Custom Delimiter In The Text Field",
+      displayPosition = 346,
+      group = "TEXT",
+      dependsOn = "useCustomDelimiter",
+      triggeredByValue = "true"
+  )
+  public boolean includeCustomDelimiterInTheText = TextDataParserFactory.INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
@@ -783,6 +822,16 @@ public class DataParserFormatConfig implements DataFormatConfig{
           );
           valid = false;
         }
+        if (useCustomDelimiter && customDelimiter.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.TEXT.name(),
+                  configPrefix + "customDelimiter",
+                  DataFormatErrors.DATA_FORMAT_200
+              )
+          );
+          valid = false;
+        }
         break;
       case DELIMITED:
         if (csvMaxObjectLen < 1) {
@@ -984,7 +1033,10 @@ public class DataParserFormatConfig implements DataFormatConfig{
       case TEXT:
         builder
             .setMaxDataLen(textMaxLineLen)
-            .setConfig(TextDataParserFactory.MULTI_LINE_KEY, multiLines);
+            .setConfig(TextDataParserFactory.MULTI_LINE_KEY, multiLines)
+            .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, useCustomDelimiter)
+            .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, customDelimiter)
+            .setConfig(TextDataParserFactory.INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, includeCustomDelimiterInTheText);
         break;
       case JSON:
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);

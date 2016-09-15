@@ -22,6 +22,8 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.io.AbstractOverrunDelimitedReader;
+import com.streamsets.pipeline.lib.io.OverrunCustomDelimiterReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
@@ -36,19 +38,23 @@ public class TextCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final boolean collapseAllLines;
-  private final OverrunLineReader reader;
+  private final AbstractOverrunDelimitedReader reader;
   private final int maxObjectLen;
   private final String fieldTextName;
   private final String fieldTruncatedName;
   private final StringBuilder recordIdSb;
   private final int recordIdOffset;
   private final StringBuilder stringBuilder;
+
   private boolean eof;
 
   public TextCharDataParser(
       Stage.Context context,
         String readerId,
         boolean collapseAllLines,
+        boolean useCustomDelimiter,
+        String customDelimiter,
+        boolean includeCustomDelimiterInText,
         OverrunReader reader,
         long readerOffset,
         int maxObjectLen,
@@ -59,7 +65,9 @@ public class TextCharDataParser extends AbstractDataParser {
     this.context = context;
     this.readerId = readerId;
     this.collapseAllLines = collapseAllLines;
-    this.reader = new OverrunLineReader(reader, maxObjectLen);
+    this.reader = (!collapseAllLines && useCustomDelimiter)?
+        new OverrunCustomDelimiterReader(reader, maxObjectLen, customDelimiter, includeCustomDelimiterInText):
+        new OverrunLineReader(reader, maxObjectLen);
     this.maxObjectLen = maxObjectLen;
     this.fieldTextName = fieldTextName;
     this.fieldTruncatedName = fieldTruncatedName;

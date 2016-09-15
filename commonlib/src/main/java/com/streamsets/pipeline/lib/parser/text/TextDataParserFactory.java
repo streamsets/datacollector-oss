@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,28 @@ public class TextDataParserFactory extends DataParserFactory {
   public static final String MULTI_LINE_KEY = "multiLines";
   public static final boolean MULTI_LINE_DEFAULT = false;
 
-  public static final Map<String, Object> CONFIGS = ImmutableMap.<String, Object>of(MULTI_LINE_KEY, MULTI_LINE_DEFAULT);
+  public static final String USE_CUSTOM_DELIMITER_KEY = "useCustomDelimiter";
+  public static final boolean USE_CUSTOM_DELIMITER_DEFAULT = false;
+
+  public static final String CUSTOM_DELIMITER_KEY = "customDelimiter";
+  public static final String CUSTOM_DELIMITER_DEFAULT = "\r\n";
+
+  public static final String INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY = "includeCustomDelimiterInText";
+  public static final boolean INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT = false;
+
+
+
+  public static final Map<String, Object> CONFIGS = new HashMap<String, Object>();
+
+
+  static {
+    CONFIGS.put(MULTI_LINE_KEY, MULTI_LINE_DEFAULT);
+    CONFIGS.put(USE_CUSTOM_DELIMITER_KEY, USE_CUSTOM_DELIMITER_DEFAULT);
+    CONFIGS.put(CUSTOM_DELIMITER_KEY, CUSTOM_DELIMITER_DEFAULT);
+    CONFIGS.put(INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT);
+  }
+
+
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
   static final String TEXT_FIELD_NAME = "text";
@@ -71,6 +93,9 @@ public class TextDataParserFactory extends DataParserFactory {
           getSettings().getContext(),
           id,
           (boolean) getSettings().getConfig(MULTI_LINE_KEY),
+          (boolean) getSettings().getConfig(USE_CUSTOM_DELIMITER_KEY),
+          (String) getSettings().getConfig(CUSTOM_DELIMITER_KEY),
+          (boolean) getSettings().getConfig(INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY),
           reader,
           offset,
           getSettings().getMaxRecordLen(),

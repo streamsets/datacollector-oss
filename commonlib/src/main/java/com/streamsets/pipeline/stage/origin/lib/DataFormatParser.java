@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -250,7 +251,10 @@ public class DataFormatParser {
 
     switch (dataFormat) {
       case TEXT:
-        builder.setMaxDataLen(dataFormatConfig.textMaxLineLen);
+        builder.setMaxDataLen(dataFormatConfig.textMaxLineLen)
+            .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, dataFormatConfig.useCustomDelimiter)
+            .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, dataFormatConfig.customDelimiter)
+            .setConfig(TextDataParserFactory.INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, dataFormatConfig.includeCustomDelimiterInTheText);
         break;
       case JSON:
         builder.setMode(dataFormatConfig.jsonContent);
