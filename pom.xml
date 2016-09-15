@@ -72,6 +72,7 @@
     <omniture-lib>omniture-lib</omniture-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
+    <salesforce-lib>salesforce-lib</salesforce-lib>
     <stats-lib>stats-lib</stats-lib>
 
   </properties>
@@ -181,6 +182,7 @@
     <module>omniture-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
+    <module>salesforce-lib</module>
     <module>stats-lib</module>
   </modules>
 
