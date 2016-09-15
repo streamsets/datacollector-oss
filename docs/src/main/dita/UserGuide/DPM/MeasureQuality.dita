@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_sx5_zds_bx">
+ <title>Measure Dataflow Quality</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        provides the same level of detailed monitoring for topologies and jobs that you are
+        accustomed to seeing for pipelines within <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
+ <conbody>
+        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
+                the same updates in both places. </draft-comment>As a data architect, you can
+            measure the health of the topology and the performance of all jobs and connecting
+            systems included in the topology. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            monitoring provides real-time statistics, error information, and alerts about the
+            running jobs. </p>
+        <p>For example, the Summary tab of the Customer 360 topology provides a single view into the
+            record count and throughput for all running jobs in the topology:</p>
+        <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="60" id="image_hv1_ctq_fx"
+            /></p>
+        <p>You can select a job or a connecting system within the topology to discover more detailed
+            monitoring about the job or system. </p>
+        <p>When a job runs on a group of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            provides a single view of the statistics for the complete job. From a job, you can view
+            the statistics for a single pipeline or you can view the aggregated statistics across
+            all remote pipeline instances that are run on a group of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />s.</p>
+        <p>For example, if we select the Social Feeds Dataflows job in the topology, the Summary tab
+            displays metrics for the selected job:</p>
+        <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="60" id="image_ylz_ptq_fx"
+            /></p>
+        <p>We've seen how you can use DPM to turn a high-level architecture diagram of your
+            dataflows into pipelines and jobs that you can then manage and measure from a single
+            topology. Give it a try, and see for yourself how easy DPM has made it to map, measure,
+            and master your data in motion.</p>
+    </conbody>
+</concept>

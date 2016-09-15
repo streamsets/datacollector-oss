@@ -25,7 +25,7 @@
       of topics Kafka Producer attempts to use. When you create a white list, any record that
       resolves to an unlisted topic is sent to the stage for error handling. Use a white list when
       record data might resolve to invalid topic names.<draft-comment author="Loretta">This topic
-        basically copied to MapR Streams Producer. Make sure changes here go there.
-      </draft-comment></p>
+        basically copied to MapR Streams Producer and to DPM chapter > Aggregated Statistics for
+        Pipelines > Write Statistics to Kafka. Make sure changes here go there. </draft-comment></p>
  </conbody>
 </concept>

@@ -43,6 +43,10 @@
           <dd>The following example writes to three partitions based on the value of the Age
             field:<codeblock>${record:value('/a') &lt; 21 ? 0 : record:value('/a') &lt; 55 ? 1 : 2}</codeblock></dd>
         </dlentry>
+        <dlentry>
+          <dt>Default</dt>
+          <dd>Writes statistics using the default partition strategy that Kafka provides.</dd>
+        </dlentry>
       </dl></p>
  </conbody>
 </concept>

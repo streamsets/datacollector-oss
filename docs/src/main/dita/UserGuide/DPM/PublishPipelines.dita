@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_rxy_xqc_fx">
+    <title>Publishing Pipelines to DPM</title>
+    <taskbody>
+        <context>
+            <p><indexterm>pipelines<indexterm>publishing to
+                        DPM</indexterm></indexterm><indexterm>DPM<indexterm>publishing
+                        pipelines</indexterm></indexterm>After you finish developing pipelines in
+                    <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />, you publish the pipelines to the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+                pipeline repository. You can publish pipelines that are valid. </p>
+        </context>
+        <steps>
+            <step>
+                <cmd>From the <uicontrol>Home</uicontrol> page, select pipelines in the list and
+                    then click the <uicontrol>Publish Pipeline</uicontrol> icon <image
+                        href="../Graphics/icon_RemoteStore.png" scale="80" id="image_svp_msc_fx"/>.
+                    Or to publish a pipeline from the pipeline canvas, click the <uicontrol>DPM
+                        Options</uicontrol> icon <image href="../graphics/icon_RemoteStore.png"
+                        id="image_lc3_kbf_2w" placement="inline" scale="80"/>, and then click
+                        <uicontrol>Publish Pipeline</uicontrol>. </cmd>
+                <info>The <uicontrol>Publish Pipeline</uicontrol> dialog box appears.</info>
+            </step>
+            <step>
+                <cmd>Enter a commit message.</cmd>
+                <info>As a best practice, state what changed in this pipeline version so that you
+                    can track the commit history of the pipeline.<note>If you are publishing multiple
+                        pipelines from the <uicontrol>Home</uicontrol> page, the same commit message
+                        is used for all of the pipelines.</note></info>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Publish Pipeline</uicontrol>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

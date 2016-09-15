@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_l45_qwf_xw">
+ <title>Meet Dataflow Performance Manager</title>
+ <shortdesc>StreamSets <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+            /><sup>TM</sup> (<ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>) is a
+        management console for data in motion. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> lets
+        you map, measure, and master complex dataflows within your organization. With <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
+        can map multiple dataflows in a single visual topology and track changes to the dataflows
+        over time. You can view real-time statistics to measure the performance and quality of your
+        dataflows. You can master your day-to-day operations by monitoring alerts to ensure that
+        incoming data meets business requirements for availability and accuracy.</shortdesc>
+ <conbody>
+        <p><indexterm>DPM<indexterm>overview</indexterm></indexterm><indexterm>Dataflow Performance
+                    Manager<indexterm>overview</indexterm></indexterm>Multiple types of users within
+            your organization can perform different roles in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
+            For example, a data architect typically creates a high-level design of how data needs to
+            flow through multiple systems. A data engineer uses this high-level design to develop
+            individual pipelines in a development <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            The data engineer then publishes the finished pipelines to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. A
+            DevOps or site reliability engineer adds published pipelines to jobs and then runs the
+            jobs across multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.
+            Data architects map the related jobs into a single visual topology, and then use the
+            topology to monitor and measure the complete dataflow.</p>
+        <p>Let’s take a closer look at what data architects, data engineers, and DevOps engineers
+            can accomplish with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />.</p>
+    </conbody>
+</concept>

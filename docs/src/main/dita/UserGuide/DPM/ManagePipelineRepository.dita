@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ung_wbs_bx">
+ <title>Manage the Pipeline Repository</title>
+ <shortdesc>As a data engineer - the person responsible for making sure that data flows smoothly
+        between systems - you use a development <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        instance to develop the pipelines needed to implement the designed data architecture. When
+        the pipelines are complete, you publish the pipelines to the pipeline repository in <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
+ <conbody>
+        <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
+                the same updates in both places. </draft-comment><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            provides release management of pipelines. A typical pipeline development cycle involves
+            iterative changes to the pipeline. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            maintains the version history of each published pipeline. For example, as you design the
+            Social Feeds Dataflows pipeline, you test the pipeline and then make changes to it. As a
+            result, you will likely publish the pipeline to the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            pipeline repository multiple times, as displayed in the following image of the pipeline
+            history: </p>
+        <p><image href="../Graphics/DPM_ManagePipelineRepository.png" id="image_llt_s4t_bx"
+                scale="50"/></p>
+        <p>When viewing the pipeline history in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+            you can view the configuration details for any pipeline version and can compare pipeline
+            versions side-by-side. For example, if we click the <uicontrol>Compare with Previous
+                Version</uicontrol> icon <image
+                href="../Graphics/icon_DPM_ComparePreviousVersion.png" scale="70"
+                id="image_zqv_3st_bx"/> for version 3 in the image above, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            displays version 2 and version 3 in the comparison window as follows: </p>
+        <p><image href="../Graphics/DPM_ComparePipelineVersions.png" scale="50"
+                id="image_bzq_3d5_bx"/></p>
+        <p>We can see that version 3 of the pipeline added an Expression Evaluator processor. We can
+            drill into the details of each pipeline stage, and compare the configuration of each
+            stage between the versions.</p>
+        <p>You can add tags to pipeline versions to mark release points or to separate development
+            and production environments. For example, when you finish developing the Social Feeds
+            Dataflows pipeline, you add a "Ready to Deploy" tag to the latest version. That tag
+            informs your DevOps engineer which pipeline version is ready to be added to a job and
+            run.</p>
+    </conbody>
+</concept>

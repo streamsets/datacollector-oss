@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_emc_p42_fx">
+    <title>Exporting Pipelines to DPM</title>
+    <shortdesc>If you develop pipelines in a <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that
+        is not registered with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
+        can export the pipelines and then import the pipelines into <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. When a
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+        registered with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, it's
+        simplest to publish the pipelines directly to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+        />.</shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>pipelines<indexterm>exporting for DPM</indexterm></indexterm>When you
+                export a pipeline for use in <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                />, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> generates a JSON file named after the pipeline, as follows:
+                    <systemoutput>&lt;pipeline name>.json</systemoutput>. The generated JSON file
+                includes the definition of each stage library used in the pipeline.<draft-comment
+                    author="alisontaylor">when SDC-3831 is fixed, update the description of this
+                    option in the main Exporting Pipelines topic in Pipeline Maintenance
+                    chapter.</draft-comment></p>
+        </context>
+        <steps>
+            <step>
+                <cmd>From the <uicontrol>Home</uicontrol> page, select pipelines in the list and
+                    then click the <uicontrol>Export</uicontrol> icon.</cmd>
+            </step>
+            <step>
+                <cmd>Or, to export a pipeline in the pipeline canvas, click the
+                        <uicontrol>More</uicontrol> icon for the pipeline and then click
+                        <uicontrol>Export with Library Definitions</uicontrol>.</cmd>
+                <info><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> generates the JSON files and saves them to your default downloads
+                    directory.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

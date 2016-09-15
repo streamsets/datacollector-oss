@@ -125,7 +125,9 @@
   </table>
   <p>
    <draft-comment author="alisontaylor">The following descriptions are used by the AWS destinations:
-    Amazon S3, Kinesis Firehose, Kinesis Producer.</draft-comment>
+    Amazon S3, Kinesis Firehose, Kinesis Producer. And by writing aggregated statistics to Kinesis,
+    in DPM chapter > Aggregated Statistics for Pipelines > Configuring a Pipeline to Aggregate
+    Statistics</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vnv_ncr_mv">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -269,6 +271,44 @@
     </tgroup>
    </table>
   </p>
+  <draft-comment author="alisontaylor">Kinesis Producer and DPM chapter > Aggregated Statistics for
+   Pipelines > Configuring a Pipeline to Aggregate Statistics use these rows</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_kqy_mw1_fx">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <tbody>
+     <row id="rowKinesisRegion">
+      <entry>Region</entry>
+      <entry>Amazon Web Services region that hosts the Kinesis cluster.</entry>
+     </row>
+     <row id="rowKinesisStreamName">
+      <entry>Stream Name</entry>
+      <entry>Kinesis stream name.</entry>
+     </row>
+     <row id="rowKinesisPartitionStrategy">
+      <entry>Partitioning Strategy</entry>
+      <entry>Strategy to write data to Kinesis shards:<ul id="ul_nqh_qw1_fx">
+        <li>Random - Generates a random partition key.</li>
+        <li>
+         <p>Expression - Uses the result of an expression as the partition key.</p>
+        </li>
+       </ul></entry>
+     </row>
+     <row id="rowKinesisPartitionExp">
+      <entry>Partition Expression</entry>
+      <entry>Expression to generate the partition key used to pass data to different shards. <p>Use
+        for the expression partition strategy. </p></entry>
+     </row>
+     <row id="rowKinesisConfig">
+      <entry>Kinesis Producer Configuration</entry>
+      <entry>Additional Kinesis properties. <p>When you add a configuration property, enter the
+        exact property name and the value. The Kinesis Producer does not validate the property names
+        or values. </p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
   <p>
    <draft-comment author="Loretta">HTTP Client origin and processor rows:</draft-comment>
   </p>
