@@ -173,9 +173,8 @@ public class JdbcDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Create JDBC Namespace Headers",
-      description = "Specifies whether to populate jdbc column" +
-          " specific information in the record headers under jdbc namespace",
+      label = "Create JDBC Header Attributes",
+      description = "Generates record header attributes that provide additional details about source data, such as the original data type or source table name.",
       defaultValue = "false",
       displayPosition = 200,
       group = "ADVANCED")
@@ -185,8 +184,7 @@ public class JdbcDSource extends DSource {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Header Prefix",
-      description = "This prefix is used as a namespace to populate jdbc column specific information in headers." +
-          "For Ex: If this is a decimal column we will specify jdbc.${columnName}.scale and jdbc.${columnName}.precision",
+      description = "Prefix for the header attributes, used as follows: <prefix>.<field name>.<type of information>. For example: jdbc.<field name>.precision and jdbc.<field name>.scale",
       defaultValue = "jdbc.",
       displayPosition = 200,
       group = "ADVANCED",
