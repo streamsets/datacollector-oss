@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.jython;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
@@ -51,14 +52,14 @@ public class JythonProcessor extends AbstractScriptingProcessor {
   }
 
   @Override
-  protected ScriptObjectFactory createScriptObjectFactory() {
-    return new JythonScriptObjectFactory(engine);
+  protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
+    return new JythonScriptObjectFactory(engine, context);
   }
 
   private static class JythonScriptObjectFactory extends ScriptObjectFactory {
 
-    public JythonScriptObjectFactory(ScriptEngine scriptEngine) {
-      super(scriptEngine);
+    public JythonScriptObjectFactory(ScriptEngine scriptEngine, Stage.Context context) {
+      super(scriptEngine, context);
     }
 
     @Override

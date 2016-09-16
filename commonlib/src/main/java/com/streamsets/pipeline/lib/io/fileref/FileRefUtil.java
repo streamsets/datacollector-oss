@@ -19,7 +19,10 @@
  */
 package com.streamsets.pipeline.lib.io.fileref;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
@@ -34,12 +37,14 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public final class FileRefUtil {
   private FileRefUtil() {}
@@ -82,6 +87,50 @@ public final class FileRefUtil {
 
   public static final List<String> MANDATORY_FIELD_PATHS =
       ImmutableList.of(FILE_REF_FIELD_PATH, FILE_INFO_FIELD_PATH, FILE_INFO_FIELD_PATH + "/size");
+
+  public static final Map<String, Integer> GAUGE_MAP_ORDERING
+      = new ImmutableMap.Builder<String, Integer>()
+      .put(FileRefUtil.FILE, 1)
+      .put(FileRefUtil.TRANSFER_THROUGHPUT, 2)
+      .put(FileRefUtil.SENT_BYTES, 3)
+      .put(FileRefUtil.REMAINING_BYTES, 4)
+      .put(FileRefUtil.COMPLETED_FILE_COUNT, 5)
+      .build();
+
+  /**
+   * Creates a gauge if it is already not. This is done only once for the stage
+   * @param context the {@link com.streamsets.pipeline.api.Stage.Context} of this stage
+   */
+  @SuppressWarnings("unchecked")
+  public static void initMetricsIfNeeded(Stage.Context context) {
+    Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
+    if (gauge == null) {
+      //Concurrent because the metrics thread will access this.
+      final Map<String, Object> gaugeStatistics = new ConcurrentSkipListMap<>(new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+          return GAUGE_MAP_ORDERING.get(o1).compareTo(GAUGE_MAP_ORDERING.get(o2));
+        }
+      });
+      //File name is populated at the MetricEnabledWrapperStream.
+      gaugeStatistics.put(FileRefUtil.FILE, "");
+      gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
+      gaugeStatistics.put(FileRefUtil.SENT_BYTES, String.format(FileRefUtil.BRACKETED_TEMPLATE, 0, 0));
+      gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
+      gaugeStatistics.put(FileRefUtil.COMPLETED_FILE_COUNT, 0L);
+      context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
+        @Override
+        public Map<String, Object> getValue() {
+          return gaugeStatistics;
+        }
+      });
+    }
+
+    Meter dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
+    if (dataTransferMeter == null) {
+      context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
+    }
+  }
 
   public static Field getWholeFileRecordRootField(FileRef fileRef, Map<String, Object> metadata) {
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();

@@ -20,10 +20,14 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.script.ScriptEngine;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,9 +40,11 @@ import java.util.regex.Pattern;
 public class ScriptObjectFactory {
 
   protected final ScriptEngine engine;
+  protected final Stage.Context context;
 
-  public ScriptObjectFactory(ScriptEngine engine) {
+  public ScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
     this.engine = engine;
+    this.context = context;
   }
 
   public ScriptRecord createScriptRecord(Record record) {
@@ -62,6 +68,26 @@ public class ScriptObjectFactory {
     public boolean isListMap();
 
   }
+
+  public interface ScriptFileRef {
+    public InputStream getInputStream() throws IOException;
+  }
+
+  private class ScriptFileRefImpl implements ScriptFileRef {
+    private final FileRef fileRef;
+    private final Stage.Context context;
+
+    ScriptFileRefImpl(FileRef fileRef, Stage.Context context) {
+      this.fileRef = fileRef;
+      this.context = context;
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+      return fileRef.createInputStream(context, InputStream.class);
+    }
+  }
+
 
   @SuppressWarnings("unchecked")
   public void putInMap(Object obj, Object key, Object value) {
@@ -114,7 +140,7 @@ public class ScriptObjectFactory {
             scriptObject = createArray(scripArrayElements);
             break;
           case FILE_REF:
-            throw new IllegalStateException(Utils.format("Unsupported field type {}", field.getType()));
+            scriptObject = new ScriptFileRefImpl(field.getValueAsFileRef(), context);
           default:
             // no action
             break;
@@ -207,6 +233,8 @@ public class ScriptObjectFactory {
       field = Field.create((String) scriptObject);
     } else if (scriptObject instanceof byte[]) {
       field = Field.create((byte[]) scriptObject);
+    } else if (scriptObject instanceof ScriptFileRef) {
+      field = Field.create(((ScriptFileRefImpl)scriptObject).fileRef);
     } else {
       field = ScriptTypedNullObject.getTypedNullFieldFromScript(scriptObject);
       if (field == null) {

@@ -19,21 +19,21 @@
  */
 package com.streamsets.pipeline.stage.processor.jython;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Field;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class TestJythonProcessor {
 
@@ -67,6 +67,33 @@ public class TestJythonProcessor {
     );
 
     ScriptingProcessorTestUtil.verifyMapAndArray(JythonDProcessor.class, processor);
+  }
+
+  @Test
+  public void testJythonFileRefField() throws Exception {
+    String script = "for record in records:\n" +
+        "  try:\n" +
+        "    fileRef = record.value['fileRef']\n" +
+        "    input_stream = fileRef.getInputStream()\n" +
+        "    b = []\n" +
+        "    while True:\n" +
+        "      read = input_stream.read()\n" +
+        "      if read == -1:\n" +
+        "        break\n" +
+        "      b.append(read)\n" +
+        "    input_stream.close()\n" +
+        "    record.value['byte_array'] = b\n" +
+        "    output.write(record)\n" +
+        "\n" +
+        "  except Exception as e:\n" +
+        "    # Send record to error\n" +
+        "    error.write(record, str(e))";
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyFileRef(JythonDProcessor.class, processor);
   }
 
   private void testMode(ProcessingMode mode) throws Exception {

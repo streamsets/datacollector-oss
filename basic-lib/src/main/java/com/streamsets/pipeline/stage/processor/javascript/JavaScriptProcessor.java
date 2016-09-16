@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.javascript;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
@@ -35,8 +36,8 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
   }
 
   @Override
-  protected ScriptObjectFactory createScriptObjectFactory() {
-    return ScriptObjectFactoryFactory.getScriptObjectFactory(engine);
+  protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
+    return ScriptObjectFactoryFactory.getScriptObjectFactory(engine, context);
   }
 
 }

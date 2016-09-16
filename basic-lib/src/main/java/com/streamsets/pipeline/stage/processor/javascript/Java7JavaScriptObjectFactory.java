@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.javascript;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 
 import javax.script.ScriptEngine;
@@ -33,8 +34,8 @@ import sun.org.mozilla.javascript.internal.NativeArray;
 
 public class Java7JavaScriptObjectFactory extends ScriptObjectFactory {
 
-  public Java7JavaScriptObjectFactory(ScriptEngine engine) {
-    super(engine);
+  public Java7JavaScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
+    super(engine, context);
   }
 
   @Override

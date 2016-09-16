@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.groovy;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.AbstractScriptingProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
@@ -37,13 +38,13 @@ public class GroovyProcessor extends AbstractScriptingProcessor {
   }
 
   @Override
-  protected ScriptObjectFactory createScriptObjectFactory() {
-    return new GroovyScriptObjectFactory(engine);
+  protected ScriptObjectFactory createScriptObjectFactory(Stage.Context context) {
+    return new GroovyScriptObjectFactory(engine, context);
   }
 
   private static class GroovyScriptObjectFactory extends ScriptObjectFactory {
-    public GroovyScriptObjectFactory(ScriptEngine engine) {
-      super(engine);
+    public GroovyScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
+      super(engine, context);
     }
   }
 }

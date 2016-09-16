@@ -21,18 +21,22 @@ package com.streamsets.pipeline.stage.processor.groovy;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class TestGroovyProcessor {
 
@@ -64,6 +68,33 @@ public class TestGroovyProcessor {
     Processor processor = new GroovyProcessor(mode, script);
 
     ScriptingProcessorTestUtil.verifyMode(GroovyDProcessor.class, processor);
+  }
+
+  @Test
+  public void testGroovyFileRefField() throws Exception {
+    String script = "for (record in records) {\n" +
+        "  try {\n" +
+        "\tfileRef = record.value['fileRef'];\n" +
+        "\tis = fileRef.getInputStream();\n" +
+        "\tb = [];\n" +
+        "\twhile ((read = is.read()) != -1) {\n" +
+        "    \tb.add(read)\n" +
+        "\t}\n" +
+        "\t is.close();\n"+
+        "\trecord.value['byte_array'] = b;\n" +
+        "    output.write(record)\n" +
+        "  } catch (e) {\n" +
+        "    // Write a record to the error pipeline\n" +
+        "    log.error(e.toString(), e)\n" +
+        "    error.write(record, e.toString())\n" +
+        "  }\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+   ScriptingProcessorTestUtil.verifyFileRef(GroovyDProcessor.class, processor);
   }
 
   @Test

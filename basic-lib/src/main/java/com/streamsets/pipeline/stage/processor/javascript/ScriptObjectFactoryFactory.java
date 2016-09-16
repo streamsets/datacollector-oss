@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.javascript;
 
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 
 import javax.script.ScriptEngine;
@@ -36,12 +37,12 @@ public class ScriptObjectFactoryFactory {
     return Double.parseDouble (version.substring (0, pos));
   }
 
-  public static ScriptObjectFactory getScriptObjectFactory(ScriptEngine engine) {
+  public static ScriptObjectFactory getScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
     double version = getVersion();
     if (version >= 1.8) {
-      return new Java8JavaScriptObjectFactory(engine);
+      return new Java8JavaScriptObjectFactory(engine, context);
     } else {
-      return new Java7JavaScriptObjectFactory(engine);
+      return new Java7JavaScriptObjectFactory(engine, context);
     }
   }
 }

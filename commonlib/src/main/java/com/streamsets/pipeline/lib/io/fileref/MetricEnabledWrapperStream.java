@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Stage;
 
@@ -54,6 +55,7 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     remainingBytesCounter = new Counter();
     sentBytesCounter = new Counter();
     remainingBytesCounter.inc(fileSize);
+    FileRefUtil.initMetricsIfNeeded(context);
     dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefUtil.GAUGE_NAME).getValue();
     //Shows the size of the file in the brack after the file name.

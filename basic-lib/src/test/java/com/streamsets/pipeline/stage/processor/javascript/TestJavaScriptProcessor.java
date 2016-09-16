@@ -33,12 +33,12 @@ import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestU
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedList;
-import java.util.Date;
 
 public class TestJavaScriptProcessor {
 
@@ -149,6 +149,30 @@ public class TestJavaScriptProcessor {
         ""
     );
     ScriptingProcessorTestUtil.verifyMapAndArray(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
+  public void testJavaScriptFileRefField() throws Exception {
+    String script = "var record = records[0];\n" +
+        "var fileRef = record.value['fileRef'];\n" +
+        "var is = fileRef.getInputStream();\n" +
+        "var b = [];\n" +
+        "var read = 0;\n" +
+        "do {\n" +
+        "    read = is.read();\n" +
+        "    if (read == -1) \n" +
+        "        break;\n" +
+        "    b.push(read)\n" +
+        "} while (true);\n" +
+        "is.close();\n" +
+        "record.value['byte_array'] = b;\n" +
+        "output.write(records[0]);";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyFileRef(JavaScriptDProcessor.class, processor);
   }
 
 

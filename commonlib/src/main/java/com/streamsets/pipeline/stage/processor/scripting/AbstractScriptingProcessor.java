@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
@@ -70,7 +71,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private final  String script;
   private final SimpleBindings bindings = new SimpleBindings();
   // State obj for use by end-user scripts.
-  private final Object state;
+  private Object state;
 
   private CompiledScript compiledScript;
   private ScriptObjectFactory scriptObjectFactory;
@@ -88,7 +89,6 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       ProcessingMode processingMode,
       String script
   ) {
-    state = getScriptObjectFactory().createMap(false);
     this.log = log;
     this.scriptingEngineName = scriptingEngineName;
     this.scriptConfigGroup = scriptConfigGroup;
@@ -99,19 +99,20 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
   private ScriptObjectFactory getScriptObjectFactory() {
     if (scriptObjectFactory == null) {
-      scriptObjectFactory = createScriptObjectFactory();
+      scriptObjectFactory = createScriptObjectFactory(getContext());
     }
     return scriptObjectFactory;
   }
 
-  protected ScriptObjectFactory createScriptObjectFactory() {
-    return new ScriptObjectFactory(engine);
-  }
+  protected abstract ScriptObjectFactory createScriptObjectFactory(Stage.Context context);
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
+    //We need Stage.Context for createScriptObjectFactory()
+    state = getScriptObjectFactory().createMap(false);
 
     try {
       engine = new ScriptEngineManager(getClass().getClassLoader()).getEngineByName(scriptingEngineName);

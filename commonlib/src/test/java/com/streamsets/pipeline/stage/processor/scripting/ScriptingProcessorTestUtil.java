@@ -26,11 +26,17 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
+import java.util.UUID;
 
 
 /**
@@ -592,6 +599,56 @@ public class ScriptingProcessorTestUtil {
     );
 
     assertFieldUtil("null_datetime", outMap.get("null_datetime"), record.get("/null_datetime").getValueAsDatetime());
+  }
+
+  public static <C extends Processor> void verifyFileRef(
+      Class<C> clazz,
+      Processor processor
+  ) throws Exception {
+
+    String testDir = "target/" + UUID.randomUUID().toString();
+    File testDirectory = new File(testDir);
+    testDirectory.deleteOnExit();
+    Assert.assertTrue(testDirectory.mkdirs());
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      FileRefTestUtil.writePredefinedTextToFile(testDirectory);
+
+      Record record = RecordCreator.create();
+      Field field = FileRefUtil.getWholeFileRecordRootField(
+          FileRefTestUtil.getLocalFileRef(testDirectory, false, null, null),
+          Files.readAttributes(Paths.get(testDir), "*")
+      );
+      record.set(field);
+
+      output = runner.runProcess(Collections.singletonList(record));
+
+    } finally {
+      runner.runDestroy();
+      FileUtils.deleteDirectory(testDirectory);
+    }
+
+    List<Record> records = output.getRecords().get("lane");
+
+    Assert.assertEquals(1, records.size());
+
+    Record record = records.get(0);
+
+    Assert.assertTrue(record.has("/byte_array"));
+
+    List<Field> bytes = record.get("/byte_array").getValueAsList();
+
+    byte[] byte_array = new byte[bytes.size()];
+    for (int i = 0; i < bytes.size(); i++) {
+      byte_array[i] = (byte) bytes.get(i).getValueAsInteger();
+    }
+    Assert.assertEquals(FileRefTestUtil.TEXT, new String(byte_array));
   }
 
   static void assertFieldUtil(String fieldName, Field field, Object obj){
