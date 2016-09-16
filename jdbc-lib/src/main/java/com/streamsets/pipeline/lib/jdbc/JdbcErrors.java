@@ -76,7 +76,9 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_47("The current latest SCN {} is less than the initial SCN"),
   JDBC_48("The start date is in the future"),
   JDBC_49("Date is invalid. Please use format DD-MM-YYYY HH24:MM:SS"),
-  JDBC_50("Error while getting table schema. Please verify the connectivity to the DB and the privileges for the user");
+  JDBC_50("Error while getting table schema. Please verify the connectivity to the DB and the privileges for the user"),
+  JDBC_51("Invalid value: {}")
+  ;
 
   private final String msg;
 

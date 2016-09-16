@@ -219,8 +219,8 @@ public class TestJdbcSource {
     JdbcSource origin = new JdbcSource(
         false,
         queryNonIncremental,
-        initialOffset,
-        "P_ID",
+        "",
+        "",
         queryInterval,
         "",
         1000,
@@ -246,7 +246,7 @@ public class TestJdbcSource {
 
       assertEquals(2, parsedRecords.size());
 
-      assertEquals(initialOffset, output.getNewOffset());
+      assertEquals("", output.getNewOffset());
 
       // Check that the remaining rows in the initial cursor are read.
       output = runner.runProduce(output.getNewOffset(), 100);
@@ -260,7 +260,7 @@ public class TestJdbcSource {
       parsedRecords = output.getRecords().get("lane");
       assertEquals(6, parsedRecords.size());
 
-      assertEquals(initialOffset, output.getNewOffset());
+      assertEquals("", output.getNewOffset());
 
       // Check that older rows are loaded.
       runInsertOldRows();

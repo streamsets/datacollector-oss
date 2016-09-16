@@ -73,7 +73,7 @@ public class JdbcDSource extends DSource {
   public String query;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Initial Offset",
       description = "Initial value to insert for ${offset}." +
@@ -84,7 +84,7 @@ public class JdbcDSource extends DSource {
   public String initialOffset;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Offset Column",
       description = "Column checked to track current offset.",

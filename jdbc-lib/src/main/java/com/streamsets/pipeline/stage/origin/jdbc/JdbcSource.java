@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +59,7 @@ public class JdbcSource extends BaseSource {
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String QUERY = "query";
   private static final String OFFSET_COLUMN = "offsetColumn";
+  private static final String INITIAL_OFFSET = "initialOffset";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
@@ -147,6 +149,13 @@ public class JdbcSource extends BaseSource {
 
     // Incremental mode have special requirements for the query form
     if(isIncrementalMode) {
+      if(StringUtils.isEmpty(offsetColumn)) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, JdbcErrors.JDBC_51, "Can't be empty"));
+      }
+      if(StringUtils.isEmpty(initialOffset)) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), INITIAL_OFFSET, JdbcErrors.JDBC_51, "Can't be empty"));
+      }
+
       final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
       Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
         String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b.*\\b%s\\b.*",
@@ -208,7 +217,7 @@ public class JdbcSource extends BaseSource {
                     columnLabels.add(columnLabel);
                   }
                 }
-                if (offsetColumn.contains(".")) {
+                if (!StringUtils.isEmpty(offsetColumn) && offsetColumn.contains(".")) {
                   issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, JdbcErrors.JDBC_32, offsetColumn));
                 } else {
                   resultSet.findColumn(offsetColumn);
@@ -297,7 +306,7 @@ public class JdbcSource extends BaseSource {
         String lastTransactionId = "";
         boolean haveNext = true;
         while (continueReading(rowCount, batchSize) && (haveNext = resultSet.next())) {
-          final Record record = processRow(resultSet);
+          final Record record = processRow(resultSet, rowCount);
 
           if (null != record) {
             if (!txnColumnName.isEmpty()) {
@@ -370,7 +379,7 @@ public class JdbcSource extends BaseSource {
     return query.replaceAll("\\$\\{offset\\}", offset);
   }
 
-  private Record processRow(ResultSet resultSet) throws SQLException, StageException {
+  private Record processRow(ResultSet resultSet, long rowCount) throws SQLException, StageException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
@@ -382,7 +391,7 @@ public class JdbcSource extends BaseSource {
       return null; // Don't output this record.
     }
 
-    final String recordContext = query + "::" + resultSet.getString(offsetColumn);
+    final String recordContext = query + "::" + (StringUtils.isEmpty(offsetColumn) ? "rowCount:" + rowCount : resultSet.getString(offsetColumn));
     Record record = context.createRecord(recordContext);
     if (recordType == JdbcRecordType.LIST_MAP) {
       record.set(Field.createListMap(fields));
