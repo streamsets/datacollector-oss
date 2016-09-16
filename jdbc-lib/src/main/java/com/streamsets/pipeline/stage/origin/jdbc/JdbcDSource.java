@@ -175,10 +175,10 @@ public class JdbcDSource extends DSource {
       type = ConfigDef.Type.BOOLEAN,
       label = "Create JDBC Header Attributes",
       description = "Generates record header attributes that provide additional details about source data, such as the original data type or source table name.",
-      defaultValue = "false",
+      defaultValue = "true",
       displayPosition = 200,
       group = "ADVANCED")
-  public boolean createJDBCNsHeaders = false;
+  public boolean createJDBCNsHeaders = true;
 
   @ConfigDef(
       required = false,
