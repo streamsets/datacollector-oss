@@ -1183,8 +1183,9 @@
                 </cmd>
             </step>
             <step id="JDBC-Credentials">
-                <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
-                    configure the following properties:</cmd>
+                <cmd>To enter JDBC credentials separately from the JDBC connection string, on the
+                        <uicontrol>Credentials</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
                         <tgroup cols="2">
