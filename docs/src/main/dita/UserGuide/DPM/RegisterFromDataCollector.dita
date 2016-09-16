@@ -36,15 +36,10 @@
                     /> user account.</cmd>
             </step>
             <step>
-                <cmd>Open the <wintitle>Enable DPM</wintitle> window by clicking the required keys
-                    for your operating system:</cmd>
-                <choices id="choices_qfh_3vq_rw">
-                    <choice>On Mac, click
-                        <uicontrol>Ctrl</uicontrol>+<uicontrol>Option</uicontrol>+<uicontrol>D</uicontrol>. </choice>
-                    <choice>On Windows, click
-                        <uicontrol>Ctrl</uicontrol>+<uicontrol>Alt</uicontrol>+<uicontrol>D</uicontrol>.
-                    </choice>
-                </choices>
+                <cmd>Click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol> Enable DPM</uicontrol>
+                    </menucascade>.</cmd>
             </step>
             <step>
                 <cmd>Enter the following information in the <wintitle>Enable DPM</wintitle>
