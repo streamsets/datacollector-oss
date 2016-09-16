@@ -327,7 +327,7 @@ public class JdbcUtil {
         case Types.BINARY:
         case Types.LONGVARBINARY:
         case Types.VARBINARY:
-          field = Field.create(Field.Type.BYTE_ARRAY, rs.getObject(columnIndex));
+          field = Field.create(Field.Type.BYTE_ARRAY, rs.getBytes(columnIndex));
           break;
         case Types.BIT:
         case Types.BOOLEAN:

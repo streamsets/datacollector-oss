@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -69,6 +70,7 @@ public class TestJdbcSource {
 
   private Connection connection = null;
 
+  // This is used for the stored procedure, do not remove
   public static ResultSet simpleResultSet() throws SQLException {
     SimpleResultSet rs = new SimpleResultSet();
     rs.addColumn("ID", Types.INTEGER, 10, 0);
@@ -112,6 +114,10 @@ public class TestJdbcSource {
         "CREATE TABLE IF NOT EXISTS TEST.TEST_TIMES " +
           "(p_id INT NOT NULL, d DATE, t TIME, ts TIMESTAMP);"
       );
+      statement.addBatch(
+        "CREATE TABLE IF NOT EXISTS TEST.TEST_UUID " +
+          "(p_id INT NOT NULL, p_uuid UUID);"
+      );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
@@ -126,6 +132,7 @@ public class TestJdbcSource {
       statement.addBatch("INSERT INTO TEST.TEST_NULL VALUES  (1, NULL, NULL)");
       statement.addBatch("INSERT INTO TEST.TEST_TIMES VALUES  (1, '1993-09-01', '15:09:02', '1960-01-01 23:03:20')");
       statement.addBatch("CREATE ALIAS STOREDPROC FOR \"" + TestJdbcSource.class.getCanonicalName() + ".simpleResultSet\"");
+      statement.addBatch("INSERT INTO TEST.TEST_UUID VALUES  (1, '80d00b8a-ffa3-45c2-93ba-d4278408552f')");
       statement.executeBatch();
     }
   }
@@ -141,6 +148,7 @@ public class TestJdbcSource {
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_NULL");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TIMES");
       statement.execute("DROP ALIAS IF EXISTS STOREDPROC");
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_UUID");
     }
 
     // Last open connection terminates H2
@@ -913,6 +921,49 @@ public class TestJdbcSource {
 
       assertTrue(parsedRecord.has("/TS"));
       assertEquals(Field.Type.DATETIME, parsedRecord.get("/TS").getType());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUUID() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        false,
+        "SELECT * FROM TEST.TEST_UUID",
+        "",
+        "",
+        queryInterval,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE,
+        CLOB_SIZE,
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password)
+        );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 2);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      Record record = parsedRecords.get(0);
+      assertNotNull(record);
+      assertTrue(record.has("/P_UUID"));
+      Field field = record.get("/P_UUID");
+      assertNotNull(field);
+      assertEquals(Field.Type.BYTE_ARRAY, field.getType());
+
     } finally {
       runner.runDestroy();
     }
