@@ -33,5 +33,8 @@
             the metadata output stream. Connect the Hive Metastore destination to the metadata
             output stream to enable the destination to create and update Hive tables. The metadata
             output stream contains no record data. </p>
+        <p>If your data contains nested fields, you would add a Field Flattener to flatten records
+            as follows: </p>
+        <p><image href="../Graphics/HiveDrift-Flatten.png" id="image_ebf_zkp_hx" scale="55"/></p>
     </conbody>
 </concept>
