@@ -59,7 +59,6 @@
     <mockito.version>1.10.19</mockito.version>
     <powermock.version>1.6.3</powermock.version>
     <jacoco.version>0.7.7.201606060606</jacoco.version>
-    <surefire.version>2.19.1</surefire.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
     <testcontainers.version>1.1.6-SNAPSHOT</testcontainers.version>
@@ -182,6 +181,7 @@
           <configuration>
             <forkCount>1</forkCount>
             <reuseForks>true</reuseForks>
+            <forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
           </configuration>
         </plugin>
         <plugin>
@@ -272,6 +272,7 @@
           <configuration>
             <forkCount>1</forkCount>
             <reuseForks>false</reuseForks>
+            <forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
           </configuration>
         </plugin>
         <plugin>
