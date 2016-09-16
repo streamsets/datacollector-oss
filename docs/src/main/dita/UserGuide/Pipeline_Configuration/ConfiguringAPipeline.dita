@@ -501,6 +501,23 @@
                     </table></info>
             </step>
             <step>
+                <cmd>If you have registered the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to work with <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                    /> (<ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    />), you can configure the pipeline to aggregate statistics on the
+                        <uicontrol>Statistics</uicontrol> tab. </cmd>
+                <info>
+                            <p>For information on configuring a pipeline to aggregate statistics for
+                            <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />, see <xref href="../DPM/AggregatedStatistics.dita#concept_h2q_mb5_xw"
+                        />.</p>
+                </info>
+            </step>
+            <step>
                 <cmd>Use the <uicontrol>Stage Library</uicontrol> to add an origin stage. In the
                     Properties panel, configure the stage properties.</cmd>
                 <info>For configuration details about origin stages, see <xref

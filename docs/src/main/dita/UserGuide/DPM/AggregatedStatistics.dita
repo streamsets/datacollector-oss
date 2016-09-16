@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_h2q_mb5_xw">
+ <title>Aggregated Statistics for Pipelines</title>
+ <shortdesc>A <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        job defines the pipeline to run and the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s that
+        run the pipeline. When you start a job, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        remotely runs the pipeline on the group of <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s. To
+        monitor the job statistics and metrics, you must configure the pipeline to aggregate
+        statistics across all running pipeline instances.</shortdesc>
+ <conbody>
+  <p><indexterm>DPM<indexterm>aggregated
+                    statistics</indexterm></indexterm><indexterm>pipelines<indexterm>aggregated
+                    statistics for DPM</indexterm></indexterm><indexterm>aggregated
+                    statistics<indexterm>pipelines</indexterm></indexterm>To aggregate statistics,
+            use <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> to configure the pipeline to write the statistics to a Kafka cluster or to Amazon
+            Kinesis Streams.<draft-comment author="alisontaylor">2 paragraphs above have same text
+                as in DPM Tutorial > Configure Statistics for a Pipeline. Make same updates in both
+                places.</draft-comment></p>
+        <p>When you run a job that includes a pipeline configured to aggregate statistics, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            automatically generates and runs a system pipeline for the job. The system pipeline
+            reads the statistics written by each running pipeline instance to Kafka or Kinesis.
+            Then, the system pipeline aggregates and sends the statistics to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
+            You can view the aggregated statistics and metrics when you monitor the job in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />:</p>
+        <p><image href="../Graphics/DPM_MonitorJob.png" scale="50" id="image_h2w_wxs_gx"/></p>
+        <p>When a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            /> job includes a pipeline that is not configured to aggregate statistics, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            cannot display statistics and metrics for the job. Instead, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            displays the following warning message when you monitor the job:</p>
+        <codeblock>Aggregated metrics for the job are not available as individual pipeline metrics are discarded.</codeblock>
+ </conbody>
+</concept>

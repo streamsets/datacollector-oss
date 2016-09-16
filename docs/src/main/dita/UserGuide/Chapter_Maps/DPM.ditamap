@@ -36,6 +36,18 @@
             <topicref href="../DPM/RegisterFromCommandLine.dita"/>
             <topicref href="../DPM/RegisterFromClouderaManager.dita"/>
         </topicref>
+        <topicref href="../DPM/AggregatedStatistics.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../DPM/AggStatistics_Kafka.dita">
+                <topicref href="../DPM/AggStatistics_KafkaPartitionStrategy.dita"/>
+                <topicref href="../DPM/AggStatistics_KafkaBestPractices.dita"/>
+            </topicref>
+            <topicref href="../DPM/AggStatistics_Kinesis.dita">
+                <topicref href="../DPM/AggStatistics_KinesisAWSCredentials.dita"/>
+                <topicref href="../DPM/AggStatistics_KinesisBestPractices.dita"/>
+            </topicref>
+            <topicref href="../DPM/AggregatedStatistics_Configuring.dita"/>
+        </topicref>
         <topicref href="../DPM/PipelineManagement.dita" chunk="to-content">
             <topicmeta>
                 <shortdesc/>

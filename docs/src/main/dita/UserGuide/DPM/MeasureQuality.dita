@@ -29,7 +29,7 @@
             running jobs. </p>
         <p>For example, the Summary tab of the Customer 360 topology provides a single view into the
             record count and throughput for all running jobs in the topology:</p>
-        <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="60" id="image_hv1_ctq_fx"
+        <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="55" id="image_hv1_ctq_fx"
             /></p>
         <p>You can select a job or a connecting system within the topology to discover more detailed
             monitoring about the job or system. </p>
@@ -43,7 +43,7 @@
             />s.</p>
         <p>For example, if we select the Social Feeds Dataflows job in the topology, the Summary tab
             displays metrics for the selected job:</p>
-        <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="60" id="image_ylz_ptq_fx"
+        <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="55" id="image_ylz_ptq_fx"
             /></p>
         <p>We've seen how you can use DPM to turn a high-level architecture diagram of your
             dataflows into pipelines and jobs that you can then manage and measure from a single
