@@ -35,6 +35,21 @@ import java.util.Map;
 import java.util.Properties;
 
 public class SparkStreamingBinding extends AbstractStreamingBinding {
+  //https://issues.streamsets.com/browse/SDC-3961
+  //>= 0.9
+  private static final String KAFKA_AUTO_RESET_EARLIEST = "earliest";
+  private static final String KAFKA_AUTO_RESET_LATEST = "latest";
+
+  //< 0.9
+  private static final String KAFKA_AUTO_RESET_SMALLEST = "smallest";
+  private static final String KAFKA_AUTO_RESET_LARGEST = "largest";
+
+  private static final Map<String, String> KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES = new HashMap<>();
+
+  static {
+    KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_EARLIEST, KAFKA_AUTO_RESET_SMALLEST);
+    KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_LATEST, KAFKA_AUTO_RESET_LARGEST);
+  }
 
   public SparkStreamingBinding(Properties properties) {
     super(properties);
@@ -43,6 +58,11 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
   @Override
   protected String getTopic() {
     return Utils.getKafkaTopic(getProperties());
+  }
+
+  static String getConfigurableAutoOffsetResetIfNonEmpty(String autoOffsetValue) {
+    String configurableAutoOffsetResetValue = KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.get(autoOffsetValue);
+    return (configurableAutoOffsetResetValue == null)? autoOffsetValue : configurableAutoOffsetResetValue;
   }
 
   @Override
@@ -66,14 +86,13 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
   }
 
   private static class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
-
     private final SparkConf sparkConf;
     private final long duration;
     private final String checkPointPath;
     private final String metaDataBrokerList;
     private final String topic;
     private final boolean isRunningInMesos;
-    private final String autoOffsetValue;
+    private String autoOffsetValue;
 
     public JavaStreamingContextFactoryImpl(SparkConf sparkConf, long duration, String checkPointPath,
                                            String metaDataBrokerList, String topic, String autoOffsetValue, boolean isRunningInMesos) {
@@ -93,6 +112,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       Map<String, String> props = new HashMap<String, String>();
       props.put("metadata.broker.list", metaDataBrokerList);
       if (!autoOffsetValue.isEmpty()) {
+        autoOffsetValue = getConfigurableAutoOffsetResetIfNonEmpty(autoOffsetValue);
         props.put(AUTO_OFFSET_RESET, autoOffsetValue);
       }
       logMessage("Meta data broker list " + metaDataBrokerList, isRunningInMesos);
@@ -105,5 +125,4 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       return result;
     }
   }
-
 }
