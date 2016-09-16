@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
@@ -42,6 +43,19 @@ public class S3FileConfig {
     group = "#0"
   )
   public String prefixPattern;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LEXICOGRAPHICAL",
+      label = "Read Order",
+      description = "Read objects based on the last-modified timestamp or lexicographically ascending key names. " +
+          "When timestamp ordering is used, objects with the same timestamp are ordered based on key names.",
+      displayPosition = 110,
+      group = "#0"
+  )
+  @ValueChooserModel(ObjectOrderingChooseValues.class)
+  public ObjectOrdering objectOrdering = ObjectOrdering.LEXICOGRAPHICAL;
 
   @ConfigDef(
     required = true,

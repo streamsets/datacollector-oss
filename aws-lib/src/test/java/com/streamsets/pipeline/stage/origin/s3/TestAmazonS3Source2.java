@@ -317,6 +317,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*/*/*.log";
+    s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
@@ -351,6 +352,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*/*.zip";
+    s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
 
     s3ConfigBean.dataFormatConfig.compression = Compression.ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/*.log";
@@ -388,6 +390,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*/logArchive*.tar.gz";
+    s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
 
     s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/[!.]*.log";
@@ -425,6 +428,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*/testAvro*.tar.gz";
+    s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
 
     s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "[!.]*.avro";

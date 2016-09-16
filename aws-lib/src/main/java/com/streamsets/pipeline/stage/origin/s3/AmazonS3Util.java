@@ -26,6 +26,8 @@ import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -46,6 +48,61 @@ public class AmazonS3Util {
   public static final int BATCH_SIZE = 1000;
 
   private AmazonS3Util() {}
+
+  /**
+   * Lists objects from AmazonS3 in lexicographical order
+   *
+   * @param s3Client
+   * @param s3ConfigBean
+   * @param pathMatcher glob patterns to match file name against
+   * @param s3Offset current offset which provides the key name of the previous object
+   * @param fetchSize number of objects to fetch in one go
+   * @return
+   * @throws AmazonClientException
+   */
+  static List<S3ObjectSummary> listObjectsLexicographically(
+      AmazonS3Client s3Client,
+      S3ConfigBean s3ConfigBean,
+      AntPathMatcher pathMatcher,
+      AmazonS3Source.S3Offset s3Offset,
+      int fetchSize
+  ) {
+    // Incrementally scan objects after the marker (s3Offset).
+    List<S3ObjectSummary> list = new ArrayList<>(fetchSize);
+
+    ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
+    listObjectsRequest.setBucketName(s3ConfigBean.s3Config.bucket);
+    listObjectsRequest.setPrefix(s3ConfigBean.s3Config.commonPrefix);
+    listObjectsRequest.setMaxKeys(BATCH_SIZE);
+    if (s3Offset.getKey() != null) {
+      listObjectsRequest.setMarker(s3Offset.getKey());
+    }
+
+    ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
+
+    while (true) {
+      for (S3ObjectSummary s : objectListing.getObjectSummaries()) {
+        String fullPrefix = s.getKey();
+        String remainingPrefix = fullPrefix.substring(s3ConfigBean.s3Config.commonPrefix.length(), fullPrefix.length());
+        if (!remainingPrefix.isEmpty()) {
+          if (pathMatcher.match(s3ConfigBean.s3FileConfig.prefixPattern, remainingPrefix)) {
+            list.add(s);
+          }
+          // We've got enough objects.
+          if (list.size() == fetchSize) {
+            return list;
+          }
+        }
+      }
+      // Listing is complete. No more objects to be listed.
+      if (!objectListing.isTruncated()) {
+        break;
+      }
+      objectListing = s3Client.listNextBatchOfObjects(objectListing);
+    }
+
+    return list;
+  }
 
   /**
    * Lists objects from AmazonS3 in chronological order [lexicographical order if 2 files have same timestamp] which are
@@ -87,8 +144,8 @@ public class AmazonS3Util {
       .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.commonPrefix)
       .withBatchSize(BATCH_SIZE);
     for (S3ObjectSummary s : s3ObjectSummaries) {
-      String commonPrefix = s.getKey();
-      String remainingPrefix = commonPrefix.substring(s3ConfigBean.s3Config.commonPrefix.length(), commonPrefix.length());
+      String fullPrefix = s.getKey();
+      String remainingPrefix = fullPrefix.substring(s3ConfigBean.s3Config.commonPrefix.length(), fullPrefix.length());
       if (!remainingPrefix.isEmpty()) {
         // remainingPrefix can be empty.
         // If the user manually creates a prefix "myFolder/mySubFolder" in bucket "myBucket" and uploads "myObject",

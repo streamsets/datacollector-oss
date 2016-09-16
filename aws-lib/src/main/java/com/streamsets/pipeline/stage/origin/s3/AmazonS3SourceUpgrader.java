@@ -44,6 +44,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -132,5 +135,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config(S3ConfigBean.S3_FILE_CONFIG_PREFIX + "objectOrdering", ObjectOrdering.TIMESTAMP));
   }
 }

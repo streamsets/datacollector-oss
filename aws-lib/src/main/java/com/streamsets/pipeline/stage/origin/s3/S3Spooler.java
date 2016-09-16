@@ -76,8 +76,30 @@ public class S3Spooler {
 
   S3ObjectSummary findAndQueueObjects(AmazonS3Source.S3Offset s3offset, boolean checkCurrent)
     throws AmazonClientException {
-    List<S3ObjectSummary> s3ObjectSummaries = AmazonS3Util.listObjectsChronologically(
-      s3Client, s3ConfigBean, pathMatcher, s3offset, objectQueue.remainingCapacity());
+    List<S3ObjectSummary> s3ObjectSummaries;
+    ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
+    switch (objectOrdering) {
+      case TIMESTAMP:
+        s3ObjectSummaries = AmazonS3Util.listObjectsChronologically(
+            s3Client,
+            s3ConfigBean,
+            pathMatcher,
+            s3offset,
+            objectQueue.remainingCapacity()
+        );
+        break;
+      case LEXICOGRAPHICAL:
+        s3ObjectSummaries = AmazonS3Util.listObjectsLexicographically(
+            s3Client,
+            s3ConfigBean,
+            pathMatcher,
+            s3offset,
+            objectQueue.remainingCapacity()
+        );
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
+    }
     for (S3ObjectSummary objectSummary : s3ObjectSummaries) {
       addObjectToQueue(objectSummary, checkCurrent);
     }

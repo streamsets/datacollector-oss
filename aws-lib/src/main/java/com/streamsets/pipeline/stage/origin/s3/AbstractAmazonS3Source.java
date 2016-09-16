@@ -217,13 +217,30 @@ public abstract class AbstractAmazonS3Source extends BaseSource {
   }
 
   private boolean isEligible(S3ObjectSummary nextAvailObj, S3Offset s3Offset) {
-    return (nextAvailObj == null) ||
-      (nextAvailObj.getLastModified().getTime() >= Long.parseLong(s3Offset.getTimestamp()));
+    ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
+    switch (objectOrdering) {
+      case TIMESTAMP:
+        return (nextAvailObj == null) ||
+            (nextAvailObj.getLastModified().getTime() >= Long.parseLong(s3Offset.getTimestamp()));
+      case LEXICOGRAPHICAL:
+        return (nextAvailObj == null || s3Offset.getKey() == null) ||
+            (nextAvailObj.getKey().compareTo(s3Offset.getKey()) > 0);
+      default:
+        throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
+    }
   }
 
   private boolean isLaterThan(String nextKey, long nextTimeStamp, String originalKey, long originalTimestamp) {
-    return (nextTimeStamp > originalTimestamp) ||
-      (nextTimeStamp == originalTimestamp && nextKey.compareTo(originalKey) > 0);
+    ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
+    switch (objectOrdering) {
+      case TIMESTAMP:
+        return (nextTimeStamp > originalTimestamp) ||
+            (nextTimeStamp == originalTimestamp && nextKey.compareTo(originalKey) > 0);
+      case LEXICOGRAPHICAL:
+        return nextKey.compareTo(originalKey) > 0;
+      default:
+        throw new IllegalArgumentException("Unknown ordering: " + objectOrdering.getLabel());
+    }
   }
 
   static class S3Offset {
