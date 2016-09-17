@@ -477,21 +477,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>single-fork-integration-test</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <!-- Disabling all Hive tests with external tables due to HIVE-9299 -->
-                <exclude>**/ColdStartIT.java</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
+        <configuration>
+          <excludes>
+            <!-- Disabling all Hive tests with external tables due to HIVE-9299 -->
+            <exclude>**/ColdStartIT.java</exclude>
+          </excludes>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
