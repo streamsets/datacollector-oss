@@ -274,9 +274,21 @@ if [ -f $SDC_PROPERTIES ]; then
   # Propagate system white and black lists
   if ! grep -q "system.stagelibs.*list" $SDC_PROPERTIES; then
     echo "System white nor black list found in configuration"
-    if [ -f $SDC_DIST/etc/sdc.properties ]; then
+    SDC_PROP_FILE=$SDC_DIST/etc/sdc.properties
+    if [ -f ${SDC_PROP_FILE} ]; then
       echo "Propagating default white and black list from parcel"
-      grep "system.stagelibs.*list" $SDC_DIST/etc/sdc.properties >> $SDC_PROPERTIES
+      line_nums=$(grep -n "system.stagelibs.*list" ${SDC_PROP_FILE} | cut -f1 -d:)
+      list_start=$(echo ${line_nums} | cut -f1 -d' ')  # line number of where whitelist starts
+      list_end=$(echo ${line_nums} | cut -f2 -d' ')    # line number of where blacklist starts
+      blacklist=$(sed "${list_end}q;d" ${SDC_PROP_FILE})
+      # Increment list_end while the line ends with '\'
+      while [[ $blacklist == *"\\" ]]
+      do
+          list_end=$((list_end+1))
+          blacklist=$(sed "${list_end}q;d" ${SDC_PROP_FILE})
+      done
+      echo "Copying lines from ${list_start} to ${list_end} in $SDC_PROP_FILE to $SDC_PROPERTIES"
+      sed -n "${list_start},${list_end}p" ${SDC_PROP_FILE} >> $SDC_PROPERTIES
     else
       echo "Parcel doesn't contain default configuration file, skipping white/black list propagation"
     fi
