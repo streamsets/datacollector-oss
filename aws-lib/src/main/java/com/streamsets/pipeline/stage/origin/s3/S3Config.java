@@ -101,14 +101,17 @@ public class S3Config {
     this.endPoint = endPoint;
   }
 
+  /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
+   */
   public void init(
       Stage.Context context,
       String configPrefix,
       ProxyConfig proxyConfig,
-      List<Stage.ConfigIssue> issues
+      List<Stage.ConfigIssue> issues,
+      int maxErrorRetries
   ) {
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
-    validateConnection(context, configPrefix, proxyConfig, issues);
+    validateConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
   }
 
   public void destroy() {
@@ -127,10 +130,15 @@ public class S3Config {
       Stage.Context context,
       String configPrefix,
       ProxyConfig proxyConfig,
-      List<Stage.ConfigIssue> issues
+      List<Stage.ConfigIssue> issues,
+      int maxErrorRetries
   ) {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
+
+    if (maxErrorRetries >= 0) {
+      clientConfig.setMaxErrorRetry(maxErrorRetries);
+    }
 
     s3Client = new AmazonS3Client(credentials, clientConfig);
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));

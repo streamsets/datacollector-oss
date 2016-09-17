@@ -130,7 +130,9 @@ public class S3TargetConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues);
+    // Don't use amazon s3 client for file transfer error retries (Setting maxErrorRetries to 0)
+    // (SDC will retry the file transfer based on AT_LEAST_ONCE/AT_MOST_ONCE SEMANTICS)
+    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, (dataFormat == DataFormat.WHOLE_FILE)? 0 : -1);
 
     if(s3Config.bucket == null || s3Config.bucket.isEmpty()) {
       issues.add(

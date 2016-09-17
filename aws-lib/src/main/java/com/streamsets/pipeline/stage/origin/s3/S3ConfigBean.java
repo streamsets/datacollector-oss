@@ -102,7 +102,7 @@ public class S3ConfigBean {
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, -1);
 
     errorConfig.errorPrefix = AWSUtil.normalizePrefix(errorConfig.errorPrefix, s3Config.delimiter);
     postProcessingConfig.postProcessPrefix = AWSUtil.normalizePrefix(postProcessingConfig.postProcessPrefix, s3Config.delimiter);
