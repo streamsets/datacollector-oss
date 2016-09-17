@@ -651,6 +651,32 @@ public class ScriptingProcessorTestUtil {
     Assert.assertEquals(FileRefTestUtil.TEXT, new String(byte_array));
   }
 
+  public static <C extends Processor> void verifyCreateRecord(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("record_value", Field.create("record_value"));
+    record.set(Field.create(map));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      output = runner.runProcess(Collections.singletonList(record));
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(2, records.size());
+    Assert.assertEquals("record_value", records.get(0).get("/record_value").getValueAsString());
+    Assert.assertEquals("record_value", records.get(1).get("/record_value").getValueAsString());
+  }
+
   static void assertFieldUtil(String fieldName, Field field, Object obj){
     Field.Type expectedType = null;
 

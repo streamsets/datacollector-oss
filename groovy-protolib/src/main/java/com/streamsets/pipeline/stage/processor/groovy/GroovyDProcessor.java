@@ -104,6 +104,11 @@ public class GroovyDProcessor extends DProcessor {
           "    // if(sdcFunctions.getFieldNull(record, '/null_int') == NULL_INTEGER)\n" +
           "    //    record.value['null_int'] = 123\n" +
           "    \n" +
+          "    // Create a new record with map field \n" +
+          "    // newRecord = sdcFunctions.createRecord('recordId')\n" +
+          "    // newRecord.value = ['field1':'val1', 'field2' : 'val2']\n" +
+          "    // output.write(newRecord)\n" +
+          "    \n" +
           "    // Write a record to the processor output\n" +
           "    output.write(record)\n" +
           "  } catch (e) {\n" +
