@@ -467,4 +467,27 @@ public class TestJavaScriptProcessor {
 
     ScriptingProcessorTestUtil.verifyNullField(JavaScriptProcessor.class, processor,record);
   }
+
+  @Test
+  public void testCreateRecordWithNewRecordId() throws Exception {
+    String recordId = "recordId";
+    String script = "for(var i = 0; i < records.length; i++) {\n" +
+        "  try {\n" +
+        "    var newRecord = sdcFunctions.createRecord('" + recordId + "');\n" +
+        "    newRecord.value = {'record_value' :'record_value'};\n" +
+        "    output.write(records[i]);\n" +
+        "    output.write(newRecord);\n" +
+        "  } catch (e) {\n" +
+        "    // Send record to error\n" +
+        "    error.write(records[i], e);\n" +
+        "  }\n" +
+        "}";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+
+    ScriptingProcessorTestUtil.verifyCreateRecord(JavaScriptProcessor.class, processor);
+  }
 }

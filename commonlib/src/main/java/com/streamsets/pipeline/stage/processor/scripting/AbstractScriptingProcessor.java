@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -36,7 +37,9 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
@@ -55,12 +58,23 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   }
 
   // This class will contain functions to expose to scripting processors
-  public class SdcFunctions extends ScriptTypedNullObject {
+  public class SdcFunctions {
 
     // To access getFieldNull function through SimpleBindings
     public Object getFieldNull(ScriptRecord scriptRecord, String fieldPath) {
-      return super.getFieldNull(getScriptObjectFactory().getRecord(scriptRecord), fieldPath);
+      return ScriptTypedNullObject.getFieldNull(getScriptObjectFactory().getRecord(scriptRecord), fieldPath);
     }
+
+    /**
+     * Create record
+     * Note: Default field value is null.
+     * @param recordSourceId the unique record id for this record.
+     * @return ScriptRecord The Newly Created Record
+     */
+    public ScriptRecord createRecord(String recordSourceId) {
+      return getScriptObjectFactory().createScriptRecord(getContext().createRecord(recordSourceId));
+    }
+
   }
 
   private final String scriptingEngineName;

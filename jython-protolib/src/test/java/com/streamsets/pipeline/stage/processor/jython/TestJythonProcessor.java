@@ -374,4 +374,24 @@ public class TestJythonProcessor {
 
     ScriptingProcessorTestUtil.verifyNullField(JythonProcessor.class, processor, record);
   }
+
+  @Test
+  public void testCreateRecordWithNewRecordId() throws Exception {
+    String recordId = "recordId";
+    String script = "for record in records:\n" +
+        "  try:\n" +
+        "    newRecord = sdcFunctions.createRecord('" + recordId + "');\n" +
+        "    newRecord.value = {'record_value' : 'record_value'}\n" +
+        "    output.write(record)\n" +
+        "    output.write(newRecord)\n" +
+        "  except Exception as e:\n" +
+        "    error.write(record, str(e))";
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyCreateRecord(JythonProcessor.class, processor);
+  }
+
 }

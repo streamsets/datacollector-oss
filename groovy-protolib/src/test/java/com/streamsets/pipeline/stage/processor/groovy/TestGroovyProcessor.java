@@ -244,4 +244,26 @@ public class TestGroovyProcessor {
     ScriptingProcessorTestUtil.verifyNullField(GroovyProcessor.class, processor,record);
   }
 
+  @Test
+  public void testCreateRecordWithNewRecordId() throws Exception {
+    String recordId = "recordId";
+    String script = "for (record in records) {\n" +
+        "  try {\n" +
+        "    newRecord = sdcFunctions.createRecord('" + recordId + "');\n" +
+        "    newRecord.value = ['record_value':'record_value']\n" +
+        "    output.write(record)\n" +
+        "    output.write(newRecord)\n" +
+        "  } catch (e) {\n" +
+        "    // Write a record to the error pipeline\n" +
+        "    log.error(e.toString(), e)\n" +
+        "    error.write(record, e.toString())\n" +
+        "  }\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyCreateRecord(GroovyProcessor.class, processor);
+  }
 }
