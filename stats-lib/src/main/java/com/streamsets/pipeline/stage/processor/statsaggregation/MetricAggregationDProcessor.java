@@ -114,6 +114,17 @@ public class MetricAggregationDProcessor extends DProcessor {
   )
   public String jobId;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "5",
+      label = "Retry Attempts",
+      description = "Max no of retries to fetch latest metrics from time-series DPM App." +
+          " To retry indefinitely, use -1. The wait time between retries starts at 2 seconds" +
+          " and doubles until reaching 16 seconds.",
+      displayPosition = 80)
+  public int retryAttempts = 5;
+
   @Override
   protected Processor createProcessor() {
     return new MetricAggregationProcessor(
@@ -123,7 +134,8 @@ public class MetricAggregationDProcessor extends DProcessor {
         targetUrl,
         authToken,
         sdcId,
-        jobId
+        jobId,
+        retryAttempts
     );
   }
 

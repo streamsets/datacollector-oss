@@ -31,8 +31,6 @@ import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
-import com.streamsets.datacollector.config.ThresholdType;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -43,7 +41,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -401,7 +398,8 @@ public class TestMetricAggregationProcessor {
       Resources.getResource("testMetricAggregation.json"),
       Charset.defaultCharset()
     );
-    return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null, "myUrl", null, null, null, "x");
+    return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null,
+        "myUrl", null, null, null, "x", 5);
   }
 
   private Record createTestMetricRecord() {

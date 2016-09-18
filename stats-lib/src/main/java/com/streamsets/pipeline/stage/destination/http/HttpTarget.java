@@ -171,19 +171,26 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   }
 
   private void sendUpdate(List<SDCMetricsJson> sdcMetricsJsonList) throws StageException {
-    Response response = target.request()
-      .header(X_REQUESTED_BY, SDC)
-      .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
-      .header(X_SS_APP_COMPONENT_ID, sdcId)
-      .post(
-        Entity.json(
-          sdcMetricsJsonList
-        )
-      );
-    if (response.getStatus() != 200) {
-      String responseMessage = response.readEntity(String.class);
-      LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
-      throw new StageException(Errors.HTTP_02, responseMessage);
+    Response response = null;
+    try {
+      response = target.request()
+          .header(X_REQUESTED_BY, SDC)
+          .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
+          .header(X_SS_APP_COMPONENT_ID, sdcId)
+          .post(
+              Entity.json(
+                  sdcMetricsJsonList
+              )
+          );
+      if (response.getStatus() != 200) {
+        String responseMessage = response.readEntity(String.class);
+        LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
+        throw new StageException(Errors.HTTP_02, responseMessage);
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
     }
   }
 

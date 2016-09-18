@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.statsaggregation;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
@@ -45,6 +46,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,7 @@ public class AggregatedMetricsFetcher {
   private final String jobId;
   private final String pipelineId;
   private final String pipelineVersion;
+  private final int retryAttempts;
 
   private Client client;
   private WebTarget target;
@@ -71,7 +74,8 @@ public class AggregatedMetricsFetcher {
       String appComponentId,
       String jobId,
       String pipelineId,
-      String pipelineVersion
+      String pipelineVersion,
+      int retryAttempts
   ) {
     this.context = context;
     this.targetUrl = targetUrl;
@@ -80,6 +84,7 @@ public class AggregatedMetricsFetcher {
     this.jobId = jobId;
     this.pipelineId = pipelineId;
     this.pipelineVersion = pipelineVersion;
+    this.retryAttempts = retryAttempts;
   }
 
   public MetricRegistryJson fetchLatestAggregatedMetrics(
@@ -94,34 +99,83 @@ public class AggregatedMetricsFetcher {
     client.register(new CsrfProtectionFilter("CSRF"));
     client.register(GZipEncoder.class);
     target = client.target(targetUrl);
+    Entity<MetricRegistryJson> metricRegistryJsonEntity = Entity.json(metricRegistryJson);
+    String errorResponseMessage = null;
+    int delaySecs = 1;
+    int attempts = 0;
 
-    Response response = target
-      .queryParam("jobId", jobId)
-      .queryParam("pipelineId", pipelineId)
-      .queryParam("pipelineVersion", pipelineVersion)
-      .request()
-      .header("X-Requested-By", MetricAggregationConstants.SDC)
-      .header("X-SS-App-Auth-Token", authToken.replaceAll("(\\r|\\n)", ""))
-      .header("X-SS-App-Component-Id", appComponentId)
-      .post(Entity.json(metricRegistryJson));
+    while (attempts < retryAttempts) {
+      if (attempts > 0) {
+        delaySecs = delaySecs * 2;
+        delaySecs = Math.min(delaySecs, 16);
+        LOG.warn("DPM fetchLatestAggregatedMetrics attempt '{}', waiting for '{}' seconds before retrying ...",
+            attempts, delaySecs);
+        sleep(delaySecs);
+      }
+      attempts++;
 
-    if (response.getStatus() != 200) {
-      String responseMessage = response.readEntity(String.class);
-      LOG.error(Utils.format(Errors.STATS_02.getMessage(), responseMessage));
+      Response response = null;
+      try {
+        response = target
+            .queryParam("jobId", jobId)
+            .queryParam("pipelineId", pipelineId)
+            .queryParam("pipelineVersion", pipelineVersion)
+            .request()
+            .header("X-Requested-By", MetricAggregationConstants.SDC)
+            .header("X-SS-App-Auth-Token", authToken.replaceAll("(\\r|\\n)", ""))
+            .header("X-SS-App-Component-Id", appComponentId)
+            .post(metricRegistryJsonEntity);
+
+        if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+          metricRegistryJson = response.readEntity(MetricRegistryJson.class);
+          break;
+        } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
+          errorResponseMessage = "Error requesting latest stats from time-series app: DPM unavailable";
+          LOG.warn(errorResponseMessage);
+        }  else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+          errorResponseMessage = response.readEntity(String.class);
+          LOG.error(Utils.format(Errors.STATS_02.getMessage(), errorResponseMessage));
+          metricRegistryJson = null;
+          break;
+        } else {
+          String responseMessage = response.readEntity(String.class);
+          LOG.warn("Error requesting latest stats from time-series app, HTTP status '{}': {}",
+              response.getStatus(), responseMessage);
+          break;
+        }
+      } catch (Exception ex) {
+        errorResponseMessage = ex.toString();
+        LOG.warn("Error requesting latest stats from time-series app : {}", ex.toString());
+      }  finally {
+        if (response != null) {
+          response.close();
+        }
+      }
+    }
+
+    if (metricRegistryJson == null) {
       issues.add(
           context.createConfigIssue(
-            Groups.STATS.getLabel(),
-            "targetUrl",
-            Errors.STATS_02,
-            responseMessage
+              Groups.STATS.getLabel(),
+              "targetUrl",
+              Errors.STATS_02,
+              errorResponseMessage
           )
       );
-      metricRegistryJson = null;
-    } else {
-      metricRegistryJson = response.readEntity(MetricRegistryJson.class);
     }
-    client.close();
+
     return metricRegistryJson;
+  }
+
+  @VisibleForTesting
+  void sleep(int secs) {
+    try {
+      Thread.sleep(secs * 1000);
+    } catch (InterruptedException ex) {
+      String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
+      LOG.error(msg);
+      throw new RuntimeException(msg);
+    }
   }
 
   private MetricRegistryJson buildMetricRegistryJson(

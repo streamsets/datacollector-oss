@@ -20,8 +20,13 @@
 
 package com.streamsets.datacollector.event.client.impl;
 
-import java.util.List;
-import java.util.Map;
+import com.streamsets.datacollector.event.client.api.EventClient;
+import com.streamsets.datacollector.event.client.api.EventException;
+import com.streamsets.datacollector.event.json.ClientEventJson;
+import com.streamsets.datacollector.event.json.ServerEventJson;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
+import org.glassfish.jersey.client.filter.EncodingFilter;
+import org.glassfish.jersey.message.GZipEncoder;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,15 +35,8 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
-import org.glassfish.jersey.client.filter.EncodingFilter;
-import org.glassfish.jersey.message.GZipEncoder;
-
-import com.streamsets.datacollector.event.client.api.EventClient;
-import com.streamsets.datacollector.event.client.api.EventException;
-import com.streamsets.datacollector.event.json.ClientEventJson;
-import com.streamsets.datacollector.event.json.ServerEventJson;
+import java.util.List;
+import java.util.Map;
 
 public class EventClientImpl implements EventClient {
 
@@ -76,15 +74,20 @@ public class EventClientImpl implements EventClient {
       builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
     }
 
-    Response response = builder.post(Entity.json(clientEventJson));
-    if (response.getStatus() != 200) {
-      throw new EventException("Failed : HTTP error code : " + response.getStatus());
-    }
+    Response response = null;
     try {
+      response = builder.post(Entity.json(clientEventJson));
+      if (response.getStatus() != 200) {
+        throw new EventException("Failed : HTTP error code : " + response.getStatus());
+      }
       return response.readEntity(new GenericType<List<ServerEventJson>>() {
       });
     } catch (Exception ex) {
       throw new EventException("Failed to read response : " + ex);
+    } finally {
+      if (response != null) {
+        response.close();
+      }
     }
   }
 
