@@ -86,7 +86,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
-    Mockito.doReturn(true).when(service).isServiceActive(false);
+    Mockito.doReturn(true).when(service).checkServiceActive();
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 
@@ -120,7 +120,7 @@ public class TestRemoteSSOService {
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     service.setConfiguration(conf);
-    Mockito.doReturn(true).when(service).isServiceActive(false);
+    Mockito.doReturn(true).when(service).checkServiceActive();
 
     SSOPrincipalJson principal = TestSSOPrincipalJson.createPrincipal();
 

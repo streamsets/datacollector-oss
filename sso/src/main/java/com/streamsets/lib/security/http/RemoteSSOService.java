@@ -232,9 +232,16 @@ public class RemoteSSOService extends AbstractSSOService {
     appAuthClientBuilder.appAuthToken(appToken);
   }
 
+  private boolean checkServiceActiveIfInActive() {
+    if (!serviceActive) {
+      serviceActive = checkServiceActive();
+    }
+    return serviceActive;
+  }
+
   protected SSOPrincipal validateUserTokenWithSecurityService(String userAuthToken)
       throws ForbiddenException {
-    Utils.checkState(isServiceActive(false), "Security service not active");
+    Utils.checkState(checkServiceActiveIfInActive(), "Security service not active");
     ValidateUserAuthTokenJson authTokenJson = new ValidateUserAuthTokenJson();
     authTokenJson.setAuthToken(userAuthToken);
     SSOPrincipalJson principal;
@@ -270,7 +277,7 @@ public class RemoteSSOService extends AbstractSSOService {
 
   protected SSOPrincipal validateAppTokenWithSecurityService(String authToken, String componentId)
       throws ForbiddenException {
-    Utils.checkState(isServiceActive(false), "Security service not active");
+    Utils.checkState(checkServiceActiveIfInActive(), "Security service not active");
     ValidateComponentAuthTokenJson authTokenJson = new ValidateComponentAuthTokenJson();
     authTokenJson.setComponentId(componentId);
     authTokenJson.setAuthToken(authToken);
