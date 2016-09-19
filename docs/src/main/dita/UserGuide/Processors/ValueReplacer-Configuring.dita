@@ -61,6 +61,26 @@
                                         /></entry>
                                 </row>
                                 <row>
+                                    <entry>Conditionally Replace Values <xref
+                                            href="ValueReplacer-DataTypes.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_ucq_nks_3x"/>
+                                        </xref>
+                                    </entry>
+                                    <entry>Replaces the specified values with constants. Click
+                                            <uicontrol>Add</uicontrol> to include more fields.
+                                        Configure the following properties:<ul id="ul_vqp_sjs_3x">
+                                            <li>Fields to Replace - Name of the field to use.</li>
+                                            <li>Operator - Operator to use for the condition. </li>
+                                            <li>Comparison Value - Constant to use for the
+                                                condition.</li>
+                                            <li>Replacement Value - Constant to replace values that
+                                                match the condition. </li>
+                                        </ul><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
+                                        /></entry>
+                                </row>
+                                <row>
                                     <entry>Field Does Not Exist</entry>
                                     <entry>Determines how to handle records without the specified
                                             fields:<ul id="ul_jx1_4w2_jr">

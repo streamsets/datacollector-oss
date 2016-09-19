@@ -15,12 +15,29 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_o5k_dmf_zq">
  <title>Value Replacer</title>
- <shortdesc>The Value Replacer replaces null values in a field with a constant. The Value Replacer
-  can also replace existing values in a field with Nulls. </shortdesc>
  <conbody>
-  <note type="tip"><indexterm>Value Replacer
-          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Value
-          Replacer</indexterm></indexterm>To use an expression instead of a constant to replace null
-      values, use an Expression Evaluator.</note>
+        <p><indexterm>Value Replacer
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Value
+                    Replacer</indexterm></indexterm>The Value Replacer replaces values in fields.
+            You can use the Value Replacer to replace null values in specified fields with
+            constants, replace existing field values with nulls, and replace specified field values
+            with constants based on a simple condition. </p>
+        <p>When replacing values based on a condition, you can use the following operators: <ul
+                id="ul_vxj_dfs_3x">
+                <li>Less than ( &lt; ) - Converts all values less than the specified value to the
+                    replacement value.</li>
+                <li>Greater than ( > ) - Converts all values greater than the specified value to the
+                    replacement value. </li>
+                <li>Equals ( = ) - Converts the specified value to the replacement value.</li>
+                <li>ALL - Converts all values in the field to the replacement value. </li>
+            </ul></p>
+        <p>You might use conditional replacement to update codes or other changed values, or to
+            replace invalid values. </p>
+        <note type="tip">To perform more complex replacements with expressions, use an Expression
+            Evaluator.</note>
+        <p>When you configure the processor, you specify the fields that you want to use and the
+            replacement values when appropriate. When performing a conditional replacement, you also
+            specify the operator type. You can list multiple fields for each type of value
+            replacement. And you can configure error handling for when a field does not exist. </p>
  </conbody>
 </concept>

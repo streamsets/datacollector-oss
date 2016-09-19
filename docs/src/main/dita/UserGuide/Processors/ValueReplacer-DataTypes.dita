@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tbv_kbs_3x">
+ <title>Data Types for Conditional Replacement</title>
+ <conbody>
+  <p><indexterm>Value Replacer processor<indexterm>Field types for conditional
+                    replacement</indexterm></indexterm>You can replace values based on a condition
+            for the following field types: <ul id="ul_dd5_qbs_3x">
+                <li>Byte</li>
+                <li>Double</li>
+                <li>Float</li>
+                <li>Integer</li>
+                <li>Long</li>
+                <li>Short</li>
+                <li>String</li>
+            </ul></p>
+ </conbody>
+</concept>

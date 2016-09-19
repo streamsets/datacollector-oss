@@ -52,7 +52,7 @@
         <li>Redis Lookup - Performs key-value lookups in Redis.</li>
         <li>Static Lookup - Performs key-value lookups in local memory.</li>
         <li>Stream Selector - Routes data to different streams based on conditions.</li>
-        <li>Value Replacer - Replaces null values or replaces values with nulls.</li>
+        <li>Value Replacer - Replaces existing nulls or specified values with constants or nulls. </li>
         <li>XML Flattener - Flattens XML data in a string field.</li>
         <li>XML Parser - Parses XML data in a string field. </li>
       </ul></p>
