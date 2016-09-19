@@ -43,7 +43,9 @@
                 <cmd>Use the following command to extract the zip file to the desired
                     location:</cmd>
                 <info>
-                    <codeblock>unzip streamsets-datacollector-1.6.0.0-all-rpms.zip</codeblock>
+                    <codeblock>unzip streamsets-datacollector-&lt;version>-all-rpms.zip</codeblock>
+                    <p>For example, to extract version 2.0.0.0, use the following
+                        command:<codeblock>unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</codeblock></p>
                 </info>
             </step>
             <step>

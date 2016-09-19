@@ -29,7 +29,9 @@
                 <cmd>Use the following command to extract the zip file to a different directory than
                     the previous version:</cmd>
                 <info>
-                    <codeblock>unzip streamsets-datacollector-1.6.0.0-all-rpms.zip</codeblock>
+                    <codeblock>unzip streamsets-datacollector-&lt;version>-all-rpms.zip</codeblock>
+                    <p>For example, to extract version 2.0.0.0, use the following
+                        command:<codeblock>unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</codeblock></p>
                 </info>
             </step>
             <step>
@@ -43,8 +45,8 @@
                 <cmd>Or, to install the core RPM package and then install individual stage libraries
                     as needed, use the following command:</cmd>
                 <info><codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>For
-                    example, to install version 1.6.0.0, use the following
-                    command:<codeblock>yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</codeblock></info>
+                    example, to install version 2.0.0.0, use the following
+                    command:<codeblock>yum localinstall streamsets-datacollector-2.0.0.0-1.noarch.rpm</codeblock></info>
             </step>
         </steps>
     </taskbody>

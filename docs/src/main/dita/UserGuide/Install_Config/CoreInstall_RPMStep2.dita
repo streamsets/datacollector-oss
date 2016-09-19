@@ -36,8 +36,8 @@
                 <dd>For example, to install the Amazon S3 origin and destination, as well as the
                     Elasticsearch destination for Elasticsearch 1.6.2 for <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> version 1.6.0.0, use the following command:
-                    <codeblock>yum localinstall streamsets-datacollector-aws-lib-1.6.0.0-1.noarch.rpm,streamsets-datacollector-elasticsearch_1_6-lib-1.6.0.0-1.noarch.rpm </codeblock></dd>
+                    /> version 2.0.0.0, use the following command:
+                    <codeblock>yum localinstall streamsets-datacollector-aws-lib-2.0.0.0-1.noarch.rpm,streamsets-datacollector-elasticsearch_1_6-lib-2.0.0.0-1.noarch.rpm </codeblock></dd>
             </dlentry>
             <dlentry>
                 <dt>To list the stage libraries installed on the current <ph

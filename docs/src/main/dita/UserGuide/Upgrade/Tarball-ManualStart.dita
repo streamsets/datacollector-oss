@@ -34,7 +34,7 @@
                 <info>
                     <codeblock>export SDC_DIST=&lt;extraction directory></codeblock>
                     <p>For
-                        example:<codeblock>export SDC_DIST=/sdc/streamsets-datacollector-1.6.0.0</codeblock></p>
+                        example:<codeblock>export SDC_DIST=/sdc/streamsets-datacollector-2.0.0.0</codeblock></p>
                 </info>
             </step>
         </steps>
