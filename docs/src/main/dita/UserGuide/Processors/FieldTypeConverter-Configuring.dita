@@ -91,6 +91,12 @@
                                                 format="html" scope="external"
                                                 >http://docs.oracle.com/javase/tutorial/i18n/format/simpleDateFormat.html</xref>.</p></entry>
                                 </row>
+                                <row>
+                                    <entry>Charset</entry>
+                                    <entry>Character encoding of the data to be
+                                            converted.<p>Available for types affected by
+                                            encoding.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

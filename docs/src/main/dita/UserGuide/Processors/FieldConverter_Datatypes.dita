@@ -16,7 +16,7 @@
 <concept id="concept_ixz_s5q_wq">
  <title>Valid Type Conversions</title>
  <shortdesc>The following table lists the data types that can be converted to another data type.
-  Byte Array, List, and Map data types cannot be converted.</shortdesc>
+  List and Map data types cannot be converted.</shortdesc>
  <conbody>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_wgg_wgd_br">
@@ -82,7 +82,7 @@
       </row>
       <row>
        <entry>String</entry>
-       <entry>All supported data types except for Byte Array, List, and Map</entry>
+       <entry>All supported data types except List and Map</entry>
       </row>
       <row>
        <entry>Time</entry>
