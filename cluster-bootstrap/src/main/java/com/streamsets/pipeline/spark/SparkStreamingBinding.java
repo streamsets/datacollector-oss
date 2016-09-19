@@ -45,7 +45,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
   private static final String KAFKA_AUTO_RESET_LARGEST = "largest";
 
   private static final Map<String, String> KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES = new HashMap<>();
-
+  private static final String GROUP_ID_KEY = "group.id";
   static {
     KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_EARLIEST, KAFKA_AUTO_RESET_SMALLEST);
     KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_LATEST, KAFKA_AUTO_RESET_LARGEST);
@@ -60,6 +60,11 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     return Utils.getKafkaTopic(getProperties());
   }
 
+  @Override
+  protected String getConsumerGroup() {
+    return Utils.getKafkaConsumerGroup(getProperties());
+  }
+
   static String getConfigurableAutoOffsetResetIfNonEmpty(String autoOffsetValue) {
     String configurableAutoOffsetResetValue = KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.get(autoOffsetValue);
     return (configurableAutoOffsetResetValue == null)? autoOffsetValue : configurableAutoOffsetResetValue;
@@ -70,6 +75,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       SparkConf conf,
       String checkPointPath,
       String topic,
+      String groupId,
       String autoOffsetValue,
       boolean isRunningInMesos
   ) {
@@ -79,6 +85,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
         checkPointPath.toString(),
         Utils.getKafkaMetadataBrokerList(getProperties()),
         topic,
+        groupId,
         autoOffsetValue,
         isRunningInMesos
     );
@@ -91,11 +98,20 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     private final String checkPointPath;
     private final String metaDataBrokerList;
     private final String topic;
+    private final String groupId;
     private final boolean isRunningInMesos;
     private String autoOffsetValue;
 
-    public JavaStreamingContextFactoryImpl(SparkConf sparkConf, long duration, String checkPointPath,
-                                           String metaDataBrokerList, String topic, String autoOffsetValue, boolean isRunningInMesos) {
+    public JavaStreamingContextFactoryImpl(
+        SparkConf sparkConf,
+        long duration,
+        String checkPointPath,
+        String metaDataBrokerList,
+        String topic,
+        String groupId,
+        String autoOffsetValue,
+        boolean isRunningInMesos
+    ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
       this.checkPointPath = checkPointPath;
@@ -103,6 +119,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       this.topic = topic;
       this.autoOffsetValue = autoOffsetValue;
       this.isRunningInMesos = isRunningInMesos;
+      this.groupId = groupId;
     }
 
     @Override
@@ -111,6 +128,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       result.checkpoint(checkPointPath);
       Map<String, String> props = new HashMap<String, String>();
       props.put("metadata.broker.list", metaDataBrokerList);
+      props.put(GROUP_ID_KEY, groupId);
       if (!autoOffsetValue.isEmpty()) {
         autoOffsetValue = getConfigurableAutoOffsetResetIfNonEmpty(autoOffsetValue);
         props.put(AUTO_OFFSET_RESET, autoOffsetValue);

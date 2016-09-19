@@ -46,8 +46,18 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
   }
 
   @Override
+  protected String getConsumerGroup() {
+    return Utils.getMaprStreamsConsumerGroup(getProperties());
+  }
+
+  @Override
   protected JavaStreamingContextFactory getStreamingContextFactory(
-      SparkConf conf, String checkPointPath, String topic, String autoOffsetValue, boolean isRunningInMesos
+      SparkConf conf,
+      String checkPointPath,
+      String topic,
+      String groupId,
+      String autoOffsetValue,
+      boolean isRunningInMesos
   ) {
     return new JavaStreamingContextFactoryImpl(
         conf,
@@ -55,7 +65,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
         checkPointPath,
         topic,
         Utils.getPropertyOrEmptyString(getProperties(), AUTO_OFFSET_RESET),
-        Utils.getMaprStreamsGroupId(getProperties()),
+        groupId,
         isRunningInMesos
     );
   }

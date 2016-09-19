@@ -40,7 +40,7 @@ public class TestMapRUtils {
     Assert.assertEquals(4000, Utils.getMaprStreamsWaitTime(properties));
     Assert.assertEquals("smallest", Utils.getPropertyOrEmptyString(properties, AbstractStreamingBinding
         .AUTO_OFFSET_RESET));
-    Assert.assertEquals("consumerGroup", Utils.getMaprStreamsGroupId(properties));
+    Assert.assertEquals("consumerGroup", Utils.getMaprStreamsConsumerGroup(properties));
     Assert.assertEquals(2000, Utils.getMaprStreamsMaxBatchSize(properties));
   }
 }

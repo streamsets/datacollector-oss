@@ -22,10 +22,18 @@ package com.streamsets.pipeline.spark;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestAbstractStreamingBinding {
+public class TestCheckpointPath {
 
   @Test
-  public void testEncode() {
-    Assert.assertEquals("a%2Fb%2Fc", AbstractStreamingBinding.encode("a/b/c"));
+  public void testCheckPointPath() {
+    try {
+      new CheckpointPath.Builder("abc").build();
+      Assert.fail("Expected IllegalArgumentException but didn't get any");
+    } catch (IllegalArgumentException e) {
+
+    }
+    CheckpointPath checkpointPath = new CheckpointPath.Builder("A").sdcId("B").topic("C").consumerGroup("D")
+        .pipelineName("E").build();
+    Assert.assertEquals("A/B/C/D/E", checkpointPath.getPath());
   }
 }

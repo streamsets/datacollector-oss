@@ -34,14 +34,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 public abstract class AbstractStreamingBinding implements ClusterBinding {
   static final String AUTO_OFFSET_RESET = "auto.offset.reset";
+  static final String CHECKPOINT_BASE_DIR = ".streamsets-spark-streaming";
+  static final String SDC_ID = "sdc.id";
+  static final String CLUSTER_PIPELINE_NAME = "cluster.pipeline.name";
   private static final Logger LOG = LoggerFactory.getLogger(AbstractStreamingBinding.class);
   private final boolean isRunningInMesos;
   private JavaStreamingContext ssc;
@@ -58,6 +58,19 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
 
   protected abstract String getTopic();
 
+  protected abstract String getConsumerGroup();
+
+  //Visible For Testing (TODO - Import guava and make sure it doesn't conflict with spark's rootclassloader)
+  CheckpointPath getCheckPointPath(String topic, String consumerGroup) {
+    CheckpointPath sdcCheckpointPath = new CheckpointPath.Builder(CHECKPOINT_BASE_DIR)
+        .sdcId(Utils.getPropertyNotNull(properties, SDC_ID))
+        .topic(topic)
+        .consumerGroup(consumerGroup)
+        .pipelineName(Utils.getPropertyNotNull(properties, CLUSTER_PIPELINE_NAME))
+        .build();
+    return sdcCheckpointPath;
+  }
+
   @Override
   public void init() throws Exception {
     for (Object key : properties.keySet()) {
@@ -66,6 +79,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
     final String topic = getTopic();
+    final String consumerGroup = getConsumerGroup();
     Configuration hadoopConf = new SparkHadoopUtil().newConfiguration(conf);
     if (isRunningInMesos) {
       hadoopConf = getHadoopConf(hadoopConf);
@@ -75,14 +89,15 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
     logMessage("Default FS URI: " + hdfsURI, isRunningInMesos);
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
-    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"
-      + Utils.getPropertyNotNull(properties, "sdc.id") + "/" + encode(topic));
-    // encode as remote pipeline name might have colon within it
-    String pipelineName = encode(Utils.getPropertyNotNull(properties, "cluster.pipeline.name"));
-    final Path checkPointPath = new Path(sdcCheckpointPath, pipelineName);
+
+
+    final Path checkPointPath = new Path(
+        hdfs.getHomeDirectory(),
+        getCheckPointPath(topic, consumerGroup).getPath()
+    );
     hdfs.mkdirs(checkPointPath);
     if (!hdfs.isDirectory(checkPointPath)) {
-      throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);
+      throw new IllegalStateException("Could not create checkpoint path: " + checkPointPath);
     }
     if (isRunningInMesos) {
       String scheme = hdfsURI.getScheme();
@@ -105,6 +120,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
         conf,
         checkPointPath.toString(),
         topic,
+        consumerGroup,
         Utils.getPropertyOrEmptyString(properties, AUTO_OFFSET_RESET),
         isRunningInMesos
     );
@@ -130,17 +146,10 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
       SparkConf conf,
       String checkPointPath,
       String topic,
+      String groupId,
       String autoOffsetValue,
       boolean isRunningInMesos
   );
-
-  static String encode(String s) {
-    try {
-      return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Could not find UTF-8: " + e, e);
-    }
-  }
 
   private Configuration getHadoopConf(Configuration conf) {
     String hdfsS3ConfProp = Utils.getPropertyOrEmptyString(properties, "hdfsS3ConfDir");

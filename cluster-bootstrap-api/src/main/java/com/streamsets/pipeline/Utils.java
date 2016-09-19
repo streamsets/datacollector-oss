@@ -22,10 +22,19 @@ package com.streamsets.pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Utils {
   private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
+  // we cache a split version of the templates to speed up formatting
+  private static final Map<String, String[]> TEMPLATES = new ConcurrentHashMap<>();
+
+  private static final String TOKEN = "{}";
+
 
   public static final String CLUSTER_HDFS_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.";
   public static final String CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX = CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
@@ -42,6 +51,44 @@ public class Utils {
       throw new NullPointerException(varName + " cannot be null");
     }
     return value;
+  }
+
+  public static void checkArgument(boolean expression, String msg, Object ... params) {
+    if (!expression) {
+      throw new IllegalArgumentException((msg != null) ? format(msg, params) : "");
+    }
+  }
+
+  static String[] prepareTemplate(String template) {
+    List<String> list = new ArrayList<>();
+    int pos = 0;
+    int nextToken = template.indexOf(TOKEN, pos);
+    while (nextToken > -1 && pos < template.length()) {
+      list.add(template.substring(pos, nextToken));
+      pos = nextToken + TOKEN.length();
+      nextToken = template.indexOf(TOKEN, pos);
+    }
+    list.add(template.substring(pos));
+    return list.toArray(new String[list.size()]);
+  }
+
+  // fast version of SLF4J MessageFormat.format(), uses {} tokens,
+  // no escaping is supported, no array content printing either.
+  public static String format(String template, Object... args) {
+    String[] templateArr = TEMPLATES.get(template);
+    if (templateArr == null) {
+      // we may have a race condition here but the end result is idempotent
+      templateArr = prepareTemplate(template);
+      TEMPLATES.put(template, templateArr);
+    }
+    StringBuilder sb = new StringBuilder(template.length() * 2);
+    for (int i = 0; i < templateArr.length; i++) {
+      sb.append(templateArr[i]);
+      if (args != null && (i < templateArr.length - 1)) {
+        sb.append((i < args.length) ? args[i] : TOKEN);
+      }
+    }
+    return sb.toString();
   }
 
   public static <T> T  checkArgumentNotNull(T arg, Object msg) {
@@ -83,11 +130,15 @@ public class Utils {
     return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "topic");
   }
 
+  public static String getKafkaConsumerGroup(Properties properties) {
+    return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup");
+  }
+
   public static String getMaprStreamsTopic(Properties properties) {
     return getPropertyNotNull(properties, MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "topic");
   }
 
-  public static String getMaprStreamsGroupId(Properties properties) {
+  public static String getMaprStreamsConsumerGroup(Properties properties) {
     return getPropertyNotNull(properties, MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "consumerGroup");
   }
 
