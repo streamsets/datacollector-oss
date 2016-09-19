@@ -57,11 +57,15 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final boolean ignoreNamespace;
   private final String fieldDelimiter;
   private final String attrDelimiter;
+  private final boolean keepExistingFields;
+  private final boolean newFieldsOverwrite;
   private final DocumentBuilderFactory factory;
   private ErrorRecordHandler errorRecordHandler;
 
   public XMLFlatteningProcessor(
       String fieldPath,
+      boolean keepExistingFields,
+      boolean newFieldsOverwrite,
       String recordDelimiter,
       String fieldDelimiter,
       String attrDelimiter,
@@ -70,6 +74,8 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   ) {
     super();
     this.fieldPath = fieldPath;
+    this.keepExistingFields = keepExistingFields;
+    this.newFieldsOverwrite = newFieldsOverwrite;
     this.recordDelimiter = recordDelimiter;
     this.fieldDelimiter = fieldDelimiter;
     this.attrDelimiter = attrDelimiter;
@@ -77,6 +83,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
     this.ignoreNamespace = ignoreNamespace;
     factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
+
   }
 
   @Override
@@ -108,6 +115,19 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
 
   @Override
   public void process(Record record, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
+
+    if (keepExistingFields && !record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+      String errorValue;
+      if (record.get().getType() == Field.Type.LIST) {
+        errorValue = record.get().getValueAsList().toString();
+      } else {
+        errorValue = record.get().toString();
+      }
+      throw new OnRecordErrorException(
+          CommonError.CMN_0100, record.get().getType().toString(),
+          errorValue, record.toString());
+    }
+
     Field original = record.get(fieldPath);
     String xmlData = null;
     if (original != null) {
@@ -116,6 +136,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
           throw new OnRecordErrorException(
               CommonError.CMN_0100, original.getType().toString(), original.getValue().toString(), record.toString());
         }
+
         xmlData = record.get(fieldPath).getValueAsString();
         Document doc = factory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlData.getBytes()));
         doc.getDocumentElement().normalize();
@@ -127,8 +148,12 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         List<Record> results = new LinkedList<>();
         if (recordDelimiter == null || recordDelimiter.isEmpty() || root.getNodeName().equals(recordDelimiter)) {
           currentlyInRecord = true;
-          newR = getContext().createRecord(record);
-          newR.set(Field.create(new HashMap<String, Field>()));
+          if (keepExistingFields) {
+            newR = getContext().cloneRecord(record);
+          } else {
+            newR = getContext().createRecord(record);
+            newR.set(Field.create(new HashMap<String, Field>()));
+          }
           prefix = root.getTagName();
           addAttrs(newR, root, prefix);
           results.add(newR);
@@ -186,7 +211,12 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       Node next = nodeList.item(i);
       // Text node - add it as a field, if we are currently in a record
       if (currentlyInRecord && next.getNodeType() == Node.TEXT_NODE) {
-        record.set("/" + current.prefix, Field.create(((Text) next).getWholeText()));
+        // If we don't need to keep existing fields, just write
+        // If we need to keep existing fields, overwrite only if the original field does not exist
+        // If we need to keep existing fields, and the current record has the path, overwrite only if newFieldsOverwrite
+        if (!keepExistingFields || !record.has("/" + current.prefix) || newFieldsOverwrite) {
+          record.set("/" + current.prefix, Field.create(((Text) next).getWholeText()));
+        }
       } else if (next.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) next;
         String tagName = element.getTagName();
@@ -196,8 +226,13 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         if (!currentlyInRecord && element.getNodeName().equals(recordDelimiter)) {
           // Create a new record
           elementPrefix = tagName;
-          Record newR = getContext().createRecord(originalRecord);
-          newR.set(Field.create(new HashMap<String, Field>()));
+          Record newR;
+          if (keepExistingFields) {
+            newR = getContext().cloneRecord(originalRecord);
+          } else {
+            newR = getContext().createRecord(originalRecord);
+            newR.set(Field.create(new HashMap<String, Field>()));
+          }
           recordList.add(newR);
           addAttrs(newR, element, elementPrefix);
           processXML(newR, true, new XMLNode(element, tagName), recordList, record);

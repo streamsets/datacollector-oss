@@ -32,11 +32,14 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.streamsets.pipeline.lib.util.CommonError.CMN_0100;
 
 public class TestXMLFlatteningProcessor {
 
@@ -64,9 +67,9 @@ public class TestXMLFlatteningProcessor {
         "<phone>(111)111-1111</phone><phone>(222)222-2222</phone></contact>";
   }
 
-  private Map<String, Field> createExpectedRecord(String prefix, String id, String offset, String delimStr,
+  private LinkedHashMap<String, Field> createExpectedRecord(String prefix, String id, String offset, String delimStr,
                                                   String attrStr, boolean addAttrs, boolean addNS) {
-    Map<String, Field> fields = new LinkedHashMap<>();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
     String baseName = prefix + "contact" + offset + delimStr;
 
     if (addAttrs) {
@@ -88,7 +91,7 @@ public class TestXMLFlatteningProcessor {
     String xml = getXML("");
     Record expected = RecordCreator.create();
     expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", false, false)));
-    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true);
+    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
 
   @Test
@@ -96,7 +99,7 @@ public class TestXMLFlatteningProcessor {
     String xml = getXML("");
     Record expected = RecordCreator.create();
     expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", true, false)));
-    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, false, true);
+    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, false, true, false, false);
   }
 
   @Test
@@ -104,7 +107,7 @@ public class TestXMLFlatteningProcessor {
     String xml = getXML("");
     Record expected = RecordCreator.create();
     expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", false, true)));
-    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, false);
+    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, false, false, false);
   }
 
   @Test
@@ -113,7 +116,7 @@ public class TestXMLFlatteningProcessor {
     Record expected = RecordCreator.create();
     expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", true, true)));
     doTest(xml, "contact", "_", ".", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD,
-        false, false);
+        false, false, false, false);
   }
 
   @Test
@@ -124,7 +127,7 @@ public class TestXMLFlatteningProcessor {
     Record expected2 = RecordCreator.create();
     expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#",false, false)));
     List<Record> expected = ImmutableList.of(expected1, expected2);
-    doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true);
+    doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
 
   @Test
@@ -134,7 +137,7 @@ public class TestXMLFlatteningProcessor {
     Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", false, false);
     allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", false, false));
     expected.set(Field.create(allFields));
-    doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true);
+    doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
 
   @Test
@@ -144,7 +147,7 @@ public class TestXMLFlatteningProcessor {
 
   @Test
   public void testInvalidConfig() throws Exception {
-    processor = new XMLFlatteningProcessor(ORIGINAL, "contact", "]", "[", true, true);
+    processor = new XMLFlatteningProcessor(ORIGINAL,false, false, "contact", "]", "[", true, true);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(OnRecordError.DISCARD).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
@@ -177,7 +180,7 @@ public class TestXMLFlatteningProcessor {
   }
 
   private void doTestInvalidRecord(OnRecordError onRecordError, boolean nonString) throws Exception{
-    processor = new XMLFlatteningProcessor(ORIGINAL, "<contact>", ".", "#", true, true);
+    processor = new XMLFlatteningProcessor(ORIGINAL, false, false, "<contact>", ".", "#", true, true);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(onRecordError).build();
     runner.runInit();
@@ -199,9 +202,50 @@ public class TestXMLFlatteningProcessor {
     }
   }
 
+  @Test
+  public void testMultipleRecordsKeepOriginalFields() throws Exception {
+    String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
+    Record expected1 = RecordCreator.create();
+    expected1.set(Field.createListMap(createExpectedRecord("", "0", "", ".", "#",false, false)));
+    expected1.set("/contact.name", Field.create("streamsets"));
+    Record expected2 = RecordCreator.create();
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#",false, false)));
+    expected2.set("/contact.name", Field.create("streamsets"));
+    List<Record> expected = ImmutableList.of(expected1, expected2);
+    doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, true, false);
+  }
+
+  @Test
+  public void testMultipleRecordsKeepOriginalFieldsOverWrite() throws Exception {
+    String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
+    Record expected1 = RecordCreator.create();
+    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#",false, false)));
+    expected1.set("/contact.name", Field.create("streamsets"));
+    Record expected2 = RecordCreator.create();
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#",false, false)));
+    List<Record> expected = ImmutableList.of(expected1, expected2);
+    doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, true, true);
+  }
+
+  @Test
+  public void testNonMap() throws Exception {
+    Record expected1 = RecordCreator.create();
+    expected1.set(Field.create(new ArrayList<Field>()));
+    processor = new XMLFlatteningProcessor(ORIGINAL, true, false, "", "", "", false, false);
+    ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
+        .addOutputLane("xml").setOnRecordError(OnRecordError.STOP_PIPELINE).build();
+    try {
+      runner.runInit();
+      runner.runProcess(ImmutableList.of(expected1));
+      Assert.fail();
+    } catch (StageException ex) {
+      Assert.assertEquals(CMN_0100, ex.getErrorCode());
+    }
+  }
+
   private void doTest(String xml, String delimiter, List<Record> expected, List<Record> error, OnRecordError onRecordError,
-      boolean ignoreAttrs, boolean ignoreNS) throws Exception {
-    doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS);
+      boolean ignoreAttrs, boolean ignoreNS, boolean keepFields, boolean newFieldOverwrites) throws Exception {
+    doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS, keepFields, newFieldOverwrites);
   }
 
   private void doTest(
@@ -213,18 +257,30 @@ public class TestXMLFlatteningProcessor {
       List<Record> error,
       OnRecordError onRecordError,
       boolean ignoreAttrs,
-      boolean ignoreNS
+      boolean ignoreNS,
+      boolean keepFields,
+      boolean newFieldOverwrites
   ) throws Exception {
-    processor = new XMLFlatteningProcessor(ORIGINAL, delimiter, fieldDelim, attrDelim, ignoreAttrs, ignoreNS);
+    processor = new XMLFlatteningProcessor(ORIGINAL, keepFields, newFieldOverwrites, delimiter, fieldDelim, attrDelim, ignoreAttrs, ignoreNS);
     ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
         .addOutputLane("xml").setOnRecordError(onRecordError).build();
     runner.runInit();
-    StageRunner.Output output = runner.runProcess(ImmutableList.of(createRecord(xml)));
+    Record r = createRecord(xml);
+    if (keepFields && !newFieldOverwrites) {
+      r.set("/contact.name", Field.create("streamsets"));
+    }
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(r));
     for (int i = 0; i < expected.size(); i++) {
       Record currentExpected = expected.get(i);
+      if (keepFields) {
+        currentExpected.set(ORIGINAL, Field.create(xml));
+        if (newFieldOverwrites && i == 0) {
+          currentExpected.set("/contact.name", Field.create("NAME0"));
+        }
+      }
       Record result = output.getRecords().get("xml").get(i);
       // Comparing the root field is good enough
-      Assert.assertEquals(currentExpected.get(), result.get());
+      Assert.assertEquals(currentExpected.get().getValueAsMap(), result.get().getValueAsMap());
     }
   }
 }

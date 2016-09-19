@@ -27,11 +27,11 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
-
 @StageDef(
-    version = 1,
+    version = 2,
     label = "XML Flattener",
     description = "Flatten XML data into fields of a record",
+    upgrader = XMLFlatteningProcessorUpgrader.class,
     icon = "xmlparser.png",
     onlineHelpRefUrl = "index.html#Processors/XMLFlattener.html#task_pmb_l55_sv"
 )
@@ -52,12 +52,37 @@ public class XMLFlatteningDProcessor extends DProcessor {
   public String fromField;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Keep Original Fields",
+      description = "Whether all fields in original record should be kept. " +
+          "If this is set, the root field of the record must be a Map or List Map.",
+      displayPosition = 20,
+      group = "XML"
+  )
+  public boolean keepOriginalFields;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "New Fields overwrite old fields, if they exist at same path",
+      description = "Whether namespace URIs should be ignored.",
+      displayPosition = 30,
+      group = "XML",
+      dependsOn = "keepOriginalFields",
+      triggeredByValue = "true"
+  )
+  public boolean newFieldOverwrites;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue="",
       label = "Record Delimiter",
       description = "XML element used to delimit records. If this is not specified, only a single record is generated.",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "XML"
   )
   public String recordDelimiter;
@@ -68,7 +93,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       defaultValue=".",
       label = "Field Delimiter",
       description = "The string used to separate entity names in the flattened field names.",
-      displayPosition = 30,
+      displayPosition = 50,
       group = "XML"
   )
   public String fieldDelimiter;
@@ -79,7 +104,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       defaultValue="#",
       label = "Attribute Delimiter",
       description = "The string used to separate attributes in the flattened field names.",
-      displayPosition = 50,
+      displayPosition = 60,
       group = "XML"
   )
   public String attrDelimiter;
@@ -90,7 +115,7 @@ public class XMLFlatteningDProcessor extends DProcessor {
       defaultValue = "false",
       label = "Ignore Attributes",
       description = "Whether attributes of elements should be ignored.",
-      displayPosition = 60,
+      displayPosition = 70,
       group = "XML"
   )
   public boolean ignoreAttributes;
@@ -101,14 +126,14 @@ public class XMLFlatteningDProcessor extends DProcessor {
       defaultValue = "false",
       label = "Ignore Namespace URI",
       description = "Whether namespace URIs should be ignored.",
-      displayPosition = 70,
+      displayPosition = 80,
       group = "XML"
   )
   public boolean ignoreNamespace;
 
   @Override
   protected Processor createProcessor() {
-    return new XMLFlatteningProcessor(fromField, recordDelimiter, fieldDelimiter, attrDelimiter,
-        ignoreAttributes, ignoreNamespace);
+    return new XMLFlatteningProcessor(fromField, keepOriginalFields, newFieldOverwrites,recordDelimiter,
+        fieldDelimiter, attrDelimiter, ignoreAttributes, ignoreNamespace);
   }
 }
