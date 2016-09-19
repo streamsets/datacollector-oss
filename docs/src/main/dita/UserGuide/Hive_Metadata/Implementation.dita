@@ -22,9 +22,8 @@
                 <li> Configure the origin and any additional processors that you want to use. <ul
                         id="ul_qjn_kp4_hx">
                         <li>If using the JDBC Consumer as the origin, enable the creation of JDBC
-                            namespace header attributes. For more information, see <xref
-                                href="../Origins/JDBCConsumer-HeaderHDS.dita#concept_tvf_tgp_fx"/>.
-                        </li>
+                            header attributes. For more information, see <xref
+                                href="../Origins/JDBCConsumer-HeaderHDS.dita#concept_tvf_tgp_fx"/>. </li>
                         <li>If data includes records with nested fields, add a Field Flattener to
                             flatten records before passing them to the Hive Metadata processor.</li>
                     </ul></li>
@@ -40,8 +39,8 @@
                                 use constants or expressions that evaluate to the same precision and
                                 scale for all decimal fields. Or, you can create more complex
                                 expressions that evaluate to different values for different fields.
-                                </p><p>When processing data from the JDBC Consumer with namespace
-                                header attributes, use the default expressions. </p></li>
+                                </p><p>When processing data from the JDBC Consumer with JDBC header
+                                attributes, use the default expressions. </p></li>
                         <li>Optionally configure advanced options, such as the maximum cache size,
                             time basis, and data time zone.</li>
                     </ul><p>For more information about the Hive Metadata processor, see <xref

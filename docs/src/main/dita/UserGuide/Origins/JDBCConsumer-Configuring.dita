@@ -192,19 +192,21 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Create JDBC Namespace Headers <xref
+                                    <entry>Create JDBC Header Attributes <xref
                                             href="JDBCConsumer-HeaderAttributes.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_n2r_rjj_kw"/>
                                         </xref></entry>
-                                    <entry>Use to add JDBC namespace header attributes to records. <p>
-                                            <note>Select this option when using the origin with the
-                                                Hive Drift Solution.</note>
+                                    <entry>Adds JDBC header attributes to records. The origin
+                                        creates JDBC header attributes by default. <p>
+                                            <note>When using the origin with the Hive Drift
+                                                Solution, make sure this property is
+                                                selected.</note>
                                         </p></entry>
                                 </row>
                                 <row>
                                     <entry>JDBC Header Prefix</entry>
-                                    <entry>Prefix for namespace header attributes. </entry>
+                                    <entry>Prefix for JDBC header attributes. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

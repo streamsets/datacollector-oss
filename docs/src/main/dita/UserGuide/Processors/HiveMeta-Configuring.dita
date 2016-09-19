@@ -121,11 +121,11 @@
                                         precisions for different fields.<note
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-MaxHivePS"
                                             /><p>The default expression determines the precision
-                                            based on information in the JDBC namespace header
-                                            attribute. </p><p>Use the default only when processing
-                                            data from a JDBC Consumer with namespace headers
-                                            enabled. Replace "jdbc" with the configured JDBC header
-                                            prefix when necessary. </p></entry>
+                                            based on information in the JDBC header attribute.
+                                            </p><p>Use the default only when processing data from a
+                                            JDBC Consumer with JDBC header attributes enabled.
+                                            Replace "jdbc" with the configured JDBC header prefix
+                                            when necessary. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Decimal Scale Expression <xref
@@ -139,9 +139,9 @@
                                         for different fields. <note
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-MaxHivePS"
                                             /><p>The default expression determines the scale based
-                                            on information in the JDBC namespace header attribute.
-                                            </p><p>Use the default only when processing data from a
-                                            JDBC Consumer with namespace headers enabled. Replace
+                                            on information in the JDBC header attribute. </p><p>Use
+                                            the default only when processing data from a JDBC
+                                            Consumer with JDBC header attributes enabled. Replace
                                             "jdbc" with the configured JDBC header prefix when
                                             necessary. </p></entry>
                                 </row>

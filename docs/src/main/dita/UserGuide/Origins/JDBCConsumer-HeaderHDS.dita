@@ -14,28 +14,29 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tvf_tgp_fx">
- <title>Namespace Header Attributes with the Hive Drift Solution</title>
+ <title>JDBC Header Attributes with the Hive Drift Solution</title>
  <conbody>
-  <p><indexterm>JDBC namespace header attributes<indexterm>using with the Hive Drift
-                    Solution</indexterm></indexterm><indexterm>Hive Drift Solution<indexterm>Using
-                    the JDBC Consumer namespace header attributes</indexterm></indexterm>When you
-            use the JDBC Consumer as part of the Hive Drift Solution, configure the origin to create
-            JDBC namespace header attributes. </p>
-        <p>Creating JDBC namespace header attributes allows the Hive Metadata processor to use the
-            precision and scale attributes to define decimal fields.</p>
+  <p><indexterm>JDBC header attributes<indexterm>using with the Hive Drift
+                Solution</indexterm></indexterm><indexterm>Hive Drift Solution<indexterm>Using the
+                    JDBC Consumer header attributes</indexterm></indexterm>When you use the JDBC
+            Consumer with the Hive Drift Solution, ensure that the origin creates JDBC header
+            attributes. </p>
+        <p>JDBC header attributes allow the Hive Metadata processor to use the precision and scale
+            information in the attributes to define decimal fields.</p>
         <p>To enable the Hive Metadata processor to define decimal fields as needed, perform the
             following steps:<ol id="ul_bbf_bmp_fx">
-                <li>In the JDBC Consumer, on the <wintitle>Advanced</wintitle> tab, select
-                        <uicontrol>Create JDBC Namespace Headers</uicontrol>.</li>
+                <li>In the JDBC Consumer, on the <wintitle>Advanced</wintitle> tab, make sure that
+                        <uicontrol>Create JDBC Header Attributes</uicontrol> is selected.</li>
                 <li>On the same tab, you can optionally configure <uicontrol>JDBC Header
                         Prefix</uicontrol>. </li>
                 <li>In the Hive Metadata processor, if necessary, configure the <uicontrol>Decimal
                         Precision Expression</uicontrol> and <uicontrol>Decimal Scale
                         Expression</uicontrol> properties on the <uicontrol>Hive</uicontrol> tab.
-                        <p>If you changed the default value for JDBC Header Prefix, then update the
-                        "jdbc." string in the expression to use the specified JDBC Header
-                        Prefix.</p><p>If you did not change the JDBC Header Prefix default value,
-                        then use the default expressions for the properties.</p></li>
+                        <p>If you changed the default value for JDBC Header Prefix in the JDBC
+                        Consumer, then update the "jdbc." string in the expressions to use the
+                        correct JDBC Header Prefix.</p><p>If you did not change the JDBC Header
+                        Prefix default value, then use the default expressions for the
+                        properties.</p></li>
             </ol></p>
  </conbody>
     <related-links>

@@ -24,21 +24,20 @@
             of 10 and scale of 2 for all decimal fields.</p>
         <p>Or you can create a more complex expression that evaluates to different values for
             different decimal fields. </p>
-        <p>The default expressions for these properties use JDBC namespace header attributes. You
-            can use the following default expressions when processing data from the JDBC
+        <p>The default expressions for these properties use JDBC header attributes. You can use the
+            following default expressions when processing data from the JDBC
             Consumer:<codeblock>${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}
 ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}</codeblock></p>
         <p>The <codeph>field:field</codeph> function returns the name of the field. So by default,
             the expressions resolve
             to:<codeblock>${record:attribute(jdbc.&lt;fieldname>.precision)}
 ${record:attribute(jdbc.&lt;fieldname>.scale)}</codeblock></p>
-        <p><note>To use these default expressions, you must enable creating the JDBC namespace
-                header attributes in the JDBC Consumer. This allows the JDBC Consumer to write the
-                precision and scale of each decimal field as a record header attribute. </note>In
-            these expressions, 'jdbc.' represents the default prefix for the JDBC namespace header
-            attributes. You can change the prefix in the JDBC Consumer. If you change the prefix, be
-            sure to update it in the decimal field expressions.</p>
-        <p>For information about enabling the JDBC Consumer to create namespace header attributes,
-            see <xref href="../Origins/JDBCConsumer-HeaderHDS.dita#concept_tvf_tgp_fx"/>.</p>
+        <p><note>The JDBC Consumer creates JDBC header attributes by default, writing the precision
+                and scale of each decimal field to a record header attribute. </note>In these
+            expressions, 'jdbc.' represents the default prefix for the JDBC header attributes. You
+            can change the prefix in the JDBC Consumer. If you change the prefix, be sure to update
+            it in the decimal field expressions.</p>
+        <p>For information about enabling the JDBC Consumer to create JDBC header attributes, see
+                <xref href="../Origins/JDBCConsumer-HeaderHDS.dita#concept_tvf_tgp_fx"/>.</p>
  </conbody>
 </concept>

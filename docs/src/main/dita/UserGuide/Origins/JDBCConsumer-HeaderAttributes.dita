@@ -14,24 +14,28 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_egw_d4c_kw">
- <title>JDBC Namespace Header Attributes </title>
+ <title>JDBC Header Attributes </title>
  <conbody>
-  <p><indexterm>JDBC Consumer origin<indexterm>JDBC namespace header
-                attributes</indexterm></indexterm><indexterm>JDBC namespace header
-                    attributes<indexterm>JDBC Consumer</indexterm></indexterm>The JDBC Consumer can
-            generate JDBC namespace header attributes that provide additional information about each
-            record, such as the original data type of a field or the source tables for the record.
-            The origin receives these details from the JDBC driver.</p>
+  <p><indexterm>JDBC Consumer origin<indexterm>JDBC header
+                attributes</indexterm></indexterm><indexterm>JDBC header attributes<indexterm>JDBC
+                    Consumer</indexterm></indexterm>The JDBC Consumer generates JDBC header
+            attributes that provide additional information about each record, such as the original
+            data type of a field or the source tables for the record. The origin receives these
+            details from the JDBC driver. </p>
         <p>You can use the record:attribute or record:attributeOrDefault functions to access the
             information in the attributes. </p>
-        <p>JDBC Consumer can provide the following JDBC namespace header attributes:<table
-                frame="all" rowsep="1" colsep="1" id="table_p1c_q5c_kw">
+        <p>JDBC header attributes include a user-defined prefix to differentiate the JDBC header
+            attributes from other record header attributes. By default, the prefix is "jdbc". You
+            can change the prefix that the origin uses and you can configure the origin not to
+            create JDBC header attributes.</p>
+        <p>JDBC Consumer can provide the following JDBC header attributes:<table frame="all"
+                rowsep="1" colsep="1" id="table_p1c_q5c_kw">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="2.0*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                     <thead>
                         <row>
-                            <entry>JDBC Namespace Header Attribute</entry>
+                            <entry>JDBC Header Attribute</entry>
                             <entry>Description</entry>
                         </row>
                     </thead>
@@ -60,12 +64,5 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p>To include the header attributes in the record, perform the following steps:<ul
-                id="ul_l5p_jvc_kw">
-                <li>On the <wintitle>Advanced</wintitle> tab, select <uicontrol>Create JDBC
-                        Namespace Headers</uicontrol>.</li>
-                <li>Configure a <uicontrol>JDBC Header Prefix</uicontrol>. The default is
-                    "jdbc".</li>
-            </ul></p>
  </conbody>
 </concept>
