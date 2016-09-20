@@ -186,7 +186,9 @@ public abstract class BaseHiveIT {
   @AfterClass
   public static void cleanUpClass() throws IOException {
     try {
-      hiveConnection.close();
+      if(hiveConnection != null) {
+        hiveConnection.close();
+      }
     } catch (SQLException e) {
       LOG.warn("Error while closing connection", e);
     }
