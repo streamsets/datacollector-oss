@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
@@ -35,6 +36,7 @@ import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.utils.TestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -63,7 +65,6 @@ public class TestKafkaTargetMultiPartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams12;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams13;
 
-  private static final String HOST = "localhost";
   private static final int PARTITIONS = 3;
   private static final int REPLICATION_FACTOR = 2;
   private static final String TOPIC1 = "TestKafkaTargetMultiPartition1";
@@ -163,7 +164,7 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get().getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams1.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams1.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams1) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -216,7 +217,7 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get().getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams2.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams2.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams2) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -229,7 +230,7 @@ public class TestKafkaTargetMultiPartition {
 
       for(String message : messages) {
         message = message.trim();
-        Assert.assertTrue(records.contains(message));
+        Assert.assertTrue(Utils.format("{} not in {}", message, StringUtils.join(records, ",")), records.contains(message));
         records.remove(message);
       }
       messages.clear();
@@ -276,19 +277,19 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get().getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams3.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams3.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams3) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
         while (it.hasNext()) {
-          messages.add(new String(it.next().message()));
+          messages.add(new String(it.next().message()).trim());
         }
       } catch (kafka.consumer.ConsumerTimeoutException e) {
         //no-op
       }
       Assert.assertEquals(3, messages.size());
       for(String message : messages) {
-        Assert.assertTrue(records.contains(message.trim()));
+        Assert.assertTrue(Utils.format("{} not in {}", message, StringUtils.join(records, ",")), records.contains(message));
       }
       messages.clear();
     }
@@ -466,7 +467,7 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get().getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams8.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams8.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams8) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -518,7 +519,7 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get("/topic").getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams9.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams9.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams9) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -531,7 +532,7 @@ public class TestKafkaTargetMultiPartition {
       Assert.assertEquals(1, messages.size());
       messages.clear();
     }
-    Assert.assertTrue(kafkaStreams10.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams10.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams10) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -544,7 +545,7 @@ public class TestKafkaTargetMultiPartition {
       Assert.assertEquals(1, messages.size());
       messages.clear();
     }
-    Assert.assertTrue(kafkaStreams11.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams11.size());
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams11) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
       try {
@@ -595,7 +596,7 @@ public class TestKafkaTargetMultiPartition {
       records.add(r.get().getValueAsString());
     }
     List<String> messages = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams12.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams12.size());
     int totalCount = 0;
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams12) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
@@ -652,7 +653,7 @@ public class TestKafkaTargetMultiPartition {
     }
     List<String> messages = new ArrayList<>();
     List<Integer> partitionSize = new ArrayList<>();
-    Assert.assertTrue(kafkaStreams13.size() == PARTITIONS);
+    Assert.assertEquals(PARTITIONS, kafkaStreams13.size());
     //All messages should be routed to same partition as the partition key is the same
     for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams13) {
       ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
