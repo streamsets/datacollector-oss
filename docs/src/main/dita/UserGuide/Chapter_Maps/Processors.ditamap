@@ -63,6 +63,9 @@
    <topicref href="../Processors/FieldRenamer-Configuring.dita"/></topicref>
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/FieldSplitter-NotEnoughSplits.dita"/>
+   <topicref href="../Processors/FieldSplitter-TooManySplits.dita"/>
+   <topicref href="../Processors/FieldSplitter-Example.dita"/>
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/FieldTypeConverter.dita" chunk="to-content">

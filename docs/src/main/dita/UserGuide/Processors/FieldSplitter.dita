@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vlj_vph_yq">
  <title>Field Splitter</title>
- <shortdesc>The Field Splitter splits string data based on a separator character and passes the
+ <shortdesc>The Field Splitter splits string data based on a regular expression and passes the
   separated data to new fields. Use the Field Splitter to split complex string values into logical
   components. </shortdesc>
  <conbody>
@@ -24,44 +24,10 @@
      Splitter</indexterm></indexterm>For example, if a field contains an error code and error
    message separated by a comma, you can use the comma to separate the code and message into
    different fields.</p>
-  <p>When a field includes additional data and separator characters, the Field Splitter includes the
-   remaining data in the last split field. </p>
-  <p>If a field cannot be split as requested, the Field Splitter can pass the record split as much
-   as possible, discard the record, pass the error to the pipeline for error handling, or stop the
-   pipeline. </p>
-  <p>You can keep data from the original field in the record or discard it. </p>
-  <section>
-   <title>Example</title>
-   <p>A Field Splitter uses a comma to split data into two fields and to discard records that cannot
-    be split as requested. When it encounters a single comma, it passes the data before the comma to
-    the ErrorCode field and the data after the comma to the ErrorMessage field. </p>
-   <p>When this Field Splitter processes the following records:<simpletable frame="none"
-     relcolwidth="1.0*" id="simpletable_dqy_dd3_yq">
-     <strow>
-      <stentry>
-       <codeblock>GM-302,information that you might need
-ME-3042,message about this error,"additional information from the server"
-IMD-03234</codeblock>
-      </stentry>
-     </strow>
-    </simpletable></p>
-   <p>The Field Splitter produces the following records:<simpletable frame="none"
-     relcolwidth="1.0* 4.1*" id="simpletable_kxh_fd3_yq">
-     <strow>
-      <stentry>
-       <codeblock><uicontrol>ErrorCode</uicontrol>
-GM-302 
-ME-3042</codeblock>
-      </stentry>
-      <stentry>
-       <codeblock><uicontrol>Message</uicontrol>
-information that you might need
-message about this error,"additional information from the server"</codeblock>
-      </stentry>
-     </strow>
-    </simpletable></p>
-   <p>The Field Splitter discards IMD-03234 because the record does not include enough data to be
-    split, and the processor is configured to discard such records. </p>
-  </section>
+  <p>When you configure the Field Splitter, you specify the field to split, the regular expression
+   to use as a separator, and the fields to use for split data. You configure what to do when a
+   record does not have the expected number of splits, and what to do when a record has additional
+   data with more possible splits. </p>
+  <p>You can keep the original field being split or discard it. </p>
  </conbody>
 </concept>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_axv_hkt_3x">
+ <title>Example</title>
+        <conbody>
+                <p>The following Field Splitter uses a comma to split data into two fields:
+            ErrorCode and ErrorMsg. The Not Enough Splits property sends records that do not have
+            enough splits to the stage for error handling, and the stage is configured to discard
+            error records. The Too Many Splits property writes additional data to a MoreInfo list
+            field. </p>
+        <p><image href="../Graphics/FieldSplitter.png" id="image_c42_vqt_3x" scale="50"/></p>
+                <p>Say the pipeline passes the processor the following set of records:<simpletable
+                frame="all" relcolwidth="1.0* 1.0*" id="simpletable_tzd_dmt_3x">
+                <sthead>
+                    <stentry><uicontrol>Datetime</uicontrol></stentry>
+                    <stentry><uicontrol>Error</uicontrol></stentry>
+                </sthead>
+                <strow>
+                    <stentry><codeph>21-09-2016 15:33:02</codeph></stentry>
+                    <stentry><codeph>GM-302,information that you might need</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>21-09-2016 15:35:53</codeph></stentry>
+                    <stentry><codeph>ME-3042,message about error,additional information from server,
+                            network error, driver error</codeph></stentry>
+                </strow>
+                <strow>
+                    <stentry><codeph>21-09-2016 15:55:48</codeph></stentry>
+                    <stentry><codeph>IMD-03234</codeph></stentry>
+                </strow>
+            </simpletable></p>
+                <p>When Field Splitter encounters a comma in the errors field, it passes the data
+            before the comma to the ErrorCode field and the data after the comma to the ErrorMsg
+            field and writes any additional fields to the MoreInfo list field. </p>
+        <p>The Field Splitter produces the following records. The processor discards IMD-03234
+            because the record does not include enough data to be split, and the processor is
+            configured to discard those records. </p>
+        <p>
+            <simpletable frame="all" relcolwidth="1.0* 1.0* 1.0* 1.0*" id="simpletable_b1g_grt_3x">
+                <sthead>
+                    <stentry><uicontrol>Datetime</uicontrol></stentry>
+                    <stentry><uicontrol>ErrorCode</uicontrol></stentry>
+                    <stentry><uicontrol>ErrorMsg</uicontrol></stentry>
+                    <stentry><uicontrol>MoreInfo</uicontrol></stentry>
+                </sthead>
+                <strow>
+                    <stentry><codeph>21-09-2016 15:33:02</codeph></stentry>
+                    <stentry><codeph>GM-302</codeph></stentry>
+                    <stentry><codeph>information that you might need</codeph></stentry>
+                    <stentry/>
+                </strow>
+                <strow>
+                    <stentry><codeph>21-09-2016 15:35:53</codeph></stentry>
+                    <stentry><codeph>ME-3042</codeph></stentry>
+                    <stentry><codeph>message about error</codeph></stentry>
+                    <stentry><codeph>- additional information from server</codeph><p><codeph>-
+                                network error</codeph></p><p><codeph>- driver
+                        error</codeph></p></stentry>
+                </strow>
+            </simpletable>
+        </p>
+            
+        </conbody>
+</concept>

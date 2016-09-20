@@ -25,7 +25,6 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-            
             <step>
                 <cmd>On the <wintitle>Split</wintitle> tab, configure the following
                     properties:</cmd>
@@ -47,30 +46,44 @@
                                 </row>
                                 <row>
                                     <entry>Separator</entry>
-                                    <entry>The character to use to split data in a field. Select one
-                                        of the listed characters or select
-                                            <uicontrol>Other</uicontrol> and enter a single
-                                        character to use.<p>You can enter a Unicode control
-                                            character using the format \u<i>NNNN</i>, where
-                                                ​<i>N</i> is a hexadecimal digit from the numbers
-                                            0-9 or the letters A-F. For example, enter \u0000 to use
-                                            the null character as the delimiter or \u2028 to use a
-                                            line separator as the delimiter.</p></entry>
+                                    <entry>The regular expression to use to split data in a field.
+                                        For some tips on using regular expressions, see <xref
+                                            href="../Apx-RegEx/RegEx-Overview.dita#concept_vd4_nsc_gs"
+                                        />.</entry>
                                 </row>
                                 <row>
                                     <entry>New Split Fields</entry>
-                                    <entry>Names of the new fields to pass the split data. Precede
-                                        each field name with a slash as follows: /NewField.</entry>
+                                    <entry>Names of the new fields to pass the split data.
+                                            <note>Precede each field name with a slash as
+                                                follows:<codeph> /NewField</codeph>.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Not Enough Splits</entry>
-                                    <entry>Determines how to handle records that cannot be split as
-                                            requested:<ul id="ul_n5d_xn3_yq">
+                                    <entry>Record handling when the data does not include as many
+                                        splits as the specified number of split fields: <ul
+                                            id="ul_n5d_xn3_yq">
                                             <li>Continue - Passes the record split as much as
                                                 possible with null values in unused split fields. </li>
                                             <li>Send to Error - Sends the record to the pipeline for
                                                 error handling. </li>
                                         </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Too Many Splits</entry>
+                                    <entry>Record handling when the data contains more potential
+                                        splits than the specified number of split fields:<ul
+                                            id="ul_vtx_ztt_3x">
+                                            <li>Put Remaining Text in Last Field - Writes any
+                                                additional data to the last split field. </li>
+                                            <li>Store Remaining Splits as List - Splits the
+                                                additional data and writes the splits to the
+                                                specified List field. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Field for Remaining Splits</entry>
+                                    <entry>List field for remaining splits. Used when the data
+                                        includes more splits than expected by the processor.</entry>
                                 </row>
                                 <row>
                                     <entry>Original Field</entry>
