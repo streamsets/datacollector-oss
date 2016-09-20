@@ -30,6 +30,7 @@
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>
                 <li>MongoDB</li>
+                <li>SFTP/FTP Client</li>
             </ul><p>For these origins, when you stop the pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> notes where it stopped processing data. When you restart the pipeline, it

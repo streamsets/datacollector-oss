@@ -25,6 +25,9 @@
             If the server requires authentication, configure the origin to use login credentials. If
             using the SFTP protocol, you can also configure the origin for strict host checking. </p>
         <p>You can configure the origin to download files to an archive directory if the origin
-            encounters errors while reading the files.</p>
+            encounters errors while reading the files. </p>
+        <p>When the pipeline stops, the SFTP/FTP Client origin notes where it stops reading. When
+            the pipeline starts again, the origin continues processing from where it stopped by
+            default. You can reset the origin to process all requested files.</p>
  </conbody>
 </concept>
