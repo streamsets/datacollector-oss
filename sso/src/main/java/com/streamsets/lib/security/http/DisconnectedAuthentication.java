@@ -20,6 +20,7 @@
 
 package com.streamsets.lib.security.http;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -27,10 +28,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 
 public class DisconnectedAuthentication implements Authentication {
   private static final Logger LOG = LoggerFactory.getLogger(DisconnectedAuthentication.class);
+
+  /**
+   * This is a role that is available in the principal to flag that a DPM enabled data collector is
+   * currently working in disconnected mode.
+   */
+  public static final String DISCONNECTED_MODE_ROLE = "disconected-sso";
 
   private final File file;
   private DisconnectedSessionHandler sessionHandler;
@@ -75,7 +83,8 @@ public class DisconnectedAuthentication implements Authentication {
           principal.setEmail("-");
           principal.setOrganizationId(userName.substring(userName.indexOf("@") + 1)); // org is extracted from username
           principal.setOrganizationName("-");
-          principal.getRoles().addAll(entry.getRoles());
+          Set<String> roles = new ImmutableSet.Builder().addAll(entry.getRoles()).add(DISCONNECTED_MODE_ROLE).build();
+          principal.getRoles().addAll(roles);
           principal.setTokenStr(UUID.randomUUID().toString());
           principal.setExpires(-1);
           principal.setRequestIpAddress(ipAddress);

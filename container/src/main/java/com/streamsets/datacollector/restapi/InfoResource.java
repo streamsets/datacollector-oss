@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.PipelineException;
 
+import com.streamsets.lib.security.http.DisconnectedAuthentication;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -93,6 +94,9 @@ public class InfoResource {
       }
       if (context.isUserInRole(AuthzRole.ADMIN) || context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
         roles.add(AuthzRole.ADMIN);
+      }
+      if (context.isUserInRole(DisconnectedAuthentication.DISCONNECTED_MODE_ROLE)) {
+        roles.add(DisconnectedAuthentication.DISCONNECTED_MODE_ROLE);
       }
     } else {
       //In case of http.authentication=none

@@ -76,7 +76,11 @@ public class TestDisconnectedAuthentication {
     Assert.assertEquals("-", principal.getEmail());
     Assert.assertEquals(-1, principal.getExpires());
     Assert.assertNotNull(UUID.fromString(principal.getTokenStr()));
-    Assert.assertEquals(ImmutableSet.of("datacollector:admin", "user"), principal.getRoles());
+      Assert.assertEquals(ImmutableSet.of(
+          "datacollector:admin",
+          "user",
+          DisconnectedAuthentication.DISCONNECTED_MODE_ROLE
+      ), principal.getRoles());
     Assert.assertTrue(principal.getAttributes().isEmpty());
     Assert.assertEquals("ip1", principal.getRequestIpAddress());
 
@@ -84,7 +88,11 @@ public class TestDisconnectedAuthentication {
     Assert.assertNotNull(principal);
     Assert.assertEquals("guest@org", principal.getPrincipalId());
     Assert.assertEquals("org", principal.getOrganizationId());
-    Assert.assertEquals(ImmutableSet.of("datacollector:guest", "user"), principal.getRoles());
+      Assert.assertEquals(ImmutableSet.of(
+          "datacollector:guest",
+          "user",
+          DisconnectedAuthentication.DISCONNECTED_MODE_ROLE
+      ), principal.getRoles());
 
     Assert.assertNull(authentication.validateUserCredentials("admin@org", "guest", "ip2"));
   }
