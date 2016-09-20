@@ -39,7 +39,16 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>GeoIP2 Database File </entry>
+                                    <entry>GeoIP2 Databases <xref
+                                            href="GeoIP-Databases.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w55_4yn_lw"/></xref></entry>
+                                    <entry>The MaxMind GeoIP databases that you want to use. Click
+                                        the <uicontrol>Add</uicontrol> icon to add additional
+                                        databases.</entry>
+                                </row>
+                                <row>
+                                    <entry>GeoIP2 Database File</entry>
                                     <entry>Directory where the GeoIP2 database file is located.
                                         Enter a fully-qualified location or the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -51,8 +60,12 @@
                                 </row>
                                 <row>
                                     <entry>GeoIP2 Database Type</entry>
-                                    <entry>Database type. You can use the GeoIP2 City or Country
-                                        database.</entry>
+                                    <entry>Database type. </entry>
+                                </row>
+                                <row>
+                                    <entry>Database Field Mappings</entry>
+                                    <entry>Mapping for each input field, output field, and the data
+                                        that you want returned in the output field. </entry>
                                 </row>
                                 <row>
                                     <entry>Input Field Name</entry>
@@ -65,9 +78,11 @@
                                         data.</entry>
                                 </row>
                                 <row>
-                                    <entry>GeoIP2 Field</entry>
-                                    <entry>Geolocation data to be passed by the output field.
-                                    </entry>
+                                    <entry>GeoIP2 Field <xref href="GeoIP-FieldTypes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_i55_xt3_hx"/></xref></entry>
+                                    <entry>Data from the available databases to be passed to the
+                                        output field. </entry>
                                 </row>
                                 <row>
                                     <entry>Missing Address Action</entry>

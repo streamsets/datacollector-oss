@@ -79,7 +79,11 @@
    <topicmeta>
    <shortdesc/>
   </topicmeta>
+   <topicref href="../Processors/GeoIP-Databases.dita"/>
    <topicref href="../Processors/GeoIP-DatabaseFileLocation.dita"/>
+   <topicref href="../Processors/GeoIP-FieldTypes.dita">
+    <topicref href="../Processors/GeoIP-FullJSON.dita"/>
+   </topicref>
    <topicref href="../Processors/GeoIP-Configuring.dita"/></topicref>
   <topicref href="../Processors/Groovy.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

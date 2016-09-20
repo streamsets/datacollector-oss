@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ewg_mgh_hx">
+ <title> GeoIP Field Types</title>
+ <conbody>
+  <p><indexterm>GeoIP processor<indexterm>supported databases</indexterm></indexterm>Each GeoIP2
+            database provides a different set of information that you can request. When you
+            configure the processor, be sure to request information that exists in the databases
+            that you are using.</p>
+        <p>For example, if you configure the processor to use the City and Country databases, do not
+            request domain information. To return domain details, you need to use the Domain
+            database.</p>
+        <p>In the processor, you request return values by defining the <uicontrol>GeoIP Field
+                Type</uicontrol> property.</p>
+        <p>The following table lists the valid GeoIP field types for each database. For details
+            about the information returned with each field type, see the MaxMind GeoIP2
+                documentation.<table frame="all" rowsep="1" colsep="1" id="table_q3d_53h_hx">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Database</entry>
+                            <entry>Valid GeoIP Field Types</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Anonymous IP</entry>
+                            <entry>
+                                <ul id="ul_zg1_4kh_hx">
+                                    <li>Anonymous IP Full JSON</li>
+                                    <li>Is Anonymous</li>
+                                    <li>Is Anonymous VPN</li>
+                                    <li>Is Hosting Provider</li>
+                                    <li>Is Public Proxy</li>
+                                    <li>Is TOR Exit Node</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>City</entry>
+                            <entry>
+                                <ul id="ul_nlq_3kh_hx">
+                                    <li>City Full JSON</li>
+                                    <li>City Name</li>
+                                    <li>Country</li>
+                                    <li>Country ISO Code</li>
+                                    <li>Latitude</li>
+                                    <li>Longitude</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Country</entry>
+                            <entry>
+                                <ul id="ul_hlm_jkh_hx">
+                                    <li>Country</li>
+                                    <li>Country Full JSON</li>
+                                    <li>Country ISO Code</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Connection Type</entry>
+                            <entry>
+                                <ul id="ul_p1f_skh_hx">
+                                    <li>Connection Type</li>
+                                    <li>Connection Type Full JSON</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Domain</entry>
+                            <entry>
+                                <ul id="ul_fvm_rkh_hx">
+                                    <li>Domain</li>
+                                    <li>Domain Full JSON</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>ISP</entry>
+                            <entry>
+                                <ul id="ul_mtc_tkh_hx">
+                                    <li>Autonomous System Number</li>
+                                    <li>Autonomous System Org</li>
+                                    <li>ISP</li>
+                                    <li>ISP Full JSON</li>
+                                    <li>Organization</li>
+                                </ul>
+                            </entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+ </conbody>
+</concept>

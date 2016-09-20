@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pmp_b1y_hx">
+ <title>Full JSON Field Types</title>
+ <conbody>
+  <p><indexterm>GeoIP processor<indexterm>Full JSON field types</indexterm></indexterm>The GeoIP
+            processor provides a Full JSON field type for each database. The Full JSON field type
+            returns all available data in the dictionary for the specified IP address. </p>
+        <p>Use the Full JSON field type when the information that you want is in a database, but not
+            available as one of the field types in the processor.</p>
+        <p>The Full JSON field type returns a JSON object with all available data. You can use a
+            JSON Parser processor downstream to parse the object and extract the information that
+            you need. </p>
+ </conbody>
+    <related-links>
+        <link href="JSONParser.dita#concept_bs1_4t3_yq"/>
+    </related-links>
+</concept>

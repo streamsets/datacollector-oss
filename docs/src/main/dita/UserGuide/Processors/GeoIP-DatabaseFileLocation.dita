@@ -14,15 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kg2_21s_ns">
- <title>Database File Location</title>
- <conbody>
-  <p><indexterm>Geo IP processor<indexterm>database file
+  <title>Database File Location</title>
+  <conbody>
+    <p><indexterm>Geo IP processor<indexterm>database file
         location</indexterm></indexterm><indexterm>MaxMind database file location<indexterm>Geo IP
           processor</indexterm></indexterm>To use the Geo IP processor, save the MaxMind GeoIP2
-      database file in a directory local to the <ph
+      database files that you want to use in a directory local to the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or in the
         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       resources directory: <filepath>$SDC_RESOURCES</filepath>. </p>
-    <p>Then define the location of the database file in the processor.</p>
- </conbody>
+    <p>Then, specify the location of the database file when you configure the processor.</p>
+  </conbody>
 </concept>

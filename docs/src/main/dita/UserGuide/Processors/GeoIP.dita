@@ -19,26 +19,16 @@
   <p><indexterm>Geo IP
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Geo
                     IP</indexterm></indexterm><indexterm>Geo IP processor<indexterm>supported
-                    databases</indexterm></indexterm>The Geo IP processor provides geographic
-            location information for IP addresses.</p>
-        <p> The Geo IP processor can use the MaxMind GeoIP2 City or the GeoIP2 Country database file
-            to provide geolocation information. You must provide your own copy of the database file. </p>
-        <note type="tip">MaxMind provides free versions of the GeoIP2 databases that you can
-            use.</note>
-        <p>To use the Geo IP processor, you specify the location of the database file and the
-            database type. You enter one or more IP address input fields, name the corresponding
-            output field, and specify the geolocation information that you want. You can also
-            configure the action that the processor takes if an IP address is missing from the
-            database file.</p>
-    <p>The input field must be an Integer or String datatype with IP addresses formatted as follows:
-                <codeph>n.n.n.n.</codeph></p>
-  <p>Geo IP can provide the following geolocation information for each IP address:<ul
-        id="ul_ptx_mg3_ms">
-        <li>Country name</li>
-        <li>Country ISO code</li>
-        <li>City name</li>
-        <li>Latitude</li>
-        <li>Longitude</li>
-      </ul></p>
+                    databases</indexterm></indexterm>The Geo IP processor is a lookup processor that
+            can return geolocation and IP intelligence information for a specified IP address.</p>
+        <p>The Geo IP processor uses MaxMind GeoIP2 database files for the lookup. You must provide
+            your own copy of the database files. </p>
+        <note type="tip">MaxMind provides some free databases that you can use.</note>
+        <p>To use the Geo IP processor, you specify the location of the database files and the
+            database types that you want to use. You enter one or more IP address input fields, name
+            the corresponding output field, and specify the return  information that you want. You
+            can also configure the action that the processor takes if the database files do not have
+            an IP address.</p>
+    <p>The input field must be an Integer or String datatype that passes IPv4 or IPv6 addresses.</p>
  </conbody>
 </concept>
