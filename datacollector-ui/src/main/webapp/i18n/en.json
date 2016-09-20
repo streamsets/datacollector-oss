@@ -33,6 +33,7 @@
       },
       "home": "Home",
       "dpmEnabled": "Dataflow Performance Manager Enabled - ",
+      "dpmDisconnectedMode": "Disconnected Mode. Dataflow Performance Manager Enabled - ",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {

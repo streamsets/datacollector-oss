@@ -65,9 +65,14 @@
       </a>
 
       <img class="pull-left remote-enabled-icon"
-           ng-if="common.remoteServerInfo.registrationStatus"
+           ng-if="common.remoteServerInfo.registrationStatus && !common.disconnectedMode"
            src="assets/cloud_done.svg"
            title="{{('global.menu.dpmEnabled' | translate) + common.dpmBaseURL}}"/>
+
+      <img class="pull-left remote-enabled-icon"
+           ng-if="common.remoteServerInfo.registrationStatus && common.disconnectedMode"
+           src="assets/cloud_disconnected.svg"
+           title="{{('global.menu.dpmDisconnectedMode' | translate) + common.dpmBaseURL}}"/>
 
       <div class="pull-left">
         <span class="navbar-brand" ng-if="common.headerTitle">{{common.headerTitle}}</span>

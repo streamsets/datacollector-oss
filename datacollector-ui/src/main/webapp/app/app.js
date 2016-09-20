@@ -429,15 +429,13 @@ angular.module('dataCollectorApp')
       }
     });
 
-    authService.init().then(function() {
-      $rootScope.common.userName = authService.getUserName();
-      $rootScope.common.userRoles = authService.getUserRoles().join(', ');
-      $rootScope.userRoles = userRoles;
-      $rootScope.isAuthorized = authService.isAuthorized;
-    });
-
-    $q.all([api.pipelineAgent.getAllAlerts(), configuration.init()])
+    $q.all([api.pipelineAgent.getAllAlerts(), configuration.init(), authService.init()])
       .then(function(results) {
+        $rootScope.common.userName = authService.getUserName();
+        $rootScope.common.userRoles = authService.getUserRoles().join(', ');
+        $rootScope.userRoles = userRoles;
+        $rootScope.isAuthorized = authService.isAuthorized;
+
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
         $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();
         $rootScope.common.dpmBaseURL = configuration.getRemoteBaseUrl();
@@ -449,7 +447,11 @@ angular.module('dataCollectorApp')
           Analytics.createAnalyticsScriptTag();
         }
 
-        if ($rootScope.common.isDPMEnabled) {
+        if ($rootScope.common.isDPMEnabled && $rootScope.common.userRoles.indexOf('disconnected-sso')) {
+          $rootScope.common.disconnectedMode = true;
+        }
+
+        if ($rootScope.common.isDPMEnabled && !$rootScope.common.disconnectedMode) {
           authService.fetchRemoteUserRoles();
         }
 
