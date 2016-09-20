@@ -38,22 +38,5 @@
       </includes>
     </fileSet>
 
-    <fileSet>
-      <directory>${dist.target-dir}/etc</directory>
-      <outputDirectory>/aux</outputDirectory>
-      <includes>
-        <include>sdc-security.policy</include>
-        <include>sdc-log4j.properties</include>
-      </includes>
-    </fileSet>
-
-    <fileSet>
-      <directory>${dist.target-dir}/libexec</directory>
-      <outputDirectory>/aux</outputDirectory>
-      <includes>
-        <include>sdc-env.sh</include>
-      </includes>
-    </fileSet>
-
   </fileSets>
 </assembly>

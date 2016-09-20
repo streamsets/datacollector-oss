@@ -75,6 +75,16 @@ $ldap_configs;
   echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
 }
 
+# Prepend content of file specified in $2 to the file specified in $1
+function prepend_file_content {
+  work_file=$1
+  prepend_file=$2
+
+  echo "Prepending content from $prepend_file to $work_file"
+  cat $prepend_file $work_file > work.tmp
+  mv work.tmp $work_file
+}
+
 # Create symlinks for standard hadoop services to SDC_RESOURCES directory
 function create_config_symlinks {
   # Hadoop
@@ -111,7 +121,14 @@ function start {
 
   create_config_symlinks
 
+  # Load default configuration from the parcel
+  prepend_file_content $CONF_DIR/sdc-security.policy $SDC_DIST/etc/sdc-security.policy
+  prepend_file_content $CONF_DIR/sdc-env.sh $SDC_DIST/libexec/sdc-env.sh
+
+  # Source environment (at this point merged the CM config and parcel default)
   source "$CONF_DIR"/sdc-env.sh
+
+  # Finally start SDC
   exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing -exec
 }
 
