@@ -30,23 +30,20 @@ import javax.crypto.spec.PBEKeySpec;
 public class TestPasswordHasher {
 
   @Test
-  public void testHashAlgorithm() {
-    Assert.assertEquals(PasswordHasher.HASH_ALGORITHM, PasswordHasher.SECRET_KEY_FACTORY.getAlgorithm());
-  }
-
-  @Test
   public void testConfiguration() {
     PasswordHasher hasher = new PasswordHasher(new Configuration());
-    Assert.assertEquals("v2", hasher.getCurrentVersion());
+    Assert.assertEquals(PasswordHasher.V3, hasher.getCurrentVersion());
     Assert.assertEquals(100000, hasher.getIterations());
     Assert.assertEquals(256, hasher.getKeyLength());
     Assert.assertEquals(32, hasher.getSaltLength());
     Assert.assertEquals(32, hasher.getSalt().length);
 
     Configuration configuration = new Configuration();
+    configuration.set(PasswordHasher.HASH_VERSION_KEY, PasswordHasher.V1);
     configuration.set(PasswordHasher.ITERATIONS_KEY, 1);
     configuration.set(PasswordHasher.KEY_LENGTH_KEY, 16);
     hasher = new PasswordHasher(configuration);
+    Assert.assertEquals(PasswordHasher.V1, hasher.getCurrentVersion());
     Assert.assertEquals(1, hasher.getIterations());
     Assert.assertEquals(16, hasher.getKeyLength());
     Assert.assertEquals(2, hasher.getSaltLength());
@@ -76,7 +73,7 @@ public class TestPasswordHasher {
         iterations,
         hasher.getKeyLength()
     );
-    byte[] hash = PasswordHasher.SECRET_KEY_FACTORY.generateSecret(spec).getEncoded();
+    byte[] hash = PasswordHasher.SECRET_KEY_FACTORIES.get(hasher.getCurrentVersion()).generateSecret(spec).getEncoded();
     String hashHex = Hex.encodeHexString(hash);
     Assert.assertEquals(parts[3], hashHex);
 
@@ -92,6 +89,10 @@ public class TestPasswordHasher {
 
   @Test
   public void testPasswordHashV1() throws Exception {
+    if (!PasswordHasher.getSupportedHashVersions().contains(PasswordHasher.V1)) {
+      System.out.println("Skipping testPasswordHashV1(), no SHA512 avail");
+      return;
+    }
     Configuration configuration = new Configuration();
     configuration.set(PasswordHasher.ITERATIONS_KEY, 1);
     PasswordHasher hasher = new PasswordHasher(configuration);
@@ -113,11 +114,37 @@ public class TestPasswordHasher {
   }
 
   @Test
-  public void testCreateRandomValueGeneration() throws Exception {
+  public void testPasswordHashV2() throws Exception {
+    if (!PasswordHasher.getSupportedHashVersions().contains(PasswordHasher.V2)) {
+      System.out.println("Skipping testPasswordHashV1(), no SHA512 avail");
+      return;
+    }
+    Configuration configuration = new Configuration();
+    configuration.set(PasswordHasher.ITERATIONS_KEY, 1);
+    PasswordHasher hasher = new PasswordHasher(configuration);
+    String passwordHash = hasher.computeHash(
+        PasswordHasher.V2,
+        2,
+        hasher.getSalt(),
+        hasher.getValueToHash(PasswordHasher.V2, "user", "foo")
+    );
+
+    //valid u/p
+    Assert.assertTrue(hasher.verify(passwordHash, "user", "foo"));
+
+    // invalid u valid p
+    Assert.assertFalse(hasher.verify(passwordHash, "userx", "foo"));
+
+    // invalid p
+    Assert.assertFalse(hasher.verify(passwordHash, "user", "bar"));
+  }
+
+  @Test
+  public void testGetRandomValueGeneration() throws Exception {
     Configuration conf = new Configuration();
     conf.set(PasswordHasher.ITERATIONS_KEY, 1);
     PasswordHasher hasher = new PasswordHasher(conf);
-    String[] random = hasher.createRandomValueAndHash();
+    String[] random = hasher.getRandomValueAndHash();
     Assert.assertNotNull(random);
     Assert.assertEquals(2, random.length);
     Assert.assertNotNull(random[0]);
@@ -139,7 +166,7 @@ public class TestPasswordHasher {
     Mockito.verify(hasher, Mockito.times(2)).getVerifyCache();
     Mockito
         .verify(hasher, Mockito.times(1))
-        .computeHash(Mockito.eq("v2"), Mockito.anyInt(), Mockito.any(byte[].class), Mockito.anyString());
+        .computeHash(Mockito.eq(PasswordHasher.V3), Mockito.anyInt(), Mockito.any(byte[].class), Mockito.anyString());
 
     Mockito.reset(hasher);
     // in cache
