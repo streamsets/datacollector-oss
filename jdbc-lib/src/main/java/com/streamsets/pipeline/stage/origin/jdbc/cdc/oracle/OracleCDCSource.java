@@ -88,8 +88,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final String CURRENT_SCN =
-      "SELECT MAX(ktuxescnw * POWER(2, 32) + ktuxescnb) FROM sys.x$ktuxe";
+  private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
   private static final int MISSING_LOG_CODE = 1291;
   private static final String START_SCN_OPT_STR = "STARTSCN => ";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
