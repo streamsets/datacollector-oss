@@ -27,8 +27,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static volatile EmbeddedSDCPool sdcPool;
   private static volatile boolean initialized = false;
-  private Throwable error;
+  private static volatile String errorStackTrace;
 
   private static synchronized void initialize(Properties properties, Integer id, String rootDataDir) throws Exception {
     if (initialized) {
@@ -75,17 +76,28 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
-    if (error != null) {
-      String msg = "Error in previous run: " + error;
-      throw new RuntimeException(msg, error);
+    if (errorStackTrace != null) {
+      LOG.info("Not proceeding as error in previous run");
+      throw new RuntimeException(errorStackTrace);
     }
     try {
       EmbeddedSDC embeddedSDC = sdcPool.checkout();
       embeddedSDC.getSource().put(batch);
     } catch (Exception | Error e) {
-      error = e;
-      throw e;
+      // Get the stacktrace as string as the spark driver wont have the jars
+      // required to deserialize the classes from the exception cause
+      errorStackTrace = getErrorStackTrace(e);
+      throw new RuntimeException(errorStackTrace);
     }
+  }
+
+  private String getErrorStackTrace(Throwable e) {
+    StringWriter errorWriter = new StringWriter();
+    PrintWriter pw = new PrintWriter(errorWriter);
+    pw.println();
+    e.printStackTrace(pw);
+    pw.flush();
+    return errorWriter.toString();
   }
 
   @Override
