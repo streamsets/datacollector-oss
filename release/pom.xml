@@ -61,6 +61,7 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
+              <tarLongFileMode>gnu</tarLongFileMode>
               <finalName>streamsets-datacollector-all-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-sdc-all.xml</descriptor>
@@ -76,6 +77,7 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
+              <tarLongFileMode>gnu</tarLongFileMode>
               <finalName>streamsets-datacollector-core-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-sdc-core.xml</descriptor>

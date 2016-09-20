@@ -63,6 +63,7 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
+              <tarLongFileMode>gnu</tarLongFileMode>
               <descriptors>
                 <descriptor>src/main/assemblies/parcel-assembly.xml</descriptor>
               </descriptors>
