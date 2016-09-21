@@ -96,7 +96,7 @@ public class S3TargetConfigBean {
   public String timeDriverTemplate;
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     defaultValue = "sdc",
     description = "Prefix for file names that will be uploaded on Amazon S3",
@@ -148,6 +148,17 @@ public class S3TargetConfigBean {
               Groups.S3.name(),
               S3_CONFIG_PREFIX + "bucket",
               Errors.S3_02, s3Config.bucket
+          )
+      );
+    }
+
+    //File prefix should not be empty for non whole file format.
+    if (dataFormat != DataFormat.WHOLE_FILE && (fileNamePrefix == null || fileNamePrefix.isEmpty())) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.S3.getLabel(),
+              S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "fileNamePrefix",
+              Errors.S3_05
           )
       );
     }
