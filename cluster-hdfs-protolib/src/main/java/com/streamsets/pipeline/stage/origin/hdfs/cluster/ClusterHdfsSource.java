@@ -356,6 +356,19 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         // will not work in cluster mode.
         try {
           hadoopConfigDir = new File(getContext().getResourcesDirectory(), conf.hdfsConfDir).getCanonicalFile();
+
+          if(!hadoopConfigDir.getPath().startsWith(new File(getContext().getResourcesDirectory()).getCanonicalPath())) {
+            issues.add(
+              getContext().createConfigIssue(
+                  Groups.HADOOP_FS.name(),
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                  Errors.HADOOPFS_29,
+                  conf.hdfsConfDir,
+                  hadoopConfigDir.getAbsolutePath(),
+                  getContext().getResourcesDirectory()
+              )
+            );
+          }
         } catch (IOException e) {
           LOG.error("Can't resolve configuration directory", e);
           issues.add(
@@ -364,19 +377,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                 CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
                 Errors.HADOOPFS_26,
                 conf.hdfsConfDir
-            )
-          );
-        }
-
-        if(!hadoopConfigDir.getPath().startsWith(getContext().getResourcesDirectory())) {
-          issues.add(
-            getContext().createConfigIssue(
-                Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
-                Errors.HADOOPFS_29,
-                conf.hdfsConfDir,
-                hadoopConfigDir.getAbsolutePath(),
-                getContext().getResourcesDirectory()
             )
           );
         }
