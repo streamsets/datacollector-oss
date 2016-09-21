@@ -394,16 +394,18 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     ClassLoader cl = stageDefinition.getStageClassLoader();
     if (stageDefinition.isPrivateClassLoader()) {
       String key = getClassLoaderKey(cl);
-      try {
-        cl = privateClassLoaderPool.borrowObject(key);
-        LOG.debug("Got a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
-                  key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
-      } catch (Exception ex) {
-        String msg = Utils.format(
-            "Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}': {}",
-            key, stageDefinition.getName(), privateClassLoaderPool.getNumActive(), ex.toString());
-        LOG.warn(msg, ex);
-        throw new RuntimeException(msg, ex);
+      synchronized (privateClassLoaderPool) {
+        try {
+          cl = privateClassLoaderPool.borrowObject(key);
+          LOG.debug("Got a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
+              key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
+        } catch (Exception ex) {
+          String msg = Utils.format(
+              "Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}': {}",
+              key, stageDefinition.getName(), privateClassLoaderPool.getNumActive(), ex.toString());
+          LOG.warn(msg, ex);
+          throw new RuntimeException(msg, ex);
+        }
       }
     }
     return cl;
@@ -413,15 +415,19 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   public void releaseStageClassLoader(ClassLoader classLoader) {
     if (isPrivateClassLoader(classLoader)) {
       String key = getClassLoaderKey(classLoader);
-      try {
-        LOG.debug("Returning private ClassLoader for '{}'", key);
-        privateClassLoaderPool.returnObject(key, classLoader);
-        LOG.debug("Returned a private ClassLoader for '{}', active private ClassLoaders='{}'",
-                  key, privateClassLoaderPool.getNumActive());
-      } catch (Exception ex) {
-        LOG.warn("Could not return a private ClassLoader for '{}', active private ClassLoaders='{}'",
-                 key, privateClassLoaderPool.getNumActive());
-        throw new RuntimeException(ex);
+      synchronized (privateClassLoaderPool){
+        if (privateClassLoaderPool.getNumActive() > 0) {
+          try {
+            LOG.debug("Returning private ClassLoader for '{}'", key);
+            privateClassLoaderPool.returnObject(key, classLoader);
+            LOG.debug("Returned a private ClassLoader for '{}', active private ClassLoaders='{}'",
+                key, privateClassLoaderPool.getNumActive());
+          } catch (Exception ex) {
+            LOG.warn("Could not return a private ClassLoader for '{}', active private ClassLoaders='{}'",
+                key, privateClassLoaderPool.getNumActive());
+            throw new RuntimeException(ex);
+          }
+        }
       }
     }
   }
