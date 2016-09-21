@@ -16,13 +16,16 @@
 <concept id="concept_nxz_2kz_bs">
  <title>Offset Column and Offset Value</title>
  <shortdesc>JDBC Consumer uses an offset column and initial offset value to determine where to start
-  reading data within a table. Include both the offset column and the offset value in the WHERE
-  clause of the SQL query.</shortdesc>
+        reading data within a table. Include both the offset column and the offset value in the
+        WHERE clause of the SQL query. </shortdesc>
  <conbody>
   <p><indexterm>JDBC Consumer origin<indexterm>offset column and
-        value</indexterm></indexterm><indexterm>offset column and value<indexterm>JDBC
-          Consumer</indexterm></indexterm>Ideally, the offset column is a column in the table with
-      unique values, such as a primary key or indexed column. The initial offset value is a value
-      within the offset column where you want JDBC Consumer to start reading.</p>
+                value</indexterm></indexterm><indexterm>offset column and value<indexterm>JDBC
+                    Consumer</indexterm></indexterm>Ideally, the offset column is a column in the
+            table with unique values, such as a primary key or indexed column. The initial offset
+            value is a value within the offset column where you want JDBC Consumer to start
+            reading.</p>
+        <p>When the origin performs an incremental query, you must configure the offset column and
+            offset value. For full queries, you can optionally configure them.</p>
  </conbody>
 </concept>

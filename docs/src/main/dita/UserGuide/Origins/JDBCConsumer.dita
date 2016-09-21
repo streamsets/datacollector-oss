@@ -22,9 +22,8 @@
                 Consumer origin<indexterm>overview</indexterm></indexterm>When you configure JDBC
             Consumer, you specify connection information, query interval, and custom JDBC
             configuration properties to determine how the origin connects to the database. You
-            configure the query mode, offset column, initial offset value, and SQL query to define
-            the data returned by the database. You can also call stored procedures from the SQL
-            query.</p>
+            configure the query mode and SQL query to define the data returned by the database. You
+            can also call stored procedures from the SQL query.</p>
         <p>You can configure the JDBC Consumer to perform change data capture for databases that
             store the information in a table. You can also configure custom properties that your
             driver requires. </p>

@@ -15,14 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hcm_gdq_ds">
  <title>Recovery</title>
- <shortdesc>JDBC Consumer uses offset values in the offset column to determine where to continue
-  processing after a deliberate or unexpected stop. To ensure seamless recovery, use a primary key
-  or indexed column as the offset column.</shortdesc>
+ <shortdesc> JDBC Consumer supports recovery after a deliberate or unexpected stop when it performs
+    incremental queries. Recovery is not supported for full queries.</shortdesc>
  <conbody>
   <p><indexterm>JDBC Consumer
-     origin<indexterm>recovery</indexterm></indexterm><indexterm>recovery<indexterm>JDBC
-     Consumer</indexterm></indexterm>As JDBC Consumer processes data, it tracks the offset value
-   internally. When the pipeline stops, JDBC Consumer notes where it stopped processing data. When
-   you restart the pipeline, it continues from the last-saved offset. </p>
+          origin<indexterm>recovery</indexterm></indexterm><indexterm>recovery<indexterm>JDBC
+          Consumer</indexterm></indexterm>In incremental mode, JDBC Consumer uses offset values in
+      the offset column to determine where to continue processing after a deliberate or unexpected
+      stop. To ensure seamless recovery in incremental mode, use a primary key or indexed column as
+      the offset column. As JDBC Consumer processes data, it tracks the offset value internally.
+      When the pipeline stops, JDBC Consumer notes where it stopped processing data. When you
+      restart the pipeline, it continues from the last-saved offset. </p>
+    <p>When JDBC Consumer performs full queries, the origin runs the full query again after you
+      restart the pipeline.</p>
  </conbody>
 </concept>

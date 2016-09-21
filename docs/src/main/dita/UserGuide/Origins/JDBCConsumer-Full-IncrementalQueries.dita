@@ -32,10 +32,11 @@
     </dlentry>
     <dlentry>
      <dt>Full mode</dt>
-     <dd>When the JDBC Consumer performs a full query, it uses the initial offset as the offset
-      value in the SQL query each time it requests data.</dd>
-     <dd>Use a full mode to capture all row updates. You might use a Record Deduplicator in the
-      pipeline to minimize repeated rows. Not ideal for large tables.</dd>
+     <dd>When the JDBC Consumer performs a full query, it runs the defined SQL query. If you
+            optionally configure the offset column and initial offset value, the origin uses the
+            initial offset as the offset value in the SQL query each time it requests data.</dd>
+     <dd>Use full mode to capture all row updates. You might use a Record Deduplicator in the
+            pipeline to minimize repeated rows. Not ideal for large tables.</dd>
     </dlentry>
    </dl>
   </p>
