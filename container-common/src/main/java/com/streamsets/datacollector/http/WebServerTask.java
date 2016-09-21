@@ -356,6 +356,11 @@ public abstract class WebServerTask extends AbstractTask {
     indexMapping.setPathSpec("");
     indexMapping.setConstraint(indexConstraint);
 
+    // docs is restricted
+    ConstraintMapping docMapping = new ConstraintMapping();
+    docMapping.setPathSpec("/docs/*");
+    docMapping.setConstraint(indexConstraint);
+
     // Disable TRACE method
     Constraint disableTraceConstraint = new Constraint();
     disableTraceConstraint.setName("Disable TRACE");
@@ -365,7 +370,15 @@ public abstract class WebServerTask extends AbstractTask {
     disableTraceMapping.setMethod("TRACE");
     disableTraceMapping.setConstraint(disableTraceConstraint);
 
-    return ImmutableList.of(disableTraceMapping, restMapping, indexMapping, logoutMapping, noAuthMapping, publicRestMapping);
+    return ImmutableList.of(
+        disableTraceMapping,
+        restMapping,
+        indexMapping,
+        docMapping,
+        logoutMapping,
+        noAuthMapping,
+        publicRestMapping
+    );
   }
 
   protected SecurityHandler createSecurityHandler(
