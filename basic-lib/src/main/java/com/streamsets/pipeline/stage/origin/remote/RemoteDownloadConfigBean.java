@@ -112,7 +112,7 @@ public class RemoteDownloadConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Path relative to User Home Directory",
+      label = "Path Relative to User Home Directory",
       description = "If checked, the path is resolved relative to the logged in user's home directory, " +
           "if a username is entered in the Credentials tab or in the URL.",
       displayPosition = 20,
@@ -194,7 +194,7 @@ public class RemoteDownloadConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "File Name Selector",
+      label = "File Name Pattern",
       defaultValue = "*",
       description =  "A glob that defines the pattern of the file names in the directory. ('*' selects all files)" +
           "Files are processed in chronological order.",

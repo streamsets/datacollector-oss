@@ -253,8 +253,8 @@ public class RemoteDownloadSource extends BaseSource {
    * @return regex.
    */
   private String globToRegex(String glob) {
-    if (glob.substring(0, 1).equals(".") || glob.substring(0, 1).equals("/") || glob.substring(0, 1).equals("~")) {
-      throw new IllegalArgumentException("Invalid leading character");
+    if (glob.charAt(0) == '.' || glob.contains("/") || glob.contains("~")) {
+      throw new IllegalArgumentException("Invalid character in file glob");
     }
 
     // treat dot as a literal.
