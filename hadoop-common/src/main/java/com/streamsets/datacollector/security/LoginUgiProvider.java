@@ -19,12 +19,11 @@
  */
 package com.streamsets.datacollector.security;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
-
-import javax.security.auth.Subject;
 import java.io.IOException;
 
 public abstract class LoginUgiProvider {
 
-  public abstract UserGroupInformation getLoginUgi(Subject subject) throws IOException;
+  public abstract UserGroupInformation getLoginUgi(Configuration hdfsConfiguration) throws IOException;
 }
