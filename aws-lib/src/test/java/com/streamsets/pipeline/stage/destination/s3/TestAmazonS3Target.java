@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -46,6 +47,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.io.File;
 import java.io.IOException;
@@ -283,5 +285,32 @@ public class TestAmazonS3Target {
     Assert.assertTrue(eventRecord.has("/objectKey"));
     Assert.assertEquals(BUCKET_NAME, eventRecord.get("/bucket").getValueAsString());
     targetRunner.runDestroy();
+  }
+
+  @Test
+  public void testEmptyPrefixForNonWholeFileFormat() throws Exception {
+    String prefix = "testEventRecords";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
+    targetConfigBean.fileNamePrefix = "";
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+
+    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testEmptyPrefixForWholeFileFormat() throws Exception {
+    String prefix = "testEventRecords";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
+    targetConfigBean.dataFormat = DataFormat.WHOLE_FILE;
+    targetConfigBean.dataGeneratorFormatConfig.fileNameEL = "sample";
+    targetConfigBean.fileNamePrefix = "";
+
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+
+    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
   }
 }

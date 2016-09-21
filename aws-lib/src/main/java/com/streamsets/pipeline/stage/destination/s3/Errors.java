@@ -29,6 +29,8 @@ public enum Errors implements ErrorCode {
   S3_02("Bucket '{}' does not exist"),
   S3_03("Invalid partition template expression '{}': {}"),
   S3_04("Invalid time basis expression '{}': {}"),
+  S3_05("File Name Prefix cannot be empty"),
+
 
   S3_20("Cannot connect to Amazon S3, reason : {}"),
   S3_21("Unable to write object to Amazon S3, reason : {}"),
