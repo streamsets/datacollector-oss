@@ -199,17 +199,19 @@ public abstract class ConfigDefinitionExtractor {
       definitionsMap.put(def.getName(), def);
     }
     for (ConfigDefinition def : defs) {
-      if (!def.getDependsOn().isEmpty()) {
-        ConfigDefinition dependsOnDef = definitionsMap.get(def.getDependsOn());
-
+      for (Map.Entry<String, List<Object>> dependency : def.getDependsOnMap().entrySet()) {
+        String dependsOn = dependency.getKey();
+        if (StringUtils.isEmpty(dependsOn)) {
+          continue;
+        }
+        ConfigDefinition dependsOnDef = definitionsMap.get(dependsOn);
         if (dependsOnDef == null) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_153, contextMsg, def.getName(), def.getDependsOn()));
+          errors.add(new ErrorMessage(DefinitionError.DEF_153, contextMsg, def.getName(), dependsOn));
         } else {
           // evaluate dependsOn triggers
-          ConfigDef annotation = def.getConfigField().getAnnotation(ConfigDef.class);
-          for (String trigger : annotation.triggeredByValue()) {
+          for (Object trigger : dependency.getValue()) {
             errors.addAll(ConfigValueExtractor.get().validate(dependsOnDef.getConfigField(), dependsOnDef.getType(),
-                                                              trigger, contextMsg, true));
+                (String) trigger, contextMsg, true));
           }
         }
       }

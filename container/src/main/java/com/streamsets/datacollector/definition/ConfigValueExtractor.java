@@ -21,6 +21,7 @@ package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.primitives.Primitives;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -71,6 +72,17 @@ public abstract class ConfigValueExtractor {
           case NUMBER:
             if (!NUMBER_TYPES.contains(field.getType())) {
               errors.add(new ErrorMessage(DefinitionError.DEF_002, contextMsg));
+            }
+            try {
+              Class<?> wrapper;
+              if (Primitives.isWrapperType(field.getType())) {
+                wrapper = field.getType();
+              } else {
+                wrapper = Primitives.wrap(field.getType());
+              }
+              wrapper.getMethod("valueOf", String.class).invoke(null, valueStr);
+            } catch (Exception ex) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_013, contextMsg, valueStr));
             }
             break;
           case STRING:

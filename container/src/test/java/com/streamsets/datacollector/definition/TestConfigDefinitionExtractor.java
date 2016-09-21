@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.PredicateModel;
 
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -597,8 +598,9 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testConfigDefBean() {
-    Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, ImmutableList.of("bar", "foo"),
-                                                               "x").isEmpty());
+    List<ErrorMessage> errors = ConfigDefinitionExtractor.get().validate(Bean.class, ImmutableList.of("bar", "foo"),
+        "x");
+    Assert.assertTrue(errors.isEmpty());
     List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean.class,
                                                                              ImmutableList.of("bar", "foo"), "x");
     Assert.assertEquals(6, configs.size());
@@ -682,7 +684,6 @@ public class TestConfigDefinitionExtractor {
         dependsOn = "props^3^"
     )
     public String prop5;
-
   }
 
   public static class Bean2 {
@@ -700,9 +701,11 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testConfigDefBeanInvalidDependsOn() {
-    Assert.assertEquals(3, ConfigDefinitionExtractor.get().validate(Bean2.class, Collections.<String>emptyList(),
-                                                                    "x").size());
+    List<ErrorMessage> errorMessages = ConfigDefinitionExtractor.get().validate(Bean2.class, Collections.<String>emptyList(),
+        "x");
+    Assert.assertEquals(3, errorMessages.size());
   }
+
 
   public static class SubBean3 {
 
@@ -713,6 +716,27 @@ public class TestConfigDefinitionExtractor {
         dependsOn = "props^"
     )
     public String prop3;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependencies = {
+            @Dependency(configName = "props3", triggeredByValues = {"someval1"}),
+            @Dependency(configName = "props6", triggeredByValues = {"someval2"})
+        }
+    )
+    public String prop6;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependencies = {
+            @Dependency(configName = "propInt^", triggeredByValues = {"testing"})
+        }
+    )
+    public String prop7;
 
   }
 
@@ -725,14 +749,22 @@ public class TestConfigDefinitionExtractor {
     )
     public String prop1;
 
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.NUMBER
+    )
+    public int propInt;
+
     @ConfigDefBean
     public SubBean3 prop2;
   }
 
   @Test
   public void testConfigDefBeanNonExistentDependsOn() {
-    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean3.class, Collections.<String>emptyList(),
-                                                                    "x").size());
+    List<ErrorMessage> errorMessages =
+        ConfigDefinitionExtractor.get().validate(Bean3.class, Collections.<String>emptyList(), "x");
+    Assert.assertEquals(4, errorMessages.size());
   }
 
 }
