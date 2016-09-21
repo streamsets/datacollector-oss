@@ -30,15 +30,15 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
 import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
 
-@StageDef(
-    version = 1,
-    label = "MapReduce executor",
-    description = "Starts a mapreduce job",
-    icon = "mapreduce.png",
-    privateClassLoader = true,
-    producesEvents = true,
-    onlineHelpRefUrl = "index.html#Executors/MapReduce.html#task_olh_bmk_fx"
-)
+//@StageDef(
+//    version = 1,
+//    label = "MapReduce executor",
+//    description = "Starts a mapreduce job",
+//    icon = "mapreduce.png",
+//    privateClassLoader = true,
+//    producesEvents = true,
+//    onlineHelpRefUrl = "index.html#Executors/MapReduce.html#task_olh_bmk_fx"
+//)
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class MapReduceDExecutor extends DExecutor {
