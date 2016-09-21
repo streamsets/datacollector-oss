@@ -26,7 +26,7 @@
                     pipelines</indexterm></indexterm>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             stores the checkpoint metadata in the following path on HDFS or Amazon
-            S3:<codeblock>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID>/${Kafka topic}</codeblock></p>
+            S3:<codeblock>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID>/&lt;Kafka topic>/&lt;consumer group>/&lt;pipelineName></codeblock></p>
         <p>When you run a cluster streaming pipeline on YARN, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             stores the metadata on HDFS. </p>
