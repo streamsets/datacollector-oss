@@ -43,13 +43,11 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.apache.http.client.config.RequestConfig;
-import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,15 +157,12 @@ public class HttpClientSource extends BaseSource {
    * Helper method to apply Jersey client configuration properties.
    */
   private void configureClient() {
-    RequestConfig requestConfig = RequestConfig.custom()
-        .setConnectionRequestTimeout(conf.client.connectTimeoutMillis)
-        .setSocketTimeout(conf.client.readTimeoutMillis)
-        .build();
-
     ClientConfig clientConfig = new ClientConfig()
+        .property(ClientProperties.CONNECT_TIMEOUT, conf.client.connectTimeoutMillis)
+        .property(ClientProperties.READ_TIMEOUT, conf.client.readTimeoutMillis)
+        .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
         .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-        .property(ApacheClientProperties.REQUEST_CONFIG, requestConfig)
-        .connectorProvider(new ApacheConnectorProvider());
+        .connectorProvider(new GrizzlyConnectorProvider());
 
     ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
