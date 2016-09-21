@@ -26,8 +26,8 @@
             them in the listed order as well. </p>
         <p>For example, in the following Value Replacer, the processor first replaces null values in
             the <uicontrol>product_id</uicontrol> field, then replaces the "0289" store ID with
-            "0132". And finally, it replaces values less than 1 in the <uicontrol>cost</uicontrol>
-            field with "1.0":</p>
+            "0132". And finally, it replaces values less than 1.00 in the
+                <uicontrol>cost</uicontrol> field with "1.00":</p>
         <p><image href="../Graphics/ValueReplacer-props.png" id="image_zmp_nys_3x" scale="60"/></p>
  </conbody>
 </concept>
