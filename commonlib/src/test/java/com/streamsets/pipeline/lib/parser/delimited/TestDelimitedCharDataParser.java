@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser.delimited;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -26,7 +27,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
@@ -35,6 +36,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collections;
+import java.util.List;
 
 public class TestDelimitedCharDataParser {
 
@@ -279,13 +281,35 @@ public class TestDelimitedCharDataParser {
     parser.close();
   }
 
-  @Test(expected = DataParserException.class)
+  @Test
   public void testMoreColumnsThenInHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b,c"), 1000, true, false);
     DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST, false, null);
     Assert.assertEquals("4", parser.getOffset());
-    parser.parse();
+
+    try {
+      parser.parse();
+      Assert.fail("Expected exception while parsing!");
+    } catch(RecoverableDataParserException ex) {
+      Record r = ex.getUnparsedRecord();
+      Assert.assertNotNull(r);
+      Assert.assertTrue(r.has("/columns"));
+      Assert.assertTrue(r.has("/headers"));
+
+      List<Field> headers = r.get("/headers").getValueAsList();
+      Assert.assertNotNull(headers);
+      Assert.assertEquals(2, headers.size());
+      Assert.assertEquals("A", headers.get(0).getValueAsString());
+      Assert.assertEquals("B", headers.get(1).getValueAsString());
+
+      List<Field> columns = r.get("/columns").getValueAsList();
+      Assert.assertNotNull(columns);
+      Assert.assertEquals(3, columns.size());
+      Assert.assertEquals("a", columns.get(0).getValueAsString());
+      Assert.assertEquals("b", columns.get(1).getValueAsString());
+      Assert.assertEquals("c", columns.get(2).getValueAsString());
+    }
   }
 
 }

@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.lib.parser.delimited;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -29,6 +31,7 @@ import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
@@ -103,8 +106,16 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   protected Record createRecord(long offset, String[] columns) throws DataParserException {
     Record record = context.createRecord(readerId + "::" + offset);
 
+    // In case that the number of columns does not equal the number of expected columns from header, report the
+    // parsing error as recoverable issue - it's safe to continue reading the stream.
     if(headers != null && columns.length > headers.size()) {
-      throw new DataParserException(Errors.DELIMITED_PARSER_01, offset, columns.length, headers.size());
+      record.set(Field.create(Field.Type.MAP, ImmutableMap.builder()
+        .put("columns", getListField(columns))
+        .put("headers", Field.create(Field.Type.LIST, headers))
+        .build()
+      ));
+
+      throw new RecoverableDataParserException(record, Errors.DELIMITED_PARSER_01, offset, columns.length, headers.size());
     }
 
     if(recordType == CsvRecordType.LIST) {
@@ -136,6 +147,16 @@ public class DelimitedCharDataParser extends AbstractDataParser {
     }
 
     return record;
+  }
+
+  private Field getListField(String ...values) {
+    ImmutableList.Builder listBuilder = ImmutableList.builder();
+
+    for(String value : values) {
+      listBuilder.add(Field.create(Field.Type.STRING, value));
+    }
+
+    return Field.create(Field.Type.LIST, listBuilder.build());
   }
 
   private Field getField(String value) {
