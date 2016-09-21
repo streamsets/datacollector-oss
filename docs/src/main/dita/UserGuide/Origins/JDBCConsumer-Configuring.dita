@@ -64,7 +64,8 @@
                                 </row>
                                 <row>
                                     <entry>Initial Offset </entry>
-                                    <entry>Offset value to use when the pipeline starts.</entry>
+                                    <entry>Offset value to use when the pipeline starts.<p>Required
+                                            in incremental mode.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Offset Column <xref
@@ -72,7 +73,8 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rqs_srq_ds"/>
                                         </xref></entry>
-                                    <entry>Column to use for the offset value.</entry>
+                                    <entry>Column to use for the offset value.<p>Required in
+                                            incremental mode.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Query Interval</entry>
