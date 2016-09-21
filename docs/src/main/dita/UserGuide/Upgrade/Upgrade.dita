@@ -17,6 +17,13 @@
  <title>Upgrade</title>
  <shortdesc>You can upgrade a previous version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to a
-        newer version. You can upgrade an installation from the tarball, an installation from the
-        RPM package, or an installation with Cloudera Manager.</shortdesc>
+        new version. You can upgrade an installation from the tarball, an installation from the RPM
+        package, or an installation with Cloudera Manager.</shortdesc>
+    <conbody>
+        <note type="important">The minimum requirements for <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            can change with each version. Before you upgrade to a new version, verify that the
+            machine meets the latest minimum requirements as described in <xref
+                href="../Install_Config/Requirements.dita#concept_vzg_n2p_kq"/>.</note>
+    </conbody>
 </concept>

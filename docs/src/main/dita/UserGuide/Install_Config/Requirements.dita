@@ -50,11 +50,11 @@
           </row>
           <row>
             <entry>Disk space</entry>
-            <entry>2 GB</entry>
+            <entry>6 GB</entry>
           </row>
           <row>
             <entry>File descriptors</entry>
-            <entry>4096</entry>
+            <entry>8192</entry>
           </row>
           <row>
             <entry>Java</entry>
