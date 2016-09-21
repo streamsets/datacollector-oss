@@ -53,7 +53,8 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sdc-header-navbar-collapse" aria-expanded="false">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#sdc-header-navbar-collapse" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -93,14 +94,36 @@
           </a>
         </li>
 
+        <li ng-if="common.isDPMEnabled">
+          <a ng-href="{{common.dpmBaseURL}}"
+             target="_blank"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.dpm' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+            <i class="fa fa-cloud fa-lg"></i>
+          </a>
+        </li>
+
+        <li ng-if="!common.isDPMEnabled">
+          <a href="javascript:;" ng-click="common.onDPMButtonClick()"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.dpm' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+            <i class="fa fa-cloud fa-lg dpm-color"></i>
+            <span>DPM</span>
+          </a>
+        </li>
+
         <li ng-if="common.isSlaveNode">
           <a ng-href="{{common.sdcClusterManagerURL}}"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.clusterManager' | translate}}"
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
-            <i class="fa fa-cloud fa-lg"></i>
-            <span class="menu-label">{{'global.menu.home' | translate}}</span>
+            <i class="fa fa-cloud fa-lg dpm-color"></i>
+            <span>DPM</span>
           </a>
         </li>
 

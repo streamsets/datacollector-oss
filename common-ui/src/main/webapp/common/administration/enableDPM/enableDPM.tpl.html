@@ -11,6 +11,12 @@
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
     <div ng-if="!dpmEnabled">
+      <ul class="properties clearfix">
+        <li class="pull-right">
+          <span class="properties-label">Don't have an account? <a href="https://streamsets.com/dpm_signup" target="_blank">Click here</a> to learn more. </span>
+        </li>
+      </ul>
+
       <div class="form-group">
         <label class="control-label" translate="home.enableDPM.dpmBaseURL">DPM URL</label>
         <input type="text"
@@ -68,11 +74,7 @@
 
       </div>
 
-      <!--ul class="properties clearfix">
-        <li class="pull-right">
-          <span class="properties-label" ng-bind-html="'home.enableDPM.contactMessage' | translate"></span>
-        </li>
-      </ul-->
+
 
     </div>
 

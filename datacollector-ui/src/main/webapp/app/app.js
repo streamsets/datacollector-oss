@@ -165,6 +165,19 @@ angular.module('dataCollectorApp')
         },
 
         /**
+         * Open the DPM Information Dialog
+         */
+        onDPMButtonClick: function() {
+          $modalStack.dismissAll();
+          $modal.open({
+            templateUrl: 'common/administration/dpmInfo/dpmInfo.tpl.html',
+            controller: 'DPMInfoModalInstanceController',
+            size: 'lg',
+            backdrop: 'static'
+          });
+        },
+
+        /**
          * Open the Enable DPM Modal Dialog
          */
         onEnableDPMClick: function() {
@@ -447,7 +460,7 @@ angular.module('dataCollectorApp')
           Analytics.createAnalyticsScriptTag();
         }
 
-        if ($rootScope.common.isDPMEnabled && $rootScope.common.userRoles.indexOf('disconnected-sso')) {
+        if ($rootScope.common.isDPMEnabled && $rootScope.common.userRoles.indexOf('disconnected-sso') !== -1) {
           $rootScope.common.disconnectedMode = true;
         }
 
