@@ -35,6 +35,7 @@
    </topicref></topicref>
   <topicref href="../Cluster_Mode/KafkaRequirements.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Cluster_Mode/MapRRequirements.dita"/>
   <topicref href="../Cluster_Mode/HDFSRequirements.dita"/>
  </topicref>
 </map>
