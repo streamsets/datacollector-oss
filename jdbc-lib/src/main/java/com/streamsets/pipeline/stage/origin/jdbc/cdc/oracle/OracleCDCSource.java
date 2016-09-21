@@ -232,6 +232,11 @@ public class OracleCDCSource extends BaseSource {
       endLogMnr.execute();
       connection.commit();
     } catch (Exception ex) {
+      // In preview, destroy gets called after timeout which can cause a SQLException
+      if (getContext().isPreview() && ex instanceof SQLException) {
+        LOG.warn("Exception while previewing", ex);
+        return NULL;
+      }
       LOG.error("Error while attempting to produce records", ex);
       errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
     }
