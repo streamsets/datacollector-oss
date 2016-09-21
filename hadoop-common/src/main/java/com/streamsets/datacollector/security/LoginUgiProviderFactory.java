@@ -20,17 +20,14 @@
 package com.streamsets.datacollector.security;
 
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.hadoop.security.UserGroupInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.security.auth.Subject;
-import java.io.IOException;
 import java.util.ServiceLoader;
 
 public abstract class LoginUgiProviderFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(LoginUgiProviderFactory.class);
+  private static final LoginUgiProvider defaultLoginUgiProvider = new DefaultLoginUgiProvider();
 
   private static LoginUgiProviderFactory loginUgiProviderFactory;
 
@@ -64,19 +61,7 @@ public abstract class LoginUgiProviderFactory {
     return new LoginUgiProviderFactory() {
       @Override
       public LoginUgiProvider createLoginUgiProvider() {
-        return new LoginUgiProvider() {
-          @Override
-          public UserGroupInformation getLoginUgi(Subject subject) throws IOException {
-            UserGroupInformation loginUgi;
-            if (UserGroupInformation.isSecurityEnabled()) {
-              loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-            } else {
-              UserGroupInformation.loginUserFromSubject(subject);
-              loginUgi = UserGroupInformation.getLoginUser();
-            }
-            return loginUgi;
-          }
-        };
+       return defaultLoginUgiProvider;
       }
     };
   }

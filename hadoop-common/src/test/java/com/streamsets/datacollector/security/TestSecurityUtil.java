@@ -31,8 +31,6 @@ import javax.security.auth.Subject;
 import org.junit.After;
 import org.junit.Test;
 
-import com.streamsets.datacollector.security.SecurityUtil;
-
 public class TestSecurityUtil {
 
   @After

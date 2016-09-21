@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,30 +21,45 @@ package com.streamsets.datacollector.security;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.zookeeper.server.util.KerberosUtil;
+import org.apache.hadoop.security.authentication.util.KerberosName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
 import java.io.IOException;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 
-public class HadoopSecurityUtil {
+public class DefaultLoginUgiProvider extends LoginUgiProvider {
 
-  public static UserGroupInformation getLoginUser(Configuration hdfsConfiguration) throws IOException {
-    return LoginUgiProviderFactory.getLoginUgiProvider().getLoginUgi(hdfsConfiguration);
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultLoginUgiProvider.class);
 
-  public static String getDefaultRealm() throws ReflectiveOperationException {
+  @Override
+  public UserGroupInformation getLoginUgi(Configuration hdfsConfiguration) throws IOException {
     AccessControlContext accessContext = AccessController.getContext();
+    Subject subject = Subject.getSubject(accessContext);
+    // As per SDC-2917 doing this avoids deadlock
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      return KerberosUtil.getDefaultRealm();
+      // call some method to force load static block in KerberosName
+      KerberosName.hasRulesBeenSet();
     }
-  }
-
-  public static UserGroupInformation getProxyUser(String user, UserGroupInformation loginUser) {
-    AccessControlContext accessContext = AccessController.getContext();
+    UserGroupInformation.setConfiguration(hdfsConfiguration);
+    UserGroupInformation loginUgi;
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      return UserGroupInformation.createProxyUser(user, loginUser);
+      if (UserGroupInformation.isSecurityEnabled()) {
+        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
+      } else {
+        UserGroupInformation.loginUserFromSubject(subject);
+        loginUgi = UserGroupInformation.getLoginUser();
+      }
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Subject = {}, Principals = {}, Login UGI = {}",
+            subject,
+            subject == null ? "null" : subject.getPrincipals(),
+            loginUgi
+        );
+      }
     }
+    return loginUgi;
   }
-
 }
