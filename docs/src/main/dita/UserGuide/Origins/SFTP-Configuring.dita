@@ -68,6 +68,30 @@
                                             authentication on the Credentials tab.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Process Subdirectories</entry>
+                                    <entry>Select to process files in all subdirectories of the
+                                        specified path.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Name Pattern</entry>
+                                    <entry>Glob-style pattern that defines the file names to
+                                        process. You can use UNIX-style wildcards, such as * or ?.
+                                            <p>For example, the pattern <userinput>??a</userinput>
+                                            represents three-character file names which end with
+                                            "a". The pattern <userinput>*.txt</userinput> represents
+                                            file names of one or more characters ending with
+                                            ".txt".</p><p>You cannot use a tilde (~) or slash (/) in
+                                            the pattern. You cannot use a period (.) at the
+                                            beginning of the pattern. The origin treats a period as
+                                            a literal in other spots in the pattern.</p><p>If
+                                            Process Subdirectories is selected, then the origin uses
+                                            the same pattern to locate file names in the
+                                            subdirectories. The origin does not use the pattern for
+                                            subdirectory names.</p><p>Default is
+                                                <userinput>*</userinput>, which processes all
+                                            files.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Data Format
                                         <xref
                                             href="SFTPClient-DataFormats.dita">
