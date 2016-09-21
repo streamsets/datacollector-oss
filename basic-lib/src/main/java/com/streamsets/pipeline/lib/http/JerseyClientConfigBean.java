@@ -77,12 +77,12 @@ public class JerseyClientConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Parallel Requests",
-      defaultValue = "10",
+      defaultValue = "1",
       description = "Maximum number of requests to make in parallel.",
       displayPosition = 140,
       group = "HTTP"
   )
-  public int numThreads = 10;
+  public int numThreads = 1;
 
   @ConfigDef(
       required = true,

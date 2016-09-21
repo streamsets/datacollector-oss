@@ -41,14 +41,11 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.http.Errors;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,18 +144,12 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
-      RequestConfig requestConfig = RequestConfig.custom()
-          .setConnectionRequestTimeout(conf.client.connectTimeoutMillis)
-          .setSocketTimeout(conf.client.readTimeoutMillis)
-          .build();
-
-      PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-      connectionManager.setMaxTotal(conf.client.numThreads);
       ClientConfig clientConfig = new ClientConfig()
-          .property(ApacheClientProperties.CONNECTION_MANAGER, connectionManager)
+          .property(ClientProperties.CONNECT_TIMEOUT, conf.client.connectTimeoutMillis)
+          .property(ClientProperties.READ_TIMEOUT, conf.client.readTimeoutMillis)
+          .property(ClientProperties.ASYNC_THREADPOOL_SIZE, conf.client.numThreads)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-          .property(ApacheClientProperties.REQUEST_CONFIG, requestConfig)
-          .connectorProvider(new ApacheConnectorProvider());
+          .connectorProvider(new GrizzlyConnectorProvider());
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
@@ -223,8 +214,14 @@ public class HttpProcessor extends SingleLaneProcessor {
     records = batch.getRecords();
     int recordNum = 0;
     while (records.hasNext()) {
-      batchMaker.addRecord(processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs));
-      ++recordNum;
+      try {
+        Record record = processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs);
+        batchMaker.addRecord(record);
+      } catch (OnRecordErrorException e) {
+        errorRecordHandler.onError(e);
+      } finally {
+        ++recordNum;
+      }
     }
   }
 

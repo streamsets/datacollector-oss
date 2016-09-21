@@ -177,6 +177,7 @@ public class HttpProcessorConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Request Time (sec)",
+      defaultValue = "60",
       description = "Maximum time to wait for each request completion.",
       displayPosition = 999,
       group = "HTTP"
