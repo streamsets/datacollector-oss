@@ -22,7 +22,6 @@ package com.streamsets.lib.security.http;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ public class DisconnectedAuthentication implements Authentication {
    * This is a role that is available in the principal to flag that a DPM enabled data collector is
    * currently working in disconnected mode.
    */
-  public static final String DISCONNECTED_MODE_ROLE = "disconected-sso";
+  public static final String DISCONNECTED_MODE_ROLE = "disconnected-sso";
 
   private final File file;
   private DisconnectedSessionHandler sessionHandler;

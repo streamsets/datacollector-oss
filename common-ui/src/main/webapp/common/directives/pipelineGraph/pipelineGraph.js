@@ -68,28 +68,6 @@ angular.module('pipelineGraphDirectives', [])
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5');
 
-      var filter = defs.append('filter')
-        .attr('id', 'drop-shadow-pipeline')
-        .attr('height', '130%');
-
-      filter.append('feGaussianBlur')
-        .attr('in', 'SourceAlpha')
-        .attr('stdDeviation', 4)
-        .attr('result', 'blur');
-
-      filter.append('feOffset')
-        .attr('in', 'blur')
-        .attr('dx', 2)
-        .attr('dy', 2)
-        .attr('result', 'offsetBlur');
-
-      var feMerge = filter.append('feMerge');
-
-      feMerge.append('feMergeNode')
-        .attr('in', 'offsetBlur');
-      feMerge.append('feMergeNode')
-        .attr('in', 'SourceGraphic');
-
       thisGraph.svg = svg;
 
       //Background lines
@@ -688,8 +666,7 @@ angular.module('pipelineGraphDirectives', [])
           'width': this.consts.rectWidth,
           'rx': this.consts.rectRound,
           'ry': this.consts.rectRound
-        })
-        .style('filter', 'url(' + $location.absUrl() + '#drop-shadow-pipeline)');
+        });
 
       //Event Connectors
       newGs.append('circle')
