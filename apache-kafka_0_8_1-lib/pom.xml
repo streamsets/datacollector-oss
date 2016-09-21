@@ -21,12 +21,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>2.0.0.0-SNAPSHOT</version>
+    <version>2.1.0.0-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-apache-kafka_0_8_1-lib</artifactId>
-  <version>2.0.0.0-SNAPSHOT</version>
+  <version>2.1.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</description>
   <name>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</name>
   <packaging>jar</packaging>

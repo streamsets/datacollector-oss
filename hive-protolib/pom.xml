@@ -21,11 +21,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>2.0.0.0-SNAPSHOT</version>
+    <version>2.1.0.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-hive-protolib</artifactId>
-  <version>2.0.0.0-SNAPSHOT</version>
+  <version>2.1.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Hive ProtoLib</description>
   <name>StreamSets Data Collector Hive ProtoLib</name>
   <packaging>jar</packaging>

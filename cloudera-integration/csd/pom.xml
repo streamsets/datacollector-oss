@@ -20,12 +20,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-cloudera-integration</artifactId>
-    <version>2.0.0.0-SNAPSHOT</version>
+    <version>2.1.0.0-SNAPSHOT</version>
   </parent>
 
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-csd</artifactId>
-  <version>2.0.0.0-SNAPSHOT</version>
+  <version>2.1.0.0-SNAPSHOT</version>
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
