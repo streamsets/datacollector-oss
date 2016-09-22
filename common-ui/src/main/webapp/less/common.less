@@ -95,8 +95,26 @@ body {
         display: none;
       }
 
-      .dpm-color {
-        color: @streamsets-color;
+      .dpm-icon {
+        i {
+          color: @streamsets-color;
+          font-size: 2em;
+        }
+
+        &.disconnected-mode {
+          i {
+            color: @brand-danger;
+          }
+        }
+
+        span {
+          position: absolute;
+          font-size: 10px;
+          color: white;
+          top: 18px;
+          left: 19px;
+        }
+
       }
 
       >li {
