@@ -67,4 +67,6 @@ public interface PipelineRunner {
 
   public MetricRegistryJson getMetricRegistryJson();
 
-}
+  void errorNotification(Pipe[] pipes, Throwable throwable);
+
+  }

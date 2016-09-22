@@ -82,6 +82,10 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
+  public void errorNotification(Pipe[] pipes, Throwable throwable) {
+  }
+
+  @Override
   public RuntimeInfo getRuntimeInfo() {
     return runtimeInfo;
   }

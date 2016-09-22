@@ -94,7 +94,7 @@ public class ProductionPipeline {
         LOG.debug("Initializing");
         List<Issue> issues = null;
         try {
-          issues = pipeline.init();
+          issues = getPipeline().init();
         } catch (Throwable e) {
           if (!wasStopped()) {
             LOG.warn("Error while starting: {}", e.toString(), e);
@@ -129,6 +129,7 @@ public class ProductionPipeline {
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("issues", new IssuesJson(new Issues(issues)));
           stateChanged(PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
+          getPipeline().errorNotification(e);
           throw e;
         }
       } finally {

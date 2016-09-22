@@ -70,17 +70,16 @@ public class EmbeddedSDCPool {
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
     Object source;
     source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
-        @Override
-        public void run() {
-          if (!embeddedSDC.inErrorState()) {
-            LOG.debug("Returning SDC instance {} back to queue", embeddedSDC.getInstanceId());
-            checkin(embeddedSDC);
-          } else {
-            LOG.info("SDC is in error state, not returning to pool");
-          }
-        }
-      });
-
+      @Override
+      public void run() {
+        LOG.debug(
+            "Returning SDC instance: '{}' in state: '{}' back to queue",
+            embeddedSDC.getInstanceId(),
+            !embeddedSDC.inErrorState() ? "SUCCESS" : "ERROR"
+        );
+        checkin(embeddedSDC);
+      }
+    });
     if (source instanceof DSource) {
       long startTime = System.currentTimeMillis();
       long endTime = startTime;

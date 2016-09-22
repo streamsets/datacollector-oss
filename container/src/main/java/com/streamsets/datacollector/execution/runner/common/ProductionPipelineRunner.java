@@ -302,8 +302,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
   }
 
-  private void errorNotification(Pipe[] pipes, Throwable throwable) throws StageException {
+  @Override
+  public void errorNotification(Pipe[] pipes, Throwable throwable) {
     Set<ErrorListener> listeners = Sets.newIdentityHashSet();
+    for (BatchListener batchListener : batchListenerList) {
+      batchListener.postBatch();
+    }
     for (Pipe pipe : pipes) {
       Stage stage = pipe.getStage().getStage();
       if (stage instanceof ErrorListener) {
@@ -317,7 +321,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
         String msg = Utils.format("Error in calling ErrorListenerStage {}: {}", listener.getClass().getName(), ex);
         LOG.error(msg, ex);
       }
-
     }
   }
 

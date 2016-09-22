@@ -167,6 +167,10 @@ public class Pipeline {
     return issues;
   }
 
+  public void errorNotification(Throwable throwable) {
+    runner.errorNotification(pipes, throwable);
+  }
+
   public void destroy() {
     try {
       runner.destroy(pipes, badRecordsHandler, statsAggregationHandler);
