@@ -34,11 +34,11 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="15.57632398753894%" id="d20565e32">Character</th>
+       <th class="entry" valign="top" width="15.57632398753894%" id="d20643e32">Character</th>
 
-       <th class="entry" valign="top" width="43.613707165109034%" id="d20565e35">Description</th>
+       <th class="entry" valign="top" width="43.613707165109034%" id="d20643e35">Description</th>
 
-       <th class="entry" valign="top" width="40.80996884735203%" id="d20565e38">Examples</th>
+       <th class="entry" valign="top" width="40.80996884735203%" id="d20643e38">Examples</th>
 
       </tr>
 
@@ -46,20 +46,20 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">[ ]</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">[ ]</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use brackets to define character classes. </td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use brackets to define character classes. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">[0-9][0-9][0-9] represents 3 digits ranging from 0 through 9, inclusive. </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">[0-9][0-9][0-9] represents 3 digits ranging from 0 through 9, inclusive. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">-</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">-</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use the hyphen to define ranges.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use the hyphen to define ranges.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">
         <p class="p">[a-z] defines one lowercase letter from a to z.</p>
 
         <p class="p">[A-Z] defines one uppercase letter from A to Z.</p>
@@ -69,203 +69,203 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">|</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">|</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Indicates an alternate option to the character or group being defined.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Indicates an alternate option to the character or group being defined.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">[a-z | A-Z] represents a single upper or lowercase letter. </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">[a-z | A-Z] represents a single upper or lowercase letter. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">( ) </td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">( ) </td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use parentheses to create groups, atomic groups, or lookarounds.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use parentheses to create groups, atomic groups, or lookarounds.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">([0-9][0-9][0-9])(-|.)([0-9][0-9][0-9])(-|.)([0-9][0-9][0-9][0-9]) represents phone
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">([0-9][0-9][0-9])(-|.)([0-9][0-9][0-9])(-|.)([0-9][0-9][0-9][0-9]) represents phone
         numbers with area codes that are separated by dashes or periods as follows: 415-555-5555 and
         415.555.5555. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">&lt; &gt; </td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">&lt; &gt; </td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use angle brackets to define named capture groups. Use the following syntax:
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use angle brackets to define named capture groups. Use the following syntax:
         <pre class="pre codeblock">(?&lt;groupName&gt; ...) </pre>
 to set up a named field extraction.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">^</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">^</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use a carat to negate a character class. </td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use a carat to negate a character class. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">[^A-G] defines a character that is not an uppercase letter from A to G.</td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">[^A-G] defines a character that is not an uppercase letter from A to G.</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">.</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">.</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">A wildcard that represents any single character except newline or other special
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">A wildcard that represents any single character except newline or other special
         characters.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">&amp;&amp;</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">&amp;&amp;</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use two ampersands to indicate the union of two ranges. </td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use two ampersands to indicate the union of two ranges. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">[\w&amp;&amp;[^1-9] represents all word characters except 1-9. </td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">? </td>
-
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">A quantifier that represents zero or one instance of the preceding character or group. </td>
-
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">B-?7 represents B7 or B-7.</td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">[\w&amp;&amp;[^1-9] represents all word characters except 1-9. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">+</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">? </td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">A quantifier that represents one or more instances of the preceding character or
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">A quantifier that represents zero or one instance of the preceding character or group. </td>
+
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">B-?7 represents B7 or B-7.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">+</td>
+
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">A quantifier that represents one or more instances of the preceding character or
         group.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">([0-9][0-9][0-9])-+([0-9][0-9][0-9][0-9]) represents phone numbers that area codes:
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">([0-9][0-9][0-9])-+([0-9][0-9][0-9][0-9]) represents phone numbers that area codes:
         415-555-5555 and 555-5555. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">* </td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">* </td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">A quantifier that represents zero or more instances of the preceding character or
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">A quantifier that represents zero or more instances of the preceding character or
         group. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">([0-9][0-9][0-9][0-9][0-9])-([0-9][0-9][0-9][0-9])* represents 5- and 9-digit zip
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">([0-9][0-9][0-9][0-9][0-9])-([0-9][0-9][0-9][0-9])* represents 5- and 9-digit zip
         codes. </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Use the backslash as an escape character.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Use the backslash as an escape character.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\\</td>
-
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a single backslash</td>
-
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\w </td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\\</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a word character - includes alphanumeric characters and the underscore. </td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a single backslash</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">\w\w\w-\w\w\w\w\w can represent an error code, such as SVR-30243.</td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\W</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\w </td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a non-word character - includes everything except alphanumeric characters
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a word character - includes alphanumeric characters and the underscore. </td>
+
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">\w\w\w-\w\w\w\w\w can represent an error code, such as SVR-30243.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\W</td>
+
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a non-word character - includes everything except alphanumeric characters
         and the underscore. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\d</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\d</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a digit. Shorthand for 0-9. </td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a digit. Shorthand for 0-9. </td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">(\d\d\d\d\d)-(\d\d\d\d)* represents a 9-digit zip code.</td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\D</td>
-
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a non-digit character.</td>
-
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 ">\D&amp;&amp;\S represents the alphabet in either case.</td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">(\d\d\d\d\d)-(\d\d\d\d)* represents a 9-digit zip code.</td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\s</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\D</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a whitespace character - includes space, tab, line break and form
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a non-digit character.</td>
+
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 ">\D&amp;&amp;\S represents the alphabet in either case.</td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\s</td>
+
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a whitespace character - includes space, tab, line break and form
         feed.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\S</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\S</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Represents a non-space character - includes everything except the space, tab, line
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Represents a non-space character - includes everything except the space, tab, line
         break, and form feed characters.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\t</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\t</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Tab character.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Tab character.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
-
-      </tr>
-
-      <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\r</td>
-
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Return character.</td>
-
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\n</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\r</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Line break or newline character.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Return character.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="15.57632398753894%" headers="d20565e32 ">\f</td>
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\n</td>
 
-       <td class="entry" valign="top" width="43.613707165109034%" headers="d20565e35 ">Form feed character.</td>
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Line break or newline character.</td>
 
-       <td class="entry" valign="top" width="40.80996884735203%" headers="d20565e38 "> </td>
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
+
+      </tr>
+
+      <tr class="row">
+       <td class="entry" valign="top" width="15.57632398753894%" headers="d20643e32 ">\f</td>
+
+       <td class="entry" valign="top" width="43.613707165109034%" headers="d20643e35 ">Form feed character.</td>
+
+       <td class="entry" valign="top" width="40.80996884735203%" headers="d20643e38 "> </td>
 
       </tr>
 

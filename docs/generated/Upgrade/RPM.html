@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade a Basic Installation from the RPM Package"></meta><meta name="abstract" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="description" content="When you upgrade a basic installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ws4_vq5_xv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade a Basic Installation from the RPM Package</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="When you upgrade an installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Upgrade an Installation from the RPM Package"></meta><meta name="abstract" content="When you upgrade an installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="description" content="When you upgrade an installation from the RPM package, the new version uses the default configuration, data, log, and resource directories. If the previous version used the default directories, the new version has access to the files created in the previous version."></meta><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ws4_vq5_xv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Upgrade an Installation from the RPM Package</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,12 +23,12 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_ws4_vq5_xv">
- <h1 class="title topictitle1">Upgrade a Basic Installation from the RPM Package</h1>
+ <h1 class="title topictitle1">Upgrade an Installation from the RPM Package</h1>
 
  
- <div class="body conbody"><p class="shortdesc">When you upgrade a basic installation from the RPM package, the new version uses the
-        default configuration, data, log, and resource directories. If the previous version used the
-        default directories, the new version has access to the files created in the previous
+ <div class="body conbody"><p class="shortdesc">When you upgrade an installation from the RPM package, the new version uses the default
+        configuration, data, log, and resource directories. If the previous version used the default
+        directories, the new version has access to the files created in the previous
         version.</p>
 
   <p class="p">If the previous version used
@@ -42,7 +42,7 @@
                   Collector</span>
             can still use the libraries after the upgrade.</div>
 
-        <p class="p">To upgrade a basic installation from the RPM package, perform the following steps:</p>
+        <p class="p">To upgrade an installation from the RPM package, perform the following steps:</p>
 
      <ol class="ol" id="concept_ws4_vq5_xv__ol_x5s_qpr_5v">
          <li class="li">Shut down the previous version.</li>
@@ -55,7 +55,8 @@
 
          <li class="li">Manually update the configuration files.</li>
 
-            <li class="li">Install additional stage libraries as needed.</li>
+            <li class="li">For an upgrade of the core installation, install additional stage libraries as
+                needed.</li>
 
          <li class="li">Start the new version of <span class="ph">Data
                   Collector</span>.</li>
@@ -116,19 +117,36 @@
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
-                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                  Collector</span> RPM zip file from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to install the <span class="ph">Data
-                  Collector</span> RPM package in a different directory than the previous version:</span>
+                <span class="ph cmd">Use the following command to extract the zip file to a different directory than
+                    the previous version:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
+                    <pre class="pre codeblock">unzip streamsets-datacollector-&lt;version&gt;-all-rpms.zip</pre>
 
-                    <div class="p">For example, to install version 1.6.0.0, use the following
-                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-1.6.0.0-1.noarch.rpm</pre>
+                    <div class="p">For example, to extract version 2.0.0.0, use the following
+                        command:<pre class="pre codeblock">unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</pre>
 </div>
 
                 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To install the full RPM package and all available stage libraries, use the
+                    following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">yum localinstall streamsets*</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Or, to install the core RPM package and then install individual stage libraries
+                    as needed, use the following command:</span>
+                <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
+For
+                    example, to install version 2.0.0.0, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-2.0.0.0-1.noarch.rpm</pre>
+</div>
             </li>
 </ol>
 
@@ -225,13 +243,13 @@
 
 </div>
 <div class="topic concept nested1" id="concept_pch_vnr_bx">
- <h2 class="title topictitle2">Step 6. Install Additional Libraries</h2>
+ <h2 class="title topictitle2">Step 6. Install Additional Libraries for the Core Installation</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Install the individual stage libraries that the upgraded pipelines require. Use the
-            <samp class="ph codeph">stagelibs</samp> command to install additional stage libraries.</p>
+ <div class="body conbody"><p class="shortdesc">If you installed the core RPM package, install the individual stage libraries that the
+        upgraded pipelines require. </p>
 
-        <p class="p">For instructions on using the <samp class="ph codeph">stagelibs</samp> command, see <a class="xref" href="../Install_Config/BasicInstall_Overview.html#concept_bnl_n3n_s5">Step 2. Install Additional Libraries</a>.</p>
+        <p class="p">For instructions on installing additional stage libraries, see <a class="xref" href="../Install_Config/CoreInstall_Overview.html#concept_amc_cf3_dx">Step 2. Install Additional RPM Libraries</a>.</p>
 
  </div>
 

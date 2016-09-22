@@ -1,0 +1,122 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can unregister a Data Collector from DPM when you no longer want to use that Data Collector installation with DPM . When you restart an unregistered Data Collector , you use your Data Collector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Unregister Data Collector from DPM"></meta><meta name="abstract" content="You can unregister a Data Collector from DPM when you no longer want to use that Data Collector installation with DPM. When you restart an unregistered Data Collector, you use your Data Collector user account to log in."></meta><meta name="description" content="You can unregister a Data Collector from DPM when you no longer want to use that Data Collector installation with DPM. When you restart an unregistered Data Collector, you use your Data Collector user account to log in."></meta><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ldb_sr5_cx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Unregister Data Collector from DPM</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ldb_sr5_cx">
+ <h1 class="title topictitle1">Unregister Data Collector from DPM</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can unregister a <span class="ph">Data
+                  Collector</span> from
+            <span class="ph">DPM</span>
+        when you no longer want to use that <span class="ph">Data
+                  Collector</span>
+        installation with <span class="ph">DPM</span>. When
+        you restart an unregistered <span class="ph">Data
+                  Collector</span>, you
+        use your <span class="ph">Data
+                  Collector</span> user account to log in. </p>
+
+  <p class="p">You can unregister a <span class="ph">Data
+                  Collector</span>
+            from the <span class="ph">Data
+                  Collector</span>
+            console or from <span class="ph">DPM</span>.
+            For a Cloudera Manager installation, you must use both <span class="ph">DPM</span> and
+            Cloudera Manager to unregister a <span class="ph">Data
+                  Collector</span>.
+            For instructions on unregistering from <span class="ph">DPM</span> and
+            Cloudera Manager, see the <span class="ph">DPM</span>
+            online help.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_iz4_vv5_cx">
+    <h2 class="title topictitle2">Unregistering from Data Collector</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can unregister a <span class="ph">Data
+                  Collector</span> from
+            <span class="ph">DPM</span>
+        using the <span class="ph">Data
+                  Collector</span>
+        console.</p>
+
+        <div class="section context">
+            <p class="p">
+                
+            </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In <span class="ph">DPM</span>, stop all jobs running on the <span class="ph">Data
+                  Collector</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In <span class="ph">Data
+                  Collector</span>, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Disable DPM</span></span>.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Disable DPM Confirmation</span> dialog box appears.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To disable <span class="ph">Data
+                  Collector</span> from working with <span class="ph">DPM</span>, click <span class="ph uicontrol">Yes</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart the <span class="ph">Data
+                  Collector</span> in one of the following ways:</span>
+                <ul class="ul choices" id="task_iz4_vv5_cx__choices_ost_pkm_nw">
+                    <li class="li choice">If you started the <span class="ph">Data
+                  Collector</span> manually from the command line, click <span class="ph uicontrol">Restart Data
+                            Collector</span> in the <span class="keyword wintitle">Disable DPM</span>
+                        window.</li>
+
+                    <li class="li choice">If you started the <span class="ph">Data
+                  Collector</span> as a service, you must use the command line for restart. Click
+                            <span class="ph uicontrol">Cancel</span> in the <span class="keyword wintitle">Disable DPM</span>
+                        window, and then run the following command:
+                        <pre class="pre codeblock">service sdc restart</pre>
+</li>
+
+                </ul>
+
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

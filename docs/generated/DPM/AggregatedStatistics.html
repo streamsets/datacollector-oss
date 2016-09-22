@@ -1,0 +1,500 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="A DPM job defines the pipeline to run and the Data Collector s that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collector s. To monitor the job ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Aggregated Statistics for Pipelines"></meta><meta name="abstract" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics, you must configure the pipeline to aggregate statistics across all running pipeline instances."></meta><meta name="description" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics, you must configure the pipeline to aggregate statistics across all running pipeline instances."></meta><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_h2q_mb5_xw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Aggregated Statistics for Pipelines</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_h2q_mb5_xw">
+ <h1 class="title topictitle1">Aggregated Statistics for Pipelines</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A <span class="ph">DPM</span>
+        job defines the pipeline to run and the <span class="ph">Data
+                  Collector</span>s that
+        run the pipeline. When you start a job, <span class="ph">DPM</span>
+        remotely runs the pipeline on the group of <span class="ph">Data
+                  Collector</span>s. To
+        monitor the job statistics and metrics, you must configure the pipeline to aggregate
+        statistics across all running pipeline instances.</p>
+
+  <p class="p">To aggregate statistics,
+            use <span class="ph">Data
+                  Collector</span> to configure the pipeline to write the statistics to a Kafka cluster or to Amazon
+            Kinesis Streams.</p>
+
+        <p class="p">When you run a job that includes a pipeline configured to aggregate statistics, <span class="ph">DPM</span>
+            automatically generates and runs a system pipeline for the job. The system pipeline
+            reads the statistics written by each running pipeline instance to Kafka or Kinesis.
+            Then, the system pipeline aggregates and sends the statistics to <span class="ph">DPM</span>.
+            You can view the aggregated statistics and metrics when you monitor the job in <span class="ph">DPM</span>:</p>
+
+        <p class="p"><img class="image" id="concept_h2q_mb5_xw__image_h2w_wxs_gx" src="../Graphics/DPM_MonitorJob.png" height="416" width="680"></img></p>
+
+        <p class="p">When a <span class="ph">DPM</span> job includes a pipeline that is not configured to aggregate statistics, <span class="ph">DPM</span>
+            cannot display statistics and metrics for the job. Instead, <span class="ph">DPM</span>
+            displays the following warning message when you monitor the job:</p>
+
+        <pre class="pre codeblock">Aggregated metrics for the job are not available as individual pipeline metrics are discarded.</pre>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_wmv_cbb_fx">
+ <h2 class="title topictitle2">Write Statistics to Kafka</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you configure a pipeline to write aggregated statistics to a Kafka cluster, you
+        define connection information and the topic to write to. </p>
+
+        <p class="p">You also configure the partition strategy. The
+            pipeline passes data to partitions in the Kafka topic based on the partition strategy
+            that you choose. You can add additional Kafka configuration properties as needed. </p>
+
+        <div class="note note"><span class="notetitle">Note:</span> At this time, you cannot configure the pipeline to connect securely through SSL or
+            Kerberos when using Kafka 0.9.0.0 or later.</div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_wph_j2b_fx">
+ <h3 class="title topictitle3">Partition Strategy</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The partition strategy determines how to write statistics to Kafka partitions. You can
+        use a partition strategy to balance the work load or to write data semantically.</p>
+
+        <p class="p">The pipeline can use one of the following partition strategies:</p>
+
+        <p class="p">
+            
+        </p>
+
+     <dl class="dl">
+         
+             <dt class="dt dlterm">Round-Robin</dt>
+
+             <dd class="dd">Writes statistics to a different partition using a cyclical order. Use for load
+                    balancing. </dd>
+
+         
+         
+             <dt class="dt dlterm">Random</dt>
+
+             <dd class="dd">Writes statistics to a different partition using a random order. Use for load
+                    balancing.</dd>
+
+         
+         
+                <dt class="dt dlterm">Expression</dt>
+
+                <dd class="dd">Writes statistics to a partition based on the results of the partition
+                    expression. Use to perform semantic partitioning. </dd>
+
+                <dd class="dd">When you configure the partition expression, define the expression to evaluate
+                    to the partition where you want statistics written. </dd>
+
+            
+            
+                <dt class="dt dlterm">Default</dt>
+
+                <dd class="dd">Writes statistics using the default partition strategy that Kafka provides.</dd>
+
+            
+     </dl>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_bmq_ff5_xw">
+ <h3 class="title topictitle3">Best Practices for a Kafka Cluster</h3>
+
+ <div class="body conbody">
+  <p class="p">Consider the following best practices
+            when you configure a pipeline to write aggregated statistics to a Kafka cluster: </p>
+
+        <ul class="ul" id="concept_bmq_ff5_xw__ul_vlq_jg5_xw">
+            <li class="li">To avoid mixing statistics from different jobs, use a unique topic name for each
+                job. </li>
+
+            <li class="li">Consider the Kafka retention policy. <p class="p">Each running pipeline instance writes
+                    statistics to Kafka, and then the system pipeline consumes the statistics from
+                    Kafka. If the system pipeline unexpectedly shuts down, Kafka retains the
+                    statistics for the amount of time determined by the Kafka retention policy. If
+                    the system pipeline is down for longer than Kafka retains data, the statistics
+                    are lost.</p>
+</li>
+
+        </ul>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_em4_2bb_fx">
+ <h2 class="title topictitle2">Write Statistics to Kinesis Streams</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you configure a pipeline to write aggregated statistics to Amazon Kinesis Streams,
+        you define connection information and the stream to write to. </p>
+
+        <p class="p">You also configure the partition strategy. The pipeline passes data to partitions in
+            Kinesis shards based on the partition strategy that you choose. You can add additional
+            Kinesis configuration properties as needed. </p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_m3j_2kb_fx">
+ <h3 class="title topictitle3">AWS Credentials</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass
+        credentials to Amazon Web Services. </p>
+
+  <p class="p">Use one of the following methods to pass AWS
+                credentials:</p>
+
+     <dl class="dl">
+         
+             <dt class="dt dlterm">IAM roles</dt>
+
+             <dd class="dd">When <span class="ph">Data
+                  Collector</span> runs on an Amazon EC2 instance, you can use the AWS Management
+                 Console to configure an IAM role for the EC2 instance. <span class="ph">Data
+                  Collector</span> uses the IAM instance profile credentials to automatically connect
+                 to AWS. </dd>
+
+             <dd class="dd">When you use IAM roles, you do not need to specify the Access Key ID and Secret
+                    Access Key properties when you configure statistics for the pipeline. </dd>
+
+             <dd class="dd">For more information about assigning an IAM role to an EC2 instance, see
+                 the Amazon EC2 documentation.</dd>
+
+         
+         
+             <dt class="dt dlterm">AWS access key pairs</dt>
+
+             <dd class="dd">
+                 <p class="p">When <span class="ph">Data
+                  Collector</span> does not run on an Amazon EC2 instance or when the EC2 instance doesn’t
+                        have an IAM role, you must specify the <span class="ph uicontrol">Access Key ID</span>
+                        and <span class="ph uicontrol">Secret Access Key</span> properties when you configure
+                        statistics for the pipeline.</p>
+
+             </dd>
+
+         
+     </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_fdy_5f5_xw">
+ <h3 class="title topictitle3">Best Practices for Kinesis Streams</h3>
+
+ <div class="body conbody">
+  <p class="p">Consider the following best practices
+            when you configure a pipeline to write aggregated statistics to Amazon Kinesis Streams: </p>
+
+        <ul class="ul" id="concept_fdy_5f5_xw__ul_w44_3g5_xw">
+            <li class="li">To avoid mixing statistics from different jobs, use a unique stream name for each
+                job. </li>
+
+            <li class="li">Consider the Kinesis Streams retention policy. <p class="p">Each running pipeline instance
+                    writes statistics to Kinesis Streams, and then the system pipeline reads the
+                    statistics from Kinesis Streams. If the system pipeline unexpectedly shuts down,
+                    Kinesis Streams retains the statistics for the amount of time determined by the
+                    Kinesis Streams retention policy. If the system pipeline is down for longer than
+                    Kinesis Streams retains data, the statistics are lost.</p>
+</li>
+
+        </ul>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_lcd_ng5_xw">
+    <h2 class="title topictitle2">Configuring a Pipeline to Aggregate Statistics</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can configure a pipeline to aggregate statistics after the Data Collector has
+        been registered with DPM.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Open the pipeline in Data Collector. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Statistics</span> tab, select one of the following
+                    options for the statistics aggregator:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_lcd_ng5_xw__ul_ljj_brd_dx">
+                        <li class="li">Write to Kafka - Write the pipeline statistics to a Kafka cluster.</li>
+
+                        <li class="li">Write to Kinesis - Write the pipeline statistics to Amazon Kinesis
+                            Streams.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To write statistics to Kafka, on the <span class="ph uicontrol">Stats Aggregator - Write to
+                        Kafka</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_i2g_jwd_dx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d23981e404">Kafka Properties</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d23981e407">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Broker URI</td>
+
+                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Connection string for the Kafka broker. Use the
+                                            following format:
+                                                <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
+                                                connection, enter a comma-separated list of
+                                                additional broker URI.</p>
+</td>
+
+                                    </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Runtime Topic Resolution </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Do not use at this time. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Topic</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Topic to use. <p class="p">To avoid mixing statistics from
+                                            different jobs, use a unique topic name for each job.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Partition Strategy </td>
+
+                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d1772e5346">
+                                                <li class="li">Round Robin - Takes turns writing to different
+                                                  partitions.</li>
+
+                                                <li class="li">Random - Writes to partitions randomly.</li>
+
+                                                <li class="li">Expression - Uses an expression to write data to
+                                                  different partitions. </li>
+
+                                                <li class="li">Default - Uses the default partition strategy
+                                                  that Kafka provides.</li>
+
+                                            </ul>
+</td>
+
+                                    </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Partition Expression </td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Expression to use when using the expression partition
+                                            strategy.<p class="p">Define the expression to evaluate to the
+                                            partition where you want statistics written. Partition
+                                            numbers start with 0.</p>
+<p class="p">Optionally, click
+                                                <span class="ph uicontrol">Ctrl + Space Bar</span> for help
+                                            with creating the expression.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">Kafka Configuration</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Additional Kafka properties to use. Click the
+                                            <span class="ph uicontrol">Add</span> icon and define the Kafka
+                                        property name and value.<p class="p">Use the property names and values
+                                            as expected by Kafka. Do not use the broker.list
+                                            property.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e404 ">ZooKeeper URI</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e407 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                        Use the following format:
+                                            <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
+                                            ZooKeeper quorum, enter a comma-separated list.
+                                            </p>
+<div class="p">To use a ZooKeeper chroot path, add the path at
+                                            the end of the list as
+                                            follows:<pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;, &lt;host2&gt;:&lt;port2&gt;, .../&lt;chroot_path&gt;</pre>
+</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To write statistics to Amazon Kinesis Streams, on the <span class="ph uicontrol">Stats
+                        Aggregator - Write to Kinesis</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lcd_ng5_xw__table_kh3_kls_dx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d23981e547">Kinesis Properties</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d23981e550">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Access Key ID
+                                        <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">
+        <p class="p">AWS access key ID.</p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
+
+       </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Secret Access Key
+                                        <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">
+        <p class="p">AWS secret access key. </p>
+
+        <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
+
+       </td>
+
+                                </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Region</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Stream Name</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">Kinesis stream name.<p class="p">To avoid mixing statistics from
+                                            different jobs, use a unique stream name for each job.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Partitioning Strategy</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d1801e540">
+        <li class="li">Random - Generates a random partition key.</li>
+
+        <li class="li">
+         <p class="p">Expression - Uses the result of an expression as the partition key.</p>
+
+        </li>
+
+       </ul>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Partition Expression</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+        for the expression partition strategy. </p>
+</td>
+
+     </tr>
+
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23981e547 ">Kinesis Producer Configuration</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23981e550 ">Additional Kinesis properties.<p class="p">When you add a
+                                            configuration property, enter the exact property name
+                                            and the value. The pipeline does not validate the
+                                            property names or values.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -107,13 +107,18 @@
  <div class="body conbody">
   <div class="p">Keep the
             following notes in mind when previewing your data:<ul class="ul" id="concept_sg4_bfm_zw__ul_ecg_ffm_zw">
-                <li class="li">Whole file data format - When previewing a pipeline that processes whole file
-                    data, data preview displays only one record.</li>
-
                 <li class="li">Date, datetime, and time data - <span class="ph">Data preview displays date,
                         datetime, and time data using the default format of the browser locale. For
                         example, if the browser uses the en_US locale, preview displays dates using
                         the following format: MMM d, y h:mm:ss a.</span></li>
+
+                <li class="li">Oracle CDC Client pipelines - When previewing a pipeline that uses the Oracle
+                    CDC Client origin, data preview might time out before connecting to the origin
+                    system. When this occurs, try increasing the timeout to 120,000 milliseconds to
+                    allow the origin time to connect.</li>
+
+                <li class="li">Whole file data format - When previewing a pipeline that processes whole file
+                    data, data preview displays only one record.</li>
 
             </ul>
 </div>

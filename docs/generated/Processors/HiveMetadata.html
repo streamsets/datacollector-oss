@@ -36,8 +36,8 @@
             process the data.</p>
 
   <p class="p">When you configure the Hive Metadata processor, you define the connection information for Hive
-            and the expressions that define the database, table, and partitions that the records
-            require. </p>
+            and the expressions that define the database, table, partitions, and decimal field
+            expressions that the records require.</p>
 
         <p class="p">You define the location of the Hive and Hadoop configuration files and optionally specify
             additional required properties. You can also configure advanced options, such as the
@@ -246,6 +246,46 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_mrh_hrp_fx">
+ <h2 class="title topictitle2">Decimal Field Expressions</h2>
+
+ <div class="body conbody">
+  <p class="p">Decimal field expressions define the precision and scale to use for decimal fields. When you
+            configure the Hive Metadata processor, you specify an expression for the precision and
+            for the scale. </p>
+
+        <p class="p">You can enter expressions that evaluate to the same precision and scale for all decimal
+            fields in the record. For example, if your use case allows it, you could use a precision
+            of 10 and scale of 2 for all decimal fields.</p>
+
+        <p class="p">Or you can create a more complex expression that evaluates to different values for
+            different decimal fields. </p>
+
+        <div class="p">The default expressions for these properties use JDBC header attributes. You can use the
+            following default expressions when processing data from the JDBC
+            Consumer:<pre class="pre codeblock">${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}
+${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}</pre>
+</div>
+
+        <div class="p">The <samp class="ph codeph">field:field</samp> function returns the name of the field. So by default,
+            the expressions resolve
+            to:<pre class="pre codeblock">${record:attribute(jdbc.&lt;fieldname&gt;.precision)}
+${record:attribute(jdbc.&lt;fieldname&gt;.scale)}</pre>
+</div>
+
+        <div class="p"><div class="note note"><span class="notetitle">Note:</span> The JDBC Consumer creates JDBC header attributes by default, writing the precision
+                and scale of each decimal field to a record header attribute. </div>
+In these
+            expressions, 'jdbc.' represents the default prefix for the JDBC header attributes. You
+            can change the prefix in the JDBC Consumer. If you change the prefix, be sure to update
+            it in the decimal field expressions.</div>
+
+        <p class="p">For information about enabling the JDBC Consumer to create JDBC header attributes, see
+                <a class="xref" href="../Origins/JDBCConsumer.html#concept_tvf_tgp_fx">JDBC Header Attributes with the Hive Drift Solution</a>.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_pg1_1fl_3w">
  <h2 class="title topictitle2">Time Basis</h2>
 
@@ -405,14 +445,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__d20933e3161" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpg_pft_zv__d24769e3197" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d167848e513">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180631e559">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d167848e516">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180631e562">Description</th>
 
                                 </tr>
 
@@ -420,24 +460,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e513 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e559 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e516 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e513 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d167848e516 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d180631e562 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e513 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_hpg_pft_zv__d20933e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e559 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e516 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d180631e562 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e559 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_hpg_pft_zv__d24769e3243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d180631e562 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -445,10 +485,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e513 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_hpg_pft_zv__d20933e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e559 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_hpg_pft_zv__d24769e3257" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e516 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d180631e562 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -456,10 +496,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e513 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_hpg_pft_zv__d20933e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e559 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_hpg_pft_zv__d24769e3272" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e516 ">Error record handling for the stage: <ul class="ul" id="task_hpg_pft_zv__d20933e3240">
+                                    <td class="entry" valign="top" width="70%" headers="d180631e562 ">Error record handling for the stage: <ul class="ul" id="task_hpg_pft_zv__d24769e3276">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -489,9 +529,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d167848e635">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180631e681">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d167848e638">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180631e684">Description</th>
 
                                 </tr>
 
@@ -499,25 +539,25 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d167848e635 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d180631e681 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d167848e638 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d180631e684 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d167848e635 ">JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d180631e681 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d167848e638 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d180631e684 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Database Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Database Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_t3v_yzk_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Optional name of the database to use. You can use an
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Optional name of the database to use. You can use an
                                         expression that evaluates to a database name. <p class="p">When not
                                             defined, the processor uses the Hive default
                                             database.</p>
@@ -526,42 +566,42 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Table Name <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Table Name <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_jwt_11l_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Name of the table to use. You can use an expression that
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Name of the table to use. You can use an expression that
                                         evaluates to a table name. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Partition Column Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Partition Column Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Name of the partition column in the Hive table. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Name of the partition column in the Hive table. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Partition Value Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Partition Value Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">The data type of partition values. <span class="ph">You can use the Int, Bigint, and String data formats
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">The data type of partition values. <span class="ph">You can use the Int, Bigint, and String data formats
                         for partition data.</span></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Partition Value Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Partition Value Expression <a class="xref" href="HiveMetadata.html#concept_zbk_jk3_fw">
                                             <img class="image" id="task_hpg_pft_zv__image_ojy_11l_gw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Expression that evaluates to the partition value to
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Expression that evaluates to the partition value to
                                         use.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">External Table</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">External Table</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Indicates if the table is an external table. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Indicates if the table is an external table. Select to
                                         write to tables outside the Hive default location. <p class="p">When
                                             not selected, the processor uses the default location
                                             defined by the hive.metastore.warehouse.dir property in
@@ -572,17 +612,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Table Path Template</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Table Path Template</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Expression that defines the path to use for external
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Expression that defines the path to use for external
                                         tables. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">Partition Path Template</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Partition Path Template</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">Expression that defines the partition path to use for
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Expression that defines the partition path to use for
                                         external tables when partitions are configured. When you
                                         omit partition configuration details, you can skip this
                                         property as well.<p class="p">When configured, the value of the
@@ -597,9 +637,49 @@
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d167848e635 ">Hadoop Configuration Directory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Decimal Precision Expression <a class="xref" href="HiveMetadata.html#concept_mrh_hrp_fx">
+                                            <img class="image" id="task_hpg_pft_zv__image_b3j_wvq_fx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d167848e638 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Expression that defines the precision of decimal fields.
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different
+                                        precisions for different fields.<div class="note note"><span class="notetitle">Note:</span> At this time, the maximum precision and scale for
+                        decimal data in Hive is 38.</div>
+<p class="p">The default expression determines the precision
+                                            based on information in the JDBC header attribute.
+                                            </p>
+<p class="p">Use the default only when processing data from a
+                                            JDBC Consumer with JDBC header attributes enabled.
+                                            Replace "jdbc" with the configured JDBC header prefix
+                                            when necessary. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">Decimal Scale Expression <a class="xref" href="HiveMetadata.html#concept_mrh_hrp_fx">
+                                            <img class="image" id="task_hpg_pft_zv__image_s2q_wvq_fx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">Expression that defines the scale for decimal fields.
+                                        Enter a single value to be used by all decimal fields in the
+                                        record or an expression that evaluates to different scales
+                                        for different fields. <div class="note note"><span class="notetitle">Note:</span> At this time, the maximum precision and scale for
+                        decimal data in Hive is 38.</div>
+<p class="p">The default expression determines the scale based
+                                            on information in the JDBC header attribute. </p>
+<p class="p">Use
+                                            the default only when processing data from a JDBC
+                                            Consumer with JDBC header attributes enabled. Replace
+                                            "jdbc" with the configured JDBC header prefix when
+                                            necessary. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d180631e681 ">Hadoop Configuration Directory</td>
+
+       <td class="entry" valign="top" width="70%" headers="d180631e684 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -621,12 +701,12 @@
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e635 ">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e681 ">
                                         <p class="p">Additional Hadoop Configuration </p>
 
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e638 ">
+                                    <td class="entry" valign="top" width="70%" headers="d180631e684 ">
                                         <p class="p">Additional properties to use. </p>
 
                                         <p class="p">To add properties, click Add and define the property name
@@ -654,9 +734,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d167848e838">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d180631e922">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d167848e841">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d180631e925">Description</th>
 
                                 </tr>
 
@@ -664,10 +744,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e838 ">Max Cache Size (entries) <a class="xref" href="HiveMetadata.html#concept_utk_3bt_dw" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries.">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e922 ">Max Cache Size (entries) <a class="xref" href="HiveMetadata.html#concept_utk_3bt_dw" title="The Hive Metadata processor queries Hive for information and caches the results. When possible, it uses the cache for record comparison to avoid unnecessary Hive queries.">
                                             <img class="image" id="task_hpg_pft_zv__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e841 ">Maximum number of entries in the cache. <p class="p">When the cache
+                                    <td class="entry" valign="top" width="70%" headers="d180631e925 ">Maximum number of entries in the cache. <p class="p">When the cache
          reaches the maximum size, the oldest cached entries are evicted to allow for new
          data.</p>
 <p class="p">Default is -1, an unlimited cache size.</p>
@@ -676,46 +756,19 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e838 ">Time Basis  <a class="xref" href="HiveMetadata.html#concept_pg1_1fl_3w">
+                                    <td class="entry" valign="top" width="30%" headers="d180631e922 ">Time Basis  <a class="xref" href="HiveMetadata.html#concept_pg1_1fl_3w">
                                             <img class="image" id="task_hpg_pft_zv__image_mn2_pnl_3w" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e841 ">Time basis used to evaluate datetime-based partition
+                                    <td class="entry" valign="top" width="70%" headers="d180631e925 ">Time basis used to evaluate datetime-based partition
                                         value expressions.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e838 ">Decimal Field Scale Expression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d180631e922 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d167848e841 ">Expression that defines the scale for decimal fields.
-                                        Enter a single value to be used by all decimal fields in the
-                                        record or an expression that evaluates to different scales
-                                        for different fields. <p class="p">The default expression determines
-                                            the scale based on information in the JDBC namespace
-                                            header attribute. </p>
-<p class="p">Use the default only when
-                                            processing data from a JDBC Consumer with namespace
-                                            headers enabled. Replace "jdbc" with the configured JDBC
-                                            header prefix when necessary. </p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d167848e838 ">Decimal Field Precision Expression</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d167848e841 ">Expression that defines the precision of decimal fields.
-                                        Enter a single value to be used by all decimal fields in the
-                                        record or an expression that evaluates to different
-                                        precisions for different fields.<p class="p">The default expression
-                                            determines the precision based on information in the
-                                            JDBC namespace header attribute. </p>
-<p class="p">Use the default
-                                            only when processing data from a JDBC Consumer with
-                                            namespace headers enabled. Replace "jdbc" with the
-                                            configured JDBC header prefix when necessary.
-                                        </p>
-</td>
+                                    <td class="entry" valign="top" width="70%" headers="d180631e925 ">Time zone to use with Time Basis to evaluate
+                                        datetime-based partition value expressions.</td>
 
                                 </tr>
 
@@ -731,7 +784,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw" title="JDBC Namespace Header Attributes">JDBC Namespace Header Attributes</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw" title="JDBC Header Attributes">JDBC Header Attributes</a></div>
 </div>
 </div>
 </div>

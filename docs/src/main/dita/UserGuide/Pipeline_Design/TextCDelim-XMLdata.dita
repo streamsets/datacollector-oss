@@ -16,27 +16,18 @@
 <concept id="concept_okt_kmg_jx">
  <title>Processing XML Data with Custom Delimiters</title>
  <conbody>
-<<<<<<< Updated upstream
         <p><indexterm>text data format<indexterm>processing XML with custom
                 delimiters</indexterm></indexterm><indexterm>XML data<indexterm>processing with the
                     text data format</indexterm></indexterm>You can use custom delimiters with the
             text data format to process XML data. You might use the text data format to process XML
             data with no root element, which cannot be processed with the XML data format. </p>
         <p>When using the text data format in the origin to read XML data, you can use the XML
-            Parser processor to parse the XML data downstream.</p>
-=======
-        <p>You can use custom delimiters with the text data format to process XML data. You might
-            use the text data format to process data when you have an invalid XML document with
-            multiple XML objects that cannot be processed properly with the XML data format. </p>
-        <p>When using the text data format in the origin to read XML data, you can use the XML
-            Parser processor to parse the XML into fields. </p>
->>>>>>> Stashed changes
+            Parser processor downstream to parse the XML data.</p>
         <p>For example, the following XML document is valid and is best processed using the XML data
             format:</p>
         <p>
             <codeblock>&lt;?xml version="1.0" encoding="UTF-8"?>
 &lt;root>
-<<<<<<< Updated upstream
  &lt;msg>
     &lt;time>8/12/2016 6:01:00&lt;/time>
     &lt;request>GET /index.html 200&lt;/request>
@@ -47,27 +38,14 @@
  &lt;/msg>
 &lt;/root></codeblock>
         </p>
-        <p>However, the following XML document does not include an XML prolog or root element, so is
-=======
- &lt;message>
-    &lt;time>8/12/2016 6:01:00&lt;/time>
-    &lt;text>GET /index.html 200&lt;/text>
- &lt;/message>
- &lt;message>
-    &lt;time>8/12/2016 6:03:43&lt;/time>
-    &lt;text>GET /images/sponsered.gif 304&lt;/text>
- &lt;/message>
-&lt;/root></codeblock>
-        </p>
-        <p>However, the following XML document does not include a root element, so is
->>>>>>> Stashed changes
+        <p>However, the following XML document does not include an XML prolog or root element, so it
+            is
             invalid:<codeblock>&lt;msg>
     &lt;time>8/12/2016 6:01:00&lt;/time>
     &lt;request>GET /index.html 200&lt;/request>
 &lt;/msg>
 &lt;msg>
     &lt;time>8/12/2016 6:03:43&lt;/time>
-<<<<<<< Updated upstream
     &lt;request>GET /images/sponsored.gif 304&lt;/request>
 &lt;/msg></codeblock></p>
         <p>You can use the text data format with a custom delimiter to process this data. To do so,
@@ -113,15 +91,5 @@
                             </ul></p></stentry>
                 </strow>
             </simpletable></p>
-=======
-    &lt;request>GET /images/sponsered.gif 304&lt;/request>
-&lt;/msg></codeblock></p>
-        <p>You can use the text data format with a custom delimiter to process this data. To process
-            the data correctly, you would use &lt;/msg> as the custom delimiter to separate data
-            into records, and include the delimiter in the record as follows:</p>
-        <p><image href="../Graphics/Text-CustomDelim-Dir.png" id="image_k3b_sgh_jx" scale="50"/></p>
-        <draft-comment author="Loretta">keep going. </draft-comment>
-        <p>The text data format reads the invalid document as a text file. </p>
->>>>>>> Stashed changes
     </conbody>
 </concept>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="To implement the Hive Drift Solution, perform the following steps: To capture columnar drift and to enable record-based writes, configure the Hive Metadata processor: Configure the Hive connection ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Implementation Steps"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Metadata/HiveDriftSolution_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_y5w_dj3_fw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Implementation Steps</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="To implement the Hive Drift Solution, perform the following steps: Configure the origin and any additional processors that you want to use. If using the JDBC Consumer as the origin, enable the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Implementation Steps"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Metadata/HiveDriftSolution_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_y5w_dj3_fw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Implementation Steps</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -28,6 +28,16 @@
  <div class="body conbody">
   <div class="p">To
             implement the Hive Drift Solution, perform the following steps:<ol class="ol" id="concept_y5w_dj3_fw__ol_zr1_3j3_fw">
+                <li class="li"> Configure the origin and any additional processors that you want to use. <ul class="ul" id="concept_y5w_dj3_fw__ul_qjn_kp4_hx">
+                        <li class="li">If using the JDBC Consumer as the origin, enable the creation of JDBC
+                            header attributes. For more information, see <a class="xref" href="../Origins/JDBCConsumer.html#concept_tvf_tgp_fx">JDBC Header Attributes with the Hive Drift Solution</a>. </li>
+
+                        <li class="li">If data includes records with nested fields, add a Field Flattener to
+                            flatten records before passing them to the Hive Metadata processor.</li>
+
+                    </ul>
+</li>
+
                 <li class="li">To capture columnar drift and to enable record-based writes, configure the Hive
                     Metadata processor:<ul class="ul" id="concept_y5w_dj3_fw__ul_qsk_5x3_fw">
                         <li class="li">Configure the Hive connection information.</li>
@@ -39,8 +49,17 @@
                                 header attribute.</p>
 </li>
 
+                        <li class="li">Configure the decimal field precision and scale expressions.<p class="p">You can
+                                use constants or expressions that evaluate to the same precision and
+                                scale for all decimal fields. Or, you can create more complex
+                                expressions that evaluate to different values for different fields.
+                                </p>
+<p class="p">When processing data from the JDBC Consumer with JDBC header
+                                attributes, use the default expressions. </p>
+</li>
+
                         <li class="li">Optionally configure advanced options, such as the maximum cache size,
-                            time basis, and decimal precision and scale expressions.</li>
+                            time basis, and data time zone.</li>
 
                     </ul>
 <p class="p">For more information about the Hive Metadata processor, see <a class="xref" href="../Processors/HiveMetadata.html#concept_rz5_nft_zv" title="The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS or MapR FS destinations as part of the Hive Drift Solution.">Hive Metadata</a>.</p>

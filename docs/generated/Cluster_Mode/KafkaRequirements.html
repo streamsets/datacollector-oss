@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Cluster mode pipelines that read from a Kafka cluster have the following minimum requirements: Component Minimum Requirement Spark Streaming Spark version 1.3 through 1.6 Kafka Spark Streaming on YARN ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Kafka Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/KConsumer.html#concept_msz_wnr_5q"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_gmd_msw_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Requirements</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Cluster mode pipelines that read from a Kafka cluster have the following minimum requirements: Component Minimum Requirement Spark Streaming Spark version 1.3 through 1.6 Apache Kafka Spark Streaming ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Kafka Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/KConsumer.html#concept_msz_wnr_5q"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_gmd_msw_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Requirements</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -34,9 +34,9 @@
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d23243e32">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d23379e32">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d23243e35">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d23379e35">Minimum Requirement</th>
 
                             </tr>
 
@@ -44,18 +44,18 @@
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23243e32 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23379e32 ">Spark Streaming</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23243e35 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23379e35 ">Spark version 1.3 through 1.6</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23243e32 ">Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23379e32 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23243e35 ">Spark Streaming on YARN requires a Cloudera distribution of
-                                    Apache Kafka cluster. <p class="p">Spark Streaming on Mesos requires
-                                        Apache Kafka.</p>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23379e35 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                    distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
+                                        Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
 
                             </tr>
@@ -99,16 +99,9 @@ If the script is not in
                     <li class="li">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties for
                         YARN or Mesos. </li>
 
-                    <li class="li">In the pipeline, use a Kafka Consumer origin for cluster mode. <div class="p">Select the
-                            required cluster mode stage library on the <span class="keyword wintitle">General</span>
-                            tab of the origin:<ul class="ul" id="task_gmd_msw_yr__ul_okj_1rn_zw">
-                                <li class="li">On YARN, select one of the Cloudera distributions of Apache
-                                    Kafka cluster stage libraries.</li>
-
-                                <li class="li">On Mesos, select one of the Apache Kafka stage libraries.</li>
-
-                            </ul>
-</div>
+                    <li class="li">In the pipeline, use a Kafka Consumer origin for cluster mode. <p class="p">If
+                            necessary, select a cluster mode stage library on the
+                                <span class="keyword wintitle">General</span> tab of the origin. </p>
 </li>
 
                 </ol>

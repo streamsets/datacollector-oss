@@ -1,0 +1,190 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="By default, the text data format creates records based on line breaks, creating a record for each line of text. You can configure origins to create records based on custom delimiters. Use custom ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Text Data Format with Custom Delimiters"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lg2_gcg_jx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Text Data Format with Custom Delimiters</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_lg2_gcg_jx">
+ <h1 class="title topictitle1">Text Data Format with Custom Delimiters</h1>
+
+ <div class="body conbody">
+        <p class="p">By default, the text data format creates records
+            based on line breaks, creating a record for each line of text. You can configure origins
+            to create records based on custom delimiters. </p>
+
+        <p class="p">Use custom delimiters when the origin system uses delimiters to separate logical sections
+            of data that you want to use as records. A custom delimiter might be a simple as a
+            semicolon or might be a set of characters. You can even use an XML tag to read XML
+            data.</p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When using a custom delimiter, the origin uses the delimiter characters to create
+                records, ignoring new lines.</div>
+
+        </div>
+
+        <p class="p">You can include the custom delimiters in records or you remove them.</p>
+
+        <div class="p">For example, say you configure the Directory origin to process a file with the following
+            text, using a semicolon as a
+            delimiter:<pre class="pre codeblock">8/12/2016 6:01:00 unspecified error message;8/12/2016 
+6:01:04 another error message;8/12/2016 6:01:09 just a warning message;</pre>
+</div>
+
+        <div class="p">If you configure Directory to discard the custom delimiter, the origin generates the
+            following
+            records:<pre class="pre codeblock">8/12/2016 6:01:00 unspecified error message
+8/12/2016 6:01:04 another error message
+8/12/2016 6:01:09 just a warning message</pre>
+</div>
+
+        <p class="p">Note that the origin ignores the line break because it uses the semicolon custom
+            delimiter to create records.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_okt_kmg_jx">
+ <h2 class="title topictitle2">Processing XML Data with Custom Delimiters</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use custom delimiters with the
+            text data format to process XML data. You might use the text data format to process XML
+            data with no root element, which cannot be processed with the XML data format. </p>
+
+        <p class="p">When using the text data format in the origin to read XML data, you can use the XML
+            Parser processor downstream to parse the XML data.</p>
+
+        <p class="p">For example, the following XML document is valid and is best processed using the XML data
+            format:</p>
+
+        <div class="p">
+            <pre class="pre codeblock">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;root&gt;
+ &lt;msg&gt;
+    &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt;
+    &lt;request&gt;GET /index.html 200&lt;/request&gt;
+ &lt;/msg&gt;
+ &lt;msg&gt;
+    &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt;
+    &lt;request&gt;GET /images/sponsored.gif 304&lt;/request&gt;
+ &lt;/msg&gt;
+&lt;/root&gt;</pre>
+
+        </div>
+
+        <div class="p">However, the following XML document does not include an XML prolog or root element, so is invalid:<pre class="pre codeblock">&lt;msg&gt;
+    &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt;
+    &lt;request&gt;GET /index.html 200&lt;/request&gt;
+&lt;/msg&gt;
+&lt;msg&gt;
+    &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt;
+    &lt;request&gt;GET /images/sponsored.gif 304&lt;/request&gt;
+&lt;/msg&gt;</pre>
+</div>
+
+        <p class="p">You can use the text data format with a custom delimiter to process this data. To do so,
+            use &lt;/msg&gt; as the custom delimiter to separate data into records, and make sure to
+            include the delimiter in the record as follows:</p>
+
+        <p class="p"><img class="image" id="concept_okt_kmg_jx__image_k3b_sgh_jx" src="../Graphics/Text-CustomDelim-Dir.png" height="212" width="486"></img></p>
+
+        <p class="p">The text data format writes record data into a single text field, so you then configure
+            the XML Parser to parse the data in that field as follows: </p>
+
+        <p class="p"><img class="image" id="concept_okt_kmg_jx__image_zfk_v3h_jx" src="../Graphics/Text-CustomDelim-XML.png" height="241" width="409"></img>
+        </p>
+
+        <div class="p">When Directory processes the document, it creates two records:<table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_bhf_tnh_jx" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d161206e119" class="stentry" width="100%">text</th>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161206e119" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt; &lt;request&gt;GET
+                        /index.html 200&lt;/request&gt; &lt;/msg&gt;</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161206e119" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt; &lt;request&gt;GET
+                        /images/sponsored.gif 304&lt;/request&gt; &lt;/msg&gt;</td>
+
+                </tr>
+</table>
+</div>
+
+        <div class="p">The XML Parser converts the data in the XML attributes to list fields within the text map
+            field, as shown. The table displays data types in angle brackets ( &lt; &gt; ):
+                <table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_jrl_vnh_jx" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d161206e142" class="stentry" width="100%">text &lt;map&gt;</th>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161206e142" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_c14_f4h_jx">
+                            <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;: 8/12/2016 6:01:00</p>
+</li>
+
+                        </ul>
+<div class="p">- request &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_i3w_g4h_jx">
+                                <li class="li">0 &lt;map&gt;:<p class="p">- GET /index.html 200</p>
+</li>
+
+                            </ul>
+</div>
+</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161206e142" class="stentry">- time:<ul class="ul" id="concept_okt_kmg_jx__ul_dqp_tqh_jx">
+                            <li class="li">0:<p class="p">- value: 8/12/2016 6:03:43</p>
+</li>
+
+                        </ul>
+<div class="p">- request: <ul class="ul" id="concept_okt_kmg_jx__ul_gkw_xqh_jx">
+                                <li class="li">0: <p class="p">- value: GET /images/sponsored.gif 304</p>
+</li>
+
+                            </ul>
+</div>
+</td>
+
+                </tr>
+</table>
+</div>
+
+
+        <p class="p">The text data format reads the invalid document as a text file. </p>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
