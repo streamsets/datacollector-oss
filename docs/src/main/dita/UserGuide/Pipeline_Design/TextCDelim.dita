@@ -29,7 +29,7 @@
             <note>When using a custom delimiter, the origin uses the delimiter characters to create
                 records, ignoring new lines.</note>
         </p>
-        <p>You can include the custom delimiters in records or you remove them.</p>
+        <p>You can include the custom delimiters in records or you can remove them.</p>
         <p>For example, say you configure the Directory origin to process a file with the following
             text, using a semicolon as a
             delimiter:<codeblock>8/12/2016 6:01:00 unspecified error message;8/12/2016 

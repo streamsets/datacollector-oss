@@ -29,6 +29,6 @@
             the corresponding output field, and specify the return  information that you want. You
             can also configure the action that the processor takes if the database files do not have
             an IP address.</p>
-    <p>The input field must be an Integer or String datatype that passes IPv4 or IPv6 addresses.</p>
+    <p>The input field must be an Integer or String data type that passes IPv4 or IPv6 addresses.</p>
  </conbody>
 </concept>
