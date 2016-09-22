@@ -442,11 +442,16 @@
                         </dlentry>
                         <dlentry id="OriginDF-TEXT">
                               <dt>Text</dt>
-                              <dd>Generates a record for each line of text. </dd>
-                              <dd>When a line exceeds the maximum line length defined for the
-                                    origin, the origin truncates the line. The origin adds a boolean
+                              <dd>Generates a record for each line of text or for each section of
+                                    text based on a custom delimiter.</dd>
+                              <dd>When a line or section exceeds the maximum line length defined for
+                                    the origin, the origin truncates it. The origin adds a boolean
                                     field named Truncated to indicate if the line was
                                     truncated.</dd>
+                              <dd>For more information about processing text with a custom
+                                    delimiter, see <xref
+                                          href="../Pipeline_Design/TextCDelim.dita#concept_lg2_gcg_jx"
+                                    /></dd>
                         </dlentry>
                         <dlentry>
                               <dt/>

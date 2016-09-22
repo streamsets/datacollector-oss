@@ -923,6 +923,24 @@
                                             indicate if it was truncated. The field name is
                                             Truncated. </p></entry>
                                 </row>
+                                <row>
+                                    <entry>Use Custom Delimiter <xref
+                                            href="../Pipeline_Design/TextCDelim.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_f2g_d54_xv"
+                                        /></xref></entry>
+                                    <entry>Uses custom delimiters to define records instead of line
+                                        breaks. </entry>
+                                </row>
+                                <row>
+                                    <entry>Custom Delimiter</entry>
+                                    <entry>One more more characters to use to define records.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Custom Delimiter</entry>
+                                    <entry>Includes delimiter characters in the record.</entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -1021,6 +1039,9 @@
                 <entry>
                     <p>XML element that acts as a delimiter. Omit a delimiter to
                         treat the entire XML document as one record.</p>
+                                        <p>Use the XML element name without surrounding angle
+                                            brackets ( &lt; > ) . For example, msg instead of
+                                            &lt;msg>. </p>
                 </entry>
             </row>
             <row>
