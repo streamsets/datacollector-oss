@@ -19,8 +19,12 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -43,6 +47,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +55,8 @@ import java.util.Set;
 public abstract class ConfigDefinitionExtractor {
 
   private static final ConfigDefinitionExtractor EXTRACTOR = new ConfigDefinitionExtractor() {};
+
+  private Set<String> cycles = new HashSet<>();
 
   public static ConfigDefinitionExtractor get() {
     return EXTRACTOR;
@@ -62,6 +69,11 @@ public abstract class ConfigDefinitionExtractor {
   public List<ErrorMessage> validateComplexField(String configPrefix, Class klass, List<String> stageGroups,
       Object contextMsg) {
     return validate(configPrefix, klass, stageGroups, true, false, true, contextMsg);
+  }
+
+  @VisibleForTesting
+  Set<String> getCycles() {
+    return cycles;
   }
 
   private List<ErrorMessage> validate(String configPrefix, Class klass, List<String> stageGroups,
@@ -215,8 +227,9 @@ public abstract class ConfigDefinitionExtractor {
       isFullyProcessed.put(def.getName(), false);
     }
 
-    for (ConfigDefinition def : defs) {
+    cycles.clear();
 
+    for (ConfigDefinition def : defs) {
       if (!def.getDependsOn().isEmpty()) {
         ConfigDefinition dependsOnDef = definitionsMap.get(def.getDependsOn());
         // evaluate dependsOn triggers
@@ -258,7 +271,7 @@ public abstract class ConfigDefinitionExtractor {
       }
       // Now find all indirect dependencies
       Deque<StackNode> stack = new ArrayDeque<>();
-      stack.push(new StackNode(def));
+      stack.push(new StackNode(def, new LinkedHashSet<String>()));
       while (!stack.isEmpty()) {
         StackNode current = stack.peek();
         // We processed this one's dependencies before, don't bother adding its children
@@ -284,18 +297,26 @@ public abstract class ConfigDefinitionExtractor {
         } else {
           Set<String> children = current.def.getDependsOnMap().keySet();
           String dependsOn = current.def.getDependsOn();
-          if (!StringUtils.isEmpty(dependsOn) && !isFullyProcessed.get(current.def.getDependsOn())) {
-            stack.push(new StackNode(definitionsMap.get(current.def.getDependsOn())));
+          LinkedHashSet<String> dependencyAncestors = new LinkedHashSet<>(current.ancestors);
+          dependencyAncestors.add(current.def.getName());
+          if (!StringUtils.isEmpty(dependsOn)
+              && !isFullyProcessed.get(current.def.getDependsOn())
+              && !detectCycle(dependencyAncestors, cycles, dependsOn)) {
+            stack.push(new StackNode(definitionsMap.get(current.def.getDependsOn()), dependencyAncestors));
           }
           for (String child : children) {
-            if (!StringUtils.isEmpty(child) && !isFullyProcessed.get(child)) {
-              stack.push(new StackNode(definitionsMap.get(child)));
+            if (!StringUtils.isEmpty(child)
+                && !isFullyProcessed.get(child)
+                && !detectCycle(dependencyAncestors, cycles, child)) {
+              stack.push(new StackNode(definitionsMap.get(child), dependencyAncestors));
             }
           }
           current.childrenAddedToStack = true;
         }
       }
     }
+    Preconditions.checkState(cycles.isEmpty(),
+        "The following cycles were detected in the configuration dependencies:\n" + Joiner.on("\n").join(cycles));
     for (Map.Entry<String, Map<String, Set<Object>>> entry : dependencyMap.entrySet()) {
       Map<String, List<Object>> dependencies = new HashMap<>();
       definitionsMap.get(entry.getKey()).setDependsOnMap(dependencies);
@@ -306,6 +327,28 @@ public abstract class ConfigDefinitionExtractor {
       }
       definitionsMap.get(entry.getKey()).setDependsOn("");
     }
+  }
+
+  /**
+   * Returns true if child creates a dependency with any member(s) of dependencyAncestors.
+   * Also adds the stringified cycle to the cycles list
+   */
+  private boolean detectCycle(LinkedHashSet<String> dependencyAncestors, Set<String> cycles, final String child) {
+    if (dependencyAncestors.contains(child)) {
+      // Find index of the child in the ancestors list
+      int index = -1;
+      for (String s : dependencyAncestors) {
+        index++;
+        if (s.equals(child)) {
+          break;
+        }
+      }
+      // The cycle starts from the first time the child is seen in the ancestors list
+      // and continues till the end of the list, followed by the child again.
+      cycles.add(Joiner.on(" -> ").join(Iterables.skip(dependencyAncestors, index)) + " -> " + child);
+      return true;
+    }
+    return false;
   }
 
   List<ErrorMessage> validateConfigDef(String configPrefix, List<String> stageGroups, Field field,
@@ -532,40 +575,14 @@ public abstract class ConfigDefinitionExtractor {
   private class StackNode {
     final ConfigDefinition def;
     boolean childrenAddedToStack;
+    final LinkedHashSet<String> ancestors;
 
-    StackNode(ConfigDefinition def) {
+    StackNode(ConfigDefinition def, LinkedHashSet<String> ancestors) {
       this.def = def;
       this.childrenAddedToStack = false;
+      this.ancestors = ancestors;
     }
 
-  }
-
-  private class DefinitionValues {
-    final ConfigDefinition def;
-    final Set<Object> triggerValues;
-    final Set<ConfigDefinition> tree;
-
-    DefinitionValues(ConfigDefinition def, Set<Object> triggerValues, Set<ConfigDefinition> tree) {
-      this.def = def;
-      this.triggerValues = triggerValues;
-      this.tree = tree;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (o == null || !(o instanceof DefinitionValues)) {
-        return false;
-      }
-      DefinitionValues castO = (DefinitionValues) o;
-      if (def.getFieldName().equals(castO.def.getFieldName())) {
-        return true;
-      }
-      return false;
-    }
-
-    public int hashCode() {
-      return def.getFieldName().hashCode();
-    }
   }
 
 }

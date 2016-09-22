@@ -21,7 +21,6 @@ package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -434,6 +433,99 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(2, a.getDependsOnMap().size());
     Assert.assertEquals(ImmutableSet.of("B"), new HashSet<>(a.getDependsOnMap().get("b")));
     Assert.assertEquals(ImmutableSet.of("C"), new HashSet<>(a.getDependsOnMap().get("c")));
+  }
+
+  public static class CycleDependencies {
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependencies = {
+            @Dependency(configName = "c", triggeredByValues = {"anything"}),
+        }
+    )
+    public String a;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependsOn = "t",
+        triggeredByValue = "f"
+    )
+    public String c;
+
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependsOn = "f",
+        triggeredByValue = "o"
+    )
+    public String b;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependencies = {
+            @Dependency(configName = "g", triggeredByValues = "random")
+        },
+        dependsOn = "b",
+        triggeredByValue = "really don't care"
+    )
+    public String e;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependencies = {
+            @Dependency(configName = "b", triggeredByValues = "random"),
+            @Dependency(configName = "e", triggeredByValues = "dds"),
+            @Dependency(configName = "f", triggeredByValues = "f"),
+            @Dependency(configName = "g", triggeredByValues = "g")
+        }
+    )
+    public String f;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependencies = {
+            @Dependency(configName = "a", triggeredByValues = {"A"}),
+            @Dependency(configName = "c", triggeredByValues = {"A"}),
+        }
+    )
+    public String g;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true,
+        dependsOn = "g",
+        triggeredByValue = "y"
+    )
+    public String t;
+  }
+
+  @Test
+  public void testDependsOnCycle() {
+    try {
+      ConfigDefinitionExtractor.get().extract(CycleDependencies.class, Collections.<String>emptyList(), "x");
+      Assert.fail();
+    } catch (IllegalStateException ex) {
+      Set<String> cycles = ConfigDefinitionExtractor.get().getCycles();
+      Assert.assertEquals(5, cycles.size());
+      Assert.assertTrue(cycles.contains("a -> c -> t -> g -> a"));
+      Assert.assertTrue(cycles.contains("b -> f -> e -> b"));
+      Assert.assertTrue(cycles.contains("c -> t -> g -> c"));
+      Assert.assertTrue(cycles.contains("b -> f -> b"));
+      Assert.assertTrue(cycles.contains("f -> f"));
+    }
   }
 
   public static class SubSubBean {
