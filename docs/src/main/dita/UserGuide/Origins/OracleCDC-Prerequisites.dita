@@ -19,22 +19,134 @@
   <p><indexterm>Oracle CDC Client
                     origin<indexterm>prerequisites</indexterm></indexterm><indexterm>LogMiner<indexterm>prerequisites
                     for the Oracle CDC Client origin</indexterm></indexterm>To use Oracle CDC
-            Client, you must enable LogMiner for the database you want to use and ensure the JDBC
-            user account has the necessary role assignment. </p>
-        <p>LogMiner provides redo logs that summarize database activity. The origin uses these logs
-            to generate records.</p>
-        <p>Before using the Oracle CDC Client, perform the following tasks: <ol id="ol_avp_3f2_dx">
-                <li>LogMiner requires an open database in ARCHIVELOG mode with archiving
-                    enabled.</li>
-                <li>LogMiner requires supplemental logging for the database or tables. <p>The Oracle
-                        CDC Client requires, at minimum, primary key or "identification key" logging
-                        at a table level. You can enable identification key logging for the database
-                        to include all tables.</p><note>To include all fields in records, enable
-                        full supplemental logging at a table or database level. Without supplemental
-                        logging enabled, records include only the fields with changes. </note></li>
-                <li>If necessary, grant the EXECUTE_CATALOG_ROLE role to the JDBC user account that
-                    you plan to use. You must specify this account when you configure the Oracle CDC
-                    Client origin.</li>
-            </ol></p>
+            Client, you must enable LogMiner for the database you want to use, enable supplemental
+            logging, and create a user with the required role and privileges. </p>
+        <p>Before using the Oracle CDC Client, perform the following tasks: <dl>
+                <dlentry>
+                    <dt>Task 1. Enable LogMiner</dt>
+                    <dd><p>LogMiner provides redo logs that summarize database activity. The origin
+                            uses these logs to generate records.</p>LogMiner requires an open
+                        database in ARCHIVELOG mode with archiving enabled. To determine the status
+                        of the database and enable LogMiner, you can use the following steps:<ol
+                            id="ol_xwd_pp1_jx">
+                            <li>Log into the database as user with DBA privileges.</li>
+                            <li>Check the database logging
+                                    mode:<codeblock>select log_mode from v$database;</codeblock><p>If
+                                    the command returns ARCHIVELOG, you can skip to Task 2.
+                                    </p><p>If the command returns NOARCHIVELOG, continue with the
+                                    following steps:</p></li>
+                            <li>Shut down the
+                                database:<codeblock>shutdown immediate</codeblock></li>
+                            <li>Start up and mount the
+                                database:<codeblock>startup mount</codeblock></li>
+                            <li>Configure enable archiving and open the
+                                database:<codeblock>alter database archivelog;
+alter database open;</codeblock></li>
+                        </ol></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Task 2. Enable supplemental logging for the database or tables</dt>
+                    <dd>To retrieve data from redo logs, LogMiner requires supplemental logging for
+                        the database or tables. </dd>
+                    <dd>
+                        <ol id="ol_nrv_ds1_jx">
+                            <li>To verify if supplemental logging is
+                                    enabled:<codeblock>SELECT supplemental_log_data_min, supplemental_log_data_pk, supplemental_log_data_all FROM v$database </codeblock><p>If
+                                    the command returns Yes or Implicit for all three columns, then
+                                    supplemental logging is enabled with both identification key and
+                                    full supplemental logging enabled. </p><p>If the command returns
+                                    Yes or Implicit for the first two columns, then supplemental
+                                    logging is enabled with identification key logging enabled.
+                                </p></li>
+                            <li>If necessary, enable identification key or full supplemental
+                                logging. <p>The Oracle CDC Client recommends at least primary key or
+                                    "identification key" logging at a table level for each table
+                                    that you want to use. With identification key logging, records
+                                    include only the primary key and changed fields.</p><p>To
+                                    include all fields in the records the origin generates, enable
+                                    full supplemental logging at a table or database level. For
+                                    details on the data included in records based on the
+                                    supplemental logging type, see <xref
+                                        href="OracleCDC-GeneratedRecords.dita#concept_db1_3sj_fx"
+                                    />.</p><p>Make sure either identification key or full
+                                    supplemental logging is enabled. You do not need to enable
+                                    both:</p><ul id="ul_ocz_dfb_jx">
+                                    <li>To enable identification key logging:<p>For minimal logging,
+                                            enable identification key logging at a table level for
+                                            each table that you want to
+                                            use:<codeblock>ALTER TABLE &lt;schema name>.&lt;table name> ADD SUPPLEMENTAL LOG DATA (PRIMARY KEY) COLUMNS;</codeblock></p><p>Or,
+                                            to enable identification key logging for all tables,
+                                            enable it for the entire
+                                            database:<codeblock>ALTER DATABASE ADD SUPPLEMENTAL LOG DATA (PRIMARY KEY) COLUMNS;</codeblock></p></li>
+                                    <li>To enable full supplemental logging:<p>Use full supplemental
+                                            logging when you want records to include data from all
+                                            columns, those with unchanged data as well as the
+                                            primary key and changed columns. </p><p>For full
+                                            supplemental logging at a table level, enable it for
+                                            each table that you want to
+                                            use:<codeblock>ALTER TABLE &lt;schema name>.&lt;table name> ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;</codeblock></p><p>Or,
+                                            to enable full supplemental logging for all tables,
+                                            enable it for the entire
+                                        database:</p><codeblock>ALTER DATABASE ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;</codeblock></li>
+                                </ul></li>
+                            <li>To submit the
+                                changes:<codeblock>ALTER SYSTEM SWITCH LOGFILE;</codeblock></li>
+                        </ol>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Task 3. Create a common user account with the required roles and
+                        privileges</dt>
+                    <dd>Create a user account to use with Oracle CDC Client origin. The origin uses
+                        the account to access the database through JDBC. You create accounts
+                        differently, based on the version of Oracle that you use. <dl>
+                            <dlentry>
+                                <dt>Oracle 12c multitenant databases</dt>
+                                <dd>For multitenant Oracle 12c databases, create a common user
+                                    account. Common user accounts are created in cdb$root and must
+                                    use the convention: <codeph>c##&lt;name></codeph>. </dd>
+                                <dd>When you configure the origin use the entire user name,
+                                    including the "c##", as the JDBC user name.<ol
+                                        id="ol_oxw_qy1_jx">
+                                        <li>Log into the database as user with DBA privileges.</li>
+                                        <li>Create the common user
+                                                account:<codeblock>ALTER SESSION SET CONTAINER=cdb$root;
+CREATE USER &lt;user name> IDENTIFIED BY &lt;password> CONTAINER=all;
+GRANT create session, alter session, set container, select any dictionary, logmining, execute_catalog_role TO &lt;username> CONTAINER=all;
+ALTER SESSION SET CONTAINER=&lt;pdb>
+GRANT select on &lt;db>.&lt;table> TO &lt;user name></codeblock><p>Repeat
+                                                the final command for each table that you want to
+                                                use.</p></li>
+                                    </ol></dd>
+                            </dlentry>
+                            <dlentry>
+                                <dt>Oracle 12c standard databases</dt>
+                                <dd>For standard Oracle 12c databases, create a user account with
+                                    the necessary privileges: <ol id="ol_jx5_4g3_jx">
+                                        <li>Log into the database as user with DBA privileges.</li>
+                                        <li>Create the user
+                                                account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
+GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;username>;
+GRANT select on &lt;db>.&lt;table> TO &lt;user name>"</codeblock><p>Repeat
+                                                the final command for each table that you want to
+                                                use.</p></li>
+                                    </ol></dd>
+                            </dlentry>
+                            <dlentry>
+                                <dt>Earlier Oracle databases </dt>
+                                <dd>For Oracle databases earlier than version 12c, create a user
+                                    account with the necessary privileges:<ol id="ol_njq_zg3_jx">
+                                        <li>Log into the database as user with DBA privileges.</li>
+                                        <li>Create the user
+                                                account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
+GRANT create session, alter session, select any dictionary, execute_catalog_role TO &lt;username>;
+GRANT select on &lt;db>.&lt;table> TO &lt;user name></codeblock><p>Repeat
+                                                the final command for each table that you want to
+                                                use.</p></li>
+                                    </ol></dd>
+                            </dlentry>
+                        </dl></dd>
+                </dlentry>
+            </dl></p>
  </conbody>
 </concept>
