@@ -898,8 +898,8 @@
                 </info>
             </step>
             <step > <cmd>                     
-                <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
-                    Kafka Consumer, JMS Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
+                <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory, Kafka
+                        Consumer, Hadoop FS, Kinesis Consumer, JMS Consumer</draft-comment>
             </cmd>
             </step>        
                 <step id="Text">
