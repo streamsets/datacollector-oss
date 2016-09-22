@@ -21,8 +21,6 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
-import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -101,8 +99,14 @@ final class DefaultFileHelper extends FileHelper {
     // upload file on Amazon S3 only if at least one record was successfully written to the stream
     if (writtenRecordCount > 0) {
       String fileName = getUniqueDateWithIncrementalFileName(keyPrefix);
-      //Create file close event record, but the record is added to event lane after upload is complete.
-      createFileCloseEventRecord(fileName);
+
+      //Create and issue file close event record, but the events are thrown after the batch completion.
+      S3Events.S3_OBJECT_WRITTEN
+          .create(context)
+          .with(BUCKET, s3TargetConfigBean.s3Config.bucket)
+          .with(OBJECT_KEY, fileName)
+          .createAndSend();
+
       // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
       // ByRefByteArrayOutputStream
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
@@ -111,14 +115,6 @@ final class DefaultFileHelper extends FileHelper {
     }
 
     return uploads;
-  }
-
-  private void createFileCloseEventRecord(String fileName) {
-    EventRecord eventRecord = context.createEventRecord("file-closed", 1);
-    eventRecord.set(getTargetInfoField(fileName));
-
-    //add event to event lane.
-    addEvent(eventRecord);
   }
 
   /**

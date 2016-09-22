@@ -150,21 +150,12 @@ final class WholeFileFormatFsHelper implements FsHelper {
   }
 
   private EventRecord createWholeFileEventRecord(Record record, Path renamableFinalPath) {
-    EventRecord wholeFileEventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
-
     //Update the event record with source file info information
-    Field sourceFileInfo = Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap());
-    wholeFileEventRecord.set(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH, sourceFileInfo);
-
-    //Set target path in wholeFileEvent Record
-    wholeFileEventRecord.set(
-        FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH,
-        Field.create(
-            Field.Type.MAP,
-            ImmutableMap.of("path", Field.create(Field.Type.STRING ,renamableFinalPath.toString()))
-        )
-    );
-    return wholeFileEventRecord;
+    return HdfsEvents.FILE_TRANSFER_COMPLETE_EVENT
+        .create(context)
+        .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of("path", (Object) renamableFinalPath))
+        .create();
   }
 
   @Override

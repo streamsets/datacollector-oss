@@ -22,8 +22,8 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -43,10 +43,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 final class WholeFileHelper extends FileHelper {
   private ELEval fileNameELEval;
@@ -105,13 +103,11 @@ final class WholeFileHelper extends FileHelper {
   }
 
   private EventRecord createEventRecordForFileTransfer(Record record, String objectKey) {
-    EventRecord eventRecord = FileRefUtil.createAndInitWholeFileEventRecord(context);
-    eventRecord.set(
-        FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH,
-        Field.create(Field.Type.MAP, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
-    );
-    eventRecord.set(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH, getTargetInfoField(objectKey));
-    return eventRecord;
+    return S3Events.FILE_TRANSFER_COMPLETE_EVENT
+        .create(context)
+        .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of(BUCKET, (Object)s3TargetConfigBean.s3Config.bucket, OBJECT_KEY, objectKey))
+        .create();
   }
 
   @Override
@@ -148,7 +144,7 @@ final class WholeFileHelper extends FileHelper {
         uploads.add(upload);
 
         //Add event to event lane.
-        addEvent(eventRecord);
+        context.toEvent(eventRecord);
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(
             new OnRecordErrorException(

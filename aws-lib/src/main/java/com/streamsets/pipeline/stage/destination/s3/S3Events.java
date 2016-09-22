@@ -17,28 +17,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hdfs.writer;
+package com.streamsets.pipeline.stage.destination.s3;
 
 import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
-public final class HdfsEvents {
+public final class S3Events {
 
   /**
-   * Fired once a new table is being created.
+   * Fired after a S3Object is created
    */
-  public static EventCreator CLOSED_FILE = new EventCreator.Builder("file-closed", 1)
-    .withRequiredField("filepath") // Absolute path to the closed file
-    .withRequiredField("length") // Size of the closed file in bytes
-    .build();
-
+  public static EventCreator S3_OBJECT_WRITTEN = new EventCreator.Builder("S3 Object Written", 1)
+      .withRequiredField("bucket")
+      .withRequiredField("objectKey")
+      .build();
 
   /**
    * Fired when the file transfer is complete.
    */
   public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
 
-  private HdfsEvents() {
+  private S3Events() {
     // Instantiation is prohibited
   }
 }

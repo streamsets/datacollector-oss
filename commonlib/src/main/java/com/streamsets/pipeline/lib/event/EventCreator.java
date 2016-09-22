@@ -136,6 +136,12 @@ public class EventCreator {
       return this;
     }
 
+    public EventBuilder with(String key, Map<String, Field> value) {
+      Field field = (value instanceof LinkedHashMap)? Field.create(Field.Type.LIST_MAP, value) : Field.create(Field.Type.MAP, value);
+      rootMap.put(key, field);
+      return this;
+    }
+
     public EventBuilder withStringMap(String key, Map<String, Object> value) {
       LinkedHashMap<String, Field> wrappedMap = new LinkedHashMap<>();
       for(Map.Entry<String, Object> entry : value.entrySet()) {

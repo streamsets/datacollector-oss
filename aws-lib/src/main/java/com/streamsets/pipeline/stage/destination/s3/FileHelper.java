@@ -48,8 +48,9 @@ import java.util.Map;
 
 abstract class FileHelper {
   private static final Logger LOG = LoggerFactory.getLogger(FileHelper.class);
-  private static final String BUCKET = "bucket";
-  private static final String OBJECT_KEY = "objectKey";
+
+  protected static final String BUCKET = "bucket";
+  protected static final String OBJECT_KEY = "objectKey";
 
   private final TransferManager transferManager;
 
@@ -109,18 +110,6 @@ abstract class FileHelper {
       }
     }
     return metadata;
-  }
-
-  Field getTargetInfoField(String objectKey) {
-    Map<String, Field> targetFileInfo = new HashMap<>();
-    targetFileInfo.put(BUCKET, Field.create(Field.Type.STRING, s3TargetConfigBean.s3Config.bucket));
-    targetFileInfo.put(OBJECT_KEY, Field.create(Field.Type.STRING, objectKey));
-    return Field.create(Field.Type.MAP, targetFileInfo);
-  }
-
-  void addEvent(EventRecord eventRecord) {
-    //events are still issued after the batch is complete.
-    context.toEvent(eventRecord);
   }
 
   Upload doUpload(String fileName, InputStream is, ObjectMetadata metadata) {

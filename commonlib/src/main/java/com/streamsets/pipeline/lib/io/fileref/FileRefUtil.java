@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
@@ -79,6 +80,14 @@ public final class FileRefUtil {
 
   public static final String WHOLE_FILE_CHECKSUM = "checksum";
   public static final String WHOLE_FILE_CHECKSUM_ALGO = "checksumAlgorithm";
+
+  public static final EventCreator FILE_TRANSFER_COMPLETE_EVENT =
+      new EventCreator.Builder(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, 1)
+          .withRequiredField(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO)
+          .withRequiredField(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO)
+          .withOptionalField(FileRefUtil.WHOLE_FILE_CHECKSUM)
+          .withOptionalField(FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO)
+          .build();
 
 
   public static final ImmutableSet<String> MANDATORY_METADATA_INFO =
