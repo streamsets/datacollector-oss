@@ -19,7 +19,7 @@
   <p><indexterm>Oracle CDC Client
                     origin<indexterm>prerequisites</indexterm></indexterm><indexterm>LogMiner<indexterm>prerequisites
                     for the Oracle CDC Client origin</indexterm></indexterm>Before using the Oracle
-            CDC Client, complete the following tasks: </p>
+            CDC Client origin, complete the following tasks: </p>
         <p>
             <dl>
                 <dlentry>

@@ -31,9 +31,9 @@
             to create records based on custom delimiters. </p>
 
         <p class="p">Use custom delimiters when the origin system uses delimiters to separate logical sections
-            of data that you want to use as records. A custom delimiter might be a simple as a
-            semicolon or might be a set of characters. You can even use an XML tag to read XML
-            data.</p>
+            of data that you want to use as records. A custom delimiter might be as simple as a
+            semicolon or might be a set of characters. You can even use an XML tag as a custom
+            delimiter to read XML data.</p>
 
         <div class="p">
             <div class="note note"><span class="notetitle">Note:</span> When using a custom delimiter, the origin uses the delimiter characters to create
@@ -41,23 +41,37 @@
 
         </div>
 
-        <p class="p">You can include the custom delimiters in records or you remove them.</p>
+        <p class="p">You can include the custom delimiters in records or you can remove them.</p>
 
         <div class="p">For example, say you configure the Directory origin to process a file with the following
-            text, using a semicolon as a
+            text, using a semicolon as a delimiter, and discarding the
             delimiter:<pre class="pre codeblock">8/12/2016 6:01:00 unspecified error message;8/12/2016 
 6:01:04 another error message;8/12/2016 6:01:09 just a warning message;</pre>
 </div>
 
-        <div class="p">If you configure Directory to discard the custom delimiter, the origin generates the
-            following
-            records:<pre class="pre codeblock">8/12/2016 6:01:00 unspecified error message
-8/12/2016 6:01:04 another error message
-8/12/2016 6:01:09 just a warning message</pre>
+        <div class="p">The origin generates the following records, with the data in a single text
+                field:<table cellpadding="4" cellspacing="0" summary="" id="concept_lg2_gcg_jx__simpletable_qcp_tjn_jx" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d161221e50" class="stentry" width="100%">Text</th>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161221e50" class="stentry">8/12/2016 6:01:00 unspecified error message</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161221e50" class="stentry">8/12/2016 <p class="p">6:01:04 another error message</p>
+</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d161221e50" class="stentry">8/12/2016 6:01:09 just a warning message</td>
+
+                </tr>
+</table>
 </div>
 
-        <p class="p">Note that the origin ignores the line break because it uses the semicolon custom
-            delimiter to create records.</p>
+        <p class="p">Note that the origin retains the line break, but does not use it to create a separate
+            record.</p>
 
     </div>
 
@@ -91,7 +105,9 @@
 
         </div>
 
-        <div class="p">However, the following XML document does not include an XML prolog or root element, so is invalid:<pre class="pre codeblock">&lt;msg&gt;
+        <div class="p">However, the following XML document does not include an XML prolog or root element, so it
+            is
+            invalid:<pre class="pre codeblock">&lt;msg&gt;
     &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt;
     &lt;request&gt;GET /index.html 200&lt;/request&gt;
 &lt;/msg&gt;
@@ -101,49 +117,48 @@
 &lt;/msg&gt;</pre>
 </div>
 
-        <p class="p">You can use the text data format with a custom delimiter to process this data. To do so,
-            use &lt;/msg&gt; as the custom delimiter to separate data into records, and make sure to
-            include the delimiter in the record as follows:</p>
+        <p class="p">You can use the text data format with a custom delimiter to process the invalid XML
+            document. To do so, use &lt;/msg&gt; as the custom delimiter to separate data into records,
+            and make sure to include the delimiter in the record as follows:</p>
 
         <p class="p"><img class="image" id="concept_okt_kmg_jx__image_k3b_sgh_jx" src="../Graphics/Text-CustomDelim-Dir.png" height="212" width="486"></img></p>
 
-        <p class="p">The text data format writes record data into a single text field, so you then configure
-            the XML Parser to parse the data in that field as follows: </p>
-
-        <p class="p"><img class="image" id="concept_okt_kmg_jx__image_zfk_v3h_jx" src="../Graphics/Text-CustomDelim-XML.png" height="241" width="409"></img>
-        </p>
-
-        <div class="p">When Directory processes the document, it creates two records:<table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_bhf_tnh_jx" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d161206e119" class="stentry" width="100%">text</th>
+        <div class="p">When origins process text data, they write record data into a single text field named
+            "text". When Directory processes the invalid XML document, it creates two
+                records:<table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_bhf_tnh_jx" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d161221e138" class="stentry" width="100%">text</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d161206e119" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt; &lt;request&gt;GET
+                    <td valign="top" headers="d161221e138" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt; &lt;request&gt;GET
                         /index.html 200&lt;/request&gt; &lt;/msg&gt;</td>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d161206e119" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt; &lt;request&gt;GET
+                    <td valign="top" headers="d161221e138" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt; &lt;request&gt;GET
                         /images/sponsored.gif 304&lt;/request&gt; &lt;/msg&gt;</td>
 
                 </tr>
 </table>
-</div>
+You can configure the XML Parser to parse the XML data as follows: </div>
 
-        <div class="p">The XML Parser converts the data in the XML attributes to list fields within the text map
-            field, as shown. The table displays data types in angle brackets ( &lt; &gt; ):
+        <p class="p"><img class="image" id="concept_okt_kmg_jx__image_zfk_v3h_jx" src="../Graphics/Text-CustomDelim-XML.png" height="241" width="409"></img>
+        </p>
+
+        <div class="p">The XML Parser converts the time and request attributes to list fields within the text
+            map field, as shown. The table displays data types in angle brackets ( &lt; &gt; ):
                 <table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_jrl_vnh_jx" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d161206e142" class="stentry" width="100%">text &lt;map&gt;</th>
+                    <th valign="bottom" align="left" id="d161221e166" class="stentry" width="100%">text &lt;map&gt;</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d161206e142" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_c14_f4h_jx">
+                    <td valign="top" headers="d161221e166" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_c14_f4h_jx">
                             <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;: 8/12/2016 6:01:00</p>
 </li>
 
                         </ul>
 <div class="p">- request &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_i3w_g4h_jx">
-                                <li class="li">0 &lt;map&gt;:<p class="p">- GET /index.html 200</p>
+                                <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;: GET /index.html 200</p>
 </li>
 
                             </ul>
@@ -152,13 +167,14 @@
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d161206e142" class="stentry">- time:<ul class="ul" id="concept_okt_kmg_jx__ul_dqp_tqh_jx">
-                            <li class="li">0:<p class="p">- value: 8/12/2016 6:03:43</p>
+                    <td valign="top" headers="d161221e166" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_dqp_tqh_jx">
+                            <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;:: 8/12/2016 6:03:43</p>
 </li>
 
                         </ul>
-<div class="p">- request: <ul class="ul" id="concept_okt_kmg_jx__ul_gkw_xqh_jx">
-                                <li class="li">0: <p class="p">- value: GET /images/sponsored.gif 304</p>
+<div class="p">- request  &lt;list&gt;: <ul class="ul" id="concept_okt_kmg_jx__ul_gkw_xqh_jx">
+                                <li class="li">0 &lt;map&gt;: <p class="p">- value &lt;string&gt;: GET /images/sponsored.gif
+                                        304</p>
 </li>
 
                             </ul>
@@ -168,9 +184,6 @@
                 </tr>
 </table>
 </div>
-
-
-        <p class="p">The text data format reads the invalid document as a text file. </p>
 
     </div>
 
