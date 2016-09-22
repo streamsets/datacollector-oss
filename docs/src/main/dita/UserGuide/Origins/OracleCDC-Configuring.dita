@@ -50,10 +50,10 @@
                                 </row>
                                 <row>
                                     <entry>Case-Sensitive Names</entry>
-                                    <entry>Enables case-sensitive database and table names. Use when
-                                        the database or tables were created with quotation marks
-                                        surrounding the names.<p>By default, the origin uses all
-                                            caps for database and table names. </p></entry>
+                                    <entry>Enables case-sensitive database, table, and column names.
+                                        Use when the database, tables, or columns were created with
+                                        quotation marks surrounding the names.<p>By default, the
+                                            origin uses all caps for the names. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Initial Change <xref href="OracleCDC-InitialChange.dita">
@@ -121,8 +121,9 @@
                                     <entry>
                                         <p>Connection string to use to connect to the database.
                                                 <note>If you include the JDBC credentials in the
-                                                connection string, the associated user account must
-                                                have the EXECUTE_CATALOG_ROLE role. For more
+                                                connection string, use the user account created for
+                                                the origin. Common user accounts for Oracle 12c
+                                                multitenant databases start with "c##". For more
                                                 information, see <xref
                                                   href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
                                                 />.</note></p>
@@ -171,16 +172,17 @@
                                 <row>
                                     <entry>Username</entry>
                                     <entry>
-                                        <p>User name for the JDBC connection. The user account must
-                                            have the EXECUTE_CATALOG_ROLE role. </p>
+                                        <p>User name for the JDBC connection. Use the user account
+                                            created for the origin. Common user accounts for Oracle
+                                            12c multitenant databases start with "c##".</p>
                                         <p>For more information, see <xref
                                                 href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
                                             />.</p>
                                     </entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-JDBCpassword">
-                                    <entry/>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for the account.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

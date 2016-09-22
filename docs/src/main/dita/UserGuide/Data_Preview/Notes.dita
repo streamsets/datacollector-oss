@@ -18,11 +18,15 @@
  <conbody>
   <p><indexterm>data preview<indexterm>notes and special cases</indexterm></indexterm>Keep the
             following notes in mind when previewing your data:<ul id="ul_ecg_ffm_zw">
-                <li>Whole file data format - When previewing a pipeline that processes whole file
-                    data, data preview displays only one record.</li>
                 <li>Date, datetime, and time data - <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-PreviewDateFormat"
                     /></li>
+                <li>Oracle CDC Client pipelines - When previewing a pipeline that uses the Oracle
+                    CDC Client origin, data preview might time out before connecting to the origin
+                    system. When this occurs, try increasing the timeout to 120,000 milliseconds to
+                    allow the origin time to connect.</li>
+                <li>Whole file data format - When previewing a pipeline that processes whole file
+                    data, data preview displays only one record.</li>
             </ul></p>
  </conbody>
 </concept>

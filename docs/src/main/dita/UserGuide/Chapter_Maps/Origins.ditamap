@@ -149,6 +149,7 @@
     <topicref href="../Origins/OracleCDC-CDCAttributes.dita"/>
    </topicref>
    <topicref href="../Origins/OracleCDC-HiveDriftSolution.dita"/>
+   <topicref href="../Origins/OracleCDC-Preview.dita"/>
    <topicref href="../Origins/OracleCDC-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/RabbitMQ.dita" chunk="to-content">

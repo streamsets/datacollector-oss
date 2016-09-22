@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_idl_bl3_jx">
+ <title>Data Preview with Oracle CDC Client</title>
+ <conbody>
+  <p><indexterm>Oracle CDC Client<indexterm>avoiding data preview
+            timeouts</indexterm></indexterm>When using data preview with the Oracle CDC Client
+            origin, you might need to increase the Preview Timeout data preview property. </p>
+        <p>By default, data preview waits 10,000 milliseconds, 10 seconds, to establish a connection
+            to the origin system before timing out. Due to the complex nature of this origin, the
+            initial startup can take longer than the default. </p>
+        <p>If data preview times out, try increasing the timeout property to 120,000 milliseconds.
+            If preview continues to time out, increase the timeout incrementally. <draft-comment
+                author="Loretta">Doc note: there's a related troubleshooting topic and a line item
+                in Data Preview > Notes. So if this recommendation changes, update the related
+                topics. 9/21/2016.</draft-comment></p>
+ </conbody>
+</concept>
