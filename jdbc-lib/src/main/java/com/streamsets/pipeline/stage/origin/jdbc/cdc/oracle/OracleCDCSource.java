@@ -112,6 +112,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String NULL = "NULL";
 
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS'";
+  private static final String NLS_NUMERIC_FORMAT = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \'.,\'";
   private static final String NLS_TIMESTAMP_FORMAT =
       "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -127,6 +128,7 @@ public class OracleCDCSource extends BaseSource {
   private String produceLogMinerProcedure;
   private String redoLogEntriesSql = null;
   private ErrorRecordHandler errorRecordHandler;
+  private boolean containerized = false;
 
   private HikariDataSource dataSource = null;
   private Connection connection = null;
@@ -136,6 +138,8 @@ public class OracleCDCSource extends BaseSource {
   private CallableStatement endLogMnr;
   private PreparedStatement dateStatement;
   private PreparedStatement tsStatement;
+  private PreparedStatement numericFormat;
+  private PreparedStatement switchContainer;
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
 
@@ -350,7 +354,6 @@ public class OracleCDCSource extends BaseSource {
       if (majorVersion == -1) {
         return issues;
       }
-      boolean switchedContainer = false;
       if (majorVersion >= 12) {
         if (!StringUtils.isEmpty(container)) {
           String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
@@ -361,7 +364,7 @@ public class OracleCDCSource extends BaseSource {
             issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
             return issues;
           }
-          switchedContainer = true;
+          containerized = true;
         }
       }
       tables = new ArrayList<>(configBean.baseConfigBean.tables.size());
@@ -387,10 +390,11 @@ public class OracleCDCSource extends BaseSource {
       container = CDB_ROOT;
       if (majorVersion >= 12) {
         try {
-          reusedStatement.execute(SWITCH_TO_CDB_ROOT);
+          switchContainer.execute();
+          LOG.info("Switched to CDB$ROOT to start LogMiner.");
         } catch (SQLException ex) {
           // Fatal only if we switched to a PDB earlier
-          if (switchedContainer) {
+          if (containerized) {
             LOG.error("Error while switching to container: " + container, ex);
             issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
             return issues;
@@ -490,6 +494,8 @@ public class OracleCDCSource extends BaseSource {
     getLatestSCN = connection.prepareStatement(CURRENT_SCN);
     dateStatement = connection.prepareStatement(NLS_DATE_FORMAT);
     tsStatement = connection.prepareStatement(NLS_TIMESTAMP_FORMAT);
+    numericFormat = connection.prepareStatement(NLS_NUMERIC_FORMAT);
+    switchContainer = connection.prepareStatement(SWITCH_TO_CDB_ROOT);
   }
 
   private void initializeLogMnrStatements() throws SQLException {
@@ -768,8 +774,12 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void alterSession() throws SQLException {
+    if (containerized) {
+      switchContainer.execute();
+    }
     dateStatement.execute();
     tsStatement.execute();
+    numericFormat.execute();
   }
 
   @VisibleForTesting
