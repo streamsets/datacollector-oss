@@ -35,11 +35,13 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.memory.TestMemoryUsageCollector;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -357,6 +359,28 @@ public class TestProductionPipeline {
     pipeline.run();
     Assert.assertFalse(capture.isPreview);
   }
+
+  @Test
+  public void testErrorNotificationOnValidationFailure() throws Exception {
+    ProductionPipeline prodPipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE,
+        true,
+        PipelineType.OFFSET_COMMITTERS
+    );
+    prodPipeline.registerStatusListener(new MyStateListener());
+    Pipeline actual = prodPipeline.getPipeline();
+    Pipeline pipeline = Mockito.spy(actual);
+    Issue issue = Mockito.mock(Issue.class);
+    Mockito.doReturn(Arrays.asList(issue)).when(pipeline).init();
+    ProductionPipeline mockProdPipeline = Mockito.spy(prodPipeline);
+    Mockito.doReturn(pipeline).when(mockProdPipeline).getPipeline();
+    try {
+      mockProdPipeline.run();
+    } catch (Exception e) {
+      //
+    }
+    Mockito.verify(pipeline).errorNotification(Mockito.any(Throwable.class));
+  }
+
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch,
     PipelineType type) throws Exception {
