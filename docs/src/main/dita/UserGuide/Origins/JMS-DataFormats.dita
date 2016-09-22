@@ -46,12 +46,9 @@
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry>
-     <dt>Text</dt>
-     <dd>Generates a record for each line of text. Reads text data of the BytesMessage format. </dd>
-     <dd>When a line exceeds the maximum line length defined for the origin, the origin truncates
-      the line. The origin adds a boolean field named Truncated to indicate if the line was
-      truncated.</dd>
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JMS-TEXT">
+     <dt/>
+     <dd/>
     </dlentry>
     <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
      <dt/>
