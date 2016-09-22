@@ -1,0 +1,234 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="To install the full Data Collector as a service, you can download the Data Collector RPM zip file or the Data Collector tarball from the StreamSets website. Installing the full Data Collector as a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Full Installation and Launch (Service Start)"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_e45_3dr_bx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Full Installation and Launch (Service Start)</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_e45_3dr_bx">
+ <h1 class="title topictitle1">Full Installation and Launch (Service Start)</h1>
+
+ <div class="body conbody">
+  <p class="p">To install the full
+            Data Collector as a service, you can download the Data Collector RPM zip file or the
+            Data Collector tarball from the StreamSets website. Installing the full Data Collector
+            as a service requires sudo privileges on the root directory.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_th5_1yj_dx">
+    <h2 class="title topictitle2">Installing from the RPM Package</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"> When you install from the RPM package, <span class="ph">Data
+                  Collector</span> uses
+        the default directories and the default system user and group. </p>
+
+        <div class="section prereq p">
+            <p class="p">The default system user and group are named sdc. If an sdc user and an sdc group do
+                not exist on the machine, the installation creates the user and group for you and
+                assigns them the next available user ID and group ID.</p>
+
+            <div class="note tip"><span class="tiptitle">Tip:</span> To use specific IDs for the sdc user and group, create the user and
+                group before installation and specify the IDs that you want to use. For example, if
+                you’re installing <span class="ph">Data
+                  Collector</span> on multiple machines, you might want to create the system user and group before
+                installation to ensure that the user ID and group ID are consistent across the
+                machines.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data
+                  Collector</span> RPM zip file from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to extract the zip file to the desired
+                    location:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">unzip streamsets-datacollector-&lt;version&gt;-all-rpms.zip</pre>
+
+                    <div class="p">For example, to extract version 2.0.0.0, use the following
+                        command:<pre class="pre codeblock">unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to install the full <span class="ph">Data
+                  Collector</span> RPM package:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">yum localinstall streamsets*</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To start <span class="ph">Data
+                  Collector</span> as a service, use the following command:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">service sdc start</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd" id="task_th5_1yj_dx__AccessDC">To access the <span class="ph">Data Collector</span> console, enter the
+                    following URL in the address bar of your browser: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">http://&lt;system-ip&gt;:18630/</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_pnf_344_1r">
+    <h2 class="title topictitle2">Installing from the Tarball</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">This procedure walks through setting the default directories and the default system
+        user and group used to start <span class="ph">Data
+                  Collector</span> as a
+        service.</p>
+
+        <div class="section context"><p class="p"> Before you
+                install, you can alternatively use the
+                    <span class="ph filepath">$SDC_DIST/libexec/sdcd-env.sh</span> file to modify the
+                environment variables that define directories and the system user and group.</p>
+</div>
+
+        <ol class="ol steps" id="task_pnf_344_1r__steps_wnx_444_1r"><li class="li step stepexpand">
+                <span class="ph cmd">Use the following URL to download the <span class="ph">Data
+                  Collector</span> tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Extract the tarball to the desired location, typically<samp class="ph codeph">
+                        /opt/local/</samp>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Copy <span class="ph filepath">initd/_sdcinitd_prototype</span> to the
+                        <span class="ph filepath">/etc/init.d/</span> directory as sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the sdc file and set the <samp class="ph codeph">$SDC_DIST</samp> and
+                        <samp class="ph codeph">$SDC_HOME</samp> environment variables to the location where you
+                    extracted the tarball.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">sudo chmod 755 /etc/init.d/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create a system user and group named sdc.</span>
+                <div class="itemgroup info">The sdc user and group are used to start <span class="ph">Data
+                  Collector</span> as a service. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the <span class="ph">Data
+                  Collector</span> configuration directory at <samp class="ph codeph">/etc/sdc</samp> and copy all files from
+                    etc into this directory.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Change the owner of the <samp class="ph codeph">/etc/sdc</samp> directory and all files in
+                    the directory to sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to set owner only permission on the
+                        <samp class="ph codeph">form-realm.properties</samp> file in the <samp class="ph codeph">/etc/sdc</samp>
+                    directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">chmod go-rwx /etc/sdc/form-realm.properties</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the <span class="ph">Data
+                  Collector</span> log directory at <samp class="ph codeph">/var/log/sdc</samp> and change the owner to
+                    sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the <span class="ph">Data
+                  Collector</span> data directory at <samp class="ph codeph">/var/lib/sdc</samp> and change the owner to
+                    sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Create the <span class="ph">Data
+                  Collector</span> resources directory at <samp class="ph codeph">/var/lib/sdc-resources</samp> and change the
+                    owner to sdc:sdc.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To start <span class="ph">Data
+                  Collector</span> as a service, use the following command: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">service sdc start  </pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add the <span class="ph">Data Collector</span> service to the system startup, use the
+                    required command for your operating system.</span>
+                <ul class="ul choices" id="task_pnf_344_1r__choices_bmy_tlr_hx">
+                    <li class="li choice">For CentOS, use the following
+                        command:<pre class="pre codeblock">chkconfig --add sdc</pre>
+</li>
+
+                    <li class="li choice">For Ubuntu, use the following
+                        command:<pre class="pre codeblock">update-rc.d sdc defaults 97 03</pre>
+</li>
+
+                </ul>
+
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd" id="task_pnf_344_1r__AccessDC">To access the <span class="ph">Data Collector</span> console, enter the
+                    following URL in the address bar of your browser: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">http://&lt;system-ip&gt;:18630/</pre>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.">Data Collector Directories</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.">User and Group for Service Start</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

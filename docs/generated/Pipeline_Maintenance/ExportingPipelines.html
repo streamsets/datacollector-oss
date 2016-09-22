@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Export pipelines to create backups or to use the pipelines with another Data Collector . When you export a pipeline, Data Collector generates a JSON file named after the pipeline, as follows: ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Exporting Pipelines"></meta><meta name="abstract" content="Export pipelines to create backups or to use the pipelines with another Data Collector."></meta><meta name="description" content="Export pipelines to create backups or to use the pipelines with another Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_dtz_4tr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Exporting Pipelines</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Export pipelines to create backups or to use the pipelines with another Data Collector . To export pipelines for use in Dataflow Performance Manager ( DPM ), see Exporting Pipelines for DPM . When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Exporting Pipelines"></meta><meta name="abstract" content="Export pipelines to create backups or to use the pipelines with another Data Collector."></meta><meta name="description" content="Export pipelines to create backups or to use the pipelines with another Data Collector."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_dtz_4tr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Exporting Pipelines</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -30,27 +30,26 @@
                   Collector</span>. </p>
 
         <div class="section context">
-            <p class="p">When you export a
-                pipeline, <span class="ph">Data
+            <p class="p">To export pipelines
+                for use in <span class="ph">Dataflow Performance Manager</span> (<span class="ph">DPM</span>), see <a class="xref" href="../DPM/PipelineManagement.html#task_emc_p42_fx" title="If you develop pipelines in a Data Collector that is not registered with DPM, you can export the pipelines and then import the pipelines into DPM. When a Data Collector is registered with DPM, it's simplest to publish the pipelines directly to DPM.">Exporting Pipelines for DPM</a>.</p>
+
+            <p class="p">When you export a pipeline, <span class="ph">Data
                   Collector</span> generates a JSON file named after the pipeline, as follows: <samp class="ph codeph">&lt;pipeline
                     name&gt;.json</samp>. </p>
 
         </div>
 
         <ol class="ol steps" id="task_dtz_4tr_5q__steps_cns_ztr_5q"><li class="li step stepexpand">
-                <span class="ph cmd">From the <span class="keyword wintitle">Home</span> page, select pipelines in the list and then
-                    click the <span class="ph uicontrol">Export</span> icon. </span>
+                <span class="ph cmd">From the <span class="keyword wintitle">Home</span> page, select pipelines in the list, click
+                    the <span class="ph uicontrol">More</span> icon, and then click
+                        <span class="ph uicontrol">Export</span>.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Or, to export a pipeline in the pipeline canvas, click the
                         <span class="ph uicontrol">More</span> icon for the pipeline and then click
-                        <span class="ph uicontrol">Export</span> or <span class="ph uicontrol">Export with Library
-                        Definitions</span>.</span>
-                <div class="itemgroup info">When you export with library definitions, the generated JSON file includes the
-                    definition of each stage library used in the pipeline. You can use either method
-                    to export a pipeline.</div>
-                <div class="itemgroup stepresult">The <span class="ph">Data
-                  Collector</span> console generates the JSON files and saves them to your default downloads
+                        <span class="ph uicontrol">Export</span>.</span>
+                <div class="itemgroup stepresult"><span class="ph">Data
+                  Collector</span> generates the JSON files and saves them to your default downloads
                     directory.</div>
             </li>
 </ol>

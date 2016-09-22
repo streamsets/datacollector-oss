@@ -1,0 +1,167 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can customize how a Data Collector works with DPM by editing the DPM configuration file, dpm.properties. Use a text editor to edit the DPM configuration file, $SDC_CONF/dpm.properties . To enable ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="DPM Configuration"></meta><meta name="abstract" content="You can customize how a Data Collector works with DPM by editing the DPM configuration file, dpm.properties."></meta><meta name="description" content="You can customize how a Data Collector works with DPM by editing the DPM configuration file, dpm.properties."></meta><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hrn_zz3_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>DPM Configuration</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hrn_zz3_fx">
+ <h1 class="title topictitle1">DPM Configuration</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can customize how a <span class="ph">Data
+                  Collector</span> works
+        with <span class="ph">DPM</span> by
+        editing the <span class="ph">DPM</span>
+        configuration file, dpm.properties.</p>
+
+  <p class="p">Use a text editor to edit the <span class="ph">DPM</span>
+            configuration file, <samp class="ph systemoutput">$SDC_CONF/dpm.properties</samp>. To enable the
+            changes, restart <span class="ph">Data
+                  Collector</span>.</p>
+
+        <p class="p">The <span class="ph">Data
+                  Collector</span>
+            configuration file includes the following general properties:</p>
+
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_hrn_zz3_fx__table_on3_xtj_fx" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr class="row">
+                        <th class="entry" valign="top" width="44.44444444444444%" id="d25643e57">General Property</th>
+
+                        <th class="entry" valign="top" width="55.55555555555556%" id="d25643e60">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.enabled</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Specifies whether the <span class="ph">Data
+                  Collector</span> is enabled to work with <span class="ph">DPM</span>. <p class="p">Default is false.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.base.url</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Base URL to access <span class="ph">DPM</span>. Set to:
+                            <samp class="ph systemoutput">https://cloud.streamsets.com/</samp></td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.registration.retry.attempts</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Maximum number of times that <span class="ph">Data
+                  Collector</span> attempts to register with <span class="ph">DPM</span> before failing the registration.<p class="p">Default is 5.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.security.validationTokenFrequency.secs</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Frequency in seconds that <span class="ph">Data
+                  Collector</span> validates authentication and user tokens with <span class="ph">DPM</span>.<p class="p">Default is 60.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.appAuthToken</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">File located within <samp class="ph codeph">$SDC_CONF</samp>, the <span class="ph">Data
+                  Collector</span> configuration directory, that includes the authentication token for
+                            this <span class="ph">Data
+                  Collector</span> instance.<p class="p">Generally, you should not need to change this value.
+                            </p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.remote.control.job.labels</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Labels to assign to this <span class="ph">Data
+                  Collector</span>. Use labels to group <span class="ph">Data
+                  Collector</span>s registered with <span class="ph">DPM</span>. To assign multiple labels, enter a comma-separated list of
+                                labels.<p class="p">Defaults are label1 and label2. In most cases, you'll want
+                                to remove the default labels.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.remote.control.ping.frequency</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Frequency in milliseconds that <span class="ph">Data
+                  Collector</span> notifies <span class="ph">DPM</span> that it is running. <p class="p">Default is 5,000.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.remote.control.events.recipient</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Name of the internal <span class="ph">DPM</span> messaging queue to which <span class="ph">Data
+                  Collector</span> sends events. <p class="p">Do not change this value.</p>
+</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d25643e57 ">dpm.remote.control.status.events.interval</td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d25643e60 ">Frequency in milliseconds that <span class="ph">Data
+                  Collector</span> informs <span class="ph">DPM</span> of the status of all local and published pipelines that are running
+                            on this <span class="ph">Data
+                  Collector</span>.<p class="p">Default is 60,000.</p>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

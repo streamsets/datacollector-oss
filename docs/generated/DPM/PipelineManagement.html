@@ -1,0 +1,387 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="After you register a Data Collector with DPM , you can manage how the pipelines work with DPM . You develop pipelines in Data Collector , and then publish or import them to DPM . Within DPM , you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Management with DPM"></meta><meta name="abstract" content="After you register a Data Collector with DPM, you can manage how the pipelines work with DPM."></meta><meta name="description" content="After you register a Data Collector with DPM, you can manage how the pipelines work with DPM."></meta><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_eq5_qjd_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Management with DPM</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_eq5_qjd_fx">
+ <h1 class="title topictitle1">Pipeline Management with DPM</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">After you register a <span class="ph">Data
+                  Collector</span> with
+            <span class="ph">DPM</span>,
+        you can manage how the pipelines work with <span class="ph">DPM</span>.</p>
+
+        <p class="p">You develop pipelines in <span class="ph">Data
+                  Collector</span>,
+            and then publish or import them to <span class="ph">DPM</span>.
+            Within <span class="ph">DPM</span>,
+            you create jobs to run pipelines and to determine the <span class="ph">Data
+                  Collector</span>s
+            that run the jobs. When you run a job on a group of <span class="ph">Data
+                  Collector</span>s,
+                <span class="ph">DPM</span>
+            remotely runs a pipeline instance on each <span class="ph">Data
+                  Collector</span>.</p>
+
+        <p class="p">Managing pipelines with <span class="ph">DPM</span>
+            involves completing the following tasks:</p>
+
+            <ul class="ul">
+            <li class="li">Understanding the different types of pipelines that can run on a registered <span class="ph">Data
+                  Collector</span>.</li>
+
+                <li class="li">Publishing pipelines to <span class="ph">DPM</span>.</li>
+
+                <li class="li">Viewing pipeline commit history, and optionally getting a previous pipeline
+                version.</li>
+
+            <li class="li">Downloading published pipelines from <span class="ph">DPM</span>.</li>
+
+            </ul>
+
+        <p class="p">If you have not registered a <span class="ph">Data
+                  Collector</span>,
+            you can still develop pipelines in the <span class="ph">Data
+                  Collector</span>
+            and then export the pipelines for use in <span class="ph">DPM</span>.</p>
+
+        
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_cqr_v3d_fx">
+ <h2 class="title topictitle2">Pipeline Types</h2>
+
+ <div class="body conbody">
+        <div class="p">After a <span class="ph">Data
+                  Collector</span>
+            has been registered with <span class="ph">DPM</span>,
+            you can view the following types of pipelines in the <span class="ph">Data
+                  Collector</span>:<dl class="dl">
+                
+                    <dt class="dt dlterm">Local pipelines</dt>
+
+                    <dd class="dd">Local pipelines are pipelines that are managed by a <span class="ph">Data
+                  Collector</span> and run locally on that <span class="ph">Data
+                  Collector</span>. <span class="ph">Data
+                  Collector</span> displays local pipelines when they are running and not running. </dd>
+
+                    <dd class="dd">Use a <span class="ph">Data
+                  Collector</span> to design, start, stop, and monitor local pipelines. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Published pipelines</dt>
+
+                    <dd class="dd">Published pipelines are local pipelines that have been published to <span class="ph">DPM</span>. You can still use <span class="ph">Data
+                  Collector</span> to manage and locally run published pipelines on that <span class="ph">Data
+                  Collector</span>. <span class="ph">Data
+                  Collector</span> displays published pipelines with the current version number, and when
+                        they are running and not running.</dd>
+
+                
+                
+                    <dt class="dt dlterm">DPM controlled pipelines</dt>
+
+                    <dd class="dd">DPM controlled pipelines are pipelines that are managed by <span class="ph">DPM</span> and run remotely on registered <span class="ph">Data
+                  Collector</span>s. <span class="ph">Data
+                  Collector</span> displays DPM controlled pipelines when they are running. </dd>
+
+                    <dd class="dd">DPM controlled pipelines include the following:<ul class="ul" id="concept_cqr_v3d_fx__ul_llz_yth_hx">
+                            <li class="li">Published pipelines run from <span class="ph">DPM</span> jobs. <p class="p">After you publish or import pipelines to <span class="ph">DPM</span>, you add them to a job, and then run the job. When you run a
+                                    job on a group of <span class="ph">Data
+                  Collector</span>s, <span class="ph">DPM</span> remotely runs an instance of the published pipeline on each
+                                        <span class="ph">Data
+                  Collector</span>. When the <span class="ph">DPM</span> job stops, the running published pipeline also stops, and can
+                                    no longer be viewed in the <span class="ph">Data
+                  Collector</span>. Use <span class="ph">DPM</span> to start, stop, and monitor published pipelines that are run
+                                    from jobs.</p>
+</li>
+
+                            <li class="li">System pipelines run from <span class="ph">DPM</span> jobs.<p class="p"><span class="ph">DPM</span> automatically generates and runs system pipelines to
+                                    aggregate statistics for jobs. System pipelines collect,
+                                    aggregate, and push metrics for all of the remote pipeline
+                                    instances run from a job. When you run a job on a group of <span class="ph">Data
+                  Collector</span>s, <span class="ph">DPM</span> picks one <span class="ph">Data
+                  Collector</span> to run the system pipeline. When the <span class="ph">DPM</span> job stops, the running system pipeline also stops, and can no
+                                    longer be viewed in the <span class="ph">Data
+                  Collector</span>.</p>
+<p class="p"><span class="ph">DPM</span> generates system pipelines as needed. Published pipelines
+                                    that are not configured to aggregate statistics do not require
+                                    system pipelines.</p>
+</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> A <span class="ph">Data
+                  Collector</span> administrator can use the <span class="ph">Data
+                  Collector</span>
+            console to stop DPM controlled pipelines. Otherwise, you cannot modify or manage DPM
+            controlled pipelines in <span class="ph">Data
+                  Collector</span>.</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ssy_ns3_hx">
+ <h3 class="title topictitle3">Viewing Pipeline Types in Data Collector</h3>
+
+ <div class="body conbody">
+        <p class="p">Let's look at a sample <span class="ph">Data
+                  Collector</span>
+            Home page to see how <span class="ph">Data
+                  Collector</span>
+            displays local pipelines, published pipelines, and DPM controlled pipelines:</p>
+
+        <p class="p"><img class="image" id="concept_ssy_ns3_hx__image_rtj_fvs_gx" src="../Graphics/DPM_LocalDPMControlledPipelines.png" height="257" width="763"></img></p>
+
+        <p class="p">The <span class="ph">Data
+                  Collector</span>
+            displays the following pipelines:</p>
+
+        <ul class="ul" id="concept_ssy_ns3_hx__ul_oh2_shm_2w">
+            <li class="li">Local pipeline that was developed in this <span class="ph">Data
+                  Collector</span> and can be run locally on this <span class="ph">Data
+                  Collector</span>. Local pipelines are listed by name. In the image above, Remove Extra Fields is a
+                local pipeline that is not running. The Remove Extra Fields pipeline has not been
+                published to <span class="ph">DPM</span>, as indicated by no version number after its name.</li>
+
+            <li class="li">Published pipeline that was published to <span class="ph">DPM</span>
+                and can still be run locally on this <span class="ph">Data
+                  Collector</span>. Published pipelines are listed by name and version number. In the image above,
+                Kafka to HDFS is a published pipeline that is not running.</li>
+
+            <li class="li">Running published pipeline that was published to <span class="ph">DPM</span>, then run from a job. Published pipelines that are remotely run from jobs are
+                named as follows:<pre class="pre codeblock">&lt;pipeline name&gt;:&lt;job ID&gt;</pre>
+</li>
+
+            <li class="li">Running system pipeline that collects, aggregates, and pushes metrics for all of the
+                remote pipeline instances run from the job. Running system pipelines are named as
+                follows:<pre class="pre codeblock">System Pipeline for Job &lt;job name&gt;:&lt;system job ID&gt;</pre>
+</li>
+
+        </ul>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> In the image above, a job is running on a <span class="ph">Data
+                  Collector</span>
+            that is being used to design pipelines. As a best practice, use labels within <span class="ph">DPM</span> to
+            separate development <span class="ph">Data
+                  Collector</span>s
+            from production <span class="ph">Data
+                  Collector</span>s.
+            That way, you can ensure that published pipelines are only run on production <span class="ph">Data
+                  Collector</span>s
+            and not on a <span class="ph">Data
+                  Collector</span>
+            that a developer is currently using to design pipelines. For more information about
+            using labels, see the <span class="ph">DPM</span>
+            online help.</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_rxy_xqc_fx">
+    <h2 class="title topictitle2">Publishing Pipelines to DPM</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">After you finish developing pipelines in
+                    <span class="ph">Data
+                  Collector</span>, you publish the pipelines to the <span class="ph">DPM</span>
+                pipeline repository. You can publish pipelines that are valid. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select pipelines in the list and
+                    then click the <span class="ph uicontrol">Publish Pipeline</span> icon <img class="image" id="task_rxy_xqc_fx__image_svp_msc_fx" src="../Graphics/icon_RemoteStore.png" height="16" width="22"></img>.
+                    Or to publish a pipeline from the pipeline canvas, click the <span class="ph uicontrol">DPM
+                        Options</span> icon <img class="image" id="task_rxy_xqc_fx__image_lc3_kbf_2w" src="../graphics/icon_RemoteStore.png" height="16" width="22"></img>, and then click
+                        <span class="ph uicontrol">Publish Pipeline</span>. </span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Publish Pipeline</span> dialog box appears.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter a commit message.</span>
+                <div class="itemgroup info">As a best practice, state what changed in this pipeline version so that you
+                    can track the commit history of the pipeline.<div class="note note"><span class="notetitle">Note:</span> If you are publishing multiple
+                        pipelines from the <span class="ph uicontrol">Home</span> page, the same commit message
+                        is used for all of the pipelines.</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Publish Pipeline</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_hjv_fbd_fx">
+    <h2 class="title topictitle2">Viewing Pipeline Commit History</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can view the commit history of any pipeline that has been published to <span class="ph">DPM</span>. If the
+        pipeline has been committed multiple times, you can get an older version of the pipeline and
+        then continue editing the older version.</p>
+
+        <div class="section context">
+            <p class="p">If you edit and then publish an older
+                version, <span class="ph">DPM</span>
+                updates the minor version number rather than the major version number. For example,
+                you have a pipeline with three versions. You get version 2 of the pipeline, edit the
+                pipeline, and then publish the pipeline. <span class="ph">DPM</span>
+                versions the current pipeline as 2.1. So you now have four versions of the pipeline,
+                with version 2.1 of the pipeline marked as the current version:</p>
+
+            <ul class="ul" id="task_hjv_fbd_fx__ul_fcc_1v3_fx">
+                <li class="li">2.1</li>
+
+                <li class="li">3</li>
+
+                <li class="li">2</li>
+
+                <li class="li">1</li>
+
+            </ul>
+
+            <p class="p">To view pipeline commit history:</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline canvas, click the <span class="ph uicontrol">DPM Options</span> icon
+                        <img class="image" id="task_hjv_fbd_fx__image_lc3_kbf_2w" src="../graphics/icon_RemoteStore.png" height="16" width="22"></img>, and then click <span class="ph uicontrol">Commit
+                        History</span>. </span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Pipeline Commit History</span> dialog box opens. For
+                    example, a pipeline with three versions displays the commit history as
+                            follows:<p class="p"><img class="image" id="task_hjv_fbd_fx__image_a4r_f2d_fx" src="../Graphics/DPM_PipelineCommitHistory.png" height="259" width="607"></img></p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To get an older version of a pipeline, click <span class="ph uicontrol">Get</span> in the
+                        <span class="ph uicontrol">Actions</span> column for that version.</span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> opens the selected pipeline version in the canvas. You can make edits to the
+                    pipeline version, and then publish the pipeline as another version.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_ydw_r42_fx">
+    <h2 class="title topictitle2">Downloading Published Pipelines from DPM</h2>
+
+    <div class="body taskbody">
+        <div class="section context">You can download a
+            published pipeline from the <span class="ph">DPM</span>
+            pipeline repository into a registered <span class="ph">Data
+                  Collector</span>.
+            Download a published pipeline when you need to edit a published pipeline version, and
+            that pipeline version was originally developed on a different <span class="ph">Data
+                  Collector</span>.</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, click <span class="ph menucascade"><span class="ph uicontrol">Create New Pipeline</span> &gt; <span class="ph uicontrol"> Download Published Pipeline</span></span>.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Download Published Pipeline</span> dialog box displays all
+                    pipelines in the <span class="ph">DPM</span> pipeline repository.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Download</span> for each published pipeline that you want
+                    to download to this <span class="ph">Data
+                  Collector</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> downloads all versions of the selected pipeline. You can view the pipeline
+                    commit history in <span class="ph">Data
+                  Collector</span>, and get an older version of the pipeline if needed.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Close</span> when you have finished downloading published
+                    pipelines.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_emc_p42_fx">
+    <h2 class="title topictitle2">Exporting Pipelines for DPM</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If you develop pipelines in a <span class="ph">Data
+                  Collector</span> that
+        is not registered with <span class="ph">DPM</span>, you
+        can export the pipelines and then import the pipelines into <span class="ph">DPM</span>. When a
+            <span class="ph">Data
+                  Collector</span> is
+        registered with <span class="ph">DPM</span>, it's
+        simplest to publish the pipelines directly to <span class="ph">DPM</span>.</p>
+
+        <div class="section context">
+            <p class="p">When you
+                export a pipeline for use in <span class="ph">DPM</span>, <span class="ph">Data
+                  Collector</span> generates a JSON file named after the pipeline, as follows:
+                    <samp class="ph systemoutput">&lt;pipeline name&gt;.json</samp>. The generated JSON file
+                includes the definition of each stage library used in the pipeline.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> To export pipelines for use in another <span class="ph">Data
+                  Collector</span>, see <a class="xref" href="../Pipeline_Maintenance/ExportingPipelines.html#task_dtz_4tr_5q" title="Export pipelines to create backups or to use the pipelines with another Data Collector.">Exporting Pipelines</a>.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select pipelines in the list, click
+                    the <span class="ph uicontrol">More</span> icon, and then click <span class="ph uicontrol">Export for
+                        DPM</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Or, to export a pipeline in the pipeline canvas, click the
+                        <span class="ph uicontrol">More</span> icon for the pipeline and then click
+                        <span class="ph uicontrol">Export for DPM</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> generates the JSON files and saves them to your default downloads
+                    directory.</div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

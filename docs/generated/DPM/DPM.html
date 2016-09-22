@@ -1,0 +1,259 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="StreamSets Dataflow Performance Manager TM ( DPM ) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization. With DPM , you can map ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Meet Dataflow Performance Manager"></meta><meta name="abstract" content="StreamSets Dataflow Performance ManagerTM (DPM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization. With DPM, you can map multiple dataflows in a single visual topology and track changes to the dataflows over time. You can view real-time statistics to measure the performance and quality of your dataflows. You can master your day-to-day operations by monitoring alerts to ensure that incoming data meets business requirements for availability and accuracy."></meta><meta name="description" content="StreamSets Dataflow Performance ManagerTM (DPM) is a management console for data in motion. DPM lets you map, measure, and master complex dataflows within your organization. With DPM, you can map multiple dataflows in a single visual topology and track changes to the dataflows over time. You can view real-time statistics to measure the performance and quality of your dataflows. You can master your day-to-day operations by monitoring alerts to ensure that incoming data meets business requirements for availability and accuracy."></meta><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_l45_qwf_xw"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Meet Dataflow Performance Manager</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_l45_qwf_xw">
+ <h1 class="title topictitle1">Meet Dataflow Performance Manager</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">StreamSets <span class="ph">Dataflow Performance Manager</span><sup class="ph sup">TM</sup> (<span class="ph">DPM</span>) is a
+        management console for data in motion. <span class="ph">DPM</span> lets
+        you map, measure, and master complex dataflows within your organization. With <span class="ph">DPM</span>, you
+        can map multiple dataflows in a single visual topology and track changes to the dataflows
+        over time. You can view real-time statistics to measure the performance and quality of your
+        dataflows. You can master your day-to-day operations by monitoring alerts to ensure that
+        incoming data meets business requirements for availability and accuracy.</p>
+
+        <p class="p">Multiple types of users within
+            your organization can perform different roles in <span class="ph">DPM</span>.
+            For example, a data architect typically creates a high-level design of how data needs to
+            flow through multiple systems. A data engineer uses this high-level design to develop
+            individual pipelines in a development <span class="ph">Data
+                  Collector</span>.
+            The data engineer then publishes the finished pipelines to <span class="ph">DPM</span>. A
+            DevOps or site reliability engineer adds published pipelines to jobs and then runs the
+            jobs across multiple <span class="ph">Data
+                  Collector</span>s.
+            Data architects map the related jobs into a single visual topology, and then use the
+            topology to monitor and measure the complete dataflow.</p>
+
+        <p class="p">Let’s take a closer look at what data architects, data engineers, and DevOps engineers
+            can accomplish with <span class="ph">DPM</span>.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_knb_cjq_dx">
+ <h2 class="title topictitle2">Design the Complete Data Architecture</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">As a data architect - the person responsible for defining how data is stored, consumed,
+        and managed by different systems - you design the complete flow of data through multiple
+        systems. You might architect the high-level design in a design document or diagram. Then,
+        you work with your team to develop <span class="ph">Data
+                  Collector</span>
+        pipelines that meet those dataflow needs.</p>
+
+  <p class="p">For example, you need to create a
+            360-degree view of your customers by collecting all customer data captured in your
+            organization’s social feeds, enterprise data warehouse, and website logs. You need to
+            send all of the data to the Hadoop Distributed File System (HDFS) for further analysis
+            using tools such as Hive and Impala. You determine that the website logs must be written
+            to Kafka as an intermediary system before being streamed to HDFS. </p>
+
+        <p class="p">To address this need, you create the following high-level design of the complete data
+            flow:</p>
+
+        <p class="p"><img class="image" id="concept_knb_cjq_dx__image_w1d_k5r_dx" src="../Graphics/DPM_DesignArchitecture.png" height="266" width="644"></img></p>
+
+        <p class="p">Then the rest of your team uses this high-level design to develop the necessary
+            pipelines, jobs, and topologies within <span class="ph">Data
+                  Collector</span>
+            and <span class="ph">DPM</span>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ung_wbs_bx">
+ <h2 class="title topictitle2">Manage the Pipeline Repository</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">As a data engineer - the person responsible for making sure that data flows smoothly
+        between systems - you use a development <span class="ph">Data
+                  Collector</span>
+        instance to develop the pipelines needed to implement the designed data architecture. When
+        the pipelines are complete, you publish the pipelines to the pipeline repository in <span class="ph">DPM</span>. </p>
+
+        <p class="p"><span class="ph">DPM</span>
+            provides release management of pipelines. A typical pipeline development cycle involves
+            iterative changes to the pipeline. <span class="ph">DPM</span>
+            maintains the version history of each published pipeline. For example, as you design the
+            Social Feeds Dataflows pipeline, you test the pipeline and then make changes to it. As a
+            result, you will likely publish the pipeline to the <span class="ph">DPM</span>
+            pipeline repository multiple times, as displayed in the following image of the pipeline
+            history: </p>
+
+        <p class="p"><img class="image" id="concept_ung_wbs_bx__image_llt_s4t_bx" src="../Graphics/DPM_ManagePipelineRepository.png" height="209" width="505"></img></p>
+
+        <p class="p">When viewing the pipeline history in <span class="ph">DPM</span>,
+            you can view the configuration details for any pipeline version and can compare pipeline
+            versions side-by-side. For example, if we click the <span class="ph uicontrol">Compare with Previous
+                Version</span> icon <img class="image" id="concept_ung_wbs_bx__image_zqv_3st_bx" src="../Graphics/icon_DPM_ComparePreviousVersion.png" height="18" width="18"></img> for version 3 in the image above, <span class="ph">DPM</span>
+            displays version 2 and version 3 in the comparison window as follows: </p>
+
+        <p class="p"><img class="image" id="concept_ung_wbs_bx__image_bzq_3d5_bx" src="../Graphics/DPM_ComparePipelineVersions.png" height="252" width="629"></img></p>
+
+        <p class="p">We can see that version 3 of the pipeline added an Expression Evaluator processor. We can
+            drill into the details of each pipeline stage, and compare the configuration of each
+            stage between the versions.</p>
+
+        <p class="p">You can add tags to pipeline versions to mark release points or to separate development
+            and production environments. For example, when you finish developing the Social Feeds
+            Dataflows pipeline, you add a "Ready to Deploy" tag to the latest version. That tag
+            informs your DevOps engineer which pipeline version is ready to be added to a job and
+            run.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_inh_ccs_bx">
+ <h2 class="title topictitle2">Manage the Orchestration of Running Jobs</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">In <span class="ph">DPM</span>,
+        pipelines are the design of the dataflow. Jobs are the execution of the
+        dataflow.</p>
+
+        <p class="p">As a DevOps or site reliability
+            engineer - the person responsible for ensuring that all services and systems are
+            scalable and reliable - you create <span class="ph">DPM</span>
+            jobs to run pipelines and to determine the <span class="ph">Data
+                  Collector</span>s
+            that run the jobs. When you run a job on a group of <span class="ph">Data
+                  Collector</span>s,
+                <span class="ph">DPM</span>
+            remotely runs the pipeline on all <span class="ph">Data
+                  Collector</span>s
+            in the group. This enables you to manage and orchestrate large scale dataflow jobs run
+            across multiple <span class="ph">Data
+                  Collector</span>s.</p>
+
+        <p class="p">You might organize jobs by project, geographic region, or department. For example, your
+            data engineer has developed and published the WebLog Collection pipeline and the EDW
+            Replication Flows pipeline. In your data center, you designate <span class="ph">Data
+                  Collector</span>s
+            that run on several of the servers as the web server group. You designate another group
+            of <span class="ph">Data
+                  Collector</span>s running on other servers as the data warehouse group. You then create a job to run
+            the WebLog Collection pipeline on the group of web server <span class="ph">Data
+                  Collector</span>s. </p>
+
+        <p class="p">The following image displays how the WebLog Collection job runs a remote pipeline
+            instance on each <span class="ph">Data
+                  Collector</span> in
+            the web server group. The job does not run on <span class="ph">Data
+                  Collector</span>s
+            in the data warehouse group, which are <span class="ph">Data
+                  Collector</span>s
+            that are reserved for jobs that read from the enterprise data warehouse.</p>
+
+        <p class="p"><img class="image" id="concept_inh_ccs_bx__image_dtc_h21_cx" src="../Graphics/DPM_ManageOrchestration.png" height="189" width="544"></img></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_t34_2ds_bx">
+ <h2 class="title topictitle2">Map Jobs into a Topology</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">In <span class="ph">Data
+                  Collector</span>, you can monitor and view the details of a single pipeline. However, you typically run
+        multiple intermediary pipelines, all of which work together to create a complete
+        dataflow.</p>
+
+        <p class="p">As a data architect, you create a
+            topology in <span class="ph">DPM</span> to
+            map multiple related jobs into a single view. A topology provides interactive end-to-end
+            views of data as it traverses multiple pipelines.</p>
+
+        <p class="p">To continue our Customer 360 example, after the WebLog Collection pipeline reads web
+            server log files and writes the data to Kafka, another pipeline consumes the Kafka data,
+            processes it, and streams the data to HDFS. Additional pipelines read from Twitter
+            social feeds and from an enterprise data warehouse and also write the data to HDFS. In
+                <span class="ph">DPM</span>, you can create a topology that includes jobs for all the pipelines, as follows: </p>
+
+        <p class="p"><img class="image" id="concept_t34_2ds_bx__image_um3_nk1_cx" src="../Graphics/DPM_MapPipelinesTopology.png" height="430" width="622"></img></p>
+
+        <p class="p">From the topology, you can select each job and then drill into the configuration details
+            of each pipeline. You can add any number of jobs to a topology.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_sx5_zds_bx">
+ <h2 class="title topictitle2">Measure Dataflow Quality</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">DPM</span>
+        provides the same level of detailed monitoring for topologies and jobs that you are
+        accustomed to seeing for pipelines within <span class="ph">Data
+                  Collector</span>. </p>
+
+        <p class="p">As a data architect, you can
+            measure the health of the topology and the performance of all jobs and connecting
+            systems included in the topology. <span class="ph">DPM</span>
+            monitoring provides real-time statistics, error information, and alerts about the
+            running jobs. </p>
+
+        <p class="p">For example, the Summary tab of the Customer 360 topology provides a single view into the
+            record count and throughput for all running jobs in the topology:</p>
+
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_hv1_ctq_fx" src="../Graphics/DPM_MeasureQualityTopology.png" height="487" width="744"></img></p>
+
+        <p class="p">You can select a job or a connecting system within the topology to discover more detailed
+            monitoring about the job or system. </p>
+
+        <p class="p">When a job runs on a group of <span class="ph">Data
+                  Collector</span>s,
+                <span class="ph">DPM</span>
+            provides a single view of the statistics for the complete job. From a job, you can view
+            the statistics for a single pipeline or you can view the aggregated statistics across
+            all remote pipeline instances that are run on a group of <span class="ph">Data
+                  Collector</span>s.</p>
+
+        <p class="p">For example, if we select the Social Feeds Dataflows job in the topology, the Summary tab
+            displays metrics for the selected job:</p>
+
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_ylz_ptq_fx" src="../Graphics/DPM_MeasureQualityJob.png" height="536" width="748"></img></p>
+
+        <p class="p">We've seen how you can use DPM to turn a high-level architecture diagram of your
+            dataflows into pipelines and jobs that you can then manage and measure from a single
+            topology. Give it a try, and see for yourself how easy DPM has made it to map, measure,
+            and master your data in motion.</p>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

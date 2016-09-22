@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components. For ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Splitter"></meta><meta name="abstract" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="description" content="The Field Splitter splits string data based on a separator character and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vlj_vph_yq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Splitter</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Splitter splits string data based on a regular expression and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components. For ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Splitter"></meta><meta name="abstract" content="The Field Splitter splits string data based on a regular expression and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="description" content="The Field Splitter splits string data based on a regular expression and passes the separated data to new fields. Use the Field Splitter to split complex string values into logical components."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vlj_vph_yq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Splitter</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -26,7 +26,7 @@
  <h1 class="title topictitle1">Field Splitter</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Field Splitter splits string data based on a separator character and passes the
+ <div class="body conbody"><p class="shortdesc">The Field Splitter splits string data based on a regular expression and passes the
   separated data to new fields. Use the Field Splitter to split complex string values into logical
   components. </p>
 
@@ -34,60 +34,138 @@
    message separated by a comma, you can use the comma to separate the code and message into
    different fields.</p>
 
-  <p class="p">When a field includes additional data and separator characters, the Field Splitter includes the
-   remaining data in the last split field. </p>
+  <p class="p">When you configure the Field Splitter, you specify the field to split, the regular expression
+   to use as a separator, and the fields to use for split data. You configure what to do when a
+   record does not have the expected number of splits, and what to do when a record has additional
+   data with more possible splits. </p>
 
-  <p class="p">If a field cannot be split as requested, the Field Splitter can pass the record split as much
-   as possible, discard the record, pass the error to the pipeline for error handling, or stop the
-   pipeline. </p>
-
-  <p class="p">You can keep data from the original field in the record or discard it. </p>
-
-  <div class="section"><h2 class="title sectiontitle">Example</h2>
-   
-   <p class="p">A Field Splitter uses a comma to split data into two fields and to discard records that cannot
-    be split as requested. When it encounters a single comma, it passes the data before the comma to
-    the ErrorCode field and the data after the comma to the ErrorMessage field. </p>
-
-   <div class="p">When this Field Splitter processes the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_dqy_dd3_yq" border="0" class="simpletable"><tr class="strow">
-      <td valign="top" class="stentry" width="100%">
-       <pre class="pre codeblock">GM-302,information that you might need
-ME-3042,message about this error,"additional information from the server"
-IMD-03234</pre>
-
-      </td>
-
-     </tr>
-</table>
-</div>
-
-   <div class="p">The Field Splitter produces the following records:<table cellpadding="4" cellspacing="0" summary="" id="concept_vlj_vph_yq__simpletable_kxh_fd3_yq" border="0" class="simpletable"><tr class="strow">
-      <td valign="top" class="stentry" width="19.607843137254903%">
-       <pre class="pre codeblock"><span class="ph uicontrol">ErrorCode</span>
-GM-302 
-ME-3042</pre>
-
-      </td>
-
-      <td valign="top" class="stentry" width="80.3921568627451%">
-       <pre class="pre codeblock"><span class="ph uicontrol">Message</span>
-information that you might need
-message about this error,"additional information from the server"</pre>
-
-      </td>
-
-     </tr>
-</table>
-</div>
-
-   <p class="p">The Field Splitter discards IMD-03234 because the record does not include enough data to be
-    split, and the processor is configured to discard such records. </p>
-
-  </div>
+  <p class="p">You can keep the original field being split or discard it. </p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ilb_m3t_3x">
+    <h2 class="title topictitle2">Not Enough Splits</h2>
+
+    <div class="body conbody">
+        <p class="p">A
+            field has not enough splits when the data does not include as many splits as the number
+            of split fields listed in the processor. </p>
+
+        <p class="p">When a field has not enough splits, the Field Splitter can continue or process the record
+            based on the configured stage error handling. When continuing, the processor passes the
+            record with the data split as much as possible, passing nulls for unused split fields. </p>
+
+        <p class="p">For example, say the data in a field has only one split separator. This produces data to
+            be written to two split fields, but the processor has three listed split fields. In this
+            case, the processor handles the record based on the <span class="ph uicontrol">Not Enough
+                Splits</span> property.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ysb_5st_3x">
+ <h2 class="title topictitle2">Too Many Splits</h2>
+
+ <div class="body conbody">
+  <p class="p">When a
+            field has too many splits, the Field Splitter can include all remaining data in the last
+            listed split field, or it can write the additional splits to a specified list field. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_axv_hkt_3x">
+ <h2 class="title topictitle2">Example</h2>
+
+        <div class="body conbody">
+                <p class="p">The following Field Splitter uses a comma to split data into two fields:
+            ErrorCode and ErrorMsg. The Not Enough Splits property sends records that do not have
+            enough splits to the stage for error handling, and the stage is configured to discard
+            error records. The Too Many Splits property writes additional data to a MoreInfo list
+            field. </p>
+
+        <p class="p"><img class="image" id="concept_axv_hkt_3x__image_c42_vqt_3x" src="../Graphics/FieldSplitter.png" height="312" width="503"></img></p>
+
+                <div class="p">Say the pipeline passes the processor the following set of records:<table cellpadding="4" cellspacing="0" summary="" id="concept_axv_hkt_3x__simpletable_tzd_dmt_3x" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d171735e112" class="stentry" width="50%"><span class="ph uicontrol">Datetime</span></th>
+
+                    <th valign="bottom" align="left" id="d171735e116" class="stentry" width="50%"><span class="ph uicontrol">Error</span></th>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d171735e112" class="stentry"><samp class="ph codeph">21-09-2016 15:33:02</samp></td>
+
+                    <td valign="top" headers="d171735e116" class="stentry"><samp class="ph codeph">GM-302,information that you might need</samp></td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d171735e112" class="stentry"><samp class="ph codeph">21-09-2016 15:35:53</samp></td>
+
+                    <td valign="top" headers="d171735e116" class="stentry"><samp class="ph codeph">ME-3042,message about error,additional information from server,
+                            network error, driver error</samp></td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d171735e112" class="stentry"><samp class="ph codeph">21-09-2016 15:55:48</samp></td>
+
+                    <td valign="top" headers="d171735e116" class="stentry"><samp class="ph codeph">IMD-03234</samp></td>
+
+                </tr>
+</table>
+</div>
+
+                <p class="p">When Field Splitter encounters a comma in the errors field, it passes the data
+            before the comma to the ErrorCode field and the data after the comma to the ErrorMsg
+            field and writes any additional fields to the MoreInfo list field. </p>
+
+        <p class="p">The Field Splitter produces the following records. The processor discards IMD-03234
+            because the record does not include enough data to be split, and the processor is
+            configured to discard those records. </p>
+
+        <div class="p">
+            <table cellpadding="4" cellspacing="0" summary="" id="concept_axv_hkt_3x__simpletable_b1g_grt_3x" border="1" class="simpletable"><tr class="sthead">
+                    <th valign="bottom" align="left" id="d171735e168" class="stentry" width="25%"><span class="ph uicontrol">Datetime</span></th>
+
+                    <th valign="bottom" align="left" id="d171735e172" class="stentry" width="25%"><span class="ph uicontrol">ErrorCode</span></th>
+
+                    <th valign="bottom" align="left" id="d171735e176" class="stentry" width="25%"><span class="ph uicontrol">ErrorMsg</span></th>
+
+                    <th valign="bottom" align="left" id="d171735e180" class="stentry" width="25%"><span class="ph uicontrol">MoreInfo</span></th>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d171735e168" class="stentry"><samp class="ph codeph">21-09-2016 15:33:02</samp></td>
+
+                    <td valign="top" headers="d171735e172" class="stentry"><samp class="ph codeph">GM-302</samp></td>
+
+                    <td valign="top" headers="d171735e176" class="stentry"><samp class="ph codeph">information that you might need</samp></td>
+
+                    <td valign="top" headers="d171735e180" class="stentry"> </td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d171735e168" class="stentry"><samp class="ph codeph">21-09-2016 15:35:53</samp></td>
+
+                    <td valign="top" headers="d171735e172" class="stentry"><samp class="ph codeph">ME-3042</samp></td>
+
+                    <td valign="top" headers="d171735e176" class="stentry"><samp class="ph codeph">message about error</samp></td>
+
+                    <td valign="top" headers="d171735e180" class="stentry"><samp class="ph codeph">- additional information from server</samp><p class="p"><samp class="ph codeph">-
+                                network error</samp></p>
+<p class="p"><samp class="ph codeph">- driver
+                        error</samp></p>
+</td>
+
+                </tr>
+</table>
+
+        </div>
+
+            
+        </div>
+
+</div>
 <div class="topic task nested1" id="task_av1_5g3_yq">
     <h2 class="title topictitle2">Configuring a Field Splitter</h2>
 
@@ -101,14 +179,14 @@ message about this error,"additional information from the server"</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_av1_5g3_yq__d20933e3161" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_av1_5g3_yq__d24769e3197" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160052e139">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d171735e272">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160052e142">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d171735e275">Description</th>
 
                                 </tr>
 
@@ -116,24 +194,24 @@ message about this error,"additional information from the server"</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160052e139 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d171735e272 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160052e142 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160052e139 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d160052e142 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d171735e275 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160052e139 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_av1_5g3_yq__d20933e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171735e272 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160052e142 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d171735e275 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d171735e272 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_av1_5g3_yq__d24769e3243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d171735e275 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -141,10 +219,10 @@ message about this error,"additional information from the server"</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160052e139 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_av1_5g3_yq__d20933e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171735e272 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_av1_5g3_yq__d24769e3257" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160052e142 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d171735e275 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -152,10 +230,10 @@ message about this error,"additional information from the server"</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160052e139 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_av1_5g3_yq__d20933e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d171735e272 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_av1_5g3_yq__d24769e3272" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160052e142 ">Error record handling for the stage: <ul class="ul" id="task_av1_5g3_yq__d20933e3240">
+                                    <td class="entry" valign="top" width="70%" headers="d171735e275 ">Error record handling for the stage: <ul class="ul" id="task_av1_5g3_yq__d24769e3276">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -186,9 +264,9 @@ message about this error,"additional information from the server"</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d160052e261">Field Splitter Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d171735e394">Field Splitter Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d160052e264">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d171735e397">Description</th>
 
                                 </tr>
 
@@ -196,41 +274,35 @@ message about this error,"additional information from the server"</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d160052e261 ">Field to Split</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Field to Split</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d160052e264 ">The String field to be split.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">The String field to be split.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d160052e261 ">Separator</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Separator</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d160052e264 ">The character to use to split data in a field. Select one
-                                        of the listed characters or select
-                                            <span class="ph uicontrol">Other</span> and enter a single
-                                        character to use.<p class="p">You can enter a Unicode control
-                                            character using the format \u<em class="ph i">NNNN</em>, where
-                                                ​<em class="ph i">N</em> is a hexadecimal digit from the numbers
-                                            0-9 or the letters A-F. For example, enter \u0000 to use
-                                            the null character as the delimiter or \u2028 to use a
-                                            line separator as the delimiter.</p>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">The regular expression to use to split data in a field.
+                                        For some tips on using regular expressions, see <a class="xref" href="../Apx-RegEx/RegEx-Overview.html#concept_vd4_nsc_gs" title="A regular expression, also known as regex, describes a pattern for a string.">Regular Expressions</a>.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">New Split Fields</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">Names of the new fields to pass the split data.
+                                            <div class="note note"><span class="notetitle">Note:</span> Precede each field name with a slash as
+                                                follows:<samp class="ph codeph"> /NewField</samp>.</div>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d160052e261 ">New Split Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Not Enough Splits</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d160052e264 ">Names of the new fields to pass the split data. Precede
-                                        each field name with a slash as follows: /NewField.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d160052e261 ">Not Enough Splits</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d160052e264 ">Determines how to handle records that cannot be split as
-                                            requested:<ul class="ul" id="task_av1_5g3_yq__ul_n5d_xn3_yq">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">Record handling when the data does not include as many
+                                        splits as the specified number of split fields: <ul class="ul" id="task_av1_5g3_yq__ul_n5d_xn3_yq">
                                             <li class="li">Continue - Passes the record split as much as
                                                 possible with null values in unused split fields. </li>
 
@@ -243,9 +315,34 @@ message about this error,"additional information from the server"</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d160052e261 ">Original Field</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Too Many Splits</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d160052e264 ">Determines how to handle the original field being
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">Record handling when the data contains more potential
+                                        splits than the specified number of split fields:<ul class="ul" id="task_av1_5g3_yq__ul_vtx_ztt_3x">
+                                            <li class="li">Put Remaining Text in Last Field - Writes any
+                                                additional data to the last split field. </li>
+
+                                            <li class="li">Store Remaining Splits as List - Splits the
+                                                additional data and writes the splits to the
+                                                specified List field. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Field for Remaining Splits</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">List field for remaining splits. Used when the data
+                                        includes more splits than expected by the processor.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d171735e394 ">Original Field</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d171735e397 ">Determines how to handle the original field being
                                             split:<ul class="ul" id="task_av1_5g3_yq__ul_rdk_ltf_br">
                                             <li class="li">Remove</li>
 

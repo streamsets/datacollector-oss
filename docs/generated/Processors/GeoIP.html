@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Geo IP processor provides geographic location information for IP addresses. The Geo IP processor can use the MaxMind GeoIP2 City or the GeoIP2 Country database file to provide geolocation ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Geo IP"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fch_fc3_ms"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Geo IP</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Geo IP processor is a lookup processor that can return geolocation and IP intelligence information for a specified IP address. The Geo IP processor uses MaxMind GeoIP2 database files for the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Geo IP"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fch_fc3_ms"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Geo IP</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -26,54 +26,243 @@
  <h1 class="title topictitle1">Geo IP</h1>
 
  <div class="body conbody">
-  <p class="p">The Geo IP processor provides geographic
-            location information for IP addresses.</p>
+  <p class="p">The Geo IP processor is a lookup processor that
+            can return geolocation and IP intelligence information for a specified IP address.</p>
 
-        <p class="p"> The Geo IP processor can use the MaxMind GeoIP2 City or the GeoIP2 Country database file
-            to provide geolocation information. You must provide your own copy of the database file. </p>
+        <p class="p">The Geo IP processor uses MaxMind GeoIP2 database files for the lookup. You must provide
+            your own copy of the database files. </p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> MaxMind provides free versions of the GeoIP2 databases that you can
-            use.</div>
+        <div class="note tip"><span class="tiptitle">Tip:</span> MaxMind provides some free databases that you can use.</div>
 
-        <p class="p">To use the Geo IP processor, you specify the location of the database file and the
-            database type. You enter one or more IP address input fields, name the corresponding
-            output field, and specify the geolocation information that you want. </p>
+        <p class="p">To use the Geo IP processor, you specify the location of the database files and the
+            database types that you want to use. You enter one or more IP address input fields, name
+            the corresponding output field, and specify the return  information that you want. You
+            can also configure the action that the processor takes if the database files do not have
+            an IP address.</p>
 
-    <p class="p">The input field must be an Integer or String datatype with IP addresses formatted as follows:
-                <samp class="ph codeph">n.n.n.n.</samp></p>
-
-  <div class="p">Geo IP can provide the following geolocation information for each IP address:<ul class="ul" id="concept_fch_fc3_ms__ul_ptx_mg3_ms">
-        <li class="li">Country name</li>
-
-        <li class="li">Country ISO code</li>
-
-        <li class="li">City name</li>
-
-        <li class="li">Latitude</li>
-
-        <li class="li">Longitude</li>
-
-      </ul>
-</div>
+    <p class="p">The input field must be an Integer or String datatype that passes IPv4 or IPv6 addresses.</p>
 
  </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_kg2_21s_ns">
- <h2 class="title topictitle2">Database File Location</h2>
+<div class="topic concept nested1" id="concept_clx_bng_hx">
+ <h2 class="title topictitle2">Supported Databases</h2>
 
  <div class="body conbody">
-  <p class="p">To use the Geo IP processor, save the MaxMind GeoIP2
-      database file in a directory local to the <span class="ph">Data
+        <div class="p">You can
+            use most MaxMind GeoIP2 databases with the GeoIP processor. The processor supports the
+            following GeoIP2 databases:<ul class="ul" id="concept_clx_bng_hx__ul_knl_cgh_hx">
+                <li class="li">Anonymous IP</li>
+
+                <li class="li">City</li>
+
+                <li class="li">Country</li>
+
+                <li class="li">Connection Type</li>
+
+                <li class="li">Domain</li>
+
+                <li class="li">ISP</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_kg2_21s_ns">
+  <h2 class="title topictitle2">Database File Location</h2>
+
+  <div class="body conbody">
+    <p class="p">To use the Geo IP processor, save the MaxMind GeoIP2
+      database files that you want to use in a directory local to the <span class="ph">Data
                   Collector</span> or in the
         <span class="ph">Data
                   Collector</span>
       resources directory: <span class="ph filepath">$SDC_RESOURCES</span>. </p>
 
-    <p class="p">Then define the location of the database file in the processor.</p>
+    <p class="p">Then, specify the location of the database file when you configure the processor.</p>
+
+  </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ewg_mgh_hx">
+ <h2 class="title topictitle2"> GeoIP Field Types</h2>
+
+ <div class="body conbody">
+  <p class="p">Each GeoIP2
+            database provides a different set of information that you can request. When you
+            configure the processor, be sure to request information that exists in the databases
+            that you are using.</p>
+
+        <p class="p">For example, if you configure the processor to use the City and Country databases, do not
+            request domain information. To return domain details, you need to use the Domain
+            database.</p>
+
+        <p class="p">In the processor, you request return values by defining the <span class="ph uicontrol">GeoIP Field
+                Type</span> property.</p>
+
+        <div class="p">The following table lists the valid GeoIP field types for each database. For details
+            about the information returned with each field type, see the MaxMind GeoIP2
+                documentation.
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ewg_mgh_hx__table_q3d_53h_hx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="30%" id="d174198e165">Database</th>
+
+                            <th class="entry" valign="top" width="70%" id="d174198e168">Valid GeoIP Field Types</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">Anonymous IP</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_zg1_4kh_hx">
+                                    <li class="li">Anonymous IP Full JSON</li>
+
+                                    <li class="li">Is Anonymous</li>
+
+                                    <li class="li">Is Anonymous VPN</li>
+
+                                    <li class="li">Is Hosting Provider</li>
+
+                                    <li class="li">Is Public Proxy</li>
+
+                                    <li class="li">Is TOR Exit Node</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">City</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_nlq_3kh_hx">
+                                    <li class="li">City Full JSON</li>
+
+                                    <li class="li">City Name</li>
+
+                                    <li class="li">Country</li>
+
+                                    <li class="li">Country ISO Code</li>
+
+                                    <li class="li">Latitude</li>
+
+                                    <li class="li">Longitude</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">Country</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_hlm_jkh_hx">
+                                    <li class="li">Country</li>
+
+                                    <li class="li">Country Full JSON</li>
+
+                                    <li class="li">Country ISO Code</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">Connection Type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_p1f_skh_hx">
+                                    <li class="li">Connection Type</li>
+
+                                    <li class="li">Connection Type Full JSON</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">Domain</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_fvm_rkh_hx">
+                                    <li class="li">Domain</li>
+
+                                    <li class="li">Domain Full JSON</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d174198e165 ">ISP</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d174198e168 ">
+                                <ul class="ul" id="concept_ewg_mgh_hx__ul_mtc_tkh_hx">
+                                    <li class="li">Autonomous System Number</li>
+
+                                    <li class="li">Autonomous System Org</li>
+
+                                    <li class="li">ISP</li>
+
+                                    <li class="li">ISP Full JSON</li>
+
+                                    <li class="li">Organization</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
 
  </div>
 
+<div class="topic concept nested2" id="concept_pmp_b1y_hx">
+ <h3 class="title topictitle3">Full JSON Field Types</h3>
+
+ <div class="body conbody">
+  <p class="p">The GeoIP
+            processor provides a Full JSON field type for each database. The Full JSON field type
+            returns all available data in the dictionary for the specified IP address. </p>
+
+        <p class="p">Use the Full JSON field type when the information that you want is in a database, but not
+            available as one of the field types in the processor.</p>
+
+        <p class="p">The Full JSON field type returns a JSON object with all available data. You can use a
+            JSON Parser processor downstream to parse the object and extract the information that
+            you need. </p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="JSONParser.html#concept_bs1_4t3_yq" title="Configure a JSON Parser to parse a JSON object in a String field.">JSON Parser</a></div>
+</div>
+</div>
+</div>
 </div>
 <div class="topic task nested1" id="task_wpz_nhs_ns">
     <h2 class="title topictitle2">Configuring a Geo IP Processor</h2>
@@ -87,14 +276,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__d20933e3161" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__d24769e3197" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d162121e150">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d174198e402">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d162121e153">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d174198e405">Description</th>
 
                                 </tr>
 
@@ -102,24 +291,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162121e150 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d174198e402 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162121e153 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162121e150 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d162121e153 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d174198e405 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162121e150 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_wpz_nhs_ns__d20933e3207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174198e402 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162121e153 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d174198e405 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d174198e402 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d24769e3243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d174198e405 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -127,10 +316,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162121e150 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_wpz_nhs_ns__d20933e3221" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174198e402 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d24769e3257" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162121e153 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d174198e405 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -138,10 +327,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162121e150 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_wpz_nhs_ns__d20933e3236" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d174198e402 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_wpz_nhs_ns__d24769e3272" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162121e153 ">Error record handling for the stage: <ul class="ul" id="task_wpz_nhs_ns__d20933e3240">
+                                    <td class="entry" valign="top" width="70%" headers="d174198e405 ">Error record handling for the stage: <ul class="ul" id="task_wpz_nhs_ns__d24769e3276">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -172,9 +361,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d162121e272">Geo IP Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d174198e524">Geo IP Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d162121e275">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d174198e527">Description</th>
 
                                 </tr>
 
@@ -182,9 +371,19 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162121e272 ">GeoIP2 Database File </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">GeoIP2 Databases <a class="xref" href="GeoIP.html#concept_clx_bng_hx">
+                                            <img class="image" id="task_wpz_nhs_ns__image_w55_4yn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162121e275 ">Directory where the GeoIP2 database file is located.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">The MaxMind GeoIP databases that you want to use. Click
+                                        the <span class="ph uicontrol">Add</span> icon to add additional
+                                        databases.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">GeoIP2 Database File</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Directory where the GeoIP2 database file is located.
                                         Enter a fully-qualified location or the <span class="ph">Data
                   Collector</span> resources directory, <span class="ph filepath">$SDC_RESOURCES</span>.
                                             <p class="p">For more information about environment variables, see
@@ -194,34 +393,63 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162121e272 ">GeoIP2 Database Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">GeoIP2 Database Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162121e275 ">Database type. You can use the GeoIP2 City or Country
-                                        database.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Database type. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162121e272 ">Input Field Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">Database Field Mappings</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162121e275 ">Incoming field with the IP address to use. The field can
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Mapping for each input field, output field, and the data
+                                        that you want returned in the output field. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">Input Field Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Incoming field with the IP address to use. The field can
                                         be an Integer or String data type. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162121e272 ">Output Field Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">Output Field Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162121e275 ">Name of the field to pass the selected geolocation
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Name of the field to pass the selected geolocation
                                         data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d162121e272 ">GeoIP2 Field</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">GeoIP2 Field <a class="xref" href="GeoIP.html#concept_ewg_mgh_hx">
+                                            <img class="image" id="task_wpz_nhs_ns__image_i55_xt3_hx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d162121e275 ">Geolocation data to be passed by the output field.
-                                    </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Data from the available databases to be passed to the
+                                        output field. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d174198e524 ">Missing Address Action</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d174198e527 ">Specify the action to take if an IP address is missing
+                                        from the database file:<ul class="ul" id="task_wpz_nhs_ns__ul_ydv_gsw_cx">
+                                            <li class="li">Send to Error - Handles the record based on the
+                                                error handling configured for the stage. </li>
+
+                                            <li class="li">Replace with Nulls - Adds all of the specified
+                                                output fields to the record, replacing the missing
+                                                values with null.</li>
+
+                                            <li class="li">Ignore - Ignores the missing data, and does not add
+                                                the specified output fields to the record.</li>
+
+                                        </ul>
+<p class="p">Default is Send to Error.</p>
+</td>
 
                                 </tr>
 
