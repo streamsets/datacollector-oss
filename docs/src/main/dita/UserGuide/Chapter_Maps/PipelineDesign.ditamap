@@ -39,10 +39,26 @@
    <topicref href="../Pipeline_Design/ErrorHandling-Stage.dita"/>
    <topicref href="../Pipeline_Design/ErrorHandling-Example.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Design/Protobuf-Prerequisites.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Design/SDCRecordFormat.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Design/TextCDelim.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Design/TextCDelim-XMLdata.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/WholeFile.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -52,11 +68,6 @@
    <topicref href="../Pipeline_Design/WholeFile-Writing.dita">
     <topicref href="../Pipeline_Design/WholeFile-AccessPermissions.dita"/>
    </topicref>
-  </topicref>
-  <topicref href="../Pipeline_Design/Protobuf-Prerequisites.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
   </topicref>
   <topicref href="../Pipeline_Design/ControlCharacters.dita">
    <topicmeta>
