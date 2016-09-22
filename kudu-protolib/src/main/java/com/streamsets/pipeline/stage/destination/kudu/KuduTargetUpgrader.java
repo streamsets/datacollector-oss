@@ -28,14 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KuduTargetUpgrader implements StageUpgrader {
-  private final List<Config> configsToRemove = new ArrayList<>();
-  private final List<Config> configsToAdd = new ArrayList<>();
 
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -44,6 +45,9 @@ public class KuduTargetUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
     for (Config config : configs) {
       switch (config.getName()) {
         case "tableName":
@@ -56,5 +60,42 @@ public class KuduTargetUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "kuduMaster":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "kuduMaster", config.getValue()));
+          break;
+        case "tableNameTemplate":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "tableNameTemplate", config.getValue()));
+          break;
+        case "fieldMappingConfigs":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "fieldMappingConfigs", config.getValue()));
+          break;
+        case "consistencyMode":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "consistencyMode", config.getValue()));
+          break;
+        case "operationTimeout":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "operationTimeout", config.getValue()));
+          break;
+        default:
+          break;
+      }
+    }
+
+    configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "upsert", false));
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

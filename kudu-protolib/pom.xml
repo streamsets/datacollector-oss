@@ -32,13 +32,13 @@
   <packaging>jar</packaging>
 
   <properties>
-    <kudu.version>0.7.1</kudu.version>
+    <kudu.version>1.0.0</kudu.version>
     <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.kududb</groupId>
+      <groupId>org.apache.kudu</groupId>
       <artifactId>kudu-client</artifactId>
       <version>${kudu.version}</version>
       <scope>provided</scope>

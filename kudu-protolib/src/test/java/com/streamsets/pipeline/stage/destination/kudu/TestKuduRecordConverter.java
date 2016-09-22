@@ -31,11 +31,11 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.kududb.ColumnSchema;
-import org.kududb.Schema;
-import org.kududb.Type;
-import org.kududb.client.PartialRow;
-import org.kududb.client.PartialRowHelper;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
+import org.apache.kudu.client.PartialRow;
+import org.apache.kudu.client.PartialRowHelper;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

@@ -25,9 +25,9 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import org.kududb.ColumnSchema;
-import org.kududb.Schema;
-import org.kududb.client.PartialRow;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.client.PartialRow;
 
 import java.util.Map;
 

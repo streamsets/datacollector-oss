@@ -29,7 +29,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -41,19 +40,19 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.kududb.ColumnSchema;
-import org.kududb.Schema;
-import org.kududb.Type;
-import org.kududb.client.ExternalConsistencyMode;
-import org.kududb.client.Insert;
-import org.kududb.client.KuduClient;
-import org.kududb.client.KuduException;
-import org.kududb.client.KuduSession;
-import org.kududb.client.KuduTable;
-import org.kududb.client.OperationResponse;
-import org.kududb.client.PartialRow;
-import org.kududb.client.RowError;
-import org.kududb.client.SessionConfiguration;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
+import org.apache.kudu.client.ExternalConsistencyMode;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduSession;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.Operation;
+import org.apache.kudu.client.OperationResponse;
+import org.apache.kudu.client.PartialRow;
+import org.apache.kudu.client.RowError;
+import org.apache.kudu.client.SessionConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +61,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class KuduTarget extends BaseTarget {
@@ -88,20 +88,15 @@ public class KuduTarget extends BaseTarget {
 
   private final String kuduMaster;
   private final String tableNameTemplate;
-  private final ConsistencyMode consistencyMode;
+  private final KuduConfigBean configBean;
   private final List<KuduFieldMappingConfig> fieldMappingConfigs;
-  private final int operationTimeout;
   private final LoadingCache<String, KuduTable> kuduTables = CacheBuilder.newBuilder()
       .maximumSize(500)
       .expireAfterAccess(1, TimeUnit.HOURS)
       .build(new CacheLoader<String, KuduTable>() {
         @Override
-        public KuduTable load(String tableName) throws Exception {
-          if (kuduClient.tableExists(tableName)) {
-            return kuduClient.openTable(tableName);
-          } else {
-            throw new KuduTableNotFoundException();
-          }
+        public KuduTable load(String tableName) throws KuduException {
+          return kuduClient.openTable(tableName);
         }
       });
 
@@ -111,19 +106,13 @@ public class KuduTarget extends BaseTarget {
   private KuduClient kuduClient;
   private KuduSession kuduSession;
 
-  public KuduTarget(
-    String kuduMaster,
-    String tableNameTemplate,
-    ConsistencyMode consistencyMode,
-    List<KuduFieldMappingConfig> fieldMappingConfigs,
-    int operationTimeout
-  ) {
-    this.kuduMaster = Strings.nullToEmpty(kuduMaster).trim();
-    this.tableNameTemplate = Strings.nullToEmpty(tableNameTemplate).trim();
-    this.consistencyMode = consistencyMode;
-    this.fieldMappingConfigs = fieldMappingConfigs == null ? Collections.<KuduFieldMappingConfig>emptyList() :
-      fieldMappingConfigs;
-    this.operationTimeout = operationTimeout;
+  public KuduTarget(KuduConfigBean configBean) {
+    this.configBean = configBean;
+    this.kuduMaster = Strings.nullToEmpty(configBean.kuduMaster).trim();
+    this.tableNameTemplate = Strings.nullToEmpty(configBean.tableNameTemplate).trim();
+    this.fieldMappingConfigs = configBean.fieldMappingConfigs == null
+        ? Collections.<KuduFieldMappingConfig>emptyList()
+        : configBean.fieldMappingConfigs;
   }
 
   @Override
@@ -140,13 +129,25 @@ public class KuduTarget extends BaseTarget {
     LOG.info("Validating connection to Kudu cluster " + kuduMaster +
       " and whether table " + tableNameTemplate + " exists and is enabled");
     if (kuduMaster.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), TABLE_NAME_TEMPLATE, Errors.KUDU_02));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.KUDU.name(),
+              KuduConfigBean.CONF_PREFIX + TABLE_NAME_TEMPLATE,
+              Errors.KUDU_02
+          )
+      );
     }
     if (tableNameTemplate.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), TABLE_NAME_TEMPLATE, Errors.KUDU_02));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.KUDU.name(),
+              KuduConfigBean.CONF_PREFIX + TABLE_NAME_TEMPLATE,
+              Errors.KUDU_02
+          )
+      );
     }
 
-    kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(operationTimeout).build();
+    kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(configBean.operationTimeout).build();
     if (issues.isEmpty()) {
       kuduSession = openKuduSession(issues);
     }
@@ -171,19 +172,20 @@ public class KuduTarget extends BaseTarget {
             issues.add(
                 getContext().createConfigIssue(
                     Groups.KUDU.name(),
-                    TABLE_NAME_TEMPLATE,
+                    KuduConfigBean.CONF_PREFIX + TABLE_NAME_TEMPLATE,
                     Errors.KUDU_01,
                     tableNameTemplate
                 )
             );
           } else {
-            table = kuduTables.getUnchecked(tableNameTemplate);
+            // ExecutionException is thrown by LoadingCache when kuduClient.openTable() throws KuduException.
+            table = kuduTables.get(tableNameTemplate);
           }
-        } catch (Exception ex) {
+        } catch (ExecutionException | KuduException ex) {
           issues.add(
               getContext().createConfigIssue(
                   Groups.KUDU.name(),
-                  KUDU_MASTER,
+                  KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
                   Errors.KUDU_00,
                   ex.toString(),
                   ex
@@ -198,18 +200,19 @@ public class KuduTarget extends BaseTarget {
   }
 
   private KuduSession openKuduSession(List<ConfigIssue> issues) {
-    KuduSession session = null;
+    KuduSession session = kuduClient.newSession();
     try {
-      session = kuduClient.newSession();
-      try {
-        session.setExternalConsistencyMode(ExternalConsistencyMode.valueOf(consistencyMode.name()));
-      } catch (IllegalArgumentException ex) {
-        issues.add(getContext().createConfigIssue(Groups.KUDU.name(), CONSISTENCY_MODE, Errors.KUDU_02));
-      }
-      session.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
-    } catch (KuduException ex) {
-      issues.add(getContext().createConfigIssue(Groups.KUDU.name(), KUDU_MASTER, Errors.KUDU_00, ex.toString(), ex));
+      session.setExternalConsistencyMode(ExternalConsistencyMode.valueOf(configBean.consistencyMode.name()));
+    } catch (IllegalArgumentException ex) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.KUDU.name(),
+              KuduConfigBean.CONF_PREFIX + CONSISTENCY_MODE,
+              Errors.KUDU_02
+          )
+      );
     }
+    session.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
     return session;
   }
 
@@ -239,7 +242,7 @@ public class KuduTarget extends BaseTarget {
           issues.add(
               getContext().createConfigIssue(
                   Groups.KUDU.name(),
-                  FIELD_MAPPING_CONFIGS,
+                  KuduConfigBean.CONF_PREFIX + FIELD_MAPPING_CONFIGS,
                   Errors.KUDU_05,
                   fieldMappingConfig.columnName
               )
@@ -291,8 +294,8 @@ public class KuduTarget extends BaseTarget {
       // if table doesn't exist, send records to the error handler and continue
       KuduTable table;
       try {
-        table = kuduTables.getUnchecked(tableName);
-      } catch (UncheckedExecutionException ex) {
+        table = kuduTables.get(tableName);
+      } catch (ExecutionException ex) {
         while (it.hasNext()) {
           errorRecordHandler.onError(new OnRecordErrorException(it.next(), Errors.KUDU_01, tableName));
         }
@@ -309,11 +312,16 @@ public class KuduTarget extends BaseTarget {
         while (it.hasNext()) {
           try {
             Record record = it.next();
-            Insert insert = table.newInsert();
-            PartialRow row = insert.getRow();
+            Operation operation;
+            if (configBean.upsert) {
+              operation = table.newUpsert();
+            } else {
+              operation = table.newInsert();
+            }
+            PartialRow row = operation.getRow();
             recordConverter.convert(record, row);
-            keyToRecordMap.put(insert.getRow().stringifyRowKey(), record);
-            session.apply(insert);
+            keyToRecordMap.put(operation.getRow().stringifyRowKey(), record);
+            session.apply(operation);
           } catch (OnRecordErrorException onRecordError) {
             errorRecordHandler.onError(onRecordError);
           }
@@ -328,11 +336,10 @@ public class KuduTarget extends BaseTarget {
           LOG.warn(Errors.KUDU_03.getMessage(), error.toString());
         }
         for (RowError error : rowErrors) {
-          Insert insert = (Insert) error.getOperation();
-          // TODO SDC-2701 - support update on duplicate key
-          if ("ALREADY_PRESENT".equals(error.getStatus())) {
+          if (error.getErrorStatus().isAlreadyPresent()) {
             // duplicate row key
-            String rowKey = insert.getRow().stringifyRowKey();
+            Operation operation = error.getOperation();
+            String rowKey = operation.getRow().stringifyRowKey();
             Record record = keyToRecordMap.get(rowKey);
             errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_08, rowKey));
           } else {

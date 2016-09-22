@@ -18,11 +18,19 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.destination.kudu;
+package org.apache.kudu.client;
 
-public class KuduTableNotFoundException extends Exception {
+import java.nio.ByteBuffer;
+import java.util.List;
 
-  public KuduTableNotFoundException() {
-    super();
+public class PartialRowHelper {
+
+  public static String toString(PartialRow row) {
+    return Bytes.pretty(row.getRowAlloc());
+  }
+
+
+  public static List<ByteBuffer> getVarLengthData(PartialRow row) {
+    return row.getVarLengthData();
   }
 }

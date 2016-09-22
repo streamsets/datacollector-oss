@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2015 StreamSets Inc.
+  Copyright 2016 StreamSets Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,20 +25,20 @@
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-apache-kudu-0_7-lib</artifactId>
+  <artifactId>streamsets-datacollector-apache-kudu_1_0-lib</artifactId>
   <version>2.2.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Apache Kudu 0.7 Lib</description>
-  <name>StreamSets Data Collector Apache Kudu 0.7 Lib</name>
+  <description>StreamSets Data Collector Apache Kudu 1.0 Lib</description>
+  <name>StreamSets Data Collector Apache Kudu 1.0 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <kudu.version>0.7.1</kudu.version>
+    <kudu.version>1.0.0</kudu.version>
     <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.kududb</groupId>
+      <groupId>org.apache.kudu</groupId>
       <artifactId>kudu-client</artifactId>
       <version>${kudu.version}</version>
     </dependency>
@@ -109,6 +109,7 @@
     </dependency>
 
   </dependencies>
+
 
   <build>
     <plugins>
