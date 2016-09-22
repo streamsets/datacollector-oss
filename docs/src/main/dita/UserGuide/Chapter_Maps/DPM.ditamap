@@ -35,6 +35,7 @@
             <topicref href="../DPM/RegisterFromDataCollector.dita"/>
             <topicref href="../DPM/RegisterFromCommandLine.dita"/>
             <topicref href="../DPM/RegisterFromClouderaManager.dita"/>
+            <topicref href="../DPM/DisconnectedMode.dita"/>
         </topicref>
         <topicref href="../DPM/AggregatedStatistics.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -61,7 +62,9 @@
             <topicref href="../DPM/ExportPipelinesForDPM.dita"/>
         </topicref>
         <topicref href="../DPM/DPMConfiguration.dita" chunk="to-content">
-            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicmeta>
+                <shortdesc/>
+            </topicmeta>
         </topicref>
         <topicref href="../DPM/UnregisterSDCwithDPM.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
