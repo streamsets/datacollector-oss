@@ -155,6 +155,9 @@
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
                                 </ul>
                             </entry>
@@ -170,6 +173,9 @@
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
                                 </ul>
                             </entry>
@@ -185,6 +191,9 @@
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
                                 </ul>
                             </entry>
@@ -200,6 +209,9 @@
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
                                 </ul>
                             </entry>
@@ -326,7 +338,7 @@
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
@@ -346,7 +358,7 @@
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
                                         <li>Kafka Consumer origin</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
@@ -367,7 +379,7 @@
                                         </li>
                                         <li>Kafka Consumer origin for standalone and cluster mode
                                             pipelines</li>
-                                        <li>SDC RFC to Kafka origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
@@ -386,8 +398,13 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jdbc-lib</entry>
-                            <entry>Includes the JDBC Consumer origin and JDBC Producer
-                                destination.</entry>
+                            <entry>Includes:<ul id="ul_apd_qbj_jx">
+                                    <li>JDBC Consumer origin</li>
+                                    <li>JDBC Lookup processor</li>
+                                    <li>JDBC Producer destination</li>
+                                    <li>JDBC Tee processor</li>
+                                    <li>Oracle CDC Client origin</li>
+                                </ul></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jms-lib </entry>
