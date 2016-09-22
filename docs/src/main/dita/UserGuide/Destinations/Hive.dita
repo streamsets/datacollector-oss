@@ -8,7 +8,7 @@
   <p><indexterm>Hive Streaming
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hive
      Streaming</indexterm></indexterm>The Hive Streaming destination requires Hive version 0.13 or
-   above. Before you use the destination, verify that your Hadoop implementation supports Hive
+   later. Before you use the destination, verify that your Hadoop implementation supports Hive
    Streaming. </p>
   <p>When configuring Hive Streaming, you specify the Hive metastore and a bucketed table stored in
    the ORC file format. You define the location of the Hive and Hadoop configuration files and

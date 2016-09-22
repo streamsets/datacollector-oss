@@ -29,7 +29,7 @@
         <p>The JavaScript Evaluator supports the following versions of Java:<ul id="ul_xyk_lp2_qr">
                 <li>Java 7 - Supports ECMAScript 5 and partially supports JavaScript 1.8. Runs on
                     the Rhino 1.7R3 JavaScript engine.</li>
-                <li>Java 8u40 and above - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript
+                <li>Java 8u40 and later - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript
                     engine.</li>
             </ul><note>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript.
                 To ensure the JavaScript Evaluator performs as expected, use the same version of

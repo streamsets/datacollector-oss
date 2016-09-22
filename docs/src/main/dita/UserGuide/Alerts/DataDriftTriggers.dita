@@ -50,7 +50,7 @@
         <p>When the specified field is missing and the ignoreWhenMissing flag is set to false, the
             expression triggers an alert for the missing field, and again for the next record when
             the field is present. </p>
-        <p>For example, the following expression checks the datatype of the ID column with
+        <p>For example, the following expression checks the data type of the ID column with
             ignoreWhenMissing set to false:
             <codeblock>${drift:type('/UserID', false)}</codeblock></p>
         <p>Say all records include the UserID field, and then a single record passes without the
