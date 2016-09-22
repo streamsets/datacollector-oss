@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,21 +47,51 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+        // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
       case 5:
         upgradeV5ToV6(configs);
+        if (toVersion == 6) {
+          break;
+        }
+        // fall through
       case 6:
         upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
+        // fall through
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
   private void upgradeV5ToV6(List<Config> configs) {

@@ -29,10 +29,11 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
   icon = "mapr.png",
+    upgrader = MapRStreamsTargetUpgrader.class,
   onlineHelpRefUrl = "index.html#Destinations/MapRStreamsProd.html#task_tbh_nbn_2v"
 )
 @ConfigGroups(value = MapRStreamsTargetGroups.class)

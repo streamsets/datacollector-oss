@@ -28,13 +28,12 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    resetOffset = false,
     upgrader = KinesisSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/KinConsumer.html#task_p4b_vv4_yr"
 )

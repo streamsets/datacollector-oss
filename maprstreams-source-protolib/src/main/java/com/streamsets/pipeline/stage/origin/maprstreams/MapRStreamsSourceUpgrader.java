@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,29 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.origin.maprstreams;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class JmsSourceUpgrader implements StageUpgrader {
+public class MapRStreamsSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-                              List<Config> configs) throws StageException {
-    switch(fromVersion) {
-      case 1:
-        upgradeV1ToV2(configs);
-      case 2:
-        upgradeV2ToV3(configs);
-      case 3:
-        upgradeV3ToV4(configs);
+  public List<Config> upgrade(
+      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
+  ) throws StageException {
+    switch (fromVersion) {
       case 4:
         upgradeV4ToV5(configs);
         break;
@@ -51,21 +44,5 @@ public class JmsSourceUpgrader implements StageUpgrader {
 
   private static void upgradeV4ToV5(List<Config> configs) {
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
-}
-
-  private static void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("dataFormatConfig.compression", Compression.NONE));
-    configs.add(new Config("dataFormatConfig.filePatternInArchive", "*"));
-  }
-  private static void upgradeV2ToV3(List<Config> configs) {
-    configs.add(new Config("jmsConfig.destinationType", "UNKNOWN"));
-    configs.add(new Config("dataFormatConfig.csvSkipStartLines", 0));
-  }
-
-  private static void upgradeV3ToV4(List<Config> configs) {
-    // This looks weird, but it's correct. Despite the fact that contextProperties
-    // is a MAP config, the UI renders it as a list of maps, so new ArrayList gets
-    // us what we want.
-    configs.add(new Config("jmsConfig.contextProperties", new ArrayList<>()));
   }
 }

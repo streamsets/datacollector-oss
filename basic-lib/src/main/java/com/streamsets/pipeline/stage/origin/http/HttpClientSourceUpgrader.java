@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
@@ -86,11 +87,21 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        if (toVersion == 8) {
+          break;
+        }
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private static void upgradeV8ToV9(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
@@ -147,7 +158,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
   }
 
-  private void upgradeV2ToV3(List<Config> configs) {
+  private static void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("conf.useProxy", false));
     configs.add(new Config("conf.proxy.uri", ""));
     configs.add(new Config("conf.proxy.username", ""));
@@ -170,7 +181,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     configs.addAll(configsToAdd);
   }
 
-  private void upgradeV4ToV5(List<Config> configs) {
+  private static void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config("conf.headers", new ArrayList<Map<String, String>>()));
   }
 

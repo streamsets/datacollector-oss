@@ -29,10 +29,10 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
 
 @StageDef(
-    version = 1,
+    version = 3,
     label = "Write to MapR Streams",
     description = "Writes records to MapR Streams as SDC Records",
-    icon = "",
+    upgrader = MapRStreamsTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r")
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {"maprStreamsTargetConfigBean.dataFormat"})

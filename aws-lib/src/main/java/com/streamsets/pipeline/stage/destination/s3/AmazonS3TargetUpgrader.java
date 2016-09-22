@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
 import java.util.ArrayList;
@@ -41,24 +42,48 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
         // fall through
       case 5:
         upgradeV5ToV6(configs);
+        if (toVersion == 6) {
+          break;
+        }
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        if (toVersion == 8) {
+          break;
+        }
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -66,7 +91,11 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private static void upgradeV8ToV9(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+  }
+
+  private static void upgradeV1ToV2(List<Config> configs) {
 
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
@@ -104,12 +133,12 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.csvCustomQuote", '\"'));
   }
 
-  private void upgradeV2ToV3(List<Config> configs) {
+  private static void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 
-  private void upgradeV3ToV4(List<Config> configs) {
+  private static void upgradeV3ToV4(List<Config> configs) {
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
 
@@ -130,16 +159,16 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "partitionTemplate", ""));
   }
 
-  private void upgradeV4ToV5(List<Config> configs) {
+  private static void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_SEE_CONFIG_PREFIX + "useSSE", "false"));
   }
 
-  private void upgradeV5ToV6(List<Config> configs) {
+  private static void upgradeV5ToV6(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeZoneID", "UTC"));
     configs.add(new Config(S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "timeDriverTemplate", "${time:now()}"));
   }
 
-  private void upgradeV6ToV7(List<Config> configs) {
+  private static void upgradeV6ToV7(List<Config> configs) {
     // rename advancedConfig to proxyConfig
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
@@ -169,7 +198,7 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "multipartUploadThreshold", "268435456"));
   }
 
-  private void upgradeV7ToV8(List<Config> configs) {
+  private static void upgradeV7ToV8(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_CONFIG_PREFIX + "endpoint", ""));
   }
 }

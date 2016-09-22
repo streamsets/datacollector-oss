@@ -32,11 +32,11 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Write to File",
     description = "Writes records to a local File System as SDC records",
-    icon="",
     execution = ExecutionMode.STANDALONE,
+    upgrader = ToErrorLocalFSTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/SDCRecordFiles.html#task_e33_3v5_1r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

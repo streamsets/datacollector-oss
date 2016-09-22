@@ -35,12 +35,13 @@ import org.slf4j.LoggerFactory;
 
 @GenerateResourceBundle
 @StageDef(
-  version = 1,
-  label = "Dev Raw Data Source",
-  description = "Add Raw data to the source.",
-  execution = ExecutionMode.STANDALONE,
-  icon = "dev.png",
-  onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+    version = 2,
+    label = "Dev Raw Data Source",
+    description = "Add Raw data to the source.",
+    execution = ExecutionMode.STANDALONE,
+    icon = "dev.png",
+    upgrader = RawDataSourceUpgrade.class,
+    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 @ConfigGroups(value = RawDataSourceGroups.class)
 public class RawDataDSource extends DSource {

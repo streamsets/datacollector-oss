@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",

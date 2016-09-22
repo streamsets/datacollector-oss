@@ -37,7 +37,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "JMS Consumer",
     description = "Reads data from a JMS source.",
     icon = "jms.png",

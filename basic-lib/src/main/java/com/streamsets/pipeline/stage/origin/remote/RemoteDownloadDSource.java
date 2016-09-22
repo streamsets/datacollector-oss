@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "SFTP/FTP Client",
     description = "Uses an SFTP/FTP client to read records from an URL.",
     icon = "sftp-client.png",

@@ -29,12 +29,13 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "RabbitMQ Producer",
     description = "Writes data to a RabbitMQ Target.",
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    upgrader = RabbitTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/RabbitMQ.html#task_rwy_wn5_2v"
 )
 @ConfigGroups(value = Groups.class)

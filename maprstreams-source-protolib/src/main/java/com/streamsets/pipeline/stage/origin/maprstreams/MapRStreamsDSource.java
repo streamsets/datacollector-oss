@@ -36,14 +36,15 @@ import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
 
 @StageDef(
-  version = 4,
-  label = "MapR Streams Consumer",
-  description = "Reads data from MapR Streams",
-  execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_YARN_STREAMING},
-  libJarsRegex = {"maprfs-\\d+.*"},
-  icon = "mapr.png",
-  recordsByRef = true,
-  onlineHelpRefUrl = "index.html#Origins/MapRStreamsCons.html#task_bfz_gch_2v"
+    version = 5,
+    label = "MapR Streams Consumer",
+    description = "Reads data from MapR Streams",
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_YARN_STREAMING},
+    libJarsRegex = {"maprfs-\\d+.*"},
+    icon = "mapr.png",
+    recordsByRef = true,
+    upgrader = MapRStreamsSourceUpgrader.class,
+    onlineHelpRefUrl = "index.html#Origins/MapRStreamsCons.html#task_bfz_gch_2v"
 )
 @ConfigGroups(value = MapRStreamsSourceGroups.class)
 @HideConfigs(value = {Utils.MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX + "compression"})

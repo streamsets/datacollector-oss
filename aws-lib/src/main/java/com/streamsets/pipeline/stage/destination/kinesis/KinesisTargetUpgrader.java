@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
@@ -54,11 +55,18 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 4:
         upgradeV4toV5(configs);
+        // fall through
+      case 5:
+        upgradeV5toV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private static void upgradeV5toV6(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
   }
 
   private void upgradeV1toV2(List<Config> configs) {
@@ -85,13 +93,13 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".producerConfigs", new ArrayList<Map<String, String>>()));
   }
 
-  private void upgradeV2toV3(List<Config> configs) {
+  private static void upgradeV2toV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
 
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.avroCompression", "NULL"));
   }
 
-  private void upgradeV3toV4(List<Config> configs) {
+  private static void upgradeV3toV4(List<Config> configs) {
     Config roundRobinPartitioner = null;
 
     for (Config config : configs) {
@@ -108,7 +116,7 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     }
   }
 
-  private void upgradeV4toV5(List<Config> configs) {
+  private static void upgradeV4toV5(List<Config> configs) {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".endpoint", ""));
   }
 }

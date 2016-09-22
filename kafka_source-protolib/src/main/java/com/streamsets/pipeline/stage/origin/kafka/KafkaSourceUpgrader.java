@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,14 +58,14 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("csvCustomDelimiter", '|'));
     configs.add(new Config("csvCustomEscape", '\\'));
     configs.add(new Config("csvCustomQuote", '\"'));
     configs.add(new Config("csvRecordType", "LIST"));
   }
 
-  private void upgradeV2ToV3(List<Config> configs) {
+  private static void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("csvSkipStartLines", 0));
   }
 
@@ -126,10 +127,10 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
   }
 
-  private void upgradeV4ToV5(List<Config> configs) {
-    configs.add(new Config(joiner.join(CONF, "valueDeserializer"), "DEFAULT"));
-    configs.add(new Config(joiner.join(CONF, "schemaRegistryUrls"), ""));
+  private static void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "keyDeserializer"), Deserializer.STRING));
+    configs.add(new Config(joiner.join(CONF, "valueDeserializer"), Deserializer.DEFAULT));
 
-    // TODO complete in subsequent patch
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 }

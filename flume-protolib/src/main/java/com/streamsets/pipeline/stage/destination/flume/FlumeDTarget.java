@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "Flume",
   description = "Writes data to Flume Source",
   icon = "flume.png",

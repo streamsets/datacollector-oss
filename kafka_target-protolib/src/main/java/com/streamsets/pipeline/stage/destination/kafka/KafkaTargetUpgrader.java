@@ -19,15 +19,19 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KafkaTargetUpgrader implements StageUpgrader {
+  private static final Joiner joiner = Joiner.on(".");
+
   @Override
   public List<Config> upgrade (
       String library,
@@ -104,7 +108,7 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 
-  private void upgradeV2ToV3(List<Config> configs) {
+  private static void upgradeV2ToV3(List<Config> configs) {
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
 
@@ -123,8 +127,9 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
 
-    // New configs are already initialized
+    configs.add(new Config(joiner.join("conf", "keyDeserializer"), Serializer.STRING));
+    configs.add(new Config(joiner.join("conf", "valueDeserializer"), Serializer.DEFAULT));
 
-    // TODO complete in subsequent patch
+    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
   }
 }

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "Write to Kinesis",
     description = "Writes Pipeline Statistic records to Kinesis",
     icon = "",

@@ -23,6 +23,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionIn
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
@@ -50,11 +51,18 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        // fall through
+      case 4:
+        upgradeV4toV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private static void upgradeV4toV5(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
   private void upgradeV1toV2(List<Config> configs) {
@@ -86,13 +94,13 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".initialPositionInStream", InitialPositionInStream.LATEST));
   }
 
-  private void upgradeV2toV3(List<Config> configs) {
+  private static void upgradeV2toV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
 
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.csvSkipStartLines", 0));
   }
 
-  private void upgradeV3toV4(List<Config> configs) {
+  private static void upgradeV3toV4(List<Config> configs) {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".endpoint", ""));
   }
 }

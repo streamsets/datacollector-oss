@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        // fall through
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -57,7 +61,11 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private static void upgradeV7ToV8(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+  }
+
+  private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.useProxy", false));
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyHost", ""));
     configs.add(new Config(S3ConfigBean.S3_CONFIG_BEAN_PREFIX + "advancedConfig.proxyPort", 0));
@@ -68,11 +76,11 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.add(new Config(S3ConfigBean.S3_DATA_FORMAT_CONFIG_PREFIX + "csvSkipStartLines", 0));
   }
 
-  private void upgradeV2ToV3(List<Config> configs) {
+  private static void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
   }
 
-  private void upgradeV3ToV4(List<Config> configs) {
+  private static void upgradeV3ToV4(List<Config> configs) {
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
 
@@ -115,7 +123,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
   }
 
-  private void upgradeV4ToV5(List<Config> configs) {
+  private static void upgradeV4ToV5(List<Config> configs) {
     // rename advancedConfig to proxyConfig
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
@@ -140,11 +148,11 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.addAll(configsToAdd);
   }
 
-  private void upgradeV5ToV6(List<Config> configs) {
+  private static void upgradeV5ToV6(List<Config> configs) {
     configs.add(new Config(S3ConfigBean.S3_FILE_CONFIG_PREFIX + "objectOrdering", ObjectOrdering.TIMESTAMP));
   }
 
-  private void upgradeV6ToV7(List<Config> configs) {
+  private static void upgradeV6ToV7(List<Config> configs) {
     configs.add(new Config(S3ConfigBean.S3_CONFIG_PREFIX + "endpoint", ""));
   }
 }

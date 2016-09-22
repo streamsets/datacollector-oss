@@ -26,12 +26,13 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "MapR FS",
     description = "Writes to a MapR filesystem",
     icon = "mapr.png",
     producesEvents = true,
     privateClassLoader = false,
+    upgrader = MapRFSTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/MapRFS.html#task_spl_1fj_fv"
 )
 @HideConfigs(

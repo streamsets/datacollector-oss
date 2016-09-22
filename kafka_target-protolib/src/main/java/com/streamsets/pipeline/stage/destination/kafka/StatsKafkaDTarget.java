@@ -29,10 +29,9 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Write to Kafka",
     description = "Writes Pipeline Statistic records to Kafka",
-    icon = "",
     onlineHelpRefUrl = "",
     upgrader = KafkaTargetUpgrader.class)
 @StatsAggregatorStage

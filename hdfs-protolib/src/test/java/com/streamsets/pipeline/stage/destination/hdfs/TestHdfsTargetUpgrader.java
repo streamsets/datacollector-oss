@@ -38,7 +38,7 @@ public class TestHdfsTargetUpgrader {
   @Test
   public void testHdfsTargetUpgrader() throws StageException {
 
-    Map<String, String> hdfsConfigs = new HashMap();
+    Map<String, String> hdfsConfigs = new HashMap<>();
     hdfsConfigs.put("x", "X");
     hdfsConfigs.put("y", "Y");
 
