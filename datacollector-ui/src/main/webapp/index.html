@@ -250,7 +250,7 @@
           </ul>
         </li>
 
-        <li class="dropdown pointer" ng-if="common.authenticationType != 'none'">
+        <li class="dropdown pointer" ng-if="common.authenticationType != 'none' || common.isDPMEnabled">
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.account.title' | translate}}"

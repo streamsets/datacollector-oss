@@ -226,11 +226,12 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator provideNoAuthenticationRoles(final Configuration configuration) {
+  ContextConfigurator provideNoAuthenticationRoles(final Configuration configuration, final RuntimeInfo runtimeInfo) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        if (configuration.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT).equals("none")) {
+        if (configuration.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT).equals("none") &&
+            !runtimeInfo.isDPMEnabled()) {
           FilterHolder filter = new FilterHolder(new AlwaysAllRolesFilter());
           context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
         }
