@@ -19,37 +19,36 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage.ConfigIssue;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
-
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.impl.Pair;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
-
-import com.streamsets.pipeline.api.Field;
-
 import org.apache.avro.io.DatumWriter;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
@@ -59,22 +58,26 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.impl.Pair;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage.ConfigIssue;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import com.streamsets.pipeline.sdk.SourceRunner;
-import com.streamsets.pipeline.sdk.StageRunner;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ClusterHDFSSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
@@ -123,7 +126,7 @@ public class ClusterHDFSSourceIT {
     }
   }
 
-  private ClusterHdfsSource createSource(ClusterHdfsConfigBean conf) {
+  static ClusterHdfsSource createSource(ClusterHdfsConfigBean conf) {
     return new ClusterHdfsSource(conf);
   }
 
@@ -335,6 +338,7 @@ public class ClusterHDFSSourceIT {
     }
   }
 
+
   @Test(timeout = 30000)
   public void testProduce() throws Exception {
     ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
@@ -382,6 +386,68 @@ public class ClusterHDFSSourceIT {
     }
     } finally {
       th.interrupt();
+    }
+  }
+
+  private FileStatus writeTextToFileAndGetFileStatus(Path filePath, String text) throws Exception {
+    FSDataOutputStream os = null;
+    try {
+      os = miniDFS.getFileSystem().create(filePath, true);
+      os.write(text.getBytes());
+    } finally {
+      if (os != null) {
+        os.close();
+      }
+    }
+
+    RemoteIterator<LocatedFileStatus> iterator = miniDFS.getFileSystem().listFiles(filePath.getParent(), false);
+    assertTrue(iterator.hasNext());
+    return iterator.next();
+  }
+
+
+  @Test(timeout = 30000)
+  public void testProduceCustomDelimiterByPreview() throws Exception {
+    String dirLocation = dir.toUri().getPath() + "/dummy";
+    Path filePath = new Path(dirLocation + "/sample.txt");
+
+    FileStatus fileStatus = writeTextToFileAndGetFileStatus(filePath, "A@B@C@D");
+
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Collections.singletonList(dirLocation);
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+    conf.dataFormatConfig.useCustomDelimiter = true;
+    conf.dataFormatConfig.customDelimiter = "@";
+
+    ClusterHdfsSource source = Mockito.spy(createSource(conf));
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, source)
+        .addOutputLane("lane")
+        .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
+        .setResourcesDir(resourcesDir)
+        .build();
+
+    sourceRunner.runInit();
+
+    Configuration hadoopConf = (Configuration) Whitebox.getInternalState(source, "hadoopConf");
+    assertEquals("@", hadoopConf.get(ClusterHdfsSource.TEXTINPUTFORMAT_RECORD_DELIMITER));
+
+    try {
+      List<Map.Entry> batch = source.previewTextBatch(fileStatus, 10);
+      assertEquals(4, batch.size());
+      String[] values = new String[4];
+      for (int i =0 ; i < batch.size(); i++) {
+        values[i] = (String)batch.get(i).getValue();
+      }
+      assertArrayEquals(new String[] {"A", "B", "C", "D"}, values);
+    } finally {
+      sourceRunner.runDestroy();
     }
   }
 

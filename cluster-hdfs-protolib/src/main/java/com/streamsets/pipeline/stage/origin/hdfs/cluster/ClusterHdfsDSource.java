@@ -41,7 +41,13 @@ import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
   onlineHelpRefUrl = "index.html#Origins/HadoopFS-origin.html#task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)
-@HideConfigs(value = {"clusterHDFSConfigBean.dataFormatConfig.schemaInMessage", "clusterHDFSConfigBean.dataFormatConfig.compression"})
+@HideConfigs(value =
+    {
+        "clusterHDFSConfigBean.dataFormatConfig.schemaInMessage",
+        "clusterHDFSConfigBean.dataFormatConfig.compression",
+        "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText"
+    }
+)
 @GenerateResourceBundle
 public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
   private ClusterHdfsSource clusterHDFSSource;

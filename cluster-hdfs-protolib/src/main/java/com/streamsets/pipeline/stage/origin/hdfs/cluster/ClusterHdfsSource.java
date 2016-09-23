@@ -34,6 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
@@ -94,9 +95,11 @@ import static com.streamsets.pipeline.Utils.CLUSTER_HDFS_CONFIG_BEAN_PREFIX;
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
 
   public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.dataFormatConfig.";
+  public static final String TEXTINPUTFORMAT_RECORD_DELIMITER = "textinputformat.record.delimiter";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private static final int PREVIEW_SIZE = 100;
+
   private Configuration hadoopConf;
   private final ControlChannel controlChannel;
   private final DataChannel dataChannel;
@@ -131,13 +134,50 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
+    hadoopConf = getHadoopConfiguration(issues);
+
     validateHadoopFS(issues);
+
     // This is for getting no of splits - no of executors
     hadoopConf.set(FileInputFormat.LIST_STATUS_NUM_THREADS, "5"); // Per Hive-on-Spark
     hadoopConf.set(FileInputFormat.SPLIT_MAXSIZE, String.valueOf(750000000)); // Per Hive-on-Spark
     for (Map.Entry<String, String> config : conf.hdfsConfigs.entrySet()) {
       hadoopConf.set(config.getKey(), config.getValue());
     }
+
+    if (conf.dataFormat == DataFormat.TEXT && conf.dataFormatConfig.useCustomDelimiter) {
+      hadoopConf.set(TEXTINPUTFORMAT_RECORD_DELIMITER, conf.dataFormatConfig.customDelimiter);
+    }
+
+    List<Path> hdfsDirPaths = validateAndGetHdfsDirPaths(issues);
+
+    hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirPaths, ","));
+    hadoopConf.set(FileInputFormat.INPUT_DIR_RECURSIVE, Boolean.toString(conf.recursive));
+
+    // CsvHeader.IGNORE_HEADER must be overridden to CsvHeader.NO_HEADER prior to building the parser.
+    // But it must be set back to the original value for the produce() method.
+    CsvHeader originalCsvHeader = conf.dataFormatConfig.csvHeader;
+    if (originalCsvHeader != null && originalCsvHeader == CsvHeader.IGNORE_HEADER) {
+      conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+
+    }
+    conf.dataFormatConfig.init(
+        getContext(),
+        conf.dataFormat,
+        Groups.HADOOP_FS.name(),
+        DATA_FROMAT_CONFIG_BEAN_PREFIX,
+        issues
+    );
+    conf.dataFormatConfig.csvHeader = originalCsvHeader;
+
+    parserFactory = conf.dataFormatConfig.getParserFactory();
+
+    LOG.info("Issues: " + issues);
+    return issues;
+  }
+
+  @VisibleForTesting
+  List<Path> validateAndGetHdfsDirPaths(List<ConfigIssue> issues) {
     List<Path> hdfsDirPaths = new ArrayList<>();
     if (conf.hdfsDirLocations == null || conf.hdfsDirLocations.isEmpty()) {
       issues.add(
@@ -242,32 +282,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         }
       }
     }
-    hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirPaths, ","));
-    hadoopConf.set(FileInputFormat.INPUT_DIR_RECURSIVE, Boolean.toString(conf.recursive));
-
-    // CsvHeader.IGNORE_HEADER must be overridden to CsvHeader.NO_HEADER prior to building the parser.
-    // But it must be set back to the original value for the produce() method.
-    CsvHeader originalCsvHeader = conf.dataFormatConfig.csvHeader;
-    if (originalCsvHeader != null && originalCsvHeader == CsvHeader.IGNORE_HEADER) {
-      conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
-
-    }
-    conf.dataFormatConfig.init(
-        getContext(),
-        conf.dataFormat,
-        Groups.HADOOP_FS.name(),
-        DATA_FROMAT_CONFIG_BEAN_PREFIX,
-        issues
-    );
-    conf.dataFormatConfig.csvHeader = originalCsvHeader;
-
-    parserFactory = conf.dataFormatConfig.getParserFactory();
-
-    LOG.info("Issues: " + issues);
-    return issues;
+    return hdfsDirPaths;
   }
 
-  private List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
+  @VisibleForTesting
+  List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
     throws IOException, InterruptedException {
     TextInputFormat textInputFormat = new TextInputFormat();
     long fileLength = fileStatus.getLen();
@@ -502,9 +521,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
 
-  private void validateHadoopFS(List<ConfigIssue> issues) {
+  @VisibleForTesting
+  void validateHadoopFS(List<ConfigIssue> issues) {
     boolean validHapoopFsUri = true;
-    hadoopConf = getHadoopConfiguration(issues);
     String hdfsUriInConf;
     if (conf.hdfsUri != null && !conf.hdfsUri.isEmpty()) {
       hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, conf.hdfsUri);
@@ -620,7 +639,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     LOG.info("Authentication Config: " + logMessage);
   }
 
-  private FileSystem getFileSystemForInitDestroy() throws IOException {
+  @VisibleForTesting
+  FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
       return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
