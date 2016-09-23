@@ -140,6 +140,8 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement tsStatement;
   private PreparedStatement numericFormat;
   private PreparedStatement switchContainer;
+  private long numChangesWithSCN = 0;
+
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
 
@@ -154,7 +156,8 @@ public class OracleCDCSource extends BaseSource {
     // Sometimes even though the SCN number has been updated, the select won't return the latest changes for a bit,
     // because the view gets materialized only on calling the SELECT - so the executeQuery may not return anything.
     // To avoid missing data in such cases, we return the new SCN only when we actually read data.
-    String nextOffset = lastSourceOffset;
+    String nextOffset = "";
+    long countWithCurrentSCN = 0;
     try {
       if (dataSource == null || dataSource.isClosed()) {
         dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
@@ -165,21 +168,50 @@ public class OracleCDCSource extends BaseSource {
         initializeLogMnrStatements();
         alterSession();
       }
-      selectChanges.setMaxRows(batchSize);
       BigDecimal endingSCN = getEndingSCN();
-      if (!startLogMiner(lastSourceOffset, endingSCN)) {
-        return lastSourceOffset;
+      String lastOffset = "";
+      long rowsRead = 0;
+      if (!StringUtils.isEmpty(lastSourceOffset)) {
+        String[] splits = lastSourceOffset.split("::");
+        lastOffset = splits[0];
+        rowsRead = Long.valueOf(splits[1]);
+      }
+      try {
+        startLogMiner(lastOffset, endingSCN);
+      } catch (SQLException ex) {
+        LOG.info("Error while starting log miner", ex);
+        if (ex.getErrorCode() == MISSING_LOG_CODE) {
+          JdbcErrors error;
+          if (configBean.startValue == StartValues.SCN) {
+            error = JDBC_46;
+          } else {
+            error = JDBC_45;
+          }
+          throw new StageException(error);
+        } else {
+          errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
+        }
       }
       String operation;
+      selectChanges.setLong(1, rowsRead);
+      selectChanges.setMaxRows(batchSize);
+      String lastSCN = lastOffset;
+      countWithCurrentSCN = rowsRead;
+
       try (ResultSet resultSet = selectChanges.executeQuery()) {
         while (resultSet.next()) {
           nextOffset = resultSet.getBigDecimal(1).toPlainString();
+          if (!lastSCN.equals(nextOffset)) {
+            countWithCurrentSCN = 0;
+            lastSCN = nextOffset;
+          }
+          countWithCurrentSCN++;
           String username = resultSet.getString(2);
           short op = resultSet.getShort(3);
           String timestamp = resultSet.getString(4);
           String redoSQL = resultSet.getString(5);
           String table = resultSet.getString(6);
-          LOG.debug(redoSQL);
+          LOG.debug(nextOffset+ " : " + redoSQL);
           sqlListener.reset();
           plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(redoSQL));
           CommonTokenStream tokenStream = new CommonTokenStream(lexer);
@@ -244,7 +276,11 @@ public class OracleCDCSource extends BaseSource {
       LOG.error("Error while attempting to produce records", ex);
       errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
     }
-    return nextOffset;
+    if (!StringUtils.isEmpty(nextOffset)) {
+      return nextOffset + "::" + countWithCurrentSCN;
+    } else {
+      return lastSourceOffset;
+    }
   }
 
   private boolean startLogMiner(String lastSourceOffset, BigDecimal endingSCN) throws SQLException {
@@ -267,7 +303,7 @@ public class OracleCDCSource extends BaseSource {
         startLogMnr = connection.prepareCall(produceLogMinerProcedure);
       }
       BigDecimal startingSCN = new BigDecimal(lastSourceOffset);
-      startLogMnr.setBigDecimal(1, startingSCN.add(BigDecimal.ONE));
+      startLogMnr.setBigDecimal(1, startingSCN);
       startLogMnr.setBigDecimal(2, endingSCN);
       startLogMnr.execute();
       connection.commit();
@@ -449,7 +485,7 @@ public class OracleCDCSource extends BaseSource {
         + " AND SEG_OWNER = '{}' "
         + " AND TABLE_NAME"
         + " IN ({})"
-        + " ORDER BY SCN ASC",
+        + " ORDER BY SCN ASC OFFSET ? ROWS",
         getSupportedOperations(), configBean.baseConfigBean.database, formatTableList(tables)
     );
 
@@ -459,29 +495,6 @@ public class OracleCDCSource extends BaseSource {
       LOG.error("Error while creating statement", ex);
       issues.add(getContext().createConfigIssue(
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
-    }
-
-    try {
-      startLogMiner(null, scn);
-    } catch (SQLException ex) {
-      LOG.error("Error while starting LogMiner", ex);
-      // 1291 is the oracle error code for missing redo logs.
-      if (ex.getErrorCode() == MISSING_LOG_CODE) {
-        String errorParam = null;
-        JdbcErrors error = null;
-        switch (configBean.startValue) {
-          case SCN:
-            error = JDBC_46;
-            errorParam = "oracleCDCConfigBean.startSCN";
-            break;
-          case DATE:
-            error = JDBC_45;
-            errorParam = "oracleCDCConfigBean.startDate";
-            break;
-          default:
-        }
-        issues.add(getContext().createConfigIssue(CDC.name(), errorParam, error));
-      }
     }
 
     if (configBean.baseConfigBean.caseSensitive) {
