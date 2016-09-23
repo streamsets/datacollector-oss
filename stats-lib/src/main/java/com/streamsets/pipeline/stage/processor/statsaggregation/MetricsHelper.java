@@ -48,7 +48,9 @@ public class MetricsHelper {
       Map<String, TimerJson> timers = metricRegistryJson.getTimers();
       if (null != timers && timers.containsKey(timerName + MetricsConfigurator.TIMER_SUFFIX)) {
         TimerJson timerJson = timers.get(timerName + MetricsConfigurator.TIMER_SUFFIX);
-        timer.update(timerJson.getCount(), TimeUnit.MILLISECONDS);
+        if (timerJson != null) {
+          timer.update(timerJson.getCount(), TimeUnit.MILLISECONDS);
+        }
       }
     }
     return timer;
@@ -66,7 +68,9 @@ public class MetricsHelper {
       Map<String, HistogramJson> histograms = metricRegistryJson.getHistograms();
       if (null != histograms && histograms.containsKey(histogramName + MetricsConfigurator.HISTOGRAM_M5_SUFFIX)) {
         HistogramJson histogramJson = histograms.get(histogramName + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
-        histogram5Min.update(histogramJson.getCount());
+        if (histogramJson != null) {
+          histogram5Min.update(histogramJson.getCount());
+        }
       }
     }
     return histogram5Min;
@@ -84,7 +88,9 @@ public class MetricsHelper {
       Map<String, MeterJson> meters = metricRegistryJson.getMeters();
       if (null != meters && meters.containsKey(meterName + MetricsConfigurator.METER_SUFFIX)) {
         MeterJson meterJson = meters.get(meterName + MetricsConfigurator.METER_SUFFIX);
-        meter.mark(meterJson.getCount());
+        if (meterJson != null) {
+          meter.mark(meterJson.getCount());
+        }
       }
     }
     return meter;
@@ -102,7 +108,9 @@ public class MetricsHelper {
       Map<String, CounterJson> counters = metricRegistryJson.getCounters();
       if (null != counters && counters.containsKey(counterName + MetricsConfigurator.COUNTER_SUFFIX)) {
         CounterJson counterJson = counters.get(counterName + MetricsConfigurator.COUNTER_SUFFIX);
-        counter.inc(counterJson.getCount());
+        if (counterJson != null) {
+          counter.inc(counterJson.getCount());
+        }
       }
     }
     return counter;

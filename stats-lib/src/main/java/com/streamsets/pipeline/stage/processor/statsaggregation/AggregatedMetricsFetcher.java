@@ -132,20 +132,22 @@ public class AggregatedMetricsFetcher {
         } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
           errorResponseMessage = "Error requesting latest stats from time-series app: DPM unavailable";
           LOG.warn(errorResponseMessage);
+          metricRegistryJson = null;
         }  else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
           errorResponseMessage = response.readEntity(String.class);
           LOG.error(Utils.format(Errors.STATS_02.getMessage(), errorResponseMessage));
           metricRegistryJson = null;
           break;
         } else {
-          String responseMessage = response.readEntity(String.class);
+          errorResponseMessage = response.readEntity(String.class);
           LOG.warn("Error requesting latest stats from time-series app, HTTP status '{}': {}",
-              response.getStatus(), responseMessage);
-          break;
+              response.getStatus(), errorResponseMessage);
+          metricRegistryJson = null;
         }
       } catch (Exception ex) {
         errorResponseMessage = ex.toString();
         LOG.warn("Error requesting latest stats from time-series app : {}", ex.toString());
+        metricRegistryJson = null;
       }  finally {
         if (response != null) {
           response.close();
