@@ -317,7 +317,7 @@ public class HdfsTargetConfigBean {
     defaultValue = "${1 * HOURS}",
     label = "Late Record Time Limit (secs)",
     description = "Time limit (in seconds) for a record to be written to the corresponding HDFS directory, if the " +
-      "limit is exceeded the record will be written to the current late records file. 0 means no limit. " +
+      "limit is exceeded the record will be written to the current late records file. " +
       "If a number is used it is considered seconds, it can be multiplied by 'MINUTES' or 'HOURS', ie: " +
       "'${30 * MINUTES}'",
     displayPosition = 200,
