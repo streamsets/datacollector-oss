@@ -123,7 +123,8 @@
                                         </xref></entry>
                                     <entry>Defines a prefix for output file names. By default, file
                                         names start with "sdc" as follows: <codeph>sdc-&lt;UTC
-                                            timestamp>-&lt;counter></codeph>. </entry>
+                                            timestamp>-&lt;counter></codeph>. <p>Not required for
+                                            the whole file data format. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Data Format <xref

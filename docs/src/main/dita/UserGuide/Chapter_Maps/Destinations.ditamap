@@ -29,7 +29,9 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Destinations/AmazonS3-AWSCredentials.dita"/>
-   <topicref href="../Destinations/AmazonS3-OutputFileNames.dita"/>
+   <topicref href="../Destinations/AmazonS3-OutputFileNames.dita">
+    <topicref href="../Destinations/AmazonS3-OutputFileNames-WholeFile.dita"/>
+   </topicref>
    <topicref href="../Destinations/AmazonS3-PartitionPrefix.dita">
     <topicref href="../Destinations/AmazonS3-TimeBasis.dita"/>
    </topicref>
