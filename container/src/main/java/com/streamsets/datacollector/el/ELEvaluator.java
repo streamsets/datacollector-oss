@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.CommonError;
-import org.apache.commons.el.ExpressionEvaluatorImpl;
+import org.apache.commons.el.LruExpressionEvaluatorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class ELEvaluator extends ELEval {
   private final List<ElConstantDefinition> elConstantDefinitions;
 
   // ExpressionEvaluatorImpl can be used as a singleton
-  private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
+  private static final LruExpressionEvaluatorImpl EVALUATOR = new LruExpressionEvaluatorImpl();
 
   public ELEvaluator(String configName, Map<String, Object> constants, List<Class> elFuncConstDefClasses) {
     this(configName, constants, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
