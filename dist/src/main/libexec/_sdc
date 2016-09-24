@@ -182,6 +182,12 @@ fi
 
 cd ${SDC_DIST}
 
+ulimit=`ulimit -n`
+if [[ $ulimit -lt $SDC_FILE_LIMIT ]]; then
+  echo "Configuration of maximum open file limit is too low: $ulimit (expected at least $SDC_FILE_LIMIT)."
+  exit 1
+fi
+
 EXTRA_OPTIONS=""
 if [ -n "${STREAMSETS_LIBRARIES_EXTRA_DIR}" ]
 then
