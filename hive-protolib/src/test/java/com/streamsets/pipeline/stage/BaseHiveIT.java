@@ -90,14 +90,10 @@ public abstract class BaseHiveIT {
 
   // Network configuration
   private static final String HOSTNAME = "localhost";
-  private static final int METASTORE_PORT;
-  private static final int HIVE_SERVER_PORT;
+  private static int METASTORE_PORT;
+  private static int HIVE_SERVER_PORT;
   private static final String WAREHOUSE_DIR = "/user/hive/warehouse";
   private static final String EXTERNAL_DIR = "/user/hive/external";
-  static {
-    METASTORE_PORT = NetworkUtils.getRandomPort();
-    HIVE_SERVER_PORT = NetworkUtils.getRandomPort();
-  }
 
   //TODO: SDC-2988, expose this better.
   private static HiveQueryExecutor hiveQueryExecutor;
@@ -137,6 +133,8 @@ public abstract class BaseHiveIT {
     writeConfiguration(miniMR.createJobConf(), confDir + "/yarn-site.xml");
 
     // Configuration for both HMS and HS2
+    METASTORE_PORT = NetworkUtils.getRandomPort();
+    HIVE_SERVER_PORT = NetworkUtils.getRandomPort();
     final HiveConf hiveConf = new HiveConf(miniDFS.getConfiguration(0), HiveConf.class);
     hiveConf.set(HiveConf.ConfVars.METASTORECONNECTURLKEY.varname, "jdbc:derby:;databaseName=target/metastore_db;create=true");
     hiveConf.set(HiveConf.ConfVars.METASTOREURIS.varname, Utils.format("thrift://{}:{}", HOSTNAME, METASTORE_PORT));
