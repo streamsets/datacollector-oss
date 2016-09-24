@@ -41,6 +41,7 @@ import org.apache.hadoop.mapred.MiniMRCluster;
 import org.apache.hive.service.server.HiveServer2;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
@@ -100,6 +101,7 @@ public abstract class BaseHiveIT {
   public HiveQueryExecutor getHiveQueryExecutor() {
     return hiveQueryExecutor;
   }
+  private static boolean isHiveInitialized = false;
 
   /**
    * Start all required mini clusters.
@@ -166,6 +168,14 @@ public abstract class BaseHiveIT {
     Class.forName(HIVE_JDBC_DRIVER);
     hiveConnection = HiveMetastoreUtil.getHiveConnection(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
     hiveQueryExecutor = new HiveQueryExecutor(hiveConnection);
+
+    // And finally we're initialized
+    isHiveInitialized = true;
+  }
+
+  @Before
+  public void assumeThatHiveStarted() {
+    Assume.assumeTrue("Hive have not started, skipping the test.", isHiveInitialized);
   }
 
   /**
