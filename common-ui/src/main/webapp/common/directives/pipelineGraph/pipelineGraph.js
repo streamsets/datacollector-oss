@@ -71,9 +71,26 @@ angular.module('pipelineGraphDirectives', [])
       thisGraph.svg = svg;
 
       //Background lines
-      var margin = {top: -5, right: -5, bottom: -5, left: -5},
-        width = 2500 - margin.left - margin.right,
-        height = 2500 - margin.top - margin.bottom;
+      var margin = {top: -5, right: -5, bottom: -5, left: -5};
+
+      var svgWidth = 2500;
+      var svgHeight = 2500;
+
+      if(svg.length && svg[0] && svg[0].length) {
+        var clientWidth = svg[0][0].clientWidth;
+        var clientHeight = svg[0][0].clientHeight;
+
+        if (clientWidth > svgWidth) {
+          svgWidth = clientWidth;
+        }
+
+        if (clientHeight > svgHeight) {
+          svgHeight = clientHeight;
+        }
+      }
+
+      var width = svgWidth - margin.left - margin.right;
+      var height = svgHeight - margin.top - margin.bottom;
 
       var container = svg.append('g');
       container.append('g')
