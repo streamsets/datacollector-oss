@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
@@ -33,6 +34,7 @@ import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -493,15 +495,27 @@ public class SpoolDirSource extends BaseSource {
             parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
         }
       }
-      for (int i = 0; i < maxBatchSize; i++) {
+      int i = 0;
+      while(i < maxBatchSize) {
         try {
-          Record record = parser.parse();
+          Record record;
+
+          try {
+            record = parser.parse();
+          } catch(RecoverableDataParserException ex) {
+            // Propagate partially parsed record to error stream
+            record = ex.getUnparsedRecord();
+            setHeaders(record, file, offset);
+            errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
+
+            // We'll simply continue reading once this
+            continue;
+          }
+
           if (record != null) {
-            record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
-            record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
-            record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
-            record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
+            setHeaders(record, file, offset);
             batchMaker.addRecord(record);
+            i++;
             offset = parser.getOffset();
           } else {
             parser.close();
@@ -561,6 +575,13 @@ public class SpoolDirSource extends BaseSource {
       }
     }
     return offset;
+  }
+
+  private void setHeaders(Record record, File file, String offset) {
+    record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
+    record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
+    record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
+    record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
   }
 
   @SuppressWarnings("unchecked")

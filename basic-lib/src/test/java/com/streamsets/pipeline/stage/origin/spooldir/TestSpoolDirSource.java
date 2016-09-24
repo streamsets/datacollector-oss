@@ -19,20 +19,26 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class TestSpoolDirSource {
@@ -308,6 +314,60 @@ public class TestSpoolDirSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(source.createSourceOffset("file-1.log", "-1"), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRecoverableDataParserError() throws Exception {
+    File f = new File("target", UUID.randomUUID().toString());
+    f.mkdir();
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.spoolDir = f.getAbsolutePath();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = "file-0.log";
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.allowLateDirectory = false;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    FileOutputStream outputStream = new FileOutputStream(new File(conf.spoolDir, "file-0.log"));
+    IOUtils.writeLines(ImmutableList.of("A,B", "a,b,c", "a,b"), "\n", outputStream);
+    outputStream.close();
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class, source)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addOutputLane("lane")
+      .build();
+    runner.runInit();
+    try {
+
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertNotNull(output);
+
+      // Verify proper record
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+
+      // And error record
+      records = runner.getErrorRecords();
+      Assert.assertEquals(1, records.size());
+
     } finally {
       runner.runDestroy();
     }
