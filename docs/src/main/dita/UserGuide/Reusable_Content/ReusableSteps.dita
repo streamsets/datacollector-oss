@@ -3378,7 +3378,7 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                 <info>
                     <p>For example, define the options as
                         follows:<codeblock>export SDC_JAVA_OPTS="<b class="+ topic/ph hi-d/b ">-Djavax.net.ssl.trustStore=&lt;path to truststore file> -Djavax.net.ssl.trustStorePassword=&lt;password></b> 
--Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"                   </codeblock></p>
+-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"                   </codeblock></p>
                 </info>
             </step>
             <step id="MongoDBEnableSSL_step3">

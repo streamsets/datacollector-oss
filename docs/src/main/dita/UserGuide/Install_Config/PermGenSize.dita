@@ -14,31 +14,25 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kxf_y2m_sr">
- <title>Permanent Generation Size</title>
- <shortdesc>When you use <ph
+  <title>Permanent Generation Size</title>
+  <shortdesc>When you use <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with Java 7,
     you can define the Java Permanent Generation size, also known as the PermGen size.</shortdesc>
- <conbody>
-  <p><indexterm>Java configuration options<indexterm>PermGen
+  <conbody>
+    <p><indexterm>Java configuration options<indexterm>PermGen
         size</indexterm></indexterm><indexterm>PermGen
         size<indexterm>configuring</indexterm></indexterm>The PermGen size determines the amount of
       memory that the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> web
-    application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
+      application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
       variable in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file.</p>
-  <p>Use the following properties to define the PermGen size:<ul id="ul_qjd_33m_sr">
-        <li>MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
-        <li>PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
+    <p>Use the following properties to define the PermGen size:<ul id="ul_qjd_33m_sr">
+        <li>PermSize - Initial and minimum size of the permanent generation space.</li>
+        <li>MaxPermSize - Maximum size of the permanent generation space.</li>
       </ul></p>
-    <p>Setting the properties higher than these guidelines can cause out of memory errors or cause
-        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-      fail to start.</p>
     <p>By default, the PermGen size is defined as
-      follows:<codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m <uicontrol>-XX:PermSize=128M -XX:MaxPermSize=256M</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
-    <p>If, for example, you doubled the heap size to 2048 MB, you might set the options as
-      follows:<codeblock> SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx2048m  -Xms1048m  <uicontrol>-XX:PermSize=256M -XX:MaxPermSize=512M</uicontrol> -server ${SDC_JAVA_OPTS}"
-</codeblock></p>
- </conbody>
+      follows:<codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m <uicontrol>-XX:PermSize=256M -XX:MaxPermSize=512M</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
+  </conbody>
 </concept>
