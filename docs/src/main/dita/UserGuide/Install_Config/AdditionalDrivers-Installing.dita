@@ -30,17 +30,21 @@
                         /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
                         might create the driver directory at:
                         <codeblock>/opt/sdc-extras</codeblock></p></li>
-                <li>Copy the drivers to the directory. Use a directory structure for each set of
-                    drivers based on the stage library name and directory structure as follows: <p>
-                        <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
-                    </p><p>For example to install drivers for JMS in an opt/sdc-extras directory,
-                        you would copy them to the following directory:
+                <li>Create subdirectories for each set of additional drivers based on the stage
+                    library name as follows: <p>
+                        <codeblock>/opt/sdc-extras/&lt;stage library name>/lib/</codeblock>
+                    </p><p>For example, to install drivers for JDBC, create the following
+                        subdirectory:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p><p>To
+                        also install drivers for JMS, create the following subdirectory:
                         <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
+                <li>Copy the drivers to the appropriate subdirectories.</li>
                 <li>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> environment configuration file, <codeph>sdc-env.sh</codeph> or <codeph>sdcd-env.sh</codeph> located in the
-                    <codeph>$SDC_DIST/libexec</codeph> directory, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
-                    variable and point it to the driver directory, as
+                    /> environment configuration file, <codeph>sdc-env.sh</codeph> or
+                        <codeph>sdcd-env.sh</codeph> located in the
+                        <codeph>$SDC_DIST/libexec</codeph> directory, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
+                    directory, as
                         follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;driver directory>"</codeblock><p>For
                         example:
                     </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></li>

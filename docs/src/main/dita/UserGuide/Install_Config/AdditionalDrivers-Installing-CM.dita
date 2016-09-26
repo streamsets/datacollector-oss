@@ -19,12 +19,13 @@
         <context><indexterm>additional drivers<indexterm>installing through Cloudera
                     Manager</indexterm></indexterm><indexterm>Cloudera Manager<indexterm>installing
                     additional drivers</indexterm></indexterm>You can install additional drivers for
-            stages. <p>Before you use the JMS Consumer and JDBC Consumer origins or the JDBC
-                Producer destination, you need to install drivers for the implementation that you
-                want to use. For example, to use the JDBC Consumer or JDBC Producer with Oracle,
-                install the Oracle JDBC drivers.</p><p>Additional drivers for other stages are
-                optional. For example, you can install custom classes for the JavaScript or Jython
-                Evaluators. </p><p>To install additional drivers for a <ph
+            stages. <p
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_list"
+                /><p
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_example"
+                /><p
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_optional"
+                /><p>To install additional drivers for a <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> administered by Cloudera Manager, perform the following steps:</p><ol
                 id="ol_f3s_hrw_ft">
@@ -40,14 +41,16 @@
                     default, the path is <codeph>/var/lib/sdc</codeph>. </li>
                 <li>On every node that runs <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, copy the drivers to the directory defined for the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable. <p>Use a directory
-                        structure for each set of drivers based on the stage library name and
-                        directory structure as follows:
-                        </p><codeblock>$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library directory>/lib</codeblock><p>For
-                        example to install drivers for JMS to the opt/sdc-extras directory, you
-                        would copy them to the following directory:
+                    />, create subdirectories for each set of additional drivers based on the stage
+                    library name as follows:
+                        <codeblock>$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library name>/lib/</codeblock><p>For
+                        example, to install drivers for JDBC, create the following subdirectory on
+                        every
+                        node:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p><p>To
+                        also install drivers for JMS, create the following subdirectory on every
+                        node:
                         <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
+                    <li>Copy the drivers to the appropriate subdirectories on every node. </li>
                 <li>When using the Java Security Manager, which is enabled by default, update the
                         <uicontrol>Data Collector Advanced Configuration Snippet (Safety Valve) for
                         sdc-security.policy</uicontrol> property to include the driver directory as follows:<p>
