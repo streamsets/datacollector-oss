@@ -48,6 +48,7 @@ public class StageRuntime {
   private final StageBean stageBean;
   private final Stage.Info info;
   private StageContext context;
+  private volatile long runnerThread;
 
   public StageRuntime(PipelineBean pipelineBean, final StageBean stageBean) {
     this.pipelineBean = pipelineBean;
@@ -127,6 +128,9 @@ public class StageRuntime {
   public List<Issue> init() {
     Preconditions.checkState(context != null, "context has not been set");
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    if(context.isPreview()) {
+      runnerThread = Thread.currentThread().getId();
+    }
     try {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       List<Issue> issues = getStage().init(info, context);
@@ -208,8 +212,12 @@ public class StageRuntime {
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
       getStage().destroy();
     } finally {
-      setEventSink(null);
-      setErrorSink(null);
+      // Do not eventSink and errorSink to null when in preview mode AND current thread
+      // is different from the one executing stages because stages might send error to errorSink.
+      if (!context.isPreview() || runnerThread == (Thread.currentThread().getId())) {
+        setEventSink(null);
+        setErrorSink(null);
+      }
       //we release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
       stageBean.releaseClassLoader();
       Thread.currentThread().setContextClassLoader(cl);
