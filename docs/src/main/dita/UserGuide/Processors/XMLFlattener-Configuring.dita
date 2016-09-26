@@ -44,6 +44,21 @@
                                         flatten.</entry>
                                 </row>
                                 <row>
+                                    <entry>Keep Original Fields</entry>
+                                    <entry>Specifies whether to keep all fields in the original
+                                        record. When selected, the processor flattens the specified
+                                        field and keeps all other fields in the record. When
+                                        cleared, the processor flattens the specified field and
+                                        removes all other fields in the record.<p>To keep original
+                                            fields, the root field of the record must be Map or
+                                            List-Map.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Overwrite Existing Fields</entry>
+                                    <entry>Overwrites any existing fields with names that match the
+                                        new flattened fields. </entry>
+                                </row>
+                                <row>
                                     <entry>Record Delimiter <xref
                                             href="XMLFlattener-RecordDelimiter.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
