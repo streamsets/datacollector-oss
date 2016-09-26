@@ -478,8 +478,8 @@
                                         properties with a space.<p>The following properties are set
                                             by default. </p><p>
                                             <ul id="ul_hf3_xqj_ws">
-                                                <li>XX:PermSize is set to 128 MB and XX:MaxPermSize
-                                                  is set to 256 MB. This defines the PermGen size
+                                                <li>XX:PermSize is set to 256 MB and XX:MaxPermSize
+                                                  is set to 512 MB. This defines the PermGen size
                                                   for the pipeline. </li>
                                                 <li>Dlog4j.debug enables debug logging for
                                                   log4j.</li>

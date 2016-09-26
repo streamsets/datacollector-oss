@@ -24,9 +24,9 @@
         environment configuration file.</shortdesc>
  <conbody>
         <p>By default, the option is defined as
-            follows:<codeblock>SDC_JAVA_OPTS="<b>-Dhttps.protocols=TLSv1.2,TLSv1.1</b> -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"</codeblock></p>
+            follows:<codeblock>SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1</uicontrol> -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"</codeblock></p>
         <p>To connect to an HTTP server that uses TLS version 1.0, set the option as
-            follows:<codeblock> SDC_JAVA_OPTS="<b>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</b> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
+            follows:<codeblock> SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
 </codeblock></p>
  </conbody>
 </concept>

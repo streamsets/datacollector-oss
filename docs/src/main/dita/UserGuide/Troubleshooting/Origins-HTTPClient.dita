@@ -38,7 +38,7 @@
                             <codeph>$SDC_DIST/libexec</codeph> directory. For example, if the HTTP
                         server uses TLS version 1.0, modify the <codeph>Dhttps.protocols</codeph>
                         option as
-                        follows:<codeblock>export SDC_JAVA_OPTS="<b>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</b> -Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</codeblock></dd>
+                        follows:<codeblock>export SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -Xmx1024m -Xms1024m -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</codeblock></dd>
                 </dlentry>
             </dl>
         </p>

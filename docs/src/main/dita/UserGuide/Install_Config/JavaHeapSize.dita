@@ -40,10 +40,10 @@
         properties to the same value. To define the unit of measure, use m for MB and g for GB. </note>
     </p>
     <p>For example, to double the heap size, you might change the following default
-      settings:<codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <uicontrol>-Xmx1024m -Xms1024m</uicontrol> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</codeblock></p>
+      settings:<codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <uicontrol>-Xmx1024m -Xms1024m</uicontrol> -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</codeblock></p>
     <p>to increase the Xmx and Xms settings as follows:</p>
     <p>
-      <codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <uicontrol>-Xmx2048m -Xms2048m</uicontrol> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</codeblock>
+      <codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <uicontrol>-Xmx2048m -Xms2048m</uicontrol> -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</codeblock>
     </p>
     <p>With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB
       of memory.<note>In the pipeline properties, you can use the jvm:maxMemoryMB() function to help
