@@ -48,9 +48,8 @@ public class ClusterHdfsConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Hadoop FS URI",
-      description = "Include the HDFS scheme and authority: <scheme>://<authority> (for example" +
-          " hdfs://nameservice). If this is not set, the URI will be set to the value of 'fs.defaultFS'" +
-          " configuration.",
+      description = "Include the Hadoop FS scheme and authority: <scheme>://<authority> (for example" +
+          " hdfs://nameservice).",
       displayPosition = 10,
       group = "HADOOP_FS")
   public String hdfsUri;
@@ -99,11 +98,11 @@ public class ClusterHdfsConfigBean {
   public boolean hdfsKerberos;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Hadoop FS Configuration Directory",
-      description = "An SDC resource directory or symbolic link with HDFS configuration files core-site.xml, " +
+      description = "An SDC resource directory or symbolic link with Hadoop configuration files core-site.xml, " +
           "hdfs-site.xml, yarn-site.xml, and mapred-site.xml",
       displayPosition = 60,
       group = "HADOOP_FS"
@@ -113,9 +112,9 @@ public class ClusterHdfsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "HDFS User",
-      description = "If set, the data collector will read from HDFS as this user. " +
-          "The data collector user must be configured as a proxy user in HDFS.",
+      label = "Hadoop FS User",
+      description = "If set, the data collector will read from Hadoop FS as this user. " +
+          "The data collector user must be configured as a proxy user in Hadoop FS.",
       displayPosition = 70,
       group = "HADOOP_FS"
   )

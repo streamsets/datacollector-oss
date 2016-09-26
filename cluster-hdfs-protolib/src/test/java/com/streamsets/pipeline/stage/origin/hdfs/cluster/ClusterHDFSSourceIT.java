@@ -214,16 +214,18 @@ public class ClusterHDFSSourceIT {
     conf.hdfsUri = miniDFS.getURI().toString();
     conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
     conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsConfDir = hadoopConfDir;
     conf.hdfsConfigs.put("x", "X");
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.textMaxLineLen = 1024;
 
     conf.hdfsUri = "/pathwithnoschemeorauthority";
+
     ClusterHdfsSource clusterHdfsSource = createSource(conf);
     try {
       List<ConfigIssue> issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_02"));
 
@@ -231,7 +233,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_12"));
 
@@ -239,7 +241,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
 
@@ -247,7 +249,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_11"));
 
@@ -256,7 +258,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_10"));
 
@@ -268,7 +270,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 0, issues.size());
 
       conf.hdfsUri = null;
@@ -278,7 +280,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 0, issues.size());
 
       Path dummyFile = new Path(new Path(dir.toUri()), "/dummyFile");
@@ -288,7 +290,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
         .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-          ImmutableList.of("lane")));
+          ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_15"));
 
@@ -299,7 +301,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_16"));
 
@@ -310,7 +312,7 @@ public class ClusterHDFSSourceIT {
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
+                               ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 0, issues.size());
     } finally {
       clusterHdfsSource.destroy();

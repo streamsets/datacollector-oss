@@ -99,6 +99,10 @@ public class ContextInfoCreator {
                                                    List<String> outputLanes) {
     return createContext(null, instanceName, isPreview, onRecordError, outputLanes, null);
   }
+  public static Source.Context createSourceContext(String instanceName, boolean isPreview, OnRecordError onRecordError,
+                                                   List<String> outputLanes, String resourcesDir) {
+    return createContext(null, instanceName, isPreview, onRecordError, outputLanes, resourcesDir);
+  }
 
   @SuppressWarnings("unchecked")
   public static Target.Context createTargetContext(Class<?> stageClass, String instanceName, boolean isPreview,
