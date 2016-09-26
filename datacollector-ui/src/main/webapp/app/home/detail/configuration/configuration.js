@@ -356,7 +356,7 @@ angular
        * @param $index
        */
       removeFromMap: function(stageInstance, configValue, mapObject, $index) {
-        configValue.splice($index, 1); fvisib
+        configValue.splice($index, 1);
       },
 
 
@@ -449,27 +449,7 @@ angular
         if (!configDefinitions) {
           configDefinitions = $scope.detailPaneConfigDefn.configDefinitions;
         }
-
         return $scope.verifyDependsOnMap(stageInstance, configDefinition);
-
-//        var dependsOnConfigName = configDefinition.dependsOn,
-//          triggeredByValues = configDefinition.triggeredByValues,
-//          dependsOnConfigurationValue = _.find(stageInstance.configuration, function(config) {
-//            return config.name === dependsOnConfigName;
-//          }),
-//          dependsOnConfiguration = _.find(configDefinitions, function(configDefn) {
-//            return configDefn.name === dependsOnConfigName;
-//          });
-//
-//        if (dependsOnConfiguration.dependsOn) {
-//          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
-//            _.contains(triggeredByValues, dependsOnConfigurationValue.value) &&
-//            $scope.verifyDependsOn(stageInstance, dependsOnConfiguration, configDefinitions);
-//        } else {
-//          return dependsOnConfigurationValue && dependsOnConfigurationValue.value !== undefined &&
-//            _.contains(triggeredByValues, dependsOnConfigurationValue.value);
-//        }
-
       },
 
 
@@ -697,7 +677,8 @@ angular
         $scope.configGroupTabs = angular.copy(groupDefn.groupNameToLabelMapList);
 
         // handle stats group for Pipeline
-        if ($scope.selectedType === pipelineConstant.PIPELINE && !$rootScope.common.isDPMEnabled) {
+        if ($scope.selectedType === pipelineConstant.PIPELINE &&
+          (!$rootScope.common.isDPMEnabled && !$scope.statsAggregatorStageConfig)) {
           $scope.configGroupTabs = _.filter($scope.configGroupTabs, function(configGroupTab) {
             return (configGroupTab.name !== 'STATS');
           });
