@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdv_qlw_ft">
- <title>Additional Drivers</title>
- <shortdesc>You can install additional drivers for stages. </shortdesc>
+ <title>Additional Drivers </title>
  <conbody>
-  <p><indexterm>drivers<indexterm>installing additional for stages</indexterm></indexterm>Before you
-   use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to
-   install drivers for the implementation that you want to use. For example, to use the JDBC
-   Consumer or JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
-  <p>Additional drivers for other stages are optional. For example, you can install custom classes
-   for the JavaScript or Jython Evaluators. </p>
+  <p><indexterm>drivers<indexterm>installing additional for stages</indexterm></indexterm>You can
+      install additional drivers for stages.</p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_list"/>
+    <p
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_example"/>
+    <p
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AdditionalDrivers_optional"/>
  </conbody>
 </concept>
