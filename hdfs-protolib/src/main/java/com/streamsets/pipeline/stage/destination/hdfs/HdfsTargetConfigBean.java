@@ -679,17 +679,20 @@ public class HdfsTargetConfigBean {
       getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
-          if (currentWriters != null) {
-            currentWriters.closeAll();
-            currentWriters.getWriterManager().issueCachedEvents();
-          }
-          if (lateWriters != null) {
-            lateWriters.closeAll();
-            lateWriters.getWriterManager().issueCachedEvents();
-          }
-
-          if(fs != null) {
-            fs.close();
+          try {
+            if (currentWriters != null) {
+              currentWriters.closeAll();
+              currentWriters.getWriterManager().issueCachedEvents();
+            }
+            if (lateWriters != null) {
+              lateWriters.closeAll();
+              lateWriters.getWriterManager().issueCachedEvents();
+            }
+          } finally {
+            if(fs != null) {
+              fs.close();
+              fs = null;
+            }
           }
           return null;
         }
