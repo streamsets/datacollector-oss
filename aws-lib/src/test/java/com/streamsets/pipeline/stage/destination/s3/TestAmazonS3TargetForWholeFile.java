@@ -24,6 +24,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.iterable.S3Objects;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -104,19 +105,29 @@ public class TestAmazonS3TargetForWholeFile {
   private final String fileNameEL;
   private final SourceType source;
   private final ChecksumAlgorithm checksumAlgorithm;
+  private final boolean withFileNamePrefix;
 
-  public TestAmazonS3TargetForWholeFile(String fileNameEL, SourceType source, ChecksumAlgorithm checksumAlgorithm) {
+
+  public TestAmazonS3TargetForWholeFile(
+      String fileNameEL,
+      boolean withFileNamePrefix,
+      SourceType source,
+      ChecksumAlgorithm checksumAlgorithm
+      ) {
     this.fileNameEL = fileNameEL;
+    this.withFileNamePrefix = withFileNamePrefix;
     this.source = source;
     this.checksumAlgorithm = checksumAlgorithm;
   }
 
-  @Parameterized.Parameters(name = "Source Type: {1}, Checksum Algorithm: {2}")
+  @Parameterized.Parameters(name = "File Name Prefix : {1}, Source Type: {2}, , Checksum Algorithm: {2}")
   public static Collection<Object[]> data() throws Exception {
     List<Object[]> finalData = new ArrayList<>();
     List<Object[]> array = Arrays.asList(new Object[][]{
-        {"${record:value('/fileInfo/filename')}", SourceType.LOCAL},
-        {"${record:value('/fileInfo/objectKey')}", SourceType.S3}
+        {"${record:value('/fileInfo/filename')}", true, SourceType.LOCAL},
+        {"${record:value('/fileInfo/filename')}", false, SourceType.LOCAL},
+        {"${record:value('/fileInfo/objectKey')}", true, SourceType.S3},
+        {"${record:value('/fileInfo/objectKey')}", false, SourceType.S3}
     });
     List<ChecksumAlgorithm> supportedChecksumAlgorithms =
         Arrays.asList(
@@ -124,10 +135,11 @@ public class TestAmazonS3TargetForWholeFile {
         );
     for (ChecksumAlgorithm checksumAlgorithm : supportedChecksumAlgorithms) {
       for (int j = 0; j < array.size(); j++) {
-        Object[] data = new Object[3];
+        Object[] data = new Object[4];
         data[0] = array.get(j)[0];
         data[1] = array.get(j)[1];
-        data[2] = checksumAlgorithm;
+        data[2] = array.get(j)[2];
+        data[3] = checksumAlgorithm;
         finalData.add(data);
       }
     }
@@ -184,6 +196,10 @@ public class TestAmazonS3TargetForWholeFile {
     if(fakeS3 != null) {
       fakeS3.shutdown();
     }
+  }
+
+  public void deleteObjectsAfterVerificationInTarget(String objectKey) throws Exception {
+    s3client.deleteObject(new DeleteObjectRequest(TARGET_BUCKET_NAME, objectKey));
   }
 
 
@@ -279,7 +295,7 @@ public class TestAmazonS3TargetForWholeFile {
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.dataFormat = DataFormat.WHOLE_FILE;
     s3TargetConfigBean.partitionTemplate = "";
-    s3TargetConfigBean.fileNamePrefix = "sdc";
+    s3TargetConfigBean.fileNamePrefix = withFileNamePrefix? "sdc" : "";
     s3TargetConfigBean.timeDriverTemplate = "${time:now()}";
     s3TargetConfigBean.timeZoneID = "UTC";
     s3TargetConfigBean.s3Config = s3Config;
@@ -316,8 +332,11 @@ public class TestAmazonS3TargetForWholeFile {
     Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, TARGET_BUCKET_NAME).iterator();
     while (s3ObjectSummaryIterator.hasNext()) {
       S3ObjectSummary s3ObjectSummary = s3ObjectSummaryIterator.next();
-      //strip out the filePrefix sdc-
-      String fileNameOrKey = s3ObjectSummary.getKey().substring(4);
+      String fileNameOrKey = s3ObjectSummary.getKey();
+      if (withFileNamePrefix) {
+        //strip out the filePrefix sdc-
+        fileNameOrKey = fileNameOrKey.substring(4);
+      }
       switch (source) {
         case LOCAL:
           verifyStreamCorrectness(
@@ -332,6 +351,7 @@ public class TestAmazonS3TargetForWholeFile {
           );
           break;
       }
+      deleteObjectsAfterVerificationInTarget(s3ObjectSummary.getKey());
       numberOfObjects++;
     }
     return numberOfObjects;
@@ -367,7 +387,12 @@ public class TestAmazonS3TargetForWholeFile {
 
         //strip out the filePrefix sdc-
         String objectKey =
-            eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/objectKey").getValueAsString().substring(4);
+            eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/objectKey").getValueAsString();
+        if (withFileNamePrefix) {
+          Assert.assertTrue(objectKey.startsWith("sdc-"));
+          //strip out the filePrefix sdc-
+          objectKey = objectKey.substring(4);
+        }
 
         String checksum = HashingUtil.getHasher(checksumAlgorithm.getHashType())
             .hashString(SAMPLE_TEXT_FOR_FILE.get(objectKey), Charset.defaultCharset()).toString();

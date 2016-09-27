@@ -179,7 +179,11 @@ public class AmazonS3Target extends BaseTarget {
         keyPrefix += s3TargetConfigBean.s3Config.delimiter;
       }
     }
-    return keyPrefix + s3TargetConfigBean.fileNamePrefix + "-";
+    if (s3TargetConfigBean.fileNamePrefix != null && !s3TargetConfigBean.fileNamePrefix.isEmpty()) {
+      //Append "-" to the key prefix only if fileNamePrefix is not empty.
+      keyPrefix = keyPrefix + s3TargetConfigBean.fileNamePrefix + "-";
+    }
+    return keyPrefix;
   }
 
 }
