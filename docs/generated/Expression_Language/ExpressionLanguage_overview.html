@@ -80,9 +80,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="55.55555555555556%" id="d78784e115">Sample Conditions</th>
+                        <th class="entry" valign="top" width="55.55555555555556%" id="d78810e115">Sample Conditions</th>
 
-                        <th class="entry" valign="top" width="44.44444444444444%" id="d78784e118">Description</th>
+                        <th class="entry" valign="top" width="44.44444444444444%" id="d78810e118">Description</th>
 
                     </tr>
 
@@ -90,41 +90,41 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e115 ">${record:value('/payment_type') == 'CRD'}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e115 ">${record:value('/payment_type') == 'CRD'}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e118 ">In a Stream Selector, this condition routes records where the payment
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e118 ">In a Stream Selector, this condition routes records where the payment
                             type is credit card to the stream.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e115 ">${record:value('[3]/State') == "MD"}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e115 ">${record:value('[3]/State') == "MD"}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e118 ">The same as above, but for a record in list format.</td>
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e118 ">The same as above, but for a record in list format.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e115 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e115 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e118 ">Used in a Stream Selector in an error pipeline, this condition routes
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e118 ">Used in a Stream Selector in an error pipeline, this condition routes
                             records with the FIELD_MERGER_02 error to a stream that corrects the
                             error.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e115 ">${record:value("[20]/value") == ""}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e115 ">${record:value("[20]/value") == ""}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e118 ">When used in an alert, triggers an alert when the specified field
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e118 ">When used in an alert, triggers an alert when the specified field
                             contains no data.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e115 ">${record:type('/ID')=STRING}</td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e115 ">${record:type('/ID')=STRING}</td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e118 ">In the Stream Selector, routes records where the ID is a String to a
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e118 ">In the Stream Selector, routes records where the ID is a String to a
                             branch that includes a Field Type Converter to convert the field to a
                             numeric data type.</td>
 
@@ -141,9 +141,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d78784e187">Sample String Manipulation</th>
+                            <th class="entry" valign="top" width="55.55555555555556%" id="d78810e187">Sample String Manipulation</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d78784e190">Description</th>
+                            <th class="entry" valign="top" width="44.44444444444444%" id="d78810e190">Description</th>
 
                         </tr>
 
@@ -151,17 +151,17 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e187 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e187 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e190 ">Replaces missing or null values in the Payment field with
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e190 ">Replaces missing or null values in the Payment field with
                                 "unknown". </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e187 ">${str:toUpper(record:value('/STATE')}</td>
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e187 ">${str:toUpper(record:value('/STATE')}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e190 ">Capitalizes all strings in the STATE field.</td>
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e190 ">Capitalizes all strings in the STATE field.</td>
 
                         </tr>
 
@@ -177,9 +177,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d78784e232">Sample Numeric Operations</th>
+                            <th class="entry" valign="top" width="55.55555555555556%" id="d78810e232">Sample Numeric Operations</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d78784e235"> </th>
+                            <th class="entry" valign="top" width="44.44444444444444%" id="d78810e235"> </th>
 
                         </tr>
 
@@ -187,10 +187,10 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78784e232 ">${record:value('/total_amount') - (record:value('/tip_amount') +
+                            <td class="entry" valign="top" width="55.55555555555556%" headers="d78810e232 ">${record:value('/total_amount') - (record:value('/tip_amount') +
                                 record:value('/tolls') + record:value('/mta_tax'))}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78784e235 ">An expression that calculates trip revenue by subtracting the
+                            <td class="entry" valign="top" width="44.44444444444444%" headers="d78810e235 ">An expression that calculates trip revenue by subtracting the
                                 tip, taxes, and tolls from the total fare amount</td>
 
                         </tr>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can install additional drivers for stages. Before you use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to install drivers for the implementation that you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Additional Drivers"></meta><meta name="abstract" content="You can install additional drivers for stages."></meta><meta name="description" content="You can install additional drivers for stages."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pdv_qlw_ft"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Additional Drivers</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can install additional drivers for stages. Before you use the following stages, you need to install drivers for the implementation that you want to use: JDBC Consumer origin JMS Consumer origin ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Additional Drivers"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pdv_qlw_ft"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Additional Drivers</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,18 +23,34 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_pdv_qlw_ft">
- <h1 class="title topictitle1">Additional Drivers</h1>
+ <h1 class="title topictitle1">Additional Drivers </h1>
 
- 
- <div class="body conbody"><p class="shortdesc">You can install additional drivers for stages. </p>
+ <div class="body conbody">
+  <p class="p">You can
+      install additional drivers for stages.</p>
 
-  <p class="p">Before you
-   use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to
-   install drivers for the implementation that you want to use. For example, to use the JDBC
-   Consumer or JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
+    <div class="p">Before you use the following stages, you need to install drivers for the implementation that
+                  you want to use: <ul class="ul" id="concept_pdv_qlw_ft__d13084e2284">
+                        <li class="li">JDBC Consumer origin</li>
 
-  <p class="p">Additional drivers for other stages are optional. For example, you can install custom classes
-   for the JavaScript or Jython Evaluators. </p>
+                        <li class="li">JMS Consumer origin</li>
+
+                        <li class="li">Oracle CDC Client origin</li>
+
+                        <li class="li">JDBC Lookup processor</li>
+
+                        <li class="li">JDBC Tee processor</li>
+
+                        <li class="li">JDBC Producer destination</li>
+
+                  </ul>
+</div>
+
+    <p class="p">For example, to use the JDBC Consumer or JDBC Producer with Oracle, install the Oracle JDBC
+                  drivers.</p>
+
+    <p class="p">Additional drivers for other stages are optional. For example, you can install custom classes
+                  for the JavaScript or Jython Evaluators. </p>
 
  </div>
 
@@ -57,21 +73,28 @@
 </div>
 </li>
 
-                <li class="li">Copy the drivers to the directory. Use a directory structure for each set of
-                    drivers based on the stage library name and directory structure as follows: <div class="p">
-                        <pre class="pre codeblock">&lt;stage library name&gt;/lib/&lt;driver name&gt;</pre>
+                <li class="li">Create subdirectories for each set of additional drivers based on the stage
+                    library name as follows: <div class="p">
+                        <pre class="pre codeblock">/opt/sdc-extras/&lt;stage library name&gt;/lib/</pre>
 
                     </div>
-<div class="p">For example to install drivers for JMS in an opt/sdc-extras directory,
-                        you would copy them to the following directory:
+<div class="p">For example, to install drivers for JDBC, create the following
+                        subdirectory:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</pre>
+</div>
+<div class="p">To
+                        also install drivers for JMS, create the following subdirectory:
                         <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
 </div>
 </li>
 
+                <li class="li">Copy the drivers to the appropriate subdirectories.</li>
+
                 <li class="li">In the <span class="ph">Data
-                  Collector</span> environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or <samp class="ph codeph">sdcd-env.sh</samp> located in the
-                    <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
-                    variable and point it to the driver directory, as
+                  Collector</span> environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
+                        <samp class="ph codeph">sdcd-env.sh</samp> located in the
+                        <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
+                    directory, as
                         follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;driver directory&gt;"</pre>
 <p class="p">For
                         example:

@@ -104,7 +104,7 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                 <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable in the
                     Data Collector environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
                         <samp class="ph codeph">sdcd-env.sh</samp>:</span>
-                <ul class="ul choices" id="task_zry_dg2_ww__d16558e5976">
+                <ul class="ul choices" id="task_zry_dg2_ww__d16615e5976">
                     <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
                         file</li>
 
@@ -116,7 +116,7 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                 <div class="itemgroup info">
                     <div class="p">For example, define the options as
                         follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; -Djavax.net.ssl.trustStorePassword=&lt;password&gt;</strong> 
--Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"                   </pre>
+-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"                   </pre>
 </div>
 
                 </div>
@@ -145,14 +145,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d16558e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d16615e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d132196e230">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d132416e230">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d132196e233">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d132416e233">Description</th>
 
                                 </tr>
 
@@ -160,24 +160,24 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132196e230 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132416e230 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132196e233 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132196e230 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132196e233 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132416e233 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132196e230 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mdf_2rs_ns__d16558e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132416e230 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132196e233 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d16558e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132416e233 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d132416e230 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mdf_2rs_ns__d16615e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d132416e233 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d16615e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -207,9 +207,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d132196e315">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d132416e315">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d132196e318">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d132416e318">Description</th>
 
                                 </tr>
 
@@ -217,77 +217,77 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Connection String</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Connection String</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Connection string for the MongoDB instance.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Database</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Name of the MongoDB database.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Connection string for the MongoDB instance.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Collection</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Database</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Name of the MongoDB collection to use.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Name of the MongoDB database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Capped Collection</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">The collection is capped. Clear this option to read an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Name of the MongoDB collection to use.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Capped Collection</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">The collection is capped. Clear this option to read an
                                         uncapped collection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Start Timestamp</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Start Timestamp</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Timestamp to begin reading data based on the timestamp in
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Timestamp to begin reading data based on the timestamp in
                                         the offset field. Use the following format:
                                             <samp class="ph codeph">YYYY-MM-DD hh:mm:ss</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns" title="MongoDB uses the offset field to track the data to read. By default, the MongoDB origin uses the _id field as the offset field.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Offset Field <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns" title="MongoDB uses the offset field to track the data to read. By default, the MongoDB origin uses the _id field as the offset field.">
                                             <img class="image" id="task_mdf_2rs_ns__image_k2w_rsd_3t" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Field to use to track reads. Default is the _id field.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Field to use to track reads. Default is the _id field.
                                         You can use any Object ID field, but results are not
                                         guaranteed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Batch Size (records)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Batch Size (records)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Maximum number of records allowed in a batch.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Maximum number of records allowed in a batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_mdf_2rs_ns__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Amount of time the origin will wait to fill a batch
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Amount of time the origin will wait to fill a batch
                                         before sending an empty batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132196e315 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns" title="You can configure the read preference that the MongoDB origin uses. The read preference determines how the origin reads data from different members of the MongoDB replica set.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d132416e315 ">Read Preference <a class="xref" href="MongoDB.html#concept_oy2_1dt_ns" title="You can configure the read preference that the MongoDB origin uses. The read preference determines how the origin reads data from different members of the MongoDB replica set.">
                                             <img class="image" id="task_mdf_2rs_ns__image_o23_1rd_ww" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132196e318 ">Determines how the origin reads data from different
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d132416e318 ">Determines how the origin reads data from different
                                         members of the MongoDB replica set.</td>
 
                                 </tr>
@@ -304,14 +304,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d16558e6028" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d16615e6028" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d132196e461">Credentials</th>
+                                    <th class="entry" valign="top" width="30%" id="d132416e461">Credentials</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d132196e464">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d132416e464">Description</th>
 
                                 </tr>
 
@@ -319,24 +319,24 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d132196e461 ">Authentication Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d132416e461 ">Authentication Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d132196e464 ">Authentication to use. To use authentication, select
+                                    <td class="entry" valign="top" width="70%" headers="d132416e464 ">Authentication to use. To use authentication, select
                                         Username/Password.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d132196e461 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d132416e461 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d132196e464 ">MongoDB user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d132416e464 ">MongoDB user name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d132196e461 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d132416e461 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d132196e464 ">MongoDB password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d132416e464 ">MongoDB password.</td>
 
                                 </tr>
 
@@ -357,9 +357,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="34.01360544217687%" id="d132196e527">Advanced Property</th>
+                                        <th class="entry" valign="top" width="34.01360544217687%" id="d132416e527">Advanced Property</th>
 
-                                        <th class="entry" valign="top" width="65.98639455782312%" id="d132196e530">Description</th>
+                                        <th class="entry" valign="top" width="65.98639455782312%" id="d132416e530">Description</th>
 
                                     </tr>
 
@@ -367,34 +367,34 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                                 <tbody class="tbody">
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Min Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Min Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
        10,000.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Max Connection Idle Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Max Connection Idle Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
        connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -402,9 +402,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Max Connection Lifetime</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Max Connection Lifetime</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
        connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -412,9 +412,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Max Wait Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Max Wait Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds that a thread can wait for a connection to become
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds that a thread can wait for a connection to become
        available. Use 0 to opt out of this property. Use a negative value to wait
         indefinitely.<p class="p">Default is 120,000.</p>
 </td>
@@ -422,9 +422,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Server Selection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Server Selection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds that <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds that <span class="ph">Data
                   Collector</span> waits for a server selection
        before throwing an exception. If you use 0, an exception is thrown immediately if no server
        is available. Use a negative value to wait indefinitely.<p class="p">Default is 30,000.</p>
@@ -433,9 +433,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Threads Allowed to Block for Connection Multiplier</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Threads Allowed to Block for Connection Multiplier</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Multiplier that determines the maximum number of threads that can wait for a connection
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Multiplier that determines the maximum number of threads that can wait for a connection
        to become available from the pool. This number multiplied by the Connections Per Host value
        determines the maximum number of threads.<p class="p">Default is 5.</p>
 </td>
@@ -443,9 +443,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">The frequency in milliseconds at which <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">The frequency in milliseconds at which <span class="ph">Data
                   Collector</span> attempts to determine the
        current state of each server in the cluster.<p class="p">Default is 10,000.</p>
 </td>
@@ -453,9 +453,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Min Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Min Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
                   Collector</span> waits at least this long
        before checking the state of each server.<p class="p">Default is 500.</p>
 </td>
@@ -463,27 +463,27 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Heartbeat Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Heartbeat Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds to wait for a connection used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds to wait for a connection used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Heartbeat Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Heartbeat Socket Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Local Threshold</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Local Threshold</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
        than or equal to the server with the fastest ping time plus the local threshold
         value.<p class="p">Default is 15.</p>
 </td>
@@ -491,39 +491,39 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Required Replica Set Name</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Required Replica Set Name</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Required replica set name to use for the cluster.</td>
-
-     </tr>
-
-                                    <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Cursor Finalizer Enabled</td>
-
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Specifies whether to enable cursor finalizers.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Required replica set name to use for the cluster.</td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Socket Keep Alive</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Cursor Finalizer Enabled</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Specifies whether to enable socket keep alive. </td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Specifies whether to enable cursor finalizers.</td>
 
      </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Socket Keep Alive</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Specifies whether to enable socket keep alive. </td>
+
+     </tr>
+
+                                    <tr class="row">
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">Socket Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">SSL Enabled </td>
+                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">SSL Enabled </td>
 
-                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Enables SSL between <span class="ph">Data
+                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Enables SSL between <span class="ph">Data
                   Collector</span> and MongoDB.<p class="p">You also must define the truststore
                                                 file and password in the SDC_JAVA_OPTS environment
                                                 variable, as described in <a class="xref" href="MongoDB.html#task_zry_dg2_ww">Enabling SSL</a>.</p>
@@ -532,9 +532,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                     </tr>
 
                                     <tr class="row">
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d132196e527 ">SSL Invalid Host Name Allowed</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d132416e527 ">SSL Invalid Host Name Allowed</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d132196e530 ">Specifies whether invalid host names are allowed in SSL certificates.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d132416e530 ">Specifies whether invalid host names are allowed in SSL certificates.</td>
 
      </tr>
 

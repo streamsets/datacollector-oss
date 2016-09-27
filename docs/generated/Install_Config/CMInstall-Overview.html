@@ -146,7 +146,7 @@ For CentOS 7:
     </div>
 
 </div>
-<div class="topic task nested1" id="unique_1959242694">
+<div class="topic task nested1" id="unique_363903279">
     <h2 class="title topictitle2">Step 3. Distribute and Activate the StreamSets Parcel</h2>
 
     <div class="body taskbody">
@@ -168,7 +168,7 @@ For CentOS 7:
 
         </div>
 
-        <ol class="ol steps" id="unique_1959242694__steps_zj3_4sm_25"><li class="li step stepexpand">
+        <ol class="ol steps" id="unique_363903279__steps_zj3_4sm_25"><li class="li step stepexpand">
                 <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
                         <span class="ph uicontrol">Parcels</span> icon. </span>
                 <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't
@@ -328,13 +328,26 @@ To run <span class="ph">Data
 
     <div class="body taskbody">
         <div class="section context">You can install additional drivers for
-            stages. <p class="p">Before you use the JMS Consumer and JDBC Consumer origins or the JDBC
-                Producer destination, you need to install drivers for the implementation that you
-                want to use. For example, to use the JDBC Consumer or JDBC Producer with Oracle,
-                install the Oracle JDBC drivers.</p>
-<p class="p">Additional drivers for other stages are
-                optional. For example, you can install custom classes for the JavaScript or Jython
-                Evaluators. </p>
+            stages. <div class="p">Before you use the following stages, you need to install drivers for the implementation that
+                  you want to use: <ul class="ul" id="task_yhv_1pn_25__d13084e2284">
+                        <li class="li">JDBC Consumer origin</li>
+
+                        <li class="li">JMS Consumer origin</li>
+
+                        <li class="li">Oracle CDC Client origin</li>
+
+                        <li class="li">JDBC Lookup processor</li>
+
+                        <li class="li">JDBC Tee processor</li>
+
+                        <li class="li">JDBC Producer destination</li>
+
+                  </ul>
+</div>
+<p class="p">For example, to use the JDBC Consumer or JDBC Producer with Oracle, install the Oracle JDBC
+                  drivers.</p>
+<p class="p">Additional drivers for other stages are optional. For example, you can install custom classes
+                  for the JavaScript or Jython Evaluators. </p>
 <p class="p">To install additional drivers for a <span class="ph">Data
                   Collector</span> administered by Cloudera Manager, perform the following steps:</p>
 <ol class="ol" id="task_yhv_1pn_25__ol_f3s_hrw_ft">
@@ -354,18 +367,22 @@ By
                     default, the path is <samp class="ph codeph">/var/lib/sdc</samp>. </li>
 
                 <li class="li">On every node that runs <span class="ph">Data
-                  Collector</span>, copy the drivers to the directory defined for the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable. <p class="p">Use a directory
-                        structure for each set of drivers based on the stage library name and
-                        directory structure as follows:
-                        </p>
-<pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library directory&gt;/lib</pre>
+                  Collector</span>, create subdirectories for each set of additional drivers based on the stage
+                    library name as follows:
+                        <pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library name&gt;/lib/</pre>
 <div class="p">For
-                        example to install drivers for JMS to the opt/sdc-extras directory, you
-                        would copy them to the following directory:
+                        example, to install drivers for JDBC, create the following subdirectory on
+                        every
+                        node:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</pre>
+</div>
+<div class="p">To
+                        also install drivers for JMS, create the following subdirectory on every
+                        node:
                         <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
 </div>
 </li>
+
+                    <li class="li">Copy the drivers to the appropriate subdirectories on every node. </li>
 
                 <li class="li">When using the Java Security Manager, which is enabled by default, update the
                         <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
