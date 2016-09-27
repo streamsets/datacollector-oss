@@ -20,7 +20,8 @@
                 CDC Client origin<indexterm>overview</indexterm></indexterm>The Oracle CDC Client
             processes change data capture (CDC) information provided by Oracle LogMiner redo logs.
             The Oracle CDC Client origin produces records with a map of fields and record header
-            attributes with CDC information.</p>
+            attributes with CDC information. Use Oracle CDC Client to process data from Oracle
+            version 12c.</p>
         <p>When needed, you can use a separate pipeline with the JDBC Consumer origin to read
             existing data before you start a pipeline with Oracle CDC Client.</p>
         <p>The Oracle CDC Client origin can create records for insert, update, select-for-update,

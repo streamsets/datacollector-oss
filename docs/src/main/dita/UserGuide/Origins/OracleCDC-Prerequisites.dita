@@ -97,7 +97,7 @@ alter database open;</codeblock></li>
                 </dlentry>
                 <dlentry>
                     <dt>Task 3. Create a user account with the required roles and privileges</dt>
-                    <dd>Create a user account to use with Oracle CDC Client origin. You need the
+                    <dd>Create a user account to use with the Oracle CDC Client origin. You need the
                         account to access the database through JDBC. </dd>
                     <dd>You create accounts differently based on the Oracle version that you use:<dl>
                             <dlentry>
@@ -135,24 +135,6 @@ GRANT select on &lt;db>.&lt;table> TO &lt;user name></codeblock><p>Repeat
                                                 account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
 GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;username>;
 GRANT select on &lt;db>.&lt;table> TO &lt;user name>"</codeblock><p>Repeat
-                                                the final command for each table that you want to
-                                                use.</p></li>
-                                    </ol></dd>
-                                <dd>
-                                    <p>When you configure the origin, use this user account for the
-                                        JDBC credentials. </p>
-                                </dd>
-                            </dlentry>
-                            <dlentry>
-                                <dt>Earlier Oracle databases </dt>
-                                <dd>For Oracle databases earlier than version 12c, create a user
-                                    account with the necessary privileges:<ol id="ol_njq_zg3_jx">
-                                        <li>Log into the database as a user with DBA
-                                            privileges.</li>
-                                        <li>Create the user
-                                                account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
-GRANT create session, alter session, select any dictionary, execute_catalog_role TO &lt;username>;
-GRANT select on &lt;db>.&lt;table> TO &lt;user name></codeblock><p>Repeat
                                                 the final command for each table that you want to
                                                 use.</p></li>
                                     </ol></dd>
