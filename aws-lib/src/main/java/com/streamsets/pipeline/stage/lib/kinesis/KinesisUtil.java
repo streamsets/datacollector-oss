@@ -27,6 +27,10 @@ import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateExcep
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ThrottlingException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
+import com.amazonaws.services.kinesis.model.GetRecordsRequest;
+import com.amazonaws.services.kinesis.model.GetRecordsResult;
+import com.amazonaws.services.kinesis.model.GetShardIteratorRequest;
+import com.amazonaws.services.kinesis.model.GetShardIteratorResult;
 import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
@@ -118,12 +122,46 @@ public class KinesisUtil {
     }
   }
 
-  public static void checkpoint(IRecordProcessorCheckpointer checkpointer) {
-    checkpoint(checkpointer, null, null);
+  /**
+   * Get the last shard Id in the given stream
+   * In preview mode, kinesis source uses the last Shard Id to get records from kinesis
+   * @param regionName
+   * @param awsConfig
+   * @param streamName
+   */
+  public static String getLastShardId(String regionName, AWSConfig awsConfig, String streamName)
+  throws AmazonClientException {
+    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
+    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
+        AWSUtil.getCredentialsProvider(awsConfig),
+        kinesisConfiguration
+    );
+    kinesisClient.setRegion(RegionUtils.getRegion(regionName));
+
+    String lastShardId = null;
+    try {
+      StreamDescription description;
+      do {
+        if (lastShardId == null) {
+          description = kinesisClient.describeStream(streamName).getStreamDescription();
+        } else {
+          description = kinesisClient.describeStream(streamName, lastShardId).getStreamDescription();
+        }
+
+        int pageSize = description.getShards().size();
+        lastShardId = description.getShards().get(pageSize - 1).getShardId();
+
+      } while (description.getHasMoreShards());
+
+      return lastShardId;
+
+    } finally {
+      kinesisClient.shutdown();
+    }
   }
 
-  public static void checkpoint(IRecordProcessorCheckpointer checkpointer, String sequenceNumber) {
-    checkpoint(checkpointer, sequenceNumber, null);
+  public static void checkpoint(IRecordProcessorCheckpointer checkpointer) {
+    checkpoint(checkpointer, null, null);
   }
 
   public static void checkpoint(
@@ -165,5 +203,30 @@ public class KinesisUtil {
         LOG.debug("Interrupted while retrying checkpoint.", e);
       }
     }
+  }
+
+  public static List<com.amazonaws.services.kinesis.model.Record> getPreviewRecords(
+      AWSConfig awsConfig,
+      String region,
+      int maxBatchSize,
+      GetShardIteratorRequest getShardIteratorRequest
+  ) {
+    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
+    AmazonKinesisClient client = new AmazonKinesisClient(
+        AWSUtil.getCredentialsProvider(awsConfig),
+        kinesisConfiguration
+    );
+
+    client.setRegion(RegionUtils.getRegion(region));
+
+    GetShardIteratorResult getShardIteratorResult = client.getShardIterator(getShardIteratorRequest);
+    String shardIterator = getShardIteratorResult.getShardIterator();
+
+    GetRecordsRequest getRecordsRequest = new GetRecordsRequest();
+    getRecordsRequest.setShardIterator(shardIterator);
+    getRecordsRequest.setLimit(maxBatchSize);
+
+    GetRecordsResult getRecordsResult = client.getRecords(getRecordsRequest);
+    return getRecordsResult.getRecords();
   }
 }

@@ -25,6 +25,8 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.clientlibrary.types.ExtendedSequenceNumber;
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
+import com.amazonaws.services.kinesis.model.GetShardIteratorRequest;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -72,6 +74,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   private IRecordProcessorCheckpointer checkpointer;
   private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
+  private List<com.amazonaws.services.kinesis.model.Record> results;
 
   public KinesisSource(KinesisConsumerConfigBean conf) {
     this.conf = conf;
@@ -94,8 +97,6 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     KinesisUtil.checkStreamExists(conf.region.getLabel(), conf.streamName, conf.awsConfig, issues, getContext());
 
     if (issues.isEmpty()) {
-      batchQueue = new ArrayBlockingQueue<>(1);
-
       conf.dataFormatConfig.init(
           getContext(),
           conf.dataFormat,
@@ -106,7 +107,10 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       );
 
       parserFactory = conf.dataFormatConfig.getParserFactory();
+    }
 
+    if (issues.isEmpty() && !getContext().isPreview()) {
+      batchQueue = new ArrayBlockingQueue<>(1);
       executorService = Executors.newFixedThreadPool(1);
 
       IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(batchQueue);
@@ -114,6 +118,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       // Create the KCL worker with the StreamSets record processor factory
       worker = createKinesisWorker(recordProcessorFactory);
     }
+
     return issues;
   }
 
@@ -181,6 +186,17 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     LOG.debug("Produce called.");
+
+    if (getContext().isPreview()) {
+      try {
+        previewProcess(maxBatchSize, batchMaker);
+      } catch (IOException | DataParserException e) {
+        LOG.warn(Errors.KINESIS_03.getMessage(), lastSourceOffset, e.toString(), e);
+        errorRecordHandler.onError(Errors.KINESIS_03, lastSourceOffset, e);
+      }
+      return lastSourceOffset;
+    }
+
     if (!isStarted) {
       executorService.execute(worker);
       isStarted = true;
@@ -242,7 +258,34 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     return lastSourceOffset;
   }
 
-  protected IRecordProcessorCheckpointer getCheckpointer() {
+  private void previewProcess(int maxBatchSize, BatchMaker batchMaker) throws IOException, DataParserException {
+    String shardId = KinesisUtil.getLastShardId(conf.region.getLabel(), conf.awsConfig, conf.streamName);
+
+    GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
+    getShardIteratorRequest.setStreamName(conf.streamName);
+    getShardIteratorRequest.setShardId(shardId);
+    getShardIteratorRequest.setShardIteratorType(conf.initialPositionInStream.name());
+
+    if (results.isEmpty()) {
+      results = KinesisUtil.getPreviewRecords(
+          conf.awsConfig,
+          conf.region.getLabel(),
+          maxBatchSize,
+          getShardIteratorRequest
+      );
+    }
+
+    int batchSize = results.size() > maxBatchSize ? maxBatchSize : results.size();
+
+    for (int index = 0; index < batchSize; index++) {
+      com.amazonaws.services.kinesis.model.Record record = results.get(index);
+      com.amazonaws.services.kinesis.clientlibrary.types.UserRecord userRecord = new UserRecord(record);
+      batchMaker.addRecord(processKinesisRecord(userRecord));
+    }
+  }
+
+  @VisibleForTesting
+  IRecordProcessorCheckpointer getCheckpointer() {
     return checkpointer;
   }
 
@@ -277,7 +320,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         LOG.error("Couldn't parse the offset string: {}", offset);
         throw new StageException(Errors.KINESIS_04, offset);
       }
-    } else if(isPreview) {
+    } else if (isPreview) {
       LOG.debug("Not checkpointing because this origin is in preview mode.");
     }
   }
