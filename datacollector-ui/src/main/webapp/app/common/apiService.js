@@ -995,9 +995,13 @@ angular.module('dataCollectorApp.common')
         }).then(function(result) {
           var remoteStorePipeline = result.data;
           var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
-          return api.pipelineAgent.savePipelineConfig(name, pipelineDefinition);
+          var rulesDefinition = JSON.parse(remoteStorePipeline.currentRules.rulesDefinition);
+          return $q.all([
+            api.pipelineAgent.savePipelineConfig(name, pipelineDefinition),
+            api.pipelineAgent.savePipelineRules(name, rulesDefinition)
+          ]);
         }).then(function(res) {
-          deferred.resolve(res.data.metadata);
+          deferred.resolve(res[0].data.metadata);
         }, function(err) {
           deferred.reject(err);
         });

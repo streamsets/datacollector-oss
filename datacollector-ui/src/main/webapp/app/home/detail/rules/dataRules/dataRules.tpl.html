@@ -9,7 +9,7 @@
   <div class="panel-body">
     <form class="form-horizontal" role="form"
           ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
-          name="{{detailPaneConfig.instanceName || 'pipeline'}}">
+          name="{{selectedType === pipelineConstant.STAGE_INSTANCE ? 'd' + detailPaneConfig.instanceName : 'pipeline'}}">
 
       <table class="table table-hover" ng-init="expandAll=false">
         <thead>
