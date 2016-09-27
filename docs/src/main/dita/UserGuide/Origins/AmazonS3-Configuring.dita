@@ -17,7 +17,7 @@
     <title>Configuring an Amazon S3 Origin</title>
     <taskbody>
         <context><indexterm>Amazon S3 origin<indexterm>configuring</indexterm></indexterm>Configure
-            an Amazon S3 origin to read data from files in Amazon S3.</context>
+            an Amazon S3 origin to read data from objects in Amazon S3.</context>
         <steps id="steps_tvn_b5v_yq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
@@ -83,6 +83,27 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3FileNamePattern">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Read Order
+                                        <xref
+                                            href="AmazonS3-ReadOrder.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v29_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry>The order to use when reading objects:<ul
+                                            id="ul_mdf_xdp_jx">
+                                            <li>Lexicographically Ascending Keys Names - Reads
+                                                objects in lexicographically ascending order based
+                                                on key name. </li>
+                                            <li>Last-Modified Timestamp - Reads objects in ascending
+                                                order based on the last-modified timestamp. When
+                                                objects have matching timestamps, reads objects in
+                                                lexicographically ascending order based on key
+                                                names.</li>
+                                        </ul><p>For best performance when reading a large number of
+                                            objects, use lexicographical order based on key
+                                            names.</p></entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3BufferLimit">
                                     <entry/>
@@ -133,20 +154,20 @@
                             <tbody>
                                 <row>
                                     <entry>Error Handling Option</entry>
-                                    <entry>The action taken when an error occurs while processing a
-                                            file:<ul id="ul_hvm_gqv_ht">
-                                            <li>None - Keeps the file in place.</li>
-                                            <li>Archive - Copies or moves the file to another
-                                                location.</li>
-                                            <li>Delete - Deletes the file.</li>
-                                        </ul><p>When archiving processed files, best practice is to
-                                            also  archive files that cannot be processed.
+                                    <entry>The action taken when an error occurs while processing an
+                                            object:<ul id="ul_hvm_gqv_ht">
+                                            <li>None - Keeps the object in place.</li>
+                                            <li>Archive - Copies or moves the object to another
+                                                prefix or bucket.</li>
+                                            <li>Delete - Deletes the object.</li>
+                                        </ul><p>When archiving processed objects, best practice is
+                                            to also archive objects that cannot be processed.
                                         </p></entry>
                                 </row>
                                 <row>
                                     <entry>Archiving Option</entry>
-                                    <entry>The action to take when archiving a file that cannot be
-                                        processed. <p
+                                    <entry>The action to take when archiving an object that cannot
+                                        be processed. <p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
                                             /><p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
@@ -154,11 +175,11 @@
                                 </row>
                                 <row>
                                     <entry>Error Prefix</entry>
-                                    <entry>Prefix for the files that cannot be processed.</entry>
+                                    <entry>Prefix for the objects that cannot be processed.</entry>
                                 </row>
                                 <row>
                                     <entry>Error Bucket</entry>
-                                    <entry>Bucket for the files that cannot be processed.</entry>
+                                    <entry>Bucket for the objects that cannot be processed.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -182,17 +203,17 @@
                             <tbody>
                                 <row>
                                     <entry>Post Processing Option</entry>
-                                    <entry>The action taken after successfully processing a file:
+                                    <entry>The action taken after successfully processing an object:
                                             <ul id="ul_gll_wqv_ht">
-                                            <li>None - Keeps the file in place.</li>
-                                            <li>Archive - Copies or moves the file to another
+                                            <li>None - Keeps the object in place.</li>
+                                            <li>Archive - Copies or moves the object to another
                                                 location.</li>
-                                            <li>Delete - Deletes the file.</li>
+                                            <li>Delete - Deletes the object.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Archiving Option</entry>
-                                    <entry>The action to take when archiving a processed file. <p
+                                    <entry>The action to take when archiving a processed object. <p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove1"
                                             /><p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/S3origin-CopyMove2"
@@ -200,11 +221,11 @@
                                 </row>
                                 <row>
                                     <entry>Post Process Prefix</entry>
-                                    <entry>Prefix for processed files. </entry>
+                                    <entry>Prefix for processed objects. </entry>
                                 </row>
                                 <row>
                                     <entry>Post Process Bucket</entry>
-                                    <entry>Bucket for processed files.</entry>
+                                    <entry>Bucket for processed objects.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -18,7 +18,7 @@
     <taskbody>
         <context><indexterm>Amazon S3
             destination<indexterm>configuring</indexterm></indexterm>Configure an Amazon S3
-            destination to write files to Amazon S3.</context>
+            destination to write objects to Amazon S3.</context>
         <steps id="steps_tzg_m3r_rt">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
@@ -65,11 +65,11 @@
                                 </row>
                                 <row>
                                     <entry>Bucket</entry>
-                                    <entry>Bucket to use when writing files.</entry>
+                                    <entry>Bucket to use when writing objects.</entry>
                                 </row>
                                 <row>
                                     <entry>Common Prefix</entry>
-                                    <entry>Common prefix that determines where files are written. </entry>
+                                    <entry>Common prefix that determines where objects are written. </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3ObjectPathDelimiter">

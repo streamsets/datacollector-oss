@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ltv_r3l_5q">
+ <title>Read Order</title>
+ <conbody>
+                <p><indexterm>object processing<indexterm>Amazon
+                                S3</indexterm></indexterm><indexterm>Amazon S3
+                                        origin<indexterm>object
+                                processing</indexterm></indexterm><indexterm>key name
+                                        pattern<indexterm>Amazon S3
+                        property</indexterm></indexterm>The Amazon S3 origin reads objects in
+                        ascending order based on the object key name or the last modified timestamp.
+                        For best performance when reading a large number of objects, configure the
+                        origin to read objects based on the key name.</p>
+                <p>You can configure one of the following read orders:</p>
+                <dl>
+                        <dlentry>
+                                <dt>Lexicographically Ascending Key Names</dt>
+                                <dd>The Amazon S3 origin can read objects in lexicographically
+                                        ascending order based on key names. Note that
+                                        lexicographically ascending order reads the numbers 1
+                                        through 11 as follows:</dd>
+                                <dd>
+                                        <codeblock>1, 10, 11, 2, 3, 4... 9</codeblock>
+                                </dd>
+                                <dd>For example, you configure the Amazon S3 origin to read from the
+                                        following bucket, common prefix, and prefix pattern using
+                                        lexicographically ascending order based on key
+                                        names:<codeblock>Bucket: WebServer
+Common Prefix: 2016/
+Prefix Pattern: **/web*.log</codeblock></dd>
+                                <dd>The origin reads the following objects in the following order:
+                                        <codeblock>s3://WebServer/2016/February/web-10.log
+s3://WebServer/2016/February/web-11.log
+s3://WebServer/2016/February/web-5.log
+s3://WebServer/2016/February/web-6.log
+s3://WebServer/2016/February/web-7.log
+s3://WebServer/2016/February/web-8.log
+s3://WebServer/2016/February/web-9.log
+s3://WebServer/2016/January/web-1.log
+s3://WebServer/2016/January/web-2.log
+s3://WebServer/2016/January/web-3.log
+s3://WebServer/2016/January/web-4.log</codeblock></dd>
+                                <dd>To read these objects in logical and lexicographically ascending
+                                        order, you might add leading zeros to the file naming
+                                        convention as
+                                        follows:<codeblock>s3://WebServer/2016/February/web-0005.log
+s3://WebServer/2016/February/web-0006.log
+...
+s3://WebServer/2016/February/web-0010.log
+s3://WebServer/2016/February/web-0011.log
+s3://WebServer/2016/January/web-0001.log
+s3://WebServer/2016/January/web-0002.log
+s3://WebServer/2016/January/web-0003.log
+s3://WebServer/2016/January/web-0004.log</codeblock></dd>
+                        </dlentry>
+                        <dlentry>
+                                <dt>Last Modified Timestamp</dt>
+                                <dd>The Amazon S3 origin can read objects in ascending order
+                                                based on the last modified timestamp. When you start
+                                                a pipeline, the origin starts processing data with
+                                                the earliest object that matches the common prefix
+                                                and prefix pattern, and then progresses in
+                                                chronological order. If two or more objects have the
+                                                same timestamp, the origin processes the objects in
+                                                lexicographically increasing order by key name.</dd>
+                                        <dd>To process objects that include a timestamp earlier than
+                                                processed objects, reset the origin to read all
+                                                available objects.</dd>
+                                <dd>
+                                        <p>For example, you configure the origin to read from the
+                                                  <codeph>ServerEast</codeph> bucket, using
+                                                  <codeph>LogFiles/</codeph> as the common prefix
+                                                and <codeph>*.log</codeph> as the prefix pattern.
+                                                You need to process the following log files from two
+                                                different servers using ascending order based on the
+                                                last modified timestamp:</p>
+                                        <codeblock>s3://ServerEast/LogFiles/fileA.log        04-30-2016 12:03:23
+s3://ServerEast/LogFiles/fileB.log        04-30-2016 15:34:51
+s3://ServerEast/LogFiles/file1.log        04-30-2016 12:00:00
+s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</codeblock>
+                                        <p>The origin reads these objects in order of the timestamp,
+                                                as
+                                                follows:<codeblock>s3://ServerEast/LogFiles/file1.log        04-30-2016 12:00:00
+s3://ServerEast/LogFiles/fileA.log        04-30-2016 12:03:23
+s3://ServerEast/LogFiles/fileB.log        04-30-2016 15:34:51
+s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</codeblock></p>
+                                        <p>If a new object arrives with a timestamp of 04-29-2016
+                                                12:00:00, the Amazon S3 origin does not process the
+                                                object unless you reset the origin.</p>
+                                </dd>
+                        </dlentry>
+                </dl>
+        </conbody>
+</concept>

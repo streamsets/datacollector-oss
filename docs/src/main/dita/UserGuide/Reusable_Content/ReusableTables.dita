@@ -196,18 +196,18 @@
       </row>
       <row id="S3Bucket">
        <entry>Bucket</entry>
-       <entry>Bucket that contains the files to be read.</entry>
+       <entry>Bucket that contains the objects to be read.</entry>
       </row>
       <row id="S3Folder">
        <entry>Common Prefix <xref href="../Origins/AmazonS3-CommonPrefixPatterns.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wm3_212_wv"/>
         </xref></entry>
-       <entry>Optional common prefix that describes the location of the data. When defined, the
+       <entry>Optional common prefix that describes the location of the objects. When defined, the
         common prefix acts as a root for the prefix pattern.</entry>
       </row>
       <row id="S3ObjectPathDelimiter">
        <entry>Delimiter</entry>
-       <entry>Delimiter used by Amazon S3 to define the directory structure.<p>Default is slash ( /
+       <entry>Delimiter used by Amazon S3 to define the prefix hierarchy.<p>Default is slash ( /
          ).</p></entry>
       </row>
       <row id="S3IncludeMetadata-row">
@@ -222,9 +222,9 @@
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_tfr_bk5_ht"/>
         </xref></entry>
        <entry>
-        <p>Prefix pattern that describes the files to be processed. </p>
-        <p>You can include the entire path to the files. You can also use Ant-style path patterns to
-         read files recursively. </p>
+        Prefix pattern that describes the objects to be processed.
+        <p>You can include the entire path to the objects. You can also use Ant-style path patterns
+         to read objects recursively. </p>
        </entry>
       </row>
       <row id="S3BufferLimit">
