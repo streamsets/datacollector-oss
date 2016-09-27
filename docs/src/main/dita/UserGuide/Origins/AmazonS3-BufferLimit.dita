@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zp2_fqs_5r">
  <title>Buffer Limit and Error Handling</title>
- <shortdesc>The Amazon S3 origin uses a buffer to read files into memory to produce records. The
+ <shortdesc>The Amazon S3 origin uses a buffer to read objects into memory to produce records. The
     size of the buffer determines the maximum size of the record that can be processed. </shortdesc>
  <conbody>
   <p><indexterm>Amazon S3 origin<indexterm>buffer limit and error
@@ -24,30 +24,30 @@
       Decrease the buffer limit when memory on the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine is
       limited. Increase the buffer limit to process larger records when memory is available. </p>
-    <p>When a record is larger than the specified limit, the origin processes the source file based
-      on the stage error handling:<dl>
+    <p>When a record is larger than the specified limit, the origin processes the object based on
+      the stage error handling:<dl>
         <dlentry>
           <dt>Discard</dt>
-          <dd>The origin discards the record and all remaining records in the file, and then
-            continues processing the next file.</dd>
+          <dd>The origin discards the record and all remaining records in the object, and then
+            continues processing the next object.</dd>
         </dlentry>
         <dlentry>
           <dt>Send to Error </dt>
           <dd>With a buffer limit error, the origin cannot send the record to the pipeline for error
             handling because it is unable to fully process the record. <p>Instead, the origin sends
               a message to the Monitor console to indicate that a buffer overrun error occurred. The
-              message includes the file and offset where the buffer overrun error occurred. The
+              message includes the object and offset where the buffer overrun error occurred. The
               information displays in the pipeline history and displays as an alert when you monitor
               the pipeline. </p><p>If an error directory is configured for the stage, the origin
-              moves the file to the error directory and continues processing the next file.
+              moves the object to the error directory and continues processing the next object.
             </p></dd>
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>
           <dd>The origin stops the pipeline and sends a message to the Monitor console to indicate
-            that a buffer overrun error occurred. The message includes the file and offset where the
-            buffer overrun error occurred. The information displays as an alert and in the pipeline
-            history. </dd>
+            that a buffer overrun error occurred. The message includes the object and offset where
+            the buffer overrun error occurred. The information displays as an alert and in the
+            pipeline history. </dd>
         </dlentry>
       </dl></p>
   <p>

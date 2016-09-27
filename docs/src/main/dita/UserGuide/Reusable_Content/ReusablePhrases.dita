@@ -555,10 +555,10 @@
                   <draft-comment author="Loretta">S3origin-CopyMove1 and 2 used in Amazon S3 origin
                         Configuring.</draft-comment>
             </p>
-            <p id="S3origin-CopyMove1">You can copy or move the file to another prefix or bucket.
+            <p id="S3origin-CopyMove1">You can copy or move the object to another prefix or bucket.
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
-            <p id="S3origin-CopyMove2">Copying the file leaves the original file in place. </p>
+            <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
             <p>
                   <draft-comment author="Loretta">JDBC Consumer and Oracle CDC use these in the
                         overview:</draft-comment>

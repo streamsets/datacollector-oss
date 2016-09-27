@@ -26,8 +26,8 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/AmazonS3-AWSCredentials.dita"/>
    <topicref href="../Origins/AmazonS3-CommonPrefixPatterns.dita"/>
-   <topicref href="../Origins/AmazonS3-FileProcessingOrder.dita"/>
    <topicref href="../Origins/AmazonS3-RecordHeaderAttrs.dita"/>
+   <topicref href="../Origins/AmazonS3-ReadOrder.dita"/>
    <topicref href="../Origins/AmazonS3-BufferLimit.dita"/>
    <topicref href="../Origins/AmazonS3-DataFormat.dita"/>
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>

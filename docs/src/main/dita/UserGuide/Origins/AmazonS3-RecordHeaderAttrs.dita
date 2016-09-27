@@ -30,9 +30,9 @@
                     <dt>System-defined metadata</dt>
                     <dd>The origin includes the following system-defined metadata: <ul
                             id="ul_q53_31f_zw">
-                            <li>Name - The file name and directory. Bucket and prefix information is
-                                included as follows:
-                                <codeblock>&lt;path to file>/&lt;filename></codeblock></li>
+                            <li>Name - The object name. Bucket and prefix information is included as
+                                follows:
+                                <codeblock>&lt;bucket>/&lt;prefix>/&lt;object_name></codeblock></li>
                             <li>Cache-Control</li>
                             <li>Content-Disposition</li>
                             <li>Content-Encoding</li>

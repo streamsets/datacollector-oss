@@ -15,17 +15,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qw5_gtq_yv">
  <title>Partition Prefix</title>
- <shortdesc>You can use a partition prefix to organize data by partitions. You can use the partition
-        prefix to write to existing partitions or to create new partitions as needed. When a
-        partition specified in the partition prefix does not exist, Amazon S3 creates the
+ <shortdesc>You can use a partition prefix to organize objects by partitions. You can use the
+        partition prefix to write to existing partitions or to create new partitions as needed. When
+        a partition specified in the partition prefix does not exist, Amazon S3 creates the
         partition.</shortdesc>
  <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>partition
                 prefix</indexterm></indexterm><indexterm>partition prefix<indexterm>Amazon S3
                     destination</indexterm></indexterm>You can specify an exact partition name for
             the partition prefix, or you can use an expression that evaluates to a partition name. </p>
-        <p>For example, to write data to partitions based on data in the Country field, you can use
-            the following expression as the partition prefix:
+        <p>For example, to write to partitions based on data in the Country field, you can use the
+            following expression as the partition prefix:
                 <codeph>${record:value('/Country')}</codeph>. </p>
         <p>With this expression, the destination writes records to partitions based on the country
             data in the record, and creates partitions for countries that do not already have a

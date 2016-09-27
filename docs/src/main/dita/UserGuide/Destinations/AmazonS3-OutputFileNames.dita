@@ -17,8 +17,8 @@
  <title>Output File Names</title>
  <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>output file names</indexterm></indexterm>The
-            Amazon S3 destination creates a file for each batch of data written. Output files
-            generally use the following naming convention:
+            Amazon S3 destination creates an object, or file, for each batch of data written. Output
+            files generally use the following naming convention:
             <codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter></codeblock></p>
         <p>For example: <codeph>sdc-1462405014177-1</codeph>.</p>
         <p>You configure the file name prefix. The UTC timestamp is the time when the file is

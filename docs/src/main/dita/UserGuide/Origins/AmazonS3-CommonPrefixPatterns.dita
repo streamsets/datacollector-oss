@@ -15,9 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_elk_jr4_ht">
  <title>Common Prefix, Prefix Pattern, and Wildcards</title>
- <shortdesc>The Amazon S3 origin appends the common prefix to the prefix pattern to define the files
-        that the origin processes. You can specify an exact prefix pattern or you can use Ant-style
-        path patterns to read multiple files recursively.</shortdesc>
+ <shortdesc>The Amazon S3 origin appends the common prefix to the prefix pattern to define the
+        objects that the origin processes. You can specify an exact prefix pattern or you can use
+        Ant-style path patterns to read multiple objects recursively.</shortdesc>
  <conbody>
         <p><indexterm>Amazon S3 origin<indexterm>common prefix and prefix
                 pattern</indexterm></indexterm>Ant-style path patterns can include the following
@@ -26,13 +26,13 @@
                 <li>Asterisk (*) to match zero or more characters</li>
                 <li>Double asterisks (**) to match zero or more directories</li>
             </ul></p>
-        <p>For example, to process all log files in <codeph>US/East/MD/</codeph> and all
-            subdirectories, you can use the following common prefix and prefix
+        <p>For example, to process all log files in <codeph>US/East/MD/</codeph> and all nested
+            prefixes, you can use the following common prefix and prefix
             pattern:<codeblock>Common Prefix: US/East/MD/
 Prefix Pattern: **/*.log</codeblock></p>
-        <p>If the unnamed subdirectories that you want to include appear earlier in the path, such
-            as <codeph> US/**/weblogs/</codeph>, you can include the subdirectories in the prefix
-            pattern or define the entire path in the prefix pattern, as
+        <p>If the unnamed nested prefixes that you want to include appear earlier in the hierarchy,
+            such as <codeph> US/**/weblogs/</codeph>, you can include the nested prefixes in the
+            prefix pattern or define the entire hierarchy in the prefix pattern, as
             follows:<codeblock>Common Prefix: US/
 Prefix Pattern: **/weblogs/*.log
 
