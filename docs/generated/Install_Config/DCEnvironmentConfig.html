@@ -111,9 +111,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="35%" id="d96749e190">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d96860e190">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d96749e193">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d96860e193">Description</th>
 
                     </tr>
 
@@ -121,11 +121,11 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d96749e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d96860e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d96749e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d96860e193 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -145,9 +145,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d96749e190 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d96860e190 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d96749e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d96860e193 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -165,9 +165,9 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d96749e190 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d96860e190 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d96749e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d96860e193 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -184,11 +184,11 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="35%" headers="d96749e190 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d96860e190 ">SDC_RESOURCES <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d96749e193 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d96860e193 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -284,13 +284,13 @@
     </div>
 
     <div class="p">For example, to double the heap size, you might change the following default
-      settings:<pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
+      settings:<pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
     <p class="p">to increase the Xmx and Xms settings as follows:</p>
 
     <div class="p">
-      <pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
+      <pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 <span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</pre>
 
     </div>
 
@@ -303,44 +303,34 @@
 
 </div>
 <div class="topic concept nested2" id="concept_kxf_y2m_sr">
- <h3 class="title topictitle3">Permanent Generation Size</h3>
+  <h3 class="title topictitle3">Permanent Generation Size</h3>
 
- 
- <div class="body conbody"><p class="shortdesc">When you use <span class="ph">Data
+  
+  <div class="body conbody"><p class="shortdesc">When you use <span class="ph">Data
                   Collector</span> with Java 7,
     you can define the Java Permanent Generation size, also known as the PermGen size.</p>
 
-  <p class="p">The PermGen size determines the amount of
+    <p class="p">The PermGen size determines the amount of
       memory that the <span class="ph">Data
                   Collector</span> web
-    application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
+      application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
       variable in the <span class="ph">Data
                   Collector</span>
       environment configuration file.</p>
 
-  <div class="p">Use the following properties to define the PermGen size:<ul class="ul" id="concept_kxf_y2m_sr__ul_qjd_33m_sr">
-        <li class="li">MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
+    <div class="p">Use the following properties to define the PermGen size:<ul class="ul" id="concept_kxf_y2m_sr__ul_qjd_33m_sr">
+        <li class="li">PermSize - Initial and minimum size of the permanent generation space.</li>
 
-        <li class="li">PermSize - Set to 1/8 of the Java heap size, with a minimum of 128 MB.</li>
+        <li class="li">MaxPermSize - Maximum size of the permanent generation space.</li>
 
       </ul>
 </div>
 
-    <p class="p">Setting the properties higher than these guidelines can cause out of memory errors or cause
-        <span class="ph">Data
-                  Collector</span> to
-      fail to start.</p>
-
     <div class="p">By default, the PermGen size is defined as
-      follows:<pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m <span class="ph uicontrol">-XX:PermSize=128M -XX:MaxPermSize=256M</span> -server ${SDC_JAVA_OPTS}"</pre>
+      follows:<pre class="pre codeblock">SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m <span class="ph uicontrol">-XX:PermSize=256M -XX:MaxPermSize=512M</span> -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
-    <div class="p">If, for example, you doubled the heap size to 2048 MB, you might set the options as
-      follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx2048m  -Xms1048m  <span class="ph uicontrol">-XX:PermSize=256M -XX:MaxPermSize=512M</span> -server ${SDC_JAVA_OPTS}"
-</pre>
-</div>
-
- </div>
+  </div>
 
 </div>
 <div class="topic concept nested2" id="concept_txl_qyc_ww">
@@ -356,11 +346,11 @@
         environment configuration file.</p>
 
         <div class="p">By default, the option is defined as
-            follows:<pre class="pre codeblock">SDC_JAVA_OPTS="<strong class="ph b">-Dhttps.protocols=TLSv1.2,TLSv1.1</strong> -Xmx1024m  -Xms1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"</pre>
+            follows:<pre class="pre codeblock">SDC_JAVA_OPTS="<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1</span> -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
         <div class="p">To connect to an HTTP server that uses TLS version 1.0, set the option as
-            follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="<strong class="ph b">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</strong> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
+            follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</span> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
 </pre>
 </div>
 

@@ -118,7 +118,7 @@
                             <samp class="ph codeph">$SDC_DIST/libexec</samp> directory. For example, if the HTTP
                         server uses TLS version 1.0, modify the <samp class="ph codeph">Dhttps.protocols</samp>
                         option as
-                        follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</strong> -Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
+                        follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</span> -Xmx1024m -Xms1024m -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</pre>
 </dd>
 
                 
