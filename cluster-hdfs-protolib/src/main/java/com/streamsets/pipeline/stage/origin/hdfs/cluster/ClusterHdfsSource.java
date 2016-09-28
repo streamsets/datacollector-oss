@@ -188,8 +188,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       );
     } else if (issues.isEmpty()) {
       for (String hdfsDirLocation : conf.hdfsDirLocations) {
+        FileSystem fs = null;
         try {
-          FileSystem fs = getFileSystemForInitDestroy();
+          fs = getFileSystemForInitDestroy();
           Path ph = fs.makeQualified(new Path(hdfsDirLocation));
           hdfsDirPaths.add(ph);
           if (!fs.exists(ph)) {
@@ -278,6 +279,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                   ioe
               )
           );
+        } finally {
+          if (fs != null) {
+            try {
+              fs.close();
+            } catch (IOException e) {
+              LOG.info("Error closing FileSystem: ", e);
+            }
+          }
         }
       }
     }
@@ -431,6 +440,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   protected Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
     Configuration hadoopConf = new Configuration();
+
+    //We will handle the file system close ourselves in destroy
+    //See https://issues.streamsets.com/browse/SDC-4057
+    hadoopConf.setBoolean("fs.automatic.close", false);
+
     if (conf.hdfsKerberos) {
       hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
         UserGroupInformation.AuthenticationMethod.KERBEROS.name());
