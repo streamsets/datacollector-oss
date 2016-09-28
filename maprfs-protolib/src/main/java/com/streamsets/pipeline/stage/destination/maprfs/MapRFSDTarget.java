@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
     label = "MapR FS",
     description = "Writes to a MapR filesystem",
     icon = "mapr.png",
+    producesEvents = true,
     privateClassLoader = false,
     onlineHelpRefUrl = "index.html#Destinations/MapRFS.html#task_spl_1fj_fv"
 )

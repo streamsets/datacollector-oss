@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
     label = "Local FS",
     description = "Writes to the local file system",
     icon = "localfilesystem.png",
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Destinations/LocalFS.html#task_e33_3v5_1r"
 )
 @ConfigGroups(Groups.class)
