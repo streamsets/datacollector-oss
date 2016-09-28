@@ -99,8 +99,8 @@ public class S3TargetConfigBean {
     required = false,
     type = ConfigDef.Type.STRING,
     defaultValue = "sdc",
-    description = "Prefix for file names that will be uploaded on Amazon S3",
-    label = "File Name Prefix",
+    description = "Prefix for object names that will be uploaded on Amazon S3",
+    label = "Object Name Prefix",
     displayPosition = 210,
     group = "S3"
   )
