@@ -58,20 +58,20 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    switch(convertBy) {
-      case BY_TYPE:
-        Field rootField = record.get();
-        if(rootField != null) {
-          record.set(processByType("", rootField));
-        }
-        batchMaker.addRecord(record);
-        break;
-      case BY_FIELD:
-        processByField(record, batchMaker);
-        break;
-      default:
-        throw new IllegalArgumentException("Unknown convert by type: " + convertBy);
-    }
+      switch (convertBy) {
+        case BY_TYPE:
+          Field rootField = record.get();
+          if (rootField != null) {
+            record.set(processByType("", rootField));
+          }
+          batchMaker.addRecord(record);
+          break;
+        case BY_FIELD:
+          processByField(record, batchMaker);
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown convert by type: " + convertBy);
+      }
   }
 
   private Field processByType(String matchingPath, Field rootField) throws StageException {
@@ -130,7 +130,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
           }
           return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask);
         } catch (ParseException | IllegalArgumentException e) {
-          throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(), converterConfig.targetType.name(), e.toString(), e);
+          throw new OnRecordErrorException(Errors.CONVERTER_02,
+              matchingField,
+              field.getValueAsString(),
+              converterConfig.targetType.name()
+          );
         }
       }
     }
@@ -152,7 +156,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       try {
         return Field.create(converterConfig.targetType, new String(field.getValueAsByteArray(), converterConfig.encoding));
       } catch (Exception e) {
-        throw new StageException(Errors.CONVERTER_01, converterConfig.encoding);
+        throw new OnRecordErrorException(Errors.CONVERTER_01, converterConfig.encoding);
       }
     }
 
@@ -161,7 +165,11 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       // Use the built in type conversion provided by TypeSupport
       return Field.create(converterConfig.targetType, field.getValue());
     } catch (IllegalArgumentException e) {
-      throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(), converterConfig.targetType.name(), e.toString(), e);
+      throw new OnRecordErrorException(Errors.CONVERTER_02,
+          matchingField,
+          field.getValueAsString(),
+          converterConfig.targetType.name()
+      );
     }
   }
 
