@@ -209,6 +209,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/root-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/root-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>/etc/sdc</directory>
                   <filemode>755</filemode>
                   <username>root</username>
