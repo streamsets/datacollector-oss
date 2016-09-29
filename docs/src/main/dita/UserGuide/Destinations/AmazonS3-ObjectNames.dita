@@ -14,15 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lkp_jd3_yv">
- <title>Output File Names</title>
+ <title>Object Names</title>
  <conbody>
-        <p><indexterm>Amazon S3 destination<indexterm>output file names</indexterm></indexterm>The
-            Amazon S3 destination creates an object, or file, for each batch of data written. Output
-            files generally use the following naming convention:
+        <p><indexterm>Amazon S3 destination<indexterm>object names</indexterm></indexterm>The Amazon
+            S3 destination creates an object, or file, for each batch of data written. Objects
+            generally use the following naming convention:
             <codeblock>&lt;prefix>-&lt;UTC timestamp>-&lt;counter></codeblock></p>
         <p>For example: <codeph>sdc-1462405014177-1</codeph>.</p>
-        <p>You configure the file name prefix. The UTC timestamp is the time when the file is
-            created, to the millisecond. The counter is used when multiple files are created in the
-            same millisecond. </p>
+        <p>You configure the object name prefix. The UTC timestamp is the time when the object is
+            created, to the millisecond. The counter is used when multiple objects are created in
+            the same millisecond. </p>
  </conbody>
 </concept>

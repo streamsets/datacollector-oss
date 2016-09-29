@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_iqn_1k4_jx">
- <title>File Names for Whole Files</title>
+ <title>Names for Whole Files</title>
  <conbody>
-  <p><indexterm>Amazon S3 destination<indexterm>whole file output file
-            names</indexterm></indexterm>When you use the whole file data format, the file name
-            prefix is optional. Whole file output files are named based on the File Name Expression
-            whole file property. If you configure a file name prefix, output files are named as
+  <p><indexterm>Amazon S3 destination<indexterm>whole file object names</indexterm></indexterm>When
+            you use the whole file data format, the object name prefix is optional. Whole files are
+            named based on the File Name Expression whole file property. If you configure an object
+            name prefix, whole files are named as
             follows:<codeblock>&lt;prefix>-&lt;results of the file name expression></codeblock></p>
  </conbody>
 </concept>

@@ -116,13 +116,14 @@
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry>File Name Prefix <xref
-                                            href="AmazonS3-OutputFileNames.dita">
+                                    <entry>Object Name Prefix <xref
+                                            href="AmazonS3-ObjectNames.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_d34_kf2_wv"/>
                                         </xref></entry>
-                                    <entry>Defines a prefix for output file names. By default, file
-                                        names start with "sdc" as follows: <codeph>sdc-&lt;UTC
+                                    <entry>Defines a prefix for object names written by the
+                                        destination. By default, object names start with "sdc" as
+                                        follows: <codeph>sdc-&lt;UTC
                                             timestamp>-&lt;counter></codeph>. <p>Not required for
                                             the whole file data format. </p></entry>
                                 </row>
