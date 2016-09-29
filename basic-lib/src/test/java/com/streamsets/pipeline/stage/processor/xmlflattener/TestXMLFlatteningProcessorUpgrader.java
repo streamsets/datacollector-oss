@@ -35,9 +35,9 @@ public class TestXMLFlatteningProcessorUpgrader {
     List<Config> upgraded = upgrader.upgrade(null, "xml", "xmll", 1, 2, new LinkedList<Config>());
     Assert.assertEquals(2, upgraded.size());
     Assert.assertEquals("keepOriginalFields", upgraded.get(0).getName());
-    Assert.assertEquals("true", upgraded.get(0).getValue());
+    Assert.assertEquals(true, upgraded.get(0).getValue());
     Assert.assertEquals("newFieldOverwrites", upgraded.get(1).getName());
-    Assert.assertEquals("false", upgraded.get(1).getValue());
+    Assert.assertEquals(false, upgraded.get(1).getValue());
   }
 
 }
