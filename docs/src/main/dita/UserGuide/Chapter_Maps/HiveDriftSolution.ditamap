@@ -15,23 +15,23 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Hive Drift Solution</title>
-    <topicref href="../Hive_Metadata/HiveDriftSolution_title.dita">
-        <topicref href="../Hive_Metadata/HiveDrift-Overview.dita" chunk="to-content">
+    <topicref href="../Hive_Drift_Solution/HiveDriftSolution_title.dita">
+        <topicref href="../Hive_Drift_Solution/HiveDrift-Overview.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Hive_Metadata/ImpalaSupport.dita"/>
-            <topicref href="../Hive_Metadata/FlattenRecords.dita"/>
+            <topicref href="../Hive_Drift_Solution/ImpalaSupport.dita"/>
+            <topicref href="../Hive_Drift_Solution/FlattenRecords.dita"/>
         </topicref>
-        <topicref href="../Hive_Metadata/BasicImplementation.dita">
+        <topicref href="../Hive_Drift_Solution/BasicImplementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Hive_Metadata/Implementation.dita">
+        <topicref href="../Hive_Drift_Solution/Implementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Hive_Metadata/CaseStudy.dita" chunk="to-content">
+        <topicref href="../Hive_Drift_Solution/CaseStudy.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Hive_Metadata/Example-HMProcessor.dita"/>
-            <topicref href="../Hive_Metadata/Example-HMDestination.dita"/>
-            <topicref href="../Hive_Metadata/HiveMeta-Ex-HDFS.dita"/>
-            <topicref href="../Hive_Metadata/Example-ProcessingData.dita"/>
+            <topicref href="../Hive_Drift_Solution/Example-HMProcessor.dita"/>
+            <topicref href="../Hive_Drift_Solution/Example-HMDestination.dita"/>
+            <topicref href="../Hive_Drift_Solution/HiveMeta-Ex-HDFS.dita"/>
+            <topicref href="../Hive_Drift_Solution/Example-ProcessingData.dita"/>
         </topicref>
-        <topicref href="../Hive_Metadata/HiveDataTypes.dita"/>
+        <topicref href="../Hive_Drift_Solution/HiveDataTypes.dita"/>
     </topicref>
 </map>

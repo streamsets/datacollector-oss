@@ -32,7 +32,7 @@
             maximum cache size, time basis, and decimal precision and scale expressions.</p>
  </conbody>
     <related-links>
-        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
-        <link href="../Hive_Metadata/HiveDataTypes.dita#concept_ry2_qkm_hw"/>
+        <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
+        <link href="../Hive_Drift_Solution/HiveDataTypes.dita#concept_ry2_qkm_hw"/>
     </related-links>
 </concept>
