@@ -32,6 +32,6 @@
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
  </conbody>
     <related-links>
-        <link href="../Hive_Metadata/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
+        <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
     </related-links>
 </concept>
