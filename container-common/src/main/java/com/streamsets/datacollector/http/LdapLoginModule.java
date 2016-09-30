@@ -24,9 +24,9 @@ import com.streamsets.datacollector.util.Configuration;
 import org.eclipse.jetty.jaas.callback.ObjectCallback;
 import org.eclipse.jetty.jaas.spi.AbstractLoginModule;
 import org.eclipse.jetty.jaas.spi.UserInfo;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.security.Credential;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -96,7 +96,7 @@ import java.util.Properties;
  */
 public class LdapLoginModule extends AbstractLoginModule
 {
-  private static final Logger LOG = Log.getLogger(LdapLoginModule.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LdapLoginModule.class);
 
   /**
    * hostname of the ldap server
@@ -269,7 +269,8 @@ public class LdapLoginModule extends AbstractLoginModule
 
     String filter = "(&(objectClass={0})({1}={2}))";
 
-    LOG.debug("Searching for users with filter: \'" + filter + "\'" + " from base dn: " + _userBaseDn);
+    LOG.debug("Checking if the user exists with filter: (&(objectClass={})({}={})) from base dn: {}",
+        _userObjectClass, _userIdAttribute, username, _userBaseDn );
 
     try
     {
@@ -280,10 +281,14 @@ public class LdapLoginModule extends AbstractLoginModule
 
       if (!results.hasMoreElements())
       {
-        throw new LoginException("User not found.");
+        LOG.warn("User {} not found at LDAP server {}:{}", username, _hostname, _port);
+        return null;
       }
-
+      // Next, get the user's attributes
       SearchResult result = findUser(username);
+      if (result == null) {
+        return null;
+      }
 
       Attributes attributes = result.getAttributes();
 
@@ -298,7 +303,7 @@ public class LdapLoginModule extends AbstractLoginModule
         }
         catch (NamingException e)
         {
-          LOG.debug("no password available under attribute: " + _userPasswordAttribute);
+          LOG.warn("no password available under attribute: " + _userPasswordAttribute);
         }
       }
     }
@@ -345,6 +350,9 @@ public class LdapLoginModule extends AbstractLoginModule
     ctls.setDerefLinkFlag(true);
     ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
     ctls.setReturningAttributes(new String[]{_roleNameAttribute});
+
+    LOG.debug("Searching for roles with filter: (&(objectClass={})({}={})) from roleBaseDn: {}",
+        _roleObjectClass, _roleMemberAttribute, userDn, _roleBaseDn );
 
     String filter = "(&(objectClass={0})({1}={2}))";
     Object[] filterArguments = {_roleObjectClass, _roleMemberAttribute, userDn};
@@ -402,6 +410,9 @@ public class LdapLoginModule extends AbstractLoginModule
       {
         throw new LoginException("No callback handler");
       }
+      if (_rootContext == null){
+        return false;
+      }
 
       Callback[] callbacks = configureCallbacks();
       getCallbackHandler().handle(callbacks);
@@ -444,14 +455,13 @@ public class LdapLoginModule extends AbstractLoginModule
     }
     catch (IOException e)
     {
-      LOG.debug("IO Error performing login", e);
-      throw new LoginException("IO Error performing login.");
+      LOG.error("IO Error performing login", e);
     }
     catch (Exception e)
     {
-      LOG.debug("IO Error performing login", e);
-      throw new LoginException("Error obtaining user info.");
+      LOG.error("IO Error performing login", e);
     }
+    return false;
   }
 
   /**
@@ -463,7 +473,11 @@ public class LdapLoginModule extends AbstractLoginModule
    */
   protected boolean credentialLogin(Object webCredential) throws LoginException
   {
-    setAuthenticated(getCurrentUser().checkCredential(webCredential));
+    boolean credResult = getCurrentUser().checkCredential(webCredential);
+    setAuthenticated(credResult);
+    if (!credResult){
+      LOG.warn("Authentication failed - Possibly the user password is wrong");
+    }
     return isAuthenticated();
   }
 
@@ -509,7 +523,8 @@ public class LdapLoginModule extends AbstractLoginModule
 
     String filter = "(&(objectClass={0})({1}={2}))";
 
-    LOG.info("Searching for users with filter: \'" + filter + "\'" + " from base dn: " + _userBaseDn);
+    LOG.info("Obtaining the user's attributes with filter: (&(objectClass={})({}={})) from base dn: ",
+        _userObjectClass,_userIdAttribute, username, _userBaseDn);
 
     Object[] filterArguments = new Object[]{
         _userObjectClass,
@@ -522,10 +537,11 @@ public class LdapLoginModule extends AbstractLoginModule
 
     if (!results.hasMoreElements())
     {
-      throw new LoginException("User not found.");
+      LOG.warn("User {} not found at LDAP server {}:{}", username, _hostname, _port);
+      return null;
+    } else {
+      return (SearchResult)results.nextElement();
     }
-
-    return (SearchResult) results.nextElement();
   }
 
 
@@ -582,27 +598,29 @@ public class LdapLoginModule extends AbstractLoginModule
         _bindPassword = _bindPassword.trim();
       }
     }
-
+    LOG.debug("Accessing LDAP Server: {}:{}", _hostname, _port);
     try
     {
       _rootContext = new InitialDirContext(getEnvironment());
     }
     catch (NamingException ex)
     {
-      throw new IllegalStateException("Unable to establish root context", ex);
+      // Note: when reaching here, _rootContext is null
+      LOG.error("Unable to establish root context at the server {}:{}. Check the configuration",
+          _hostname, _port, ex);
     }
   }
 
   @Override
   public boolean commit() throws LoginException
   {
-    try
-    {
-      _rootContext.close();
-    }
-    catch (NamingException e)
-    {
-      throw new LoginException( "error closing root context: " + e.getMessage() );
+    if (_rootContext != null) {
+      try {
+        _rootContext.close();
+      } catch (NamingException e) {
+        LOG.error("Error while closing root context ", e );
+        throw new LoginException("error closing root context: " + e.getMessage());
+      }
     }
 
     return super.commit();
@@ -617,6 +635,7 @@ public class LdapLoginModule extends AbstractLoginModule
     }
     catch (NamingException e)
     {
+      LOG.error("Error while closing root context ", e );
       throw new LoginException( "error closing root context: " + e.getMessage() );
     }
 

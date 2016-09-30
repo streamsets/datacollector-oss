@@ -114,7 +114,7 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
-  private static String startServer(String authenticationType) throws  Exception {
+  private static String startServer(String authenticationType, String ldapConf) throws  Exception {
     int port = NetworkUtils.getRandomPort();
 
     Configuration conf = new Configuration();
@@ -123,7 +123,7 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     conf.set(WebServerTask.HTTP_AUTHENTICATION_LOGIN_MODULE, "ldap");
     conf.set(WebServerTask.HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING,
         "Admins:admin;Managers:manager;Creators:creator;Guests:guest");
-    Writer writer = writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
+    Writer writer = new FileWriter(new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
         RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
     writer.close();
@@ -132,29 +132,9 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
         RuntimeInfo.CONFIG_DIR), "ldap-login.conf");
     writer = new FileWriter(realmFile);
-    writer.write("ldap {\n" +
-        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
-        "  debug=\"false\"\n" +
-        "  useLdaps=\"false\"\n" +
-        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
-        "  hostname=\"localhost\"\n" +
-        "  port=\"" + ldapServer.getPort() + "\"\n" +
-        "  bindDn=\"uid=admin,ou=system\"\n" +
-        "  bindPassword=\"secret\"\n" +
-        "  authenticationMethod=\"simple\"\n" +
-        "  forceBindingLogin=\"false\"\n" +
-        "  userBaseDn=\"ou=users,ou=system\"\n" +
-        "  userRdnAttribute=\"uid\"\n" +
-        "  userIdAttribute=\"uid\"\n" +
-        "  userPasswordAttribute=\"userPassword\"\n" +
-        "  userObjectClass=\"inetOrgPerson\"\n" +
-        "  roleBaseDn=\"ou=groups,ou=system\"\n" +
-        "  roleNameAttribute=\"cn\"\n" +
-        "  roleMemberAttribute=\"member\"\n" +
-        "  roleObjectClass=\"groupofnames\";\n" +
-        "};");
-
+    writer.write(ldapConf);
     writer.close();
+
     Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
         PosixFilePermission.OWNER_READ,
         PosixFilePermission.OWNER_WRITE));
@@ -216,16 +196,97 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
   @Test
   public void testFormLDAPAuthentication() throws Exception {
     String[] authenticationTypes = {"basic", "form", "digest"};
-    Task server = null;
+    String single = "ldap {\n" +
+        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
+        "  debug=\"false\"\n" +
+        "  useLdaps=\"false\"\n" +
+        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
+        "  hostname=\"localhost\"\n" +
+        "  port=\"" + ldapServer.getPort() + "\"\n" +
+        "  bindDn=\"uid=admin,ou=system\"\n" +
+        "  bindPassword=\"secret\"\n" +
+        "  authenticationMethod=\"simple\"\n" +
+        "  forceBindingLogin=\"false\"\n" +
+        "  userBaseDn=\"ou=users,ou=system\"\n" +
+        "  userRdnAttribute=\"uid\"\n" +
+        "  userIdAttribute=\"uid\"\n" +
+        "  userPasswordAttribute=\"userPassword\"\n" +
+        "  userObjectClass=\"inetOrgPerson\"\n" +
+        "  roleBaseDn=\"ou=groups,ou=system\"\n" +
+        "  roleNameAttribute=\"cn\"\n" +
+        "  roleMemberAttribute=\"member\"\n" +
+        "  roleObjectClass=\"groupofnames\";\n" +
+        "};";
     try {
       for(String authType: authenticationTypes) {
-        String baseURL = startServer(authType);
+        String baseURL = startServer(authType, single);
         testAuthenticationAndRoleMapping(baseURL, authType, "admin1", "admin1", "admin");
         testAuthenticationAndRoleMapping(baseURL, authType, "manager", "manager", "manager");
         testAuthenticationAndRoleMapping(baseURL, authType, "creator", "creator", "creator");
         testAuthenticationAndRoleMapping(baseURL, authType, "guest", "guest", "guest");
         stopServer();
       }
+    } catch (Exception e) {
+      LOG.debug("Ignoring exception", e);
+    } finally {
+      stopServer();
+    }
+  }
+
+  @Test
+  public void testMultipleLDAPAuthentication() throws Exception {
+    String authType = "basic";
+    String multiple = "ldap {\n" + // Incorrect ldap entry. This should fail
+        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
+        "  debug=\"false\"\n" +
+        "  useLdaps=\"false\"\n" +
+        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
+        "  hostname=\"dummyhost\"\n" +   // hostname is dummy host. should cause timeout error
+        "  port=\"" + ldapServer.getPort() + "\"\n" +
+        "  bindDn=\"uid=admin,ou=system\"\n" +
+        "  bindPassword=\"dummy\"\n" +
+        "  authenticationMethod=\"simple\"\n" +
+        "  forceBindingLogin=\"false\"\n" +
+        "  userBaseDn=\"ou=users,ou=system\"\n" +
+        "  userRdnAttribute=\"uid\"\n" +
+        "  userIdAttribute=\"uid\"\n" +
+        "  userPasswordAttribute=\"userPassword\"\n" +
+        "  userObjectClass=\"inetOrgPerson\"\n" +
+        "  roleBaseDn=\"ou=groups,ou=system\"\n" +
+        "  roleNameAttribute=\"cn\"\n" +
+        "  roleMemberAttribute=\"member\"\n" +
+        "  roleObjectClass=\"groupofnames\";\n" +
+        "  \n" +   // Correct ldap entry. This should succeed.
+        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
+        "  debug=\"false\"\n" +
+        "  useLdaps=\"false\"\n" +
+        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
+        "  hostname=\"localhost\"\n" +
+        "  port=\"" + ldapServer.getPort() + "\"\n" +
+        "  bindDn=\"uid=admin,ou=system\"\n" +
+        "  bindPassword=\"secret\"\n" +
+        "  authenticationMethod=\"simple\"\n" +
+        "  forceBindingLogin=\"false\"\n" +
+        "  userBaseDn=\"ou=users,ou=system\"\n" +
+        "  userRdnAttribute=\"uid\"\n" +
+        "  userIdAttribute=\"uid\"\n" +
+        "  userPasswordAttribute=\"userPassword\"\n" +
+        "  userObjectClass=\"inetOrgPerson\"\n" +
+        "  roleBaseDn=\"ou=groups,ou=system\"\n" +
+        "  roleNameAttribute=\"cn\"\n" +
+        "  roleMemberAttribute=\"member\"\n" +
+        "  roleObjectClass=\"groupofnames\";\n" +
+        "};";
+
+    try {
+      String baseURL = startServer(authType, multiple);
+      // first entry in ldap-login.conf is host unreachable, but second entry has correct ldap info.
+      // authentication should succeed.
+      testAuthenticationAndRoleMapping(baseURL, authType, "admin1", "admin1", "admin");
+      testAuthenticationAndRoleMapping(baseURL, authType, "manager", "manager", "manager");
+      testAuthenticationAndRoleMapping(baseURL, authType, "creator", "creator", "creator");
+      testAuthenticationAndRoleMapping(baseURL, authType, "guest", "guest", "guest");
+      stopServer();
     } catch (Exception e) {
       LOG.debug("Ignoring exception", e);
     } finally {
