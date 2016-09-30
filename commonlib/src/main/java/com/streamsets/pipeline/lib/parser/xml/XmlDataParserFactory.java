@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +39,11 @@ public class XmlDataParserFactory extends DataParserFactory {
   public static final String RECORD_ELEMENT_KEY = KEY_PREFIX + "record.element";
   static final String RECORD_ELEMENT_DEFAULT = "";
 
-  public static final Map<String, Object> CONFIGS = ImmutableMap.of(RECORD_ELEMENT_KEY, (Object) RECORD_ELEMENT_DEFAULT);
+  public static final String RECORD_ELEMENT_XPATH_NAMESPACES_KEY = KEY_PREFIX + "record.element.xPathNamespaces";
+  static final Map<String, String> RECORD_ELEMENT_XPATH_NAMESPACES_DEFAULT = new HashMap<>();
+
+  public static final Map<String, Object> CONFIGS = ImmutableMap.of(RECORD_ELEMENT_KEY, (Object) RECORD_ELEMENT_DEFAULT,
+      RECORD_ELEMENT_XPATH_NAMESPACES_KEY, RECORD_ELEMENT_XPATH_NAMESPACES_DEFAULT);
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
   public XmlDataParserFactory(Settings settings) {
@@ -60,7 +65,9 @@ public class XmlDataParserFactory extends DataParserFactory {
       reader.getPos()));
     try {
       return new XmlCharDataParser(getSettings().getContext(), id, reader, offset,
-        (String) getSettings().getConfig(RECORD_ELEMENT_KEY), getSettings().getMaxRecordLen());
+          getSettings().<String>getConfig(RECORD_ELEMENT_KEY),
+          getSettings().<Map<String,String>>getConfig(RECORD_ELEMENT_XPATH_NAMESPACES_KEY),
+          getSettings().getMaxRecordLen());
     } catch (IOException ex) {
       throw new DataParserException(Errors.XML_PARSER_00, id, offset, ex.toString(), ex);
     }

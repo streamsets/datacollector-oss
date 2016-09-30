@@ -60,6 +60,8 @@ import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
+import com.streamsets.pipeline.lib.xml.xpath.Constants;
+import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
@@ -381,13 +383,26 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
       defaultValue = "",
-      description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
+      description = Constants.XML_RECORD_ELEMENT_DESCRIPTION,
       displayPosition = 440,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "XML"
   )
   public String xmlRecordElement = "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Namespaces",
+      description = Constants.XPATH_NAMESPACE_CONTEXT_DESCRIPTION,
+      defaultValue = "{}",
+      displayPosition = 445,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML"
+  )
+  public Map<String, String> xPathNamespaceContext = new HashMap<>();
 
   @ConfigDef(
       required = true,
@@ -1011,7 +1026,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       );
       valid = false;
     }
-    if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
+    if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XPathValidatorUtil.isValidXPath(xmlRecordElement)) {
       issues.add(
           context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "xmlRecordElement",
@@ -1169,7 +1184,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
         buildDelimitedParser(builder);
         break;
       case XML:
-        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
+        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
+            .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);

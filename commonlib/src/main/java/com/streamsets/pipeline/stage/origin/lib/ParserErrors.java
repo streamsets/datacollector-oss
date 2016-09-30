@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum ParserErrors implements ErrorCode {
   // Configuration errors
   PARSER_01("Unsupported charset '{}'"),
-  PARSER_02("Invalid XML element name '{}'"),
+  PARSER_02("Invalid XML element name or XPath expression '{}'"),
   PARSER_03("Cannot parse record from message '{}': {}"),
   PARSER_04("Max data object length cannot be less than 1"),
   PARSER_05("Unsupported data format '{}'"),
@@ -34,6 +34,7 @@ public enum ParserErrors implements ErrorCode {
   PARSER_07("Avro Schema must be specified"),
   PARSER_08("After error '{}' parsing message, another error '{}' was encountered while trying to " +
     "serialize message '{}' of container '{}'"),
+  PARSER_09("Unmapped XPath namespace prefixes defined in record separator {}"),
   ;
   private final String msg;
 

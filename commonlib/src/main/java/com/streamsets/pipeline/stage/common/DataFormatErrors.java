@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 public enum DataFormatErrors implements ErrorCode {
   // Configuration errors
   DATA_FORMAT_01("Max data object length cannot be less than 1"),
-  DATA_FORMAT_03("Invalid XML element name '{}'"),
+  DATA_FORMAT_03("Invalid XML element name or XPath expression '{}'"),
   DATA_FORMAT_04("Unsupported data format '{}'"),
   DATA_FORMAT_05("Unsupported charset '{}'"),
   DATA_FORMAT_06("Cannot create the parser factory: {}"),
@@ -46,6 +46,7 @@ public enum DataFormatErrors implements ErrorCode {
   DATA_FORMAT_302("Input data is not Base64 for record: {}"),
 
   DATA_FORMAT_303("Could not parse XML object '{}'"),
+  DATA_FORMAT_304("Unmapped XPath namespace prefixes defined in record separator {}"),
 
   DATA_FORMAT_400("collectd Types DB '{}' not found"),
   DATA_FORMAT_401("collectd Auth File '{}' not found"),

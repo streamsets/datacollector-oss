@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.Map;
 
 public class XmlCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
@@ -38,13 +39,18 @@ public class XmlCharDataParser extends AbstractDataParser {
   private long readerOffset;
 
   public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                           String recordElement, int maxObjectLen) throws IOException {
+      String recordElement, int maxObjectLen) throws IOException {
+    this(context, readerId, reader, readerOffset, recordElement, null, maxObjectLen);
+  }
+
+  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+                           String recordElement, Map<String, String> namespaces, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.readerOffset = readerOffset;
     this.maxObjectLen = maxObjectLen;
     try {
-      parser = new OverrunStreamingXmlParser(reader, recordElement, readerOffset, maxObjectLen);
+      parser = new OverrunStreamingXmlParser(reader, recordElement, namespaces, readerOffset, maxObjectLen);
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }

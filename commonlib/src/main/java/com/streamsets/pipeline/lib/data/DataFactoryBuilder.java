@@ -67,7 +67,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     Utils.checkNotNull(key, "key");
     Utils.checkArgument(configs.containsKey(key),
                         Utils.formatL("Format '{}', unsupported configuration '{}'", format, key));
-    Utils.checkArgument(value == null || configs.get(key).getClass() == value.getClass(),
+    Utils.checkArgument(value == null || configs.get(key).getClass().isAssignableFrom(value.getClass()),
                         Utils.formatL("Format '{}', configuration '{}' must be of type '{}'", format, key,
                                       configs.get(key).getClass().getSimpleName()));
     if (value == null) {

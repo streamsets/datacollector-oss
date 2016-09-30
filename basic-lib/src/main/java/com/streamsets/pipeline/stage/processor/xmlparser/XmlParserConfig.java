@@ -29,12 +29,19 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
+import com.streamsets.pipeline.lib.xml.xpath.Constants;
+import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
+import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
+import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class XmlParserConfig {
 
@@ -77,12 +84,22 @@ public class XmlParserConfig {
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
       defaultValue = "",
-      description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document " +
-          "as one record",
+      description = Constants.XML_RECORD_ELEMENT_DESCRIPTION,
       displayPosition = 40,
       group = "XML"
   )
   public String xmlRecordElement = "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Namespaces",
+      description = Constants.XPATH_NAMESPACE_CONTEXT_DESCRIPTION,
+      defaultValue = "{}",
+      displayPosition = 41,
+      group = "XML"
+  )
+  public Map<String, String> xPathNamespaceContext = new HashMap<>();
 
   @ConfigDef(
       required = true,
@@ -105,14 +122,26 @@ public class XmlParserConfig {
       issues.add(context.createConfigIssue("XML", "charset", DataFormatErrors.DATA_FORMAT_05, charset));
       valid = false;
     }
-    if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
-      issues.add(context.createConfigIssue(
-          Groups.XML.name(),
-          "xmlRecordElement",
-          DataFormatErrors.DATA_FORMAT_03,
-          xmlRecordElement
-      ));
-      valid = false;
+    if (xmlRecordElement != null && !xmlRecordElement.isEmpty()) {
+      if (!XPathValidatorUtil.isValidXPath(xmlRecordElement)) {
+        issues.add(context.createConfigIssue(Groups.XML.name(),
+            "xmlRecordElement",
+            DataFormatErrors.DATA_FORMAT_03,
+            xmlRecordElement
+        ));
+        valid = false;
+      } else {
+        final Set<String> nsPrefixes = XPathValidatorUtil.getNamespacePrefixes(xmlRecordElement);
+        nsPrefixes.removeAll(xPathNamespaceContext.keySet());
+        if (!nsPrefixes.isEmpty()) {
+          issues.add(context.createConfigIssue(Groups.XML.name(),
+              "xPathNamespaceContext",
+              DataFormatErrors.DATA_FORMAT_304,
+              StringUtils.join(nsPrefixes, ", ")
+          ));
+          valid = false;
+        }
+      }
     }
     return valid;
   }
@@ -127,7 +156,8 @@ public class XmlParserConfig {
     }
 
     builder.setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1)
-        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
     return builder.build();
   }
 

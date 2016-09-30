@@ -19,12 +19,14 @@
  */
 package com.streamsets.pipeline.lib.xml;
 
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.Field;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +96,99 @@ public class TestStreamingXmlParser {
     f = parser.read();
     Assert.assertNull(f);
 
+    parser.close();
+  }
+
+  @Test
+  public void testComplexInput() throws Exception {
+    StreamingXmlParser parser = new StreamingXmlParser(getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"), "root[1]/toplevel[3]/blargh[@theone='yes']/record" );
+
+    Field f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertTrue(f.getValueAsMap().isEmpty());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("r1", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("A", f.getValueAsMap().get("attr|a").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(2, f.getValueAsMap().size());
+    Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
+    Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
+    Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
+    Assert.assertEquals("a", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(2, f.getValueAsMap().size());
+    Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().size());
+    Assert.assertEquals(1, f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().size());
+    Assert.assertEquals("b", f.getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValue());
+    Assert.assertEquals(1, f.getValueAsMap().get("data").getValueAsList().size());
+    Map<String, Field> data = f.getValueAsMap().get("data").getValueAsList().get(0).getValueAsMap();
+    Assert.assertEquals(1, data.size());
+    List<Field> values = data.get("value").getValueAsList();
+    Assert.assertEquals(2, values.size());
+    Assert.assertEquals(1, values.get(0).getValueAsMap().size());
+    Assert.assertEquals("0", values.get(0).getValueAsMap().get("value").getValue());
+    Assert.assertEquals(1, values.get(1).getValueAsMap().size());
+    Assert.assertEquals("1", values.get(1).getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("foobar", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNull(f);
+
+    parser.close();
+  }
+
+  @Test
+  public void testXPathWithNamespaces() throws Exception {
+    Map<String, String> namespaces = new HashMap<>();
+    namespaces.put("myns", "x");
+    StreamingXmlParser parser = new StreamingXmlParser(
+        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-namespaced-records.xml"),
+        "myns:record",
+        namespaces
+    );
+
+    Field f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals("0", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals("3", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals("4", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals("7", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNotNull(f);
+    Assert.assertEquals("9", f.getValueAsMap().get("value").getValue());
+
+    f = parser.read();
+    Assert.assertNull(f);
     parser.close();
   }
 

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Map;
 
 public class OverrunStreamingXmlParser  extends StreamingXmlParser {
 
@@ -39,14 +40,15 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
 
   public OverrunStreamingXmlParser(Reader reader, String recordElement, long initialPosition, int maxObjectLen)
       throws IOException, XMLStreamException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), recordElement, initialPosition,
-         maxObjectLen);
+    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), recordElement, null,
+        initialPosition, maxObjectLen);
     this.initialPosition = initialPosition;
   }
 
-  public OverrunStreamingXmlParser(OverrunReader reader, String recordElement, long initialPosition, int maxObjectLen)
+  public OverrunStreamingXmlParser(OverrunReader reader, String recordElement, Map<String, String> namespaces,
+      long initialPosition, int maxObjectLen)
       throws IOException, XMLStreamException {
-    super(reader, recordElement, initialPosition);
+    super(reader, recordElement, namespaces, initialPosition);
     countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
     this.maxObjectLen = maxObjectLen;

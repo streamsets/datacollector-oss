@@ -19,8 +19,13 @@
  */
 package com.streamsets.pipeline.lib.xml;
 
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.impl.XMLChar;
+import com.streamsets.pipeline.lib.xml.xpath.Constants;
+import com.streamsets.pipeline.lib.xml.xpath.MatchStatus;
+import com.streamsets.pipeline.lib.xml.xpath.XPathMatchingEventReader;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -46,31 +51,44 @@ public class StreamingXmlParser {
   private static final String NS_PREFIX_KEY = "ns|";
 
   private final Reader reader;
-  private final XMLEventReader xmlEventReader;
+  private final XPathMatchingEventReader xmlEventReader;
   private String recordElement;
   private boolean closed;
 
   // reads a full XML document as a single Field
   public StreamingXmlParser(Reader xmlEventReader) throws IOException, XMLStreamException {
-    this(xmlEventReader, null, 0);
+    this(xmlEventReader, null, null, 0);
   }
 
   // reads an XML document producing a Field for each first level 'recordElement' element, other first level elements
   // are ignored
   public StreamingXmlParser(Reader xmlEventReader, String recordElement)
       throws IOException, XMLStreamException {
-    this(xmlEventReader, recordElement, 0);
+    this(xmlEventReader, recordElement, null, 0);
+  }
+
+  public StreamingXmlParser(Reader xmlEventReader, String recordElement,  Map<String, String> namespaces)
+      throws IOException, XMLStreamException {
+    this(xmlEventReader, recordElement, namespaces, 0);
   }
 
   // reads an XML document producing a Field for each first level 'recordElement' element, other first level elements
   // are ignored
   public StreamingXmlParser(Reader reader, String recordElement, long initialPosition)
       throws IOException, XMLStreamException {
+    this(reader, recordElement, null, initialPosition);
+  }
+
+  public StreamingXmlParser(Reader reader, String recordElement, Map<String, String> namespaces, long initialPosition)
+      throws IOException, XMLStreamException {
     this.reader = reader;
+    if (Strings.isNullOrEmpty(recordElement)) {
+      recordElement = Constants.ROOT_ELEMENT_PATH;
+    }
     this.recordElement = recordElement;
     XMLInputFactory factory = XMLInputFactory.newFactory();
     factory.setProperty("javax.xml.stream.isCoalescing", true);
-    this.xmlEventReader = factory.createXMLEventReader(reader);
+    this.xmlEventReader = new XPathMatchingEventReader(factory.createXMLEventReader(reader), recordElement, namespaces);
     while (hasNext(xmlEventReader) && !peek(xmlEventReader).isEndDocument() && !peek(xmlEventReader).isStartElement()) {
       read(xmlEventReader);
     }
@@ -81,10 +99,13 @@ public class StreamingXmlParser {
       //consuming root
       read(xmlEventReader);
     }
-    //fastforward to initial position
-    while (hasNext(xmlEventReader) && peek(xmlEventReader).getLocation().getCharacterOffset() < initialPosition) {
-      read(xmlEventReader);
-      fastForwardLeaseReader();
+    if (initialPosition > 0) {
+      //fastforward to initial position
+      while (hasNext(xmlEventReader) && peek(xmlEventReader).getLocation().getCharacterOffset() < initialPosition) {
+        read(xmlEventReader);
+        fastForwardLeaseReader();
+      }
+      xmlEventReader.clearLastMatch();
     }
   }
 
@@ -113,16 +134,18 @@ public class StreamingXmlParser {
       // elements deeper than first level
       while (hasNext(xmlEventReader) && !isStartOfRecord(peek(xmlEventReader), depth)) {
         XMLEvent event = read(xmlEventReader);
-        if (event.getEventType() == XMLEvent.START_ELEMENT) {
+        if (event.isStartElement()) {
           depth++;
         } else if (event.getEventType() == XMLEvent.END_ELEMENT) {
           depth--;
         }
       }
       if (hasNext(xmlEventReader)) {
-        StartElement startE = (StartElement) read(xmlEventReader);
+        StartElement startE = (StartElement) xmlEventReader.getLastMatchingEvent();
         field = parse(xmlEventReader, startE);
       }
+      // if advancing, don't evaluate XPath matches
+      xmlEventReader.clearLastMatch();
     }
     return field;
   }
@@ -135,14 +158,7 @@ public class StreamingXmlParser {
   }
 
   private boolean isStartOfRecord(XMLEvent event, int depth) {
-    boolean is = false;
-    if (depth == 0 && event.isStartElement()) {
-      StartElement startE = (StartElement) event;
-      if (startE.getName().getLocalPart().equals(recordElement)) {
-        is = true;
-      }
-    }
-    return is;
+    return xmlEventReader.getLastElementMatchResult() == MatchStatus.ELEMENT_MATCH;
   }
 
   boolean isIgnorable(XMLEvent event) {

@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -38,8 +37,10 @@ import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
+import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
@@ -135,16 +137,26 @@ public class DataFormatParser {
               )
           );
         }
-        if (dataFormatConfig.xmlRecordElement != null && !dataFormatConfig.xmlRecordElement.isEmpty() &&
-          !XMLChar.isValidName(dataFormatConfig.xmlRecordElement)) {
-          issues.add(
-              context.createConfigIssue(
+        if (dataFormatConfig.xmlRecordElement != null && !dataFormatConfig.xmlRecordElement.isEmpty()) {
+          if (!XPathValidatorUtil.isValidXPath(dataFormatConfig.xmlRecordElement)) {
+            issues.add(context.createConfigIssue(
+                DataFormat.XML.name(),
+                DATA_FORMAT_CONFIG_PREFIX + "xmlRecordElement",
+                ParserErrors.PARSER_02,
+                dataFormatConfig.xmlRecordElement
+            ));
+          } else {
+            final Set<String> nsPrefixes = XPathValidatorUtil.getNamespacePrefixes(dataFormatConfig.xmlRecordElement);
+            nsPrefixes.removeAll(dataFormatConfig.xPathNamespaceContext.keySet());
+            if (!nsPrefixes.isEmpty()) {
+              issues.add(context.createConfigIssue(
                   DataFormat.XML.name(),
-                  DATA_FORMAT_CONFIG_PREFIX + "xmlRecordElement",
-                  ParserErrors.PARSER_02,
-                  dataFormatConfig.xmlRecordElement
-              )
-          );
+                  DATA_FORMAT_CONFIG_PREFIX + "xPathNamespaceContext",
+                  ParserErrors.PARSER_09,
+                  StringUtils.join(nsPrefixes, ", ")
+              ));
+            }
+          }
         }
         break;
       case SDC_JSON:
@@ -279,6 +291,7 @@ public class DataFormatParser {
       case XML:
         builder.setMaxDataLen(dataFormatConfig.xmlMaxObjectLen);
         builder.setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, dataFormatConfig.xmlRecordElement);
+        builder.setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, dataFormatConfig.xPathNamespaceContext);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
