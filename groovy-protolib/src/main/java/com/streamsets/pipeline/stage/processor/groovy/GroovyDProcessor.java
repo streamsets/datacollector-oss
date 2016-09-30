@@ -29,6 +29,8 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
+import static com.streamsets.pipeline.api.ConfigDef.Evaluation.EXPLICIT;
+
 @StageDef(
     version = 1,
     label = "Groovy Evaluator",
@@ -46,7 +48,7 @@ public class GroovyDProcessor extends DProcessor {
       defaultValue = "BATCH",
       label = "Record Processing Mode",
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
-                    "the Jython script must take care of record error handling",
+                    "the Groovy script must take care of record error handling",
       displayPosition = 10,
       group = "GROOVY"
   )
@@ -125,7 +127,8 @@ public class GroovyDProcessor extends DProcessor {
       label = "Script",
       displayPosition = 20,
       group = "GROOVY",
-      mode = ConfigDef.Mode.GROOVY
+      mode = ConfigDef.Mode.GROOVY,
+      evaluation = EXPLICIT // Do not evaluate the script as an EL.
   )
   public String script;
 
