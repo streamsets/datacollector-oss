@@ -396,6 +396,7 @@
         <elasticsearch_2_1-lib>elasticsearch_2_1-lib</elasticsearch_2_1-lib>
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
+        <elasticsearch_2_4-lib>elasticsearch_2_4-lib</elasticsearch_2_4-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
@@ -443,6 +444,7 @@
         <module>elasticsearch_2_1-lib</module>
         <module>elasticsearch_2_2-lib</module>
         <module>elasticsearch_2_3-lib</module>
+        <module>elasticsearch_2_4-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
@@ -478,7 +480,7 @@
         <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
         <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
-        <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
+        <elasticsearch_2_4-lib>elasticsearch_2_4-lib</elasticsearch_2_4-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
@@ -500,7 +502,7 @@
         <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_8-lib</module>
         <module>cdh_kafka_1_3-lib</module>
-        <module>elasticsearch_2_3-lib</module>
+        <module>elasticsearch_2_4-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_4-lib</module>
         <module>jython_2_7-lib</module>

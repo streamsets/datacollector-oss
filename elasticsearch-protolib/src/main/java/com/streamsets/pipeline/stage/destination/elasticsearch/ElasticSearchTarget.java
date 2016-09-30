@@ -51,6 +51,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.Base64;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import java.io.ByteArrayOutputStream;
@@ -292,7 +293,7 @@ public class ElasticSearchTarget extends BaseTarget {
           conf.shieldConfigBean.sslTruststorePassword,
           conf.useElasticCloud
       );
-      elasticClient.admin().cluster().health(new ClusterHealthRequest());
+      elasticClient.admin().cluster().health(new ClusterHealthRequest(Strings.EMPTY_ARRAY));
     } catch (RuntimeException|UnknownHostException ex) {
       issues.add(
           getContext().createConfigIssue(

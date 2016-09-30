@@ -322,6 +322,11 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-elasticsearch_2_4-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cassandra_3-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
