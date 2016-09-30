@@ -102,4 +102,54 @@ public class TestTextDataParserFactory {
     parser.close();
   }
 
+  @Test
+  public void testCustomDelimiterSettingWithEscapeCharacters() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataParserFactory factory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, true)
+        .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, "\\r\\n")
+        .build();
+    try (DataParser parser = factory.getParser("id", "Hello\r\nBye")) {
+      Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+
+      Record record = parser.parse();
+      Assert.assertNotNull(record);
+      Assert.assertTrue(record.has("/text"));
+      Assert.assertEquals("Hello", record.get("/text").getValueAsString());
+
+      record = parser.parse();
+      Assert.assertNotNull(record);
+      Assert.assertTrue(record.has("/text"));
+      Assert.assertEquals("Bye", record.get("/text").getValueAsString());
+
+      record = parser.parse();
+      Assert.assertNull(record);
+    }
+  }
+
+  @Test
+  public void testCustomDelimiterSettingWithDoubleEscapeCharacters() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
+    DataParserFactory factory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, true)
+        .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, "\\\\r\\\\n")
+        .build();
+    try (DataParser parser = factory.getParser("id", "Hello\\r\\nBye")) {
+      Record record = parser.parse();
+      Assert.assertNotNull(record);
+      Assert.assertTrue(record.has("/text"));
+      Assert.assertEquals("Hello", record.get("/text").getValueAsString());
+
+      record = parser.parse();
+      Assert.assertNotNull(record);
+      Assert.assertTrue(record.has("/text"));
+      Assert.assertEquals("Bye", record.get("/text").getValueAsString());
+
+      record = parser.parse();
+      Assert.assertNull(record);
+    }
+  }
+
 }

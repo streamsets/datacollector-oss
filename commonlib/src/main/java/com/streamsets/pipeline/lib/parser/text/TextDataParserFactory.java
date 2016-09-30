@@ -19,12 +19,12 @@
  */
 package com.streamsets.pipeline.lib.parser.text;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,14 +42,12 @@ public class TextDataParserFactory extends DataParserFactory {
   public static final boolean USE_CUSTOM_DELIMITER_DEFAULT = false;
 
   public static final String CUSTOM_DELIMITER_KEY = "customDelimiter";
-  public static final String CUSTOM_DELIMITER_DEFAULT = "\r\n";
+  public static final String CUSTOM_DELIMITER_DEFAULT = "\\r\\n";
 
   public static final String INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY = "includeCustomDelimiterInText";
   public static final boolean INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT = false;
 
-
-
-  public static final Map<String, Object> CONFIGS = new HashMap<String, Object>();
+  public static final Map<String, Object> CONFIGS = new HashMap<>();
 
 
   static {
@@ -92,10 +90,10 @@ public class TextDataParserFactory extends DataParserFactory {
       return new TextCharDataParser(
           getSettings().getContext(),
           id,
-          (boolean) getSettings().getConfig(MULTI_LINE_KEY),
-          (boolean) getSettings().getConfig(USE_CUSTOM_DELIMITER_KEY),
-          (String) getSettings().getConfig(CUSTOM_DELIMITER_KEY),
-          (boolean) getSettings().getConfig(INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY),
+          getSettings().<Boolean>getConfig(MULTI_LINE_KEY),
+          getSettings().<Boolean>getConfig(USE_CUSTOM_DELIMITER_KEY),
+          StringEscapeUtils.unescapeJava(getSettings().<String>getConfig(CUSTOM_DELIMITER_KEY)),
+          getSettings().<Boolean>getConfig(INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY),
           reader,
           offset,
           getSettings().getMaxRecordLen(),
