@@ -35,21 +35,20 @@ detectSdcDist() {
   # resolve links - $0 may be a softlink
 
   while [ -h "${PRG}" ]; do
-    LS=`ls -ld "${PRG}"`
-    LINK=`expr "$LS" : '.*-> \(.*\)$'`
+    LS=$(ls -ld "${PRG}")
+    LINK=$(expr "$LS" : '.*-> \(.*\)$')
     if expr "$LINK" : '/.*' > /dev/null; then
       PRG="$LINK"
     else
-      PRG=`dirname "${PRG}"`/"$LINK"
+      PRG=$(dirname "${PRG}")/"$LINK"
     fi
   done
 
-  BASEDIR=`dirname ${PRG}`
-  BASEDIR=`cd ${BASEDIR}/.. && pwd`
+  BASEDIR=$(dirname "${PRG}")
+  BASEDIR=$(cd "${BASEDIR}/.." && pwd)
 
   SDC_DIST=${BASEDIR}
 }
-
 
 #
 # Prints message if DEBUG is true.
@@ -60,7 +59,7 @@ detectSdcDist() {
 #
 debug() {
   if [ "${DEBUG}" = "true" ]; then
-  echo "$*"
+    echo "$*"
   fi
 }
 
@@ -73,13 +72,11 @@ debug() {
 # output: NONE, fails if not OK
 #
 run() {
-  debug "\$ ${@}"
+  debug "\$ $*"
   "${@}"
   EXIT_CODE=$?
   if [[ ${EXIT_CODE} != 0 ]]; then
-    echo
-    echo "Failed! running ${@} in `pwd`"
-    echo
+    >&2 echo "Failed! running $* in $(pwd)"
     cleanTempDir
     exit ${EXIT_CODE}
   fi
@@ -92,12 +89,12 @@ run() {
 # output: NONE, fails if not OK
 #
 verifySHA1() {
-  CURRENT_DIR=`pwd`
-  DIR_NAME=`dirname ${1}`
-  FILE_NAME=`basename ${1}`
-  run cd ${DIR_NAME}
-  run sha1sum --status -c ${FILE_NAME}.sha1
-  run cd ${CURRENT_DIR}
+  CURRENT_DIR=$(pwd)
+  DIR_NAME=$(dirname "${1}")
+  FILE_NAME=$(basename "${1}")
+  run cd "${DIR_NAME}"
+  run sha1sum --status -c "${FILE_NAME}.sha1"
+  run cd "${CURRENT_DIR}"
 }
 
 #
@@ -108,7 +105,7 @@ verifySHA1() {
 # output: fails if not OK
 #
 verifyIfCommandIsAvailable() {
-  which ${1} &> /dev/null
+  which "${1}" &> /dev/null
   if [[ $? != 0 ]]; then
     echo
     echo "The system does not have '${1}' in the PATH"
@@ -138,10 +135,10 @@ verifySha1sumIsAvailable() {
 verifyCurlIsAvailable() {
   verifyIfCommandIsAvailable 'curl'
 
-  CURL_VERSION=`curl --version | head -1| awk '{print $2}' | sed 's|\.| |g'`
-  CURL_MAJOR_VERSION=`echo ${CURL_VERSION} | awk '{print $1}'`
-  CURL_MINOR_VERSION=`echo ${CURL_VERSION} | awk '{print $2}'`
-  CURL_MICRO_VERSION=`echo ${CURL_VERSION} | awk '{print $3}'`
+  CURL_VERSION=$(curl --version | head -1| awk '{print $2}' | sed 's|\.| |g')
+  CURL_MAJOR_VERSION=$(echo "${CURL_VERSION}" | awk '{print $1}')
+  CURL_MINOR_VERSION=$(echo "${CURL_VERSION}" | awk '{print $2}')
+  CURL_MICRO_VERSION=$(echo "${CURL_VERSION}" | awk '{print $3}')
   CURL_VERSION_OK="false"
   if [ "${CURL_MAJOR_VERSION}" -gt "7" ]; then
     CURL_VERSION_OK="true"
@@ -170,7 +167,7 @@ downloadFile() {
   if [ "${1}" != "-s" ]; then
     echo "Downloading: ${2}"
   fi
-  run curl ${1} -f ${2} -SL -o ${3}
+  run curl "${1}" -f "${2}" -SL -o "${3}"
 }
 
 #
@@ -181,9 +178,9 @@ downloadFile() {
 # output: NONE, fail if not OK
 #
 downloadManifest() {
-  downloadFile -s ${REPO_URL}/stage-lib-manifest.properties.sha1 ${SDC_TMP}/stage-lib-manifest.properties.sha1
-  downloadFile -s ${REPO_URL}/stage-lib-manifest.properties ${SDC_TMP}/stage-lib-manifest.properties
-  verifySHA1 ${SDC_TMP}/stage-lib-manifest.properties
+  downloadFile -s "${REPO_URL}/stage-lib-manifest.properties.sha1" "${SDC_TMP}/stage-lib-manifest.properties.sha1"
+  downloadFile -s "${REPO_URL}/stage-lib-manifest.properties" "${SDC_TMP}/stage-lib-manifest.properties"
+  verifySHA1 "${SDC_TMP}/stage-lib-manifest.properties"
 }
 
 #
@@ -198,9 +195,9 @@ downloadManifest() {
 downloadStageLib() {
   LIB_FILE="${1}-${SDC_VERSION}.tgz"
 
-  downloadFile -s ${REPO_URL}/${LIB_FILE}.sha1 ${2}/${LIB_FILE}.sha1
-  downloadFile --progress-bar ${REPO_URL}/${LIB_FILE} ${2}/${LIB_FILE}
-  verifySHA1 ${2}/${LIB_FILE}
+  downloadFile -s "${REPO_URL}/${LIB_FILE}.sha1" "${2}/${LIB_FILE}.sha1"
+  downloadFile --progress-bar "${REPO_URL}/${LIB_FILE}" "${2}/${LIB_FILE}"
+  verifySHA1 "${2}/${LIB_FILE}"
 }
 
 #
@@ -215,7 +212,7 @@ downloadStageLib() {
 #
 installStageLib() {
   LIB_FILE="${1}-${SDC_VERSION}.tgz"
-  CURRENT_DIR=`pwd`
+  CURRENT_DIR=$(pwd)
   if [ -e "${SDC_DIST}/streamsets-libs/${1}" ]; then
     echo
     echo "Stage library ${1} already installed"
@@ -223,11 +220,11 @@ installStageLib() {
     cleanTempDir
     exit 1
   fi
-  run cd ${SDC_DIST}/..
-  run tar xf ${2}/${LIB_FILE}
+  run cd "${SDC_DIST}/.."
+  run tar xf "${2}/${LIB_FILE}"
   echo
   echo "Stage library ${1} installed"
-  run cd ${CURRENT_DIR}
+  run cd "${CURRENT_DIR}"
 }
 
 #
@@ -247,7 +244,7 @@ uninstallStageLib() {
     cleanTempDir
     exit 1
   fi
-  run rm -r ${SDC_DIST}/streamsets-libs/${1}
+  run rm -r "${SDC_DIST}/streamsets-libs/${1}"
   echo
   echo "Stage library ${1} uninstalled"
 }
@@ -261,7 +258,7 @@ uninstallStageLib() {
 #
 createTempDir() {
   SDC_TMP="${TMPDIR:-/tmp}/sdc-setup-$$"
-  run mkdir ${SDC_TMP}
+  run mkdir "${SDC_TMP}"
   debug "Temporary directory: ${SDC_TMP}"
 }
 
@@ -274,7 +271,7 @@ createTempDir() {
 #
 cleanTempDir() {
   if [[ ! -z "${SDC_TMP}" && -e "${SDC_TMP}" ]]; then
-    rm -rf ${SDC_TMP}
+    rm -rf "${SDC_TMP}"
   fi
   echo
 }
@@ -293,19 +290,19 @@ findStageLibsStatus() {
   STAGE_LIB_ID=()
   STAGE_LIB_NAME=()
   STAGE_LIB_INSTALLED=()
-  while read LINE; do
+  while read -r LINE; do
     if [[ ${LINE} == stage-lib.* ]]; then
-      LIB_ID=`echo ${LINE} | sed 's|=.*||;s|^stage-lib\.||'`
-      LIB_NAME=`echo ${LINE} | sed 's|.*=||'`
+      LIB_ID=$(echo "${LINE}" | sed 's|=.*||;s|^stage-lib\.||')
+      LIB_NAME=$(echo "${LINE}" | sed 's|.*=||')
       STAGE_LIB_ID+=("${LIB_ID}")
       STAGE_LIB_NAME+=("${LIB_NAME}")
-      if [ -e ${2}/${LIB_ID} ]; then
+      if [ -e "${2}/${LIB_ID}" ]; then
         STAGE_LIB_INSTALLED+=("YES")
       else
         STAGE_LIB_INSTALLED+=("NO")
       fi
     fi
-  done < ${1}
+  done < "${1}"
   STAGE_LIB_COUNT=${#STAGE_LIB_ID[@]}
 }
 
@@ -324,11 +321,11 @@ findStageLibsStatus() {
 #
 printStageLibsStatus() {
   printf "\nStreamSets Data Collector\n\n"
-  printf "Stage Library Repository: %s\n\n" ${REPO_URL}
+  printf "Stage Library Repository: %s\n\n" "${REPO_URL}"
   printf "    %-60s %-40s %s\n" "ID" "Name" "Installed"
   printf '=%.0s' {1..113}
   printf "\n"
-  for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+  for (( i=0; i<STAGE_LIB_COUNT; i++ ));
   do
     printf " %-60s %-40s    %3s\n" "${STAGE_LIB_ID[${i}]}" "${STAGE_LIB_NAME[${i}]}" "${STAGE_LIB_INSTALLED[${i}]}"
   done
@@ -353,9 +350,9 @@ printUnknownStageLibs() {
   for stageLibDir in ${SDC_DIST}/streamsets-libs/*;
   do
     if [ -d "${stageLibDir}" ]; then
-      LIB_ID=`basename ${stageLibDir}`
+      LIB_ID=$(basename "${stageLibDir}")
       FOUND=false
-      for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+      for (( i=0; i<STAGE_LIB_COUNT; i++ ));
       do
         if [ "${STAGE_LIB_ID[${i}]}" == "${LIB_ID}" ]; then
           FOUND=true
@@ -379,9 +376,11 @@ printUnknownStageLibs() {
 # output: NONE, fails if not OK
 #
 verifyStageLibNotInstalled() {
-  if [ -e ${SDC_DIST}/streamsets-libs/${1} ]; then
+  if [ -e "${SDC_DIST}/streamsets-libs/${1}" ]; then
     echo "Stage library '${1}' already installed"
-    exit 1
+    return 1
+  else
+    return 0
   fi
 }
 
@@ -395,9 +394,11 @@ verifyStageLibNotInstalled() {
 # output: NONE, fails if not OK
 #
 verifyStageLibInstalled() {
-  if [ ! -e ${SDC_DIST}/streamsets-libs/${1} ]; then
+  if [ ! -e "${SDC_DIST}/streamsets-libs/${1}" ]; then
     echo "Stage library '${1}' not installed"
-    exit 1
+    return 1
+  else
+    return 0
   fi
 }
 
@@ -418,10 +419,10 @@ printInstallScript() {
   printf "\n"
   printf "streamsets stagelibs -install="
   LIB_SEPARATOR=""
-  for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+  for (( i=0; i<STAGE_LIB_COUNT; i++ ));
   do
     if [ "${STAGE_LIB_INSTALLED[${i}]}" = "YES" ]; then
-      printf "%s%s" ${LIB_SEPARATOR} ${STAGE_LIB_ID[${i}]}
+      printf "%s%s" "${LIB_SEPARATOR}" "${STAGE_LIB_ID[${i}]}"
       LIB_SEPARATOR=","
     fi
   done
@@ -449,7 +450,7 @@ fi
 while test $# -gt 0; do
   case "${1}" in
     -repoUrl=*)
-      REPO_URL=`echo ${1} | sed 's|^-repoUrl=||'`
+      REPO_URL=${1/#-repoUrl=/}
       shift
       ;;
     -debug)
@@ -461,11 +462,11 @@ while test $# -gt 0; do
       LIST="true"
       ;;
     -install=*)
-      INSTALL=`echo ${1} | sed 's|^-install=||'`
+      INSTALL=${1/#-install=/}
       shift
       ;;
     -uninstall=*)
-      UNINSTALL=`echo ${1} | sed 's|^-uninstall=||'`
+      UNINSTALL=${1/#-uninstall=/}
       shift
       ;;
     -installScript)
@@ -514,7 +515,7 @@ verifyCurlIsAvailable
 
 downloadManifest
 
-findStageLibsStatus ${SDC_TMP}/stage-lib-manifest.properties ${SDC_DIST}/streamsets-libs
+findStageLibsStatus "${SDC_TMP}/stage-lib-manifest.properties" "${SDC_DIST}/streamsets-libs"
 
 if [ ! -z "${LIST}" ]; then
   printStageLibsStatus
@@ -524,23 +525,19 @@ fi
 if [ ! -z "${INSTALL}" ]; then
   IFS=',' read -ra LIBS <<< "$INSTALL"
   for LIB in "${LIBS[@]}"; do
-      verifyStageLibNotInstalled ${LIB}
-  done
-  for LIB in "${LIBS[@]}"; do
-      downloadStageLib ${LIB} ${SDC_TMP}
-  done
-  for LIB in "${LIBS[@]}"; do
-      installStageLib ${LIB} ${SDC_TMP}
+      if verifyStageLibNotInstalled "${LIB}"; then
+        downloadStageLib "${LIB}" "${SDC_TMP}"
+        installStageLib "${LIB}" "${SDC_TMP}"
+      fi
   done
 fi
 
 if [ ! -z "${UNINSTALL}" ]; then
   IFS=',' read -ra LIBS <<< "$UNINSTALL"
   for LIB in "${LIBS[@]}"; do
-      verifyStageLibInstalled ${LIB} ${SDC_TMP}
-  done
-  for LIB in "${LIBS[@]}"; do
-      uninstallStageLib ${LIB}
+      if verifyStageLibInstalled "${LIB}"; then
+        uninstallStageLib "${LIB}"
+      fi
   done
 fi
 
