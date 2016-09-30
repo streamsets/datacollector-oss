@@ -222,11 +222,26 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   public String textFieldPath;
 
   @ConfigDef(
+      // not required since an empty separator is acceptable
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = TextDataGeneratorFactory.RECORD_SEPARATOR_DEFAULT,
+      label = "Record Separator",
+      description = "Value to insert in output between records, defaults to newline",
+      displayPosition = 385,
+      group = "TEXT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "TEXT",
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String textRecordSeparator = TextDataGeneratorFactory.RECORD_SEPARATOR_DEFAULT;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Empty Line If No Text",
-    description = "",
+    label = "Insert Record Separator If No Text",
+    description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
     displayPosition = 390,
     group = "TEXT",
     dependsOn = "dataFormat^",
@@ -587,7 +602,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         break;
       case TEXT:
         builder.setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
-        builder.setConfig(TextDataGeneratorFactory.EMPTY_LINE_IF_NULL_KEY, textEmptyLineIfNull);
+        builder.setConfig(TextDataGeneratorFactory.RECORD_SEPARATOR_IF_NULL_KEY, textEmptyLineIfNull);
+        builder.setConfig(TextDataGeneratorFactory.RECORD_SEPARATOR_KEY, textRecordSeparator);
         break;
       case JSON:
         builder.setMode(jsonMode);

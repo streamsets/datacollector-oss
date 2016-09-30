@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.generator.text;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,15 +35,18 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
   static final String KEY_PREFIX = "text.";
   public static final String FIELD_PATH_KEY = KEY_PREFIX + "fieldPath";
   static final String FIELD_PATH_DEFAULT = "";
-  public static final String EMPTY_LINE_IF_NULL_KEY = KEY_PREFIX + "emptyLineIfNull";
-  static final boolean EMPTY_LINE_IF_NULL_DEFAULT = false;
+  public static final String RECORD_SEPARATOR_IF_NULL_KEY = KEY_PREFIX + "recordSeparatorIfNull";
+  static final boolean RECORD_SEPARATOR_IF_NULL_DEFAULT = false;
+  public static final String RECORD_SEPARATOR_KEY = KEY_PREFIX + "recordSeparator";
+  public static final String RECORD_SEPARATOR_DEFAULT = "\\n";
 
   public static final Map<String, Object> CONFIGS;
 
   static {
     Map<String, Object> configs = new HashMap<>();
     configs.put(FIELD_PATH_KEY, FIELD_PATH_DEFAULT);
-    configs.put(EMPTY_LINE_IF_NULL_KEY, EMPTY_LINE_IF_NULL_DEFAULT);
+    configs.put(RECORD_SEPARATOR_IF_NULL_KEY, RECORD_SEPARATOR_IF_NULL_DEFAULT);
+    configs.put(RECORD_SEPARATOR_KEY, RECORD_SEPARATOR_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
@@ -51,17 +55,19 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
   public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of();
 
   private final String fieldPath;
-  private final boolean emptyLineIfNullDefault;
+  private final boolean recordSeparatorIfNullDefault;
+  private final String recordSeparator;
 
   public TextDataGeneratorFactory(Settings settings) {
     super(settings);
     fieldPath = settings.getConfig(FIELD_PATH_KEY);
-    emptyLineIfNullDefault = settings.getConfig(EMPTY_LINE_IF_NULL_KEY);
+    recordSeparatorIfNullDefault = settings.getConfig(RECORD_SEPARATOR_IF_NULL_KEY);
+    recordSeparator = StringEscapeUtils.unescapeJava(settings.<String>getConfig(RECORD_SEPARATOR_KEY));
   }
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    return new TextCharDataGenerator(createWriter(os), fieldPath, emptyLineIfNullDefault);
+    return new TextCharDataGenerator(createWriter(os), fieldPath, recordSeparatorIfNullDefault, recordSeparator);
   }
 
 }

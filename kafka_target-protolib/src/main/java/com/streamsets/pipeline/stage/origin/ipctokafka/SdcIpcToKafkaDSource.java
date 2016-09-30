@@ -54,6 +54,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "conf.dataGeneratorFormatConfig.jsonMode",
         "conf.dataGeneratorFormatConfig.textFieldPath",
         "conf.dataGeneratorFormatConfig.textEmptyLineIfNull",
+        "conf.dataGeneratorFormatConfig.textRecordSeparator",
         "conf.dataGeneratorFormatConfig.avroSchemaSource",
         "conf.dataGeneratorFormatConfig.avroSchema",
         "conf.dataGeneratorFormatConfig.schemaRegistryUrls",

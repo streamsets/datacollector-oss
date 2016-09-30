@@ -28,18 +28,18 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class TextCharDataGenerator implements DataGenerator {
-  final static String EOL = System.getProperty("line.separator");
-
   private final String fieldPath;
-  private final boolean emptyLineIfNull;
+  private final boolean recordSeparatorIfNull;
   private final Writer writer;
   private boolean closed;
+  private final String recordSeparator;
 
-  public TextCharDataGenerator(Writer writer, String fieldPath, boolean emptyLineIfNull)
+  public TextCharDataGenerator(Writer writer, String fieldPath, boolean recordSeparatorIfNull, String recordSeparator)
       throws IOException {
     this.writer = writer;
     this.fieldPath = fieldPath;
-    this.emptyLineIfNull = emptyLineIfNull;
+    this.recordSeparatorIfNull = recordSeparatorIfNull;
+    this.recordSeparator = recordSeparator;
   }
 
   //VisibleForTesting
@@ -48,8 +48,8 @@ public class TextCharDataGenerator implements DataGenerator {
   }
 
   //VisibleForTesting
-  boolean isEmptyLineIfNull() {
-    return emptyLineIfNull;
+  boolean isRecordSeparatorIfNull() {
+    return recordSeparatorIfNull;
   }
 
   @Override
@@ -58,6 +58,7 @@ public class TextCharDataGenerator implements DataGenerator {
       throw new IOException("Generator has been closed");
     }
     Field field = record.get(fieldPath);
+    boolean fieldWritten = false;
     if (field != null && field.getValue() != null) {
       String value;
       try {
@@ -66,9 +67,11 @@ public class TextCharDataGenerator implements DataGenerator {
         throw new DataGeneratorException(Errors.TEXT_GENERATOR_00, record.getHeader().getSourceId(), fieldPath);
       }
       writer.write(value);
-      writer.write(EOL);
-    } else if (emptyLineIfNull) {
-      writer.write(EOL);
+      fieldWritten = true;
+    }
+
+    if ((fieldWritten || recordSeparatorIfNull) && recordSeparator != null) {
+      writer.write(recordSeparator);
     }
   }
 
