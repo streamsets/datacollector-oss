@@ -27,12 +27,12 @@ public class HBaseConnectionConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
       label = "ZooKeeper Quorum",
       description = "Comma separated list of servers in the ZooKeeper Quorum. " +
           "For example, host1.mydomain.com,host2.mydomain.com,host3.mydomain.com ",
       displayPosition = 10,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public String zookeeperQuorum;
 
   @ConfigDef(
@@ -42,7 +42,8 @@ public class HBaseConnectionConfig {
       label = "ZooKeeper Client Port",
       description = "The ZooKeeper port at which clients connect",
       displayPosition = 20,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public int clientPort;
 
   @ConfigDef(
@@ -52,8 +53,9 @@ public class HBaseConnectionConfig {
       label = "ZooKeeper Parent Znode",
       description = "Root Znode for HBase in ZooKeeper",
       displayPosition = 30,
-      group = "HBASE")
-  public String zookeeperParentZnode;
+      group = "HBASE"
+  )
+  public String zookeeperParentZNode;
 
   @ConfigDef(
       required = true,
@@ -63,7 +65,8 @@ public class HBaseConnectionConfig {
       description = "The qualified table name. Use format <NAMESPACE>.<TABLE>. " +
           "If namespace is not specified, namespace 'default' will be assumed",
       displayPosition = 40,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public String tableName;
 
   @ConfigDef(required = true,
@@ -71,7 +74,8 @@ public class HBaseConnectionConfig {
       defaultValue = "false",
       label = "Kerberos Authentication",
       displayPosition = 110,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public boolean kerberosAuth;
 
   @ConfigDef(
@@ -92,7 +96,8 @@ public class HBaseConnectionConfig {
       label = "HBase Configuration Directory",
       description = "An absolute path or a directory under SDC resources directory to load hbase-site.xml configuration file",
       displayPosition = 130,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public String hbaseConfDir;
 
   @ConfigDef(required = false,
@@ -100,6 +105,7 @@ public class HBaseConnectionConfig {
       label = "HBase Configuration",
       description = "Additional HBase client properties",
       displayPosition = 140,
-      group = "HBASE")
+      group = "HBASE"
+  )
   public Map<String, String> hbaseConfigs;
 }

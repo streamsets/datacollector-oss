@@ -139,7 +139,7 @@ public class HBaseTargetIT {
     configure(dTarget);
     dTarget.hBaseConnectionConfig.zookeeperQuorum = "";
     dTarget.hBaseConnectionConfig.clientPort = 0;
-    dTarget.hBaseConnectionConfig.zookeeperParentZnode = "";
+    dTarget.hBaseConnectionConfig.zookeeperParentZNode = "";
     dTarget.timeDriver = "${time:now()}";
     HBaseTarget target = (HBaseTarget) dTarget.createTarget();
 
@@ -1063,11 +1063,15 @@ public class HBaseTargetIT {
   static class ForTestHBaseTarget extends HBaseDTarget {
     @Override
     protected Target createTarget() {
-      return new HBaseTarget(hBaseConnectionConfig.zookeeperQuorum, hBaseConnectionConfig.clientPort,
-          hBaseConnectionConfig.zookeeperParentZnode, hBaseConnectionConfig.tableName, hbaseRowKey,
-          rowKeyStorageType, hbaseFieldColumnMapping, hBaseConnectionConfig.kerberosAuth, hBaseConnectionConfig.hbaseConfDir,
-          hBaseConnectionConfig.hbaseConfigs, hBaseConnectionConfig.hbaseUser, implicitFieldMapping,
-          ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver
+      return new HBaseTarget(
+          hBaseConnectionConfig,
+          hbaseRowKey,
+          rowKeyStorageType,
+          hbaseFieldColumnMapping,
+          implicitFieldMapping,
+          ignoreMissingFieldPath,
+          ignoreInvalidColumn,
+          timeDriver
       ) {
         @Override
         public void write(Batch batch) throws StageException {
@@ -1119,7 +1123,7 @@ public class HBaseTargetIT {
   private void configure(HBaseDTarget target) {
     target.hBaseConnectionConfig.zookeeperQuorum = "127.0.0.1";
     target.hBaseConnectionConfig.clientPort = miniZK.getClientPort();
-    target.hBaseConnectionConfig.zookeeperParentZnode = "/hbase";
+    target.hBaseConnectionConfig.zookeeperParentZNode = "/hbase";
     target.hBaseConnectionConfig.tableName = tableName;
     target.hbaseRowKey = "[0]";
     target.rowKeyStorageType = StorageType.BINARY;
@@ -1233,18 +1237,21 @@ public class HBaseTargetIT {
   }
 
   private HBaseTarget getDefaultTarget() {
+    HBaseConnectionConfig conf = new HBaseConnectionConfig();
+    conf.zookeeperQuorum = "localhost";
+    conf.clientPort = miniZK.getClientPort();
+    conf.zookeeperParentZNode = "/hbase";
+    conf.tableName = tableName;
+    conf.kerberosAuth = false;
+    conf.hbaseConfDir = "";
+    conf.hbaseConfigs = new HashMap<>();
+    conf.hbaseUser = "";
+
     return new HBaseTarget(
-        "localhost",
-        miniZK.getClientPort(),
-        "/hbase",
-        tableName,
+        conf,
         "[0]",
         StorageType.TEXT,
         ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)),
-        false,
-        "",
-        new HashMap<String, String>(),
-        "",
         false,
         false,
         false,
@@ -1256,7 +1263,7 @@ public class HBaseTargetIT {
     HBaseConnectionConfig config = new HBaseConnectionConfig();
     config.zookeeperQuorum = "127.0.0.1";
     config.clientPort = miniZK.getClientPort();
-    config.zookeeperParentZnode = "/hbase";
+    config.zookeeperParentZNode = "/hbase";
     config.tableName = tableName;
     config.hbaseUser = "";
     config.hbaseConfigs = new HashMap<String, String>();

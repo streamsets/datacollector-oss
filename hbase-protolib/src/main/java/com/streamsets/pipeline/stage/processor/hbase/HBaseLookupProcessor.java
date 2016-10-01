@@ -88,16 +88,12 @@ public class HBaseLookupProcessor extends BaseProcessor {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     hbaseConf = HBaseUtil.getHBaseConfiguration(
-      issues,
-      getContext(),
-      Groups.HBASE.getLabel(),
-      conf.hBaseConnectionConfig.hbaseConfDir,
-      conf.hBaseConnectionConfig.zookeeperQuorum,
-      conf.hBaseConnectionConfig.zookeeperParentZnode,
-      conf.hBaseConnectionConfig.clientPort,
-      conf.hBaseConnectionConfig.tableName,
-      conf.hBaseConnectionConfig.kerberosAuth,
-      conf.hBaseConnectionConfig.hbaseConfigs
+        issues,
+        getContext(),
+        Groups.HBASE.getLabel(),
+        conf.hBaseConnectionConfig.hbaseConfDir,
+        conf.hBaseConnectionConfig.tableName,
+        conf.hBaseConnectionConfig.hbaseConfigs
     );
 
     HBaseUtil.validateQuorumConfigs(
@@ -105,7 +101,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       getContext(),
       Groups.HBASE.getLabel(),
       conf.hBaseConnectionConfig.zookeeperQuorum,
-      conf.hBaseConnectionConfig.zookeeperParentZnode,
+      conf.hBaseConnectionConfig.zookeeperParentZNode,
       conf.hBaseConnectionConfig.clientPort
     );
 
@@ -114,7 +110,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
     if(issues.isEmpty()) {
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
       hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.hBaseConnectionConfig.clientPort);
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZnode);
+      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.hBaseConnectionConfig.zookeeperParentZNode);
     }
 
     if (issues.isEmpty()) {

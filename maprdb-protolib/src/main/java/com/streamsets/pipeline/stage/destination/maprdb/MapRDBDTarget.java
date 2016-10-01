@@ -25,21 +25,18 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseDTarget;
 
-import java.util.List;
-
 @StageDef(
   version = 1,
   label = "MapR DB",
   description = "Writes to a MapR DB",
   icon = "mapr.png",
-  privateClassLoader = false,
   onlineHelpRefUrl = "index.html#Destinations/MapRDB.html#task_pgk_p2z_yv"
 )
 @HideConfigs(
   value = {
     "hBaseConnectionConfig.zookeeperQuorum",
     "hBaseConnectionConfig.clientPort",
-    "hBaseConnectionConfig.zookeeperParentZnode"
+    "hBaseConnectionConfig.zookeeperParentZNode"
   }
 )
 @GenerateResourceBundle
@@ -48,21 +45,14 @@ public class MapRDBDTarget extends HBaseDTarget {
   @Override
   protected Target createTarget() {
     return new MapRDBTarget(
-      hBaseConnectionConfig.zookeeperQuorum,
-      hBaseConnectionConfig.clientPort,
-      hBaseConnectionConfig.zookeeperParentZnode,
-      hBaseConnectionConfig.tableName,
-      hbaseRowKey,
-      rowKeyStorageType,
-      hbaseFieldColumnMapping,
-      hBaseConnectionConfig.kerberosAuth,
-      hBaseConnectionConfig.hbaseConfDir,
-      hBaseConnectionConfig.hbaseConfigs,
-      hBaseConnectionConfig.hbaseUser,
-      implicitFieldMapping,
-      ignoreMissingFieldPath,
-      ignoreInvalidColumn,
-      timeDriver
+        hBaseConnectionConfig,
+        hbaseRowKey,
+        rowKeyStorageType,
+        hbaseFieldColumnMapping,
+        implicitFieldMapping,
+        ignoreMissingFieldPath,
+        ignoreInvalidColumn,
+        timeDriver
     );
   }
 }

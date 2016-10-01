@@ -30,8 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HBaseTargetUpgrader implements StageUpgrader {
-  private static final String DATA_FORMAT_CONFIG= "hBaseConnectionConfig";
+  private static final String HBASE_CONNECTION_CONFIG = "hBaseConnectionConfig";
   private static final Joiner joiner = Joiner.on(".");
+
+  private static final String ZOOKEEPER_QUORUM = "zookeeperQuorum";
+  private static final String CLIENT_PORT = "clientPort";
+  private static final String ZOOKEEPER_PARENT_ZNODE_OLD = "zookeeperParentZnode";
+  private static final String ZOOKEEPER_PARENT_ZNODE = "hBaseConnectionConfig.zookeeperParentZNode";
+  private static final String TABLE_NAME = "tableName";
+  private static final String KERBEROS_AUTH = "kerberosAuth";
+  private static final String HBASE_USER = "hbaseUser";
+  private static final String HBASE_CONF_DIR = "hbaseConfDir";
+  private static final String HBASE_CONFIGS = "hbaseConfigs";
 
   private final List<Config> configsToRemove = new ArrayList<>();
   private final List<Config> configsToAdd = new ArrayList<>();
@@ -42,6 +52,12 @@ public class HBaseTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -50,26 +66,17 @@ public class HBaseTargetUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    final String ZOOKEEPERQUORUM = "zookeeperQuorum";
-    final String CLIENTPORT = "clientPort";
-    final String ZOOKEEPERPARENTZNODE = "zookeeperParentZnode";
-    final String TABLENAME = "tableName";
-    final String KERBEROSAUTH = "kerberosAuth";
-    final String HBASEUSER = "hbaseUser";
-    final String HBASECONFDIR = "hbaseConfDir";
-    final String HBASECONFIGS = "hbaseConfigs";
-
     for (Config config : configs) {
       switch (config.getName()) {
-        case ZOOKEEPERQUORUM:
-        case CLIENTPORT:
-        case ZOOKEEPERPARENTZNODE:
-        case TABLENAME:
-        case KERBEROSAUTH:
-        case HBASEUSER:
-        case HBASECONFDIR:
-        case HBASECONFIGS:
-          configsToAdd.add(new Config(joiner.join(DATA_FORMAT_CONFIG, config.getName()), config.getValue()));
+        case ZOOKEEPER_QUORUM:
+        case CLIENT_PORT:
+        case ZOOKEEPER_PARENT_ZNODE_OLD:
+        case TABLE_NAME:
+        case KERBEROS_AUTH:
+        case HBASE_USER:
+        case HBASE_CONF_DIR:
+        case HBASE_CONFIGS:
+          configsToAdd.add(new Config(joiner.join(HBASE_CONNECTION_CONFIG, config.getName()), config.getValue()));
           configsToRemove.add(config);
           break;
         default:
@@ -78,5 +85,20 @@ public class HBaseTargetUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private static void upgradeV2toV3(List<Config> configs) {
+    Config oldZnodeConfig = null;
+    for (Config config : configs) {
+      if (config.getName().contains(ZOOKEEPER_PARENT_ZNODE_OLD)) {
+        oldZnodeConfig = config;
+        break;
+      }
+    }
+
+    if (oldZnodeConfig != null) {
+      configs.add(new Config(ZOOKEEPER_PARENT_ZNODE, oldZnodeConfig.getValue()));
+      configs.remove(oldZnodeConfig);
+    }
   }
 }

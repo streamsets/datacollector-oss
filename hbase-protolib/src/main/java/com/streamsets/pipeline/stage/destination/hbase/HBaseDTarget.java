@@ -20,11 +20,11 @@
 
 package com.streamsets.pipeline.stage.destination.hbase;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -37,7 +37,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "HBase",
     description = "Writes data to HBase",
     icon = "hbase.png",
@@ -128,13 +128,18 @@ public class HBaseDTarget extends DTarget {
   )
   public String timeDriver;
 
-
-
   @Override
   protected Target createTarget() {
-    return new HBaseTarget(hBaseConnectionConfig.zookeeperQuorum, hBaseConnectionConfig.clientPort, hBaseConnectionConfig.zookeeperParentZnode, hBaseConnectionConfig.tableName, hbaseRowKey,
-        rowKeyStorageType, hbaseFieldColumnMapping, hBaseConnectionConfig.kerberosAuth, hBaseConnectionConfig.hbaseConfDir, hBaseConnectionConfig.hbaseConfigs, hBaseConnectionConfig.hbaseUser, implicitFieldMapping,
-        ignoreMissingFieldPath, ignoreInvalidColumn, timeDriver);
+    return new HBaseTarget(
+        hBaseConnectionConfig,
+        hbaseRowKey,
+        rowKeyStorageType,
+        hbaseFieldColumnMapping,
+        implicitFieldMapping,
+        ignoreMissingFieldPath,
+        ignoreInvalidColumn,
+        timeDriver
+    );
   }
 
 }

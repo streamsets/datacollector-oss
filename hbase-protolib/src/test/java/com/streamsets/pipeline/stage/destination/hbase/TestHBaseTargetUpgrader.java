@@ -21,12 +21,15 @@ package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestHBaseTargetUpgrader {
   @Test
@@ -41,47 +44,61 @@ public class TestHBaseTargetUpgrader {
     configs.add(new Config("hbaseConfDir", ""));
     configs.add(new Config("hbaseConfigs", new ArrayList()));
 
-    HBaseTargetUpgrader hbaseTargetUpgrader = new HBaseTargetUpgrader();
+    StageUpgrader hbaseTargetUpgrader = new HBaseTargetUpgrader();
     hbaseTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(8, configs.size());
+    assertEquals(8, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
       configValues.put(c.getName(), c.getValue());
     }
 
-    final String ZOOKEEPERQUORUM = "hBaseConnectionConfig.zookeeperQuorum";
-    final String CLIENTPORT = "hBaseConnectionConfig.clientPort";
-    final String ZOOKEEPERPARENTZNODE = "hBaseConnectionConfig.zookeeperParentZnode";
-    final String TABLENAME = "hBaseConnectionConfig.tableName";
-    final String KERBEROSAUTH = "hBaseConnectionConfig.kerberosAuth";
-    final String HBASEUSER = "hBaseConnectionConfig.hbaseUser";
-    final String HBASECONFDIR = "hBaseConnectionConfig.hbaseConfDir";
-    final String HBASECONFIGS = "hBaseConnectionConfig.hbaseConfigs";
+    final String ZOOKEEPER_QUORUM = "hBaseConnectionConfig.zookeeperQuorum";
+    final String CLIENT_PORT = "hBaseConnectionConfig.clientPort";
+    final String ZOOKEEPER_PARENT_ZNODE = "hBaseConnectionConfig.zookeeperParentZnode";
+    final String TABLE_NAME = "hBaseConnectionConfig.tableName";
+    final String KERBEROS_AUTH = "hBaseConnectionConfig.kerberosAuth";
+    final String HBASE_USER = "hBaseConnectionConfig.hbaseUser";
+    final String HBASE_CONF_DIR = "hBaseConnectionConfig.hbaseConfDir";
+    final String HBASE_CONFIGS = "hBaseConnectionConfig.hbaseConfigs";
 
-    Assert.assertTrue(configValues.containsKey(ZOOKEEPERQUORUM));
-    Assert.assertEquals("localhost", configValues.get(ZOOKEEPERQUORUM));
+    Assert.assertTrue(configValues.containsKey(ZOOKEEPER_QUORUM));
+    assertEquals("localhost", configValues.get(ZOOKEEPER_QUORUM));
 
-    Assert.assertTrue(configValues.containsKey(CLIENTPORT));
-    Assert.assertEquals("80", configValues.get(CLIENTPORT));
+    Assert.assertTrue(configValues.containsKey(CLIENT_PORT));
+    assertEquals("80", configValues.get(CLIENT_PORT));
 
-    Assert.assertTrue(configValues.containsKey(ZOOKEEPERPARENTZNODE));
-    Assert.assertEquals("/hbase", configValues.get(ZOOKEEPERPARENTZNODE));
+    Assert.assertTrue(configValues.containsKey(ZOOKEEPER_PARENT_ZNODE));
+    assertEquals("/hbase", configValues.get(ZOOKEEPER_PARENT_ZNODE));
 
-    Assert.assertTrue(configValues.containsKey(TABLENAME));
-    Assert.assertEquals("test", configValues.get(TABLENAME));
+    Assert.assertTrue(configValues.containsKey(TABLE_NAME));
+    assertEquals("test", configValues.get(TABLE_NAME));
 
-    Assert.assertTrue(configValues.containsKey(KERBEROSAUTH));
-    Assert.assertEquals(true, configValues.get(KERBEROSAUTH));
+    Assert.assertTrue(configValues.containsKey(KERBEROS_AUTH));
+    assertEquals(true, configValues.get(KERBEROS_AUTH));
 
-    Assert.assertTrue(configValues.containsKey(HBASEUSER));
-    Assert.assertEquals("", configValues.get(HBASEUSER));
+    Assert.assertTrue(configValues.containsKey(HBASE_USER));
+    assertEquals("", configValues.get(HBASE_USER));
 
-    Assert.assertTrue(configValues.containsKey(HBASECONFDIR));
-    Assert.assertEquals("", configValues.get(HBASECONFDIR));
+    Assert.assertTrue(configValues.containsKey(HBASE_CONF_DIR));
+    assertEquals("", configValues.get(HBASE_CONF_DIR));
 
-    Assert.assertTrue(configValues.containsKey(HBASECONFIGS));
-    Assert.assertEquals(new ArrayList(), configValues.get(HBASECONFIGS));
+    Assert.assertTrue(configValues.containsKey(HBASE_CONFIGS));
+    assertEquals(new ArrayList(), configValues.get(HBASE_CONFIGS));
+  }
+
+  @Test
+  public void testV2toV3() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("hBaseConnectionConfig.zookeeperParentZnode", "/hbase"));
+
+    StageUpgrader hbaseTargetUpgrader = new HBaseTargetUpgrader();
+    hbaseTargetUpgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    assertEquals(1, configs.size());
+    assertEquals("hBaseConnectionConfig.zookeeperParentZNode", configs.get(0).getName());
+
   }
 }

@@ -20,17 +20,18 @@
 
 package com.streamsets.pipeline.stage.processor.hbase;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HBaseProcessorUpgrader implements StageUpgrader {
+  private static final String ZOOKEEPER_PARENT_ZNODE_OLD = "conf.hBaseConnectionConfig.zookeeperParentZnode";
+  private static final String ZOOKEEPER_PARENT_ZNODE = "conf.hBaseConnectionConfig.zookeeperParentZNode";
+
   @Override
   public List<Config> upgrade(
       String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
@@ -38,6 +39,12 @@ public class HBaseProcessorUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -46,29 +53,33 @@ public class HBaseProcessorUpgrader implements StageUpgrader {
   }
 
   @SuppressWarnings("unchecked")
-  private void upgradeV1ToV2(List<Config> configs) {
-    List<Config> configsToRemove = new ArrayList<>();
-    List<Config> configsToAdd = new ArrayList<>();
+  private static void upgradeV1ToV2(List<Config> configs) {
 
-    final String LOOKUPS = "conf.lookups";
-    final String TABLES = "tables";
+    final String lookupsConfigName = "conf.lookups";
+    final String tablesConfigName = "tables";
 
     for (Config config : configs) {
-      switch (config.getName()) {
-        case LOOKUPS:
-          ArrayList<LinkedHashMap<String, String>> lookupConfigs = (ArrayList<LinkedHashMap<String, String>>) config.getValue();
-          if (lookupConfigs.size() > 0) {
-            LinkedHashMap<String, String> configMaps = lookupConfigs.get(0);
-            configMaps.remove(TABLES);
-            configsToAdd.add(new Config(config.getName(), ImmutableList.of(configMaps)));
-            configsToRemove.add(config);
-          }
-          break;
-        default:
-          //no-op
+      if (lookupsConfigName.equals(config.getName())) {
+        List<Map<String, String>> lookupConfigs = (List<Map<String, String>>) config.getValue();
+        for (Map<String, String> lookupConfig : lookupConfigs) {
+          lookupConfig.remove(tablesConfigName);
+        }
       }
     }
-    configs.addAll(configsToAdd);
-    configs.removeAll(configsToRemove);
+  }
+
+  private static void upgradeV2toV3(List<Config> configs) {
+    Config oldZnodeConfig = null;
+    for (Config config : configs) {
+      if (ZOOKEEPER_PARENT_ZNODE_OLD.equals(config.getName())) {
+        oldZnodeConfig = config;
+        break;
+      }
+    }
+
+    if (oldZnodeConfig != null) {
+      configs.add(new Config(ZOOKEEPER_PARENT_ZNODE, oldZnodeConfig.getValue()));
+      configs.remove(oldZnodeConfig);
+    }
   }
 }

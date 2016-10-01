@@ -22,7 +22,7 @@ package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
-import com.google.protobuf.ServiceException;
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Field.Type;
@@ -37,10 +37,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
+import com.streamsets.pipeline.lib.hbase.common.FieldConversionException;
 import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
+import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
-
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.hadoop.conf.Configuration;
@@ -56,8 +57,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,59 +68,40 @@ import java.util.Set;
 
 public class HBaseTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseTarget.class);
+  private static final String HBASE_FIELD_COLUMN_MAPPING = "hbaseFieldColumnMapping";
 
-  private final String zookeeperQuorum;
-  private final int clientPort;
-  private final String zookeeperParentZnode;
-  private final String tableName;
   private final String hbaseRowKey;
   private final List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
-  private final boolean kerberosAuth;
   private final Map<String, ColumnInfo> columnMappings = new HashMap<>();
-  private final Map<String, String> hbaseConfigs;
   private final StorageType rowKeyStorageType;
-  private final String hbaseConfDir;
-  private final String hbaseUser;
   private final boolean implicitFieldMapping;
   private final boolean ignoreMissingField;
   private final boolean ignoreInvalidColumn;
   private final String timeDriver;
+  private final HBaseConnectionConfig conf;
   private Configuration hbaseConf;
   private ErrorRecordHandler errorRecordHandler;
   private ELEval timeDriverElEval;
   private Date batchTime;
 
   public HBaseTarget(
-    String zookeeperQuorum,
-    int clientPort,
-    String zookeeperParentZnode,
-    String tableName,
+    HBaseConnectionConfig conf,
     String hbaseRowKey,
     StorageType rowKeyStorageType,
     List<HBaseFieldMappingConfig> hbaseFieldColumnMapping,
-    boolean kerberosAuth,
-    String hbaseConfDir,
-    Map<String, String> hbaseConfigs,
-    String hbaseUser,
     boolean implicitFieldMapping,
     boolean ignoreMissingField,
     boolean ignoreInvalidColumn,
     String timeDriver
   ) {
-    if (null != zookeeperQuorum) {
-      zookeeperQuorum = CharMatcher.WHITESPACE.removeFrom(zookeeperQuorum);
+    this.conf = conf;
+    // ZooKeeper Quorum may be null for MapRDBTarget
+    if (conf.zookeeperQuorum != null) {
+      this.conf.zookeeperQuorum = CharMatcher.WHITESPACE.removeFrom(conf.zookeeperQuorum);
     }
-    this.zookeeperQuorum = zookeeperQuorum;
-    this.clientPort = clientPort;
-    this.zookeeperParentZnode = zookeeperParentZnode;
-    this.tableName = tableName;
     this.hbaseRowKey = hbaseRowKey;
     this.hbaseFieldColumnMapping = hbaseFieldColumnMapping;
-    this.kerberosAuth = kerberosAuth;
-    this.hbaseConfigs = hbaseConfigs;
     this.rowKeyStorageType = rowKeyStorageType;
-    this.hbaseConfDir = hbaseConfDir;
-    this.hbaseUser = hbaseUser;
     this.implicitFieldMapping = implicitFieldMapping;
     this.ignoreMissingField = ignoreMissingField;
     this.ignoreInvalidColumn = ignoreInvalidColumn;
@@ -130,45 +112,42 @@ public class HBaseTarget extends BaseTarget {
   protected List<ConfigIssue> init() {
     final List<ConfigIssue> issues = super.init();
     hbaseConf = HBaseUtil.getHBaseConfiguration(
-      issues,
-      getContext(),
-      Groups.HBASE.name(),
-      hbaseConfDir,
-      zookeeperQuorum,
-      zookeeperParentZnode,
-      clientPort,
-      tableName,
-      kerberosAuth,
-      hbaseConfigs
+        issues,
+        getContext(),
+        Groups.HBASE.name(),
+        conf.hbaseConfDir,
+        conf.tableName,
+        conf.hbaseConfigs
     );
 
     validateQuorumConfigs(issues);
-    HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), hbaseConf, kerberosAuth);
+    HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.name(), hbaseConf, conf.kerberosAuth);
 
     if(issues.isEmpty()) {
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, zookeeperQuorum);
-      hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, clientPort);
-      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, zookeeperParentZnode);
+      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.zookeeperQuorum);
+      hbaseConf.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, conf.clientPort);
+      HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_ZNODE_PARENT, conf.zookeeperParentZNode);
     }
 
     HTableDescriptor hTableDescriptor = null;
     if (issues.isEmpty()) {
       try {
-        hTableDescriptor = HBaseUtil.getUGI(hbaseUser).doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
+        hTableDescriptor = HBaseUtil.getUGI(conf.hbaseUser).doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
           @Override
           public HTableDescriptor run() throws Exception {
-          try {
-            checkHBaseAvailable(hbaseConf);
-          } catch (Exception ex) {
-            LOG.warn("Received exception while connecting to cluster: ", ex);
-            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06, ex.toString(), ex));
-          }
-          return HBaseUtil.checkConnectionAndTableExistence(issues, getContext(), hbaseConf, Groups.HBASE.name(), tableName);
+            checkHBaseAvailable(hbaseConf, issues);
+            return HBaseUtil.checkConnectionAndTableExistence(
+                issues,
+                getContext(),
+                hbaseConf,
+                Groups.HBASE.name(),
+                conf.tableName
+            );
           }
         });
       } catch(InterruptedException | IOException e) {
-        LOG.warn("Unexpected exception", e);
-        throw new RuntimeException(e);
+        LOG.error("Unexpected exception: {}", e.toString(), e);
+        throw Throwables.propagate(e);
       }
     }
 
@@ -177,7 +156,7 @@ public class HBaseTarget extends BaseTarget {
       try {
         setBatchTime();
         getRecordTime(getContext().createRecord("validateTimeDriver"));
-      } catch (OnRecordErrorException ex) {
+      } catch (OnRecordErrorException ex) { // NOSONAR
         // OREE is just a wrapped ElEvalException, so unwrap this for the error message
         issues.add(getContext().createConfigIssue(
           Groups.HBASE.name(),
@@ -190,16 +169,15 @@ public class HBaseTarget extends BaseTarget {
     }
 
     validateStorageTypes(issues);
-    if (issues.isEmpty()) {
-      Collection<byte[]> families = hTableDescriptor.getFamiliesKeys();
+    if (issues.isEmpty() && hTableDescriptor != null) {
       for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
-        HBaseColumn hbaseColumn = getColumn(column.columnName);
+        HBaseColumn hbaseColumn = HBaseUtil.getColumn(column.columnName);
         if (hbaseColumn == null) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_28,
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_FIELD_COLUMN_MAPPING, Errors.HBASE_28,
             column.columnName, KeyValue.COLUMN_FAMILY_DELIMITER));
-        } else if (!families.contains(hbaseColumn.getCf())) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_32,
-            column.columnName, this.tableName));
+        } else if (hTableDescriptor.getFamily(hbaseColumn.getCf()) == null) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_FIELD_COLUMN_MAPPING, Errors.HBASE_32,
+            column.columnName, conf.tableName));
         } else {
           columnMappings.put(column.columnValue, new ColumnInfo(hbaseColumn, column.columnStorageType));
         }
@@ -210,11 +188,17 @@ public class HBaseTarget extends BaseTarget {
   }
 
   protected void validateQuorumConfigs(List<ConfigIssue> issues) {
-    HBaseUtil.validateQuorumConfigs(issues, getContext(), Groups.HBASE.name(), zookeeperQuorum, zookeeperParentZnode, clientPort);
+    HBaseUtil.validateQuorumConfigs(issues, getContext(), Groups.HBASE.name(), conf.zookeeperQuorum,
+        conf.zookeeperParentZNode, conf.clientPort);
   }
 
-  protected void checkHBaseAvailable(Configuration conf) throws IOException, ServiceException {
-    HBaseAdmin.checkHBaseAvailable(conf);
+  protected void checkHBaseAvailable(Configuration conf, List<ConfigIssue> issues) {
+    try {
+      HBaseAdmin.checkHBaseAvailable(conf);
+    } catch (Exception ex) {
+      LOG.warn("Received exception while connecting to cluster: ", ex);
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06, ex.toString(), ex));
+    }
   }
 
   private void validateStorageTypes(List<ConfigIssue> issues) {
@@ -240,20 +224,7 @@ public class HBaseTarget extends BaseTarget {
         }
       }
     } else if (!implicitFieldMapping) {
-      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseFieldColumnMapping", Errors.HBASE_18));
-    }
-  }
-
-  private HBaseColumn getColumn(String column) {
-    byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
-    byte[] cf = null;
-    byte[] qualifier = null;
-    if (parts.length == 2) {
-      cf = parts[0];
-      qualifier = parts[1];
-      return new HBaseColumn(cf, qualifier);
-    } else {
-      return null;
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_FIELD_COLUMN_MAPPING, Errors.HBASE_18));
     }
   }
 
@@ -270,8 +241,7 @@ public class HBaseTarget extends BaseTarget {
     return p;
   }
 
-  @VisibleForTesting
-  Date setBatchTime() {
+  private Date setBatchTime() {
     batchTime = new Date();
     return batchTime;
   }
@@ -304,7 +274,7 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private void addCell(Put p, byte[] columnFamily, byte[] qualifier, Date recordTime, byte[] value) {
+  private static void addCell(Put p, byte[] columnFamily, byte[] qualifier, Date recordTime, byte[] value) {
     if (recordTime != null) {
       p.add(columnFamily, qualifier, recordTime.getTime(), value);
     } else {
@@ -312,7 +282,7 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private void validateRootLevelType(Record record) throws OnRecordErrorException {
+  private static void validateRootLevelType(Record record) throws OnRecordErrorException {
     for (String fieldPath : record.getEscapedFieldPaths()) {
       if (fieldPath.isEmpty()) {
         Type type = record.get(fieldPath).getType();
@@ -334,18 +304,20 @@ public class HBaseTarget extends BaseTarget {
         if (fieldPath.charAt(0) == '/') {
           fieldPathColumn = fieldPath.substring(1);
         }
-        HBaseColumn hbaseColumn = getColumn(fieldPathColumn.replace("'", ""));
+        HBaseColumn hbaseColumn = HBaseUtil.getColumn(fieldPathColumn.replace("'", ""));
         if (hbaseColumn != null) {
           byte[] value = getBytesForValue(record, fieldPath, null);
           addCell(p, hbaseColumn.getCf(), hbaseColumn.getQualifier(), recordTime, value);
+        } else if (ignoreInvalidColumn) {
+          String errorMessage = Utils.format(
+              Errors.HBASE_28.getMessage(),
+              fieldPathColumn,
+              KeyValue.COLUMN_FAMILY_DELIMITER
+          );
+          LOG.warn(errorMessage);
+          errorMsgBuilder.append(errorMessage);
         } else {
-          if (ignoreInvalidColumn) {
-            String errorMessage = Utils.format(Errors.HBASE_28.getMessage(), fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
-            LOG.warn(errorMessage);
-            errorMsgBuilder.append(errorMessage);
-          } else {
-            throw new OnRecordErrorException(record, Errors.HBASE_28, fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
-          }
+          throw new OnRecordErrorException(record, Errors.HBASE_28, fieldPathColumn, KeyValue.COLUMN_FAMILY_DELIMITER);
         }
       }
     }
@@ -376,7 +348,7 @@ public class HBaseTarget extends BaseTarget {
   public void write(final Batch batch) throws StageException {
     setBatchTime();
     try {
-      HBaseUtil.getUGI(hbaseUser).doAs(new PrivilegedExceptionAction<Void>() {
+      HBaseUtil.getUGI(conf.hbaseUser).doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
         writeBatch(batch);
@@ -399,34 +371,15 @@ public class HBaseTarget extends BaseTarget {
   }
 
   private void writeBatch(Batch batch) throws StageException {
-    HTable hTable = null;
     Iterator<Record> it = batch.getRecords();
     Map<String, Record> rowKeyToRecord = new HashMap<>();
-    try {
-      hTable = new HTable(hbaseConf, tableName);
+    try (HTable hTable = new HTable(hbaseConf, conf.tableName)) {
       // Disable auto-flush to increase performance by reducing the number of RPCs.
       // HTable is deprecated as of HBase 1.0 and replaced by Table which does not use autoFlush
       hTable.setAutoFlushTo(false);
       while (it.hasNext()) {
         Record record = it.next();
-        try {
-          byte[] rowKeyBytes = getBytesForRowKey(record);
-          // Map hbase rows to sdc records.
-          Put p = getHBasePut(record, rowKeyBytes);
-          rowKeyToRecord.put(Bytes.toString(rowKeyBytes), record);
-          try {
-            // HTable internally keeps a buffer, a put() will keep on buffering till the buffer
-            // limit is reached
-            // Once it hits the buffer limit or autoflush is set to true, commit will happen
-            hTable.put(p);
-          } catch (RetriesExhaustedWithDetailsException rex) {
-            // There may be more than one row which failed to persist
-            HBaseUtil.handleNoColumnFamilyException(rex, record, null, errorRecordHandler);
-          }
-        } catch (OnRecordErrorException ex) {
-          LOG.debug("Got exception while writing to HBase", ex);
-          errorRecordHandler.onError(ex);
-        }
+        doPut(rowKeyToRecord, hTable, record);
       }
       // This will flush the internal buffer
       hTable.flushCommits();
@@ -440,14 +393,32 @@ public class HBaseTarget extends BaseTarget {
       LOG.debug("Got exception while flushing commits to HBase", ex);
       throw new StageException(Errors.HBASE_02, ex);
     }
-    finally {
-      try {
-        if (hTable != null) {
-          hTable.close();
-        }
-      } catch (IOException e) {
-        LOG.warn("Cannot close table ", e);
-      }
+  }
+
+  private void doPut(Map<String, Record> rowKeyToRecord, HTable hTable, Record record) throws
+      InterruptedIOException,
+      StageException {
+    try {
+      byte[] rowKeyBytes = getBytesForRowKey(record);
+      // Map hbase rows to sdc records.
+      Put p = getHBasePut(record, rowKeyBytes);
+      rowKeyToRecord.put(Bytes.toString(rowKeyBytes), record);
+      performPut(hTable, record, p);
+    } catch (OnRecordErrorException ex) {
+      LOG.debug("Got exception while writing to HBase", ex);
+      errorRecordHandler.onError(ex);
+    }
+  }
+
+  private void performPut(HTable hTable, Record record, Put p) throws InterruptedIOException, StageException {
+    try {
+      // HTable internally keeps a buffer, a put() will keep on buffering till the buffer
+      // limit is reached
+      // Once it hits the buffer limit or autoflush is set to true, commit will happen
+      hTable.put(p);
+    } catch (RetriesExhaustedWithDetailsException rex) {
+      // There may be more than one row which failed to persist
+      HBaseUtil.handleNoColumnFamilyException(rex, record, null, errorRecordHandler);
     }
   }
 
@@ -478,21 +449,22 @@ public class HBaseTarget extends BaseTarget {
         storageType = StorageType.JSON_STRING;
         break;
       default:
-        throw new RuntimeException(Utils.format("Conversion not defined for: {} ", fieldType));
+        throw new FieldConversionException(Utils.format("Conversion not defined for: {} ", fieldType));
     }
     return storageType;
   }
 
   private byte[] getBytesForValue(
-      Record record, String fieldPath, StorageType columnStorageType
+      Record record, String fieldPath, StorageType storageType
   ) throws OnRecordErrorException {
+    StorageType columnStorageType = storageType;
     byte[] value;
     Field field = record.get(fieldPath);
     if (field == null || field.getValue() == null) {
       if (!ignoreMissingField) {
         throw new OnRecordErrorException(record, Errors.HBASE_25, fieldPath);
       } else {
-        return null;
+        return new byte[0];
       }
     }
     // column storage type is null for implicit field mapping
@@ -583,8 +555,8 @@ public class HBaseTarget extends BaseTarget {
         throw new OnRecordErrorException(record, Errors.HBASE_12, Type.STRING.name(),
           StorageType.BINARY.name());
       default:
-        throw new RuntimeException("This shouldn't happen: " + "Conversion not defined for "
-          + field.toString());
+        throw new FieldConversionException(
+            "This shouldn't happen: Conversion not defined for " + field.toString());
     }
     return value;
   }

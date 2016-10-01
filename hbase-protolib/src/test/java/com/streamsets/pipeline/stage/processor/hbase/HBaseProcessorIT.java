@@ -38,7 +38,6 @@ import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.client.HTable;
@@ -329,7 +328,7 @@ public class HBaseProcessorIT {
     config.hBaseConnectionConfig = new HBaseConnectionConfig();
     config.hBaseConnectionConfig.zookeeperQuorum = "127.0.0.1";
     config.hBaseConnectionConfig.clientPort = miniZK.getClientPort();
-    config.hBaseConnectionConfig.zookeeperParentZnode = "/hbase";
+    config.hBaseConnectionConfig.zookeeperParentZNode = "/hbase";
     config.hBaseConnectionConfig.tableName = tableName;
     config.hBaseConnectionConfig.hbaseUser = "";
     config.hBaseConnectionConfig.hbaseConfigs = new HashMap<>();
@@ -350,18 +349,12 @@ public class HBaseProcessorIT {
       new ArrayList<Stage.ConfigIssue>(),
       context,
       Groups.HBASE.getLabel(),
-      config.hBaseConnectionConfig.hbaseConfDir,
-      config.hBaseConnectionConfig.zookeeperQuorum,
-      config.hBaseConnectionConfig.zookeeperParentZnode,
-      config.hBaseConnectionConfig.clientPort,
-      config.hBaseConnectionConfig.tableName,
-      config.hBaseConnectionConfig.kerberosAuth,
-      config.hBaseConnectionConfig.hbaseConfigs
+      config.hBaseConnectionConfig.hbaseConfDir, config.hBaseConnectionConfig.tableName, config.hBaseConnectionConfig.hbaseConfigs
     );
 
     HBaseUtil.setIfNotNull(hbaseConfig, HConstants.ZOOKEEPER_QUORUM, config.hBaseConnectionConfig.zookeeperQuorum);
     hbaseConfig.setInt(HConstants.ZOOKEEPER_CLIENT_PORT, config.hBaseConnectionConfig.clientPort);
-    HBaseUtil.setIfNotNull(hbaseConfig, HConstants.ZOOKEEPER_ZNODE_PARENT, config.hBaseConnectionConfig.zookeeperParentZnode);
+    HBaseUtil.setIfNotNull(hbaseConfig, HConstants.ZOOKEEPER_ZNODE_PARENT, config.hBaseConnectionConfig.zookeeperParentZNode);
 
     return hbaseConfig;
   }

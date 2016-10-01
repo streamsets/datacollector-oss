@@ -19,15 +19,13 @@
  */
 package com.streamsets.pipeline.stage.destination.maprdb;
 
-import com.google.protobuf.ServiceException;
+import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseFieldMappingConfig;
 import com.streamsets.pipeline.stage.destination.hbase.HBaseTarget;
 import com.streamsets.pipeline.stage.destination.hbase.StorageType;
 import org.apache.hadoop.conf.Configuration;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Overridden HBaseTarget that disables checks that are not relevant to Mapr DB (zookeeper and such).
@@ -35,34 +33,20 @@ import java.util.Map;
 public class MapRDBTarget extends HBaseTarget {
 
   public MapRDBTarget(
-        String zookeeperQuorum,
-        int clientPort,
-        String zookeeperParentZnode,
-        String tableName,
+        HBaseConnectionConfig conf,
         String hbaseRowKey,
         StorageType rowKeyStorageType,
         List<HBaseFieldMappingConfig> hbaseFieldColumnMapping,
-        boolean kerberosAuth,
-        String hbaseConfDir,
-        Map<String, String> hbaseConfigs,
-        String hbaseUser,
         boolean implicitFieldMapping,
         boolean ignoreMissingFieldPath,
         boolean ignoreInvalidColumn,
         String timeDriver
   ) {
     super(
-      zookeeperQuorum,
-      clientPort,
-      zookeeperParentZnode,
-      tableName,
+      conf,
       hbaseRowKey,
       rowKeyStorageType,
       hbaseFieldColumnMapping,
-      kerberosAuth,
-      hbaseConfDir,
-      hbaseConfigs,
-      hbaseUser,
       implicitFieldMapping,
       ignoreMissingFieldPath,
       ignoreInvalidColumn,
@@ -76,7 +60,7 @@ public class MapRDBTarget extends HBaseTarget {
   }
 
   @Override
-  protected void checkHBaseAvailable(Configuration conf) throws IOException, ServiceException {
+  protected void checkHBaseAvailable(Configuration conf, List<ConfigIssue> issues) {
     // Call to HBaseAdmin.checkHBaseAvailable is not supported on MapR DB
     // http://doc.mapr.com/display/MapR/Support+for+the+HBaseAdmin+class
   }

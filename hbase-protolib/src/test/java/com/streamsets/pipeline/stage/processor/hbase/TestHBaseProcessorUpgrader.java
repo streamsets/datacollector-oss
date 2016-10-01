@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.hbase;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,37 +31,58 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestHBaseProcessorUpgrader {
   @Test
   public void testV1toV2() throws StageException {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("conf.hBaseConnectionConfig.zookeeperQuorum", "localhost"));
     configs.add(new Config("conf.hBaseConnectionConfig.clientPort", "2181"));
-    configs.add(new Config("conf.hBaseConnectionConfig.zookeeperParentZnode", "/hbase"));
+    configs.add(new Config("conf.hBaseConnectionConfig.zookeeperParentZNode", "/hbase"));
     configs.add(new Config("conf.hBaseConnectionConfig.tableName", "test"));
     configs.add(new Config("conf.hBaseConnectionConfig.kerberosAuth", true));
     configs.add(new Config("conf.hBaseConnectionConfig.hbaseUser", null));
     configs.add(new Config("conf.hBaseConnectionConfig.hbaseConfDir", null));
     configs.add(new Config("conf.hBaseConnectionConfig.hbaseConfigs", new ArrayList()));
     configs.add(new Config("conf.mode", "BATCH"));
-    List lookupsConfigs = new ArrayList<>();
     Map<String, String> lookupsConfigMap = new LinkedHashMap<>();
     lookupsConfigMap.put("rowExpr", "");
-    lookupsConfigMap.put("columnExprr", "");
+    lookupsConfigMap.put("columnExpr", "");
     lookupsConfigMap.put("timestampExpr", "");
     lookupsConfigMap.put("tables", "");
     lookupsConfigMap.put("outputFieldPath", "");
+    List<Map<String, String>> lookupsConfigs = new ArrayList<>();
+    lookupsConfigs.add(lookupsConfigMap);
     lookupsConfigs.add(lookupsConfigMap);
     configs.add(new Config("conf.lookups", lookupsConfigs));
     configs.add(new Config("conf.cache.enabled", false));
 
-    HBaseProcessorUpgrader hbaseProcessorUpgrader = new HBaseProcessorUpgrader();
+    StageUpgrader hbaseProcessorUpgrader = new HBaseProcessorUpgrader();
 
     hbaseProcessorUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
     Assert.assertEquals(11, configs.size());
 
     lookupsConfigMap.remove("tables");
-    Assert.assertEquals(configs.get(10).getValue(), lookupsConfigs);
+    for (Config config : configs) {
+      if ("conf.lookups".equals(config.getName())) {
+        assertEquals(lookupsConfigs, config.getValue());
+      }
+    }
+  }
+
+  @Test
+  public void testV2toV3() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("conf.hBaseConnectionConfig.zookeeperParentZnode", "/hbase"));
+
+    StageUpgrader hbaseTargetUpgrader = new HBaseProcessorUpgrader();
+    hbaseTargetUpgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    assertEquals(1, configs.size());
+    assertEquals("conf.hBaseConnectionConfig.zookeeperParentZNode", configs.get(0).getName());
+
   }
 }

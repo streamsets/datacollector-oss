@@ -57,10 +57,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public final class HBaseUtil {
-  private HBaseUtil() {
-  }
+import static org.apache.hadoop.hbase.util.Strings.isEmpty;
 
+public final class HBaseUtil {
+  private static final String TABLE_NAME = "tableName";
   private static final Logger LOG = LoggerFactory.getLogger(HBaseUtil.class);
   // master and region server principals are not defined in HBase constants, so do it here
   private static final String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
@@ -68,16 +68,15 @@ public final class HBaseUtil {
   private static final String HBASE_CONF_DIR_CONFIG = "hbaseConfDir";
   private static UserGroupInformation loginUgi;
 
+  private HBaseUtil() {
+  }
+
   public static Configuration getHBaseConfiguration(
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
-      String HBaseName,
+      String hbaseName,
       String hbaseConfDir,
-      String zookeeperQuorum,
-      String zookeeperParentZnode,
-      int clientPort,
       String tableName,
-      boolean kerberosAuth,
       Map<String, String> hbaseConfigs
   ) {
     Configuration hbaseConf = HBaseConfiguration.create();
@@ -88,24 +87,24 @@ public final class HBaseUtil {
           || context.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) && hbaseConfigDir.isAbsolute()) {
         //Do not allow absolute hdfs config directory in cluster mode
         issues.add(
-            context.createConfigIssue(HBaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_24, hbaseConfDir)
+            context.createConfigIssue(hbaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_24, hbaseConfDir)
         );
       } else {
         if (!hbaseConfigDir.isAbsolute()) {
           hbaseConfigDir = new File(context.getResourcesDirectory(), hbaseConfDir).getAbsoluteFile();
         }
         if (!hbaseConfigDir.exists()) {
-          issues.add(context.createConfigIssue(HBaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_19,
+          issues.add(context.createConfigIssue(hbaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_19,
               hbaseConfDir));
         } else if (!hbaseConfigDir.isDirectory()) {
-          issues.add(context.createConfigIssue(HBaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_20,
+          issues.add(context.createConfigIssue(hbaseName, HBASE_CONF_DIR_CONFIG, Errors.HBASE_20,
               hbaseConfDir));
         } else {
           File hbaseSiteXml = new File(hbaseConfigDir, "hbase-site.xml");
           if (hbaseSiteXml.exists()) {
             if (!hbaseSiteXml.isFile()) {
               issues.add(context.createConfigIssue(
-                  HBaseName,
+                  hbaseName,
                   HBASE_CONF_DIR_CONFIG,
                   Errors.HBASE_21,
                   hbaseConfDir,
@@ -129,7 +128,7 @@ public final class HBaseUtil {
     }
 
     if (tableName == null || tableName.isEmpty()) {
-      issues.add(context.createConfigIssue(HBaseName, "tableName", Errors.HBASE_05));
+      issues.add(context.createConfigIssue(hbaseName, TABLE_NAME, Errors.HBASE_05));
     }
 
 
@@ -140,14 +139,14 @@ public final class HBaseUtil {
   public static void validateQuorumConfigs(
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
-      String HBaseName,
+      String hbaseName,
       String zookeeperQuorum,
-      String zookeeperParentZnode,
+      String zookeeperParentZNode,
       int clientPort
       //String tableName
   ) {
-    if (zookeeperQuorum == null || zookeeperQuorum.isEmpty()) {
-      issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum", Errors.HBASE_04));
+    if (isEmpty(zookeeperQuorum)) {
+      issues.add(context.createConfigIssue(hbaseName, "zookeeperQuorum", Errors.HBASE_04));
     } else {
       List<String> zkQuorumList = Lists.newArrayList(Splitter.on(",").trimResults().omitEmptyStrings().split(
           zookeeperQuorum));
@@ -160,16 +159,16 @@ public final class HBaseUtil {
               zookeeperQuorum,
               ex
           ), ex);
-          issues.add(context.createConfigIssue(HBaseName, "zookeeperQuorum", Errors.HBASE_39, hostName));
+          issues.add(context.createConfigIssue(hbaseName, "zookeeperQuorum", Errors.HBASE_39, hostName));
         }
       }
     }
-    if (zookeeperParentZnode == null || zookeeperParentZnode.isEmpty()) {
-      issues.add(context.createConfigIssue(HBaseName, "zookeeperBaseDir",
+    if (zookeeperParentZNode == null || zookeeperParentZNode.isEmpty()) {
+      issues.add(context.createConfigIssue(hbaseName, "zookeeperBaseDir",
           Errors.HBASE_09));
     }
     if (clientPort == 0) {
-      issues.add(context.createConfigIssue(HBaseName, "clientPort", Errors.HBASE_13));
+      issues.add(context.createConfigIssue(hbaseName, "clientPort", Errors.HBASE_13));
 
     }
 
@@ -178,7 +177,7 @@ public final class HBaseUtil {
   public static void validateSecurityConfigs(
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
-      String HBaseName,
+      String hbaseName,
       Configuration hbaseConf,
       boolean kerberosAuth
   ) {
@@ -191,7 +190,8 @@ public final class HBaseUtil {
           try {
             defaultRealm = HadoopSecurityUtil.getDefaultRealm();
           } catch (Exception e) {
-            issues.add(context.createConfigIssue(HBaseName, "masterPrincipal", Errors.HBASE_22));
+            LOG.error(Errors.HBASE_22.getMessage(), e.toString(), e);
+            issues.add(context.createConfigIssue(hbaseName, "masterPrincipal", Errors.HBASE_22, e.toString()));
           }
           hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + defaultRealm);
 
@@ -202,7 +202,8 @@ public final class HBaseUtil {
               defaultRealm = HadoopSecurityUtil.getDefaultRealm();
             }
           } catch (Exception e) {
-            issues.add(context.createConfigIssue(HBaseName, "regionServerPrincipal", Errors.HBASE_23));
+            LOG.error(Errors.HBASE_23.getMessage(), e.toString(), e);
+            issues.add(context.createConfigIssue(hbaseName, "regionServerPrincipal", Errors.HBASE_23, e.toString()));
           }
           hbaseConf.set(REGIONSERVER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + defaultRealm);
         }
@@ -214,7 +215,7 @@ public final class HBaseUtil {
       if (kerberosAuth) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          issues.add(context.createConfigIssue(HBaseName, "kerberosAuth", Errors.HBASE_16,
+          issues.add(context.createConfigIssue(hbaseName, "kerberosAuth", Errors.HBASE_16,
               loginUgi.getAuthenticationMethod()));
         }
       } else {
@@ -225,7 +226,7 @@ public final class HBaseUtil {
       LOG.info("Authentication Config: " + logMessage);
     } catch (Exception ex) {
       LOG.info("Error validating security configuration: " + ex, ex);
-      issues.add(context.createConfigIssue(HBaseName, null, Errors.HBASE_17, ex.toString(), ex));
+      issues.add(context.createConfigIssue(hbaseName, null, Errors.HBASE_17, ex.toString(), ex));
     }
   }
 
@@ -238,31 +239,27 @@ public final class HBaseUtil {
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
       Configuration hbaseConf,
-      String HBaseName,
+      String hbaseName,
       String tableName
-  ) throws Exception {
+  ) throws IOException {
     LOG.debug("Validating connection to hbase cluster and whether table " + tableName + " exists and is enabled");
     HBaseAdmin hbaseAdmin = null;
     HTableDescriptor hTableDescriptor = null;
     try {
       hbaseAdmin = new HBaseAdmin(hbaseConf);
       if (!hbaseAdmin.tableExists(tableName)) {
-        issues.add(context.createConfigIssue(HBaseName, "tableName", Errors.HBASE_07, tableName));
+        issues.add(context.createConfigIssue(hbaseName, TABLE_NAME, Errors.HBASE_07, tableName));
       } else if (!hbaseAdmin.isTableEnabled(tableName)) {
-        issues.add(context.createConfigIssue(HBaseName, "tableName", Errors.HBASE_08, tableName));
+        issues.add(context.createConfigIssue(hbaseName, TABLE_NAME, Errors.HBASE_08, tableName));
       } else {
         hTableDescriptor = hbaseAdmin.getTableDescriptor(TableName.valueOf(tableName));
       }
     } catch (Exception ex) {
       LOG.warn("Received exception while connecting to cluster: ", ex);
-      issues.add(context.createConfigIssue(HBaseName, null, Errors.HBASE_06, ex.toString(), ex));
+      issues.add(context.createConfigIssue(hbaseName, null, Errors.HBASE_06, ex.toString(), ex));
     } finally {
       if (hbaseAdmin != null) {
-        try {
-          hbaseAdmin.close();
-        } catch (IOException ex) {
-          throw ex;
-        }
+        hbaseAdmin.close();
       }
     }
     return hTableDescriptor;
@@ -318,7 +315,7 @@ public final class HBaseUtil {
   private static String getErrorDescription(Throwable t, Row row, String server) {
     StringWriter errorWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(errorWriter);
-    pw.append("Exception from " + server + " for " + Bytes.toStringBinary(row.getRow()));
+    pw.append("Exception from ").append(server).append(" for ").append(Bytes.toStringBinary(row.getRow()));
     if (t != null) {
       pw.println();
       t.printStackTrace(pw);
@@ -329,8 +326,8 @@ public final class HBaseUtil {
 
   public static HBaseColumn getColumn(String column) {
     byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
-    byte[] cf = null;
-    byte[] qualifier = null;
+    byte[] cf;
+    byte[] qualifier;
     if (parts.length == 2) {
       cf = parts[0];
       qualifier = parts[1];
