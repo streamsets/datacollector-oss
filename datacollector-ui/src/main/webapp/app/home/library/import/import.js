@@ -150,6 +150,11 @@ angular
                     $scope.common.errors = [res.data];
 
                     //Failed to import pipeline. If new pipeline is created during import revert it back.
+                    if (res.data && res.data.RemoteException &&
+                      res.data.RemoteException.errorCode === 'CONTAINER_0201') {
+                      // For CONTAINER_0201 - Pipeline 'Sample123' already exists - don't delete existing one
+                      return;
+                    }
 
                     api.pipelineAgent.deletePipelineConfig(name);
                   });
