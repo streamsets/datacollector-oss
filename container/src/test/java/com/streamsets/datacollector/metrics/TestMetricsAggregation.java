@@ -21,6 +21,7 @@
 package com.streamsets.datacollector.metrics;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -59,20 +60,19 @@ public class TestMetricsAggregation {
     callbackInfoCollection = new HashSet<>();
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker1", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics1.json").getFile()), null));
+        CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics1.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker2", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics2.json").getFile()), null));
+        CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics2.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker3", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics3.json").getFile()), null));
+        CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics3.json").getFile()), null));
 
     callbackInfoCollection.add(new CallbackInfo(null, null, null, null, "worker4", null, null, null, null, null,
-      readFile(classLoader.getResource("metrics/metrics4.json").getFile()), null));
-
+        CallbackObjectType.METRICS, readFile(classLoader.getResource("metrics/metrics4.json").getFile()), null));
 
     slaveCallbackManager = Mockito.mock(SlaveCallbackManager.class);
-    Mockito.when(slaveCallbackManager.getSlaveCallbackList())
+    Mockito.when(slaveCallbackManager.getSlaveCallbackList(CallbackObjectType.METRICS))
       .thenReturn(callbackInfoCollection);
 
     pipelineStateStore = Mockito.mock(PipelineStateStore.class);

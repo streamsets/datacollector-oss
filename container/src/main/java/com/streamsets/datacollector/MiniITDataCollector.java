@@ -22,6 +22,7 @@ package com.streamsets.datacollector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.Manager;
@@ -215,7 +216,7 @@ public class MiniITDataCollector implements DataCollector {
   @Override
   public List<URI> getWorkerList() throws URISyntaxException {
     List<URI> sdcURLList = new ArrayList<>();
-    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList() ) {
+    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList(CallbackObjectType.METRICS) ) {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
     }
     return sdcURLList;

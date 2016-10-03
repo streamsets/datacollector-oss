@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
@@ -139,7 +140,7 @@ public interface Runner {
 
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException;
 
-  Collection<CallbackInfo> getSlaveCallbackList();
+  Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType);
 
   void close();
 

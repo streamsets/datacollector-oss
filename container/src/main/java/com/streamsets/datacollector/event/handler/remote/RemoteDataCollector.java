@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.Runner;
 import org.slf4j.Logger;
@@ -224,7 +225,7 @@ public class RemoteDataCollector implements DataCollector {
         Runner runner = manager.getRunner(pipelineState.getUser(), name, rev);
         latestState = runner.getState();
         if (isClusterMode) {
-          workerInfos = getWorkers(runner.getSlaveCallbackList());
+          workerInfos = getWorkers(runner.getSlaveCallbackList(CallbackObjectType.METRICS));
         }
       } else {
         latestState = pipelineState;
@@ -271,7 +272,7 @@ public class RemoteDataCollector implements DataCollector {
         List<WorkerInfo> workerInfos = new ArrayList<>();
         boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true: false;
         if (isClusterMode) {
-          for (CallbackInfo callbackInfo : manager.getRunner(user, name, rev).getSlaveCallbackList()) {
+          for (CallbackInfo callbackInfo : manager.getRunner(user, name, rev).getSlaveCallbackList(CallbackObjectType.METRICS)) {
             WorkerInfo workerInfo = new WorkerInfo();
             workerInfo.setWorkerURL(callbackInfo.getSdcURL());
             workerInfo.setWorkerId(callbackInfo.getSlaveSdcId());

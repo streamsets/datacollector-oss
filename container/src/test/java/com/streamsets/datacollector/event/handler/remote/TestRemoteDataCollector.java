@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
@@ -399,7 +400,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public Collection<CallbackInfo> getSlaveCallbackList() {
+    public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
       // TODO Auto-generated method stub
       return null;
     }

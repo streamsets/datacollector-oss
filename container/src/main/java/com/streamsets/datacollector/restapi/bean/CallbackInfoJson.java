@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 
 public class CallbackInfoJson {
 
@@ -40,10 +41,11 @@ public class CallbackInfoJson {
                           @JsonProperty("creatorToken") String creatorToken,
                           @JsonProperty("managerToken") String managerToken,
                           @JsonProperty("guestToken") String guestToken,
-                          @JsonProperty("metrics") String metrics,
+                          @JsonProperty("callbackObjectType") CallbackObjectType callbackObjectType,
+                          @JsonProperty("callbackObject") String callbackObject,
                           @JsonProperty("slaveSdcId") String slaveSdcId) {
     this.callbackInfo = new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, sdcURL,
-      adminToken, creatorToken, managerToken, guestToken, metrics, slaveSdcId);
+      adminToken, creatorToken, managerToken, guestToken, callbackObjectType, callbackObject, slaveSdcId);
   }
 
 
@@ -61,6 +63,14 @@ public class CallbackInfoJson {
 
   public String getRev() {
     return callbackInfo.getRev();
+  }
+
+  public CallbackObjectType getCallbackObjectType() {
+    return callbackInfo.getCallbackObjectType();
+  }
+
+  public String getCallbackObject() {
+    return callbackInfo.getCallbackObject();
   }
 
   public String getSdcClusterToken() {
@@ -91,16 +101,12 @@ public class CallbackInfoJson {
     return callbackInfo.getGuestToken();
   }
 
-  public String getMetrics() {
-    return callbackInfo.getMetrics();
-  }
-
   public String getSlaveSdcId() {
     return callbackInfo.getSlaveSdcId();
   }
 
   @JsonIgnore
-  public CallbackInfo  getCallbackInfo() {
+  public CallbackInfo getCallbackInfo() {
     return callbackInfo;
   }
 

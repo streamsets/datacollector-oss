@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
@@ -79,22 +80,20 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,6 +109,8 @@ public class ClusterRunner extends AbstractRunner {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterRunner.class);
   static final String APPLICATION_STATE = "cluster.application.state";
   private static final String APPLICATION_STATE_START_TIME = "cluster.application.startTime";
+  static final String SLAVE_ERROR_ATTRIBUTE = "cluster.slave.error";
+
 
   @Inject PipelineStateStore pipelineStateStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
@@ -491,8 +492,8 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public Collection<CallbackInfo> getSlaveCallbackList() {
-    return slaveCallbackManager.getSlaveCallbackList();
+  public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
+    return slaveCallbackManager.getSlaveCallbackList(callbackObjectType);
   }
 
   @Override
@@ -532,6 +533,9 @@ public class ClusterRunner extends AbstractRunner {
           fromState.getStatus(), toStatus);
         long nextRetryTimeStamp = fromState.getNextRetryTimeStamp();
         int retryAttempt = fromState.getRetryAttempt();
+        if (toStatus == PipelineStatus.RUN_ERROR) {
+          handleErrorCallbackFromSlaves(attributes);
+        }
         if (toStatus == PipelineStatus.RUN_ERROR && shouldRetry) {
           toStatus = PipelineStatus.RETRY;
           checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
@@ -581,6 +585,22 @@ public class ClusterRunner extends AbstractRunner {
         eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.CLUSTER);
       }
     }
+  }
+
+  @VisibleForTesting
+  void handleErrorCallbackFromSlaves(Map<String, Object> attributes) {
+    Set<String> errorMessages = new HashSet<>();
+    for (CallbackInfo callbackInfo : slaveCallbackManager.getSlaveCallbackList(CallbackObjectType.ERROR)) {
+      String error = callbackInfo.getCallbackObject();
+      //Log dedepulicated messages.
+      if (errorMessages.add(error)) {
+        LOG.error("Error in Slave Runner:" + error);
+      }
+    }
+    if (attributes != null) {
+      attributes.put(SLAVE_ERROR_ATTRIBUTE, errorMessages);
+    }
+    slaveCallbackManager.clearSlaveList(CallbackObjectType.ERROR);
   }
 
   private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {

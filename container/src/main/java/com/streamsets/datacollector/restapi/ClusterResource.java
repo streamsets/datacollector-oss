@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.base.Joiner;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
@@ -68,7 +69,7 @@ public class ClusterResource {
     @Context final HttpServletResponse response,
     @Context SecurityContext context) throws IOException, PipelineStoreException, PipelineManagerException {
     Runner runner = manager.getRunner(user, name, rev);
-    Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList();
+    Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList(CallbackObjectType.METRICS);
     CallbackInfo slaveCallbackInfo = null;
 
     for(CallbackInfo callbackInfo : callbackInfoCollection) {

@@ -22,15 +22,18 @@ package com.streamsets.datacollector.execution.runner.cluster;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.main.RuntimeInfo;
-
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -38,24 +41,39 @@ public class SlaveCallbackManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlaveCallbackManager.class);
 
-  private final ReentrantLock callbackCacheLock;
-  private final Cache<String, CallbackInfo> slaveCallbackList;
+  private final Map<CallbackObjectType, ReentrantLock> callbackTypeToCacheLock;
+  private final Map<CallbackObjectType, Cache<String, CallbackInfo>> slaveCallbackList;
   private String clusterToken;
 
   public SlaveCallbackManager() {
-    this.callbackCacheLock = new ReentrantLock();
-    this.slaveCallbackList = CacheBuilder.newBuilder()
-      .expireAfterWrite(1, TimeUnit.MINUTES)
-      .build();
+    this.callbackTypeToCacheLock = ImmutableMap.of(CallbackObjectType.METRICS, new ReentrantLock(), CallbackObjectType.ERROR, new ReentrantLock());
+    //Metrics will still expire after a minute
+    Cache<String, CallbackInfo> slaveMetricsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
+    //Error cache entries will be invalidated immediately after visiting them in the ClusterRunner
+    Cache<String, CallbackInfo> slaveerrorCache = CacheBuilder.newBuilder().build();
+    this.slaveCallbackList = ImmutableMap.of(CallbackObjectType.METRICS, slaveMetricsCache, CallbackObjectType.ERROR, slaveerrorCache);
   }
 
-  public Collection<CallbackInfo> getSlaveCallbackList() {
+  private ReentrantLock getLock(CallbackObjectType callbackObjectType) {
+    ReentrantLock reentrantLock = callbackTypeToCacheLock.get(callbackObjectType);
+    Utils.checkNotNull(reentrantLock, "Invalid callbackTypeToCacheLock list initialization");
+    return reentrantLock;
+  }
+
+  private Cache<String, CallbackInfo> getCache(CallbackObjectType callbackObjectType) {
+    Cache<String, CallbackInfo> slaveCallbackCache = slaveCallbackList.get(callbackObjectType);
+    Utils.checkNotNull(slaveCallbackCache, "Invalid SlaveCallBack list initialization");
+    return slaveCallbackCache;
+  }
+
+  public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
     List<CallbackInfo> callbackInfoSet;
-    callbackCacheLock.lock();
+    ReentrantLock lock = getLock(callbackObjectType);
+    lock.lock();
     try {
-      callbackInfoSet = new ArrayList<>(slaveCallbackList.asMap().values());
+      callbackInfoSet = new ArrayList<>(getCache(callbackObjectType).asMap().values());
     } finally {
-      callbackCacheLock.unlock();
+      lock.unlock();
     }
     return callbackInfoSet;
   }
@@ -64,11 +82,12 @@ public class SlaveCallbackManager {
     String sdcToken = Strings.nullToEmpty(this.clusterToken);
     if (sdcToken.equals(callbackInfo.getSdcClusterToken()) &&
       !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
-      callbackCacheLock.lock();
+      ReentrantLock lock = getLock(callbackInfo.getCallbackObjectType());
+      lock.lock();
       try {
-        slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
+       getCache(callbackInfo.getCallbackObjectType()).put(callbackInfo.getSdcURL(), callbackInfo);
       } finally {
-        callbackCacheLock.unlock();
+        lock.unlock();
       }
     } else {
       LOG.warn("SDC Cluster token not matched");
@@ -76,11 +95,25 @@ public class SlaveCallbackManager {
   }
 
   public void clearSlaveList() {
-    callbackCacheLock.lock();
+    for (CallbackObjectType callbackObjectType : CallbackObjectType.values()) {
+      ReentrantLock lock = getLock(callbackObjectType);
+      lock.lock();
+      try {
+        getCache(callbackObjectType).invalidateAll();
+      } finally {
+        lock.unlock();
+      }
+    }
+  }
+
+
+  public void clearSlaveList(CallbackObjectType callbackObjectType) {
+    ReentrantLock lock = getLock(callbackObjectType);
+    lock.lock();
     try {
-      slaveCallbackList.invalidateAll();
+      getCache(callbackObjectType).invalidateAll();
     } finally {
-      callbackCacheLock.unlock();
+      lock.unlock();
     }
   }
 

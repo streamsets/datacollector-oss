@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -37,7 +38,6 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JvmEL;
-import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -80,6 +80,7 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -139,6 +140,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private volatile boolean isClosed;
   private UpdateChecker updateChecker;
   private volatile String metricsForRetry;
+  private final List<ErrorListener> errorListeners;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
     new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -165,7 +167,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     this.rev = rev;
     this.user = user;
     this.objectGraph = objectGraph;
+    this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
+  }
+
+  public void addErrorListener(ErrorListener errorListener) {
+    this.errorListeners.add(errorListener);
   }
 
   @Override
@@ -660,6 +667,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
         MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);
         ProductionPipelineRunner runner = (ProductionPipelineRunner) objectGraph.get(PipelineRunner.class);
+        runner.addErrorListeners(errorListeners);
         if (isRetrying) {
           ObjectMapper objectMapper = ObjectMapperFactory.get();
           MetricRegistryJson metricRegistryJson = null;
@@ -788,7 +796,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public Collection<CallbackInfo> getSlaveCallbackList() {
+  public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
     throw new UnsupportedOperationException("This method is only supported in Cluster Runner");
   }
 

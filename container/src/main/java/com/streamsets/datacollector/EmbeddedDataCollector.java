@@ -22,6 +22,7 @@ package com.streamsets.datacollector;
 
 import com.google.common.base.Splitter;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.Runner;
@@ -223,7 +224,7 @@ public class EmbeddedDataCollector implements DataCollector {
   @Override
   public List<URI> getWorkerList() throws URISyntaxException {
     List<URI> sdcURLList = new ArrayList<>();
-    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList()) {
+    for (CallbackInfo callBackInfo : runner.getSlaveCallbackList(CallbackObjectType.METRICS)) {
       sdcURLList.add(new URI(callBackInfo.getSdcURL()));
     }
     return sdcURLList;

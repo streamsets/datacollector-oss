@@ -23,6 +23,7 @@ package com.streamsets.datacollector.execution.metrics;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -167,11 +168,11 @@ public class MetricsEventRunnable implements Runnable {
     Map<String, MeterJson> aggregatedMeters = null;
     List<String> slaves = new ArrayList<>();
 
-    for(CallbackInfo callbackInfo : slaveCallbackManager.getSlaveCallbackList()) {
+    for(CallbackInfo callbackInfo : slaveCallbackManager.getSlaveCallbackList(CallbackObjectType.METRICS)) {
       slaves.add(callbackInfo.getSdcURL());
-      MetricRegistryJson metricRegistryJson = callbackInfo.getMetricRegistryJson();
+      MetricRegistryJson metricRegistryJson = callbackInfo.getCallbackInfoHelper().getMetricRegistryJson();
       if(metricRegistryJson != null) {
-        slaveMetrics.put(callbackInfo.getSdcSlaveToken(), callbackInfo.getMetricRegistryJson());
+        slaveMetrics.put(callbackInfo.getSdcSlaveToken(), metricRegistryJson);
       }
     }
 

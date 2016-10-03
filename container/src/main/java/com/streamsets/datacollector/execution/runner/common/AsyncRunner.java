@@ -21,6 +21,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
@@ -223,8 +224,8 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public Collection<CallbackInfo> getSlaveCallbackList() {
-    return runner.getSlaveCallbackList();
+  public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
+    return runner.getSlaveCallbackList(callbackObjectType);
   }
 
   @Override

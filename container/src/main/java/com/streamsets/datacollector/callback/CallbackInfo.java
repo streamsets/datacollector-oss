@@ -19,17 +19,7 @@
  */
 package com.streamsets.datacollector.callback;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
 public class CallbackInfo implements Comparable<CallbackInfo> {
-  private final static Logger LOG = LoggerFactory.getLogger(CallbackInfo.class);
   private final String sdcClusterToken;
   private final String sdcSlaveToken;
   private final String sdcURL;
@@ -37,8 +27,9 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
   private final String creatorToken;
   private final String managerToken;
   private final String guestToken;
-  private final String metrics;
-  private MetricRegistryJson metricRegistryJson;
+  private final CallbackObjectType callbackObjectType;
+  private final String callbackObject;
+  private final CallbackInfoHelper callbackInfoHelper;
   private final String name;
   private final String rev;
   private final String user;
@@ -55,7 +46,8 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
       String creatorToken,
       String managerToken,
       String guestToken,
-      String metrics,
+      CallbackObjectType callbackObjectType,
+      String callbackObject,
       String slaveSdcId
   ) {
     this.name = name;
@@ -68,8 +60,10 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
     this.creatorToken = creatorToken;
     this.managerToken = managerToken;
     this.guestToken = guestToken;
-    this.metrics = metrics;
+    this.callbackObjectType = callbackObjectType;
+    this.callbackObject = callbackObject;
     this.slaveSdcId = slaveSdcId;
+    this.callbackInfoHelper = new CallbackInfoHelper(this);
   }
 
   public String getSdcClusterToken() {
@@ -100,8 +94,16 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
     return creatorToken;
   }
 
-  public String getMetrics() {
-    return metrics;
+  public CallbackObjectType getCallbackObjectType() {
+    return callbackObjectType;
+  }
+
+  public String getCallbackObject() {
+    return callbackObject;
+  }
+
+  public CallbackInfoHelper getCallbackInfoHelper() {
+    return callbackInfoHelper;
   }
 
   public String getName() {
@@ -114,18 +116,6 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
 
   public String getRev() {
     return rev;
-  }
-
-  public MetricRegistryJson getMetricRegistryJson() {
-    if(metricRegistryJson == null) {
-      ObjectMapper objectMapper = ObjectMapperFactory.get();
-      try {
-        metricRegistryJson = objectMapper.readValue(this.metrics, MetricRegistryJson.class);
-      } catch (IOException ex) {
-        LOG.warn("Error while serializing slave metrics: , {}", ex.toString(), ex);
-      }
-    }
-    return metricRegistryJson;
   }
 
   public String getSlaveSdcId() {

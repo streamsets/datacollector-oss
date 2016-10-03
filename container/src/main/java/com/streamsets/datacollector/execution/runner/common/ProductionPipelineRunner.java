@@ -58,6 +58,7 @@ import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.util.AggregatorUtil;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -98,6 +99,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private DeliveryGuarantee deliveryGuarantee;
   private final String pipelineName;
   private final String revision;
+  private final List<ErrorListener> errorListeners;
 
   private final Timer batchProcessingTimer;
   private final Meter batchCountMeter;
@@ -144,8 +146,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
 
   @Inject
-  public ProductionPipelineRunner(@Named("name") String pipelineName, @Named ("rev") String revision,
-                                  com.streamsets.datacollector.util.Configuration configuration,
+  public ProductionPipelineRunner(@Named("name") String pipelineName, @Named("rev") String revision,
+                                  Configuration configuration,
                                   RuntimeInfo runtimeInfo, MetricRegistry metrics, SnapshotStore snapshotStore,
                                   ThreadHealthReporter threadHealthReporter) {
     this.runtimeInfo = runtimeInfo;
@@ -158,6 +160,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     stageToErrorRecordsMap = new HashMap<>();
     stageToErrorMessagesMap = new HashMap<>();
     errorRecordsMutex = new Object();
+    this.errorListeners = new ArrayList<>();
 
     MetricsConfigurator.registerPipeline(pipelineName, revision);
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
@@ -197,6 +200,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public void setStatsAggregatorRequests(BlockingQueue<Record> statsAggregatorRequests) {
     this.statsAggregatorRequests = statsAggregatorRequests;
+  }
+
+  public void addErrorListeners(List<ErrorListener> errorListeners) {
+    LOG.info("Adding error listeners" + errorListeners.size());
+    this.errorListeners.addAll(errorListeners);
   }
 
   public void updateMetrics(MetricRegistryJson metricRegistryJson) {
@@ -308,6 +316,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     for (BatchListener batchListener : batchListenerList) {
       batchListener.postBatch();
     }
+    listeners.addAll(new ArrayList<>(errorListeners));
     for (Pipe pipe : pipes) {
       Stage stage = pipe.getStage().getStage();
       if (stage instanceof ErrorListener) {

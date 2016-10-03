@@ -22,6 +22,7 @@ package com.streamsets.datacollector.execution.runner.cluster;
 
 import com.google.common.io.Files;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.MockClusterProvider;
 import com.streamsets.datacollector.cluster.MockSystemProcess;
@@ -61,20 +62,28 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -394,17 +403,89 @@ public class TestClusterRunner {
   public void testSlaveList() throws Exception {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "",
-      "", "", "", "", "","sdc_id");
+      "", "", "", "", CallbackObjectType.METRICS, "","sdc_id");
     clusterRunner.updateSlaveCallbackInfo(callbackInfo);
-    List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
+    List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList(CallbackObjectType.METRICS));
     assertFalse(slaves.isEmpty());
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
     assertEquals("myToken", slaves.get(0).getSdcClusterToken());
     assertEquals("sdc_id", slaves.get(0).getSlaveSdcId());
     clusterRunner.prepareForStart();
     clusterRunner.start();
-    slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList());
+    slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.METRICS));
     assertTrue(slaves.isEmpty());
+  }
+
+
+  @Test
+  public void testSlaveErrorCallbackList() throws Exception {
+    ClusterRunner clusterRunner = Mockito.spy((ClusterRunner) createClusterRunner());
+    String sampleError = "java.lang.NullPointerException\n" +
+        "\tat com.streamsets.datacollector.execution.runner.cluster.TestClusterRunner.testSlaveErrorCallbackList(TestClusterRunner.java:416)";
+    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "",
+        "", "", "", "", CallbackObjectType.ERROR, sampleError,"sdc_id");
+    clusterRunner.updateSlaveCallbackInfo(callbackInfo);
+    List<CallbackInfo> errorCallbacks = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.ERROR));
+    assertFalse(errorCallbacks.isEmpty());
+    assertEquals(1, errorCallbacks.size());
+
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+
+    Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
+    assertFalse(errorCallbacks.isEmpty());
+    assertEquals(1, errorCallbacks.size());
+
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "Run Error", new HashMap<String, Object>());
+    //Check the handleErrorCallbackFromSlaves is called.
+    Mockito.verify(clusterRunner, Mockito.times(1)).handleErrorCallbackFromSlaves(Matchers.anyMap());
+
+    errorCallbacks = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.ERROR));
+    assertEquals(0, errorCallbacks.size());
+  }
+
+
+  @Test
+  public void testMultipleSlavesWithSameErrorCallbackObject() throws Exception {
+    ClusterRunner clusterRunner = Mockito.spy((ClusterRunner) createClusterRunner());
+    final String sampleError = "java.lang.NullPointerException\n" +
+        "\tat com.streamsets.datacollector.execution.runner.cluster.TestClusterRunner.testSlaveErrorCallbackList(TestClusterRunner.java:416)";
+
+    CallbackInfo callbackInfo1 = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "url1",
+        "", "", "", "", CallbackObjectType.ERROR, sampleError,"sdc_id1");
+    CallbackInfo callbackInfo2 = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "url2",
+        "", "", "", "", CallbackObjectType.ERROR, sampleError,"sdc_id2");
+
+
+    clusterRunner.updateSlaveCallbackInfo(callbackInfo1);
+    clusterRunner.updateSlaveCallbackInfo(callbackInfo2);
+
+
+    List<CallbackInfo> errorCallbacks = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.ERROR));
+    assertFalse(errorCallbacks.isEmpty());
+    assertEquals(2, errorCallbacks.size());
+
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+
+    Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
+    assertFalse(errorCallbacks.isEmpty());
+    assertEquals(2, errorCallbacks.size());
+
+    final Map<String, Object> attributeMap = new HashMap<>();
+
+    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "Run Error", attributeMap);
+
+    assertFalse(attributeMap.isEmpty());
+    assertTrue(attributeMap.containsKey(ClusterRunner.SLAVE_ERROR_ATTRIBUTE));
+    assertEquals(1, ((Set<String>)attributeMap.get(ClusterRunner.SLAVE_ERROR_ATTRIBUTE)).size());
+
+    //Check the handleErrorCallbackFromSlaves is called.
+    Mockito.verify(clusterRunner, Mockito.times(1)).handleErrorCallbackFromSlaves(Matchers.anyMap());
+
+    errorCallbacks = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.ERROR));
+    assertEquals(0, errorCallbacks.size());
   }
 
   @Test

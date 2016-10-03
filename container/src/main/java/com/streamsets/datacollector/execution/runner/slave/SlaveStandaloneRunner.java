@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.execution.runner.slave;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.callback.CallbackServerErrorEventListener;
 import com.streamsets.datacollector.callback.CallbackServerMetricsEventListener;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineInfo;
@@ -136,6 +138,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
     if (callbackServerURL != null) {
       eventListenerManager.addMetricsEventListener(this.getName(), new CallbackServerMetricsEventListener(getUser(),
         getName(), getRev(), runtimeInfo, callbackServerURL, clusterToken, standaloneRunner.getToken()));
+      standaloneRunner.addErrorListener(new CallbackServerErrorEventListener(getUser(),
+          getName(), getRev(), runtimeInfo, callbackServerURL, clusterToken, standaloneRunner.getToken()));
     } else {
       throw new RuntimeException(
         "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
@@ -216,8 +220,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public Collection<CallbackInfo> getSlaveCallbackList() {
-    return standaloneRunner.getSlaveCallbackList();
+  public Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType) {
+    return standaloneRunner.getSlaveCallbackList(callbackObjectType);
   }
 
   @Override
