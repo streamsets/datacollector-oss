@@ -279,7 +279,7 @@ public class DataStore {
   private void verifyAndRecover() throws IOException {
     if (Files.exists(fileOld) || Files.exists(fileTmp) || Files.exists(fileNew)) {
       if (Files.exists(fileNew)) {
-        LOG.debug("File '{}', write completed but not committed, committing", file);
+        LOG.warn("File '{}', write completed but not committed, committing", file);
         if (Files.exists(fileTmp)) {
           throw new IOException(Utils.format("File '{}' exists, '{}' should not exist", fileNew, fileTmp));
         }
@@ -289,11 +289,11 @@ public class DataStore {
         Files.move(fileNew, file);
         if (Files.exists(fileOld)) {
           Files.delete(fileOld);
-          LOG.trace("File '{}', deleted during verification", fileOld);
+          LOG.warn("File '{}', deleted during verification", fileOld);
         }
-        LOG.trace("File '{}', committed during verification", file);
+        LOG.warn("File '{}', committed during verification", file);
       } else if (Files.exists(fileTmp)) {
-        LOG.debug("File '{}', write incomplete while writing, rolling back", file);
+        LOG.warn("File '{}', write incomplete while writing, rolling back", file);
         if (!Files.exists(fileOld)) {
           throw new IOException(Utils.format("File '{}' exists, '{}' should exists", fileTmp, fileOld));
         }
@@ -302,14 +302,14 @@ public class DataStore {
         }
         Files.delete(fileTmp);
         Files.move(fileOld, file);
-        LOG.trace("File '{}', rolled back during verification", file);
+        LOG.warn("File '{}', rolled back during verification", file);
       } else if (Files.exists(fileOld)) {
-        LOG.debug("File '{}', write incomplete while starting write, rolling back", file);
+        LOG.warn("File '{}', write incomplete while starting write, rolling back", file);
         if (Files.exists(file)) {
           throw new IOException(Utils.format("File '{}' exists, '{}' should not exist", fileOld, file));
         }
         Files.move(fileOld, file);
-        LOG.trace("File '{}', rolled back during verification", file);
+        LOG.warn("File '{}', rolled back during verification", file);
       }
     } else {
       LOG.trace("File '{}' no recovery needed", file);
