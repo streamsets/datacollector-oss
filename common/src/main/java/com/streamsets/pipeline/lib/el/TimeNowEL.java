@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeNowEL {
@@ -34,7 +35,8 @@ public class TimeNowEL {
 
   private TimeNowEL() {}
 
-  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")
+  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "Creates a Datetime object set to the current " +
+      "time.")
   public static Date getTimeNowFunc() {
     Date now = (Date) ELEval.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);
     if(null == now) {
@@ -73,4 +75,33 @@ public class TimeNowEL {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(TIME_NOW_CONTEXT_VAR, now);
   }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "millisecondsToDateTime",
+      description = "Convert epoch in milliseconds to DateTime")
+  public static Date millisecondsToDateTime(@ElParam("long") long in) {
+    return new Date(in);
+
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "extractStringFromDate",
+      description = "Format a date into a string, based on an output format specification")
+  public static String millisecondsToStringDate(@ElParam("datetime") Date in, @ElParam("string") String outputFormat) {
+    SimpleDateFormat formatter = new SimpleDateFormat(outputFormat);
+    return formatter.format(in);
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "extractLongFromDate",
+      description = "Format a date into a long, based on an output format specification")
+  public static long milliSecondsToLongDate(@ElParam("datetime") Date in, @ElParam("string") String outputFormat)
+      throws NumberFormatException {
+    SimpleDateFormat formatter = new SimpleDateFormat(outputFormat);
+    String str = formatter.format(in);
+
+    String value = str.replaceAll("[^0-9]","");
+    return Long.parseLong(value);
+  }
+
 }

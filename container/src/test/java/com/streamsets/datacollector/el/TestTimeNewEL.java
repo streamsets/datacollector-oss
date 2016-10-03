@@ -19,25 +19,32 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TestTimeNewEL {
 
-  ELEvaluator eval;
-  ELVariables variables;
+  ELEvaluator eval = new ELEvaluator("testTimeNowELFunctions", TimeNowEL.class, RecordEL.class);
+  ELVariables variables = new ELVariables();
+
   Date date;
 
   @Before
   public void setUp() {
     date = new Date();
-    eval = new ELEvaluator("test", TimeNowEL.class);
+    eval = new ELEvaluator("test", TimeNowEL.class, RecordEL.class);
     variables = new ELVariables();
     variables.addContextVariable(TimeNowEL.TIME_NOW_CONTEXT_VAR, date);
+    TimeNowEL.setTimeNowInContext(variables, date);
   }
 
   @Test
@@ -63,6 +70,73 @@ public class TestTimeNewEL {
     Assert.assertEquals(0, output.getSeconds());
 
     Assert.assertNull(eval.eval(variables, "${time:trimTime(null)}", Date.class));
+  }
+
+  @Test
+  public void testMillisecondsToDateTime() throws Exception {
+
+    Record.Header header = Mockito.mock(Record.Header.class);
+    Record record = Mockito.mock(Record.class);
+    Mockito.when(record.getHeader()).thenReturn(header);
+    long val = System.currentTimeMillis();
+    Mockito.when(record.get(Mockito.eq("/epochMS"))).thenReturn(Field.create(val));
+
+    RecordEL.setRecordInContext(variables, record);
+
+    Assert.assertEquals(new Date(val), eval.eval(variables, "${time:millisecondsToDateTime(record:value('/epochMS'))}", Date.class));
+  }
+
+  @Test
+  public void testExtractStringFromDate() throws Exception {
+
+    Record.Header header = Mockito.mock(Record.Header.class);
+    Record record = Mockito.mock(Record.class);
+    Mockito.when(record.getHeader()).thenReturn(header);
+    long val = System.currentTimeMillis();
+    Date d = new Date(val);
+    Mockito.when(record.get(Mockito.eq("/theDate"))).thenReturn(Field.createDate(d));
+    Mockito.when(record.get(Mockito.eq("/epochMS"))).thenReturn(Field.create(val));
+
+    String format  = "G yyyy-MM-dd HH:mm:ss.SSS a zzzzzzz";
+    Mockito.when(record.get(Mockito.eq("/format"))).thenReturn(Field.create(format));
+
+    RecordEL.setRecordInContext(variables, record);
+
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+    String ans = sdf.format(d);
+
+    Assert.assertEquals(ans, eval.eval(variables,
+        "${time:extractStringFromDate(time:millisecondsToDateTime(record:value('/epochMS')), record:value('/format'))}", String.class));
+
+    Assert.assertEquals(ans, eval.eval(variables,
+        "${time:extractStringFromDate(record:value('/theDate'), record:value('/format'))}", String.class));
+  }
+
+
+  @Test
+  public void testExtractLongFromDate() throws Exception {
+
+    Record.Header header = Mockito.mock(Record.Header.class);
+    Record record = Mockito.mock(Record.class);
+    Mockito.when(record.getHeader()).thenReturn(header);
+
+    long val = System.currentTimeMillis();
+    Mockito.when(record.get(Mockito.eq("/epochMS"))).thenReturn(Field.create(val));
+
+    String format = "yyyy/MM/dd HH:mm:ss.SSS";
+    Mockito.when(record.get(Mockito.eq("/format"))).thenReturn(Field.create(format));
+
+    RecordEL.setRecordInContext(variables, record);
+
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+    Date d = new Date(val);
+    String digits = sdf.format(d).replaceAll("[^0-9]","");
+    Long ans = Long.parseLong(digits);
+
+    Assert.assertEquals(ans, eval.eval(variables,
+        "${time:extractLongFromDate(time:millisecondsToDateTime(record:value('/epochMS')), record:value('/format'))}", Long.class));
   }
 
 }
