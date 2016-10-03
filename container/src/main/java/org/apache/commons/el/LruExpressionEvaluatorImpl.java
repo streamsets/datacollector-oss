@@ -22,6 +22,7 @@ package org.apache.commons.el;
 import java.util.Collections;
 
 import org.apache.commons.collections.map.LRUMap;
+import org.slf4j.LoggerFactory;
 
 /**
  * StreamSets specific subclass of ExpressionEvaluatorImpl that workarounds
@@ -30,6 +31,8 @@ import org.apache.commons.collections.map.LRUMap;
  */
 @SuppressWarnings("unchecked")
 public class LruExpressionEvaluatorImpl extends ExpressionEvaluatorImpl {
+  private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(LruExpressionEvaluatorImpl.class);
+
   /**
    * Max LRU size, right now it's a magic constant.
    */
@@ -41,6 +44,24 @@ public class LruExpressionEvaluatorImpl extends ExpressionEvaluatorImpl {
   static {
     sCachedExpressionStrings = Collections.synchronizedMap(new LRUMap(MAX_LRU_SIZE));
     sCachedExpectedTypes = new LRUMap(MAX_LRU_SIZE);
+    Thread thread = new Thread("EL-cache-trimmer") {
+      @Override
+      public void run() {
+        LOG.info(" Starting housekeeper thread for expected types cache (runs every 5mins)");
+        while (true) {
+          try {
+            LOG.debug("Clearing expected types cache");
+            sleep(5 * 60 * 1000);
+            synchronized (sCachedExpectedTypes) {
+              sCachedExpectedTypes.clear();
+            }
+          } catch (InterruptedException ex) {
+          }
+        }
+      }
+    };
+    thread.setDaemon(true);
+    thread.start();
   }
 
 }
