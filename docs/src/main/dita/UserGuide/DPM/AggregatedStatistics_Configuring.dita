@@ -138,6 +138,10 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisRegion">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisEndpoint">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Stream Name</entry>
                                     <entry>Kinesis stream name.<p>To avoid mixing statistics from

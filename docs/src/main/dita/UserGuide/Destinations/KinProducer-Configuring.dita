@@ -66,6 +66,11 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisEndpoint">
+                                    <entry/>
+                                </row>
+                                
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisStreamName">
                                     <entry/>
                                 </row>

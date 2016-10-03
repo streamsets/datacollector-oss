@@ -174,9 +174,9 @@
      </tbody>
     </tgroup>
    </table>
-   <draft-comment author="Loretta">The following rows are used in full for the Amazon S3 origin and
-    the Amazon S3 destination reuses individual rows. Data Format and File Compression are also used
-    in Directory and SFTP Client.</draft-comment>
+   <draft-comment author="Loretta">The following rows are used in full for the Amazon S3 origin. The
+    Amazon S3 destination and Kinesis Firehose destination reuse individual rows. Data Format and
+    File Compression are also used in Directory and SFTP Client.</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
@@ -193,6 +193,11 @@
       <row id="S3-Region">
        <entry>Region</entry>
        <entry>Amazon S3 region. </entry>
+      </row>
+      <row id="S3-Endpoint">
+       <entry>Endpoint</entry>
+       <entry>Endpoint to connect to when you select Other for the region. Enter the endpoint
+        name.</entry>
       </row>
       <row id="S3Bucket">
        <entry>Bucket</entry>
@@ -271,8 +276,9 @@
     </tgroup>
    </table>
   </p>
-  <draft-comment author="alisontaylor">Kinesis Producer and DPM chapter > Aggregated Statistics for
-   Pipelines > Configuring a Pipeline to Aggregate Statistics use these rows</draft-comment>
+  <draft-comment author="alisontaylor">Kinesis Consumer, Kinesis Producer and DPM chapter >
+   Aggregated Statistics for Pipelines > Configuring a Pipeline to Aggregate Statistics use these
+   rows</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_kqy_mw1_fx">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -281,6 +287,11 @@
      <row id="rowKinesisRegion">
       <entry>Region</entry>
       <entry>Amazon Web Services region that hosts the Kinesis cluster.</entry>
+     </row>
+     <row id="rowKinesisEndpoint">
+      <entry>Endpoint</entry>
+      <entry>Endpoint to connect to when you select Other for the region. Enter the endpoint
+       name.</entry>
      </row>
      <row id="rowKinesisStreamName">
       <entry>Stream Name</entry>
