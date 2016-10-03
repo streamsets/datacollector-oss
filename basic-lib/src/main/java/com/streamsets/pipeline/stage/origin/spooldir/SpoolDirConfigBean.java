@@ -55,11 +55,48 @@ public class SpoolDirConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      label = "File Name Pattern",
+      description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
+          "Files are processed in lexicographically increasing order.",
+      displayPosition = 20,
+      group = "FILES"
+  )
+  public String filePattern;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LEXICOGRAPHICAL",
+      label = "Read Order",
+      description = "Read files based on the last-modified timestamp or lexicographically ascending file names. When timestamp ordering is used, files with the same timestamp are ordered based on file names.",
+      displayPosition = 30,
+      group = "FILES"
+  )
+  @ValueChooserModel(FileOrderingChooseValues.class)
+  public FileOrdering useLastModified = FileOrdering.LEXICOGRAPHICAL;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Process Subdirectories",
+      description = "Process files in subdirectories of Files Directory.  " +
+          "Only file names matching File Name Pattern will be processed.",
+      displayPosition = 40,
+      dependsOn = "useLastModified",
+      triggeredByValue = "TIMESTAMP",
+      group = "FILES"
+  )
+  public boolean processSubdirectories;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Allow Late Directory",
       description = "Enables reading from a late-arriving directory." +
           " When enabled, the origin does not validate the configured path.",
-      displayPosition = 12,
+      displayPosition = 50,
       group = "FILES",
       defaultValue = "false"
   )
@@ -71,7 +108,7 @@ public class SpoolDirConfigBean {
       label = "Buffer Limit (KB)",
       defaultValue = "128",
       description = "Low level reader buffer limit to avoid out of Memory errors",
-      displayPosition = 15,
+      displayPosition = 70,
       group = "FILES",
       min = 1,
       max = Integer.MAX_VALUE
@@ -84,7 +121,7 @@ public class SpoolDirConfigBean {
       label = "Batch Size (recs)",
       defaultValue = "1000",
       description = "Max number of records per batch",
-      displayPosition = 20,
+      displayPosition = 43,
       group = "FILES",
       min = 0,
       max = Integer.MAX_VALUE
@@ -97,34 +134,11 @@ public class SpoolDirConfigBean {
       defaultValue = "600",
       label = "Batch Wait Time (secs)",
       description = "Max time to wait for new files before sending an empty batch",
-      displayPosition = 30,
+      displayPosition = 48,
       group = "FILES",
       min = 1
   )
   public long poolingTimeoutSecs;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "LEXICOGRAPHICAL",
-      label = "Read Order",
-      description = "Read files based on the last-modified timestamp or lexicographically ascending file names. When timestamp ordering is used, files with the same timestamp are ordered based on file names.",
-      displayPosition = 35,
-      group = "FILES"
-  )
-  @ValueChooserModel(FileOrderingChooseValues.class)
-  public FileOrdering useLastModified = FileOrdering.LEXICOGRAPHICAL;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "File Name Pattern",
-      description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
-          "Files are processed in lexicographically increasing order.",
-      displayPosition = 40,
-      group = "FILES"
-  )
-  public String filePattern;
 
   @ConfigDef(
       required = true,

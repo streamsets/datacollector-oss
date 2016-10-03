@@ -47,7 +47,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
@@ -205,7 +207,9 @@ public class SpoolDirSource extends BaseSource {
           DirectorySpooler.builder().setDir(conf.spoolDir).setFilePattern(conf.filePattern)
               .setMaxSpoolFiles(conf.maxSpoolFiles)
               .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()))
-              .waitForPathAppearance(waitForPathToBePresent);
+              .waitForPathAppearance(waitForPathToBePresent)
+              .processSubdirectories(conf.processSubdirectories);
+
       if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
         builder.setArchiveDir(conf.archiveDir);
         builder.setArchiveRetention(conf.retentionTimeMins);
@@ -214,7 +218,6 @@ public class SpoolDirSource extends BaseSource {
         builder.setErrorArchiveDir(conf.errorArchiveDir);
       }
       builder.setContext(getContext());
-      LOG.info("Ordering: " + conf.useLastModified.getLabel());
       this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
       builder.setUseLastModifiedTimestamp(useLastModified);
       spooler = builder.build();
@@ -292,7 +295,7 @@ public class SpoolDirSource extends BaseSource {
     if (conf.initialFileToProcess != null && !conf.initialFileToProcess.isEmpty()) {
       try {
         PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(conf.filePattern);
-        if (!pathMatcher.matches(new File(conf.initialFileToProcess).toPath())) {
+        if (!pathMatcher.matches(new File(conf.initialFileToProcess).toPath().getFileName())) {
           issues.add(
               getContext().createConfigIssue(
                   Groups.FILES.name(),
@@ -405,19 +408,20 @@ public class SpoolDirSource extends BaseSource {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
+    String fullPath = getSpooler().getSpoolDir() + "/" + file;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
     String offset = getOffsetFromSourceOffset(lastSourceOffset);
-    if (hasToFetchNextFileFromSpooler(file, offset)) {
+    if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
       currentFile = null;
       try {
         File nextAvailFile = null;
         do {
           if (nextAvailFile != null) {
             LOG.warn("Ignoring file '{}' in spool directory as is lesser than offset file '{}'",
-                nextAvailFile.getName(), file);
+                nextAvailFile.toString(), fullPath);
           }
           nextAvailFile = getSpooler().poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
-        } while (!isFileFromSpoolerEligible(nextAvailFile, file, offset));
+        } while (!isFileFromSpoolerEligible(nextAvailFile, fullPath, offset));
 
         if (nextAvailFile == null) {
           // no file to process
@@ -443,7 +447,7 @@ public class SpoolDirSource extends BaseSource {
             pickFileFromSpooler = true;
           }
           if (pickFileFromSpooler) {
-            file = currentFile.getName();
+            file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + "/", "");
             offset = ZERO;
           }
         }
@@ -465,6 +469,7 @@ public class SpoolDirSource extends BaseSource {
         try {
           // then we ask the spooler to error handle the failed file
           spooler.handleCurrentFileAsError();
+
         } catch (IOException ex1) {
           throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.toString(), ex1);
         }
@@ -477,7 +482,7 @@ public class SpoolDirSource extends BaseSource {
   }
 
   /**
-   * Processes a batch from the specified file and offset up to a maximum batch size. If the file is fully process
+   * Processes a batch from the specified file and offset up to a maximum batch size. If the file is fully processed
    * it must return -1, otherwise it must return the offset to continue from next invocation.
    */
   public String produce(File file, String offset, int maxBatchSize, BatchMaker batchMaker) throws StageException,
