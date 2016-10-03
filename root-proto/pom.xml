@@ -59,6 +59,7 @@
     <mockito.version>1.10.19</mockito.version>
     <powermock.version>1.6.3</powermock.version>
     <jacoco.version>0.7.7.201606060606</jacoco.version>
+    <hikaricp.version>2.4.1</hikaricp.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
     <testcontainers.version>1.1.6</testcontainers.version>

@@ -69,6 +69,7 @@
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
     <jdbc-lib>jdbc-lib</jdbc-lib>
     <jms-lib>jms-lib</jms-lib>
+    <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
@@ -180,6 +181,7 @@
     <module>influxdb_0_9-lib</module>
     <module>jdbc-lib</module>
     <module>jms-lib</module>
+    <module>mysql-binlog-lib</module>
     <module>omniture-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>

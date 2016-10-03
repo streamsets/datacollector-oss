@@ -184,6 +184,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- mysql-binlog-lib -->
+    <fileSet>
+      <directory>${basedir}/../mysql-binlog-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- rabbitmq-lib -->
     <fileSet>
       <directory>${basedir}/../rabbitmq-lib/target/streamsets-libs/</directory>
