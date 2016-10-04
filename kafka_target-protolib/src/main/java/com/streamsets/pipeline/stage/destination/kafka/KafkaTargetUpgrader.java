@@ -127,8 +127,8 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
 
-    configs.add(new Config(joiner.join("conf", "keyDeserializer"), Serializer.STRING));
-    configs.add(new Config(joiner.join("conf", "valueDeserializer"), Serializer.DEFAULT));
+    configs.add(new Config(joiner.join("conf", "keySerializer"), Serializer.STRING));
+    configs.add(new Config(joiner.join("conf", "valueSerializer"), Serializer.DEFAULT));
 
     DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
   }

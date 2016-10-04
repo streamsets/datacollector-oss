@@ -56,7 +56,7 @@ public class DataFormatUpgradeHelper {
     Optional<Config> schemaInMessage = findByName(configs, "schemaInMessage");
 
     if (schemaInMessage.isPresent()) {
-      if ((boolean) schemaInMessage.get().getValue()) {
+      if ((boolean) schemaInMessage.get().<Boolean>getValue()) {
         toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
       }
       toRemove.add(schemaInMessage.get());
@@ -65,7 +65,7 @@ public class DataFormatUpgradeHelper {
     }
 
     // New configs added
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrls"), ""));
+    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrls"), new ArrayList<>()));
     toAdd.add(new Config(PERIOD.join(prefix, "schemaLookupMode"), AvroSchemaLookupMode.AUTO));
     toAdd.add(new Config(PERIOD.join(prefix, "subject"), ""));
     toAdd.add(new Config(PERIOD.join(prefix, "schemaId"), 0));
@@ -99,11 +99,11 @@ public class DataFormatUpgradeHelper {
     }
 
     toAdd.add(new Config(PERIOD.join(prefix, "registerSchema"), false));
-    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrlsForRegistration"), ""));
+    toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrlsForRegistration"), new ArrayList<>()));
     toAdd.add(new Config(PERIOD.join(prefix, "schemaRegistryUrls"), new ArrayList<>()));
     toAdd.add(new Config(PERIOD.join(prefix, "schemaLookupMode"), AvroSchemaLookupMode.AUTO));
     toAdd.add(new Config(PERIOD.join(prefix, "subject"), ""));
-    toAdd.add(new Config(PERIOD.join(prefix, "subjectToRegister"), new ArrayList<>()));
+    toAdd.add(new Config(PERIOD.join(prefix, "subjectToRegister"), ""));
     toAdd.add(new Config(PERIOD.join(prefix, "schemaId"), 0));
 
     configs.removeAll(toRemove);

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
     description = "Add Raw data to the source.",
     execution = ExecutionMode.STANDALONE,
     icon = "dev.png",
-    upgrader = RawDataSourceUpgrade.class,
+    upgrader = RawDataSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 @ConfigGroups(value = RawDataSourceGroups.class)

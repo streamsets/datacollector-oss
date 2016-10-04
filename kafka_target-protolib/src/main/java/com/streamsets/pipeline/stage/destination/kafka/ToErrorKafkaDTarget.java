@@ -34,13 +34,19 @@ import com.streamsets.pipeline.config.DataFormat;
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
     upgrader = KafkaTargetUpgrader.class)
 @ErrorStage
-@HideConfigs(preconditions = true, onErrorRecord = true, value = {"conf.dataFormat"})
+@HideConfigs(preconditions = true, onErrorRecord = true, value = {
+    "conf.dataFormat",
+    "conf.keySerializer",
+    "conf.valueSerializer"
+})
 @GenerateResourceBundle
 public class ToErrorKafkaDTarget extends KafkaDTarget {
 
   @Override
   protected Target createTarget() {
     conf.dataFormat = DataFormat.SDC_JSON;
+    conf.keySerializer = Serializer.STRING;
+    conf.valueSerializer = Serializer.DEFAULT;
     return new KafkaTarget(conf);
   }
 

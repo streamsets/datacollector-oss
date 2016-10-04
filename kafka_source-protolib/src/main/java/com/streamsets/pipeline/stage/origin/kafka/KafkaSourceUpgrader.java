@@ -44,11 +44,19 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
       case 3:
         upgradeV3ToV4(configs);
-        break;
+        if (toVersion == 4) {
+          break;
+        }
       case 4:
         upgradeV4ToV5(configs);
         break;

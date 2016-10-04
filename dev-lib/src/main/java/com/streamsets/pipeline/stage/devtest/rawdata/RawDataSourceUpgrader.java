@@ -23,11 +23,11 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RawDataSourceUpgrade implements StageUpgrader {
+public class RawDataSourceUpgrader implements StageUpgrader {
   @Override
   public List<Config> upgrade(
       String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
@@ -42,7 +42,18 @@ public class RawDataSourceUpgrade implements StageUpgrader {
     return configs;
   }
 
+  // Avro support removed as it does not make sense for a text area.
   private static void upgradeV1ToV2(List<Config> configs) {
-    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+    List<Config> toRemove = new ArrayList<>();
+
+    for (Config config : configs) {
+      if (config.getName().contains("schemaInMessage")) {
+        toRemove.add(config);
+      } else if (config.getName().contains("avro")) {
+        toRemove.add(config);
+      }
+    }
+
+    configs.removeAll(toRemove);
   }
 }

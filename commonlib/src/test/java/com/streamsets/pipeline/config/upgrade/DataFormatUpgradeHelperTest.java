@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.config.upgrade;
 
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.AvroCompression;
+import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import org.junit.Test;
@@ -29,6 +31,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper.findByName;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -49,13 +52,13 @@ public class DataFormatUpgradeHelperTest {
 
     assertEquals(
         OriginAvroSchemaSource.SOURCE,
-        DataFormatUpgradeHelper.findByName(configs, "avroSchemaSource").get().getValue()
+        findByName(configs, "avroSchemaSource").get().getValue()
     );
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "avroSchema").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaLookupMode").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaRegistryUrls").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "subject").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaId").isPresent());
+    checkStringConfig(configs, "avroSchema");
+    checkConfig(configs, "schemaLookupMode", AvroSchemaLookupMode.class);
+    checkListConfig(configs, "schemaRegistryUrls");
+    checkStringConfig(configs, "subject");
+    checkConfig(configs, "schemaId", Integer.class);
   }
 
   @Test
@@ -73,20 +76,40 @@ public class DataFormatUpgradeHelperTest {
 
     assertEquals(
         DestinationAvroSchemaSource.HEADER,
-        DataFormatUpgradeHelper.findByName(configs, "avroSchemaSource").get().getValue()
+        findByName(configs, "avroSchemaSource").get().getValue()
     );
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "avroSchema").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaLookupMode").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaRegistryUrls").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "subject").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "subjectToRegister").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaId").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "includeSchema").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "registerSchema").isPresent());
-    assertTrue(DataFormatUpgradeHelper.findByName(configs, "schemaRegistryUrlsForRegistration").isPresent());
+
+    checkStringConfig(configs, "avroSchema");
+    checkConfig(configs, "schemaLookupMode", AvroSchemaLookupMode.class);
+    checkListConfig(configs, "schemaRegistryUrls");
+    checkListConfig(configs, "schemaRegistryUrlsForRegistration");
+    checkStringConfig(configs, "subject");
+    checkStringConfig(configs, "subjectToRegister");
+    checkConfig(configs, "schemaId", Integer.class);
+    checkBooleanConfig(configs, "includeSchema");
+    checkBooleanConfig(configs, "registerSchema");
+
     assertEquals(
         "None",
-        ((AvroCompression) DataFormatUpgradeHelper.findByName(configs, "avroCompression").get().getValue()).getLabel()
+        ((AvroCompression) findByName(configs, "avroCompression").get().getValue()).getLabel()
     );
+  }
+
+  private void checkConfig(List<Config> configs, String name, Class type) {
+    Optional<Config> config = findByName(configs, name);
+    assertTrue(config.isPresent());
+    assertTrue(type.isInstance(config.get().getValue()));
+  }
+
+  private void checkStringConfig(List<Config> configs, String name) {
+    checkConfig(configs, name, String.class);
+  }
+
+  private void checkListConfig(List<Config> configs, String name) {
+    checkConfig(configs, name, List.class);
+  }
+
+  private void checkBooleanConfig(List<Config> configs, String name) {
+    checkConfig(configs, name, Boolean.class);
   }
 }
