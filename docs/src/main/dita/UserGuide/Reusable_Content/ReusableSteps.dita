@@ -897,10 +897,56 @@
                     </table>
                 </info>
             </step>
-            <step > <cmd>                     
-                <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory, Kafka
-                        Consumer, Hadoop FS, Kinesis Consumer, JMS Consumer</draft-comment>
-            </cmd>
+            <step>
+                <cmd>                    <draft-comment author="alisontaylor"><uicontrol>TEXT_Hadoop data</uicontrol> -
+                        Hadoop FS origin (Include Custom Delimiter is not
+                        applicable)</draft-comment></cmd>
+            </step>        
+            <step id="Text_Hadoop">
+                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ney_vwc_fv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p>Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Custom Delimiter <xref
+                                        href="../Pipeline_Design/TextCDelim.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline" id="image_f8g_d37_xv"
+                                        /></xref></entry>
+                                    <entry>Uses custom delimiters to define records instead of line
+                                        breaks. </entry>
+                                </row>
+                                <row>
+                                    <entry>Custom Delimiter</entry>
+                                    <entry>One more more characters to use to define records.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+                
+            </step>
+            <step > <cmd>
+                    <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
+                        Kafka Consumer, Kinesis Consumer, JMS Consumer</draft-comment>
+                </cmd>
             </step>        
                 <step id="Text">
                     <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following properties:</cmd>

@@ -163,7 +163,7 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text_Hadoop">
                 <cmd/>
             </step>
         </steps>
