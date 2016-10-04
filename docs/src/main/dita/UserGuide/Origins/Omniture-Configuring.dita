@@ -72,7 +72,9 @@
                                 </row>
                                 <row>
                                     <entry>Username</entry>
-                                    <entry>Omniture user name.</entry>
+                                    <entry>Omniture user name.<note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Shared Secret </entry>
@@ -117,7 +119,9 @@
                                 </row>
                                 <row>
                                     <entry>Password</entry>
-                                    <entry>Proxy password.</entry>
+                                    <entry>Proxy password.<note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>

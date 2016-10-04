@@ -1132,12 +1132,14 @@
                                 <row>
                                     <entry>Username</entry>
                                     <entry>User name for basic, digest, or universal authentication.
-                                    </entry>
+                                            </entry>
                                 </row>
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Password for basic, digest, or universal authentication.
-                                    </entry>
+                                        <note
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Consumer Key</entry>
@@ -1192,7 +1194,9 @@
                                 </row>
                                 <row>
                                     <entry>Password</entry>
-                                    <entry>Proxy password.</entry>
+                                    <entry>Proxy password.<note
+                                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                    /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1209,6 +1213,7 @@
                 <cmd>Optionally, on the <uicontrol>SSL/TLS</uicontrol> tab, configure truststore and
                     keystore details:</cmd>
                 <info>
+                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_cpn_3rh_jw">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1271,7 +1276,9 @@
                                 </row>
                                 <row id="row-JDBCpassword">
                                     <entry>Password</entry>
-                                    <entry>Password for the JDBC account.</entry>
+                                    <entry>Password for the JDBC account.<note
+                                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                    /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1457,6 +1464,9 @@
             <step id="Rabbit-CredentialsStep">
                 <cmd>On the <wintitle>Credentials</wintitle> tab, enter the RabbitMQ credentials to
                     use if you enabled credentials.</cmd>
+                <info>
+                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/>
+                </info>
             </step>
             <step id="Rabbit-QueueStep">
                 <cmd>On the <wintitle>Queue</wintitle> tab, configure the following queue
@@ -1669,7 +1679,9 @@
                                 </row>
                                 <row id="O-RPC-KeystorePass">
                                     <entry>Keystore Password</entry>
-                                    <entry>Password for the keystore file.</entry>
+                                    <entry>Password for the keystore file.<note
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry/>
@@ -2871,6 +2883,9 @@
                 <cmd>When writing to a Shield-protected cluster, on the <wintitle>Shield</wintitle>
                     tab, configure the following properties:</cmd>
                 <info id="ElasticSHIELD-Info">
+                    <note
+                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                    />
                     <table frame="all" rowsep="1" colsep="1" id="table_jsk_fhg_z5">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -3264,7 +3279,9 @@
                                 </row>
                                 <row id="row-TSpass">
                                     <entry>Truststore Password</entry>
-                                    <entry>Password for the truststore file.</entry>
+                                    <entry>Password for the truststore file.<note
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                        /></entry>
                                 </row>
                                 <row id="row-verifyHost">
                                     <entry>Verify Host in Server Certificate</entry>
@@ -3464,7 +3481,9 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                                 </row>
                                 <row>
                                     <entry>Password</entry>
-                                    <entry>MongoDB password.</entry>
+                                    <entry>MongoDB password.<note
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>

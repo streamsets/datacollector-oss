@@ -1470,5 +1470,23 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   drivers.</p>
             <p id="AdditionalDrivers_optional">Additional drivers for other stages are optional. For example, you can install custom classes
                   for the JavaScript or Jython Evaluators. </p>
+            <draft-comment author="alisontaylor"><uicontrol>Tip_Usernames</uicontrol> Used in
+                  username/password properties for all stages. <uicontrol>Tip_AccessKeys</uicontrol>
+                  used in AWS Credentials topic for AWS stages. <uicontrol>Tip_Passwords</uicontrol>
+                  used in keystore/truststore password properties for all stages.</draft-comment>
+            <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Install_Config/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
+                  pairs, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Install_Config/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords, you can use runtime
+                  resources or Hashicorp Vault secrets. For more information, see <xref
+                        href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Install_Config/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
       </conbody>
 </concept>

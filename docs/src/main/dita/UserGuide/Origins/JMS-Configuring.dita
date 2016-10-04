@@ -142,7 +142,9 @@
                                 </row>
                                 <row>
                                     <entry>Password</entry>
-                                    <entry>JMS password.</entry>
+                                    <entry>JMS password.<note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>

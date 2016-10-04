@@ -29,6 +29,11 @@
             <step>
                 <cmd>On the <wintitle>Credentials</wintitle> tab, enter the RabbitMQ credentials to
                     use if you enabled credentials.</cmd>
+                <info>
+                    <note
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                    />
+                </info>
             </step>
             <step>
                 <cmd>On the <wintitle>Queue</wintitle> tab, configure the following queue

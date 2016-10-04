@@ -657,7 +657,8 @@
      </row>
      <row id="row-ProxyPassword">
       <entry>Proxy Password</entry>
-      <entry>Password for proxy credentials. </entry>
+      <entry>Password for proxy credentials.<note
+       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
      <row>
       <entry>Thread Pool Size for Parallel Uploads</entry>

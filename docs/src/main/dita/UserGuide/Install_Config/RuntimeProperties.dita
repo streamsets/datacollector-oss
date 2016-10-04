@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fjx_g31_1s">
- <title>Runtime Properties</title>
+ <title>Using Runtime Properties</title>
  <shortdesc>Runtime properties are properties that you define in a file local to the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and call
     from within a pipeline. With runtime properties, you can define different sets of values for

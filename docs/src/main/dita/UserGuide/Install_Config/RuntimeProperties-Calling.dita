@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdh_glg_1s">
- <title>Calling a Runtime Property</title>
+ <title>Step 2. Call the Runtime Property</title>
  <shortdesc>Use the <codeph>runtime:conf</codeph> function to call a runtime property. You can use
         runtime properties to represent any stage or pipeline property that allows the use of the
         expression language. </shortdesc>
