@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -73,11 +72,31 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     this.comparator = new FieldRenamerPathComparator();
   }
 
+  /**
+   * Add backslash to escape the | character within quoted sections of the
+   * input string.  This prevents the | from being processed as part of a regex.
+   * @param input Contains the field name to process.
+   * @return New string
+   */
+  private static String escapeQuotedSubstring(String input) {
+    String[] parts = input.split("'");
+    StringBuilder output = new StringBuilder(input.length() * 2);
+    for (int i = 0; i < parts.length; i++) {
+      if ((i % 2) == 1) {
+        output.append("'").append(parts[i].replace("|", "\\|")).append("'");
+      } else {
+        output.append(parts[i]);
+      }
+    }
+    return output.toString();
+  }
+
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     for (FieldRenamerConfig renameConfig : renameMapping) {
       String fromFieldPathRegex = FieldRegexUtil.patchUpFieldPathRegex(renameConfig.fromFieldExpression);
+      fromFieldPathRegex = escapeQuotedSubstring(fromFieldPathRegex);
       try {
         Pattern pattern = Pattern.compile(fromFieldPathRegex);
         fromPatternToFieldExpMapping.put(pattern, renameConfig.toFieldExpression);

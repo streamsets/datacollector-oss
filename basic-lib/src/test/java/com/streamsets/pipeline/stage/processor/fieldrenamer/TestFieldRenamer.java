@@ -33,7 +33,6 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1020,6 +1019,45 @@ public class TestFieldRenamer {
       Assert.assertEquals(1, runner.getErrorRecords().size());
       Record errorRecord = runner.getErrorRecords().get(0);
       Assert.assertEquals(Errors.FIELD_RENAMER_04.name(), errorRecord.getHeader().getErrorCode());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+  @Test
+  public void testSourceWithQuotedSubstring() throws StageException {
+    // source should be processed as quoted string.
+    FieldRenamerConfig renameConfig1 = new FieldRenamerConfig();
+    renameConfig1.fromFieldExpression = "/'attr|OrderNum'";
+    renameConfig1.toFieldExpression = "/theOrderNum";
+
+    FieldRenamerProcessorErrorHandler errorHandler = new FieldRenamerProcessorErrorHandler();
+    errorHandler.nonExistingFromFieldHandling = OnStagePreConditionFailure.CONTINUE;
+    errorHandler.multipleFromFieldsMatching = OnStagePreConditionFailure.TO_ERROR;
+    errorHandler.existingToFieldHandling = ExistingToFieldHandling.REPLACE;
+
+    FieldRenamerProcessor processor =
+        new FieldRenamerProcessor(ImmutableList.of(renameConfig1),  errorHandler);
+
+    // Test non-existent source with existing target field
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldRenamerDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("attr|OrderNum", Field.create(Field.Type.STRING, "foo"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(String.valueOf(result), 1, result.size());
+      Assert.assertFalse(result.containsKey("/'attr|OrderNum'"));
+      Assert.assertFalse(result.containsKey("'attr|OrderNum'"));
+      Assert.assertFalse(result.containsKey("attr|OrderNum"));
+      Assert.assertTrue(result.containsKey("theOrderNum"));
     } finally {
       runner.runDestroy();
     }
