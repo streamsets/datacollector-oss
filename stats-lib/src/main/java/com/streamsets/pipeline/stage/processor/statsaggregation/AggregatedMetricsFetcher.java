@@ -50,6 +50,7 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class AggregatedMetricsFetcher {
 
@@ -103,6 +104,14 @@ public class AggregatedMetricsFetcher {
     String errorResponseMessage = null;
     int delaySecs = 1;
     int attempts = 0;
+
+    // Wait for a few random seconds before starting the stopwatch
+    int waitSeconds = new Random().nextInt(60);
+    try {
+      Thread.sleep(waitSeconds * 1000);
+    } catch (InterruptedException e) {
+      // No-op
+    }
 
     while (attempts < retryAttempts) {
       if (attempts > 0) {
