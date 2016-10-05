@@ -12,70 +12,35 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_i3h_q3w_hx">
-    <title>MapR Requirements</title>
-    <taskbody>
-        <context>
-            <p><indexterm>cluster mode<indexterm>configuration for
-                MapR</indexterm></indexterm>Cluster mode pipelines that read from a MapR cluster
-                have the following minimum requirements: <table frame="all" rowsep="1" colsep="1"
-                    id="table_agw_5pn_zw">
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                        <colspec colname="c2" colnum="2" colwidth="3.0*"/>
-                        <thead>
-                            <row>
-                                <entry>Component</entry>
-                                <entry>Minimum Requirement</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry>Spark Streaming</entry>
-                                <entry>Spark version 1.5.2 through 1.6</entry>
-                            </row>
-                            <row>
-                                <entry>MapR</entry>
-                                <entry>MapR version 5.1 or 5.2</entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table></p>
-            <p>Complete the following steps to configure a cluster mode pipeline to read from a MapR
-                    cluster:<ol id="ol_e32_llw_yr">
-                    <li>Verify the installation of MapR and Spark Streaming, and YARN.</li>
-                    <li>Install the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> on a Spark and YARN gateway node.</li>
-                    <li>If necessary, specify the location of the spark-submit script. <p>The <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> assumes that the spark-submit script used to submit job requests to
-                            Spark Streaming, is located in the following directory:
-                            <codeblock>/usr/bin/spark-submit</codeblock></p>If the script is not in
-                        this directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to
-                        define the location of the script.<p>For example, say the spark-submit
-                            script is in the following directory:
-                            /opt/mapr/spark/spark-1.6.1/bin/spark-submit. Then, you might use the
-                            following command to define the location of the
-                            script:<codeblock>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</codeblock></p></li>
-                    <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
-                            <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster
-                            YARN Streaming</uicontrol>.</li>
-                    <li>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties for
-                        YARN. </li>
-                    <li>In the pipeline, use the MapR Streams Consumer origin for cluster mode.
-                            <p>If necessary, select a cluster mode stage library on the
-                                <wintitle>General</wintitle> tab of the origin. </p></li>
-                </ol><note>When you add a partition to the MapR topic, restart the pipeline to
-                    enable the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to generate a new worker to read from the new partition. </note></p>
-        </context>
-    </taskbody>
-    <related-links>
-        <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq"
-            type="topic"/>
-        <link href="../Origins/MapRStreamsCons.dita#concept_cvy_xsf_2v" type="topic"/>
-    </related-links>
-</task>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kry_gn5_lx">
+ <title>MapR Requirements</title>
+ <conbody>
+        <p><indexterm>cluster mode<indexterm>configuration for MapR</indexterm></indexterm>Cluster
+            mode pipelines that read from a MapR cluster have the following minimum requirements:
+                <table frame="all" rowsep="1" colsep="1" id="table_agw_5pn_zw">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Component</entry>
+                            <entry>Minimum Requirement</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Spark Streaming (for cluster streaming mode)</entry>
+                            <entry>Spark version 1.5.2 through 1.6</entry>
+                        </row>
+                        <row>
+                            <entry>MapR</entry>
+                            <entry>MapR version 5.1 or 5.2</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <p>The steps that you complete to configure a cluster pipeline to read from MapR depend on
+            the cluster execution mode.</p>
+ </conbody>
+</concept>

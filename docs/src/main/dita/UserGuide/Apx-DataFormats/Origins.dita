@@ -220,6 +220,23 @@
                 /></entry>
             </row>
             <row>
+              <entry>MapR FS</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ihy_lvt_lx"
+                /></entry>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_dj5_mvt_lx"
+                /></entry>
+              <entry/>
+              <entry/>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_acf_nvt_lx"
+                /></entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
               <entry>MapR Streams Consumer</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rp1_2gc_kv"
                 /></entry>

@@ -70,13 +70,13 @@
                                             <li>Cluster Batch - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
-                                                data in HDFS. Processes all available data and then
-                                                stops the pipeline.</li>
+                                                data in HDFS or MapR. Processes all available data
+                                                and then stops the pipeline.</li>
                                             <li>Cluster Yarn Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
-                                                data. Use to stream data from a Kafka cluster that
-                                                uses Spark Streaming on YARN.</li>
+                                                data. Use to stream data from a Kafka or MapR
+                                                cluster that uses Spark Streaming on YARN.</li>
                                             <li>Cluster Mesos Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process

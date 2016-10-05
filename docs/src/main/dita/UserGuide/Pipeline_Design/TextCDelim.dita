@@ -30,7 +30,8 @@
                 records, ignoring new lines.</note>
         </p>
         <p>For most origins, you can include the custom delimiters in records or you can remove
-            them. For the Hadoop FS origin, you cannot include the custom delimiters in records.</p>
+            them. For the Hadoop FS and MapR FS origins, you cannot include the custom delimiters in
+            records.</p>
         <p>For example, say you configure the Directory origin to process a file with the following
             text, using a semicolon as a delimiter, and discarding the
             delimiter:<codeblock>8/12/2016 6:01:00 unspecified error message;8/12/2016 

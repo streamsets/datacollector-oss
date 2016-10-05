@@ -427,6 +427,7 @@
                             <entry>streamsets-datacollector-mapr_5_1-lib</entry>
                             <entry>For MapR version 5.1.<p>Includes:</p><p>
                                     <ul id="ul_egx_c3h_cw">
+                                        <li>MapR FS origin for cluster mode pipelines</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
                                         <li>MapR Streams Producer destination</li>
@@ -440,6 +441,7 @@
                             <entry>streamsets-datacollector-mapr_5_2-lib</entry>
                             <entry>For MapR version 5.2.<p>Includes:</p><p>
                                     <ul id="ul_y2p_mbc_hx">
+                                        <li>MapR FS origin for cluster mode pipelines</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
                                         <li>MapR Streams Producer destination</li>

@@ -899,7 +899,7 @@
             </step>
             <step>
                 <cmd>                    <draft-comment author="alisontaylor"><uicontrol>TEXT_Hadoop data</uicontrol> -
-                        Hadoop FS origin (Include Custom Delimiter is not
+                        Hadoop FS and MapR FS origins (Include Custom Delimiter is not
                         applicable)</draft-comment></cmd>
             </step>        
             <step id="Text_Hadoop">
@@ -934,8 +934,7 @@
                                 </row>
                                 <row>
                                     <entry>Custom Delimiter</entry>
-                                    <entry>One more more characters to use to define records.
-                                    </entry>
+                                    <entry>One or more characters to use to define records. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -980,8 +979,7 @@
                                 </row>
                                 <row>
                                     <entry>Custom Delimiter</entry>
-                                    <entry>One more more characters to use to define records.
-                                    </entry>
+                                    <entry>One or more characters to use to define records. </entry>
                                 </row>
                                 <row>
                                     <entry>Include Custom Delimiter</entry>

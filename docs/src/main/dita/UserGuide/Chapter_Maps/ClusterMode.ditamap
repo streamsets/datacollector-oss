@@ -18,6 +18,7 @@
  <topicref href="../Cluster_Mode/ClusterPipelines_title.dita">
   <topicref href="../Cluster_Mode/ClusterPipelines.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Cluster_Mode/ClusterPipelines-ExecutionMode.dita"/>
    <topicref href="../Cluster_Mode/HTTPProtocols.dita"/>
    <topicref href="../Cluster_Mode/KerberosAuthentication.dita"/>
    <topicref href="../Cluster_Mode/CheckpointStorage.dita">
@@ -33,9 +34,14 @@
      <shortdesc/>
     </topicmeta>
    </topicref></topicref>
-  <topicref href="../Cluster_Mode/KafkaRequirements.dita">
+  <topicref href="../Cluster_Mode/KafkaRequirements.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Cluster_Mode/MapRRequirements.dita"/>
-  <topicref href="../Cluster_Mode/HDFSRequirements.dita"/>
+  <topicref href="../Cluster_Mode/MapRRequirements.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Cluster_Mode/MapR-BatchMode.dita"/>
+   <topicref href="../Cluster_Mode/MapR-StreamingMode.dita"/>
+  </topicref>
+  <topicref href="../Cluster_Mode/HDFSRequirements.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>
 </map>

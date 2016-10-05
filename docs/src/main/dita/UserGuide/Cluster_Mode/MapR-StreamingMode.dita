@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_i3h_q3w_hx">
+    <title>Configuring Cluster Streaming Mode for MapR</title>
+    <shortdesc>Complete the following steps to configure a cluster pipeline to read from MapR in
+        cluster streaming mode.</shortdesc>
+    <taskbody>
+        <steps id="steps_knp_2p5_lx">
+            <step>
+                <cmd>Verify the installation of MapR, Spark Streaming, and YARN.</cmd>
+            </step>
+            <step>
+                <cmd>Install the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> on a Spark and YARN gateway node.</cmd>
+            </step>
+            <step>
+                <cmd>If necessary, specify the location of the spark-submit script. </cmd>
+                <info><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> assumes that the spark-submit script used to submit job requests to Spark
+                    Streaming is located in the following directory:
+                    <codeblock>/usr/bin/spark-submit</codeblock>If the script is not in this
+                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
+                    location of the script.<p>For example, say the spark-submit script is in the
+                        following directory: /opt/mapr/spark/spark-1.6.1/bin/spark-submit. Then, you
+                        might use the following command to define the location of the
+                        script:<codeblock>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</codeblock></p></info>
+            </step>
+            <step>
+                <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
+                        <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster YARN
+                        Streaming</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties for
+                    YARN.</cmd>
+            </step>
+            <step>
+                <cmd>In the pipeline, use the MapR Streams Consumer origin for cluster mode. </cmd>
+                <info>If necessary, select a cluster mode stage library on the
+                        <wintitle>General</wintitle> tab of the origin. <note>When you add a
+                        partition to the MapR topic, restart the pipeline to enable <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> to generate a new worker to read from the new partition. </note></info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq"
+            type="topic"/>
+        <link href="../Origins/MapRStreamsCons.dita#concept_cvy_xsf_2v" type="topic"/>
+    </related-links>
+</task>

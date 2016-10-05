@@ -26,9 +26,10 @@
       it can use the Kerberos principal to connect to external systems.</p>
     <p>You can configure Kerberos authentication for the following stages:<ul id="ul_u5p_x1f_55">
         <li>Hadoop FS origin</li>
-        <li>Kafka Consumer, <ph
+        <li>Kafka Consumer origin, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>
+        <li>MapR FS origin</li>
         <li>SDC RPC to Kafka, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
           only</li>

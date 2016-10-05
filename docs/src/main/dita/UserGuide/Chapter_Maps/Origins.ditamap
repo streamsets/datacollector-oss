@@ -120,6 +120,14 @@
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
+  <topicref href="../Origins/MapRFS.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MapRFS-Kerberos.dita"/>
+   <topicref href="../Origins/MapRFS-HadoopUser-origin.dita"/>
+   <topicref href="../Origins/MapRFS-HadoopProps-origin.dita"/>
+   <topicref href="../Origins/MapRFS-DataFormat-origin.dita"/>
+   <topicref href="../Origins/MapRFS-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>

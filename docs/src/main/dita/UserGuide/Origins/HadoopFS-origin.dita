@@ -15,9 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lw2_tnm_vs">
  <title>Hadoop FS</title>
- <shortdesc>The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can
-    read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines
-    configured for cluster execution mode.</shortdesc>
+ <shortdesc>The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). Use this
+    origin only in pipelines configured for cluster execution mode.</shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Hadoop

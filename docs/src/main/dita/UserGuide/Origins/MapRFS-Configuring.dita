@@ -3,22 +3,24 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
+  
       http://www.apache.org/licenses/LICENSE-2.0
-
+      
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
-<task id="task_hgl_vgn_vs">
-    <title>Configuring a Hadoop FS Origin</title>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_h2p_mb4_lx">
+    <title>Configuring a MapR FS Origin</title>
     <taskbody>
-        <context><indexterm>Hadoop FS origins<indexterm>configuring</indexterm></indexterm>Configure
-            a Hadoop FS origin to read data from HDFS.</context>
-        <steps id="steps_v51_1hn_vs">
+        <context>
+            <p><indexterm>MapR FS origins<indexterm>configuring</indexterm></indexterm>Configure a
+                MapR FS origin to read files from MapR FS.</p>
+        </context>
+        <steps>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ClusterOrigin">
                 <cmd/>
@@ -39,9 +41,9 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="HadoopFS-DataFormat.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_mfn_hwx_5r"
+                                    <entry>Data Format <xref href="MapRFS-DataFormat-origin.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline" id="image_mfn_hwx_5r"
                                         /></xref></entry>
                                     <entry>
                                         <p>Type of data to be read. Use one of the following
@@ -54,16 +56,21 @@
                                 </row>
                                 <row>
                                     <entry>Hadoop FS URI</entry>
-                                    <entry>HDFS URI. Include the HDFS scheme and authority as
-                                        follows:
-                                            <codeph>&lt;scheme>://&lt;authority></codeph>.<p>For
-                                            example:<codeblock>hdfs://nameservice</codeblock></p></entry>
+                                    <entry>Hadoop URI. <p>To connect to a specific cluster, enter
+                                                <codeph>maprfs:///mapr/&lt;cluster name></codeph>.
+                                            For
+                                            example:</p><codeblock>maprfs:///mapr/my.cluster.com/</codeblock><p>Leave
+                                            empty to use the default value of
+                                                <codeph>maprfs:///</codeph>, which uses the first
+                                            entry defined in the
+                                                <codeph>$MAPR_HOME/conf/mapr-clusters.conf</codeph>
+                                            file.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Input Paths</entry>
                                     <entry>Location of the input data to be read. Enter the path as
                                         follows: <codeph>/&lt;path></codeph>.<p>For
-                                            example:<codeblock>/user/hadoop/directory</codeblock></p></entry>
+                                            example:<codeblock>/user/mapr/directory</codeblock></p></entry>
                                 </row>
                                 <row>
                                     <entry>Include All Subdirectories</entry>
@@ -77,11 +84,11 @@
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication <xref
-                                            href="HadoopFS-Kerberos.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_a5x_jzn_vs"
+                                        href="MapRFS-Kerberos.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Uses Kerberos credentials to connect to HDFS. <p>When
+                                    <entry>Uses Kerberos credentials to connect to MapR. <p>When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -91,18 +98,16 @@
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory  <xref
-                                        href="HadoopFS-HadoopProperties-origin.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_ocv_4qg_xs"
+                                        href="MapRFS-HadoopProps-origin.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline" id="image_ocv_4qg_xs"
                                         /></xref></entry>
                                     <entry>
                                         <p>Location of the Hadoop configuration files. </p>
-                                        <p>For a Cloudera Manager installation, enter
-                                                <codeph>hadoop-conf</codeph>. For all other
-                                            installations, use a directory or symlink within the <ph
+                                        <p>Use a directory or symlink within the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory.</p>
-                                        <p>You can use the following files with the Hadoop FS
+                                        <p>You can use the following files with the MapR FS
                                                 origin:<ul
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-HDFSfiles_HDFSorigin"
                                                 id="ul_o22_m4r_bt">
@@ -116,29 +121,26 @@
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry>Hadoop FS User <xref href="HadoopFS-HDFSUser-origin.dita">
+                                    <entry>Hadoop FS User <xref href="MapRFS-HadoopUser-origin.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_t3x_4qg_xs"
                                         /></xref></entry>
-                                    <entry>The Hadoop user to use to connect to HDFS. When using
-                                        this property, make sure HDFS is configured
+                                    <entry>The Hadoop user to use to connect to MapR FS. When using
+                                        this property, make sure MapR is configured
                                             appropriately.<p>By default, the pipeline uses the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> user to connect to HDFS.</p></entry>
+                                            /> user to connect to MapR FS.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration  <xref
-                                            href="HadoopFS-HadoopProperties-origin.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_if3_4hl_xs"
+                                        href="MapRFS-HadoopProps-origin.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline" id="image_if3_4hl_xs"
                                         /></xref></entry>
-                                    <entry>
-                                        <p>Additional Hadoop configuration properties to use. To add
-                                            properties, click <uicontrol>Add</uicontrol> and define
-                                            the property name and value. </p>
-                                        <p>Use the property names and values as expected by Hadoop.
-                                        </p>
-                                    </entry>
+                                    <entry>Additional Hadoop configuration properties to use. To add
+                                        properties, click <uicontrol>Add</uicontrol> and define the
+                                        property name and value. <p>Use the property names and
+                                            values as expected by MapR FS. </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
