@@ -72,7 +72,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       label = "Table Name",
       type = ConfigDef.Type.STRING,
       defaultValue = "${record:attribute('table_name')}",
-      description = "Use an expression language to obtain table name from record",
+      description = "Use an expression to obtain the table name from the record. Note that Hive changes the name to lowercase when creating a table.",
       displayPosition = 20,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class},
