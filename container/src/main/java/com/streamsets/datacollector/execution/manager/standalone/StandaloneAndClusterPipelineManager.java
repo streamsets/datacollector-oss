@@ -35,13 +35,11 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StateEventListener;
-import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -49,9 +47,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.ValidationError;
-import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -67,13 +63,7 @@ import javax.inject.Named;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -165,7 +155,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       if (runnerInfo.executionMode != pipelineStateStore.getState(name, rev).getExecutionMode()) {
         LOG.info(Utils.format("Invalidate the existing runner for pipeline '{}::{}' as execution mode has changed",
           name, rev));
-        if (!removeRunnerIfActive(runnerInfo.runner)) {
+        if (!removeRunnerIfNotActive(runnerInfo.runner)) {
           throw new PipelineManagerException(ValidationError.VALIDATION_0082, pipelineStateStore.getState(name, rev).getExecutionMode(),
             runnerInfo.executionMode);
         } else {
@@ -251,7 +241,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       }
     }
 
-    runnerExpiryFuture = managerExecutor.schedule(new Runnable() {
+    runnerExpiryFuture = managerExecutor.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
         for (RunnerInfo runnerInfo : runnerCache.asMap().values()) {
@@ -259,14 +249,14 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           try {
             LOG.debug("Runner for pipeline '{}::{}' is in status: '{}'", runner.getName(), runner.getRev(),
               runner.getState());
-            removeRunnerIfActive(runner);
+            removeRunnerIfNotActive(runner);
           } catch (PipelineStoreException ex) {
             LOG.warn("Cannot remove runner for pipeline: '{}::{}' due to '{}'", runner.getName(), runner.getRev(),
               ex.toString(), ex);
           }
         }
       }
-    }, runnerExpiryInterval, TimeUnit.MILLISECONDS);
+    }, 0, runnerExpiryInterval, TimeUnit.MILLISECONDS);
   }
 
   @VisibleForTesting
@@ -275,7 +265,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   }
 
-  private boolean removeRunnerIfActive(Runner runner) throws PipelineStoreException {
+  private boolean removeRunnerIfNotActive(Runner runner) throws PipelineStoreException {
     if (!runner.getState().getStatus().isActive()) {
       runner.close();
       runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
