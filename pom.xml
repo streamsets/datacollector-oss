@@ -263,7 +263,7 @@
             <!-- Modules to exclude (for now), not java stuff -->
             <exclude>python/**</exclude>
             <exclude>docs/**</exclude>
-            <exclude>csd/**</exclude>
+            <exclude>cloudera-integration/csd/**</exclude>
             <exclude>common-ui/src/main/webapp/common/directives/**</exclude>
 
           </excludes>
