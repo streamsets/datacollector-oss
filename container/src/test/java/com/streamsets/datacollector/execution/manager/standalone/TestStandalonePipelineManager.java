@@ -349,6 +349,39 @@ public class TestStandalonePipelineManager {
     });
   }
 
+
+  @Test
+  public void testPipelineRunnersAtDifferentTimesExpiry() throws Exception {
+    pipelineStoreTask.create("user", "aaaa", "blah", false);
+    pipelineStoreTask.create("user", "bbbb", "blah", false);
+    setUpManager(100, false);
+
+    pipelineManager.getRunner("user1", "aaaa", "0");
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
+
+    await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0");
+      }
+    });
+
+    pipelineManager.getRunner("user1", "aaaa", "0");
+    pipelineStateStore.saveState("user", "bbbb", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
+
+    pipelineManager.stop();
+    pipelineStoreTask.stop();
+
+    await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws Exception {
+        return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("bbbb", "0");
+      }
+    });
+
+
+  }
+
   @Test
   public void testChangeExecutionModes() throws Exception {
     pipelineStoreTask.create("user1", "pipeline2", "blah", false);
