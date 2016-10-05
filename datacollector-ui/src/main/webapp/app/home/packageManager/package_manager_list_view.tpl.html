@@ -1,0 +1,106 @@
+<section class="pipeline-list-view" ng-if="!header.pipelineGridView">
+  <div class="list-content">
+    <ul class="list-group checked-list-box">
+
+      <li class="list-group-item header-list-group-item">
+        <i ng-if="allSelected"
+           ng-click="unSelectAll()"
+           class="glyphicon glyphicon-check fa-12x header-check-box"></i>
+
+        <i ng-if="!allSelected"
+           ng-click="selectAll()"
+           class="glyphicon glyphicon-unchecked fa-12x header-check-box"></i>
+
+        <div class="stage-library-name header">
+          <a ng-click="onSortColumnHeaderClick('label')">
+            <span>Library Label</span>
+            <i ng-if="header.sortColumn !== 'label'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'label' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'label' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
+        <div class="stage-library-id header">
+          <a ng-click="onSortColumnHeaderClick('id')">
+            <span>Library ID</span>
+            <i ng-if="header.sortColumn !== 'id'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'id' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'id' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
+        <div class="stage-library-installed header">
+          <a ng-click="onSortColumnHeaderClick('installed')">
+            <span>Installed</span>
+            <i ng-if="header.sortColumn !== 'installed'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'installed' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'installed' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
+      </li>
+
+      <li class="list-group-item"
+          ng-class="{'active-info': selectedStageLibraryMap[stageLibrary.id]}"
+          ng-repeat="stageLibrary in filteredStageLibraries | orderBy: customStageLibrarySortFunction: header.sortReverse | limitTo: limit">
+
+        <i ng-if="selectedStageLibraryMap[stageLibrary.id]"
+           ng-click="unSelectStageLibrary(stageLibrary)"
+           class="glyphicon glyphicon-check fa-12x"></i>
+
+        <i ng-if="!selectedStageLibraryMap[stageLibrary.id]"
+           ng-click="selectStageLibrary(stageLibrary)"
+           class="glyphicon glyphicon-unchecked fa-12x"></i>
+
+        <div class="stage-library-name">
+          <span>{{stageLibrary.label}}</span>
+        </div>
+
+        <div class="stage-library-id">
+          <span>{{stageLibrary.id}}</span>
+        </div>
+
+        <div class="stage-library-installed">
+          <i ng-if="stageLibrary.installed"
+             class="fa fa-check-circle fa-12x"></i>
+        </div>
+
+        <div class="action-menu pull-right" dropdown>
+              <span class="dropdown-toggle" dropdown-toggle
+                    ng-click="$event.stopPropagation();">
+                <i class="fa fa-ellipsis-v"></i>
+              </span>
+          <ul class="dropdown-menu" role="menu">
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && !stageLibrary.installed">
+              <a href="#" dropdown-toggle ng-click="onInstallLibraryClick(stageLibrary, $event)">
+                <i class="fa fa-plus-square"></i>
+                <span>{{'packageManager.header.install' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && stageLibrary.installed">
+              <a href="#" dropdown-toggle ng-click="onUninstallLibraryClick(stageLibrary, $event)">
+                <i class="fa fa-minus-square"></i>
+                <span>{{'packageManager.header.uninstall' | translate}}</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+      </li>
+
+      <li class="list-group-item center-align" ng-if="filteredStageLibraries.length === 0">
+        <span translate="packageManager.noStageLibrary"></span>
+      </li>
+
+      <li class="list-group-item center-align" ng-if="limit < filteredStageLibraries.length">
+        <a class="btn btn-default"
+           ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
+      </li>
+
+    </ul>
+
+  </div>
+</section>

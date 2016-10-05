@@ -22,10 +22,9 @@ package com.streamsets.datacollector.restapi;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.StageDefinitionBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -34,25 +33,20 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-
 import org.glassfish.hk2.api.Factory;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 public class TestUtil {
 
@@ -217,6 +211,21 @@ public class TestUtil {
 
     @Override
     public void dispose(RuntimeInfo runtimeInfo) {
+    }
+
+  }
+
+  public static class BuildInfoTestInjector implements Factory<BuildInfo> {
+    @Singleton
+    @Override
+    public BuildInfo provide() {
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("2.0.0.0");
+      return buildInfo;
+    }
+
+    @Override
+    public void dispose(BuildInfo buildInfo) {
     }
 
   }

@@ -1,0 +1,374 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.package-manager-page {
+  .panel-heading {
+    height: 45px;
+    padding: @smallPadding @smallPadding*3;
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+
+    .navbar-toggle {
+      display: block;
+      float: left;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      &:hover {
+        background-color: #ddd;
+      }
+
+      .icon-bar {
+        background-color: #888;
+      }
+
+      &.selected {
+        .icon-bar {
+          background-color: #2BB8E9;
+        }
+      }
+    }
+
+    .panel-title {
+      h3 {
+        padding-top: @smallPadding;
+        margin: 0;
+        font-size: 20px;
+        padding-right: @defaultPadding;
+      }
+    }
+
+    .list-grid-toggle-toolbar {
+      padding-top: 2px;
+      margin-right: 10px;
+      margin-left: 20px;
+    }
+
+    .sort-by-label {
+      padding-top: 7px;
+      font-size: 14px;
+      display: inline-block;
+    }
+
+    .sort-by-dropdown {
+      .btn {
+        padding-left: 0;
+      }
+
+      .fa {
+        color: #bebebe;
+        font-size: 12px;
+      }
+    }
+
+
+    .pipeline-search {
+      margin-right: 30px;
+      width: 250px;
+
+      .search-clear {
+        position: absolute;
+        right: 10px;
+        bottom: 0;
+        height: 16px;
+        margin: auto;
+        font-size: 15px;
+        cursor: pointer;
+        color: #ccc;
+
+        &:hover {
+          color: @streamsets-icon-btn-hover-color;
+        }
+      }
+    }
+    .pipelines-count {
+      padding: @defaultPadding @defaultPadding*3 @defaultPadding 0;
+      color: #ACACAC;
+      font-size: 12px;
+    }
+
+  }
+
+  .home-page-body {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transition: opacity .3s;
+    overflow: auto;
+    margin-bottom: 10px;
+
+    .alert {
+      margin-left: @defaultPadding;
+    }
+
+    .tile-list {
+      padding: 10px 10px 40px 0;
+
+      .pipeline-container {
+        border: 1px solid #dedede;
+        position: relative;
+        display: inline-block;
+        margin: 0 0 15px 15px;
+        padding: 22px 20px 40px;
+        border-radius: 2px 3px 2px 2px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.15);
+        vertical-align: top;
+        opacity: 1;
+        float: left;
+        cursor: pointer;
+
+        header {
+          h2 {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 22px;
+            color: #4e4e4e;
+            text-decoration: none;
+            text-transform: none;
+            display: inline;
+            background-image: linear-gradient(to top,rgba(0,0,0,0),rgba(0,0,0,0) 1px,#d3d3d3 1px,#d3d3d3 2px,rgba(0,0,0,0) 2px);
+            position: relative;
+            transition: opacity .3s ease-out 0s,visibility .3s ease-out 0s;
+            pointer-events: none;
+            word-wrap: break-word;
+            word-break: break-all;
+          }
+        }
+
+
+        .project-additional-info {
+          position: absolute;
+          left: 20px;
+          right: 20px;
+          bottom: 50px;
+          line-height: 14px;
+
+          span {
+            font-size: 12px;
+            color: #a4a3a3;
+          }
+        }
+
+        footer {
+          height: 40px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          position: absolute;
+          background-color: #f7f7f7;
+
+          .running-status, .invalid-status {
+            width: 23px;
+            height: 31px;
+            position: absolute;
+            left: 16px;
+            bottom: 0;
+            color: @brand-success;
+          }
+
+          .running-status {
+            color: @brand-success;
+          }
+
+          .invalid-status {
+            color: @brand-danger;
+          }
+
+          .triggered-alert-status {
+            width: 50px;
+            height: 31px;
+            position: absolute;
+            left: 50px;
+            bottom: 0;
+            color: #b6b6b6;
+          }
+
+          .pipeline-menu {
+            width: 36px;
+            height: 40px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            cursor: pointer;
+
+            .split-bar {
+              content: '';
+              width: 1px;
+              height: 20px;
+              position: absolute;
+              left: 0;
+              top: 10px;
+              background-color: #e3e3e3;
+            }
+
+            .action-menu {
+              .dropdown-toggle {
+                display: inline-block;
+                width: 100%;
+                padding: @defaultPadding;
+
+                .fa {
+                  color: #a2a1a1;
+
+                  &:hover {
+                    color: @streamsets-icon-btn-hover-color;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &.new-pipeline {
+          display: -webkit-inline-flex;
+          display: -ms-inline-flexbox;
+          display: inline-flex;
+          width: 220px;
+          height: 170px;
+          padding: 0;
+          border: 1px solid #dedede;
+          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+
+          .centering-container {
+            margin: auto;
+
+            a {
+              display: block;
+            }
+          }
+        }
+
+        &.single-pipeline {
+          width: 220px;
+          height: 170px;
+          background-color: #FFF;
+        }
+
+      }
+    }
+
+    .pipeline-list-view {
+
+      .list-content {
+        .list-group-item {
+          border-left: 0;
+          border-right: 0;
+
+          .glyphicon-check,
+          .glyphicon-unchecked {
+            cursor: pointer;
+            color: #777777;
+          }
+
+          &.active-info {
+            color: #31708f;
+            background-color: #d9edf7;
+          }
+
+          &.header-list-group-item {
+            border: 0;
+            color: #333;
+            background-color: #f5f5f5;
+          }
+
+          &:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+
+          .header {
+            display: inline-block;
+            font-weight: bold;
+            a {
+              cursor: pointer;
+              color: black;
+            }
+          }
+
+          &.center-align {
+            text-align: center;
+          }
+
+          .stage-library-name {
+            width: 30%;
+            display: inline-block;
+            word-break: break-all;
+            padding-left: 10px;
+          }
+
+          .stage-library-id {
+            width: 50%;
+            display: inline-block;
+            padding-left: 10px;
+          }
+
+          .stage-library-installed {
+            width: 10%;
+            display: inline-block;
+          }
+
+          .action-menu {
+            cursor: pointer;
+            .dropdown-toggle {
+              display: inline-block;
+              width: 30px;
+              padding: 0 12px;
+              .fa {
+                color: #a2a1a1;
+
+                &:hover {
+                  color: @streamsets-icon-btn-hover-color;
+                }
+              }
+            }
+          }
+
+          .pipeline-details {
+            margin: 10px 20px;
+          }
+        }
+
+      }
+
+    }
+  }
+
+  .properties {
+    list-style: none;
+    font-size: 0.9em;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      padding-left: @defaultPadding;
+    }
+
+    .properties-label {
+      opacity: 0.6;
+    }
+
+    .properties-value {
+
+    }
+  }
+}
+
+
+

@@ -249,7 +249,9 @@ public class TestRestApiAuthorization {
 
     list.add(new RestApi("/rest/v1/definitions", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/definitions/stage/foo/foo/icons", Method.GET, AuthzRole.ALL_ROLES));
-
+    list.add(new RestApi("/rest/v1/stageLibraries/list", Method.GET, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/stageLibraries/install", Method.POST, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/stageLibraries/uninstall", Method.POST, AuthzRole.ADMIN));
 
     list.add(new RestApi("/rest/v1/system/logs", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
     list.add(new RestApi("/rest/v1/system/logs/files", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));

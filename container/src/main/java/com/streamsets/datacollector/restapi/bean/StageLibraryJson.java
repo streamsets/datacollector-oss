@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,16 +17,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.datacollector.restapi.bean;
 
-/**
- * This is the main application stylesheet. It should include or import all
- * stylesheets used throughout the application as this is the only stylesheet in
- * the Grunt configuration that is automatically processed.
- */
+public class StageLibraryJson {
+  private String id;
+  private String label;
+  private boolean installed;
 
+  public StageLibraryJson(String id, String label, boolean installed) {
+    this.id = id;
+    this.label = label;
+    this.installed = installed;
+  }
 
-@import '../../../../../common-ui/src/main/webapp/less/common.less';
-@import '../app/home/home.less';
-@import '../app/home/pipelineHome/pipelineHome.less';
-@import '../app/help/restapi/restapi.less';
-@import '../app/home/packageManager/package_manager.less';
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public boolean isInstalled() {
+    return installed;
+  }
+
+  public void setInstalled(boolean installed) {
+    this.installed = installed;
+  }
+}

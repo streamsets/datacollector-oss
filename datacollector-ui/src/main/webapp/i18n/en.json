@@ -35,6 +35,7 @@
       "home": "Home",
       "dpmEnabled": "Dataflow Performance Manager Enabled - ",
       "dpmDisconnectedMode": "Disconnected Mode. Dataflow Performance Manager Enabled - ",
+      "packageManager": "Package Manager",
       "toggleNavigation": "Toggle navigation"
     },
     "form": {
@@ -81,6 +82,8 @@
       "help": "Help",
       "histogram": "Records Per Batch Histogram (5 minutes decay)",
       "import": "Import",
+      "install": "Install",
+      "installing": "Installing...",
       "label": "Label",
       "labels": "Labels",
       "lastModifiedBy": "Last Modified By",
@@ -133,6 +136,8 @@
       "toStage": "To Stage",
       "type": "Type",
       "undo": "Undo",
+      "uninstall": "Uninstall",
+      "uninstalling": "Uninstalling...",
       "username": "Login",
       "username.placeholder": "Your login",
       "value": "Value",
@@ -370,7 +375,7 @@
       "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
       "monitoringJSONData": "Pipeline Monitoring",
-      "noStageDefinitionFound": "Could not find stage definition",
+      "noStageDefinitionFound": "Could not find stage definition for stage name: {{stageName}}, library: {{library}}",
       "pipelineConfigJSONData": "Pipeline Configuration",
       "pipelinePreviewJSONData": "Preview Data",
       "pipelineRulesJSONData": "Pipeline Rules",
@@ -679,6 +684,25 @@
     "TIMER_M5_RATE" : "5 Minute Rate",
     "TIMER_M15_RATE" : "15 Minute Rate",
     "TIMER_MEAN_RATE" : "Mean Rate"
+  },
+  "packageManager": {
+    "header": {
+      "install": "Install",
+      "uninstall": "Uninstall"
+    },
+    "install": {
+      "confirmationMessage": "Are you sure you want to install below stage libraries?",
+      "title": "Install Stage Library",
+      "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+    },
+    "uninstall": {
+      "confirmationMessage": "Are you sure you want to uninstall below stage libraries?",
+      "title": "Uninstall Stage Library",
+      "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+    },
+    "manifestURL": "Manifest URL",
+    "noStageLibrary": "No Stage Library Found",
+    "title": "Package Manager"
   },
   "restapi": {
     "title": "Data Collector RESTful API"

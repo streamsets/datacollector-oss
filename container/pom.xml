@@ -31,6 +31,10 @@
   <name>StreamSets Data Collector Container</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <commons-compress.version>1.10</commons-compress.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -209,6 +213,12 @@
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>${commons-compress.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

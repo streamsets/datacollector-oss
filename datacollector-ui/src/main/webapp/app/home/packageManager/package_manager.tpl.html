@@ -1,0 +1,33 @@
+<div class="panel panel-default page-panel package-manager-page">
+  <ng-include src="'app/home/packageManager/package_manager_header.tpl.html'"></ng-include>
+
+
+  <div class="home-bg-splitter" ng-cloak>
+    <bg-splitter orientation="horizontal" class="library-splitter"
+                 ng-class="{'hide-library-panel': hideLibraryPanel}">
+
+      <bg-pane min-size="0">
+        <ng-include src="'app/home/packageManager/package_manager_side_nav.tpl.html'"></ng-include>
+      </bg-pane>
+
+      <bg-pane min-size="0">
+        <div class="home-page-body">
+          <ng-include src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+          <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+          <ng-include src="'app/home/packageManager/package_manager_list_view.tpl.html'"></ng-include>
+
+          <ul class="properties clearfix" ng-if="stageLibraries.length === filteredStageLibraries.length">
+            <li class="pull-right">
+              <span class="properties-label">{{'packageManager.manifestURL' | translate}}: </span>
+              <span class="properties-value">
+                <a href="{{manifestURL}}" target="_blank">{{manifestURL}}</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </bg-pane>
+
+    </bg-splitter>
+  </div>
+
+</div>

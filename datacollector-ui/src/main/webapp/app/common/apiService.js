@@ -265,6 +265,47 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Fetches all libraries information from archives/nightly.
+       *
+       * @returns {*}
+       */
+      getLibraries: function() {
+        var url = apiBase + '/stageLibraries/list';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Install library from archives/nightly
+       *
+       * @returns {*}
+       */
+      installLibraries: function(libraryList) {
+        var url = apiBase + '/stageLibraries/install';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: libraryList
+        });
+      },
+
+      /**
+       * Uninstall library from archives/nightly
+       *
+       * @returns {*}
+       */
+      uninstallLibraries: function(libraryList) {
+        var url = apiBase + '/stageLibraries/uninstall';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: libraryList
+        });
+      },
+
+      /**
        * Fetches all Pipeline Configuration Info.
        *
        * @returns {*}
@@ -384,6 +425,14 @@ angular.module('dataCollectorApp.common')
       },
 
 
+      /**
+       * Duplicate Pipeline Configuration
+       *
+       * @param name
+       * @param description
+       * @param pipelineInfo
+       * @returns {*|promise}
+       */
       duplicatePipelineConfig: function(name, description, pipelineInfo) {
         var deferred = $q.defer(),
           pipelineObject,

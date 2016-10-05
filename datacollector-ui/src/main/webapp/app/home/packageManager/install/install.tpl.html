@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="packageManager.install.title">Install Stage Library</h3>
+</div>
+<div class="modal-body multiple-pipelines-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <div ng-if="!libraryInstalled">
+    <p translate="packageManager.install.confirmationMessage"></p>
+    <p ng-repeat="library in libraryList">{{library.label}}</p>
+  </div>
+
+  <div ng-if="libraryInstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
+       translate="packageManager.install.successMessage">
+  </div>
+
+  <div class="alert alert-success alert-dismissible" role="alert"
+       ng-show="isRestartInProgress"
+       translate="home.restart.successMessage">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
+          translate="global.form.cancel">Cancel</button>
+  <button type="button" class="btn btn-primary" ng-click="install()" ng-if="!operationInProgress && !libraryInstalled"
+          translate="global.form.install">Install</button>
+  <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+          translate="global.form.installing">Installing...</button>
+  <button ng-if="!operationInProgress && libraryInstalled && !isRestartInProgress"
+          ng-click="restart()"
+          class="btn btn-primary" translate="global.form.restart">Restart</button>
+</div>

@@ -1,0 +1,12 @@
+<div class="panel panel-default library-pane">
+  <div class="panel-body">
+    <ul class="list-group predefined-labels">
+      <li class="list-group-item pointer clearfix"
+          ng-repeat="navigationItem in navigationItems"
+          ng-class="{'active' : selectedNavigationItem === navigationItem}"
+          ng-click="onNavigationItemClick(navigationItem)">
+        <span class="pipeline-details-name">{{navigationItem}}</span>
+      </li>
+    </ul>
+  </div>
+ </div>

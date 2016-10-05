@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api, contextHelpService) {
+  .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal) {
     var infoTab =  {
         name:'info',
         template:'app/home/detail/info/info.tpl.html',
@@ -278,7 +278,7 @@ angular
 
             if(config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.errorStage.instanceName]);
-            } else if(config.statsAggregatorStage && issuesMap.stageIssues && 
+            } else if(config.statsAggregatorStage && issuesMap.stageIssues &&
               issuesMap.stageIssues[config.statsAggregatorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.statsAggregatorStage.instanceName]);
             }
@@ -369,6 +369,32 @@ angular
           case pipelineConstant.LINK:
             $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane] = tab.name;
         }
+      },
+
+      /**
+       * Callback function on clicking install missing library link
+       */
+      onInstallMissingLibraryClick: function() {
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/packageManager/install/install.tpl.html',
+          controller: 'InstallModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            libraryList: function () {
+              return [{
+                id: $scope.detailPaneConfig.library,
+                label: $scope.detailPaneConfig.library
+              }];
+            }
+          }
+        });
+        modalInstance.result.then(function() {
+          angular.forEach(libraryList, function(library) {
+            library.installed = true;
+          });
+        }, function () {
+        });
       }
     });
 
