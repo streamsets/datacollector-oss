@@ -67,6 +67,7 @@ public class RuleELRegistry {
         };
       case ALERT:
         return new Class[] {
+            RecordEL.class,
             StringEL.class,
             RuntimeEL.class,
             JvmEL.class,

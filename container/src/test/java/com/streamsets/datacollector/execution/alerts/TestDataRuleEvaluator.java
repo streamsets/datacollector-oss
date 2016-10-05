@@ -325,13 +325,13 @@ public class TestDataRuleEvaluator {
     Record record = new RecordImpl("creator", "id", null, null);
     record.set(Field.create(new ArrayList<Field>()));
     Assert.assertFalse(dataRuleEvaluator.evaluate(elVars, record, def.getCondition(), "id"));
-    Assert.assertEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, def));
+    Assert.assertEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, record, def));
     Assert.assertFalse(dataRuleEvaluator.evaluate(elVars, record, def.getCondition(), "id"));
-    Assert.assertEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, def));
+    Assert.assertEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, record, def));
     record.get().getValueAsList().add(Field.create("Hello"));
     Assert.assertTrue(dataRuleEvaluator.evaluate(elVars, record, def.getCondition(), "id"));
-    Assert.assertNotEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, def));
-    Assert.assertTrue(dataRuleEvaluator.resolveAlertText(elVars, def).startsWith("alert "));
+    Assert.assertNotEquals("alert ", dataRuleEvaluator.resolveAlertText(elVars, record, def));
+    Assert.assertTrue(dataRuleEvaluator.resolveAlertText(elVars, record, def).startsWith("alert "));
 
     Record record1 = new RecordImpl("creator", "id", null, null);
     record1.set(Field.create(new ArrayList<Field>()));
@@ -352,6 +352,43 @@ public class TestDataRuleEvaluator {
     );
     Assert.assertNotEquals("alert ", captor.getValue().getAlertText());
     Assert.assertTrue(captor.getValue().getAlertText().startsWith("alert "));
+  }
+
+  @Test
+  public void testAlertMessageWithRecordEL() {
+    DriftRuleDefinition def = new DriftRuleDefinition(
+        "id",
+        "label",
+        "lane",
+        100,
+        10,
+        "${drift:size('/', true)}",
+        true,
+        "alert ${record:id()}",
+        true,
+        false,
+        true,
+        System.currentTimeMillis()
+    );
+    AlertManager alertManager = Mockito.mock(AlertManager.class);
+    DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(
+        "name",
+        "0",
+        metrics,
+        alertManager,
+        null,
+        new HashMap<String, Object>(),
+        def,
+        new Configuration(),
+        null,
+        null
+    );
+    ELVariables elVars = new ELVariables();
+    elVars.addContextVariable(DataRuleEvaluator.PIPELINE_CONTEXT, new HashMap());
+    Record record = new RecordImpl("creator", "id", null, null);
+    record.set(Field.create(new ArrayList<Field>()));
+    Assert.assertFalse(dataRuleEvaluator.evaluate(elVars, record, def.getCondition(), "id"));
+    Assert.assertEquals("alert id", dataRuleEvaluator.resolveAlertText(elVars, record, def));
   }
 
 }

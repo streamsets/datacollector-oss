@@ -46,11 +46,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +171,7 @@ public class DataRuleEvaluator {
         //evaluate
         boolean success = evaluate(elVars, r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
         if (success) {
-          alertTextForMatchRecords.add(resolveAlertText(elVars, dataRuleDefinition));
+          alertTextForMatchRecords.add(resolveAlertText(elVars, r, dataRuleDefinition));
           sampledRecords.add(new SampledRecord(r, true));
           matchingRecordCount++;
         } else {
@@ -241,7 +241,7 @@ public class DataRuleEvaluator {
                       dataRuleDefinition,
                       evaluatedRecordCount,
                       matchingRecordCount,
-                      Arrays.asList(resolveAlertText(elVars, dataRuleDefinition))
+                      alertTextForMatchRecords
                   );
                 } else {
                   alertManager.alert(
@@ -249,7 +249,7 @@ public class DataRuleEvaluator {
                       emailIds,
                       AlertManagerHelper.cloneRuleWithResolvedAlertText(
                           dataRuleDefinition,
-                          resolveAlertText(elVars, dataRuleDefinition)
+                          alertTextForMatchRecords.get(0)
                       )
                   );
                 }
@@ -276,8 +276,8 @@ public class DataRuleEvaluator {
                   matchingRecordCounter.getCount(),
                   emailIds,
                   AlertManagerHelper.cloneRuleWithResolvedAlertText(
-                    dataRuleDefinition,
-                    resolveAlertText(elVars, dataRuleDefinition)
+                      dataRuleDefinition,
+                      alertTextForMatchRecords.get(0)
                   )
                 );
               }
@@ -318,14 +318,18 @@ public class DataRuleEvaluator {
   }
 
   @VisibleForTesting
-  String resolveAlertText(ELVars elVars, DataRuleDefinition ruleDef) {
+  String resolveAlertText(ELVars elVars, Record record, DataRuleDefinition ruleDef) {
     try {
       String alertText = ruleDef.getAlertText();
       if (alertText == null) {
         alertText = "";
       }
+
       ELEvaluator elEval = new ELEvaluator("alertInfo", RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
+      RecordEL.setRecordInContext(elVars, record);
+
       return elEval.eval(elVars, alertText, String.class);
+
     } catch (ELEvalException e) {
       //A faulty el alerttext should not take down rest of the alerts with it.
       //Log and it and continue for now
