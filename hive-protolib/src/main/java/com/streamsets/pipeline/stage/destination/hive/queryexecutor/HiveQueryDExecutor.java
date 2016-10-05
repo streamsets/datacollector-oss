@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
  */
 @StageDef(
     version = 1,
-    label = "Hive Query Executor",
+    label = "Hive Query",
     description = "Executes Hive or Impala queries.",
     icon = "hive.png",
     privateClassLoader = true,

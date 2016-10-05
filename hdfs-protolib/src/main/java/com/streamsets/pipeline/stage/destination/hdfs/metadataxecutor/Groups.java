@@ -22,8 +22,8 @@ package com.streamsets.pipeline.stage.destination.hdfs.metadataxecutor;
 import com.streamsets.pipeline.api.Label;
 
 public enum Groups implements Label {
-  HDFS("Hdfs"),
-  ACTIONS("Actions"),
+  HDFS("HDFS"),
+  Tasks("Tasks"),
   ;
 
   private final String label;

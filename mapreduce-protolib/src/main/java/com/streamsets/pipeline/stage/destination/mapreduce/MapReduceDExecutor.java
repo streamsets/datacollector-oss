@@ -32,8 +32,8 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfi
 
 @StageDef(
     version = 1,
-    label = "MapReduce executor",
-    description = "Starts a mapreduce job",
+    label = "MapReduce",
+    description = "Starts a MapReduce job",
     icon = "mapreduce.png",
     privateClassLoader = true,
     producesEvents = true,

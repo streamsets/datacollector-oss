@@ -27,8 +27,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "Input file",
-    description = "Absolute path to the input file on HDFS.",
+    label = "Input Avro File",
+    description = "Absolute path to the input avro file on HDFS.",
     defaultValue = "${record:value('/filepath')}",
     displayPosition = 10,
     group = "AVRO_PARQUET",
@@ -42,7 +42,7 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "Output directory",
+    label = "Output Directory",
     description = "Absolute path to the destination directory on HDFS.",
     defaultValue = "",
     displayPosition = 20,
@@ -57,8 +57,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    label = "Keep input file",
-    description = "If checked, the input file will not be removed after the mapreduce converter job ends.",
+    label = "Keep Avro Input File",
+    description = "If checked, the input file will not be removed after the MapReduce converter job ends.",
     defaultValue = "false",
     displayPosition = 10,
     group = "AVRO_PARQUET",
@@ -70,7 +70,7 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = "Compression codec",
+    label = "Compression Codec",
     description = "Compression codec that will be used in Parquet. Valid values are for example 'SNAPPY' or 'LZO'. Empty value will use Parquet default.",
     defaultValue = "",
     displayPosition = 30,
@@ -83,8 +83,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Row group size",
-    description = "Row group size that will be used in Parquet. '-1' value will use Parquet default.",
+    label = "Row Group Size",
+    description = "Row group size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 40,
     group = "AVRO_PARQUET",
@@ -96,8 +96,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Page size",
-    description = "Page size that will be used in Parquet. '-1' value will use Parquet default.",
+    label = "Page Size",
+    description = "Page size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 50,
     group = "AVRO_PARQUET",
@@ -109,8 +109,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Dictionary page size",
-    description = "Dictionary page size that will be used in Parquet. '-1' value will use Parquet default.",
+    label = "Dictionary Page Size",
+    description = "Dictionary page size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 60,
     group = "AVRO_PARQUET",
@@ -122,8 +122,8 @@ public class AvroParquetConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Max padding size",
-    description = "Max padding size that will be used in Parquet. '-1' value will use Parquet default.",
+    label = "Max Padding Size",
+    description = "Max padding size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 70,
     group = "AVRO_PARQUET",

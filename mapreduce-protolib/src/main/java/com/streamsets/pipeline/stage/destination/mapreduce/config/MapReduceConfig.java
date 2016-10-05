@@ -67,8 +67,8 @@ public class MapReduceConfig {
     required = false,
     type = ConfigDef.Type.STRING,
     label = "MapReduce User",
-    description = "If set, the data collector will start the MapReduce job as this user. " +
-      "The data collector user must be configured as a proxy user in the cluster.",
+    description = "If set, Data Collector will start the MapReduce job as this user. " +
+      "The Data Collector user must be configured as a proxy user in the cluster.",
     displayPosition = 30,
     group = "MAPREDUCE"
   )

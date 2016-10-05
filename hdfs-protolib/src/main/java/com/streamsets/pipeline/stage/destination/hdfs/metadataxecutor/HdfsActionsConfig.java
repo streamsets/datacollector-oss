@@ -37,7 +37,7 @@ public class HdfsActionsConfig {
     label = "Input File",
     description = "Full path to the file on which the metadata operations should be executed.",
     displayPosition = 100,
-    group = "ACTIONS",
+    group = "TASKS",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class}
   )
@@ -47,10 +47,10 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Move file",
+    label = "Move File",
     description = "Moves the file to a new location.",
     displayPosition = 110,
-    group = "ACTIONS"
+    group = "TASKS"
   )
   public boolean shouldMoveFile;
 
@@ -58,10 +58,10 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "/new/location/file.name",
-    label = "New location",
+    label = "New Location",
     description = "New location where the file should be moved to.",
     displayPosition = 115,
-    group = "ACTIONS",
+    group = "TASKS",
     dependsOn = "shouldMoveFile",
     triggeredByValue = "true",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -73,10 +73,10 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Change ownership",
+    label = "Change Ownership",
     description = "Set to change owner and group of the file.",
     displayPosition = 120,
-    group = "ACTIONS"
+    group = "TASKS"
   )
   public boolean shouldChangeOwnership;
 
@@ -84,9 +84,9 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "new_owner",
-    label = "New owner",
+    label = "New Owner",
     displayPosition = 125,
-    group = "ACTIONS",
+    group = "TASKS",
     dependsOn = "shouldChangeOwnership",
     triggeredByValue = "true",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -98,9 +98,9 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "new_group",
-    label = "New group",
+    label = "New Group",
     displayPosition = 130,
-    group = "ACTIONS",
+    group = "TASKS",
     dependsOn = "shouldChangeOwnership",
     triggeredByValue = "true",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -112,10 +112,10 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Set permissions",
+    label = "Set Permissions",
     description = "Set to override files permissions.",
     displayPosition = 135,
-    group = "ACTIONS"
+    group = "TASKS"
   )
   public boolean shouldSetPermissions;
 
@@ -123,10 +123,10 @@ public class HdfsActionsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "700",
-    label = "New permissions",
+    label = "New Permissions",
     description = "Permissions in either in octal or symbolic format.",
     displayPosition = 140,
-    group = "ACTIONS",
+    group = "TASKS",
     dependsOn = "shouldSetPermissions",
     triggeredByValue = "true",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -141,7 +141,7 @@ public class HdfsActionsConfig {
     label = "Set ACLs",
     description = "Set to set extended access attributes.",
     displayPosition = 145,
-    group = "ACTIONS"
+    group = "TASKS"
   )
   public boolean shouldSetAcls;
 
@@ -152,7 +152,7 @@ public class HdfsActionsConfig {
     label = "New ACLs",
     description = "List of ACLs separated by commas.",
     displayPosition = 150,
-    group = "ACTIONS",
+    group = "TASKS",
     dependsOn = "shouldSetAcls",
     triggeredByValue = "true",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -166,7 +166,7 @@ public class HdfsActionsConfig {
     if(shouldSetPermissions && shouldSetAcls) {
       issues.add(
         context.createConfigIssue(
-          Groups.ACTIONS.name(),
+          Groups.Tasks.name(),
           null,
           HdfsMetadataErrors.HDFS_METADATA_006
         )
