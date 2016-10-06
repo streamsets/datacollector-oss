@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum OriginAvroSchemaSource implements Label {
   SOURCE("Message/Data Includes Schema"),
-  INLINE("Use Provided Schema"),
+  INLINE("In Pipeline Configuration"),
   REGISTRY("Confluent Schema Registry"),
   ;
 

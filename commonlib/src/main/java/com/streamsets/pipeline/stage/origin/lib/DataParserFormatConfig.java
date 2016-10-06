@@ -612,7 +612,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Lookup Schema By...",
+      label = "Lookup Schema By",
       description = "Whether to look up the Avro Schema by ID or fetch the latest schema for a Subject.",
       defaultValue = "SUBJECT",
       dependsOn = "avroSchemaSource",
