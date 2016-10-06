@@ -244,7 +244,19 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RetriesBatch">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-BackOffPeriod">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCID">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ConTimeout">
                                     <entry/>
                                 </row>
                                 <row
@@ -252,7 +264,15 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ReadTimeout">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-TrustStore">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UseCompression">
                                     <entry/>
                                 </row>
                                 <row
@@ -261,22 +281,6 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-verifyHost">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RetriesBatch">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ConTimeout">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ReadTimeout">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UseCompression">
                                     <entry/>
                                 </row>
                             </tbody>

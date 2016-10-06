@@ -3235,7 +3235,7 @@
                             </thead>
                             <tbody>
                                 <row id="row-RPCconnect">
-                                    <entry>RPC Connection  <xref
+                                    <entry>SDC RPC Connection <xref
                                             href="../Destinations/RPCdest-Connections.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bb2_k4b_ft"
@@ -3249,7 +3249,7 @@
                                             receives the data.</p></entry>
                                 </row>
                                 <row id="row-RPCID">
-                                    <entry>RPC ID</entry>
+                                    <entry>SDC RPC ID</entry>
                                     <entry>User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</entry>
@@ -3318,6 +3318,18 @@
                                         the SDC RPC origin. <p>When the destination cannot write the
                                             batch within the configured number of retries, it fails
                                             the batch.</p><p>Default is 3.</p></entry>
+                                </row>
+                                <row id="row-BackOffPeriod">
+                                    <entry>Back Off Period</entry>
+                                    <entry>Milliseconds to wait before retrying writing a batch to
+                                        the SDC RPC origin.<p>The value that you enter increases
+                                            exponentially after each retry. For example, if you set
+                                            the back off period to 10, the destination attempts the
+                                            first retry after waiting 10 milliseconds, attempts the
+                                            second retry after waiting 100 milliseconds, and
+                                            attempts the third retry after waiting 1,000
+                                            milliseconds. Set to 0 to retry
+                                            immediately.</p><p>Default is 0.</p></entry>
                                 </row>
                                 <row id="row-ConTimeout">
                                     <entry>Connection Timeout (ms)</entry>
