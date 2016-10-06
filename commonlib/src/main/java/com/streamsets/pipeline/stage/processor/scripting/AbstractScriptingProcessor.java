@@ -76,6 +76,10 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       return getScriptObjectFactory().createScriptRecord(getContext().createRecord(recordSourceId));
     }
 
+    public Object createMap(boolean listMap) {
+      return getScriptObjectFactory().createMap(listMap);
+    }
+
   }
 
   private final String scriptingEngineName;

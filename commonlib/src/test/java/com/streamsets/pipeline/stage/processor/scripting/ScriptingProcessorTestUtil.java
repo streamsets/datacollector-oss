@@ -448,6 +448,51 @@ public class ScriptingProcessorTestUtil {
     }
   }
 
+  public static <C extends Processor> void verifyMapListMapCreation(Class<C> clazz, Processor processor) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      listMap.put("Hello", Field.create(1));
+
+      Record record = RecordCreator.create();
+      record.set(Field.create(listMap));
+      record.set("/Hello", Field.create(1));
+      List<Record> input = Collections.singletonList(record);
+      StageRunner.Output output = runner.runProcess(input);
+
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(Field.Type.MAP, outRec.get().getType());
+      // In this case the type passthrough works because the scripting processor didn't modify this field.
+      Assert.assertEquals(1, outRec.get("/Hello").getValue());
+      Field f = outRec.get("/Test");
+      Assert.assertEquals(Field.Type.LIST_MAP, f.getType());
+      Assert.assertEquals("streamsets", outRec.get("/Test/Key").getValue());
+      outRec = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      // JavaScript only defines "Number" as a type which is a 64-bit float (double)
+      if (System.getProperty("java.version").startsWith("1.7.")) {
+        Assert.assertEquals(2.0, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2.0, outRec.get("[0]").getValue());
+      }
+      // Java8's Nashorn engine however, will respect the original Java type of Integer.
+      if (System.getProperty("java.version").startsWith("1.8")) {
+        Assert.assertEquals(2, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2, outRec.get("[0]").getValue());
+      }
+      f = outRec.get("/Test");
+      // The field referred to as /Test and [1] should be the same
+      Assert.assertEquals(f, outRec.get("[1]"));
+      Assert.assertEquals(Field.Type.MAP, f.getType());
+      Assert.assertEquals("dpm", outRec.get("/Test/Key").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   public static <C extends Processor> void verifyListMapOrder(Class<C> clazz, Processor processor)
       throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)

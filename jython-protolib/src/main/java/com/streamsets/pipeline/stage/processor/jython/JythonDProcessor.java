@@ -79,6 +79,8 @@ public class JythonDProcessor extends DProcessor {
     "#\n" +
     "#  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
     "#                                  to check if the field is typed field with value null\n" +
+    "#  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n" +
+    "#                            Pass True to this function to create a list map (ordered map)\n" +
     "#\n" +
     "# Add additional module search paths:\n" +
     "#import sys\n" +

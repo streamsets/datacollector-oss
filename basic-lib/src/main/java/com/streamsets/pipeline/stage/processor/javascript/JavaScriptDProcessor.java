@@ -79,6 +79,8 @@ public class JavaScriptDProcessor extends DProcessor {
     " *\n" +
     " *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n" +
     " *                            to check if the field is typed field with value null\n" +
+    " *  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n" +
+    " *                            Pass true to this function to create a list map (ordered map)\n" +
     " */\n" +
     "\n" +
     "// Sample JavaScript code\n" +
@@ -117,6 +119,10 @@ public class JavaScriptDProcessor extends DProcessor {
     "    // var newRecord = sdcFunctions.createRecord('recordId')\n" +
     "    // newRecord.value = {'field1' : 'val1', 'field2' : 'val2'}\n" +
     "    // output.write(newRecord)\n" +
+    "    // Create a new map and add it to the original record\n" +
+    "    // var newMap = sdcFunctions.createMap(true)\n" +
+    "    // newMap['key'] = 'value'\n" +
+    "    // records[i].value['b'] = newMap\n" +
     "\n" +
     "    // Write record to procesor output\n" +
     "    output.write(records[i]);\n" +

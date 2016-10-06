@@ -79,6 +79,9 @@ public class GroovyDProcessor extends DProcessor {
           " *\n" +
           " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
           " *                          to check if the field is typed field with value null\n" +
+          " *\n" +
+          " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
+          " *                          Pass true to this function to create a list map (ordered map)\n" +
           " */ \n" +
           "\n" +
           " // Sample Groovy code\n" +
@@ -109,6 +112,9 @@ public class GroovyDProcessor extends DProcessor {
           "    // Create a new record with map field \n" +
           "    // newRecord = sdcFunctions.createRecord('recordId')\n" +
           "    // newRecord.value = ['field1':'val1', 'field2' : 'val2']\n" +
+          "    // newMap = sdcFunctions.createMap(true)\n" +
+          "    // newMap['field'] = 'val' "+
+          "    // newRecord.value['field2'] =  newMap\n" +
           "    // output.write(newRecord)\n" +
           "    \n" +
           "    // Write a record to the processor output\n" +

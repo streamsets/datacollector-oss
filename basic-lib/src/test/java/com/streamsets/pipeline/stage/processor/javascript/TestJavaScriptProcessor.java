@@ -308,6 +308,26 @@ public class TestJavaScriptProcessor {
   }
 
   @Test
+  public void testMapCreation() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        "newMap = sdcFunctions.createMap(true)\n" +
+            "newMap['Key'] = 'streamsets'\n" +
+            "records[0].value['Test'] = newMap\n" +
+            "output.write(records[0])\n" +
+            "newRecord = sdcFunctions.createRecord('id')\n" +
+            "rootMap = sdcFunctions.createMap(true)\n" +
+            "rootMap['Hello'] = 2\n" +
+            "newRecord.value = rootMap\n" +
+            "newMap2 = sdcFunctions.createMap(false)\n" +
+            "newMap2['Key'] = 'dpm'\n" +
+            "newRecord.value['Test'] = newMap2\n" +
+            "output.write(newRecord)"
+    );
+    ScriptingProcessorTestUtil.verifyMapListMapCreation(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
   public void testTypedNullPassThrough() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
