@@ -39,6 +39,7 @@
     <commons-io.version>2.4</commons-io.version>
     <commons-pool2.version>2.4.2</commons-pool2.version>
     <h2.version>1.4.187</h2.version>
+    <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
   <dependencies>
@@ -63,6 +64,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdc-kafka-api</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
       <scope>compile</scope>
     </dependency>
 
