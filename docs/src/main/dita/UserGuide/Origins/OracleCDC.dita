@@ -24,6 +24,7 @@
             version 12c.</p>
         <p>When needed, you can use a separate pipeline with the JDBC Consumer origin to read
             existing data before you start a pipeline with Oracle CDC Client.</p>
+        <p>Oracle CDC Client processes data based on the commit number, in ascending order. </p>
         <p>The Oracle CDC Client origin can create records for insert, update, select-for-update,
             and delete operations for one or more tables in a database. You can select the
             operations that you want to use.</p>
