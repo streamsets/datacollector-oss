@@ -14,17 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bnl_n3n_s5">
- <title>Step 2. Install Additional Tarball Libraries</title>
+ <title>Install Additional Libraries Using the Command Line</title>
  <conbody>
         <p><indexterm>core tarball install<indexterm>installing additional
-                libraries</indexterm></indexterm>Use the <codeph>stagelibs</codeph> command to
-            install additional libraries to use stages that are not included in the core
+                libraries</indexterm></indexterm>You can use the <codeph>stagelibs</codeph> command
+            to install additional tarball libraries to use stages that are not included in the core
             installation. This is an optional step, but generally you'll want to install additional
             libraries to process data.</p>
         <note>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
             sha1sum utilities are installed on the machine. Verify that these utilities are
             installed before running the command.</note>
-        <p>Use the following commands to install additional libraries:<dl>
+        <p>Use the following commands to install additional tarball libraries:<dl>
                 <dlentry>
                     <dt>To view the list of available libraries:</dt>
                     <dd>Use the following

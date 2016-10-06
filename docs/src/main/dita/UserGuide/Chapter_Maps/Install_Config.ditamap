@@ -43,8 +43,9 @@
     <topicref href="../Install_Config/CoreInstall_RPMStep2.dita"/>
    </topicref>
    <topicref href="../Install_Config/CoreInstall_Tarball.dita">
-    <topicref href="../Install_Config/CoreInstall_TarballStep1.dita"/>
-    <topicref href="../Install_Config/CoreInstall-TarballStep2.dita"/>
+    <topicref href="../Install_Config/CoreInstall_TarballInstall.dita"/>
+    <topicref href="../Install_Config/CoreInstall-Tarball-LibsPackageMgr.dita"/>
+    <topicref href="../Install_Config/CoreInstall-Tarball-LibsCommand.dita"/>
    </topicref>
    <topicref href="../Install_Config/CoreInstall-LibList.dita"/>
   </topicref>

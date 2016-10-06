@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_ijj_cvr_kv">
-    <title>Step 1. Install and Launch the RPM Package</title>
+    <title>Install and Launch the RPM Package</title>
     <shortdesc>When you install from the RPM package, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         the default directories and the default system user and group. </shortdesc>

@@ -20,6 +20,11 @@
             core version of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             you can download the core tarball. After you perform the core installation and launch,
-            you install individual stage libraries as needed.</p>
+            you install individual stage libraries as needed. You can install additional tarball
+            libraries using the Package Manager within <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
+            using the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            command line program.</p>
     </conbody>
 </concept>

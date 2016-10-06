@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_eyy_qbn_s5">
-    <title>Step 1. Install and Launch the Core Tarball</title>
+    <title>Install and Launch the Core Tarball</title>
     <taskbody>
         <context>
             <p>Download the core installation tarball from the StreamSets website, and then use one

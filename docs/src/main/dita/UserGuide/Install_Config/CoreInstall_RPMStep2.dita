@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_amc_cf3_dx">
- <title>Step 2. Install Additional RPM Libraries</title>
+ <title>Install Additional RPM Libraries</title>
  <conbody>
   <p><indexterm>core RPM install<indexterm>installing additional
             libraries</indexterm></indexterm>Install additional libraries to use stages that are not

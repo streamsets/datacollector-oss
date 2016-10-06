@@ -47,9 +47,28 @@
           </p></stentry>
       </strow>
       <strow>
+        <stentry><image href="../Graphics/icon_DPM.png" scale="70" id="image_vk5_ryk_nx"/></stentry>
+        <stentry>Dataflow Performance Manager icon</stentry>
+        <stentry>Provides information about StreamSets <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (<ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>) and
+          lets you register this <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+          />.</stentry>
+      </strow>
+      <strow>
         <stentry><image href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts"/></stentry>
         <stentry>Home icon</stentry>
         <stentry>Displays a home page with a list of pipelines and their statuses.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_PackageManager.png" scale="80" id="image_o51_szk_nx"/></stentry>
+        <stentry>Package Manager icon</stentry>
+        <stentry>Displays the Package Manager which allows you to install additional stage libraries
+          for a core <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          installation.</stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_MonAlert.png" id="image_mfs_2xd_zs"/></stentry>

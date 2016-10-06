@@ -17,10 +17,11 @@
  <title>Step 6. Install Additional Libraries for the Core Installation</title>
  <shortdesc>If you upgraded a core installation of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-        install the individual stage libraries that the upgraded pipelines require. Use the
-            <codeph>stagelibs</codeph> command to install additional stage libraries.</shortdesc>
- <conbody>
-  <p>For instructions on using the <codeph>stagelibs</codeph> command, see <xref
-                href="../Install_Config/CoreInstall-TarballStep2.dita#concept_bnl_n3n_s5"/>.</p>
- </conbody>
+        install the individual stage libraries that the upgraded pipelines require. Use the Package
+        Manager or the <codeph>stagelibs</codeph> command to install additional stage
+        libraries.</shortdesc>
+    <related-links>
+        <link href="../Install_Config/CoreInstall-Tarball-LibsPackageMgr.dita#concept_h5k_jbl_nx" type="topic"/>
+        <link href="../Install_Config/CoreInstall-Tarball-LibsCommand.dita#concept_bnl_n3n_s5" type="topic"/>
+    </related-links>
 </concept>
