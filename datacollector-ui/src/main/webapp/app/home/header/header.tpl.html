@@ -82,6 +82,12 @@
             </a>
           </li>
 
+          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && pipelineConfig.previewable && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode)">
+            <a href="#" dropdown-toggle ng-click="!pipelineConfig.previewable || previewPipeline(true)">
+              <i class="glyphicon glyphicon-eye-open"></i> {{'home.header.previewConfig' | translate}}
+            </a>
+          </li>
+
         </ul>
       </div>
 

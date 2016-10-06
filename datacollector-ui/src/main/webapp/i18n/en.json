@@ -256,6 +256,7 @@
       "pipeline": "Pipeline",
       "pipelineIssues": "Pipeline Issues",
       "preview": "Preview",
+      "previewConfig": "Preview Config",
       "processors": "Processors",
       "refreshPreview": "Refresh Preview",
       "refreshSnapshot": "Refresh Snapshot",

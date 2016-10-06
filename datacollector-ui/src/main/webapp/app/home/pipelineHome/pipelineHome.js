@@ -248,8 +248,8 @@ angular
        * Fetches preview data for the pipeline and sets previewMode flag to true.
        *
        */
-      previewPipeline: function () {
-        if(!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe) {
+      previewPipeline: function (showPreviewConfig) {
+        if(!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
