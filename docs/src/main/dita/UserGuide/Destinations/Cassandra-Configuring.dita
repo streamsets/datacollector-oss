@@ -50,6 +50,16 @@
                                     <entry>The port number for the Cassandra nodes.</entry>
                                 </row>
                                 <row>
+                                    <entry>Protocol Version</entry>
+                                    <entry>Native protocol version that defines the format of the
+                                        binary messages exchanged between the driver and Cassandra.
+                                        Select the protocol version that you are using.<p>For
+                                            information about determining your protocol version, see
+                                                <xref
+                                                href="https://datastax.github.io/java-driver/manual/native_protocol/"
+                                                format="html" scope="external"/>.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Compression</entry>
                                     <entry>Optional compression type for transport-level requests
                                         and responses.</entry>
