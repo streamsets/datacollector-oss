@@ -420,8 +420,12 @@ public class DirectorySpooler {
             break;
           case DELETE:
             try {
-              LOG.debug("Deleting previous file '{}'", previousFile);
-              Files.delete(previousFile);
+              if(Files.exists(previousFile)) {
+                LOG.debug("Deleting previous file '{}'", previousFile);
+                Files.delete(previousFile);
+              } else {
+                LOG.error("failed to delete previous file '{}'", previousFile);
+              }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString(),
                   ex));
@@ -432,6 +436,8 @@ public class DirectorySpooler {
               if (Files.exists(previousFile)) {
                 LOG.debug("Archiving previous file '{}'", previousFile);
                 Files.move(previousFile, archiveDirPath.resolve(previousFile.getFileName()));
+              } else {
+                LOG.error("failed to Archive previous file '{}'", previousFile);
               }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
