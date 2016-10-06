@@ -92,7 +92,13 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void start(String user, String name, String rev) throws PipelineException, StageException {
     validateIfRemote(name, rev, "START");
-    manager.getRunner(user, name, rev).start();
+    PipelineState pipelineState = pipelineStateStore.getState(name, rev);
+    if (pipelineState.getStatus().isActive()) {
+      LOG.warn("Pipeline {}:{} is already in active state {}", pipelineState.getName(), pipelineState.getRev(),
+          pipelineState.getStatus());
+    } else {
+      manager.getRunner(user, name, rev).start();
+    }
   }
 
   @Override
@@ -154,8 +160,7 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void resetOffset(String user, String name, String rev) throws PipelineException,
-    PipelineManagerException {
+  public void resetOffset(String user, String name, String rev) throws PipelineException {
     validateIfRemote(name, rev, "RESET_OFFSET");
     manager.getRunner(user, name, rev).resetOffset();
   }
@@ -171,27 +176,39 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException {
     validateIfRemote(name, rev, "STOP_AND_DELETE");
-    PipelineState pipelineState = pipelineStateStore.getState(name, rev);
-    if (pipelineState.getStatus().isActive()) {
-      manager.getRunner(user, name, rev).stop();
-    }
-    long now = System.currentTimeMillis();
-    // wait for 10 secs for a graceful stop
-    while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < 10000) {
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException e) {
-        throw new IllegalStateException("Interrupted while waiting for pipeline to stop " + e, e);
+    if (!pipelineStore.hasPipeline(name)) {
+      LOG.warn("Pipeline {}:{} is already deleted", name, rev);
+    } else {
+      PipelineState pipelineState = pipelineStateStore.getState(name, rev);
+      if (pipelineState.getStatus().isActive()) {
+        manager.getRunner(user, name, rev).stop();
       }
-      pipelineState = pipelineStateStore.getState(name, rev);
+      long now = System.currentTimeMillis();
+      // wait for 10 secs for a graceful stop
+      while (pipelineState.getStatus().isActive() && (System.currentTimeMillis() - now) < 10000) {
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          throw new IllegalStateException("Interrupted while waiting for pipeline to stop " + e, e);
+        }
+        pipelineState = pipelineStateStore.getState(name, rev);
+      }
+      // If still active, force stop of this pipeline as we are deleting this anyways
+      if (pipelineState.getStatus().isActive()) {
+        pipelineStateStore.saveState(user,
+            name,
+            rev,
+            PipelineStatus.STOPPED,
+            "Stopping pipeline forcefully as we are performing a delete afterwards",
+            pipelineState.getAttributes(),
+            pipelineState.getExecutionMode(),
+            pipelineState.getMetrics(),
+            pipelineState.getRetryAttempt(),
+            pipelineState.getNextRetryTimeStamp()
+        );
+      }
+      delete(name, rev);
     }
-    // If still active, force stop of this pipeline as we are deleting this anyways
-    if (pipelineState.getStatus().isActive()) {
-      pipelineStateStore.saveState(user, name, rev, PipelineStatus.STOPPED,
-        "Stopping pipeline forcefully as we are performing a delete afterwards", pipelineState.getAttributes(), pipelineState.getExecutionMode(),
-        pipelineState.getMetrics(), pipelineState.getRetryAttempt(), pipelineState.getNextRetryTimeStamp());
-    }
-    delete(name, rev);
   }
 
   // Returns info about remote pipelines that have changed since the last sending of events

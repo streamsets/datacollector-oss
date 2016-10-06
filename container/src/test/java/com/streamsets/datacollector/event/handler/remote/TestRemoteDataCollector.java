@@ -709,8 +709,11 @@ public class TestRemoteDataCollector {
 
     @Override
     public boolean hasPipeline(String name) {
-      // TODO Auto-generated method stub
-      return false;
+      if (deleteCalled == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     @Override
@@ -793,6 +796,7 @@ public class TestRemoteDataCollector {
           new RemoteStateEventListener(new Configuration())
       );
       dataCollector.stopAndDelete("user", "ns:name", "rev");
+      dataCollector.stopAndDelete("user", "ns:name", "rev");
       assertEquals(1, MockRunner.stopCalled);
       assertEquals(1, MockPipelineStoreTask.deleteCalled);
       assertEquals(1, MockPipelineStoreTask.deleteRulesCalled);
@@ -854,8 +858,9 @@ public class TestRemoteDataCollector {
   @Test
   public void testRemotePipelines() throws Exception {
     RemoteStateEventListener remoteStateEventListener = Mockito.mock(RemoteStateEventListener.class);
+    PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
-        new MockPipelineStoreTask(),
+        pipelineStoreTask,
         new MockPipelineStateStore(),
         remoteStateEventListener
     );
@@ -872,6 +877,7 @@ public class TestRemoteDataCollector {
         -1,
         -1
     ));
+    Mockito.when(pipelineStoreTask.hasPipeline(Mockito.anyString())).thenReturn(false);
     Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(pipelineStates);
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = dataCollector.getRemotePipelinesWithChanges();
     assertEquals(1, pipelineAndValidationStatuses.size());
