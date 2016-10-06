@@ -35,6 +35,7 @@ import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
+import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
 import com.streamsets.datacollector.util.Configuration;
@@ -451,7 +452,21 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public Record createRecord(Record originatorRecord) {
     Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
-    return new RecordImpl(instanceName, originatorRecord, null, null);
+    RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
+    HeaderImpl header = record.getHeader();
+    header.setStagesPath("");
+    return record;
+  }
+
+  //Processor.Context
+  @Override
+  public Record createRecord(Record originatorRecord, String sourceIdPostfix) {
+    Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
+    RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
+    HeaderImpl header = record.getHeader();
+    header.setSourceId(header.getSourceId() + "_" + sourceIdPostfix);
+    header.setStagesPath("");
+    return record;
   }
 
   //Processor.Context
@@ -463,7 +478,20 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   //Processor.Context
   @Override
   public Record cloneRecord(Record record) {
-    return ((RecordImpl) record).clone();
+    RecordImpl clonedRecord = ((RecordImpl) record).clone();
+    HeaderImpl header = clonedRecord.getHeader();
+    header.setStagesPath("");
+    return clonedRecord;
+  }
+
+  //Processor.Context
+  @Override
+  public Record cloneRecord(Record record, String sourceIdPostfix) {
+    RecordImpl clonedRecord = ((RecordImpl) record).clone();
+    HeaderImpl header = clonedRecord.getHeader();
+    header.setSourceId(header.getSourceId() + "_" + sourceIdPostfix);
+    header.setStagesPath("");
+    return clonedRecord;
   }
 
   @Override
