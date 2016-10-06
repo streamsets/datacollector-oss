@@ -166,7 +166,7 @@ public class HdfsActionsConfig {
     if(shouldSetPermissions && shouldSetAcls) {
       issues.add(
         context.createConfigIssue(
-          Groups.Tasks.name(),
+          Groups.TASKS.name(),
           null,
           HdfsMetadataErrors.HDFS_METADATA_006
         )

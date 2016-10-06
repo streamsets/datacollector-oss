@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Label;
 
 public enum Groups implements Label {
   HDFS("HDFS"),
-  Tasks("Tasks"),
+  TASKS("Tasks"),
   ;
 
   private final String label;
