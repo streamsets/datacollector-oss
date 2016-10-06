@@ -67,13 +67,15 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
     }
 
     List<Field> list = listField.getValueAsList();
+    int i = 1;
     for (Field field : list) {
       Record newRec;
+      String sourceIdPostfix = i++ + "";
       if (copyFields) {
-        newRec = getContext().cloneRecord(record);
+        newRec = getContext().cloneRecord(record, sourceIdPostfix);
         newRec.set(newPath, field);
       } else {
-        newRec = getContext().createRecord(record);
+        newRec = getContext().createRecord(record, sourceIdPostfix);
         newRec.set(field);
       }
       batchMaker.addRecord(newRec);
