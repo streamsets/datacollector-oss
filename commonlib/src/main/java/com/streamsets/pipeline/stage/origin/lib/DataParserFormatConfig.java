@@ -51,6 +51,7 @@ import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -62,6 +63,8 @@ import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -83,7 +86,10 @@ import static com.streamsets.pipeline.stage.common.DataFormatErrors.DATA_FORMAT_
  * Instances of this object must be called 'dataFormatConfig' exactly for error
  * messages to be placed in the correct location on the UI.
  */
-public class DataParserFormatConfig implements DataFormatConfig{
+public class DataParserFormatConfig implements DataFormatConfig {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DataParserFormat.class);
+
   private static final String DEFAULT_REGEX =
       "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
   private static final String DEFAULT_APACHE_CUSTOM_LOG_FORMAT = "%h %l %u %t \"%r\" %>s %b";
@@ -1183,6 +1189,7 @@ public class DataParserFormatConfig implements DataFormatConfig{
     try {
       parserFactory = builder.build();
     } catch (Exception ex) {
+      LOG.error("Can't create parserFactory", ex);
       issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_06, ex.toString(), ex));
       valid = false;
     }

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -646,6 +647,7 @@ public class ClusterHDFSSourceIT {
     conf.recursive = false;
     conf.produceSingleRecordPerMessage = false;
     conf.dataFormat = DataFormat.AVRO;
+    conf.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
 
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
