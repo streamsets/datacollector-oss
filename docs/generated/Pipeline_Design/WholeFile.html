@@ -82,9 +82,9 @@
             that processes whole files include an origin and one or more destinations that support
             the whole file data format. </p>
 
-        <p class="p">You can include certain processors to modify file information included in the record,
-            such as the file name or size. You cannot use processors to transform data in the
-            file.</p>
+        <p class="p">You can include certain processors to read the file data or to modify file information
+            included in the record, such as the file name or size.  You cannot use processors to
+            transform data in the file.</p>
 
         <p class="p">Here's a basic pipeline that moves whole files from Amazon S3 to HDFS:</p>
 
@@ -100,7 +100,8 @@
         <div class="p">When reading whole files, the origin produces a
             record with two fields:<ul class="ul" id="concept_kxr_kqh_xw__ul_oqn_bpv_xw">
                 <li class="li">fileref - Contains a reference that enables streaming the file from the origin
-                    system to the destination system. You cannot modify the fileref field.</li>
+                    system to the destination system. You can use processors to read the fielref
+                    field. You cannot modify information in the fileref field. </li>
 
                 <li class="li">fileInfo - A map of file properties, such as file path, file name, and file
                     owner. The details differ based on the origin system. You can use processors to
@@ -120,10 +121,10 @@
 
  <div class="body conbody">
         <p class="p">You can use certain processors in a whole file
-            pipeline to modify file information in the fileInfo field, such as the file owner or
-            permissions.</p>
+            pipeline to read the file data in the fileref field or to modify file information in the
+            fileInfo field, such as the file owner or permissions.</p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d23995e1467">You can use
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d25289e1747">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span> The information and field names
                         can differ based on the origin system.</div>
@@ -136,6 +137,17 @@
 
                     <dd class="dd">For example, you might use the Expression Evaluator to update the owner of
                         the file.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Groovy Evaluator, JavaScript Evaluator, and Jython Evaluator</dt>
+
+                    <dd class="dd">Use to access the fileref field by creating an input stream using the
+                        getInputStream() API. </dd>
+
+                    <dd class="dd">For example, you might use the Groovy Evaluator to use Groovy code that
+                        reads the file data in the fileref field and then creates new records with
+                        the data.</dd>
 
                 
             </dl>

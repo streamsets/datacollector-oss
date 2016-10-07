@@ -41,7 +41,9 @@
                   Collector</span>
             from the <span class="ph">Data
                   Collector</span>
-            console or from <span class="ph">DPM</span>.
+            console, the <span class="ph">Data
+                  Collector</span>
+            command line interface, or from <span class="ph">DPM</span>.
             For a Cloudera Manager installation, you must use both <span class="ph">DPM</span> and
             Cloudera Manager to unregister a <span class="ph">Data
                   Collector</span>.
@@ -103,6 +105,131 @@
 
             </li>
 </ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_r4v_fwf_nx">
+ <h2 class="title topictitle2">Unregistering from the Command Line Interface</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can unregister a <span class="ph">Data
+                  Collector</span> from
+            <span class="ph">DPM</span>
+        using the <span class="ph">Data
+                  Collector</span>
+        command line interface. </p>
+
+        <p class="p">
+            
+        </p>
+
+        <p class="p">Start the <span class="ph">Data
+                  Collector</span>,
+            and then use the system disableDPM command to unregister the <span class="ph">Data
+                  Collector</span>. </p>
+
+        <div class="p">Use the command as
+            follows:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli \
+(-U &lt;sdcURL&gt; | --url &lt;sdcURL&gt;) \
+[(-a &lt;sdcAuthType&gt; | --auth-type &lt;sdcAuthType&gt;)] \
+[(-D &lt;dpmURL&gt; | --dpmURL &lt;dpmURL&gt;)] \ 
+[(-u &lt;sdcUser&gt; | --user &lt;sdcUser&gt;)] \
+[(-p &lt;sdcPassword&gt; | --password &lt;sdcPassword&gt;)] \
+system disableDPM</pre>
+</div>
+
+        <p class="p">When using the system disableDPM command, the following basic options are required:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r4v_fwf_nx__table_njq_3bb_cx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d29192e266">Basic Option</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d29192e269">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d29192e266 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+--url &lt;sdcURL&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d29192e269 ">Required. URL of the <span class="ph">Data
+                  Collector</span>.<p class="p">The default URL is
+                                        <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d29192e266 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+--auth-type &lt;sdcAuthType&gt;</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d29192e269 ">Required. Authentication type used by the <span class="ph">Data
+                  Collector</span>. Set to <samp class="ph codeph">dpm</samp>.<p class="p">If you omit this option, <span class="ph">Data
+                  Collector</span> uses the Form authentication type, which causes the
+                                    disableDPM command to fail.</p>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d29192e266 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+<p class="p">--dpmURL &lt;dpmURL&gt;</p>
+</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d29192e269 ">Required. Set to:
+                                <samp class="ph codeph">https://cloud.streamsets.com</samp>.</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d29192e266 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+<p class="p">--user &lt;sdcUser&gt;</p>
+</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d29192e269 ">Required. Enter your <span class="ph">DPM</span> user name using the following
+                                    format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
+<p class="p">If
+                                    you omit this option, <span class="ph">Data
+                  Collector</span> uses the <samp class="ph codeph">admin</samp> user account, which causes
+                                    the disableDPM command to fail.</p>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d29192e266 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+<p class="p">--password
+                                &lt;sdcPassword&gt;</p>
+</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d29192e269 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+        <div class="p">For example, the following command unregisters a <span class="ph">Data
+                  Collector</span>
+            with <span class="ph">DPM</span>:<pre class="pre codeblock">$SDC_DIST/bin/streamsets cli -U http://localhost:18630 -a dpm -D https://cloud.streamsets.com -u alison@MyOrg -p MyPassword system disableDPM</pre>
+</div>
+
+        <p class="p">Restart the <span class="ph">Data
+                  Collector</span> to
+            apply the changes. </p>
 
     </div>
 

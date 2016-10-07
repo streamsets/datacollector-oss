@@ -86,6 +86,10 @@
                   
             </dl>
 
+        <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as access key
+                  pairs, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+
  </div>
 
 </div>
@@ -378,8 +382,29 @@ s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</pre>
 
                               <dd class="dd">Generates a record for every record. </dd>
 
-                              <dd class="dd">The origin assumes each file includes an Avro schema definition.
-                                    But you can optionally provide an alternate schema. </dd>
+                              <dd class="dd">You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul class="ul" id="concept_gz5_dqw_yq__d17104e468">
+                                          <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
+                                                Use the schema in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration. </li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID or subject
+                                                specified in the stage configuration.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the file and can improve performance.</dd>
 
                               <dd class="dd">The origin reads files compressed by Avro-supported compression
                                     codecs without requiring additional configuration. To enable the
@@ -391,7 +416,7 @@ s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</pre>
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_gz5_dqw_yq__d16528e561">
+                                    following delimited format types:<ul class="ul" id="concept_gz5_dqw_yq__d17104e665">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -424,7 +449,7 @@ s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</pre>
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d16528e603">
+                                    configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d17104e707">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -454,7 +479,7 @@ s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</pre>
                                     origin, the origin cannot continue processing data in the file.
                                     Records already processed from the file are passed to the
                                     pipeline. The behavior of the origin is then based on the error
-                                    handling configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d16528e644">
+                                    handling configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d17104e748">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -554,7 +579,7 @@ s3://ServerEast/LogFiles/file2.log        04-30-2016 18:39:44</pre>
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d16528e878">
+                                    configured for the stage:<ul class="ul" id="concept_gz5_dqw_yq__d17104e981">
                                           <li class="li">Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -592,14 +617,14 @@ If you want to process invalid XML documents, you can try
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d101045e751">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d106039e796">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d101045e754">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d106039e799">Description</th>
 
                                 </tr>
 
@@ -607,24 +632,24 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e751 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e796 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e754 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e751 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e754 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e799 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e751 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_gfj_ssv_yq__d16615e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e796 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e754 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d16615e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e799 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e796 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_gfj_ssv_yq__d17202e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e799 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d17202e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -654,9 +679,9 @@ If you want to process invalid XML documents, you can try
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e836">Amazon S3 Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e881">Amazon S3 Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e839">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e884">Description</th>
 
                                 </tr>
 
@@ -664,12 +689,12 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e836 ">Access Key ID
+                                    <td class="entry" valign="top" width="30%" headers="d106039e881 ">Access Key ID
                                         <a class="xref" href="AmazonS3.html#concept_uhy_ttg_vw" title="When Data Collector reads data from an Amazon S3 origin, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_gfj_ssv_yq__image_v94_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e839 ">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e884 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -679,12 +704,12 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e836 ">Secret Access Key
+                                    <td class="entry" valign="top" width="30%" headers="d106039e881 ">Secret Access Key
                                         <a class="xref" href="AmazonS3.html#concept_uhy_ttg_vw" title="When Data Collector reads data from an Amazon S3 origin, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_gfj_ssv_yq__image_v64_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e839 ">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e884 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -694,54 +719,62 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Region</td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Region</td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Amazon S3 region. </td>
-
-      </tr>
-
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Bucket</td>
-
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Bucket that contains the objects to be read.</td>
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Amazon S3 region. </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Common Prefix <a class="xref" href="AmazonS3.html#concept_elk_jr4_ht" title="The Amazon S3 origin appends the common prefix to the prefix pattern to define the objects that the origin processes. You can specify an exact prefix pattern or you can use Ant-style path patterns to read multiple objects recursively.">
-         <img class="image" id="task_gfj_ssv_yq__d16628e357" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Endpoint</td>
+
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+        name.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Bucket</td>
+
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Bucket that contains the objects to be read.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Common Prefix <a class="xref" href="AmazonS3.html#concept_elk_jr4_ht" title="The Amazon S3 origin appends the common prefix to the prefix pattern to define the objects that the origin processes. You can specify an exact prefix pattern or you can use Ant-style path patterns to read multiple objects recursively.">
+         <img class="image" id="task_gfj_ssv_yq__d17215e366" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
         </a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Optional common prefix that describes the location of the objects. When defined, the
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Optional common prefix that describes the location of the objects. When defined, the
         common prefix acts as a root for the prefix pattern.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Delimiter</td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Delimiter</td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash ( /
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash ( /
          ).</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Include Metadata <a class="xref" href="AmazonS3.html#concept_inh_qjx_yw">
-         <img class="image" id="task_gfj_ssv_yq__d16628e381" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Include Metadata <a class="xref" href="AmazonS3.html#concept_inh_qjx_yw">
+         <img class="image" id="task_gfj_ssv_yq__d17215e391" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
         </a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Includes system-defined and user-defined metadata in record header attributes.
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Includes system-defined and user-defined metadata in record header attributes.
        </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Prefix Pattern <a class="xref" href="AmazonS3.html#concept_elk_jr4_ht" title="The Amazon S3 origin appends the common prefix to the prefix pattern to define the objects that the origin processes. You can specify an exact prefix pattern or you can use Ant-style path patterns to read multiple objects recursively.">
-         <img class="image" id="task_gfj_ssv_yq__d16628e395" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Prefix Pattern <a class="xref" href="AmazonS3.html#concept_elk_jr4_ht" title="The Amazon S3 origin appends the common prefix to the prefix pattern to define the objects that the origin processes. You can specify an exact prefix pattern or you can use Ant-style path patterns to read multiple objects recursively.">
+         <img class="image" id="task_gfj_ssv_yq__d17215e404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
         </a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">
         Prefix pattern that describes the objects to be processed.
         <p class="p">You can include the entire path to the objects. You can also use Ant-style path patterns
          to read objects recursively. </p>
@@ -751,12 +784,12 @@ If you want to process invalid XML documents, you can try
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e836 ">Read Order
+                                    <td class="entry" valign="top" width="30%" headers="d106039e881 ">Read Order
                                         <a class="xref" href="AmazonS3.html#concept_ltv_r3l_5q">
                                             <img class="image" id="task_gfj_ssv_yq__image_v29_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e839 ">The order to use when reading objects:<ul class="ul" id="task_gfj_ssv_yq__ul_mdf_xdp_jx">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e884 ">The order to use when reading objects:<ul class="ul" id="task_gfj_ssv_yq__ul_mdf_xdp_jx">
                                             <li class="li">Lexicographically Ascending Keys Names - Reads
                                                 objects in lexicographically ascending order based
                                                 on key name. </li>
@@ -776,9 +809,9 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Buffer Limit (KB)</td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Buffer Limit (KB)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Maximum buffer size. The buffer size determines the size of the record that can be
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Maximum buffer size. The buffer size determines the size of the record that can be
         processed. <p class="p">Decrease when memory on the <span class="ph">Data
                   Collector</span> machine
          is limited. Increase to process larger records when memory is available. </p>
@@ -789,28 +822,28 @@ If you want to process invalid XML documents, you can try
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Character encoding of the files to be processed.<p class="p">Not used for all data
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Character encoding of the files to be processed.<p class="p">Not used for all data
         formats.</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_gfj_ssv_yq__d16628e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_gfj_ssv_yq__d17215e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_gfj_ssv_yq__d16628e426" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_gfj_ssv_yq__d17215e435" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">The compression format of the files:<ul class="ul" id="task_gfj_ssv_yq__d16628e430">
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">The compression format of the files:<ul class="ul" id="task_gfj_ssv_yq__d17215e439">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -826,9 +859,9 @@ If you want to process invalid XML documents, you can try
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -838,19 +871,19 @@ If you want to process invalid XML documents, you can try
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_gfj_ssv_yq__d16628e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_gfj_ssv_yq__d17215e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d101045e839 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="70%" headers="d106039e884 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d101045e836 ">Data Format <a class="xref" href="AmazonS3.html#concept_gz5_dqw_yq">
-         <img class="image" id="task_gfj_ssv_yq__d16628e452" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+       <td class="entry" valign="top" width="30%" headers="d106039e881 ">Data Format <a class="xref" href="AmazonS3.html#concept_gz5_dqw_yq">
+         <img class="image" id="task_gfj_ssv_yq__d17215e461" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
         </a></td>
 
-       <td class="entry" id="task_gfj_ssv_yq__d16628e455" valign="top" width="70%" headers="d101045e839 ">Data format for source files. Use one of the following formats:<ul class="ul" id="task_gfj_ssv_yq__d16628e457">
+       <td class="entry" id="task_gfj_ssv_yq__d17215e464" valign="top" width="70%" headers="d106039e884 ">Data format for source files. Use one of the following formats:<ul class="ul" id="task_gfj_ssv_yq__d17215e466">
          <li class="li">Avro</li>
 
          <li class="li">Delimited</li>
@@ -862,12 +895,12 @@ If you want to process invalid XML documents, you can try
          <li class="li">Protobuf</li>
 
          <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
-           <img class="image" id="task_gfj_ssv_yq__d16628e479" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+           <img class="image" id="task_gfj_ssv_yq__d17215e488" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
          <li class="li">Text</li>
 
          <li class="li">Whole File <a class="xref" href="../Pipeline_Design/WholeFile.html#concept_nfc_qkh_xw">
-           <img class="image" id="task_gfj_ssv_yq__d16628e488" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+           <img class="image" id="task_gfj_ssv_yq__d17215e497" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
          <li class="li">XML</li>
 
@@ -893,9 +926,9 @@ If you want to process invalid XML documents, you can try
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d101045e1198">Error Handling Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d106039e1252">Error Handling Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d101045e1201">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d106039e1255">Description</th>
 
                                 </tr>
 
@@ -903,9 +936,9 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1198 ">Error Handling Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1252 ">Error Handling Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1201 ">The action taken when an error occurs while processing an
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1255 ">The action taken when an error occurs while processing an
                                             object:<ul class="ul" id="task_gfj_ssv_yq__ul_hvm_gqv_ht">
                                             <li class="li">None - Keeps the object in place.</li>
 
@@ -923,9 +956,9 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1198 ">Archiving Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1252 ">Archiving Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1201 ">The action to take when archiving an object that cannot
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1255 ">The action to take when archiving an object that cannot
                                         be processed. <p class="p">You can copy or move the object to another prefix or bucket.
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
@@ -935,16 +968,16 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1198 ">Error Prefix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1252 ">Error Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1201 ">Prefix for the objects that cannot be processed.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1255 ">Prefix for the objects that cannot be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1198 ">Error Bucket</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1252 ">Error Bucket</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1201 ">Bucket for the objects that cannot be processed.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1255 ">Bucket for the objects that cannot be processed.</td>
 
                                 </tr>
 
@@ -965,9 +998,9 @@ If you want to process invalid XML documents, you can try
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d101045e1288">Post Processing Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d106039e1342">Post Processing Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d101045e1291">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d106039e1345">Description</th>
 
                                 </tr>
 
@@ -975,9 +1008,9 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1288 ">Post Processing Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1342 ">Post Processing Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1291 ">The action taken after successfully processing an object:
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1345 ">The action taken after successfully processing an object:
                                             <ul class="ul" id="task_gfj_ssv_yq__ul_gll_wqv_ht">
                                             <li class="li">None - Keeps the object in place.</li>
 
@@ -992,9 +1025,9 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1288 ">Archiving Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1342 ">Archiving Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1291 ">The action to take when archiving a processed object. <p class="p">You can copy or move the object to another prefix or bucket.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1345 ">The action to take when archiving a processed object. <p class="p">You can copy or move the object to another prefix or bucket.
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
 <p class="p">Copying the object leaves the original object in place. </p>
@@ -1003,16 +1036,16 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1288 ">Post Process Prefix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1342 ">Post Process Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1291 ">Prefix for processed objects. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1345 ">Prefix for processed objects. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1288 ">Post Process Bucket</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e1342 ">Post Process Bucket</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1291 ">Bucket for processed objects.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e1345 ">Bucket for processed objects.</td>
 
                                 </tr>
 
@@ -1033,9 +1066,9 @@ If you want to process invalid XML documents, you can try
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1376">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e1430">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1379">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e1433">Description</th>
 
                                 </tr>
 
@@ -1043,37 +1076,40 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d101045e1376 ">Use Proxy</td>
+      <td class="entry" valign="top" width="30%" headers="d106039e1430 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="70%" headers="d101045e1379 ">Specifies whether to use a proxy to connect to Amazon S3.</td>
-
-     </tr>
-
-                                <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d101045e1376 ">Proxy Host</td>
-
-      <td class="entry" valign="top" width="70%" headers="d101045e1379 ">Proxy host.</td>
+      <td class="entry" valign="top" width="70%" headers="d106039e1433 ">Specifies whether to use a proxy to connect to Amazon S3.</td>
 
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d101045e1376 ">Proxy Port</td>
+      <td class="entry" valign="top" width="30%" headers="d106039e1430 ">Proxy Host</td>
 
-      <td class="entry" valign="top" width="70%" headers="d101045e1379 ">Proxy port.</td>
-
-     </tr>
-
-                                <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d101045e1376 ">Proxy User</td>
-
-      <td class="entry" valign="top" width="70%" headers="d101045e1379 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="70%" headers="d106039e1433 ">Proxy host.</td>
 
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="30%" headers="d101045e1376 ">Proxy Password</td>
+      <td class="entry" valign="top" width="30%" headers="d106039e1430 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="70%" headers="d101045e1379 ">Password for proxy credentials. </td>
+      <td class="entry" valign="top" width="70%" headers="d106039e1433 ">Proxy port.</td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="30%" headers="d106039e1430 ">Proxy User</td>
+
+      <td class="entry" valign="top" width="70%" headers="d106039e1433 ">User name for proxy credentials.</td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="30%" headers="d106039e1430 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d106039e1433 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+</td>
 
      </tr>
 
@@ -1086,17 +1122,17 @@ If you want to process invalid XML documents, you can try
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, optionally configure the
-                    following property:</span>
+                    following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e617" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e617" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1459">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e1537">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1462">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e1540">Description</th>
 
                                 </tr>
 
@@ -1104,17 +1140,85 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1459 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1462 ">Avro schema definition to use when processing data.
-                                        Overrides any existing schema definitions associated with
-                                        the data. Defining a schema can improve performance.<p class="p">When
-                                            not used, the origin uses the schema defined in the
-                                            file.</p>
-<p class="p">You can optionally use the
-                                            runtime:loadResource function to use a schema definition
-                                            stored in a runtime resource file. </p>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_gfj_ssv_yq__d17202e646">
+                                            <li class="li">Message/Data Includes Schema - Use the schema in the
+                                                file.</li>
+
+                                            <li class="li">In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+
+                                        </ul>
+<p class="p">Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p>
 </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Avro schema definition used to process the data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. <p class="p">You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
+                                        the following format to enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Lookup Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_gfj_ssv_yq__d17202e693">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID. </li>
+
+                                        </ul>
+Overrides any existing schema definitions associated
+                                        with the data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p class="p">If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <span class="ph uicontrol">Look Up Schema By</span> property to
+                                            Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1537 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1540 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
 
                                 </tr>
 
@@ -1130,14 +1234,14 @@ If you want to process invalid XML documents, you can try
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e959" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1189" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1509">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e1663">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1512">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e1666">Description</th>
 
                                 </tr>
 
@@ -1145,9 +1249,9 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_gfj_ssv_yq__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1172,25 +1276,25 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1205,24 +1309,24 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Escape Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
-                                            <img class="image" id="task_gfj_ssv_yq__d16615e1056" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Root field type to use:<ul class="ul" id="task_gfj_ssv_yq__d16615e1060">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_gfj_ssv_yq__d17202e1286" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Root field type to use:<ul class="ul" id="task_gfj_ssv_yq__d17202e1290">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1238,24 +1342,24 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Lines to Skip</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">Parse NULLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1509 ">NULL Constant</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1663 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1512 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1666 ">String constant to replace with null values.</td>
 
                                 </tr>
 
@@ -1271,25 +1375,25 @@ If you want to process invalid XML documents, you can try
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1123" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1353" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1692">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e1846">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1695">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e1849">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_gfj_ssv_yq__d16615e1145" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1692 ">JSON Content</td>
+                                <tr id="task_gfj_ssv_yq__d17202e1375" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1846 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1695 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_gfj_ssv_yq__d16615e1154">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1849 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_gfj_ssv_yq__d17202e1384">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1301,10 +1405,10 @@ If you want to process invalid XML documents, you can try
 
                                 </tr>
 
-                                <tr id="task_gfj_ssv_yq__d16615e1165" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1692 ">Maximum Object Length (chars)</td>
+                                <tr id="task_gfj_ssv_yq__d17202e1395" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1846 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1695 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1849 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -1323,14 +1427,14 @@ If you want to process invalid XML documents, you can try
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1212" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1442" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1760">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e1914">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1763">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e1917">Description</th>
 
                                 </tr>
 
@@ -1338,10 +1442,10 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1760 ">Log Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1914 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1763 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_gfj_ssv_yq__d16615e1241">
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1917 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_gfj_ssv_yq__d17202e1471">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1362,17 +1466,17 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1760 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1914 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1763 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1917 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1760 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e1914 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1763 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d106039e1917 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1385,7 +1489,7 @@ If you want to process invalid XML documents, you can try
                         </table>
 </div>
 
-                    <ul class="ul" id="task_gfj_ssv_yq__d16615e1290">
+                    <ul class="ul" id="task_gfj_ssv_yq__d17202e1520">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1408,14 +1512,14 @@ If you want to process invalid XML documents, you can try
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1335" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1565" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d101045e1888">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d106039e2042">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d101045e1891">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d106039e2045">Description</th>
 
                                             </tr>
 
@@ -1423,10 +1527,10 @@ If you want to process invalid XML documents, you can try
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1888 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e2042 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1891 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d16615e1364">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e2045 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d17202e1594">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1445,17 +1549,17 @@ If you want to process invalid XML documents, you can try
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1888 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e2042 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1891 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e2045 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d101045e1888 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d106039e2042 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d101045e1891 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d106039e2045 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1477,14 +1581,14 @@ If you want to process invalid XML documents, you can try
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1519" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1749" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e1965">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e2119">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e1968">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e2122">Description</th>
 
                                 </tr>
 
@@ -1492,9 +1596,9 @@ If you want to process invalid XML documents, you can try
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1965 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2119 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1968 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2122 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                             <p class="p">For more information about environment variables, see
@@ -1505,9 +1609,9 @@ If you want to process invalid XML documents, you can try
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1965 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2119 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1968 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2122 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1517,9 +1621,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e1965 ">Delimited Messages</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2119 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e1968 ">Indicates if a file might include more than one protobuf
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2122 ">Indicates if a file might include more than one protobuf
                                         message.</td>
 
                                 </tr>
@@ -1535,14 +1639,14 @@ Use a message type defined in the
                     <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1612" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e1921" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e2088">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e2242">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e2091">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e2245">Description</th>
 
                                 </tr>
 
@@ -1550,9 +1654,9 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2088 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2242 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2091 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2245 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1561,26 +1665,25 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2088 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_gfj_ssv_yq__d16615e1651" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2242 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_gfj_ssv_yq__d17202e1960" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2091 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2245 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2088 ">Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2242 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2091 ">One more more characters to use to define records.
-                                    </td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2245 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2088 ">Include Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2242 ">Include Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2091 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2245 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
@@ -1597,14 +1700,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1758" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e2068" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d101045e2168">Whole File Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d106039e2322">Whole File Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d101045e2171">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d106039e2325">Description</th>
 
                                 </tr>
 
@@ -1612,17 +1715,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2168 ">Max Buffer Size (bytes)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2322 ">Max Buffer Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2171 ">Maximum buffer size to use when transferring
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2325 ">Maximum buffer size to use when transferring
                                         data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d101045e2168 ">Verify Checksum</td>
+                                    <td class="entry" valign="top" width="30%" headers="d106039e2322 ">Verify Checksum</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d101045e2171 ">Verifies the checksum during the read. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d106039e2325 ">Verifies the checksum during the read. </td>
 
                                 </tr>
 
@@ -1638,22 +1741,22 @@ Use a message type defined in the
                     properties:</span>      
             <div class="itemgroup info">
                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d16615e1823" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d17202e2132" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left"> <tr class="row">                         
-                            <th class="entry" valign="top" width="30%" id="d101045e2223">XML Property</th>
+                            <th class="entry" valign="top" width="30%" id="d106039e2377">XML Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d101045e2226">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d106039e2380">Description</th>
 </tr>
   
                         </thead>
 
        <tbody class="tbody">                
             <tr class="row">
-                <td class="entry" valign="top" width="30%" headers="d101045e2223 ">Delimiter Element</td>
+                <td class="entry" valign="top" width="30%" headers="d106039e2377 ">Delimiter Element</td>
 
-                <td class="entry" valign="top" width="70%" headers="d101045e2226 ">
+                <td class="entry" valign="top" width="70%" headers="d106039e2380 ">
                     <p class="p">XML element that acts as a delimiter. Omit a delimiter to
                         treat the entire XML document as one record.</p>
 
@@ -1666,9 +1769,9 @@ Use a message type defined in the
             </tr>
 
             <tr class="row">
-                <td class="entry" valign="top" width="30%" headers="d101045e2223 ">Max Record Length (chars)</td>
+                <td class="entry" valign="top" width="30%" headers="d106039e2377 ">Max Record Length (chars)</td>
 
-                <td class="entry" valign="top" width="70%" headers="d101045e2226 ">
+                <td class="entry" valign="top" width="70%" headers="d106039e2380 ">
                     <p class="p">The maximum number of characters in a record. Longer
                         records are diverted to the pipeline for error handling.
                     </p>
