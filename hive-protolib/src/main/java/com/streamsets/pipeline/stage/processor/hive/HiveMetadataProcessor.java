@@ -59,6 +59,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class HiveMetadataProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetadataProcessor.class.getCanonicalName());
@@ -471,7 +472,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String avroSchema
   ) throws HiveStageCheckedException
   {
-    Record metadataRecord = getContext().createRecord("Table Metadata Record");
+    //creating a record with uuid as postfix so multiple SDCs won't generate the record with same id.
+    Record metadataRecord = getContext().createRecord("Table Metadata Record" + UUID.randomUUID().toString());
 
     Field metadataField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
         database,
@@ -579,7 +581,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, String> partitionList,
       String location) throws StageException {
 
-    Record metadataRecord = getContext().createRecord("Partition Metadata Record");
+    //creating a record with uuid as postfix so multiple SDCs won't generate the record with same id.
+    Record metadataRecord = getContext().createRecord("Partition Metadata Record" + UUID.randomUUID().toString());
     Field metadataField = HiveMetastoreUtil.newPartitionMetadataFieldBuilder(
         database,
         tableName,
