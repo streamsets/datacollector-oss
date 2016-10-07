@@ -126,12 +126,13 @@ public class TestSdcRecordDataGenerator {
     gen.flush();
   }
 
-  @Test
+  // https://issues.streamsets.com/browse/SDC-4126
+  // @Test
   public void testGenerateWithSampler() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
     Configuration configuration = new Configuration();
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 0);
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 0);
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
+    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 1);
     DataGenerator gen = new SdcRecordDataGenerator(
         getContextExtensions().createRecordWriter(writer),
         getContextExtensions()
