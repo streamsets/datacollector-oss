@@ -18,8 +18,8 @@
  <conbody>
         <p><indexterm>whole file data format<indexterm>additional
             processors</indexterm></indexterm>You can use certain processors in a whole file
-            pipeline to modify file information in the fileInfo field, such as the file owner or
-            permissions.</p>
+            pipeline to read the file data in the fileref field or to modify file information in the
+            fileInfo field, such as the file owner or permissions.</p>
         <note
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/WF-TIP-DataPreview"/>
         <p>You can use the following additional processors in a whole file pipeline:<dl>
@@ -28,6 +28,14 @@
                     <dd>Use to update fileInfo fields. </dd>
                     <dd>For example, you might use the Expression Evaluator to update the owner of
                         the file.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Groovy Evaluator, JavaScript Evaluator, and Jython Evaluator</dt>
+                    <dd>Use to access the fileref field by creating an input stream using the
+                        getInputStream() API. </dd>
+                    <dd>For example, you might use the Groovy Evaluator to use Groovy code that
+                        reads the file data in the fileref field and then creates new records with
+                        the data.</dd>
                 </dlentry>
             </dl><dl>
                 <dlentry>

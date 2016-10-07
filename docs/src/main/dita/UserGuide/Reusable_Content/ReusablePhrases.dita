@@ -724,12 +724,38 @@
                         <dlentry>
                               <dt>sdcFunctions</dt>
                               <dd>An object that runs functions that evaluate or modify data.
-                                    Includes a <codeph>getFieldNull(Record, 'field path')</codeph>
-                                    method that checks if a field is assigned a constant such as
-                                    NULL_INTEGER or NULL_STRING. </dd>
+                                    Includes the following methods: </dd>
+                              <dd>
+                                    <ul id="ul_th2_3lr_mx">
+                                          <li><codeph>getFieldNull(Record, 'field path')</codeph> -
+                                                Method that checks if a field is assigned a constant
+                                                such as NULL_INTEGER or NULL_STRING.</li>
+                                          <li><codeph>createRecord(String, 'recordId')</codeph> -
+                                                Method that creates a new record with the specified
+                                                fields and values. The recordId uniquely identifies
+                                                the record. It should include enough information to
+                                                track down the record source.</li>
+                                          <li><codeph>createMap(boolean listMap)</codeph> - Method
+                                                that creates a map for use as a field in a record.
+                                                Pass true to create a list-map field, or false to
+                                                create a map field.</li>
+                                    </ul>
+                              </dd>
                         </dlentry>
                   </dl>
             </p>
+            <draft-comment author="alisontaylor">Groovy, JavaScript, Jython Evaluators use this text
+                  in Accessing Whole Files topic</draft-comment>
+            <p id="Script-WholeFile">The processor can access the fileref field in a whole file record by creating an
+                  input stream using the getInputStream() API. For example, you might use the
+                  processor to read the file data in the fileref field and then create new records
+                  with the data. The processor can access the fileref field, but cannot modify
+                  information in the field.</p>
+            <p id="Script-CreateStream">Use the following lines to create and then read the input
+                  stream:<codeblock>input_stream = record.value['fileRef'].getInputStream()
+input_stream.read()</codeblock></p>
+            <p id="Script-CloseStream">After the processor reads the input stream, include the following line in the code to
+                  close the input stream:<codeblock>input_stream.close()</codeblock></p>
             <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Individual items are
                         conrefed, not the whole list. (8/10/16) </draft-comment>
