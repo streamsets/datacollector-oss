@@ -27,9 +27,8 @@
             MapR cluster uses username/password login authentication, you must enable <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             use username/password authentication.</p>
-       <p><note>The MapR FS origin, MapR DB destination, and the Hive Streaming destination using the MapR
-                library currently only support MapR versions 5.1.0 and 5.2.0. All other stages that
-                use the MapR library support MapR versions 5.0.0, 5.1.0, and 5.2.0.</note></p>
+       <p><note>The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other stages that
+                use the MapR library currently only support MapR versions 5.1.0 and 5.2.0.</note></p>
         <p>
             <ol id="ol_o2r_nq4_vw">
                 <li>Install <ph
