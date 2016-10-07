@@ -38,7 +38,6 @@ import com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHdfsDSource;
 )
 @HideConfigs(value =
                  {
-                     "clusterHDFSConfigBean.dataFormatConfig.schemaInMessage",
                      "clusterHDFSConfigBean.dataFormatConfig.compression",
                      "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText"
                  }
