@@ -27,7 +27,7 @@ then
   echo "Usage: $0 NEW-VERSION"
   exit 1
 fi
-mvn versions:set -Drelease -Parchetype -DnewVersion=$version
+mvn versions:set -Drelease -Parchetype -DnewVersion=$version -DartifactId=*  -DgroupId=* -DoldVersion=*
 
 # mvn version:set doesn't work with the following sub-modules. Update them via perl regex.
 for d in rbgen-maven-plugin stage-lib-archetype e2e-tests
