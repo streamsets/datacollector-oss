@@ -19,7 +19,7 @@
   <p><indexterm>whole file data format<indexterm>overview</indexterm></indexterm>You can use the
             whole file data format to move entire files from an origin system to a destination
             system. With the whole file data format, you can transfer any type of file. You cannot
-            perform additional processing on file data in the pipeline. </p>
+            perform additional processing on whole file data in the pipeline. </p>
         <p>When moving whole files, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             streams file data from the origin system and writes the data to the destination system.
