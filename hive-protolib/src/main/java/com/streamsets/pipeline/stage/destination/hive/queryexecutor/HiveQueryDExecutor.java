@@ -29,14 +29,14 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
 
 /**
  */
-@StageDef(
-    version = 1,
-    label = "Hive Query",
-    description = "Executes Hive or Impala queries.",
-    icon = "hive.png",
-    privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Executors/HiveQuery.html#task_mgm_4lk_fx"
-)
+//@StageDef(
+//    version = 1,
+//    label = "Hive Query",
+//    description = "Executes Hive or Impala queries.",
+//    icon = "hive.png",
+//    privateClassLoader = true,
+//    onlineHelpRefUrl = "index.html#Executors/HiveQuery.html#task_mgm_4lk_fx"
+//)
 @ConfigGroups(value = Groups.class)
 @HideConfigs({
   "config.hiveConfigBean.maxCacheSize"

@@ -26,15 +26,15 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DExecutor;
 
-@StageDef(
-  version = 1,
-  label = "HDFS File Metadata",
-  description = "Changes HDFS file metadata such as renaming files or changing permissions.",
-  icon = "hdfs.png",
-  privateClassLoader = true,
-  onlineHelpRefUrl = "index.html#Executors/HDFSMetadata.html#task_m3v_5lk_fx",
-  producesEvents = true
-)
+//@StageDef(
+//  version = 1,
+//  label = "HDFS File Metadata",
+//  description = "Changes HDFS file metadata such as renaming files or changing permissions.",
+//  icon = "hdfs.png",
+//  privateClassLoader = true,
+//  onlineHelpRefUrl = "index.html#Executors/HDFSMetadata.html#task_m3v_5lk_fx",
+//  producesEvents = true
+//)
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class HdfsMetadataDExecutor extends DExecutor {
