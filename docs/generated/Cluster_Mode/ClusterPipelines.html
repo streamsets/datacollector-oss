@@ -38,7 +38,7 @@
    manager and a cluster application to spawn additional workers as needed. Use cluster mode to read
    data from a Kafka cluster, MapR cluster, or HDFS.</p>
 
-  <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from applications
+  <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from application
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to a Kafka or MapR
    cluster. And then use a cluster pipeline to process the data from the cluster and perform the
@@ -47,86 +47,100 @@
   <p class="p">Or, you might use cluster mode to move data from HDFS to another destination, such as
    Elasticsearch.</p>
 
-  <div class="p">The origin system determines how a <span class="ph">Data
-                  Collector</span> runs a cluster
-   mode pipeline:<dl class="dl">
-    
-     <dt class="dt dlterm">Kafka cluster</dt>
-
-     <dd class="dd"><span class="ph">Data
-                  Collector</span> can
-      process data from a Kafka cluster in cluster streaming execution mode. In cluster streaming
-      mode, the <span class="ph">Data
-                  Collector</span> processes data continuously until you stop the pipeline. </dd>
-
-     <dd class="dd">The <span class="ph">Data
-                  Collector</span>
-      runs as an application within Spark Streaming, an open source cluster-computing application.
-      Spark Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
-      cluster.</dd>
-
-     <dd class="dd">The cluster manager and Spark Streaming spawn a <span class="ph">Data
-                  Collector</span> worker for
-      each topic partition in the Kafka cluster. So each partition has a <span class="ph">Data
-                  Collector</span> worker to
-      process data. </dd>
-
-     <dd class="dd">Use the Kafka Consumer origin to process data from a Kafka cluster.</dd>
-
-    
-   </dl>
-<dl class="dl">
-    
-     <dt class="dt dlterm">MapR cluster</dt>
-
-     <dd class="dd"><span class="ph">Data
-                  Collector</span> can
-      process data from a MapR cluster in cluster streaming execution mode. In cluster streaming
-      mode, the <span class="ph">Data
-                  Collector</span> processes data continuously until you stop the pipeline. </dd>
-
-     <dd class="dd">The <span class="ph">Data
-                  Collector</span>
-      runs as an application within Spark Streaming, an open source cluster-computing application.
-      Spark Streaming runs on a YARN cluster manager to process data from a MapR cluster.</dd>
-
-     <dd class="dd">The cluster manager and Spark Streaming spawn a <span class="ph">Data
-                  Collector</span> worker for
-      each topic partition in the MapR cluster. So each partition has a <span class="ph">Data
-                  Collector</span> worker to
-      process data. </dd>
-
-     <dd class="dd">Use the MapR Streams Consumer origin to process data from a MapR cluster.</dd>
-
-    
-    
-     <dt class="dt dlterm">HDFS</dt>
-
-     <dd class="dd"><span class="ph">Data
-                  Collector</span> can
-      process data from HDFS in cluster batch mode: In cluster batch mode, the <span class="ph">Data
-                  Collector</span> processes
-      all available data and then stops the pipeline. </dd>
-
-     <dd class="dd">The <span class="ph">Data
-                  Collector</span>
-      runs as an application on top of MapReduce, an open-source cluster-computing framework.
-      MapReduce runs on a YARN cluster manager. </dd>
-
-     <dd class="dd">YARN and MapReduce generate additional worker nodes as needed. MapReduce creates one map
-      task for each HDFS block. </dd>
-
-     <dd class="dd">Use the Hadoop FS origin to process data from HDFS in cluster batch mode.</dd>
-
-    
-   </dl>
-</div>
-
-  <p class="p">You can use any processor or destination in cluster pipelines.</p>
-
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_rjc_4m5_lx">
+ <h2 class="title topictitle2">Cluster Batch and Streaming Execution Modes</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+        can run a cluster pipeline using the cluster batch or the cluster streaming execution
+        mode.</p>
+
+  <p class="p">The execution mode that <span class="ph">Data
+                  Collector</span>
+            can use depends on the origin system that the cluster pipeline reads from:</p>
+
+     <dl class="dl">
+         
+             <dt class="dt dlterm">Kafka cluster</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can
+                 process data from a Kafka cluster in cluster streaming mode. In cluster streaming mode, <span class="ph">Data
+                  Collector</span> processes
+                 data continuously until you stop the pipeline. </dd>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> runs
+                 as an application within Spark Streaming, an open source cluster-computing application. Spark
+                 Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
+                 cluster. The cluster manager and Spark Streaming spawn a <span class="ph">Data
+                  Collector</span> worker for
+                 each topic partition in the Kafka cluster. So each partition has a <span class="ph">Data
+                  Collector</span> worker to
+                 process data. <p class="p">Use the Kafka Consumer origin to process data from a Kafka cluster in cluster
+                     streaming mode.</p>
+</dd>
+
+         
+     </dl>
+<dl class="dl">
+         
+             <dt class="dt dlterm">MapR cluster</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can process data from a MapR cluster in both execution modes: <ul class="ul" id="concept_rjc_4m5_lx__ul_ay3_lzt_lx">
+                        <li class="li">Cluster batch mode - In cluster batch mode, <span class="ph">Data
+                  Collector</span> processes all available data and then stops the pipeline. <span class="ph">Data
+                  Collector</span> runs as an application on top of MapReduce, an open-source
+                            cluster-computing framework. MapReduce runs on a YARN cluster manager.
+                            YARN and MapReduce generate additional worker nodes as needed. MapReduce
+                            creates one map task for each MapR FS block.<p class="p">Use the MapR FS origin to
+                                process data from MapR in cluster batch mode.</p>
+</li>
+
+                        <li class="li">Cluster streaming mode - In cluster streaming mode, <span class="ph">Data
+                  Collector</span> processes data continuously until you stop the pipeline. <span class="ph">Data
+                  Collector</span> runs as an application within Spark Streaming, an open source
+                            cluster-computing application. Spark Streaming runs on a YARN cluster
+                            manager to process data from a MapR cluster. The cluster manager and
+                            Spark Streaming spawn a <span class="ph">Data
+                  Collector</span> worker for each topic partition in the MapR cluster. So each
+                            partition has a <span class="ph">Data
+                  Collector</span> worker to process data. <p class="p">Use the MapR Streams Consumer origin to
+                                process data from a MapR cluster in cluster streaming mode.</p>
+</li>
+
+                    </ul>
+</dd>
+
+         
+         
+             <dt class="dt dlterm">HDFS</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can process data from HDFS in cluster batch mode. In cluster batch mode, <span class="ph">Data
+                  Collector</span> processes all available data and then stops the pipeline. </dd>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> runs
+                 as an application on top of MapReduce, an open-source cluster-computing framework. MapReduce
+                 runs on a YARN cluster manager. YARN and MapReduce generate additional worker nodes as needed.
+                 MapReduce creates one map task for each HDFS block. <p class="p">Use the Hadoop FS origin to process
+                     data from HDFS in cluster batch mode.</p>
+</dd>
+
+         
+     </dl>
+
+        <p class="p">You can use any processor or destination in cluster pipelines.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_rmd_hgp_cw">
  <h2 class="title topictitle2">HTTP Protocols</h2>
 

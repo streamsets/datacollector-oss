@@ -125,7 +125,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_hzt_zjt_gv__d25093e1098">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_hzt_zjt_gv__d26387e1201">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -185,9 +185,28 @@ The
                               <dt class="dt dlterm">sdcFunctions</dt>
 
                               <dd class="dd">An object that runs functions that evaluate or modify data.
-                                    Includes a <samp class="ph codeph">getFieldNull(Record, 'field path')</samp>
-                                    method that checks if a field is assigned a constant such as
-                                    NULL_INTEGER or NULL_STRING. </dd>
+                                    Includes the following methods: </dd>
+
+                              <dd class="dd">
+                                    <ul class="ul" id="concept_hzt_zjt_gv__d26387e1283">
+                                          <li class="li"><samp class="ph codeph">getFieldNull(Record, 'field path')</samp> -
+                                                Method that checks if a field is assigned a constant
+                                                such as NULL_INTEGER or NULL_STRING.</li>
+
+                                          <li class="li"><samp class="ph codeph">createRecord(String, 'recordId')</samp> -
+                                                Method that creates a new record with the specified
+                                                fields and values. The recordId uniquely identifies
+                                                the record. It should include enough information to
+                                                track down the record source.</li>
+
+                                          <li class="li"><samp class="ph codeph">createMap(boolean listMap)</samp> - Method
+                                                that creates a map for use as a field in a record.
+                                                Pass true to create a list-map field, or false to
+                                                create a map field.</li>
+
+                                    </ul>
+
+                              </dd>
 
                         
                   </dl>
@@ -267,6 +286,89 @@ for (record in records) {
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_t35_rsy_mx">
+ <h2 class="title topictitle2">Accessing Whole File Format Records</h2>
+
+ <div class="body conbody">
+        <p class="p">In a pipeline that processes the whole file
+            data format, you can use a Groovy Evaluator to read the whole file data.</p>
+
+        <p class="p">The processor can access the fileref field in a whole file record by creating an
+                  input stream using the getInputStream() API. For example, you might use the
+                  processor to read the file data in the fileref field and then create new records
+                  with the data. The processor can access the fileref field, but cannot modify
+                  information in the field.</p>
+
+        <div class="p">Use the following lines to create and then read the input
+                  stream:<pre class="pre codeblock">input_stream = record.value['fileRef'].getInputStream()
+input_stream.read()</pre>
+</div>
+
+        <div class="p">After the processor reads the input stream, include the following line in the code to
+                  close the input stream:<pre class="pre codeblock">input_stream.close()</pre>
+</div>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Design/WholeFile.html#concept_nfc_qkh_xw" title="Whole File Data Format">Whole File Data Format</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_otr_swr_nx">
+    <h2 class="title topictitle2">Granting Permissions on Groovy Scripts</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">If <span class="ph">Data
+                  Collector</span> is
+        using the Java Security Manager and the Groovy code needs to access network resources, you
+        must update the Data Collector security policy to include Groovy scripts. The Java Security
+        Manager is enabled by default.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph">Data
+                  Collector</span> configuration directory, edit the security policy:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">$SDC_CONF/sdc-security.policy</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add the following lines to the file:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">// groovy source code
+grant codebase "file:///groovy/script" { 
+  &lt;permissions&gt;;
+};</pre>
+
+                    <p class="p">Where &lt;permissions&gt; are the permissions you are granting to the Groovy
+                        scripts.</p>
+
+                    <div class="p">For example, to grant read permission on all files in the
+                            <samp class="ph codeph">/data/files</samp> directory and subdirectories, add the
+                        following
+                        lines:<pre class="pre codeblock">// groovy source code
+grant codebase "file:///groovy/script" { 
+  permission java.util.PropertyPermission "*", "read";
+  permission java.io.FilePermission "/data/files/*", "read";
+};</pre>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_tm4_pbg_ht" title="Data Collector includes a Java Security Manager that is enabled by default.">Java Security Manager</a></div>
+</div>
+</div>
+</div>
 <div class="topic task nested1" id="task_asl_bpt_gv">
     <h2 class="title topictitle2">Configuring a Groovy Evaluator</h2>
 
@@ -282,14 +384,14 @@ for (record in records) {
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__d25031e3197" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_asl_bpt_gv__d26325e3517" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d175748e378">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d186069e520">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175748e381">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d186069e523">Description</th>
 
                                 </tr>
 
@@ -297,24 +399,24 @@ for (record in records) {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d175748e378 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d186069e520 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175748e381 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d175748e378 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d175748e381 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d186069e523 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d175748e378 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d25031e3243" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d186069e520 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175748e381 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d186069e523 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d186069e520 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d26325e3563" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d186069e523 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -322,10 +424,10 @@ for (record in records) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d175748e378 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d25031e3257" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d186069e520 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d26325e3577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175748e381 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d186069e523 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -333,10 +435,10 @@ for (record in records) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d175748e378 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_asl_bpt_gv__d25031e3272" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d186069e520 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_asl_bpt_gv__d26325e3592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175748e381 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d25031e3276">
+                                    <td class="entry" valign="top" width="70%" headers="d186069e523 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d26325e3596">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -367,9 +469,9 @@ for (record in records) {
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d175748e500">Groovy Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d186069e642">Groovy Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d175748e503">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d186069e645">Description</th>
 
                                 </tr>
 
@@ -377,9 +479,9 @@ for (record in records) {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d175748e500 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d186069e642 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d175748e503 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d186069e645 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -393,9 +495,9 @@ for (record in records) {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d175748e500 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d186069e642 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d175748e503 ">Groovy code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d186069e645 ">Groovy code to use in the processor.</td>
 
                                 </tr>
 

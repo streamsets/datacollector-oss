@@ -106,9 +106,9 @@ latitude_longitude: {Map}
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="53.57142857142857%" id="d74130e154">Data Collector Data Type</th>
+                            <th class="entry" valign="top" width="53.57142857142857%" id="d77865e154">Data Collector Data Type</th>
 
-                            <th class="entry" valign="top" width="46.42857142857144%" id="d74130e157">Redis Data Type</th>
+                            <th class="entry" valign="top" width="46.42857142857144%" id="d77865e157">Redis Data Type</th>
 
                         </tr>
 
@@ -116,23 +116,23 @@ latitude_longitude: {Map}
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="53.57142857142857%" headers="d74130e154 ">String</td>
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d77865e154 ">String</td>
 
-                            <td class="entry" valign="top" width="46.42857142857144%" headers="d74130e157 ">String</td>
-
-                        </tr>
-
-                        <tr class="row">
-                            <td class="entry" valign="top" width="53.57142857142857%" headers="d74130e154 ">List</td>
-
-                            <td class="entry" valign="top" width="46.42857142857144%" headers="d74130e157 ">List or Set</td>
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d77865e157 ">String</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="53.57142857142857%" headers="d74130e154 ">Map</td>
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d77865e154 ">List</td>
 
-                            <td class="entry" valign="top" width="46.42857142857144%" headers="d74130e157 ">Hash</td>
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d77865e157 ">List or Set</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="53.57142857142857%" headers="d77865e154 ">Map</td>
+
+                            <td class="entry" valign="top" width="46.42857142857144%" headers="d77865e157 ">Hash</td>
 
                         </tr>
 
@@ -160,14 +160,40 @@ latitude_longitude: {Map}
                 
                               <dt class="dt dlterm">Avro</dt>
 
-                              <dd class="dd">The destination writes records based on the Avro schema in the
-                                    avroSchema record header attribute or the Avro schema that you
-                                    provide. </dd>
+                              <dd class="dd">The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
 
-                              <dd class="dd">You can optionally include the schema definition as part of the
-                                    message. Omitting the schema definition can improve performance,
-                                    but requires the appropriate schema management to avoid losing
-                                    track of the schema associated with the data.</dd>
+                              <dd class="dd">
+                                    <ul class="ul" id="concept_xl3_3ql_3w__d5521e1505">
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Record Header</span> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p class="p">If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema Registry. You can
+                                                  also optionally include the schema definition in
+                                                  the message. Omitting the schema definition can
+                                                  improve performance, but requires the appropriate
+                                                  schema management to avoid losing track of the
+                                                  schema associated with the data.</p>
+</li>
+
+                                    </ul>
+
+                              </dd>
 
                               <dd class="dd">You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
@@ -192,7 +218,7 @@ latitude_longitude: {Map}
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_xl3_3ql_3w__d5474e1288">
+                                    the following formats:<ul class="ul" id="concept_xl3_3ql_3w__d5521e1563">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -224,9 +250,18 @@ latitude_longitude: {Map}
                 
                         <dt class="dt dlterm">Text</dt>
 
-                        <dd class="dd">The destination writes a single text field of a record. When you
-                              configure the stage, you select the field to use. When necessary,
-                              merge record data into the field earlier in the pipeline. </dd>
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a Unix-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
 
                   
             </dl>
@@ -251,46 +286,46 @@ latitude_longitude: {Map}
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e3537" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e3857" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e359">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e385">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e362">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e388">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_mzk_lw2_gw__d5534e3559" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">Name</td>
+                                <tr id="task_mzk_lw2_gw__d5592e3879" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_mzk_lw2_gw__d5534e3568" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_mzk_lw2_gw__d5534e3577" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">Stage Library</td>
+                                <tr id="task_mzk_lw2_gw__d5592e3888" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_mzk_lw2_gw__d5592e3897" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mzk_lw2_gw__d5534e3592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzk_lw2_gw__d5592e3912" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -298,21 +333,21 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mzk_lw2_gw__d5534e3606" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzk_lw2_gw__d5592e3926" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_mzk_lw2_gw__d5534e3616" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e359 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mzk_lw2_gw__d5534e3622" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr id="task_mzk_lw2_gw__d5592e3936" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e385 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mzk_lw2_gw__d5592e3942" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e362 ">Error record handling for the stage: <ul class="ul" id="task_mzk_lw2_gw__d5534e3626">
+                                    <td class="entry" valign="top" width="70%" headers="d77865e388 ">Error record handling for the stage: <ul class="ul" id="task_mzk_lw2_gw__d5592e3946">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -342,9 +377,9 @@ latitude_longitude: {Map}
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d74130e491">Redis Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d77865e517">Redis Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d74130e494">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d77865e520">Description</th>
 
                                 </tr>
 
@@ -352,9 +387,9 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">URI</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">URI</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">URI of the Redis server. Use the following
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">URI of the Redis server. Use the following
         format:<pre class="pre codeblock">redis://&lt;host name&gt;:&lt;port number&gt;/&lt;database&gt;</pre>
 <p class="p">You
         can omit the port number or database if the server uses the default port number or default
@@ -367,20 +402,20 @@ latitude_longitude: {Map}
      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Connection Timeout (sec)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Connection Timeout (sec)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Maximum time in seconds to wait for a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Maximum time in seconds to wait for a
                                             connection.<p class="p">Default is 1000 seconds.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Mode
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Mode
                                         <a class="xref" href="Redis.html#concept_ing_cvm_jw" title="When you configure the destination for batch mode, you select the incoming fields to use as the Redis key and value. You also select the data type of the Redis value. If needed, the Redis destination converts the Data Collector data type of the incoming value field to the selected Redis data type.">
                                             <img class="image" id="task_mzk_lw2_gw__image_h2p_p9v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Mode used to write to Redis:<ul class="ul" id="task_mzk_lw2_gw__ul_fmn_d5h_jw">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Mode used to write to Redis:<ul class="ul" id="task_mzk_lw2_gw__ul_fmn_d5h_jw">
                                             <li class="li">Batch - Writes data to Redis key-value pairs.</li>
 
                                             <li class="li">Publish - Publishes data as messages to a Redis
@@ -393,38 +428,38 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Key </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Key </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Incoming field to use for the Redis key. Used in batch
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Incoming field to use for the Redis key. Used in batch
                                         mode only.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Value</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Value</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Incoming field to use for the Redis value. Used in batch
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Incoming field to use for the Redis value. Used in batch
                                         mode only.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Data Type 
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Data Type 
                                         <a class="xref" href="Redis.html#concept_ozv_24h_jw" title="When you configure the destination for batch mode, you select the incoming fields to use as the Redis key and value. You also select the data type of the Redis value. If needed, the Redis destination converts the Data Collector data type of the incoming value field to the selected Redis data type.">
                                             <img class="image" id="task_mzk_lw2_gw__image_h6p_p2v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Data type of the Redis value. Used in batch mode
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Data type of the Redis value. Used in batch mode
                                             only.<p class="p">Default is String.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Data Format
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Data Format
                                         <a class="xref" href="Redis.html#concept_xl3_3ql_3w">
                                             <img class="image" id="task_mzk_lw2_gw__image_h3p_p7v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Data format for messages:<ul class="ul" id="task_mzk_lw2_gw__ul_wlj_353_br">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Data format for messages:<ul class="ul" id="task_mzk_lw2_gw__ul_wlj_353_br">
                                             <li class="li">Avro</li>
 
                                             <li class="li">Binary</li>
@@ -447,17 +482,17 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Channel</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Channel</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Redis channel to publish the messages to. Used in publish
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Redis channel to publish the messages to. Used in publish
                                         mode only.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d74130e491 ">Charset</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d77865e517 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d74130e494 ">Character set to use when writing data. Used in publish
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d77865e520 ">Character set to use when writing data. Used in publish
                                         mode only.<p class="p">Not used with all data formats.</p>
 </td>
 
@@ -475,14 +510,14 @@ latitude_longitude: {Map}
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e3843" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4313" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e697">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e723">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e700">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e726">Description</th>
 
                                 </tr>
 
@@ -490,29 +525,99 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e697 ">Load Schema from Header <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
-                                            <img class="image" id="task_mzk_lw2_gw__d5534e3871" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
-                                    </td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e700 ">Indicates that the Avro schema is embedded in the
-                                        avroSchema record header attribute. <p class="p">Use only when the
-                                            avroSchema attribute is defined for all
-                                        records.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_mzk_lw2_gw__d5592e4342">
+                                            <li class="li">In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+
+                                            <li class="li">In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
+                                                  <img class="image" id="task_mzk_lw2_gw__d5592e4351" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+
+                                        </ul>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e697 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e700 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Avro schema definition used to write the data. <p class="p">You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e697 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e700 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <span class="ph uicontrol">Add</span>. Use the following format to
+                                        enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Look Up Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_mzk_lw2_gw__d5592e4399">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p class="p">If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <span class="ph uicontrol">Look Up Schema By</span>
+                                            property to Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Include Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -521,9 +626,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e697 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e723 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e700 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d77865e726 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -542,14 +647,14 @@ latitude_longitude: {Map}
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e3937" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4650" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e781">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e881">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e784">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e884">Description</th>
 
                                 </tr>
 
@@ -557,9 +662,9 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e781 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e881 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e784 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e884 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -575,14 +680,14 @@ latitude_longitude: {Map}
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e3995" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4707" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e827">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e927">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e830">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e930">Description</th>
 
                                 </tr>
 
@@ -590,9 +695,9 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Format for delimited data:<ul class="ul" id="task_mzk_lw2_gw__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Format for delimited data:<ul class="ul" id="task_mzk_lw2_gw__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -616,16 +721,16 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -633,9 +738,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -644,9 +749,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -661,9 +766,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -672,9 +777,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e827 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e927 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e830 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d77865e930 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -694,14 +799,14 @@ latitude_longitude: {Map}
                     property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e4129" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4842" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e980">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e1080">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e983">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e1083">Description</th>
 
                                 </tr>
 
@@ -709,9 +814,9 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e980 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1080 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e983 ">Determines how JSON data is written:<ul class="ul" id="task_mzk_lw2_gw__d5534e4158">
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1083 ">Determines how JSON data is written:<ul class="ul" id="task_mzk_lw2_gw__d5592e4871">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -737,14 +842,14 @@ latitude_longitude: {Map}
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e4265" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4909" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e1034">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e1134">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e1037">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e1137">Description</th>
 
                                 </tr>
 
@@ -752,9 +857,9 @@ latitude_longitude: {Map}
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e1034 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1134 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e1037 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1137 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                             <p class="p">For more information about environment variables, see
@@ -765,9 +870,9 @@ latitude_longitude: {Map}
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e1034 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1134 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e1037 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1137 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -788,14 +893,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5534e4194" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzk_lw2_gw__d5592e4992" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d74130e1148">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d77865e1248">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d74130e1151">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d77865e1251">Description</th>
 
                                 </tr>
 
@@ -803,20 +908,31 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e1148 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1248 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e1151 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1251 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d74130e1148 ">Empty Line If No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1248 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d74130e1151 ">Creates an empty line when a record does not include the
-                                        text field specified above. <p class="p">When not selected, records
-                                            without the specified text field are
-                                        discarded.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1251 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d77865e1248 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d77865e1251 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
 </td>
 
                                 </tr>

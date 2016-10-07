@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jrt_s5y_mx">
- <title>Accessing Whole Files</title>
+ <title>Accessing Whole File Format Records</title>
  <conbody>
         <p><indexterm>Jython Evaluator processor<indexterm>whole
                 files</indexterm></indexterm><indexterm>whole files<indexterm>Jython
