@@ -1,12 +1,20 @@
 <div class="modal-header">
   <h3 class="modal-title" translate="packageManager.install.title">Install Stage Library</h3>
 </div>
-<div class="modal-body multiple-pipelines-modal-body">
+<div class="modal-body package-manager-modal-body">
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
   <div ng-if="!libraryInstalled">
+    <div ng-if="maprStageLib" class="alert alert-info" role="alert">
+      You must perform additional steps to install MapR stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Install_Config/MapR-Prerequisites.html" target="_blank">MapR Prerequisites</a>.
+    </div>
+
+    <div ng-if="solr6StageLib" class="alert alert-info" role="alert">
+      You must perform additional steps to install Solr stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Destinations/Solr.html#concept_gm2_y12_pw" target="_blank">Solr Prerequisites</a>.
+    </div>
+
     <p translate="packageManager.install.confirmationMessage"></p>
-    <p ng-repeat="library in libraryList">{{library.label}}</p>
+    <p class="stage-library-label" ng-repeat="library in libraryList">{{library.label}}</p>
   </div>
 
   <div ng-if="libraryInstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"

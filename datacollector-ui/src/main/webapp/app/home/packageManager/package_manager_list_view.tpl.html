@@ -65,7 +65,7 @@
              class="fa fa-check-circle fa-12x"></i>
         </div>
 
-        <div class="action-menu pull-right" dropdown>
+        <div class="action-menu pull-right" dropdown ng-if="!isManagedByClouderaManager">
               <span class="dropdown-toggle" dropdown-toggle
                     ng-click="$event.stopPropagation();">
                 <i class="fa fa-ellipsis-v"></i>

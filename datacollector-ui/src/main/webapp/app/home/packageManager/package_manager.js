@@ -61,6 +61,7 @@ angular
         'Installed Stage Libraries',
         'Apache Kafka',
         'Apache Kudu',
+        'Apache Solr',
         'CDH',
         'Elasticsearch',
         'HDP',
@@ -82,6 +83,7 @@ angular
       hideLibraryPanel: false,
       limit: pipelinesLimit,
       manifestURL: '',
+      isManagedByClouderaManager: false,
 
       toggleLibraryPanel: function () {
         $scope.hideLibraryPanel = !$scope.hideLibraryPanel;
@@ -278,7 +280,8 @@ angular
     });
 
     $q.all([
-      api.pipelineAgent.getLibraries()
+      api.pipelineAgent.getLibraries(),
+      configuration.init()
     ]).then(
       function (results) {
         $scope.loaded = true;
@@ -290,6 +293,8 @@ angular
         if(configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/collector/packageManager');
         }
+
+        $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
       },
       function (results) {
         $scope.loaded = true;
@@ -322,6 +327,12 @@ angular
       modalInstance.result.then(function() {
         angular.forEach(libraryList, function(library) {
           library.installed = true;
+          $scope.trackEvent(
+            pipelineConstant.STAGE_LIBRARY_CATEGORY,
+            pipelineConstant.INSTALL_ACTION,
+            library.label,
+            1
+          );
         });
       }, function () {
       });
@@ -342,6 +353,12 @@ angular
       modalInstance.result.then(function() {
         angular.forEach(libraryList, function(library) {
           library.installed = false;
+          $scope.trackEvent(
+            pipelineConstant.STAGE_LIBRARY_CATEGORY,
+            pipelineConstant.UNINSTALL_ACTION,
+            library.label,
+            1
+          );
         });
       }, function () {
       });

@@ -33,6 +33,8 @@ angular
       operationInProgress: false,
       libraryInstalled: false,
       isRestartInProgress: false,
+      maprStageLib: false,
+      solr6StageLib: false,
 
       install: function() {
         $scope.operationInProgress = true;
@@ -58,4 +60,17 @@ angular
         $modalInstance.dismiss('cancel');
       }
     });
+
+    if (libraryList && libraryList.length) {
+      angular.forEach(libraryList, function(library) {
+        if (library.id.indexOf('streamsets-datacollector-mapr_') !== -1) {
+          $scope.maprStageLib = true;
+        }
+
+        if (library.id.indexOf('streamsets-datacollector-apache-solr_6') !== -1) {
+          $scope.solr6StageLib = true;
+        }
+      });
+    }
+
   });

@@ -17,7 +17,7 @@
       <h3 class="pull-left" translate="packageManager.title">Package Manager</h3>
     </div>
 
-    <div class="pull-right">
+    <div class="pull-right" ng-if="!isManagedByClouderaManager">
 
       <a ng-disabled="selectedStageLibraryList.length === 0"
          ng-if="isAuthorized([userRoles.admin])"
@@ -39,87 +39,6 @@
         <i class="fa fa-minus-square fa-14x"></i>
       </a>
 
-    </div>
-
-    <div class="pull-right" ng-show="pipelines.length > 1 && header.pipelineGridView">
-
-      <span class="sort-by-label">Sort by:</span>
-      <div class="btn-group pull-right sort-by-dropdown">
-
-        <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
-          <span>{{'home.sortColumn.' + header.sortColumn | translate}}</span>
-          <i ng-show="!header.sortReverse" class="fa fa-arrow-down"></i>
-          <i ng-show="header.sortReverse" class="fa fa-arrow-up"></i>
-        </button>
-
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'name'; header.sortReverse = false">
-              <span translate="home.sortColumn.name">Name</span>
-              <i class="fa fa-arrow-down"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'name'; header.sortReverse = true">
-              <span translate="home.sortColumn.name">Name</span>
-              <i class="fa fa-arrow-up"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'created'; header.sortReverse = false">
-              <span translate="home.sortColumn.created">Date created</span>
-              <i class="fa fa-arrow-down"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'created'; header.sortReverse = true">
-              <span translate="home.sortColumn.created">Date created</span>
-              <i class="fa fa-arrow-up"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'lastModified'; header.sortReverse = false">
-              <span translate="home.sortColumn.lastModified">Date updated</span>
-              <i class="fa fa-arrow-down"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'lastModified'; header.sortReverse = true">
-              <span translate="home.sortColumn.lastModified">Date updated</span>
-              <i class="fa fa-arrow-up"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'status'; header.sortReverse = false">
-              <span translate="home.sortColumn.status">Status</span>
-              <i class="fa fa-arrow-down"></i>
-            </a>
-          </li>
-
-          <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="header.sortColumn = 'status'; header.sortReverse = true">
-              <span translate="home.sortColumn.status">Status</span>
-              <i class="fa fa-arrow-up"></i>
-            </a>
-          </li>
-
-        </ul>
-      </div>
     </div>
 
     <div class="pull-right">
