@@ -21,8 +21,8 @@
                     field</indexterm></indexterm>When reading whole files, the origin produces a
             record with two fields:<ul id="ul_oqn_bpv_xw">
                 <li>fileref - Contains a reference that enables streaming the file from the origin
-                    system to the destination system. You can use processors to read the fielref
-                    field. You cannot modify information in the fileref field. </li>
+                    system to the destination system. You can use scripting processors to read the
+                    fielref field. You cannot modify information in the fileref field. </li>
                 <li>fileInfo - A map of file properties, such as file path, file name, and file
                     owner. The details differ based on the origin system. You can use processors to
                     modify information in the fileInfo field as needed.<note type="tip"><ph

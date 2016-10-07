@@ -31,11 +31,12 @@
                 </dlentry>
                 <dlentry>
                     <dt>Groovy Evaluator, JavaScript Evaluator, and Jython Evaluator</dt>
-                    <dd>Use to access the fileref field by creating an input stream using the
-                        getInputStream() API. </dd>
+                    <dd>Use to access the fileref field by creating an input stream in the code
+                        using the getInputStream() API. </dd>
                     <dd>For example, you might use the Groovy Evaluator to use Groovy code that
                         reads the file data in the fileref field and then creates new records with
-                        the data.</dd>
+                        the data.<note>Be sure to close the input stream in the code when the
+                            processor has finished reading the stream.</note></dd>
                 </dlentry>
             </dl><dl>
                 <dlentry>
