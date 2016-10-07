@@ -191,17 +191,66 @@
                   <draft-comment author="Loretta">ORIGIN DATA FORMATS</draft-comment>
             </p>
             <p>
-                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer, and Kinesis
-                        Consumer and other message origins</draft-comment>
+                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer </draft-comment>
+                  <dl>
+                        <dlentry id="OriginDF-AVRO-Kafka">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every message.</dd>
+                              <dd>You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul id="ul_npz_4lz_gx">
+                                          <li><uicontrol>Message/Data Includes Schema</uicontrol> -
+                                                Use the schema in the message.</li>
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID embedded in the
+                                                message or by the schema ID or subject specified in
+                                                the stage configuration.<p>You must specify the
+                                                  method that the Kafka Consumer uses to deserialize
+                                                  the message. If the Avro schema ID is embedded in
+                                                  each message, set the key and value deserializers
+                                                  to Confluent on the <uicontrol>Kafka</uicontrol>
+                                                  tab.</p></li>
+                                    </ul></dd>
+                              <dd>Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the message and can improve
+                                    performance.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer and other message
+                        origins</draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVRO">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every message. </dd>
-                              <dd>To ensure proper data processing, indicate if the message includes
-                                    an Avro schema. </dd>
-                              <dd>You can use the schema associated with the message or provide an
-                                    alternate schema definition. Providing an alternate schema can
-                                    improve performance.</dd>
+                              <dd>Generates a record for every message.</dd>
+                              <dd>You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul id="ul_npz_1lz_kx">
+                                          <li><uicontrol>Message/Data Includes Schema</uicontrol> -
+                                                Use the schema in the message.</li>
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration. </li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID embedded in the
+                                                message or by the schema ID or subject specified in
+                                                the stage configuration.</li>
+                                    </ul></dd>
+                              <dd>Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the message and can improve
+                                    performance.</dd>
                         </dlentry>
                   </dl>
             </p>
@@ -214,8 +263,24 @@
                         <dlentry id="OriginDF-AVROfiles">
                               <dt>Avro</dt>
                               <dd>Generates a record for every record. </dd>
-                              <dd>The origin assumes each file includes an Avro schema definition.
-                                    But you can optionally provide an alternate schema. </dd>
+                              <dd>You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul id="ul_ykg_g5z_kx">
+                                          <li><uicontrol>Message/Data Includes Schema</uicontrol> -
+                                                Use the schema in the file.</li>
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration. </li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID or subject
+                                                specified in the stage configuration.</li>
+                                    </ul></dd>
+                              <dd>Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the file and can improve performance.</dd>
                               <dd>The origin reads files compressed by Avro-supported compression
                                     codecs without requiring additional configuration. To enable the
                                     origin to read files compressed by other codecs, use the
@@ -224,17 +289,32 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin -
-                        MapReduce doesn't allow getting the schema from the files. Not adding the
-                        avro-compression-codec </draft-comment>
+                  <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin - Not
+                        adding the avro-compression-codec </draft-comment>
             </p>
             <p>
                   <dl>
                         <dlentry id="AVRO-HadoopFS">
                               <dt>Avro</dt>
                               <dd>Generates a record for every record. </dd>
-                              <dd>The origin uses the specified schema definition to process Avro
-                                    data.</dd>
+                              <dd>You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul id="ul_v5j_gvz_kx">
+                                          <li><uicontrol>Message/Data Includes Schema</uicontrol> -
+                                                Use the schema in the file.</li>
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID or subject
+                                                specified in the stage configuration.</li>
+                                    </ul></dd>
+                              <dd>Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the file and can improve performance.</dd>
                               <dd>The origin reads files compressed by Avro-supported compression
                                     codecs without requiring additional configuration.</dd>
                         </dlentry>
@@ -767,44 +847,159 @@ input_stream.read()</codeblock></p>
                               <dd>
                                     <draft-comment author="Loretta"><uicontrol>AvroFlume</uicontrol>
                                           is used only by Flume. <b>AvroFile</b> used by Hadoop FS,
-                                          Local and S3, and other file destinations. <b>AvroMess</b>
-                                          used by Kafka and Kinesis Producer and other message
-                                          destinations. When making changes to these, add updates to
-                                          the Flume data formats topic when necessary.
-                                    </draft-comment>
+                                          Local and S3, and other file destinations.
+                                                <b>AvroKafka</b> used by Kafka. <b>AvroMess</b> used
+                                          by Kinesis Producer and other message destinations. When
+                                          making changes to these, add updates to the Flume data
+                                          formats topic when necessary. </draft-comment>
                               </dd>
                         </dlentry>
+                  </dl>
+                  <draft-comment author="alisontaylor">Avro Flume</draft-comment>
+                  <dl>
                         <dlentry id="Avro-Flume">
                               <dt>Avro</dt>
-                              <dd>The destination writes records based on the Avro schema in the
-                                    avroSchema record header attribute or the Avro schema that you
-                                    provide. </dd>
-                              <dd>You can optionally include the schema definition as part of the
-                                    Flume event. Omitting the schema definition can improve
-                                    performance, but requires the appropriate schema management to
-                                    avoid losing track of the schema associated with the data.</dd>
+                              <dd>The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
+                              <dd>
+                                    <ul id="ul_xwl_1sf_lx">
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>In Record Header</uicontrol> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p>If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema Registry. You can
+                                                  also optionally include the schema definition as
+                                                  part of the Flume event. Omitting the schema
+                                                  definition can improve performance, but requires
+                                                  the appropriate schema management to avoid losing
+                                                  track of the schema associated with the
+                                                data.</p></li>
+                                    </ul>
+                              </dd>
                               <dd>You can also compress data with an Avro-supported compression
                                     codec. When using Avro compression, do not use other compression
                                     available in the destination. </dd>
                         </dlentry>
+                  </dl>
+                  <draft-comment author="alisontaylor">Avro File</draft-comment>
+                  <dl>
                         <dlentry id="DEST-DF-AvroFILE">
                               <dt>Avro</dt>
-                              <dd>The destination writes records based on the Avro schema in the
-                                    avroSchema record header attribute or the Avro schema that you
-                                    provide. The schema definition is included in each file.</dd>
+                              <dd>The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
+                              <dd>
+                                    <ul id="ul_iyw_vrf_lx">
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>In Record Header</uicontrol> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p>If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema
+                                                Registry.</p></li>
+                                    </ul>
+                              </dd>
+                              <dd>The destination includes the schema definition in each file.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
                                     available in the destination. </dd>
                         </dlentry>
+                  </dl>
+                  <draft-comment author="alisontaylor">Avro Kafka</draft-comment>
+                  <dl>
+                        <dlentry id="D-DF-AvroKafka">
+                              <dt>Avro</dt>
+                              <dd>The destination writes records based on the Avro schema. </dd>
+                              <dd>You can use one of the following methods to specify the location
+                                    of the Avro schema definition:</dd>
+                              <dd>
+                                    <ul id="ul_fkw_tx4_nx">
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>In Record Header</uicontrol> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p>You must specify the method that the
+                                                  Kafka Producer uses to serialize the messages in
+                                                  the Avro format. To embed the Avro schema ID in
+                                                  each message that the destination writes, set the
+                                                  key and value serializers to Confluent on the
+                                                  <uicontrol>Kafka</uicontrol> tab.</p><p>If using
+                                                  the Avro schema in the stage or in the record
+                                                  header attribute, you can optionally configure the
+                                                  destination to register the Avro schema with the
+                                                  Confluent Schema Registry. You can also optionally
+                                                  include the schema definition in the
+                                                message.</p></li>
+                                    </ul>
+                              </dd>
+                              <dd>You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
+                        </dlentry>
+                  </dl>
+                  <draft-comment author="alisontaylor">Avro other message
+                        destinations</draft-comment>
+                  <dl>
                         <dlentry id="D-DF-AvroMess">
                               <dt>Avro</dt>
-                              <dd>The destination writes records based on the Avro schema in the
-                                    avroSchema record header attribute or the Avro schema that you
-                                    provide. </dd>
-                              <dd>You can optionally include the schema definition as part of the
-                                    message. Omitting the schema definition can improve performance,
-                                    but requires the appropriate schema management to avoid losing
-                                    track of the schema associated with the data.</dd>
+                              <dd>The destination writes records based on the Avro schema. You can
+                                    use one of the following methods to specify the location of the
+                                    Avro schema definition:</dd>
+                              <dd>
+                                    <ul id="ul_gkw_tx4_nx">
+                                          <li><uicontrol>In Pipeline Configuration</uicontrol> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+                                          <li><uicontrol>In Record Header</uicontrol> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+                                          <li><uicontrol>Confluent Schema Registry</uicontrol> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p>If using the Avro schema in the stage or
+                                                  in the record header attribute, you can optionally
+                                                  configure the destination to register the Avro
+                                                  schema with the Confluent Schema Registry. You can
+                                                  also optionally include the schema definition in
+                                                  the message. Omitting the schema definition can
+                                                  improve performance, but requires the appropriate
+                                                  schema management to avoid losing track of the
+                                                  schema associated with the data.</p></li>
+                                    </ul>
+                              </dd>
                               <dd>You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
                                     available in the destination. </dd>

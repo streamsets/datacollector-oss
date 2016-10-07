@@ -87,6 +87,24 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Key Deserializer
+                                        <xref href="KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h8q_ds"
+                                            /></xref></entry>
+                                    <entry>Method used to deserialize the Kafka message key when the
+                                        configured data format is Avro. <p>Set to Confluent when the
+                                            Avro schema ID is embedded in each Kafka message.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Value Deserializer</entry>
+                                    <entry>Method used to deserialize the Kafka message value when
+                                        the configured data format is Avro. <p>Set to Confluent when
+                                            the Avro schema ID is embedded in each Kafka
+                                            message.</p></entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-KafkaConfig">
                                     <entry/>
@@ -105,7 +123,7 @@
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-KAFKA">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Binary">

@@ -28,7 +28,14 @@
         <p>You can add additional Kafka configuration properties as needed. You can also configure
             the destination to use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            security features.<draft-comment author="Loretta">Make sure changes in Kafka Producer
-                topics go into MapR Producer. </draft-comment></p>
+            security features.</p>
+        <p>When using Kafka 0.8.2 or later to write messages in the Avro format, you can configure
+            the Kafka Producer to work with the Confluent Schema Registry. The Confluent Schema
+            Registry is a distributed storage layer for Avro schemas which uses Kafka as its
+            underlying storage mechanism.</p>
+        <p>
+            <draft-comment author="Loretta">Make sure changes in Kafka Producer topics go into MapR
+                Producer. </draft-comment>
+        </p>
  </conbody>
 </concept>

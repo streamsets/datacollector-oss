@@ -21,7 +21,7 @@
       processes data differently based on the data format. Kafka Consumer can process the following
       types of data:</p>
   <dl>
-      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO-Kafka">
         <dt/>
         <dd/>
       </dlentry>

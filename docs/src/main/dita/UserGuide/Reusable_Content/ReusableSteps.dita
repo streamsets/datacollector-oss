@@ -333,15 +333,15 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-AVROFILE</uicontrol> - The
-                        following step is used by Directory, other file-based origins that read avro
-                        from files.</draft-comment>
+                        following step is used by Directory S3, Hadoop FS, SFTP, other file-based
+                        origins that read avro from files.</draft-comment>
                 </cmd>
             </step>
             <step id="O-AVRO-FILE">
                 <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, optionally configure the
-                    following property:</cmd>
+                    following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_igl_bq2_2t">
+                    <table frame="all" rowsep="1" colsep="1" id="table_fv4_ggf_lx">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -353,47 +353,58 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        processing data:<ul id="ul_gv4_ggf_lx">
+                                            <li>Message/Data Includes Schema - Use the schema in the
+                                                file.</li>
+                                            <li>In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+                                        </ul><p>Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Avro schema definition to use when processing data.
+                                    <entry>Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
-                                        the data. Defining a schema can improve performance.<p>When
-                                            not used, the origin uses the schema defined in the
-                                            file.</p><p>You can optionally use the
-                                            runtime:loadResource function to use a schema definition
-                                            stored in a runtime resource file. </p></entry>
+                                        the data. <p>You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p></entry>
                                 </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-AVROHadoopFS</uicontrol> - The
-                        following step is used by HadoopFS origin only.</draft-comment>
-                </cmd>
-            </step>
-            <step id="O-AVROHadoopFS">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, optionally configure the
-                    following property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_nyl_sbf_55">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
                                 <row>
-                                    <entry>Avro Property</entry>
-                                    <entry>Description</entry>
+                                    <entry>Schema Registry URLs</entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <uicontrol>Add</uicontrol>. Use
+                                        the following format to enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
                                 </row>
-                            </thead>
-                            <tbody>
                                 <row>
-                                    <entry>Avro Schema</entry>
-                                    <entry>Avro schema definition to use when processing data.<p>You
-                                            can optionally use the runtime:loadResource function to
-                                            use a schema definition stored in a runtime resource
-                                            file. </p></entry>
+                                    <entry>Lookup Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_hv4_ggf_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                        </ul>Overrides any existing schema definitions associated
+                                        with the data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p>If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <uicontrol>Look Up Schema By</uicontrol> property to
+                                            Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -423,19 +434,145 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Message includes Schema</entry>
-                                    <entry>Indicates that the message includes an Avro schema.
-                                    </entry>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        processing data:<ul id="ul_k2p_vx2_lx">
+                                            <li>Message/Data Includes Schema - Use the schema in the
+                                                message.</li>
+                                            <li>In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+                                        </ul><p>Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Avro schema definition to use when processing data.
+                                    <entry>Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
-                                        the data. Defining a schema can improve performance.<p>When
-                                            not used, the origin uses the schema defined in the
-                                            file.</p><p>You can optionally use the
-                                            runtime:loadResource function to use a schema definition
-                                            stored in a runtime resource file. </p></entry>
+                                        the data. <p>You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs</entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <uicontrol>Add</uicontrol>. Use
+                                        the following format to enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Lookup Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_pb1_5df_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Embedded Schema ID - Look up the Avro schema ID
+                                                embedded in each message.</li>
+                                        </ul>Overrides any existing schema definitions associated
+                                        with the message. </entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p>If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <uicontrol>Look Up Schema By</uicontrol> property to
+                                            Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor"><uicontrol>O-AVRO-KAFKA</uicontrol> used by
+                        Kafka Consumer</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-AVRO-KAFKA">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_acd_9qd_4t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        processing data:<ul id="ul_k6p_vx3_lx">
+                                            <li>Message/Data Includes Schema - Use the schema in the
+                                                message.</li>
+                                            <li>In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+                                        </ul><p>Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Avro schema definition used to process the data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. <p>You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs </entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <uicontrol>Add</uicontrol>. Use
+                                        the following format to enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Lookup Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_pb2_9df_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Embedded Schema ID - Look up the Avro schema ID
+                                                embedded in each message. You must configure the
+                                                origin to use the Confluent method to deserialize
+                                                the messages on the <uicontrol>Kafka</uicontrol>
+                                                tab.</li>
+                                        </ul>Overrides any existing schema definitions associated
+                                        with the message. </entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p>If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <uicontrol>Look Up Schema By</uicontrol> property to
+                                            Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2090,7 +2227,7 @@
                 <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_igm_vtd_3t">
+                    <table frame="all" rowsep="1" colsep="1" id="table_o1j_7nd_9t">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -2102,19 +2239,65 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header <xref
-                                            href="../Destinations/RecordHeaderAttributes.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_qn5_tlt_nw"/></xref>
-                                    </entry>
-                                    <entry>Indicates that the Avro schema is embedded in the
-                                        avroSchema record header attribute. <p>Use only when the
-                                            avroSchema attribute is defined for all
-                                        records.</p></entry>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        writing data:<ul id="ul_mr3_sdg_lx">
+                                            <li>In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+                                            <li>In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <xref
+                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_alj_pws_nx"/></xref></li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
+                                    <entry>Avro schema definition used to write the data. <p>You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Register Schema</entry>
+                                    <entry>Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs</entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <uicontrol>Add</uicontrol>. Use the following format to
+                                        enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Look Up Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_t62_m3g_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p>If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <uicontrol>Look Up Schema By</uicontrol>
+                                            property to Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
                                 </row>
                                 <row>
                                     <entry>Include Schema</entry>
@@ -2126,8 +2309,8 @@
                                 <row>
                                     <entry>Avro Compression Codec</entry>
                                     <entry>The Avro compression type to use. <p>When using Avro
-                                            compression, do not enable other compression for the
-                                            destination. </p></entry>
+                                            compression, do not enable other compression available
+                                            in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2144,7 +2327,7 @@
                 <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
+                    <table frame="all" rowsep="1" colsep="1" id="table_o7j_3nd_9t">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -2156,28 +2339,72 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header <xref
-                                            href="../Destinations/RecordHeaderAttributes.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_tfb_1ql_gw"/></xref>
-                                    </entry>
-                                    <entry>Indicates that the Avro schema is embedded in the
-                                        avroSchema record header attribute. The destination includes
-                                        the schema definition in each generated file. <p>Use only
-                                            when the avroSchema attribute is defined for all
-                                            records.</p></entry>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        writing data:<ul id="ul_mr6_sdg_lx">
+                                            <li>In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+                                            <li>In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <xref
+                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_yjw_4ws_nx"/></xref></li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+                                        </ul><p>The destination includes the schema definition in
+                                            each generated file. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. The
-                                        destination includes the schema definition in each generated
-                                        file. </entry>
+                                    <entry>Avro schema definition used to write the data. <p>You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Register Schema</entry>
+                                    <entry>Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs</entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <uicontrol>Add</uicontrol>. Use the following format to
+                                        enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Look Up Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_t38_m6g_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p>If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <uicontrol>Look Up Schema By</uicontrol>
+                                            property to Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
                                 </row>
                                 <row>
                                     <entry>Avro Compression Codec</entry>
-                                    <entry>The Avro-supported compression type to use. <p>When you
-                                            enable Avro compression, do not enable other compression
-                                            available in the destination. </p></entry>
+                                    <entry>The Avro compression type to use. <p>When using Avro
+                                        compression, do not enable other compression available
+                                        in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2186,8 +2413,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in
-                        KProducer and KinFirehose.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in all
+                        message destinations except for Kafka Producer - ie, Kinesis Producer, MapR
+                        Streams, Rabbit MQ Producer.</draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-Mess">
@@ -2206,19 +2434,65 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Load Schema from Header <xref
-                                            href="../Destinations/RecordHeaderAttributes.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_fvp_srs_nw"/></xref>
-                                    </entry>
-                                    <entry>Indicates that the Avro schema is embedded in the
-                                        avroSchema record header attribute. <p>Use only when the
-                                            avroSchema attribute is defined for all
-                                        records.</p></entry>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        writing data:<ul id="ul_mr5_sdg_lx">
+                                            <li>In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+                                            <li>In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <xref
+                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_dsv_nws_nx"/></xref></li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
+                                    <entry>Avro schema definition used to write the data. <p>You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Register Schema</entry>
+                                    <entry>Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs</entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <uicontrol>Add</uicontrol>. Use the following format to
+                                        enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Look Up Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_t54_m2g_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p>If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <uicontrol>Look Up Schema By</uicontrol>
+                                            property to Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
                                 </row>
                                 <row>
                                     <entry>Include Schema</entry>
@@ -2232,6 +2506,106 @@
                                     <entry>The Avro compression type to use. <p>When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor"><uicontrol>D-AVRO-KAFKA</uicontrol> used in
+                        Kafka Producer</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-KAFKA">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_o9j_2nd_7t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema Location</entry>
+                                    <entry>Location of the Avro schema definition to use when
+                                        writing data:<ul id="ul_mr9_sdg_lx">
+                                            <li>In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+                                            <li>In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <xref
+                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_fvd_sis_nw"/></xref></li>
+                                            <li>Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Avro schema definition used to write the data. <p>You can
+                                        optionally use the runtime:loadResource function to use
+                                        a schema definition stored in a runtime resource file.
+                                    </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Register Schema</entry>
+                                    <entry>Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Registry URLs  </entry>
+                                    <entry>Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <uicontrol>Add</uicontrol>. Use the following format to
+                                        enter the
+                                        URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>Look Up Schema By</entry>
+                                    <entry>Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul id="ul_t93_m5g_lx">
+                                            <li>Subject - Look up the specified Avro schema
+                                                subject.</li>
+                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Subject</entry>
+                                    <entry>Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p>If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <uicontrol>Look Up Schema By</uicontrol>
+                                            property to Schema ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema ID</entry>
+                                    <entry>Avro schema ID to look up in the Confluent Schema
+                                        Registry.</entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each message. <note>If you
+                                            configured Kafka Producer to embed the Avro schema ID in
+                                            each message that it writes, clear this
+                                        property.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Compression Codec</entry>
+                                    <entry>The Avro compression type to use. <p>When using Avro
+                                        compression, do not enable other compression available
+                                        in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -3137,6 +3511,24 @@
                                     <row
                                         conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
                                         <entry/>
+                                    </row>
+                                    <row>
+                                        <entry>Key Serializer
+                                            <xref
+                                                href="../Destinations/KProducer-DataFormat.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                    scale="10" id="image_as8_sc7_ft"/></xref></entry>
+                                        <entry>Method used to serialize the Kafka message key when
+                                            the configured data format is Avro. <p>Set to Confluent
+                                                to embed the Avro schema ID in each message that
+                                                Kafka Producer writes. </p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Value Serializer</entry>
+                                        <entry>Method used to serialize the Kafka message value when
+                                            the configured data format is Avro. <p>Set to Confluent
+                                                to embed the Avro schema ID in each message that
+                                                Kafka Producer writes.</p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>
