@@ -52,5 +52,8 @@ angular.module('dataCollectorApp.common')
     CLICK_ACTION: 'click',
     SELECT_ACTION: 'select',
     ADD_ACTION: 'add',
-    CONNECT_ACTION: 'connect'
+    CONNECT_ACTION: 'connect',
+    STAGE_LIBRARY_CATEGORY: 'library',
+    INSTALL_ACTION: 'install',
+    UNINSTALL_ACTION: 'uninstall'
   });

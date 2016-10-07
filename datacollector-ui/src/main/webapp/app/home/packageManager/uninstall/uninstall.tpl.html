@@ -1,12 +1,12 @@
 <div class="modal-header">
   <h3 class="modal-title" translate="packageManager.uninstall.title">Install Stage Library</h3>
 </div>
-<div class="modal-body multiple-pipelines-modal-body">
+<div class="modal-body package-manager-modal-body">
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
   <div ng-if="!libraryUninstalled">
     <p translate="packageManager.uninstall.confirmationMessage"></p>
-    <p ng-repeat="library in libraryList">{{library.label}}</p>
+    <p class="stage-library-label" ng-repeat="library in libraryList">{{library.label}}</p>
   </div>
 
   <div ng-if="libraryUninstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
