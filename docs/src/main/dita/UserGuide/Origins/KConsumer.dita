@@ -21,6 +21,10 @@
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
           Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the
       consumer group name, topic, and ZooKeeper connection information. </p>
+    <p>When using Kafka 0.8.2 or later to consume messages in the Avro format, you can configure the
+      Kafka Consumer to work with the Confluent Schema Registry. The Confluent Schema Registry is a
+      distributed storage layer for Avro schemas which uses Kafka as its underlying storage
+      mechanism.</p>
     <p>You can add additional Kafka configuration properties as needed. You can also configure the
       origin to use <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/> security
