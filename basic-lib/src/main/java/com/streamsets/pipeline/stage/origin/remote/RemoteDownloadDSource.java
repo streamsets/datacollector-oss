@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
     version = 3,
-    label = "SFTP/FTP Client",
+    label = "SFTP FTP Client",
     description = "Uses an SFTP/FTP client to read records from an URL.",
     icon = "sftp-client.png",
     execution = ExecutionMode.STANDALONE,
