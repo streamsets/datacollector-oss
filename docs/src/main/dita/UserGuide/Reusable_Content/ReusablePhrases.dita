@@ -844,9 +844,16 @@
             <dl>
                   <dlentry id="DESTDataF-Text">
                         <dt>Text</dt>
-                        <dd>The destination writes a single text field of a record. When you
-                              configure the stage, you select the field to use. When necessary,
-                              merge record data into the field earlier in the pipeline. </dd>
+                        <dd>The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+                        <dd>You can configure the characters to use as record separators. By
+                              default, the destination uses a Unix-style line ending (\n) to
+                              separate records.</dd>
+                        <dd>When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
                   </dlentry>
             </dl>
             <p>

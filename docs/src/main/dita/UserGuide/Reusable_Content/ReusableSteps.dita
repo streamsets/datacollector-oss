@@ -1135,7 +1135,7 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Password for basic, digest, or universal authentication.
-                                        <note
+                                            <note
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
                                         /></entry>
                                 </row>
@@ -1193,8 +1193,8 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Proxy password.<note
-                                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-                                    /></entry>
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1275,8 +1275,8 @@
                                 <row id="row-JDBCpassword">
                                     <entry>Password</entry>
                                     <entry>Password for the JDBC account.<note
-                                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-                                    /></entry>
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2387,44 +2387,6 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>TextProps</uicontrol> - Using for
-                        Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
-                </cmd>
-            </step>
-            <step id="TextProps">
-                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Text Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Text Field Path</entry>
-                                    <entry>Field that contains the text data to be written. All data
-                                        must be incorporated into the specified field. </entry>
-                                </row>
-                                <row>
-                                    <entry>Empty Line If No Text</entry>
-                                    <entry>Creates an empty line when a record does not include the
-                                        text field specified above. <p>When not selected, records
-                                            without the specified text field are
-                                        discarded.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
                     <draft-comment author="Loretta"><b>D-PROTO-props</b> - used by all protobuf
                             destinations<p>NOTE: when making changes, make sure to make any related
                             ones to BOTH origin tables.</p></draft-comment>
@@ -2466,6 +2428,51 @@
                                                 <codeph>&lt;package name>.&lt;message
                                             type></codeph>. </p>Use a message type defined in the
                                         descriptor file.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>TextProps</uicontrol> - Using for
+                        Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
+                </cmd>
+            </step>
+            <step id="TextProps">
+                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Text Field Path</entry>
+                                    <entry>Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </entry>
+                                </row>
+                                <row>
+                                    <entry>Record Separator</entry>
+                                    <entry>Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p>By default, the
+                                            destination uses \n.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Insert Record Separator if No Text</entry>
+                                    <entry>When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p>When not selected, records without the text
+                                            field are discarded.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2881,9 +2888,7 @@
                 <cmd>When writing to a Shield-protected cluster, on the <wintitle>Shield</wintitle>
                     tab, configure the following properties:</cmd>
                 <info id="ElasticSHIELD-Info">
-                    <note
-                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-                    />
+                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_jsk_fhg_z5">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -3090,10 +3095,11 @@
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_as2_sc1_ft"/></xref></entry>
-                                        <entry id="KPPartExpr_entry">Expression to use when using the expression partition
-                                            strategy. <p>Define the expression to evaluate to the
-                                                partition where you want each record written.
-                                                Partition numbers start with 0.</p><p
+                                        <entry id="KPPartExpr_entry">Expression to use when using
+                                            the expression partition strategy. <p>Define the
+                                                expression to evaluate to the partition where you
+                                                want each record written. Partition numbers start
+                                                with 0.</p><p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
                                             /></entry>
                                     </row>
