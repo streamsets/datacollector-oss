@@ -31,6 +31,7 @@
         <p>Use the command as
             follows:<codeblock>$SDC_DIST/bin/streamsets cli \
 (-U &lt;sdcURL> | --url &lt;sdcURL>) \
+[(-D &lt;dpmURL> | --dpmURL &lt;dpmURL>)] \
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
@@ -39,6 +40,34 @@ system enableDPM \
 (--dpmUser &lt;dpmUserID>) \
 (--dpmPassword &lt;dpmUserPassword>) \
 [(--labels &lt;labels>)]</codeblock></p>
+        <p>When using the system enableDPM command, the following basic options are required:</p>
+        <table frame="all" rowsep="1" colsep="1" id="table_lkb_qkl_nx">
+            <tgroup cols="2">
+                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                <thead>
+                    <row>
+                        <entry>Basic Option</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>-U &lt;sdcURL><p>or</p>--url &lt;sdcURL></entry>
+                        <entry>Required. URL of the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />.<p>The default URL is
+                                    <systemoutput>http://localhost:18630</systemoutput>.</p></entry>
+                    </row>
+                    <row>
+                        <entry>-D &lt;dpmURL><p>or</p><p>--dpmURL &lt;dpmURL></p></entry>
+                        <entry>Required. Set to:
+                            <codeph>https://cloud.streamsets.com</codeph></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+        <p>The following table describes the enableDPM options:</p>
   <p><table frame="all" rowsep="1" colsep="1" id="table_njq_3bb_cx">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -53,7 +82,7 @@ system enableDPM \
                         <row>
                             <entry>--dpmUrl &lt;dpmBaseURL></entry>
                             <entry>Required. Set to:
-                                <codeph>https://cloud.streamsets.com/</codeph></entry>
+                                <codeph>https://cloud.streamsets.com</codeph></entry>
                         </row>
                         <row>
                             <entry>--dpmUser &lt;dpmUserID></entry>
@@ -99,7 +128,7 @@ system enableDPM \
             with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             /> and assigns three labels to the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />:<codeblock>$SDC_DIST/bin/streamsets cli -U http://localhost:18630 system enableDPM --dpmUrl https://cloud.streamsets.com/ --dpmUser alison@MyOrg --dpmPassword MyPassword --labels Finance,Accounting,Development</codeblock></p>
+            />:<codeblock>$SDC_DIST/bin/streamsets cli -U http://localhost:18630 -D https://cloud.streamsets.com system enableDPM --dpmUrl https://cloud.streamsets.com --dpmUser alison@MyOrg --dpmPassword MyPassword --labels Finance,Accounting,Development</codeblock></p>
         <p>Restart the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             apply the changes. </p>

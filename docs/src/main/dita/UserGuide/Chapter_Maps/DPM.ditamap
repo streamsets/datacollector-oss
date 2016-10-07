@@ -69,6 +69,7 @@
         <topicref href="../DPM/UnregisterSDCwithDPM.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../DPM/UnregisterFromDataCollector.dita"/>
+            <topicref href="../DPM/UnregisterFromCommandLine.dita"/>
         </topicref>
     </topicref>
 </map>

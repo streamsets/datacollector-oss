@@ -16,17 +16,17 @@
 <concept id="concept_l45_qwf_xw">
  <title>Meet Dataflow Performance Manager</title>
  <shortdesc>StreamSets <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-            /><sup>TM</sup> (<ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>) is a
-        management console for data in motion. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (<ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            /><sup>TM</sup>) is a management console for data in motion. <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> lets
         you map, measure, and master complex dataflows within your organization. With <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
         can map multiple dataflows in a single visual topology and track changes to the dataflows
-        over time. You can view real-time statistics to measure the performance and quality of your
-        dataflows. You can master your day-to-day operations by monitoring alerts to ensure that
-        incoming data meets business requirements for availability and accuracy.</shortdesc>
+        over time. You can view real-time statistics to measure dataflow performance across each
+        topology, from end-to-end or point-to-point. You can master your day-to-day operations by
+        performing release and configuration management, and monitoring alerts to ensure incoming
+        data meets business requirements for availability and accuracy.</shortdesc>
  <conbody>
         <p><indexterm>DPM<indexterm>overview</indexterm></indexterm><indexterm>Dataflow Performance
                     Manager<indexterm>overview</indexterm></indexterm>Multiple types of users within
