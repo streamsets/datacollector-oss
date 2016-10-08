@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.udp.UDPConsumingServer;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.config.DatagramMode;
+import io.netty.channel.epoll.Epoll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,8 @@ public class UDPSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(UDPSource.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
+  private final boolean enableEpoll;
+  private final int numThreads;
   private final Set<String> ports;
   private final int maxBatchSize;
   private final Queue<Record> overrunQueue;
@@ -80,11 +83,15 @@ public class UDPSource extends BaseSource {
 
   public UDPSource(
       List<String> ports,
+      boolean enableEpoll,
+      int numThreads,
       ParserConfig parserConfig,
       DatagramMode dataFormat,
       int maxBatchSize,
       long maxWaitTime
   ) {
+    this.enableEpoll = enableEpoll;
+    this.numThreads = numThreads;
     this.ports = ImmutableSet.copyOf(ports);
     this.parserConfig = parserConfig;
     this.dataFormat = dataFormat;
@@ -101,6 +108,9 @@ public class UDPSource extends BaseSource {
 
     this.recordCount = 0;
     this.incomingQueue = new ArrayBlockingQueue<>(this.maxBatchSize * 10);
+    if (enableEpoll && !Epoll.isAvailable()) {
+      issues.add(getContext().createConfigIssue(Groups.UDP.name(), "enableEpoll", Errors.UDP_08));
+    }
     if (ports.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports",
         Errors.UDP_02));
@@ -136,7 +146,7 @@ public class UDPSource extends BaseSource {
       case COLLECTD:
         charset = validateCharset(Groups.COLLECTD.name(), issues);
         checkCollectdParserConfigs(issues);
-        if (issues.size() == 0) {
+        if (issues.isEmpty()) {
           parser = new CollectdParser(
               getContext(),
               parserConfig.getBoolean(CONVERT_TIME),
@@ -155,7 +165,7 @@ public class UDPSource extends BaseSource {
     if (issues.isEmpty()) {
       if (!addresses.isEmpty()) {
         QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(parser, incomingQueue);
-        udpServer = new UDPConsumingServer(addresses, udpConsumer);
+        udpServer = new UDPConsumingServer(enableEpoll, numThreads, addresses, udpConsumer);
         try {
           udpServer.listen();
           udpServer.start();

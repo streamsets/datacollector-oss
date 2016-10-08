@@ -24,12 +24,13 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.testing.NetworkUtils;
+import io.netty.channel.epoll.Epoll;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
+import static org.junit.Assume.assumeTrue;
 
 public class TestUDPSource {
   private static final String TEN_PACKETS_RESOURCE = "netflow-v5-file-1";
@@ -60,8 +62,8 @@ public class TestUDPSource {
 
     boolean produceCalled;
 
-    public TUDPSource(List<String> ports, ParserConfig parserConfig, DatagramMode dataFormat, int maxBatchSize, long maxWaitTime) {
-      super(ports, parserConfig, dataFormat, maxBatchSize, maxWaitTime);
+    public TUDPSource(List<String> ports, boolean enableEpoll, int numThreads, ParserConfig parserConfig, DatagramMode dataFormat, int maxBatchSize, long maxWaitTime) {
+      super(ports, enableEpoll, numThreads, parserConfig, dataFormat, maxBatchSize, maxWaitTime);
     }
 
     @Override
@@ -81,8 +83,33 @@ public class TestUDPSource {
     List<AssertionError> failures = new ArrayList<>();
     for (int i = 0; i < maxRuns; i++) {
       try {
-        doBasicTest(DatagramMode.NETFLOW);
-        doBasicTest(DatagramMode.SYSLOG);
+        doBasicTest(DatagramMode.NETFLOW, false, 1);
+        doBasicTest(DatagramMode.SYSLOG, false, 1);
+      } catch (Exception ex) {
+        // we don't expect exceptions to be thrown,
+        // even when udp messages are lost
+        throw ex;
+      } catch (AssertionError failure) {
+        String msg = "Test failed on iteration: " + i;
+        LOG.error(msg, failure);
+        failures.add(failure);
+        Assert.assertTrue("Interrupted while sleeping", ThreadUtil.sleep(10 * 1000));
+      }
+    }
+    if (failures.size() >= maxRuns) {
+      throw failures.get(0);
+    }
+  }
+
+  @Test
+  public void testBasicEpoll() throws Exception {
+    assumeTrue(Epoll.isAvailable());
+    int maxRuns = 3;
+    List<AssertionError> failures = new ArrayList<>();
+    for (int i = 0; i < maxRuns; i++) {
+      try {
+        doBasicTest(DatagramMode.NETFLOW, true, 2);
+        doBasicTest(DatagramMode.SYSLOG, true, 2);
       } catch (Exception ex) {
         // we don't expect exceptions to be thrown,
         // even when udp messages are lost
@@ -104,7 +131,7 @@ public class TestUDPSource {
     List<String> ports = Lists.newArrayList("514", "10000");
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");
-    TUDPSource source = new TUDPSource(ports, parserConfig, DatagramMode.SYSLOG, 20, 100L);
+    TUDPSource source = new TUDPSource(ports, false, 1, parserConfig, DatagramMode.SYSLOG, 20, 100L);
     SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     if (System.getProperty("user.name").equals("root")) {
@@ -114,11 +141,11 @@ public class TestUDPSource {
     }
   }
 
-  private void doBasicTest(DatagramMode dataFormat) throws Exception {
+  private void doBasicTest(DatagramMode dataFormat, boolean enableEpoll, int numThreads) throws Exception {
     List<String> ports = NetworkUtils.getRandomPorts(2);
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");
-    TUDPSource source = new TUDPSource(ports, parserConfig, dataFormat, 20, 100L);
+    TUDPSource source = new TUDPSource(ports, enableEpoll, numThreads, parserConfig, dataFormat, 20, 100L);
     SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {

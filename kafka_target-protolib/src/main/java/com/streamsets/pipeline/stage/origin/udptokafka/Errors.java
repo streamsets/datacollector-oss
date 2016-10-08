@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   UDP_KAFKA_ORIG_03("No valid ports specified"),
   UDP_KAFKA_ORIG_04("Concurrency out of range, it must be between 1 and 2048"),
   UDP_KAFKA_ORIG_05("Accept Threads out of range, it must be between 1 and 32"),
+  UDP_KAFKA_ORIG_06("Multithreaded UDP server is not available on your platform."),
   ;
 
   private final String msg;

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.origin.lib.UDPDataFormat;
 import com.streamsets.pipeline.stage.origin.lib.UDPDataFormatChooserValues;
+import io.netty.channel.epoll.Epoll;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -53,6 +54,17 @@ public class UDPConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable UDP Multithreading",
+      description = "Only available on 64-bit Linux systems",
+      defaultValue = "false",
+      group = "ADVANCED",
+      displayPosition = 25
+  )
+  public boolean enableEpoll;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Accept Threads",
       description = "It should be based on the CPU cores expected to be dedicated to the pipeline",
@@ -60,7 +72,9 @@ public class UDPConfigBean {
       min = 1,
       max = 32,
       group = "ADVANCED",
-      displayPosition = 30)
+      dependsOn = "enableEpoll",
+      triggeredByValue = "true",
+      displayPosition = 26)
   public int acceptThreads;
 
   @ConfigDef(
@@ -104,10 +118,19 @@ public class UDPConfigBean {
       issues.add(context.createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_KAFKA_ORIG_03));
     }
     if (acceptThreads < 1 || acceptThreads > 32) {
-      issues.add(context.createConfigIssue(Groups.UDP.name(), "acceptThreads", Errors.UDP_KAFKA_ORIG_05));
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), "acceptThreads", Errors.UDP_KAFKA_ORIG_05));
     }
     if (concurrency < 1 || concurrency > 2048) {
       issues.add(context.createConfigIssue(Groups.UDP.name(), "concurrency", Errors.UDP_KAFKA_ORIG_04));
+    }
+
+    if (enableEpoll && !Epoll.isAvailable()) {
+      issues.add(context.createConfigIssue(Groups.UDP.name(), "enableEpoll", Errors.UDP_KAFKA_ORIG_06));
+    }
+
+    // Force threads to 1 if epoll not enabled
+    if (!enableEpoll) {
+      acceptThreads = 1;
     }
     return issues;
   }

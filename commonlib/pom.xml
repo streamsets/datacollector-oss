@@ -179,6 +179,13 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <classifier>linux-x86_64</classifier>
+      <version>${netty.version}</version>
+    </dependency>
+
     <!-- Test Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>

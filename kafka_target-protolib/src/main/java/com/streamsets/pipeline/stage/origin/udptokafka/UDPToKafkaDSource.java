@@ -31,11 +31,12 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 1,
+  version = 2,
   label = "UDP to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives UDP packages and writes them to Kafka",
   icon="udptokafka.png",
+    upgrader = UDPToKafkaUpgrader.class,
   onlineHelpRefUrl = "index.html#Origins/UDPtoKafka.html#task_tvh_bhz_pw"
 )
 @ConfigGroups(Groups.class)

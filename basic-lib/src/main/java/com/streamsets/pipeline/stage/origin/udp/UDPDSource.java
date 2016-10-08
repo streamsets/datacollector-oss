@@ -42,12 +42,13 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INT
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "UDP Source",
     description = "Listens for UDP messages on a single port",
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    upgrader = UDPSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/UDP.html#task_kgn_rcv_1s"
 )
 
@@ -66,6 +67,29 @@ public class UDPDSource extends DSource {
       displayPosition = 10
   )
   public List<String> ports; // string so we can listen on multiple ports in the future
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable Multithreading",
+      description = "Only available on 64-bit Linux systems",
+      defaultValue = "false",
+      group = "UDP",
+      displayPosition = 15
+  )
+  public boolean enableEpoll;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Number of Receive Threads",
+      defaultValue = "1",
+      group = "UDP",
+      dependsOn = "enableEpoll",
+      triggeredByValue = "true",
+      displayPosition = 16
+  )
+  public int numThreads;
 
   @ConfigDef(
       required = true,
@@ -199,6 +223,11 @@ public class UDPDSource extends DSource {
     parserConfig.put(TYPES_DB_PATH, typesDbPath);
     parserConfig.put(EXCLUDE_INTERVAL, excludeInterval);
     parserConfig.put(AUTH_FILE_PATH, authFilePath);
-    return new UDPSource(ports, parserConfig, dataFormat, batchSize, maxWaitTime);
+
+    // Force single thread if epoll not enabled.
+    if (!enableEpoll) {
+      numThreads = 1;
+    }
+    return new UDPSource(ports, enableEpoll, numThreads, parserConfig, dataFormat, batchSize, maxWaitTime);
   }
 }
