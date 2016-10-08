@@ -66,7 +66,12 @@ public class UDPToKafkaSource extends BaseSource implements OffsetCommitter {
       if (!udpConfigs.getAddresses().isEmpty()) {
         udpConsumer = new KafkaUDPConsumer(getContext(), udpConfigs, kafkaConfigBean, errorQueue);
         udpConsumer.init();
-        udpServer = new UDPConsumingServer(udpConfigs.acceptThreads, udpConfigs.getAddresses(), udpConsumer);
+        udpServer = new UDPConsumingServer(
+            udpConfigs.enableEpoll,
+            udpConfigs.acceptThreads,
+            udpConfigs.getAddresses(),
+            udpConsumer
+        );
         try {
           udpServer.listen();
           udpServer.start();

@@ -19,12 +19,14 @@
  */
 package com.streamsets.pipeline.lib.udp;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@ChannelHandler.Sharable
 public class UDPConsumingServerHandler extends SimpleChannelInboundHandler<DatagramPacket> {
   private static final Logger LOG = LoggerFactory.getLogger(UDPConsumingServerHandler.class);
   private final UDPConsumer udpConsumer;

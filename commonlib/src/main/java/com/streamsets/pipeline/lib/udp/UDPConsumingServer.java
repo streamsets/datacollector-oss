@@ -26,6 +26,9 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollChannelOption;
+import io.netty.channel.epoll.EpollDatagramChannel;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import org.slf4j.Logger;
@@ -38,44 +41,58 @@ import java.util.List;
 
 public class UDPConsumingServer {
   private static final Logger LOG = LoggerFactory.getLogger(UDPConsumingServer.class);
-  private final int acceptThreads;
+  private static final String NETTY_UNSAFE = "io.netty.noUnsafe";
+  private final boolean enableEpoll;
+  private final int numThreads;
   private final List<InetSocketAddress> addresses;
   private final UDPConsumer udpConsumer;
-  private final List<ChannelFuture> channelFutures;
-  private EventLoopGroup group;
+  private final List<ChannelFuture> channelFutures = new ArrayList<>();
+  private final List<EventLoopGroup> groups = new ArrayList<>();
 
-  static {
-    // required to fully disable direct buffers which
-    // while faster to allocate when shared, come with
-    // unpredictable limits
-    if (System.getProperty("io.netty.noUnsafe") == null) {
-      System.setProperty("io.netty.noUnsafe", "true");
-    }
-  }
-
-  public UDPConsumingServer(List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
-    this(1, addresses, udpConsumer);
-  }
-
-  public UDPConsumingServer(int acceptThreads, List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
-    this.acceptThreads = acceptThreads;
+  public UDPConsumingServer(boolean enableEpoll, int numThreads, List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
+    this.enableEpoll = enableEpoll;
+    this.numThreads = numThreads;
     this.addresses = ImmutableList.copyOf(addresses);
     this.udpConsumer = udpConsumer;
-    this.channelFutures = new ArrayList<>();
   }
 
   public void listen() throws Exception {
-    group = new NioEventLoopGroup(acceptThreads);
     for (SocketAddress address : addresses) {
-      Bootstrap b = new Bootstrap();
-      b.group(group)
-        .channel(NioDatagramChannel.class)
-        .handler(new UDPConsumingServerHandler(udpConsumer))
-        .option(ChannelOption.SO_REUSEADDR, true)
-        .option(ChannelOption.ALLOCATOR, new PooledByteBufAllocator()); // use on-heap buffers
+      Bootstrap b = bootstrap(enableEpoll);
+      if (!enableEpoll && numThreads > 1) {
+        throw new IllegalArgumentException("numThreads cannot be > 1 unless epoll is enabled");
+      }
       LOG.info("Starting server on address {}", address);
-      ChannelFuture channelFuture = b.bind(address).sync();
-      channelFutures.add(channelFuture);
+      for (int i = 0; i < numThreads; i++) {
+        ChannelFuture channelFuture = b.bind(address).sync();
+        channelFutures.add(channelFuture);
+      }
+    }
+  }
+
+  private Bootstrap bootstrap(boolean enableEpoll) {
+    if (enableEpoll) {
+      // Direct buffers required for Epoll
+      System.setProperty(NETTY_UNSAFE, "false");
+      EventLoopGroup group = new EpollEventLoopGroup(numThreads);
+      groups.add(group);
+      return new Bootstrap()
+          .group(group)
+          .channel(EpollDatagramChannel.class)
+          .handler(new UDPConsumingServerHandler(udpConsumer))
+          .option(EpollChannelOption.SO_REUSEADDR, true)
+          .option(EpollChannelOption.SO_REUSEPORT, true)
+          .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+    } else {
+      disableDirectBuffers();
+      EventLoopGroup group = new NioEventLoopGroup(numThreads);
+      groups.add(group);
+      return new Bootstrap()
+          .group(group)
+          .channel(NioDatagramChannel.class)
+          .handler(new UDPConsumingServerHandler(udpConsumer))
+          .option(ChannelOption.SO_REUSEADDR, true)
+          .option(ChannelOption.ALLOCATOR, new PooledByteBufAllocator()); // use on-heap buffers
     }
   }
 
@@ -86,23 +103,31 @@ public class UDPConsumingServer {
         channelFuture.cancel(true);
       }
     }
-    if (group != null && !group.isShutdown() && !group.isShuttingDown()) {
-      try {
-        group.shutdownGracefully().get();
-      } catch (InterruptedException ex) {
-        // ignore
-      } catch (Exception ex) {
-        LOG.error("Unexpected error shutting down: " + ex, ex);
+    for (EventLoopGroup group : groups) {
+      if (group != null && !group.isShutdown() && !group.isShuttingDown()) {
+        try {
+          group.shutdownGracefully().get();
+        } catch (InterruptedException ex) {
+          // ignore
+        } catch (Exception ex) {
+          LOG.error("Unexpected error shutting down: " + ex, ex);
+        }
       }
     }
-    group = null;
     channelFutures.clear();
   }
   public void start() {
     Utils.checkNotNull(channelFutures, "Channel future cannot be null");
-    Utils.checkNotNull(group, "Event group cannot be null");
+    Utils.checkState(!groups.isEmpty(), "Event group cannot be null");
     for (ChannelFuture channelFuture : channelFutures) {
       channelFuture.channel().closeFuture();
     }
+  }
+
+  private static void disableDirectBuffers() {
+    // required to fully disable direct buffers which
+    // while faster to allocate when shared, come with
+    // unpredictable limits
+    System.setProperty(NETTY_UNSAFE, "true");
   }
 }

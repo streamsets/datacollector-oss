@@ -32,7 +32,8 @@ public enum Errors implements ErrorCode {
   UDP_04("Charset '{}' is not supported"),
   UDP_05("collectd Types DB '{}' not found"),
   UDP_06("collectd Auth File '{}' not found"),
-  UDP_07("Insufficient permissions to listen on privileged port {}")
+  UDP_07("Insufficient permissions to listen on privileged port {}"),
+  UDP_08("Multithreaded UDP server is not available on your platform."),
   ;
 
   private final String msg;
