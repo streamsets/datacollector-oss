@@ -1141,6 +1141,11 @@ angular.module('dataCollectorApp.common')
           }
         }
 
+        if (stage.eventLanes.length) {
+          laneYPos[stage.eventLanes[0]] = y + 150;
+          laneXPos[stage.eventLanes[0]] = x;
+        }
+
         stage.uiInfo.xPos = x;
         stage.uiInfo.yPos = y;
 
