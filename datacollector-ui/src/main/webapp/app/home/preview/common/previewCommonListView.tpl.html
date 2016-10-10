@@ -162,6 +162,24 @@
       </td>
     </tr>
 
+
+
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET' || detailPaneConfig.uiInfo.stageType === 'PROCESSOR'" ng-repeat="record in stagePreviewData.eventRecords">
+      <td>
+      </td>
+      <td>
+        <record-tree
+          record="record"
+          record-value="record.value"
+          field-name="('global.form.eventRecord' | translate)+($index+1)"
+          is-root="true"
+          editable="previewMode"
+          show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+          show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+        </record-tree>
+      </td>
+    </tr>
+
     <tr ng-if="stagePreviewData.input.length === 0 &&
                 stagePreviewData.output.length === 0 &&
                 stagePreviewData.errorRecords.length === 0">

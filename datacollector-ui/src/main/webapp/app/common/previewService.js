@@ -63,8 +63,6 @@ angular.module('dataCollectorApp.common')
           stagePreviewData.errorRecords = stageOutput.errorRecords;
           stagePreviewData.stageErrors = stageOutput.stageErrors;
           stagePreviewData.eventRecords = stageOutput.eventRecords;
-        } else if (stageOutput.eventRecords && stageOutput.i) {
-
         }
 
         if(stageOutput.output && stageInstance.inputLanes && stageInstance.inputLanes.length) {

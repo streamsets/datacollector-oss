@@ -175,6 +175,14 @@ angular
         valueList.push(["Error" , errorRecordsMeter.count ]);
       }
 
+      // Event Lanes
+      if (stageInstance.eventLanes && stageInstance.eventLanes.length) {
+        var eventLaneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' + stageInstance.eventLanes[0] + '.outputRecords.meter'];
+        if (eventLaneMeter) {
+          valueList.push(["Event" , eventLaneMeter.count ]);
+        }
+      }
+
       $scope.barChartData[0].values = valueList;
     };
 

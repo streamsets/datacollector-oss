@@ -272,13 +272,14 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         outputRecordsPerLaneCounter.get(lane).inc(outputRecords);
         outputRecordsPerLaneMeter.get(lane).mark(outputRecords);
       }
-      if(getStage().getConfiguration().getEventLanes().size() > 0) {
-        String lane = getStage().getConfiguration().getEventLanes().get(0);
-        int outputRecords = eventSink.getEventRecords().size();
-        outputRecordsPerLane.put(lane, outputRecords);
-        outputRecordsPerLaneCounter.get(lane).inc(outputRecords);
-        outputRecordsPerLaneMeter.get(lane).mark(outputRecords);
-      }
+    }
+
+    if(getStage().getConfiguration().getEventLanes().size() > 0) {
+      String lane = getStage().getConfiguration().getEventLanes().get(0);
+      int eventRecords = eventSink.getEventRecords().size();
+      outputRecordsPerLane.put(lane, eventRecords);
+      outputRecordsPerLaneCounter.get(lane).inc(eventRecords);
+      outputRecordsPerLaneMeter.get(lane).mark(eventRecords);
     }
 
     // capture stage metrics for this batch

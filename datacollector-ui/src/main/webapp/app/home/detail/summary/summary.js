@@ -92,7 +92,8 @@ angular
         'Output 6': '#138808',
         'Output 7': '#556B2F',
         'Batch Throughput': '#5cb85c',
-        'Total': '#5cb85c'
+        'Total': '#5cb85c',
+        'Event': '#ff9f4a'
       },
       stageNameToLabelMap: _.reduce($scope.pipelineConfig.stages, function(nameToLabelMap, stageInstance){
         nameToLabelMap[stageInstance.instanceName] = stageInstance.uiInfo.label;

@@ -50,7 +50,8 @@ angular
         'Output 4': '#85BB65',
         'Output 5': '#03C03C',
         'Output 6': '#138808',
-        'Output 7': '#556B2F'
+        'Output 7': '#556B2F',
+        'Event': '#ff9f4a'
       },
       timeRange: 'latest',
 
