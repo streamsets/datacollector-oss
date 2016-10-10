@@ -346,8 +346,11 @@
                   <dl>
                         <dlentry id="O-DF-Datagram">
                               <dt>Datagram</dt>
-                              <dd>Generates a record for every message. You can use the following
-                                    datagram format types: collectd, NetFlow, or syslog. </dd>
+                              <dd>Generates a record for every message. The origin <ph
+                                          conref="#concept_vhs_5tz_xp/UDP-messagetypes"/><ul
+                                          conref="#concept_vhs_5tz_xp/UDP-syslog" id="ul_fj2_3q4_4x">
+                                          <li/>
+                                    </ul></dd>
                         </dlentry>
                   </dl>
             </p>
@@ -659,6 +662,22 @@
             <p><ph><ph id="OracleCDC-fulldata"><ph>use the JDBC Consumer origin in a separate
                                     pipeline to read the existing data before you start the pipeline
                                     with Oracle CDC Client</ph></ph></ph></p>
+            <p>
+                  <draft-comment author="Loretta">UDP Source and UDP to Kafka use the following ph
+                        and ul:</draft-comment>
+            </p>
+            <p><ph id="UDP-messagetypes">can read collectd messages, Netflow messages from NetFlow
+                        Version 5, and the following types of syslog messages:</ph><ul
+                        id="UDP-syslog">
+                        <li>RFC 5424 (<xref href="https://tools.ietf.org/html/rfc5424" format="html"
+                                    scope="external"
+                              >https://tools.ietf.org/html/rfc5424</xref>)</li>
+                        <li>RFC 3164 (<xref href="https://tools.ietf.org/html/rfc3164" format="html"
+                                    scope="external"
+                              >https://tools.ietf.org/html/rfc3164</xref>)</li>
+                        <li>Non-standard common messages, such as RFC 3339 dates with no version
+                              digit</li>
+                  </ul></p>
             <p>
                   <draft-comment author="Loretta">UDP to Kafka origin and SDC RPC to Kafka origins
                         use the following text in the Pipeline Configuration topics.
